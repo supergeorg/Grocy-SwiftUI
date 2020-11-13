@@ -1,0 +1,701 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB74AE255E9EF800319108 /* Tests_iOS.swift */; };
+		78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB74B9255E9EF800319108 /* Tests_macOS.swift */; };
+		78CB74BC255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */; };
+		78CB74BD255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */; };
+		78CB74BE255E9EF800319108 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7494255E9EF700319108 /* ContentView.swift */; };
+		78CB74BF255E9EF800319108 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7494255E9EF700319108 /* ContentView.swift */; };
+		78CB74C0255E9EF800319108 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78CB7495255E9EF800319108 /* Assets.xcassets */; };
+		78CB74C1255E9EF800319108 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78CB7495255E9EF800319108 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		78CB74AB255E9EF800319108 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78CB748E255E9EF600319108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78CB7499255E9EF800319108;
+			remoteInfo = "Grocy-SwiftUI (iOS)";
+		};
+		78CB74B6255E9EF800319108 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78CB748E255E9EF600319108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78CB74A1255E9EF800319108;
+			remoteInfo = "Grocy-SwiftUI (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocy_SwiftUIApp.swift; sourceTree = "<group>"; };
+		78CB7494255E9EF700319108 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		78CB7495255E9EF800319108 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB749D255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB74A4255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78CB74A5255E9EF800319108 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		78CB74AA255E9EF800319108 /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB74AE255E9EF800319108 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
+		78CB74B0255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78CB74B5255E9EF800319108 /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB74B9255E9EF800319108 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
+		78CB74BB255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		78CB7497255E9EF800319108 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB749F255E9EF800319108 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74A7255E9EF800319108 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74B2255E9EF800319108 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		78CB748D255E9EF600319108 = {
+			isa = PBXGroup;
+			children = (
+				78CB7492255E9EF700319108 /* Shared */,
+				78CB749C255E9EF800319108 /* iOS */,
+				78CB74A3255E9EF800319108 /* macOS */,
+				78CB74AD255E9EF800319108 /* Tests iOS */,
+				78CB74B8255E9EF800319108 /* Tests macOS */,
+				78CB749B255E9EF800319108 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		78CB7492255E9EF700319108 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */,
+				78CB7494255E9EF700319108 /* ContentView.swift */,
+				78CB7495255E9EF800319108 /* Assets.xcassets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		78CB749B255E9EF800319108 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */,
+				78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */,
+				78CB74AA255E9EF800319108 /* Tests iOS.xctest */,
+				78CB74B5255E9EF800319108 /* Tests macOS.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		78CB749C255E9EF800319108 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				78CB749D255E9EF800319108 /* Info.plist */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		78CB74A3255E9EF800319108 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				78CB74A4255E9EF800319108 /* Info.plist */,
+				78CB74A5255E9EF800319108 /* macOS.entitlements */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		78CB74AD255E9EF800319108 /* Tests iOS */ = {
+			isa = PBXGroup;
+			children = (
+				78CB74AE255E9EF800319108 /* Tests_iOS.swift */,
+				78CB74B0255E9EF800319108 /* Info.plist */,
+			);
+			path = "Tests iOS";
+			sourceTree = "<group>";
+		};
+		78CB74B8255E9EF800319108 /* Tests macOS */ = {
+			isa = PBXGroup;
+			children = (
+				78CB74B9255E9EF800319108 /* Tests_macOS.swift */,
+				78CB74BB255E9EF800319108 /* Info.plist */,
+			);
+			path = "Tests macOS";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (iOS)" */;
+			buildPhases = (
+				78CB7496255E9EF800319108 /* Sources */,
+				78CB7497255E9EF800319108 /* Frameworks */,
+				78CB7498255E9EF800319108 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Grocy-SwiftUI (iOS)";
+			productName = "Grocy-SwiftUI (iOS)";
+			productReference = 78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (macOS)" */;
+			buildPhases = (
+				78CB749E255E9EF800319108 /* Sources */,
+				78CB749F255E9EF800319108 /* Frameworks */,
+				78CB74A0255E9EF800319108 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Grocy-SwiftUI (macOS)";
+			productName = "Grocy-SwiftUI (macOS)";
+			productReference = 78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78CB74A9255E9EF800319108 /* Tests iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78CB74CA255E9EF800319108 /* Build configuration list for PBXNativeTarget "Tests iOS" */;
+			buildPhases = (
+				78CB74A6255E9EF800319108 /* Sources */,
+				78CB74A7255E9EF800319108 /* Frameworks */,
+				78CB74A8255E9EF800319108 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78CB74AC255E9EF800319108 /* PBXTargetDependency */,
+			);
+			name = "Tests iOS";
+			productName = "Tests iOS";
+			productReference = 78CB74AA255E9EF800319108 /* Tests iOS.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		78CB74B4255E9EF800319108 /* Tests macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78CB74CD255E9EF800319108 /* Build configuration list for PBXNativeTarget "Tests macOS" */;
+			buildPhases = (
+				78CB74B1255E9EF800319108 /* Sources */,
+				78CB74B2255E9EF800319108 /* Frameworks */,
+				78CB74B3255E9EF800319108 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78CB74B7255E9EF800319108 /* PBXTargetDependency */,
+			);
+			name = "Tests macOS";
+			productName = "Tests macOS";
+			productReference = 78CB74B5255E9EF800319108 /* Tests macOS.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		78CB748E255E9EF600319108 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1220;
+				LastUpgradeCheck = 1220;
+				TargetAttributes = {
+					78CB7499255E9EF800319108 = {
+						CreatedOnToolsVersion = 12.2;
+					};
+					78CB74A1255E9EF800319108 = {
+						CreatedOnToolsVersion = 12.2;
+					};
+					78CB74A9255E9EF800319108 = {
+						CreatedOnToolsVersion = 12.2;
+						TestTargetID = 78CB7499255E9EF800319108;
+					};
+					78CB74B4255E9EF800319108 = {
+						CreatedOnToolsVersion = 12.2;
+						TestTargetID = 78CB74A1255E9EF800319108;
+					};
+				};
+			};
+			buildConfigurationList = 78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy-SwiftUI" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 78CB748D255E9EF600319108;
+			productRefGroup = 78CB749B255E9EF800319108 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */,
+				78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */,
+				78CB74A9255E9EF800319108 /* Tests iOS */,
+				78CB74B4255E9EF800319108 /* Tests macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		78CB7498255E9EF800319108 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74C0255E9EF800319108 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74A0255E9EF800319108 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74C1255E9EF800319108 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74A8255E9EF800319108 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74B3255E9EF800319108 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		78CB7496255E9EF800319108 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
+				78CB74BC255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB749E255E9EF800319108 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,
+				78CB74BD255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74A6255E9EF800319108 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78CB74B1255E9EF800319108 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		78CB74AC255E9EF800319108 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */;
+			targetProxy = 78CB74AB255E9EF800319108 /* PBXContainerItemProxy */;
+		};
+		78CB74B7255E9EF800319108 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */;
+			targetProxy = 78CB74B6255E9EF800319108 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		78CB74C2255E9EF800319108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		78CB74C3255E9EF800319108 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		78CB74C5255E9EF800319108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		78CB74C6255E9EF800319108 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		78CB74C8255E9EF800319108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		78CB74C9255E9EF800319108 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		78CB74CB255E9EF800319108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Grocy-SwiftUI (iOS)";
+			};
+			name = Debug;
+		};
+		78CB74CC255E9EF800319108 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Grocy-SwiftUI (iOS)";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		78CB74CE255E9EF800319108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Grocy-SwiftUI (macOS)";
+			};
+			name = Debug;
+		};
+		78CB74CF255E9EF800319108 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Grocy-SwiftUI (macOS)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy-SwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78CB74C2255E9EF800319108 /* Debug */,
+				78CB74C3255E9EF800319108 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78CB74C5255E9EF800319108 /* Debug */,
+				78CB74C6255E9EF800319108 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78CB74C8255E9EF800319108 /* Debug */,
+				78CB74C9255E9EF800319108 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78CB74CA255E9EF800319108 /* Build configuration list for PBXNativeTarget "Tests iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78CB74CB255E9EF800319108 /* Debug */,
+				78CB74CC255E9EF800319108 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78CB74CD255E9EF800319108 /* Build configuration list for PBXNativeTarget "Tests macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78CB74CE255E9EF800319108 /* Debug */,
+				78CB74CF255E9EF800319108 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 78CB748E255E9EF600319108 /* Project object */;
+}
