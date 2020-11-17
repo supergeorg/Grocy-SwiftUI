@@ -1,0 +1,120 @@
+/* 
+  Localizable.strings
+  Grocy-SwiftUI
+
+  Created by Georg Meissner on 13.11.20.
+  
+*/
+
+// MARK: - Generic
+"str.cancel" = "Cancel";
+"str.delete" = "Delete";
+"str.edit" = "Edit";
+"str.save" = "Save";
+"str.noSearchResult" = "No search result found.";
+
+// MARK: - Navigation
+"str.nav.stockOverview" = "Stock overview";
+"str.nav.shoppingList" = "Shopping list";
+"str.nav.recipes" = "Recipes";
+"str.nav.mealPlan" = "Meal plan";
+"str.nav.choresOverview" = "Chores overview";
+"str.nav.tasks" = "Tasks";
+"str.nav.batteriesOverview" = "Batteries overview";
+"str.nav.equipment" = "Equipment";
+"str.nav.calendar" = "Calendar";
+"str.nav.purchase" = "Purchase";
+"str.nav.consume" = "Consume";
+"str.nav.transfer" = "Transfer";
+"str.nav.inventory" = "Inventory";
+"str.nav.choreTracking" = "Chore tracking";
+"str.nav.batteryTracking" = "Battery tracking";
+"str.nav.md" = "Master data";
+"str.nav.md.products" = "Products";
+"str.nav.md.locations" = "Locations";
+"str.nav.md.shoppingLocations" = "Shopping locations";
+"str.nav.md.quantityUnits" = "Quantity units";
+"str.nav.md.productGroups" = "Product groups";
+"str.nav.md.chores" = "Chores";
+"str.nav.md.batteries" = "Batteries";
+"str.nav.md.taskCategories" = "Task categories";
+"str.nav.settings" = "Settings";
+
+// MARK: - Stock
+"str.stock.stockOverview" = "Stock overview";
+"str.stock.search" = "Search stock";
+"str.stock.empty" = "Nothing on stock.";
+"str.stock.location" = "Location";
+"str.stock.productGroup" = "Product group";
+"str.stock.status" = "Status";
+"str.stock.all" = "All";
+"str.stock.expiringSoon" = "Expiring soon";
+"str.stock.expired" = "Already expired";
+"str.stock.belowMinStock" = "Below min. stock amount";
+
+"str.stock.tbl.product" = "Product";
+"str.stock.tbl.productGroup" = "Product group";
+"str.stock.tbl.amount" = "Amount";
+"str.stock.tbl.value" = "Value";
+"str.stock.tbl.nextBestBefore" = "Next best before date";
+"str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
+"str.stock.tbl.calories" = "Calories";
+
+// MARK: - Master Data
+"str.md.masterData" = "Master Data";
+"str.md.description" = "Description";
+
+"str.md.search" = "Search";
+"str.md.searchFailed %@" = "No %@ found.";
+"str.md.delete %@" = "Delete %@";
+"str.md.edit %@" = "Edit %@";
+"str.md.new %@" = "New %@";
+"str.md.save %@" = "Save %@";
+"str.md.empty %@" = "No %@ found. Add some.";
+
+"str.md.masterData" = "Master Data";
+"str.md.products" = "Products";
+"str.md.locations" = "Locations";
+"str.md.location" = "Standort";
+"str.md.location.new" = "New location";
+"str.md.location.edit" = "Edit location";
+"str.md.location.info" = "Location info";
+"str.md.location.name" = "Location";
+"str.md.location.name.required" = "A name is required";
+"str.md.location.freezer" = "Freezer";
+"str.md.location.isFreezing" = "Ist ein Gefrier-Standort (also z. B. ein Gefrierschrank)";
+"str.md.location.isFreezing.description" = "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst";
+
+"str.md.shoppingLocations" = "Shopping locations";
+"str.md.shoppingLocation" = "Shopping location";
+"str.md.shoppingLocation.new" = "New Shopping location";
+"str.md.shoppingLocation.edit" = "Edit Shopping location";
+"str.md.shoppingLocation.info" = "Shopping location info";
+"str.md.shoppingLocation.name" = "Name of Shopping location";
+"str.md.shoppingLocation.name.required" = "An unused name is required";
+
+"str.md.quantityUnits" = "Quantity Units";
+"str.md.quantityUnit" = "Quantity Unit";
+"str.md.quantityUnit.new" = "Neue Mengeneinheit";
+"str.md.quantityUnit.edit" = "Bearbeite Mengeneinheit";
+"str.md.quantityUnit.info" = "Mengeneinheitsinfo";
+"str.md.quantityUnit.name" = "Name (singular)";
+"str.md.quantityUnit.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.quantityUnit.namePlural" = "Name (plural)";
+
+"str.md.productGroups" = "Product Groups";
+"str.md.productGroup" = "Product Group";
+"str.md.productGroup.name" = "Name of product group";
+
+"str.md.chores" = "Chores";
+"str.md.batteries" = "Batteries";
+"str.md.taskCategories" = "Task Categories";
+
+// MARK: - Settings
+"str.settings" = "Settings";
+"str.settings.version %@" = "Grocy Version %@";
+"str.settings.logout" = "Logout from server";
+"str.settings.grocyVersion %@" = "Version: %@";
+"str.settings.grocyRLSDate %@" = "Release Date: ";
+"str.settings.grocyPHPVersion %@" = "PHP Version: ";
+"str.settings.grocySQLiteVersion %@" = "SQLite Version: ";

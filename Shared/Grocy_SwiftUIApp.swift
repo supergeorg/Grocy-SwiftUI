@@ -12,6 +12,15 @@ struct Grocy_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.locale, Locale(identifier: "de"))
         }
+        .commands {
+            SidebarCommands()
+        }
+        #if os(macOS)
+        Settings {
+            SettingsView()
+        }
+        #endif
     }
 }
