@@ -16,7 +16,8 @@ enum getDataMode {
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPIProvider
     
-    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo-prerelease.grocy.info"
+//    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo-prerelease.grocy.info"
+    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-7acbku5yigb6xne7xp2fo9.demo-prerelease.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
@@ -30,6 +31,7 @@ class GrocyViewModel: ObservableObject {
     
 //    @Published var users: [UserDto] = []
     @Published var stock: Stock = []
+    @Published var stockJournal: StockJournal = []
 //    @Published var volatileStock: VolatileStock?
 //    @Published var shoppingListDescriptions: ShoppingListDescriptions = []
 //    @Published var shoppingList: ShoppingList = []
@@ -53,14 +55,16 @@ class GrocyViewModel: ObservableObject {
         if !isDemoModus {
             grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         } else {
-            grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+//            grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+            grocyApi.setLoginData(baseURL: "https://test-7acbku5yigb6xne7xp2fo9.demo-prerelease.grocy.info", apiKey: "")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
         //        self.lastLoadingFailed = true
     }
     
     func setDemoModus() {
-        grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+//        grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+        grocyApi.setLoginData(baseURL: "https://test-7acbku5yigb6xne7xp2fo9.demo-prerelease.grocy.info", apiKey: "")
         isDemoModus = true
         isLoggedIn = true
     }
@@ -101,12 +105,16 @@ class GrocyViewModel: ObservableObject {
     func findNextID(_ object: ObjectEntities) -> Int {
         var ints: [Int] = []
         switch object {
+        case .products:
+            ints = self.mdProducts.map{ Int($0.id) ?? 0 }
         case .locations:
             ints = self.mdLocations.map{ Int($0.id) ?? 0 }
         case .shopping_locations:
             ints = self.mdShoppingLocations.map{ Int($0.id) ?? 0 }
         case .quantity_units:
             ints = self.mdQuantityUnits.map{ Int($0.id) ?? 0 }
+        case .product_groups:
+            ints = self.mdProductGroups.map{ Int($0.id) ?? 0 }
         default:
             print("findnextid not impl")
         }
@@ -227,6 +235,13 @@ class GrocyViewModel: ObservableObject {
         let cancellable = grocyApi.getStock()
             .replaceError(with: [])
             .assign(to: \.stock, on: self)
+        cancellables.insert(cancellable)
+    }
+    
+    func getStockJournal() {
+        let cancellable = grocyApi.getStockJournal()
+            .replaceError(with: [])
+            .assign(to: \.stockJournal, on: self)
         cancellables.insert(cancellable)
     }
 

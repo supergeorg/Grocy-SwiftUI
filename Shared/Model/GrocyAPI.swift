@@ -24,7 +24,7 @@ public enum APIError: Error {
 //}
 
 public enum ObjectEntities: String {
-    case products, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan
+    case products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
 }
 
 public enum StockProductPost: String {
@@ -52,6 +52,7 @@ protocol GrocyAPIProvider {
 //    func deleteUser(id: String) -> AnyPublisher<UserDto, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
+    func getStockJournal() -> AnyPublisher<StockJournal, APIError>
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
     func getStockProduct<T: Codable>(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<T, APIError>
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
@@ -200,6 +201,10 @@ extension GrocyApi {
     
     func getStock() -> AnyPublisher<[StockElement], APIError> {
         return call(.stock, method: .GET)
+    }
+    
+    func getStockJournal() -> AnyPublisher<StockJournal, APIError> {
+        return call(.objectsEntity, method: .GET, object: .stock_log)
     }
     
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError> {

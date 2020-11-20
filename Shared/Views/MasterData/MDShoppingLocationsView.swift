@@ -26,7 +26,6 @@ struct MDShoppingLocationRowView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Color.primary, lineWidth: 1)
-                .shadow(radius: 5)
         )
     }
 }
@@ -126,7 +125,7 @@ struct MDShoppingLocationsView: View {
                     Button(action: {
                         showAddShoppingLocation.toggle()
                     }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddLocation, content: {
+                    .sheet(isPresented: self.$showAddShoppingLocation, content: {
                             NavigationView {
                                 MDShoppingLocationFormView(isNewShoppingLocation: true)
                             } })

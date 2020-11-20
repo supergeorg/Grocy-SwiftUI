@@ -16,6 +16,8 @@ struct MDQuantityUnitFormView: View {
     @State private var namePlural: String = ""
     @State private var mdQuantityUnitDescription: String = ""
     
+    @State private var showDeleteAlert: Bool = false
+    
     var isNewQuantityUnit: Bool
     var quantityUnit: MDQuantityUnit?
     
@@ -38,7 +40,7 @@ struct MDQuantityUnitFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
-    private func saveLocation() {
+    private func saveQuantityUnit() {
         if isNewQuantityUnit {
             grocyVM.postMDObject(object: .quantity_units, content: MDQuantityUnitPOST(id: grocyVM.findNextID(.quantity_units), name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, namePlural: namePlural, pluralForms: nil, userfields: nil))
         } else {
@@ -70,7 +72,7 @@ struct MDQuantityUnitFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button("str.save") {
-                    saveLocation()
+                    saveQuantityUnit()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
@@ -78,17 +80,22 @@ struct MDQuantityUnitFormView: View {
             #endif
             if !isNewQuantityUnit {
                 Button(action: {
-                    deleteQuantityUnit()
-                    #if os(macOS)
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                    #else
-                    presentationMode.wrappedValue.dismiss()
-                    #endif
+                    showDeleteAlert.toggle()
                 }, label: {
                     Label("str.md.delete \("str.md.quantityUnit".localized)", systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
+                .alert(isPresented: $showDeleteAlert) {
+                    Alert(title: Text("str.md.quantityUnit.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                        deleteQuantityUnit()
+                        #if os(macOS)
+                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        #else
+                        presentationMode.wrappedValue.dismiss()
+                        #endif
+                    }, secondaryButton: .cancel())
+                }
             }
         }
         .navigationTitle(isNewQuantityUnit ? "str.md.quantityUnit.new" : "str.md.quantityUnit.edit")
@@ -99,7 +106,7 @@ struct MDQuantityUnitFormView: View {
         .toolbar(content: {
             #if os(iOS)
             ToolbarItem(placement: .cancellationAction) {
-                if isNewLocation {
+                if isNewQuantityUnit {
                     Button("str.cancel") {
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -107,13 +114,13 @@ struct MDQuantityUnitFormView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("str.md.save \("str.md.quantityUnit".localized)") {
-                    saveLocation()
+                    saveQuantityUnit()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 // Back not shown without it
-                if !isNewLocation{
+                if !isNewQuantityUnit{
                     Text("")
                 }
             }

@@ -13,6 +13,7 @@ struct SettingsView: View {
     @State var showGrocyVersion: Bool = false
     @State var showAbout: Bool = false
     
+    @AppStorage("isDemoModus") var isDemoModus: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
@@ -64,7 +65,11 @@ struct SettingsView: View {
                     MyTextField(textToEdit: $grocyServerURL, description: "Grocy Server URL", isCorrect: Binding.constant(true), leadingIcon: "network")
                     MyTextField(textToEdit: $grocyAPIKey, description: "Valid API Key", isCorrect: Binding.constant(true), leadingIcon: "key")
                     Button("Login") {
+                        grocyVM.setLoginModus()
                         grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+                    }
+                    Button("Demo") {
+                        grocyVM.setDemoModus()
                     }
                 }
             }
@@ -100,7 +105,7 @@ struct SettingsView: View {
                         GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")).padding()
                     })
                     Button("str.settings.logout") {
-                        print("logout")
+                        isLoggedIn = false
                     }
                 } else {
                     MyTextField(textToEdit: $grocyServerURL, description: "Grocy Server URL", isCorrect: Binding.constant(true), leadingIcon: "network")
@@ -111,8 +116,15 @@ struct SettingsView: View {
                     //                                    .onChange(of: grocyAPIKey, perform: { value in
                     //                                        checkAPIKey()
                     //                                    })
-                    Button("Login") {
-                        grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+                    HStack{
+                        Button("Login") {
+                            grocyVM.setLoginModus()
+                            grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+                        }
+                        Spacer()
+                        Button("Demo") {
+                            grocyVM.setDemoModus()
+                        }
                     }
                 }
                 Button(action: {

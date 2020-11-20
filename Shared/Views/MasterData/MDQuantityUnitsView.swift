@@ -26,7 +26,6 @@ struct MDQuantityUnitRowView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .stroke(Color.primary, lineWidth: 1)
-                .shadow(radius: 5)
         )
     }
 }
@@ -83,11 +82,11 @@ struct MDQuantityUnitsView: View {
                     })
             }
             #else
-            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
-                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
-                }
-            }
+//            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
+//                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
+//                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
+//                }
+//            }
             #endif
         }
         .animation(.default)
@@ -124,7 +123,7 @@ struct MDQuantityUnitsView: View {
                     })
                     #else
                     Button(action: {
-                        showAddShoppingLocation.toggle()
+                        showAddQuantityUnit.toggle()
                     }, label: {Image(systemName: "plus")})
                     .sheet(isPresented: self.$showAddQuantityUnit, content: {
                             NavigationView {

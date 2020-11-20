@@ -18,6 +18,8 @@ struct MDLocationFormView: View {
     
     @State private var showFreezerInfo: Bool = false
     
+    @State private var showDeleteAlert: Bool = false
+    
     var isNewLocation: Bool
     var location: MDLocation?
     
@@ -108,17 +110,22 @@ struct MDLocationFormView: View {
             #endif
             if !isNewLocation {
                 Button(action: {
-                    deleteLocation()
-                    #if os(macOS)
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                    #else
-                    presentationMode.wrappedValue.dismiss()
-                    #endif
+                    showDeleteAlert.toggle()
                 }, label: {
                     Label("str.md.delete \("str.md.location".localized)", systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
+                .alert(isPresented: $showDeleteAlert) {
+                    Alert(title: Text("str.md.location.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                        deleteLocation()
+                        #if os(macOS)
+                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        #else
+                        presentationMode.wrappedValue.dismiss()
+                        #endif
+                    }, secondaryButton: .cancel())
+                }
             }
         }
         .navigationTitle(isNewLocation ? "str.md.location.new" : "str.md.location.edit")

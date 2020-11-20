@@ -10,6 +10,7 @@ import Foundation
 enum ProductStatus: String {
     case all = "str.stock.all"
     case expiringSoon = "str.stock.expiringSoon"
+    case overdue = "str.stock.overdue"
     case expired = "str.stock.expired"
     case belowMinStock = "str.stock.belowMinStock"
 }

@@ -71,6 +71,7 @@
 "str.md.new %@" = "New %@";
 "str.md.save %@" = "Save %@";
 "str.md.empty %@" = "No %@ found. Add some.";
+"str.md.delete.confirm" = "Möchtest du wirklich diesen Eintrag löschen?";
 
 "str.md.masterData" = "Master Data";
 "str.md.products" = "Products";

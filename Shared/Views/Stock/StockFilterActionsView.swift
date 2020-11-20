@@ -47,6 +47,7 @@ struct StockFilterActionsView: View {
     @Binding var filteredStatus: ProductStatus
     
     var numExpiringSoon: Int
+    var numOverdue: Int
     var numExpired: Int
     var numBelowStock: Int
     
@@ -54,6 +55,7 @@ struct StockFilterActionsView: View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack{
                 StockFilterItemView(num: numExpiringSoon, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expiringSoon, normalColor: Color.grocyYellow, lightColor: Color.grocyYellowLight, darkColor: Color.grocyYellowDark)
+                StockFilterItemView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.overdue, normalColor: Color.grocyGray, lightColor: Color.grocyGrayLight, darkColor: Color.grocyGrayDark)
                 StockFilterItemView(num: numExpired, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expired, normalColor: Color.grocyRed, lightColor: Color.grocyRedLight, darkColor: Color.grocyRedDark)
                 StockFilterItemView(num: numBelowStock, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.belowMinStock, normalColor: Color.grocyBlue, lightColor: Color.grocyBlueLight, darkColor: Color.grocyBlueDark)
             }
@@ -63,6 +65,6 @@ struct StockFilterActionsView: View {
 
 struct StockFilterActionsView_Previews: PreviewProvider {
     static var previews: some View {
-        StockFilterActionsView(filteredStatus: .constant(.expired), numExpiringSoon: 1, numExpired: 2, numBelowStock: 3)
+        StockFilterActionsView(filteredStatus: .constant(.expired), numExpiringSoon: 1, numOverdue: 2, numExpired: 2, numBelowStock: 3)
     }
 }

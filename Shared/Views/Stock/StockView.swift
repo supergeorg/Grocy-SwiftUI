@@ -39,6 +39,8 @@ struct StockView: View {
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
+    @State private var showStockJournal: Bool = false
+    
     private enum InteractionSheet: Identifiable {
         case none, buy, consume, transfer
         var id: Int {
@@ -56,10 +58,18 @@ struct StockView: View {
             .count
     }
     
+    var numOverdue: Int {
+        grocyVM.stock
+            .filter {
+                ($0.dueType == "1") && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
+            }
+            .count
+    }
+    
     var numExpired: Int {
         grocyVM.stock
             .filter {
-                (getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0
+                ($0.dueType == "2") && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
             }
             .count
     }
@@ -78,7 +88,10 @@ struct StockView: View {
                 filteredStatus == .expiringSoon ? ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString($0.bestBeforeDate) ?? 100) : true
             }
             .filter {
-                filteredStatus == .expired ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : true
+                filteredStatus == .overdue ? ($0.dueType == "1" ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
+            }
+            .filter {
+                filteredStatus == .expired ? ($0.dueType == "2" ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
             }
             .filter {
                 filteredStatus == .belowMinStock ? Int($0.amount) ?? 1 < Int($0.product.minStockAmount) ?? 0 : true
@@ -97,7 +110,7 @@ struct StockView: View {
                 case .product:
                     return sortAscending ? ($0.product.name < $1.product.name) : ($0.product.name > $1.product.name)
                 case .productGroup:
-                    return sortAscending ? ($0.product.productGroupID ?? "0" < $1.product.productGroupID ?? "1") : ($0.product.productGroupID ?? "0" > $1.product.productGroupID ?? "1")
+                    return sortAscending ? ($0.product.productGroupID < $1.product.productGroupID) : ($0.product.productGroupID > $1.product.productGroupID)
                 case .amount:
                     return sortAscending ? ($0.amount < $1.amount) : ($0.amount > $1.amount)
                 case .nextBestBeforeDate:
@@ -108,9 +121,16 @@ struct StockView: View {
             }
     }
     
+    private func updateData() {
+        grocyVM.getStock()
+        grocyVM.getMDProducts()
+        grocyVM.getMDLocations()
+        grocyVM.getMDProductGroups()
+    }
+    
     var body: some View {
         List() {
-            StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numExpired: numExpired, numBelowStock: numBelowStock)
+            StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
             StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocation, filteredProductGroup: $filteredProductGroup, filteredStatus: $filteredStatus)
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
@@ -125,25 +145,46 @@ struct StockView: View {
                     .padding()
             })
             StockTable(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, filteredStock: filteredProducts, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-//            ForEach(filteredProducts, id:\.productID) { stock in
-//                StockRowView(stockElement: stock)
-//            }
+            //            ForEach(filteredProducts, id:\.productID) { stock in
+            //                StockRowView(stockElement: stock)
+            //            }
         }.listStyle(InsetListStyle())
         .animation(.default)
         .navigationTitle("str.stock.stockOverview".localized)
         .onAppear(perform: {
-            grocyVM.getStock()
-            grocyVM.getMDLocations()
-            grocyVM.getMDProductGroups()
+            updateData()
         })
         .toolbar(content: {
+            #if os(macOS)
             ToolbarItem(placement: .automatic, content: {
                 Button(action: {
-                    grocyVM.getStock()
-                    grocyVM.getMDLocations()
-                    grocyVM.getMDProductGroups()
+                    showStockJournal.toggle()
                 }, label: {
-                    Image(systemName: "arrow.clockwise.circle")
+                    Label("Journal", systemImage: "list.bullet.rectangle")
+                })
+                .popover(isPresented: $showStockJournal, content: {
+                    StockJournalView().padding().frame(width: 300, height: 300, alignment: .leading)
+                })
+            })
+            #else
+            ToolbarItem(placement: .automatic, content: {
+                Button(action: {
+                    showStockJournal.toggle()
+                }, label: {
+                    Label("Journal", systemImage: "list.bullet.rectangle")
+                })
+                .sheet(isPresented: $showStockJournal, content: {
+                    NavigationView{
+                        StockJournalView()
+                    }
+                })
+            })
+            #endif
+            ToolbarItem(placement: .automatic, content: {
+                Button(action: {
+                    updateData()
+                }, label: {
+                    Image(systemName: "arrow.clockwise")
                 })
             })
         })

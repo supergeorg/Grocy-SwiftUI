@@ -10,12 +10,12 @@ import SwiftUI
 struct MasterDataView: View {
     var body: some View {
         List(){
-//            NavigationLink(destination: MDProductsView()) {
-//                HStack{
-//                    Image(systemName: "archivebox")
-//                    Text("str.md.products")
-//                }
-//            }
+            NavigationLink(destination: MDProductsView()) {
+                HStack{
+                    Image(systemName: "archivebox")
+                    Text("str.md.products")
+                }
+            }
             NavigationLink(destination: MDLocationsView()) {
                 HStack{
                     Image(systemName: "location")
@@ -40,24 +40,24 @@ struct MasterDataView: View {
                     Text("str.md.productGroups")
                 }
             }
-//            NavigationLink(destination: MDChoresView()) {
-//                HStack{
-//                    Image(systemName: "house")
-//                    Text("str.md.chores")
-//                }
-//            }
-//            NavigationLink(destination: MDBatteriesView()) {
-//                HStack{
-//                    Image(systemName: "battery.25")
-//                    Text("str.md.batteries")
-//                }
-//            }
-//            NavigationLink(destination: MDTaskCategoriesView()) {
-//                HStack{
-//                    Image(systemName: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
-//                    Text("str.md.taskCategories")
-//                }
-//            }
+            NavigationLink(destination: MDChoresView()) {
+                HStack{
+                    Image(systemName: "house")
+                    Text("str.md.chores")
+                }
+            }
+            NavigationLink(destination: MDBatteriesView()) {
+                HStack{
+                    Image(systemName: "battery.25")
+                    Text("str.md.batteries")
+                }
+            }
+            NavigationLink(destination: MDTaskCategoriesView()) {
+                HStack{
+                    Image(systemName: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+                    Text("str.md.taskCategories")
+                }
+            }
         }
         .animation(.default)
         .navigationTitle("str.md.masterData".localized)

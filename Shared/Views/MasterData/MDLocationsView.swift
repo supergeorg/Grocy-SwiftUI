@@ -32,7 +32,6 @@ struct MDLocationRowView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Color.primary, lineWidth: 1)
-                .shadow(radius: 5)
         )
     }
 }

@@ -12,6 +12,7 @@
 "str.edit" = "Bearbeiten";
 "str.save" = "Speichern";
 "str.noSearchResult" = "Kein Suchergebnis gefunden.";
+"str.days" = "Tag(e)";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Bestand";
@@ -49,6 +50,7 @@
 "str.stock.status" = "Status";
 "str.stock.all" = "Alle";
 "str.stock.expiringSoon" = "Bald ablaufend";
+"str.stock.overdue" = "Überfällig";
 "str.stock.expired" = "Bereits abgelaufen";
 "str.stock.belowMinStock" = "Unter Mindestbestand";
 
@@ -73,7 +75,51 @@
 "str.md.empty %@" = "Keine %@ gefunden. Füge welche hinzu.";
 
 "str.md.masterData" = "Stammdaten";
+
 "str.md.products" = "Produkte";
+"str.md.product" = "Produkt";
+"str.md.product.new" = "Neues Produkt";
+"str.md.product.edit" = "Bearbeite Produkt";
+"str.md.product.info" = "Produktinfo";
+"str.md.product.name" = "Produktname";
+"str.md.product.name.required" = "Ein nicht verwendeter Produktname ist erforderlich";
+"str.md.product.active" = "Aktiv";
+"str.md.product.parentProduct" = "Übergeordnetes Produkt";
+"str.md.product.locationID" = "Standard-Standort";
+"str.md.product.locationID.required" = "Ein Standort ist erforderlich";
+"str.md.product.shoppingLocationID" = "Standardgeschäft";
+"str.md.product.minStockAmount" = "Mindestbestand";
+"str.md.product.cumulateMinStockAmountOfSubProducts" = "Mindestbestände von untergeordneten Produkten aufsummieren";
+"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "TODO";
+"str.md.product.dueType" = "Fälligkeitsdatum-Typ";
+"str.md.product.dueType.info" = "TODO";
+"str.md.product.dueType.bestBefore" = "MHD";
+"str.md.product.dueType.bestBefore.info" = "TODO";
+"str.md.product.dueType.expires" = "Verbrauchsdatum";
+"str.md.product.dueType.expires.info" = "TODO";
+"str.md.product.defaultBestBeforeDays" = "Standard-Fälligkeitstage";
+"str.md.product.defaultBestBeforeDays.info" = "TODO";
+"str.md.product.defaultBestBeforeDaysAfterOpen" = "Standard-Fälligkeitstage nach dem Öffnen";
+"str.md.product.defaultBestBeforeDaysAfterOpen.info" = "TODO";
+"str.md.product.productGroup" = "Produktgruppe";
+"str.md.product.quIDStock" = "Mengeneinheit Bestand";
+"str.md.product.quIDStock.info" = "TODO";
+"str.md.product.quIDPurchase" = "Standard Mengeneinheit Einkauf";
+"str.md.product.quIDPurchase.info" = "TODO";
+"str.md.product.quFactorPurchaseToStock" = "Faktor Mengeneinheit Einkauf zu Mengeneinheit Bestand";
+"str.md.product.enableTareWeightHandling" = "Taragewichtbehandlung aktivieren";
+"str.md.product.enableTareWeightHandling.info" = "TODO";
+"str.md.product.tareWeight" = "Taragewicht";
+"str.md.product.notCheckStockFulfillmentForRecipes" = "Bestandsprüfung für diese Zutat deaktivieren";
+"str.md.product.notCheckStockFulfillmentForRecipes.info" = "TODO";
+"str.md.product.calories" = "Energie (kcal)";
+"str.md.product.calories.info" = "TODO";
+"str.md.product.defaultBestBeforeDaysAfterFreezing" = "Standard-Fälligkeitstage nach dem Einfrieren";
+"str.md.product.defaultBestBeforeDaysAfterFreezing.info" = "TODO";
+"str.md.product.defaultBestBeforeDaysAfterThawing" = "Standard-Fälligkeitstage nach dem Auftauen ";
+"str.md.product.defaultBestBeforeDaysAfterThawing.info" = "TODO";
+"str.md.product.quickConsumeAmount" = "Schnell-Verbrauchs-Menge";
+"str.md.product.quickConsumeAmount.info" = "TODO";
 
 "str.md.locations" = "Standorte";
 "str.md.location" = "Standort";
@@ -85,6 +131,7 @@
 "str.md.location.freezer" = "Gefrier-Standort";
 "str.md.location.isFreezing" = "Ist ein Gefrier-Standort (also z. B. ein Gefrierschrank)";
 "str.md.location.isFreezing.description" = "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst";
+"str.md.location.delete.confirm" = "Möchtest du wirklich diesen Standort löschen?";
 
 "str.md.shoppingLocations" = "Geschäfte";
 "str.md.shoppingLocation" = "Geschäft";
@@ -93,6 +140,7 @@
 "str.md.shoppingLocation.info" = "Geschäftsinfo";
 "str.md.shoppingLocation.name" = "Geschäftsname";
 "str.md.shoppingLocation.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.shoppingLocation.delete.confirm" = "Möchtest du wirklich dieses Geschäft löschen?";
 
 "str.md.quantityUnits" = "Mengeneinheiten";
 "str.md.quantityUnit" = "Mengeneinheit";
@@ -102,10 +150,16 @@
 "str.md.quantityUnit.name" = "Name (singular)";
 "str.md.quantityUnit.name.required" = "Ein nicht verwendeter Name ist erforderlich";
 "str.md.quantityUnit.namePlural" = "Name (plural)";
+"str.md.quantityUnit.delete.confirm" = "Möchtest du wirklich diese Mengeneinheit löschen?";
 
 "str.md.productGroups" = "Produktgruppen";
 "str.md.productGroup" = "Produktgruppe";
+"str.md.productGroup.new" = "Neue Produktgruppe";
+"str.md.productGroup.edit" = "Bearbeite Produktgruppe";
+"str.md.productGroup.info" = "Produktgruppeninfo";
 "str.md.productGroup.name" = "Name der Produktgruppe";
+"str.md.productGroup.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.productGroup.delete.confirm" = "Möchtest du wirklich diese Produktgruppe löschen?";
 
 "str.md.chores" = "Hausarbeiten";
 "str.md.batteries" = "Batterien";

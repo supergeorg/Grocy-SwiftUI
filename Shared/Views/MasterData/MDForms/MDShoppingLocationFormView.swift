@@ -15,6 +15,8 @@ struct MDShoppingLocationFormView: View {
     @State private var name: String = ""
     @State private var mdShoppingLocationDescription: String = ""
     
+    @State private var showDeleteAlert: Bool = false
+    
     var isNewShoppingLocation: Bool
     var shoppingLocation: MDShoppingLocation?
     
@@ -35,7 +37,7 @@ struct MDShoppingLocationFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
-    private func saveLocation() {
+    private func saveShoppingLocation() {
         if isNewShoppingLocation {
             grocyVM.postMDObject(object: .shopping_locations, content: MDShoppingLocationPOST(id: grocyVM.findNextID(.shopping_locations), name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil))
         } else {
@@ -66,7 +68,7 @@ struct MDShoppingLocationFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button("str.save") {
-                    saveLocation()
+                    saveShoppingLocation()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
@@ -74,17 +76,22 @@ struct MDShoppingLocationFormView: View {
             #endif
             if !isNewShoppingLocation {
                 Button(action: {
-                    deleteShoppingLocation()
-                    #if os(macOS)
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                    #else
-                    presentationMode.wrappedValue.dismiss()
-                    #endif
+                    showDeleteAlert.toggle()
                 }, label: {
                     Label("str.md.delete \("str.md.shoppingLocation".localized)", systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
+                .alert(isPresented: $showDeleteAlert) {
+                    Alert(title: Text("str.md.shoppingLocation.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                        deleteShoppingLocation()
+                        #if os(macOS)
+                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        #else
+                        presentationMode.wrappedValue.dismiss()
+                        #endif
+                    }, secondaryButton: .cancel())
+                }
             }
         }
         .navigationTitle(isNewShoppingLocation ? "str.md.shoppingLocation.new" : "str.md.shoppingLocation.edit")
@@ -95,7 +102,7 @@ struct MDShoppingLocationFormView: View {
         .toolbar(content: {
             #if os(iOS)
             ToolbarItem(placement: .cancellationAction) {
-                if isNewLocation {
+                if isNewShoppingLocation {
                     Button("str.cancel") {
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -103,13 +110,13 @@ struct MDShoppingLocationFormView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("str.md.save \("str.md.location".localized)") {
-                    saveLocation()
+                    saveShoppingLocation()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 // Back not shown without it
-                if !isNewLocation{
+                if !isNewShoppingLocation{
                     Text("")
                 }
             }
