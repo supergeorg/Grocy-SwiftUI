@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject private var grocyVM = GrocyViewModel()
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     @State var showGrocyVersion: Bool = false
     @State var showAbout: Bool = false

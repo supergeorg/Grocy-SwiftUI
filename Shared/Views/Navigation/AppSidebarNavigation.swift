@@ -36,6 +36,7 @@ extension AppSidebarNavigation {
         case mdTaskCategories = "scale.3d"
         
         case settings = "gear"
+        case userManagement = "person.3.fill"
     }
 }
 
@@ -189,11 +190,17 @@ struct AppSidebarNavigation: View {
                     }
 //                    Divider()
                 }
+                
                 #if os(iOS)
                 NavigationLink(destination: SettingsView(), tag: NavigationItem.settings, selection: $selection) {
                     Label("str.nav.settings", systemImage: NavigationItem.settings.rawValue)
                 }
                 #endif
+                
+                NavigationLink(destination: UserManagementView(), tag: NavigationItem.userManagement, selection: $selection) {
+                    Label("User Management", systemImage: NavigationItem.userManagement.rawValue)
+                }
+                .tag(NavigationItem.userManagement)
             }
             .toolbar {
                 #if os(macOS)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 //struct StockTableRow: View {
-//    @StateObject private var grocyVM = GrocyViewModel()
+//    @StateObject var grocyVM: GrocyViewModel = .shared
 //    
 //    var stockElement: StockElement
 //    
@@ -26,7 +26,7 @@ import SwiftUI
 //}
 
 struct StockTableRow: View {
-    @StateObject private var grocyVM = GrocyViewModel()
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var showProduct: Bool
     @Binding var showProductGroup: Bool

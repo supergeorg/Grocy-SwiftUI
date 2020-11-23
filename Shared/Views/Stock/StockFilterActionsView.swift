@@ -20,7 +20,7 @@ private struct StockFilterItemView: View {
             Divider()
                 .hidden()
                 .frame(height: 10)
-                .frame(width: 100)
+                .frame(width: 90)
                 .background(normalColor)
             HStack {
                 if filteredStatus == ownFilteredStatus {

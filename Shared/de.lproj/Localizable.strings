@@ -14,6 +14,9 @@
 "str.noSearchResult" = "Kein Suchergebnis gefunden.";
 "str.days" = "Tag(e)";
 
+// MARK: - Transaktionen
+"tr.purchase" = "Einkauf";
+
 // MARK: - Navigation
 "str.nav.stockOverview" = "Bestand";
 "str.nav.shoppingList" = "Einkaufszettel";
@@ -61,6 +64,32 @@
 "str.stock.tbl.nextBestBefore" = "Next best before date";
 "str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
 "str.stock.tbl.calories" = "Calories";
+
+"str.stock.buy" = "Einkauf";
+"str.stock.buy.product" = "Produkt";
+"str.stock.buy.product.buy" = "Produkt einkaufen";
+"str.stock.buy.product.required" = "Ein Produkt muss ausgewählt werden";
+"str.stock.buy.product.amount" = "Menge";
+"str.stock.buy.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.buy.product.quantityUnit" = "Mengeneinheit";
+"str.stock.buy.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.stock.buy.product.dueDate" = "Fälligkeitsdatum";
+"str.stock.buy.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
+"str.stock.buy.product.doesntSpoil" = "Nie überfällig";
+"str.stock.buy.product.price" = "Preis";
+"str.stock.buy.product.price.required" = "Dies darf nicht niedriger als 0.01 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
+"str.stock.buy.product.price.perUnit" = "Preis";
+"str.stock.buy.product.price.summedUp" = "Gesamtpreis";
+"str.stock.buy.product.shoppingLocation" = "Geschäft";
+"str.stock.buy.product.location" = "Standort";
+
+"str.stock.journal" = "Bestandsjournal";
+"str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
+"str.stock.journal.amount" = "Menge";
+"str.stock.journal.transactionTime" = "Transaktionszeitpunkt";
+"str.stock.journal.transactionType" = "Transaktionstyp";
+"str.stock.journal.location" = "Standort";
+"str.stock.journal.user" = "Nutzer";
 
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";

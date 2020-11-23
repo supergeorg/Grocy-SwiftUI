@@ -12,7 +12,7 @@ enum StockColumn {
 }
 
 struct StockView: View {
-    @StateObject private var grocyVM = GrocyViewModel()
+    @StateObject var grocyVM: GrocyViewModel = .shared
     @Environment(\.presentationMode) private var presentationMode
     
     @AppStorage("expiringDays") var expiringDays: Int = 5
@@ -39,10 +39,10 @@ struct StockView: View {
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
-    @State private var showStockJournal: Bool = false
+    //    @State private var showStockJournal: Bool = false
     
     private enum InteractionSheet: Identifiable {
-        case none, buy, consume, transfer
+        case none, purchaseProduct, consumeProduct, transferProduct, stockJournal
         var id: Int {
             self.hashValue
         }
@@ -124,8 +124,10 @@ struct StockView: View {
     private func updateData() {
         grocyVM.getStock()
         grocyVM.getMDProducts()
+        grocyVM.getMDShoppingLocations()
         grocyVM.getMDLocations()
         grocyVM.getMDProductGroups()
+        grocyVM.getMDQuantityUnits()
     }
     
     var body: some View {
@@ -158,6 +160,11 @@ struct StockView: View {
             #if os(macOS)
             ToolbarItem(placement: .automatic, content: {
                 Button(action: {
+                    updateData()
+                }, label: {
+                    Image(systemName: "arrow.clockwise")
+                })
+                Button(action: {
                     showStockJournal.toggle()
                 }, label: {
                     Label("Journal", systemImage: "list.bullet.rectangle")
@@ -168,25 +175,41 @@ struct StockView: View {
             })
             #else
             ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    showStockJournal.toggle()
-                }, label: {
-                    Label("Journal", systemImage: "list.bullet.rectangle")
-                })
-                .sheet(isPresented: $showStockJournal, content: {
-                    NavigationView{
-                        StockJournalView()
-                    }
-                })
+                HStack{
+                    Button(action: {
+                        updateData()
+                    }, label: {
+                        Image(systemName: "arrow.clockwise")
+                    })
+                    Button(action: {
+                        self.activeSheet = .stockJournal
+                        self.isShowingSheet.toggle()
+                    }, label: {
+                        Label("Journal", systemImage: "list.bullet.rectangle")
+                    })
+                    Button(action: {
+                        self.activeSheet = .purchaseProduct
+                        self.isShowingSheet.toggle()
+                    }, label: {
+                        Label("Purchase", systemImage: "cart.badge.plus")
+                    })
+                }
             })
             #endif
-            ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    updateData()
-                }, label: {
-                    Image(systemName: "arrow.clockwise")
-                })
-            })
+        })
+        .sheet(isPresented: $isShowingSheet, content: {
+            switch activeSheet {
+            case .stockJournal:
+                StockJournalView()
+            case .purchaseProduct:
+                PurchaseProductView()
+            case .consumeProduct:
+                ConsumeProductView()
+            case .transferProduct:
+                TransferProductView()
+            case .none:
+                EmptyView()
+            }
         })
     }
 }

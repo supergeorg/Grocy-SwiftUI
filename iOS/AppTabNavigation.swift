@@ -18,7 +18,7 @@ extension AppTabNavigation {
 }
 
 struct AppTabNavigation: View {
-    @State private var selection: Tab = .settings
+    @State private var selection: Tab = .stockOverview
     
     var body: some View {
         TabView(selection: $selection) {

@@ -44,6 +44,21 @@ func formatDateOutput(_ dateStrIN: String) -> String {
     }
 }
 
+func formatTimestampOutput(_ timeStampIN: String) -> String {
+    let dateFormatterIN = DateFormatter()
+//    EX: 2020-11-20 13:04:38
+    dateFormatterIN.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    let dateToFormat = dateFormatterIN.date(from: timeStampIN)
+    let dateFormatterOUT = DateFormatter()
+    dateFormatterOUT.dateFormat = "dd.MM.yyyy HH:mm:ss"
+    if dateToFormat != nil {
+        let dateStrOut = dateFormatterOUT.string(from: dateToFormat!)
+        return dateStrOut
+    } else {
+        return "Fehler bei Datum"
+    }
+}
+
 func getDateFromString(_ dateStrIN: String) -> Date? {
     let dateFormatterIN = DateFormatter()
     dateFormatterIN.dateFormat = "yyyy-MM-dd"
