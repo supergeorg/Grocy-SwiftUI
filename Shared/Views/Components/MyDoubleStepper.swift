@@ -9,20 +9,21 @@ import SwiftUI
 
 struct MyDoubleStepper: View {
     @Binding var amount: Double
-    
+
     var description: String
     var descriptionInfo: String?
     var minAmount: Double
     var amountStep: Double
     var amountName: String? = nil
     
-    //    @Binding var isCorrect: Bool
     var errorMessage: String?
+    
+    var systemImage: String?
     
     @State private var showInfo: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(description.localized)
                 if descriptionInfo != nil {
@@ -37,7 +38,11 @@ struct MyDoubleStepper: View {
                 }
             }
             HStack{
+                if systemImage != nil {
+                    Image(systemName: systemImage!)
+                }
                 TextField("", value: $amount, formatter: NumberFormatter())
+                    .frame(width: 50)
                 Stepper((amountName ?? "").localized, onIncrement: {
                     amount += amountStep
                 }, onDecrement: {
@@ -51,6 +56,7 @@ struct MyDoubleStepper: View {
                     Text(errorMessage!.localized)
                         .font(.caption)
                         .foregroundColor(.red)
+                        .frame(width: 200)
                 }
             }
         }
@@ -59,7 +65,7 @@ struct MyDoubleStepper: View {
 
 struct MyDoubleStepper_Previews: PreviewProvider {
     static var previews: some View {
-        MyDoubleStepper(amount: Binding.constant(1), description: "Description", descriptionInfo: "Description info Text", minAmount: 1.0, amountStep: 0.1, amountName: "QuantityUnit", errorMessage: "Error in input")
+        MyDoubleStepper(amount: Binding.constant(0), description: "Description", descriptionInfo: "Description info Text", minAmount: 1.0, amountStep: 0.1, amountName: "QuantityUnit", errorMessage: "Error in inputsadksaklwkfleksfklmelsfmlklkmlmgkelsmkgmlemkl", systemImage: "tag")
             .padding()
     }
 }

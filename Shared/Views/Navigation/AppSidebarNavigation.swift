@@ -19,7 +19,7 @@ extension AppSidebarNavigation {
         case equipment = "latch.2.case"
         case calendar = "calendar"
         case purchase = "cart.badge.plus"
-        case consume = "envelope.open"
+        case consume = "tuningfork"
         case transfer = "arrow.left.arrow.right"
         case inventory = "list.bullet"
         case choreTracking = "play.fill"
@@ -41,7 +41,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.stockOverview
+    @State private var selection: NavigationItem? = NavigationItem.consume
     //    @AppStorage("viewSelection") var viewSelection: NavigationItem? = .stockoverview
     
     private func toggleSidebar() {
@@ -70,7 +70,7 @@ struct AppSidebarNavigation: View {
                     }
                     .tag(NavigationItem.shoppingList)
                     
-//                    Divider()
+                    Divider()
                 }
                 
                 Group {
@@ -83,7 +83,7 @@ struct AppSidebarNavigation: View {
                         Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
                     }
                     .tag(NavigationItem.mealPlan)
-//                    Divider()
+                    Divider()
                 }
 
                 Group {
@@ -106,7 +106,7 @@ struct AppSidebarNavigation: View {
                         Label("str.nav.equipment", systemImage: NavigationItem.equipment.rawValue)
                     }
                     .tag(NavigationItem.equipment)
-//                    Divider()
+                    Divider()
                 }
 
                 Group {
@@ -114,7 +114,7 @@ struct AppSidebarNavigation: View {
                         Label("str.nav.calendar", systemImage: NavigationItem.calendar.rawValue)
                     }
                     .tag(NavigationItem.calendar)
-//                    Divider()
+                    Divider()
                 }
 
                 Group {
@@ -123,15 +123,15 @@ struct AppSidebarNavigation: View {
                     }
                     .tag(NavigationItem.purchase)
                     
-                    NavigationLink(destination: EmptyView(), tag: NavigationItem.consume, selection: $selection) {
+                    NavigationLink(destination: ConsumeProductView(), tag: NavigationItem.consume, selection: $selection) {
                         Label("str.nav.consume", systemImage: NavigationItem.consume.rawValue)
                     }
                     .tag(NavigationItem.consume)
-                    NavigationLink(destination: EmptyView(), tag: NavigationItem.transfer, selection: $selection) {
+                    NavigationLink(destination: TransferProductView(), tag: NavigationItem.transfer, selection: $selection) {
                         Label("str.nav.transfer", systemImage: NavigationItem.transfer.rawValue)
                     }
                     .tag(NavigationItem.transfer)
-                    NavigationLink(destination: EmptyView(), tag: NavigationItem.inventory, selection: $selection) {
+                    NavigationLink(destination: InventoryProductView(), tag: NavigationItem.inventory, selection: $selection) {
                         Label("str.nav.inventory", systemImage: NavigationItem.inventory.rawValue)
                     }
                     .tag(NavigationItem.inventory)
@@ -144,7 +144,7 @@ struct AppSidebarNavigation: View {
                         Label("str.nav.batteryTracking", systemImage: NavigationItem.batteryTracking.rawValue)
                     }
                     .tag(NavigationItem.batteryTracking)
-//                    Divider()
+                    Divider()
                 }
                 Group {
                     Section(header: Label("Master Data", systemImage: NavigationItem.masterData.rawValue)) {
@@ -188,7 +188,7 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdTaskCategories)
                     }
-//                    Divider()
+                    Divider()
                 }
                 
                 #if os(iOS)

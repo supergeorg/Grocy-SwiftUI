@@ -56,6 +56,8 @@ protocol GrocyAPIProvider {
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
     func getStockProduct<T: Codable>(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<T, APIError>
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
+    func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
+    func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
@@ -161,6 +163,19 @@ extension GrocyApi {
         case stockProductTransfer = "/stock/products/{productId}/transfer"
         case stockProductInventory = "/stock/products/{productId}/inventory"
         case stockProductOpen = "/stock/products/{productId}/open"
+        
+        case stockShoppingListAddMissing = "/stock/shoppinglist/add-missing-products"
+        case stockShoppingListAddOverdue = "/stock/shoppinglist/add-overdue-products"
+        case stockShoppingListAddExpired = "/stock/shoppinglist/add-expired-products"
+        case stockShoppingListClear = "/stock/shoppinglist/clear"
+        case stockShoppingListAddProduct = "/stock/shoppinglist/add-product"
+        case stockShoppingListRemoveProduct = "/stock/shoppinglist/remove-product"
+        case stockBookingWithId = "/stock/bookings/{bookingId}"
+        case stockBookingWithIdUndo = "/stock/bookings/{bookingId}/undo"
+        case stockTransactionWithID = "/stock/transactions/{transactionId}"
+        case stockTransactionWithIDUndo = "/stock/transactions/{transactionId}/undo"
+        case stockBarcodeExternalLookup = "/stock/barcodes/external-lookup/{barcode}"
+        
         //        TODO
         //        Stock by-barcode
         //        Recipes
@@ -237,6 +252,14 @@ extension GrocyApi {
         case .transfer:
             return call(.stockProductTransfer, method: .POST, id: id, content: content)
         }
+    }
+    
+    func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError> {
+        return call(.stockBookingWithId, method: .GET)
+    }
+    
+    func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError> {
+        return call(.stockBookingWithIdUndo, method: .POST, id: id)
     }
     
     // MARK: - Master Data

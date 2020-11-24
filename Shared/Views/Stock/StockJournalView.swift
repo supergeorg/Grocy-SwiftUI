@@ -71,26 +71,29 @@ struct StockJournalRowView: View {
             Image(systemName: "arrow.counterclockwise")
                 .padding()
                 .foregroundColor(Color.white)
-                .background(Color.gray)
+                .background(journalEntry.undone == "1" ? Color.grocyGrayLight : Color.grocyGray)
                 .cornerRadius(5)
                 .onTapGesture {
-                    print("raus")
+                    if journalEntry.undone == "0" {
+                        grocyVM.undoBookingWithID(id: journalEntry.id)
+                        grocyVM.getStockJournal()
+                    }
                 }
-        VStack(alignment: .leading){
-            Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
-                .font(.title)
-                .strikethrough(journalEntry.undone == "1", color: .primary)
-            Group {
-            Text("\("str.stock.journal.amount".localized): \(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-            Text("\("str.stock.journal.transactionTime".localized): \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))")
-                Text("\("str.stock.journal.transactionType".localized): \(formatTransactionType(journalEntry.transactionType))").font(.caption)
-            Text("\("str.stock.journal.location".localized): \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
-                Text("\("str.stock.journal.user".localized): \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
+            VStack(alignment: .leading){
+                Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
+                    .font(.title)
+                    .strikethrough(journalEntry.undone == "1", color: .primary)
+                Group {
+                    Text("\("str.stock.journal.amount".localized): \(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                    Text("\("str.stock.journal.transactionTime".localized): \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))")
+                    Text("\("str.stock.journal.transactionType".localized): \(formatTransactionType(journalEntry.transactionType))").font(.caption)
+                    Text("\("str.stock.journal.location".localized): \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
+                    Text("\("str.stock.journal.user".localized): \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
+                }
+                .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
+                .font(.caption)
             }
-            .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
-            .font(.caption)
         }
-    }
     }
 }
 
@@ -129,6 +132,15 @@ struct StockJournalView: View {
         NavigationView {
             content
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .automatic, content: {
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Image(systemName: "x.circle")
+                })
+            })
+        })
         #else
         content
         #endif
@@ -147,19 +159,7 @@ struct StockJournalView: View {
             }
         }
         .onAppear(perform: updateData)
-        .animation(.default)
         .navigationTitle("str.stock.journal".localized)
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "x.circle")
-                })
-            })
-            #endif
-        })
     }
 }
 

@@ -488,14 +488,15 @@
 			isa = PBXGroup;
 			children = (
 				78CB75FD255EB9A000319108 /* ProductBuyModel.swift */,
-				78FA6A932567D40500941460 /* StockJournalModel.swift */,
 				78CB75FA255EB9A000319108 /* ProductConsumeModel.swift */,
-				78FA6A9A2567D4E000941460 /* TransactionType.swift */,
 				78CB75FC255EB9A000319108 /* ProductOpenModel.swift */,
+				78FA6A932567D40500941460 /* StockJournalModel.swift */,
+				78FA6A9A2567D4E000941460 /* TransactionType.swift */,
 				78CB75FB255EB9A000319108 /* ProductTransferModel.swift */,
 				78CB75F7255EB9A000319108 /* StockEntryModel.swift */,
 				78CB75F8255EB9A000319108 /* StockModel.swift */,
 				78CB75F9255EB9A000319108 /* VolatileStockModel.swift */,
+				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
 			);
 			path = Stock;
 			sourceTree = "<group>";
@@ -516,7 +517,6 @@
 			isa = PBXGroup;
 			children = (
 				7885B8B92567F70E003439F5 /* StockInteraction */,
-				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
 				78CB762C255EBA3F00319108 /* StockView.swift */,
 				78CB7629255EBA3F00319108 /* StockFilterActionsView.swift */,
 				78CB7656255EC0B500319108 /* StockFilterBarView.swift */,

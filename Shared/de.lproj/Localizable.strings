@@ -52,10 +52,12 @@
 "str.stock.productGroup" = "Produktgruppe";
 "str.stock.status" = "Status";
 "str.stock.all" = "Alle";
-"str.stock.expiringSoon" = "Bald ablaufend";
-"str.stock.overdue" = "Überfällig";
-"str.stock.expired" = "Bereits abgelaufen";
-"str.stock.belowMinStock" = "Unter Mindestbestand";
+"str.stock.productAmount1" = "1 Produkt ist";
+"str.stock.productAmount" = "Produkte sind";
+"str.stock.expiringSoon" = "bald ablaufend";
+"str.stock.overdue" = "überfällig";
+"str.stock.expired" = "bereits abgelaufen";
+"str.stock.belowMinStock" = "unter Mindestbestand";
 
 "str.stock.tbl.product" = "Produkt";
 "str.stock.tbl.productGroup" = "Produktgruppe";
@@ -82,6 +84,25 @@
 "str.stock.buy.product.price.summedUp" = "Gesamtpreis";
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
+
+"str.stock.consume" = "Verbrauch";
+"str.stock.consume.product" = "Produkt";
+"str.stock.consume.product.consume" = "Produkt einkaufen";
+"str.stock.consume.product.open" = "Als geöffnet markieren";
+"str.stock.consume.product.required" = "Ein Produkt muss ausgewählt werden";
+"str.stock.consume.product.amount" = "Menge";
+"str.stock.consume.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.consume.product.quantityUnit" = "Mengeneinheit";
+"str.stock.consume.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.stock.consume.product.location" = "Standort";
+"str.stock.consume.product.location.required" = "Ein Standort ist erforderlich";
+"str.stock.consume.product.details" = "Details";
+"str.stock.consume.product.spoiled" = "Verdorben";
+"str.stock.consume.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
+"str.stock.consume.product.useStockEntry.description" = "TODO";
+"str.stock.consume.product.stockEntry" = "Bestandseintrag";
+"str.stock.consume.product.recipe" = "Rezept";
+"str.stock.consume.product.recipe.description" = "TODO";
 
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";

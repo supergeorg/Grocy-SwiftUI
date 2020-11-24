@@ -26,7 +26,8 @@ private struct StockFilterItemView: View {
                 if filteredStatus == ownFilteredStatus {
                     Image(systemName: "line.horizontal.3.decrease.circle")
                 }
-                Text("\(String(num)) \(ownFilteredStatus.rawValue.localized)")
+//                Text("\(String(num)) \(ownFilteredStatus.rawValue.localized)")
+                Text(ownFilteredStatus.getDescription(amount: num))
                     .foregroundColor(darkColor)
             }
             .padding(.horizontal, 10)

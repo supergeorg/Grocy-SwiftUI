@@ -22,8 +22,9 @@ struct MyToggle: View {
                     .onTapGesture {
                         showInfo.toggle()
                     }
-                    .sheet(isPresented: $showInfo, content: {
+                    .popover(isPresented: $showInfo, content: {
                         Text(descriptionInfo!.localized)
+                            .padding()
                     })
             }
         }

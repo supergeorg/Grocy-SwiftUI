@@ -14,7 +14,7 @@
 import Foundation
 
 struct ProductOpen: Codable {
-    let amount: Int
+    let amount: Double
     let stockEntryID: String?
 
     enum CodingKeys: String, CodingKey {

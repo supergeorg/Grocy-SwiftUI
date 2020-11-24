@@ -17,7 +17,7 @@ struct PurchaseProductView: View {
     @State private var quantityUnitID: String = ""
     @State private var dueDate: Date = Date()
     @State private var productDoesntSpoil: Bool = false
-    @State private var price: Double = 0
+    @State private var price: Double = 0.0
     @State private var isTotalPrice: Bool = false
     @State private var shoppingLocationID: String = ""
     @State private var locationID: String = ""
@@ -30,7 +30,7 @@ struct PurchaseProductView: View {
         }
     }
     
-    func getQuantityUnit() -> MDQuantityUnit? {
+    private func getQuantityUnit() -> MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
         return qu
@@ -43,6 +43,18 @@ struct PurchaseProductView: View {
     
     var isFormValid: Bool {
         !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty)
+    }
+    
+    private func resetForm() {
+        productID = ""
+        amount = 0.0
+        quantityUnitID = ""
+        dueDate = Date()
+        productDoesntSpoil = false
+        price = 0.0
+        isTotalPrice = false
+//        shoppingLocationID = ""
+//        locationID = ""
     }
     
     private func purchaseProduct() {
@@ -58,44 +70,67 @@ struct PurchaseProductView: View {
     }
     
     var body: some View {
-        #if os(iOS)
-        NavigationView {
-            content
-        }
+        #if os(macOS)
+        content
+            .padding()
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: {
+                        purchaseProduct()
+                        resetForm()
+                    }, label: {
+                        HStack{
+                            Text("str.stock.buy.product.buy".localized)
+                            Image(systemName: "cart")
+                        }
+                        //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                    })
+                    .disabled(!isFormValid)
+                }
+            })
         #else
         content
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("str.cancel") {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("str.stock.buy.product.buy") {
+                        purchaseProduct()
+                        resetForm()
+                    }.disabled(!isFormValid)
+                }
+            })
         #endif
     }
     
     var content: some View {
         Form {
-            HStack{
-                Image(systemName: "tag")
-                Picker(selection: $productID, label: Text("str.stock.buy.product")) {
-                    SearchBar(text: $searchProductTerm, placeholder: "str.search")
-                    ForEach(filteredProducts, id: \.id) { productElement in
-                        Text(productElement.name).tag(productElement.id)
-                    }
+            Picker(selection: $productID, label: Label("str.stock.buy.product", systemImage: "tag"), content: {
+                #if os(iOS)
+                SearchBar(text: $searchProductTerm, placeholder: "str.search")
+                #endif
+                ForEach(filteredProducts, id: \.id) { productElement in
+                    Text(productElement.name).tag(productElement.id)
                 }
-                .onChange(of: productID) { newProduct in
-                        if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                            if locationID.isEmpty { locationID = selectedProduct.locationID }
-                            if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
-                            quantityUnitID = selectedProduct.quIDPurchase
-                        }
+            })
+            .onChange(of: productID) { newProduct in
+                if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                    if locationID.isEmpty { locationID = selectedProduct.locationID }
+                    if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
+                    quantityUnitID = selectedProduct.quIDPurchase
                 }
             }
             
             Section(header: Text("str.stock.buy.product.amount")) {
-                HStack(alignment: .top) {
-                    Image(systemName: "number.circle")
-                    MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.required")
-                }
-                
-                Picker(selection: $quantityUnitID, label: Text("str.stock.buy.product.quantityUnit"), content: {
+                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.required", systemImage: "number.circle")
+                Picker(selection: $quantityUnitID, label: Label("str.stock.buy.product.quantityUnit", systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text(pickerQU.name).tag(pickerQU.id)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
                     }
                 }).disabled(true)
             }
@@ -114,10 +149,7 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text("str.stock.buy.product.price")) {
-                HStack(alignment: .top) {
-                    Image(systemName: "eurosign.circle")
-                    MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.required")
-                }
+                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.required", systemImage: "eurosign.circle")
                 
                 Picker("", selection: $isTotalPrice, content: {
                     Text("str.stock.buy.product.price.perUnit").tag(false)
@@ -126,44 +158,31 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text("str.stock.buy.product.location")) {
-                HStack{
-                    Image(systemName: "cart")
-                    Picker("str.stock.buy.product.shoppingLocation".localized, selection: $shoppingLocationID, content: {
-                        Text("").tag("")
-                        ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                            Text(shoppingLocation.name).tag(shoppingLocation.id)
-                        }
-                    })
-                }
-                HStack{
-                    Image(systemName: "location")
-                    Picker("str.stock.buy.product.location".localized, selection: $locationID, content: {
-                        Text("").tag("")
-                        ForEach(grocyVM.mdLocations, id:\.id) { location in
-                            Text(location.name).tag(location.id)
-                        }
-                    })
-                }
+                Picker(selection: $shoppingLocationID, label: Label("str.stock.buy.product.shoppingLocation".localized, systemImage: "cart"), content: {
+                    Text("").tag("")
+                    ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
+                        Text(shoppingLocation.name).tag(shoppingLocation.id)
+                    }
+                })
+                
+                Picker(selection: $locationID, label: Label("str.stock.buy.product.location".localized, systemImage: "location"), content: {
+                    Text("").tag("")
+                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                        Text(location.name).tag(location.id)
+                    }
+                })
             }
-            
         }
-        .animation(.default)
-        .navigationTitle("str.stock.buy")
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                Button("str.cancel") {
-                    self.presentationMode.wrappedValue.dismiss()
-                }
+        .onAppear(perform: {
+            if grocyVM.mdProducts.isEmpty {
+                grocyVM.getMDProducts()
+                grocyVM.getMDQuantityUnits()
+                grocyVM.getMDLocations()
+                grocyVM.getMDShoppingLocations()
             }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("str.stock.buy.product.buy") {
-                    purchaseProduct()
-                    presentationMode.wrappedValue.dismiss()
-                }.disabled(!isFormValid)
-            }
-            #endif
         })
+        .animation(.default)
+        .navigationTitle("str.stock.buy".localized)
     }
 }
 

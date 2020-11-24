@@ -133,11 +133,11 @@ struct MDProductsView: View {
                         showAddProduct.toggle()
                     }, label: {Image(systemName: "plus")})
                     .popover(isPresented: self.$showAddProduct, content: {
-                                ScrollView{
-                        MDProductFormView(isNewProduct: true)
-                            .padding()
-                                }
-//                            .frame(maxWidth: 300, maxHeight: 250)
+//                        ScrollView{
+                            MDProductFormView(isNewProduct: true)
+                                .padding()
+//                        }
+                                                    .frame(maxWidth: 500, maxHeight: 500)
                     })
                     #else
                     Button(action: {

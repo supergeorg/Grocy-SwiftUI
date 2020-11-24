@@ -253,11 +253,18 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-        print(String(data: jsonContent, encoding: .utf8)!)
-        let cancellable = grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
+//        print(String(data: jsonContent, encoding: .utf8)!)
+        grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .replaceError(with: [])
             .assign(to: \.lastErrors, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
+    }
+    
+    func undoBookingWithID(id: String) {
+        grocyApi.undoBookingWithID(id: id)
+            .replaceError(with: [])
+            .assign(to: \.lastErrors, on: self)
+            .store(in: &cancellables)
     }
     //
     //    // MARK: -Shopping Lists

@@ -7,10 +7,10 @@
 
 import Foundation
 
-//amount -> number
+//amount    number
 //The amount to remove - please note that when tare weight handling for the product is enabled, this needs to be the amount including the container weight (gross), the amount to be posted will be automatically calculated based on what is in stock and the defined tare weight
 
-//transaction_type    stringEnum: [ purchase, consume, inventory-correction, product-opened ]
+//transaction_type    string [ purchase, consume, inventory-correction, product-opened ]
 
 //spoiled    boolean
 //True when the given product was spoiled, defaults to false
@@ -24,13 +24,17 @@ import Foundation
 //location_id    number($integer)
 //A valid location id (if supplied, only stock at the given location is considered, if ommitted, stock of any location is considered)
 
+//exact_amount    boolean
+//For tare weight handling enabled products, true when the given is the absolute amount to be consumed, not the amount including the container weight
+
 struct ProductConsume: Codable {
-    let amount: Int
-    let transactionType: String
+    let amount: Double
+    let transactionType: TransactionType
     let spoiled: Bool
     let stockEntryID: String?
     let recipeID: Int?
     let locationID: Int?
+    let exactAmount: Bool?
 
     enum CodingKeys: String, CodingKey {
         case amount
@@ -39,5 +43,6 @@ struct ProductConsume: Codable {
         case stockEntryID = "stock_entry_id"
         case recipeID = "recipe_id"
         case locationID = "location_id"
+        case exactAmount = "exact_amount"
     }
 }

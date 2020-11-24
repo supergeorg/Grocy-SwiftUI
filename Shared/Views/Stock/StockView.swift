@@ -39,16 +39,17 @@ struct StockView: View {
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
-    //    @State private var showStockJournal: Bool = false
-    
+    #if os(macOS)
+    @State private var showStockJournal: Bool = false
+    #else
     private enum InteractionSheet: Identifiable {
         case none, purchaseProduct, consumeProduct, transferProduct, stockJournal
         var id: Int {
             self.hashValue
         }
     }
-    
     @State private var activeSheet: InteractionSheet = .none
+    #endif
     
     var numExpiringSoon: Int {
         grocyVM.stock
@@ -131,6 +132,84 @@ struct StockView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        content
+            .toolbar(content: {
+                ToolbarItem(placement: .automatic, content: {
+                    HStack{
+                        Button(action: {
+                            self.showStockJournal.toggle()
+                        }, label: {
+                            Label("Journal", systemImage: "list.bullet.rectangle")
+                        })
+                        .popover(isPresented: $showStockJournal, content: {
+                            StockJournalView()
+                                .padding()
+                                .frame(width: 300, height: 300, alignment: .leading)
+                        })
+                        Button(action: {
+                            updateData()
+                        }, label: {
+                            Image(systemName: "arrow.clockwise")
+                        })
+                    }
+                })
+            })
+        #elseif os(iOS)
+        content
+            .toolbar(content: {
+                ToolbarItem(placement: .automatic, content: {
+                    HStack{
+                        Button(action: {
+                            updateData()
+                        }, label: {
+                            Image(systemName: "arrow.clockwise")
+                        })
+                        Button(action: {
+                            self.activeSheet = .stockJournal
+                            self.isShowingSheet.toggle()
+                        }, label: {
+                            Label("Journal", systemImage: "list.bullet.rectangle")
+                        })
+                        Button(action: {
+                            self.activeSheet = .consumeProduct
+                            self.isShowingSheet.toggle()
+                        }, label: {
+                            Label("Consume", systemImage: "tuningfork")
+                        })
+                        Button(action: {
+                            self.activeSheet = .purchaseProduct
+                            self.isShowingSheet.toggle()
+                        }, label: {
+                            Label("Purchase", systemImage: "cart.badge.plus")
+                        })
+                    }
+                })
+            })
+            .sheet(isPresented: $isShowingSheet, content: {
+                switch activeSheet {
+                case .stockJournal:
+                    StockJournalView()
+                case .purchaseProduct:
+                    NavigationView{
+                        PurchaseProductView()
+                    }
+                case .consumeProduct:
+                    NavigationView{
+                        ConsumeProductView()
+                    }
+                case .transferProduct:
+                    NavigationView{
+                        TransferProductView()
+                    }
+                case .none:
+                    EmptyView()
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         List() {
             StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
             StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocation, filteredProductGroup: $filteredProductGroup, filteredStatus: $filteredStatus)
@@ -155,61 +234,6 @@ struct StockView: View {
         .navigationTitle("str.stock.stockOverview".localized)
         .onAppear(perform: {
             updateData()
-        })
-        .toolbar(content: {
-            #if os(macOS)
-            ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    updateData()
-                }, label: {
-                    Image(systemName: "arrow.clockwise")
-                })
-                Button(action: {
-                    showStockJournal.toggle()
-                }, label: {
-                    Label("Journal", systemImage: "list.bullet.rectangle")
-                })
-                .popover(isPresented: $showStockJournal, content: {
-                    StockJournalView().padding().frame(width: 300, height: 300, alignment: .leading)
-                })
-            })
-            #else
-            ToolbarItem(placement: .automatic, content: {
-                HStack{
-                    Button(action: {
-                        updateData()
-                    }, label: {
-                        Image(systemName: "arrow.clockwise")
-                    })
-                    Button(action: {
-                        self.activeSheet = .stockJournal
-                        self.isShowingSheet.toggle()
-                    }, label: {
-                        Label("Journal", systemImage: "list.bullet.rectangle")
-                    })
-                    Button(action: {
-                        self.activeSheet = .purchaseProduct
-                        self.isShowingSheet.toggle()
-                    }, label: {
-                        Label("Purchase", systemImage: "cart.badge.plus")
-                    })
-                }
-            })
-            #endif
-        })
-        .sheet(isPresented: $isShowingSheet, content: {
-            switch activeSheet {
-            case .stockJournal:
-                StockJournalView()
-            case .purchaseProduct:
-                PurchaseProductView()
-            case .consumeProduct:
-                ConsumeProductView()
-            case .transferProduct:
-                TransferProductView()
-            case .none:
-                EmptyView()
-            }
         })
     }
 }
