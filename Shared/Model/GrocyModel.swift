@@ -179,7 +179,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func postUser(user: GrocyUser) {
+    func postUser(user: GrocyUserPOST) {
         let jsonUser = try! JSONEncoder().encode(user)
         //                print(String(data: jsonUser, encoding: .utf8)!)
         grocyApi.postUser(user: jsonUser)
@@ -189,10 +189,17 @@ class GrocyViewModel: ObservableObject {
     }
     
     func deleteUser(id: String) {
-        grocyApi.deleteUser(id: id)
+        grocyApi.deleteUserWithID(id: id)
             .replaceError(with: ErrorMessage(errorMessage: "delete user error"))
             .assign(to: \.lastError, on: self)
             .store(in: &cancellables)
+    }
+    
+    func getNewUserID() -> Int {
+        let ints = self.users.map{ Int($0.id) ?? 0 }
+        var startvar = 0
+        while ints.contains(startvar) { startvar += 1 }
+        return startvar
     }
     
     // MARK: - Stock management

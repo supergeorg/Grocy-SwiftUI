@@ -49,7 +49,8 @@ protocol GrocyAPIProvider {
     // MARK: - User
     func getUsers() -> AnyPublisher<GrocyUsers, APIError>
     func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError>
-    func deleteUser(id: String) -> AnyPublisher<ErrorMessage, APIError>
+    func putUserWithID(id: String, user: Data) -> AnyPublisher<ErrorMessage, APIError>
+    func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
@@ -211,8 +212,12 @@ extension GrocyApi {
         return call(.users, method: .POST, content: user)
     }
     
-    func deleteUser(id: String) -> AnyPublisher<ErrorMessage, APIError> {
-        return call(.users, method: .DELETE, id: id)
+    func putUserWithID(id: String, user: Data) -> AnyPublisher<ErrorMessage, APIError> {
+        return call(.usersWithID, method: .PUT, id: id, content: user)
+    }
+    
+    func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError> {
+        return call(.usersWithID, method: .DELETE, id: id)
     }
     
     // MARK: - Stock

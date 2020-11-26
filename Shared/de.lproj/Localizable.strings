@@ -11,6 +11,7 @@
 "str.delete" = "Löschen";
 "str.edit" = "Bearbeiten";
 "str.save" = "Speichern";
+"str.search" = "Suchen";
 "str.noSearchResult" = "Kein Suchergebnis gefunden.";
 "str.days" = "Tag(e)";
 "str.refresh" = "Aktualisieren";
@@ -260,3 +261,20 @@
 "str.settings.grocyRLSDate %@" = "Release Date: ";
 "str.settings.grocyPHPVersion %@" = "PHP Version: ";
 "str.settings.grocySQLiteVersion %@" = "SQLite Version: ";
+
+// MARK: - Admin
+"str.admin.user" = "Benutzerverwaltung";
+"str.admin.user.tooltip.edit" = "Diesen Eintrag bearbeiten";
+"str.admin.user.tooltip.permissions" = "Benutzerberechtigungen konfigurieren";
+"str.admin.user.tooltip.delete" = "Diesen Eintrag löschen";
+"str.admin.user.delete.question" = "Möchtest du diesen Nutzer wirklich löschen?";
+"str.admin.user.new" = "Neuer Benutzer";
+"str.admin.user.new.create" = "Neuen Benutzer erstellen";
+"str.admin.user.new.edit" = "Benutzer bearbeiten";
+"str.admin.user.new.userName" = "Benutzername";
+"str.admin.user.new.userName.required" = "Ein Benutzername ist erforderlich";
+"str.admin.user.new.firstName" = "Vorname";
+"str.admin.user.new.lastName" = "Nachname";
+"str.admin.user.new.password" = "Passwort";
+"str.admin.user.new.password.confirm" = "Passwort bestätigen";
+"str.admin.user.new.password.mismatch" = "Passwörter stimmen nicht überein";

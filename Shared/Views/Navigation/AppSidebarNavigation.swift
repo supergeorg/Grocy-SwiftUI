@@ -41,7 +41,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.shoppingList
+    @State private var selection: NavigationItem? = NavigationItem.userManagement
     //    @AppStorage("viewSelection") var viewSelection: NavigationItem? = .stockoverview
     
     private func toggleSidebar() {
@@ -147,7 +147,7 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 Group {
-                    Section(header: Label("Master Data", systemImage: NavigationItem.masterData.rawValue)) {
+                    Section(header: Label("str.nav.md".localized, systemImage: NavigationItem.masterData.rawValue)) {
                         NavigationLink(destination: MDProductsView(), tag: NavigationItem.mdProducts, selection: $selection) {
                             Label("str.nav.md.products", systemImage: NavigationItem.mdProducts.rawValue)
                         }
