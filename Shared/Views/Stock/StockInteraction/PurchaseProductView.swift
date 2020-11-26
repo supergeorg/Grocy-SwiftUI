@@ -125,7 +125,7 @@ struct PurchaseProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.buy.product.amount")) {
+            Section(header: Text("str.stock.buy.product.amount").font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.required", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label("str.stock.buy.product.quantityUnit", systemImage: "scalemass"), content: {
                     Text("").tag("")
@@ -135,7 +135,7 @@ struct PurchaseProductView: View {
                 }).disabled(true)
             }
             
-            Section(header: Text("str.stock.buy.product.dueDate")) {
+            Section(header: Text("str.stock.buy.product.dueDate").font(.headline)) {
                 HStack {
                     Image(systemName: "calendar")
                     DatePicker("str.stock.buy.product.dueDate".localized, selection: $dueDate, displayedComponents: .date)
@@ -148,7 +148,7 @@ struct PurchaseProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.buy.product.price")) {
+            Section(header: Text("str.stock.buy.product.price").font(.headline)) {
                 MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.required", systemImage: "eurosign.circle")
                 
                 Picker("", selection: $isTotalPrice, content: {
@@ -157,7 +157,7 @@ struct PurchaseProductView: View {
                 }).pickerStyle(SegmentedPickerStyle())
             }
             
-            Section(header: Text("str.stock.buy.product.location")) {
+            Section(header: Text("str.stock.buy.product.location").font(.headline)) {
                 Picker(selection: $shoppingLocationID, label: Label("str.stock.buy.product.shoppingLocation".localized, systemImage: "cart"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in

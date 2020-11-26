@@ -129,7 +129,7 @@ struct ConsumeProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label("str.stock.consume.product", systemImage: "tag"), content: {
+            Picker(selection: $productID, label: Label("str.stock.consume.product".localized, systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
                 #endif
@@ -138,16 +138,16 @@ struct ConsumeProductView: View {
                 }
             })
             .onChange(of: productID) { newProduct in
-                grocyVM.getProductEntries(productID: productID)
+                grocyVM.getStockProductEntries(productID: productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     locationID = selectedProduct.locationID
                     quantityUnitID = selectedProduct.quIDPurchase
                 }
             }
             
-            Section(header: Text("str.stock.consume.product.amount")) {
+            Section(header: Text("str.stock.consume.product.amount".localized).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.consume.product.quantityUnit", systemImage: "scalemass"), content: {
+                Picker(selection: $quantityUnitID, label: Label("str.stock.consume.product.quantityUnit".localized, systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
@@ -155,17 +155,12 @@ struct ConsumeProductView: View {
                 }).disabled(true)
             }
             
-            Section(header: Text("str.stock.consume.product.details")) {
-                HStack {
-                    Image(systemName: "trash")
-                    Toggle("str.stock.consume.product.spoiled", isOn: $spoiled)
-                }
+            Section(header: Text("str.stock.consume.product.details".localized).font(.headline)) {
                 
+                MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: "trash")
                 
-                HStack {
-                    Image(systemName: "tag")
-                    MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description")
-                }
+                MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
+                
                 
                 if useSpecificStockEntry && !productID.isEmpty {
                     Picker(selection: $stockEntryID, label: Label("str.stock.consume.product.stockEntry", systemImage: "tag"), content: {
@@ -175,9 +170,9 @@ struct ConsumeProductView: View {
                     })
                 }
                 
-                //                Picker(selection: $recipeID, label: Label("str.stock.consume.product.recipe".localized, systemImage: "tag"), content: {
-                //                    Text("Not implemented").tag("nI")
-                //                })
+                Picker(selection: $recipeID, label: Label("str.stock.consume.product.recipe".localized, systemImage: "tag"), content: {
+                    Text("Not implemented").tag("nI")
+                })
             }
         }
         .onAppear(perform: {

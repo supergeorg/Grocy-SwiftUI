@@ -1,11 +1,9 @@
 //
 //  ProductTransferModel.swift
-//  grocy-ios
+//  Grocy-SwiftUI
 //
-//  Created by Georg Meissner on 29.10.20.
+//  Created by Georg Meissner on 25.11.20.
 //
-
-import Foundation
 
 //amount    number
 //The amount to transfer - please note that when tare weight handling for the product is enabled, this needs to be the amount including the container weight (gross), the amount to be posted will be automatically calculated based on what is in stock and the defined tare weight
@@ -19,8 +17,12 @@ import Foundation
 //stock_entry_id    string
 //A specific stock entry id to transfer, if used, the amount has to be 1
 
+import Foundation
+
+// MARK: - ProductTransfer
 struct ProductTransfer: Codable {
-    let amount, locationIDFrom, locationIDTo: Int
+    let amount: Double
+    let locationIDFrom, locationIDTo: Int
     let stockEntryID: String?
 
     enum CodingKeys: String, CodingKey {

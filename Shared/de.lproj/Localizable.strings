@@ -13,6 +13,7 @@
 "str.save" = "Speichern";
 "str.noSearchResult" = "Kein Suchergebnis gefunden.";
 "str.days" = "Tag(e)";
+"str.refresh" = "Aktualisieren";
 
 // MARK: - Transaktionen
 "tr.purchase" = "Einkauf";
@@ -104,6 +105,24 @@
 "str.stock.consume.product.recipe" = "Rezept";
 "str.stock.consume.product.recipe.description" = "TODO";
 
+"str.stock.transfer" = "Umlagern";
+"str.stock.transfer.product" = "Produkt";
+"str.stock.transfer.product.transfer" = "Produkt umlagern";
+"str.stock.transfer.product.required" = "Ein Produkt muss ausgewählt werden";
+"str.stock.transfer.product.locationFrom" = "Von Standort";
+"str.stock.transfer.product.locationFrom.required" = "Ein Standort ist erforderlich";
+"str.stock.transfer.product.amount" = "Menge";
+"str.stock.transfer.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.transfer.product.quantityUnit" = "Mengeneinheit";
+"str.stock.transfer.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.stock.transfer.product.locationTo" = "Nach Standort";
+"str.stock.transfer.product.locationTO.required" = "Ein Standort ist erforderlich";
+"str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie 'Von Standort' sein";
+
+"str.stock.transfer.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
+"str.stock.transfer.product.useStockEntry.description" = "TODO";
+"str.stock.transfer.product.stockEntry" = "Bestandseintrag";
+
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
 "str.stock.journal.amount" = "Menge";
@@ -111,6 +130,24 @@
 "str.stock.journal.transactionType" = "Transaktionstyp";
 "str.stock.journal.location" = "Standort";
 "str.stock.journal.user" = "Nutzer";
+
+// MARK: - Shopping List
+"str.shL" = "Einkaufszettel";
+"str.shL.new" = "Neuer Einkaufszettel";
+"str.shL.edit" = "Einkaufszettel bearbeiten";
+"str.shL.delete" = "Einkaufszettel löschen";
+"str.shL.print" = "Drucken";
+"str.shL.amount" = "Menge";
+
+"str.shL.new.title" = "Einkaufszettel erstellen";
+"str.shL.new.name" = "Name";
+"str.shL.new.name.required" = "Name";
+"str.shL.new.save" = "Speichern";
+
+"str.shL.edit.title" = "Einkaufszettel bearbeiten";
+"str.shL.edit.name" = "Name";
+"str.shL.edit.name.required" = "Name";
+"str.shL.edit.save" = "Speichern";
 
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";

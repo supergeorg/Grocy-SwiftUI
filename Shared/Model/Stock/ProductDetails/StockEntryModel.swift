@@ -5,8 +5,34 @@
 //  Created by Georg Meissner on 23.10.20.
 //
 
+//id    integer
+
+//product_id    integer
+
+//location_id    integer
+
+//shopping_location_id    integer
+
+//amount    number
+
+//best_before_date    string($date)
+
+//purchased_date    string($date)
+
+//stock_id    string
+//A unique id which references this stock entry during its lifetime
+
+//price    number
+
+//open    integer
+
+//opened_date    string($date)
+
+//row_created_timestamp    string($date-time)
+
 import Foundation
 
+// MARK: - StockEntry
 struct StockEntry: Codable {
     let id, productID, amount, bestBeforeDate: String
     let purchasedDate, stockID: String

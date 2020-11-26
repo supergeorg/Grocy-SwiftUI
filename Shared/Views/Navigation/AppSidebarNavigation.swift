@@ -41,7 +41,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.consume
+    @State private var selection: NavigationItem? = NavigationItem.shoppingList
     //    @AppStorage("viewSelection") var viewSelection: NavigationItem? = .stockoverview
     
     private func toggleSidebar() {
@@ -65,7 +65,7 @@ struct AppSidebarNavigation: View {
                     }
                     .tag(NavigationItem.stockOverview)
                     
-                    NavigationLink(destination: EmptyView(), tag: NavigationItem.shoppingList, selection: $selection) {
+                    NavigationLink(destination: ShoppingListView(), tag: NavigationItem.shoppingList, selection: $selection) {
                         Label("str.nav.shoppingList", systemImage: NavigationItem.shoppingList.rawValue)
                     }
                     .tag(NavigationItem.shoppingList)

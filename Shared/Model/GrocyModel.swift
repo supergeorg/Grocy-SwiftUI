@@ -32,19 +32,22 @@ class GrocyViewModel: ObservableObject {
     @Published var users: GrocyUsers = []
     @Published var stock: Stock = []
     @Published var stockJournal: StockJournal = []
-    //    @Published var volatileStock: VolatileStock?
-    //    @Published var shoppingListDescriptions: ShoppingListDescriptions = []
-    //    @Published var shoppingList: ShoppingList = []
-    //
+    @Published var shoppingListDescriptions: ShoppingListDescriptions = []
+    @Published var shoppingList: ShoppingList = []
+    
     @Published var mdProducts: MDProducts = []
     @Published var mdLocations: MDLocations = []
     @Published var mdShoppingLocations: MDShoppingLocations = []
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdProductGroups: MDProductGroups = []
     
+    @Published var stockProductDetails: [String: StockProductDetails] = [:]
+    @Published var stockProductLocations: [String: StockLocations] = [:]
     @Published var stockProductEntries: [String: StockEntries] = [:]
+    @Published var stockProductPriceHistories: [String: ProductPriceHistories] = [:]
     
     @Published var lastErrors: [ErrorMessage] = []
+    @Published var lastError: ErrorMessage = ErrorMessage(errorMessage: "")
     
     var cancellables = Set<AnyCancellable>()
     
@@ -115,6 +118,10 @@ class GrocyViewModel: ObservableObject {
             ints = self.mdQuantityUnits.map{ Int($0.id) ?? 0 }
         case .product_groups:
             ints = self.mdProductGroups.map{ Int($0.id) ?? 0 }
+        case .shopping_lists:
+            ints = self.shoppingListDescriptions.map{ Int($0.id) ?? 0 }
+        case .shopping_list:
+            ints = self.shoppingList.map{ Int($0.id) ?? 0 }
         default:
             print("findnextid not impl")
         }
@@ -171,53 +178,23 @@ class GrocyViewModel: ObservableObject {
             .assign(to: \.users, on: self)
             .store(in: &cancellables)
     }
-    //
-    //    func postUser(user: User) {
-    //        do{
-    //            let jsonUser = try JSONEncoder().encode(user)
-    //            print(String(data: jsonUser, encoding: .utf8)!)
-    //            let cancellable = grocyApi.postUser(user: jsonUser)
-    //                .sink(receiveCompletion: { result in
-    //                    print(".sink() received the completion", String(describing: result))
-    //                    switch result {
-    //                    case .failure(let error):
-    //                        print("Handle error: postuser\(error)")
-    //                    case .finished:
-    //                        break
-    //                    }
-    //
-    //                }) { (exit) in
-    //                    DispatchQueue.main.async {
-    //                        print(exit)
-    //                        self.getUsers()
-    //                    }
-    //                }
-    //            cancellables.insert(cancellable)
-    //        } catch {
-    //            print("fehler")
-    //        }
-    //    }
-    //
-    //    func deleteUser(id: String) {
-    //        let cancellable = grocyApi.deleteUser(id: id)
-    //            .sink(receiveCompletion: { result in
-    //                print(".sink() received the completion", String(describing: result))
-    //                switch result {
-    //                case .failure(let error):
-    //                    print("Handle error: deluser\(error)")
-    //                case .finished:
-    //                    break
-    //                }
-    //
-    //            }) { (exit) in
-    //                DispatchQueue.main.async {
-    //                    print(exit)
-    //                    self.getUsers()
-    //                }
-    //            }
-    //        cancellables.insert(cancellable)
-    //    }
-    //
+    
+    func postUser(user: GrocyUser) {
+        let jsonUser = try! JSONEncoder().encode(user)
+        //                print(String(data: jsonUser, encoding: .utf8)!)
+        grocyApi.postUser(user: jsonUser)
+            .replaceError(with: ErrorMessage(errorMessage: "delete user error"))
+            .assign(to: \.lastError, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func deleteUser(id: String) {
+        grocyApi.deleteUser(id: id)
+            .replaceError(with: ErrorMessage(errorMessage: "delete user error"))
+            .assign(to: \.lastError, on: self)
+            .store(in: &cancellables)
+    }
+    
     // MARK: - Stock management
     
     func getStock() {
@@ -235,25 +212,25 @@ class GrocyViewModel: ObservableObject {
     }
     
     func getStockEntry() {}
-    //    func getVolatileStock(expiringDays: Int) {
-    //        grocyApi.getVolatileStock(expiringDays: expiringDays)
-    //            .replaceError(with: VolatileStock(expiringProducts: [], expiredProducts: [], missingProducts: []))
-    //            .assign(to: \.volatileStock, on: self)
+    
+    //    func getStockProductDetails(productID: String) {
+    //        grocyApi.getStockProductDetails(stockModeGet: .details, id: productID, query: "?include_sub_products=true")
+    //            .replaceError(with: [])
+    //            .assign(to: \.stockProductDetails[productID], on: self)
     //            .store(in: &cancellables)
     //    }
-    func getProductDetails() {}
-    func getProductLocations() {}
-    func getProductEntries(productID: String) {
-        grocyApi.getStockProduct(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
+    func getStockProductLocations(productID: String) {}
+    func getStockProductEntries(productID: String) {
+        grocyApi.getStockProductDetails(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
             .replaceError(with: [])
             .assign(to: \.stockProductEntries[productID], on: self)
             .store(in: &cancellables)
     }
-    func getProductPriceHistory() {}
+    func getStockProductPriceHistory(productID: String) {}
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-//        print(String(data: jsonContent, encoding: .utf8)!)
+        //        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .replaceError(with: [])
             .assign(to: \.lastErrors, on: self)
@@ -266,22 +243,22 @@ class GrocyViewModel: ObservableObject {
             .assign(to: \.lastErrors, on: self)
             .store(in: &cancellables)
     }
-    //
-    //    // MARK: -Shopping Lists
-    //    func getShoppingListDescriptions() {
-    //        grocyApi.getObject(object: .shopping_lists)
-    //            .replaceError(with: [])
-    //            .assign(to: \.shoppingListDescriptions, on: self)
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func getShoppingLists() {
-    //        grocyApi.getObject(object: .shopping_list)
-    //            .replaceError(with: [])
-    //            .assign(to: \.shoppingList, on: self)
-    //            .store(in: &cancellables)
-    //    }
-    //
+    
+        // MARK: -Shopping Lists
+        func getShoppingListDescriptions() {
+            grocyApi.getObject(object: .shopping_lists)
+                .replaceError(with: [])
+                .assign(to: \.shoppingListDescriptions, on: self)
+                .store(in: &cancellables)
+        }
+    
+        func getShoppingList() {
+            grocyApi.getObject(object: .shopping_list)
+                .replaceError(with: [])
+                .assign(to: \.shoppingList, on: self)
+                .store(in: &cancellables)
+        }
+    
     // MARK: -Master Data
     
     func getMDProducts() {
@@ -323,6 +300,7 @@ class GrocyViewModel: ObservableObject {
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
+        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .replaceError(with: [])
             .assign(to: \.lastErrors, on: self)

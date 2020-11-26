@@ -13,9 +13,10 @@ enum StockColumn {
 
 struct StockView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    @Environment(\.presentationMode) private var presentationMode
     
     @AppStorage("expiringDays") var expiringDays: Int = 5
+    
+    @State private var reloadRotationDeg: Double = 0.0
     
     @State private var isShowingSheet: Bool = false
     
@@ -135,8 +136,7 @@ struct StockView: View {
         #if os(macOS)
         content
             .toolbar(content: {
-                ToolbarItem(placement: .automatic, content: {
-                    HStack{
+                ToolbarItemGroup(placement: .automatic, content: {
                         Button(action: {
                             self.showStockJournal.toggle()
                         }, label: {
@@ -147,12 +147,15 @@ struct StockView: View {
                                 .padding()
                                 .frame(width: 300, height: 300, alignment: .leading)
                         })
-                        Button(action: {
-                            updateData()
-                        }, label: {
-                            Image(systemName: "arrow.clockwise")
-                        })
-                    }
+                    Button(action: {
+                        withAnimation {
+                            self.reloadRotationDeg += 360
+                        }
+                        updateData()
+                    }, label: {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .rotationEffect(Angle.degrees(reloadRotationDeg))
+                    })
                 })
             })
         #elseif os(iOS)

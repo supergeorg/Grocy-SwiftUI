@@ -11,11 +11,15 @@ struct MyToggle: View {
     @Binding var isOn: Bool
     var description: String
     var descriptionInfo: String?
+    var icon: String?
     
     @State private var showInfo: Bool = false
     
     var body: some View {
         HStack{
+            if icon != nil {
+                Image(systemName: icon!)
+            }
             Toggle(description.localized, isOn: $isOn)
             if descriptionInfo != nil {
                 Image(systemName: "questionmark.circle.fill")
@@ -33,6 +37,6 @@ struct MyToggle: View {
 
 struct MyToggle_Previews: PreviewProvider {
     static var previews: some View {
-        MyToggle(isOn: Binding.constant(true), description: "Description", descriptionInfo: "Descriptioninfo")
+        MyToggle(isOn: Binding.constant(true), description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
     }
 }

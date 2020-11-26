@@ -48,13 +48,16 @@ protocol GrocyAPIProvider {
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
     // MARK: - User
     func getUsers() -> AnyPublisher<GrocyUsers, APIError>
-//    func postUser(user: Data) -> AnyPublisher<User, APIError>
-//    func deleteUser(id: String) -> AnyPublisher<UserDto, APIError>
+    func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError>
+    func deleteUser(id: String) -> AnyPublisher<ErrorMessage, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
-    func getStockProduct<T: Codable>(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<T, APIError>
+    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<T, APIError>
+//    func getStockProductLocations(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockLocations, APIError>
+//    func getStockProductEntries(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockEntries, APIError>
+//    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
@@ -204,14 +207,14 @@ extension GrocyApi {
         return call(.users, method: .GET)
     }
     
-//    func postUser(user: Data) -> AnyPublisher<User, APIError> {
-//        return call(.users, method: .POST, content: user)
-//    }
-//    
-//    func deleteUser(id: String) -> AnyPublisher<UserDto, APIError> {
-//        return call(.users, method: .DELETE, id: id)
-//    }
-//    
+    func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError> {
+        return call(.users, method: .POST, content: user)
+    }
+    
+    func deleteUser(id: String) -> AnyPublisher<ErrorMessage, APIError> {
+        return call(.users, method: .DELETE, id: id)
+    }
+    
     // MARK: - Stock
     
     func getStock() -> AnyPublisher<[StockElement], APIError> {
@@ -226,7 +229,7 @@ extension GrocyApi {
         return call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
     }
     
-    func getStockProduct<T: Codable>(stockModeGet: StockProductGet, id: String, query: String? = nil) -> AnyPublisher<T, APIError> {
+    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: String, query: String? = nil) -> AnyPublisher<T, APIError> {
         switch stockModeGet {
         case .details:
             return call(.stockProductWithId, method: .GET, id: id)
