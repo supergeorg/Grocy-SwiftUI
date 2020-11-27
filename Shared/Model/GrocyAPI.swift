@@ -46,6 +46,7 @@ protocol GrocyAPIProvider {
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
+    func getSystemConfig() -> AnyPublisher<SystemConfig, APIError>
     // MARK: - User
     func getUsers() -> AnyPublisher<GrocyUsers, APIError>
     func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError>
@@ -200,6 +201,10 @@ extension GrocyApi {
     
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError> {
         return call(.systemDBChangedTime, method: .GET)
+    }
+    
+    func getSystemConfig() -> AnyPublisher<SystemConfig, APIError> {
+        return call(.systemConfig, method: .GET)
     }
     
     // MARK: - User

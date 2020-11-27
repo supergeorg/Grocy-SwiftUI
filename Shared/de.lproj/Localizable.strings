@@ -150,6 +150,20 @@
 "str.shL.edit.name.required" = "Name";
 "str.shL.edit.save" = "Speichern";
 
+"str.shL.action.addItem" = "Eintrag hinzufügen";
+"str.shL.action.clearList" = "Liste leeren";
+"str.shL.action.addListItemsToStock" = "Alle Einträge zum Bestand hinzufügen";
+"str.shL.action.addBelowMinStock" = "Produkte unter Mindestbestand hinzufügen";
+"str.shL.action.addOverdue" = "Überfällige/Abgelaufene Produkte hinzufügen";
+
+"str.shL.filter.status" = "Status";
+"str.shL.filter.reset" = "Filter zurücksetzen";
+"str.shL.filter.all" = "Alle";
+"str.shL.filter.belowMinStock" = "unter Mindestbestand";
+"str.shL.filter.undone" = "unerledigte Einträge";
+"str.shL.filter.productAmount1" = "1 Produkt ist";
+"str.shL.filter.productAmount" = "Produkte sind";
+
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";
 "str.md.description" = "Beschreibung";

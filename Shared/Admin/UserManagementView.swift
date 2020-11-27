@@ -25,6 +25,7 @@ struct UserManagementView: View {
     
     private func updateData() {
         grocyVM.getUsers()
+        grocyVM.getSystemConfig()
     }
     
     var body: some View {
@@ -67,7 +68,7 @@ struct UserManagementView: View {
                 Text("Keine Nutzer gefunden.").padding()
             }
             ForEach(filteredUsers, id:\.id) {user in
-                UserRowView(user: user)
+                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
             }
         }
         .navigationTitle("str.admin.user".localized)

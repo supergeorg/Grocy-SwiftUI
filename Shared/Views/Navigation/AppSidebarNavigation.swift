@@ -41,7 +41,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.userManagement
+    @State private var selection: NavigationItem? = NavigationItem.shoppingList
     //    @AppStorage("viewSelection") var viewSelection: NavigationItem? = .stockoverview
     
     private func toggleSidebar() {

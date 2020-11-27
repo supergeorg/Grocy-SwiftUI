@@ -27,6 +27,9 @@ extension Color {
     static let grocyGrayDark = Color(red: 61 / 255, green: 69 / 255, blue: 77 / 255)
     
     static let grocyTurquoise = Color(red: 17 / 255, green: 145 / 255, blue: 171 / 255)
+    
+    static let grocyDelete = Color(red: 212 / 255, green: 27 / 255, blue: 50 / 255)
+    static let grocyDeleteLocked = Color(red: 221 / 255, green: 95 / 255, blue: 110 / 255)
 }
 
 extension Color {

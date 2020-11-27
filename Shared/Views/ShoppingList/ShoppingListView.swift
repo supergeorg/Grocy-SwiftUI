@@ -14,6 +14,9 @@ struct ShoppingListView: View {
     
     @State private var selectedShoppingListID: String = ""
     
+    @State private var searchString: String = ""
+    @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
+    
     #if os(macOS)
     @State private var showNewShoppingList: Bool = false
     @State private var showEditShoppingList: Bool = false
@@ -23,6 +26,23 @@ struct ShoppingListView: View {
         grocyVM.shoppingList
             .filter{
                 selectedShoppingListID.isEmpty ? true : $0.shoppingListID == selectedShoppingListID
+            }
+            .filter{shLItem in
+                if !searchString.isEmpty {
+                if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
+                    return product.name.localizedCaseInsensitiveContains(searchString)
+                } else { return false }} else { return true }
+            }
+            .filter{shLItem in
+                switch filteredStatus {
+                case .all:
+                    return true
+//                case .belowMinStock:
+//                    return shLItem.amount
+                case .undone:
+                    return shLItem.done == "0"
+                default: return true
+                }
             }
     }
     
@@ -121,6 +141,11 @@ struct ShoppingListView: View {
     
     var content: some View {
         List{
+            Group {
+                ShoppingListFilterActionView()
+                ShoppingListInteractionView()
+                ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
+            }
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in
                 Section(header: Text(productGroup.name)) {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) {shItem in

@@ -28,6 +28,7 @@ class GrocyViewModel: ObservableObject {
     
     @Published var systemInfo: SystemInfo?
     @Published var systemDBChangedTime: SystemDBChangedTime?
+    @Published var systemConfig: SystemConfig?
     
     @Published var users: GrocyUsers = []
     @Published var stock: Stock = []
@@ -130,23 +131,21 @@ class GrocyViewModel: ObservableObject {
         return startvar
     }
     
-    //MARK: - GET DATA
+    //MARK: - SYSTEM
     
     func getSystemInfo() {
         let cancellable = grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.lastLoadingFailed = true
                     print("Handle error: sysinfo\(error)")
                 case .finished:
-                    self.lastLoadingFailed = false
                     break
                 }
                 
-            }) { (systemInfo) in
+            }) { (systemInfoOut) in
                 DispatchQueue.main.async {
-                    self.systemInfo = systemInfo
+                    self.systemInfo = systemInfoOut
                 }
             }
         cancellables.insert(cancellable)
@@ -157,14 +156,32 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: getsysbdch\(error)")
+                    print("Handle error: sysct\(error)")
                 case .finished:
                     break
                 }
                 
-            }) { (systemDBChangedTime) in
+            }) { (systemDBChangedTimeOut) in
                 DispatchQueue.main.async {
-                    self.systemDBChangedTime = systemDBChangedTime
+                    self.systemDBChangedTime = systemDBChangedTimeOut
+                }
+            }
+        cancellables.insert(cancellable)
+    }
+    
+    func getSystemConfig() {
+        let cancellable = grocyApi.getSystemConfig()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: sysconfig\(error)")
+                case .finished:
+                    break
+                }
+                
+            }) { (systemConfigOut) in
+                DispatchQueue.main.async {
+                    self.systemConfig = systemConfigOut
                 }
             }
         cancellables.insert(cancellable)

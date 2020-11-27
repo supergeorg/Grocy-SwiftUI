@@ -11,6 +11,7 @@ struct UserRowActionsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     var user: GrocyUser
+    var isCurrentUser: Bool
     
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
@@ -42,7 +43,7 @@ struct UserRowActionsView: View {
             Image(systemName: "trash.fill")
                 .font(Font.system(size: 15, weight: .bold))
                 .padding(paddingValue)
-                .background(Color.red)
+                .background(isCurrentUser ? Color.grocyDeleteLocked : Color.grocyDelete)
                 .foregroundColor(.white)
                 .cornerRadius(cornerRadiusValue)
                 .help("str.admin.user.tooltip.delete".localized)
@@ -55,6 +56,7 @@ struct UserRowActionsView: View {
                         grocyVM.getUsers()
                     }, secondaryButton: .cancel())
                 }
+                .disabled(isCurrentUser)
         }
     }
 }
@@ -62,9 +64,11 @@ struct UserRowActionsView: View {
 struct UserRowView: View {
     var user: GrocyUser
     
+    var isCurrentUser: Bool
+    
     var body: some View {
         HStack{
-            UserRowActionsView(user: user)
+            UserRowActionsView(user: user, isCurrentUser: isCurrentUser)
             Divider()
             VStack(alignment: .leading){
                 Text(user.username)
@@ -78,6 +82,6 @@ struct UserRowView: View {
 
 struct UserRowView_Previews: PreviewProvider {
     static var previews: some View {
-        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name"))
+        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name"), isCurrentUser: false)
     }
 }

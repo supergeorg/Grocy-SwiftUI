@@ -158,6 +158,14 @@
 		78CB764D255EBB0400319108 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB764B255EBB0400319108 /* SearchBar.swift */; };
 		78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7656255EC0B500319108 /* StockFilterBarView.swift */; };
 		78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7656255EC0B500319108 /* StockFilterBarView.swift */; };
+		78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
+		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
+		78D0F4CA257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */; };
+		78D0F4CB257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */; };
+		78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */; };
+		78D0F4D6257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */; };
+		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
+		78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78EB13AE255F09E40055A0A8 /* SearchToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */; };
 		78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
 		78F1FAC1255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
@@ -281,6 +289,10 @@
 		78CB7643255EBA6C00319108 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		78CB764B255EBB0400319108 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		78CB7656255EC0B500319108 /* StockFilterBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockFilterBarView.swift; sourceTree = "<group>"; };
+		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
+		78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListInteractionView.swift; sourceTree = "<group>"; };
+		78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterView.swift; sourceTree = "<group>"; };
+		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
 		78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToolbarItem.swift; sourceTree = "<group>"; };
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
 		78F1FAC6255EEDD1007D2E8B /* StockTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTable.swift; sourceTree = "<group>"; };
@@ -351,6 +363,9 @@
 			children = (
 				7880F0F0256FB4CB00FB8431 /* ShoppingListView.swift */,
 				7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */,
+				78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */,
+				78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */,
+				78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */,
 				7880F111256FC92800FB8431 /* ShoppingListFormView.swift */,
 			);
 			path = ShoppingList;
@@ -383,6 +398,7 @@
 			children = (
 				7880F0F8256FB63800FB8431 /* ShoppingListModel.swift */,
 				7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */,
+				78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */,
 			);
 			path = ShoppingList;
 			sourceTree = "<group>";
@@ -666,6 +682,8 @@
 			dependencies = (
 			);
 			name = "Grocy-SwiftUI (macOS)";
+			packageProductDependencies = (
+			);
 			productName = "Grocy-SwiftUI (macOS)";
 			productReference = 78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */;
 			productType = "com.apple.product-type.application";
@@ -741,6 +759,8 @@
 				de,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
+			packageReferences = (
+			);
 			productRefGroup = 78CB749B255E9EF800319108 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -799,6 +819,7 @@
 				786F6EB225640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				78CB7604255EB9A000319108 /* ProductConsumeModel.swift in Sources */,
 				78CB7608255EB9A000319108 /* ProductOpenModel.swift in Sources */,
+				78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
 				7880F0F1256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
 				78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */,
 				78CB760A255EB9A000319108 /* ProductBuyModel.swift in Sources */,
@@ -807,6 +828,7 @@
 				7880F104256FB6E400FB8431 /* ShoppingListDescriptionModel.swift in Sources */,
 				7885B8A72567ED14003439F5 /* SharedModel.swift in Sources */,
 				78CB761A255EB9C600319108 /* MDQuantityUnitsModel.swift in Sources */,
+				78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */,
 				786F6E8B2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
 				786F6EA42564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */,
@@ -841,6 +863,7 @@
 				7880F10B256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78CB7599255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */,
+				78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
 				7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
@@ -870,6 +893,7 @@
 				78CB759D255EA56D00319108 /* SettingsView.swift in Sources */,
 				78CB7616255EB9C600319108 /* MDLocationsModel.swift in Sources */,
 				7885B8AF2567F08F003439F5 /* GrocyUserModel.swift in Sources */,
+				78D0F4CA257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */,
 				781A25C82566B84600560026 /* MyDoubleStepper.swift in Sources */,
 				78CB761E255EB9C600319108 /* MDShoppingLocationsModel.swift in Sources */,
 			);
@@ -890,6 +914,7 @@
 				7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				788EFFEC255F10970076FE0F /* NSTableView.swift in Sources */,
 				78CB7619255EB9C600319108 /* MDProductsModel.swift in Sources */,
+				78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */,
 				781A25A4256690C200560026 /* MDProductGroupFormView.swift in Sources */,
 				7848A0EA256BE3EF004EAF18 /* InventoryProductView.swift in Sources */,
 				7848A0DC256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
@@ -897,8 +922,10 @@
 				7880F113256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				786F6E8C2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
 				7880F0F2256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
+				78D0F4D6257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
 				786F6EA52564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78CB764D255EBB0400319108 /* SearchBar.swift in Sources */,
+				78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78CB759C255EA56D00319108 /* AboutView.swift in Sources */,
 				786F6E9325640332004D8DE0 /* MDProductsView.swift in Sources */,
 				78F1FADC255EFE73007D2E8B /* MDLocationsView.swift in Sources */,
@@ -951,6 +978,7 @@
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
+				78D0F4CB257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */,
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB7632255EBA3F00319108 /* StockTableRow.swift in Sources */,
 				78CB7590255EA53F00319108 /* Errors.swift in Sources */,
