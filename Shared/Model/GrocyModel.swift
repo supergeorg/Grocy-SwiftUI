@@ -126,7 +126,7 @@ class GrocyViewModel: ObservableObject {
         default:
             print("findnextid not impl")
         }
-        var startvar = 0
+        var startvar = 1
         while ints.contains(startvar) { startvar += 1 }
         return startvar
     }
@@ -282,6 +282,22 @@ class GrocyViewModel: ObservableObject {
                 .assign(to: \.shoppingList, on: self)
                 .store(in: &cancellables)
         }
+    
+    func addShoppingListProduct(content: ShoppingListAddProduct) {
+        let jsonContent = try! jsonEncoder.encode(content)
+        grocyApi.shoppingListAddProduct(content: jsonContent)
+            .replaceError(with: [])
+            .assign(to: \.lastErrors, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType) {
+        let jsonContent = try! jsonEncoder.encode(content)
+        grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
+            .replaceError(with: [])
+            .assign(to: \.lastErrors, on: self)
+            .store(in: &cancellables)
+    }
     
     // MARK: -Master Data
     

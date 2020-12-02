@@ -17,10 +17,7 @@ struct StockFilterBar: View {
     
     var body: some View {
         HStack{
-            HStack{
-                Image(systemName: "magnifyingglass")
-                TextField("Search", text: $searchString)
-            }
+            SearchBar(text: $searchString, placeholder: "str.search".localized)
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")

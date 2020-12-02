@@ -30,6 +30,7 @@ extension Color {
     
     static let grocyDelete = Color(red: 212 / 255, green: 27 / 255, blue: 50 / 255)
     static let grocyDeleteLocked = Color(red: 221 / 255, green: 95 / 255, blue: 110 / 255)
+    static let grocyGreen = Color(red: 31 / 255, green: 156 / 255, blue: 49 / 255)
 }
 
 extension Color {

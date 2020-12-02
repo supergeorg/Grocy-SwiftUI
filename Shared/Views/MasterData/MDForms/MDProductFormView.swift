@@ -176,7 +176,7 @@ struct MDProductFormView: View {
                 })
                 
                 // Min Stock amount
-                MyNumberStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0)
+                MyIntStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0)
                 
                 // Accumulate sub products min stock amount
                 MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info")
@@ -192,10 +192,10 @@ struct MDProductFormView: View {
                 }).pickerStyle(SegmentedPickerStyle())
                 
                 // Default due days
-                MyNumberStepper(amount: $defaultBestBeforeDays, description: "str.md.product.defaultBestBeforeDays", descriptionInfo: "str.md.product.defaultBestBeforeDays.info", minAmount: 0, amountName: "str.days")
+                MyIntStepper(amount: $defaultBestBeforeDays, description: "str.md.product.defaultBestBeforeDays", descriptionInfo: "str.md.product.defaultBestBeforeDays.info", minAmount: 0, amountName: defaultBestBeforeDays == 1 ? "str.day" : "str.days")
                 
                 // Default due days afer opening
-                MyNumberStepper(amount: $defaultBestBeforeDaysAfterOpen, description: "str.md.product.defaultBestBeforeDaysAfterOpen", descriptionInfo: "str.md.product.defaultBestBeforeDaysAfterOpen.info", minAmount: 0, amountName: "str.days")
+                MyIntStepper(amount: $defaultBestBeforeDaysAfterOpen, description: "str.md.product.defaultBestBeforeDaysAfterOpen", descriptionInfo: "str.md.product.defaultBestBeforeDaysAfterOpen.info", minAmount: 0, amountName: defaultBestBeforeDaysAfterOpen == 1 ? "str.day" : "str.days")
                 
                 // Product group
                 Picker("str.md.product.productGroup", selection: $productGroupID, content: {

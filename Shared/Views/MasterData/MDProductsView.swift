@@ -111,6 +111,7 @@ struct MDProductsView: View {
             updateData()
         })
         .toolbar {
+//            ToolbarSearch(
             ToolbarItem(placement: .primaryAction) {
                 HStack{
                     #if os(macOS)

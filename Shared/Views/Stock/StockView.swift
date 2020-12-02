@@ -130,6 +130,7 @@ struct StockView: View {
         grocyVM.getMDLocations()
         grocyVM.getMDProductGroups()
         grocyVM.getMDQuantityUnits()
+        grocyVM.getSystemConfig()
     }
     
     var body: some View {
@@ -227,6 +228,7 @@ struct StockView: View {
             .popover(isPresented: $showTableSettings, content: {
                 StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
                     .padding()
+//                    .frame(width: 400, height: 400)
             })
             StockTable(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, filteredStock: filteredProducts, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             //            ForEach(filteredProducts, id:\.productID) { stock in

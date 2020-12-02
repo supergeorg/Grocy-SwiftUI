@@ -1,5 +1,5 @@
 //
-//  ShoppingListInteractionView.swift
+//  ShoppingListActionView.swift
 //  Grocy-SwiftUI
 //
 //  Created by Georg Meissner on 27.11.20.
@@ -7,9 +7,20 @@
 
 import SwiftUI
 
-struct ShoppingListInteractionView: View {
-    let cornerRadiusValue: CGFloat = 5.0
+struct ShoppingListActionView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
+    let cornerRadiusValue: CGFloat = 3.0
     let paddingAmount: CGFloat = 4.0
+    
+    @State private var showAddItem: Bool = false
+    
+    @Binding var selectedShoppingListID: String
+    
+    private func slAction(_ actionType: ShoppingListActionType) {
+        grocyVM.shoppingListAction(content: ShoppingListAction(listID: Int(selectedShoppingListID)!), actionType: actionType)
+        grocyVM.getShoppingList()
+    }
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
@@ -19,6 +30,13 @@ struct ShoppingListInteractionView: View {
                     .foregroundColor(.white)
                     .background(Color.blue)
                     .cornerRadius(cornerRadiusValue)
+                    .onTapGesture {
+                        showAddItem.toggle()
+                    }
+                    .popover(isPresented: $showAddItem, content: {
+                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                            .padding()
+                    })
                 Text("str.shL.action.clearList".localized)
                     .padding(paddingAmount)
                     .foregroundColor(.red)
@@ -26,6 +44,9 @@ struct ShoppingListInteractionView: View {
                         RoundedRectangle(cornerRadius: cornerRadiusValue)
                             .stroke(Color.red, lineWidth: 1)
                     )
+                    .onTapGesture {
+                        slAction(.clear)
+                    }
                 Text("str.shL.action.addListItemsToStock".localized)
                     .padding(paddingAmount)
                     .foregroundColor(.blue)
@@ -33,6 +54,9 @@ struct ShoppingListInteractionView: View {
                         RoundedRectangle(cornerRadius: cornerRadiusValue)
                             .stroke(Color.blue, lineWidth: 1)
                     )
+                    .onTapGesture {
+                        print("not implemented")
+                    }
                 Text("str.shL.action.addBelowMinStock".localized)
                     .padding(paddingAmount)
                     .foregroundColor(.blue)
@@ -40,6 +64,9 @@ struct ShoppingListInteractionView: View {
                         RoundedRectangle(cornerRadius: cornerRadiusValue)
                             .stroke(Color.blue, lineWidth: 1)
                     )
+                    .onTapGesture {
+                        slAction(.addMissing)
+                    }
                 Text("str.shL.action.addOverdue".localized)
                     .padding(paddingAmount)
                     .foregroundColor(.blue)
@@ -47,13 +74,17 @@ struct ShoppingListInteractionView: View {
                         RoundedRectangle(cornerRadius: cornerRadiusValue)
                             .stroke(Color.blue, lineWidth: 1)
                     )
+                    .onTapGesture {
+                        slAction(.addExpired)
+                        slAction(.addOverdue)
+                    }
             }
         }
     }
 }
 
-struct ShoppingListInteractionView_Previews: PreviewProvider {
+struct ShoppingListActionView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListInteractionView()
+        ShoppingListActionView(selectedShoppingListID: Binding.constant("1"))
     }
 }

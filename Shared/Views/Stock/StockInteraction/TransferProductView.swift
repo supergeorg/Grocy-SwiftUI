@@ -116,7 +116,7 @@ struct TransferProductView: View {
                 grocyVM.getStockProductEntries(productID: productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     locationIDFrom = selectedProduct.locationID
-                    quantityUnitID = selectedProduct.quIDPurchase
+                    quantityUnitID = selectedProduct.quIDStock
                 }
             }
             
@@ -159,7 +159,7 @@ struct TransferProductView: View {
             if useSpecificStockEntry && !productID.isEmpty {
                 Picker(selection: $stockEntryID, label: Label("str.stock.transfer.product.stockEntry", systemImage: "tag"), content: {
                     ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.id) { stockProduct in
-                        Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate)), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
+                        Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate) ?? "Best before date error"), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
                     }
                 })
             }

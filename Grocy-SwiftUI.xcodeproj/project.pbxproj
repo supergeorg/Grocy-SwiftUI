@@ -12,8 +12,8 @@
 		781A25A4256690C200560026 /* MDProductGroupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25A2256690C200560026 /* MDProductGroupFormView.swift */; };
 		781A25AE2566952A00560026 /* MDProductFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25AD2566952A00560026 /* MDProductFormView.swift */; };
 		781A25AF2566952A00560026 /* MDProductFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25AD2566952A00560026 /* MDProductFormView.swift */; };
-		781A25BD2566B5AF00560026 /* MyNumberStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25BC2566B5AF00560026 /* MyNumberStepper.swift */; };
-		781A25BE2566B5AF00560026 /* MyNumberStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25BC2566B5AF00560026 /* MyNumberStepper.swift */; };
+		781A25BD2566B5AF00560026 /* MyIntStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25BC2566B5AF00560026 /* MyIntStepper.swift */; };
+		781A25BE2566B5AF00560026 /* MyIntStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25BC2566B5AF00560026 /* MyIntStepper.swift */; };
 		781A25C82566B84600560026 /* MyDoubleStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25C72566B84600560026 /* MyDoubleStepper.swift */; };
 		781A25C92566B84600560026 /* MyDoubleStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25C72566B84600560026 /* MyDoubleStepper.swift */; };
 		781A25D32566BB9100560026 /* MyToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25D22566BB9100560026 /* MyToggle.swift */; };
@@ -83,6 +83,12 @@
 		7885B8BB2567F723003439F5 /* PurchaseProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8BA2567F723003439F5 /* PurchaseProductView.swift */; };
 		7885B8BC2567F723003439F5 /* PurchaseProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8BA2567F723003439F5 /* PurchaseProductView.swift */; };
 		788EFFEC255F10970076FE0F /* NSTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788EFFEB255F10970076FE0F /* NSTableView.swift */; };
+		78A33CBA257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
+		78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
+		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
+		78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
+		78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
+		78B67B7D2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB74AE255E9EF800319108 /* Tests_iOS.swift */; };
 		78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB74B9255E9EF800319108 /* Tests_macOS.swift */; };
 		78CB74BC255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */; };
@@ -160,12 +166,16 @@
 		78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7656255EC0B500319108 /* StockFilterBarView.swift */; };
 		78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
-		78D0F4CA257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */; };
-		78D0F4CB257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */; };
+		78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */; };
+		78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */; };
 		78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */; };
 		78D0F4D6257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */; };
 		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
+		78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
+		78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
+		78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
+		78D98F772577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78EB13AE255F09E40055A0A8 /* SearchToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */; };
 		78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
 		78F1FAC1255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
@@ -180,6 +190,8 @@
 		78FA6A952567D40500941460 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
 		78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
 		78FA6A9C2567D4E000941460 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
+		78FD0677257649D8006E4946 /* ProductDetailsObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FD0676257649D8006E4946 /* ProductDetailsObject.swift */; };
+		78FD0678257649D8006E4946 /* ProductDetailsObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FD0676257649D8006E4946 /* ProductDetailsObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,7 +215,7 @@
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		781A25A2256690C200560026 /* MDProductGroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductGroupFormView.swift; sourceTree = "<group>"; };
 		781A25AD2566952A00560026 /* MDProductFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductFormView.swift; sourceTree = "<group>"; };
-		781A25BC2566B5AF00560026 /* MyNumberStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNumberStepper.swift; sourceTree = "<group>"; };
+		781A25BC2566B5AF00560026 /* MyIntStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyIntStepper.swift; sourceTree = "<group>"; };
 		781A25C72566B84600560026 /* MyDoubleStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDoubleStepper.swift; sourceTree = "<group>"; };
 		781A25D22566BB9100560026 /* MyToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyToggle.swift; sourceTree = "<group>"; };
 		782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductDetailsModel.swift; sourceTree = "<group>"; };
@@ -239,6 +251,9 @@
 		7885B8AE2567F08F003439F5 /* GrocyUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserModel.swift; sourceTree = "<group>"; };
 		7885B8BA2567F723003439F5 /* PurchaseProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseProductView.swift; sourceTree = "<group>"; };
 		788EFFEB255F10970076FE0F /* NSTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTableView.swift; sourceTree = "<group>"; };
+		78A33CB9257528B900C450D4 /* ProductOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductOverviewView.swift; sourceTree = "<group>"; };
+		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
+		78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionModel.swift; sourceTree = "<group>"; };
 		78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocy_SwiftUIApp.swift; sourceTree = "<group>"; };
 		78CB7494255E9EF700319108 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		78CB7495255E9EF800319108 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -290,9 +305,11 @@
 		78CB764B255EBB0400319108 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		78CB7656255EC0B500319108 /* StockFilterBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockFilterBarView.swift; sourceTree = "<group>"; };
 		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
-		78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListInteractionView.swift; sourceTree = "<group>"; };
+		78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionView.swift; sourceTree = "<group>"; };
 		78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterView.swift; sourceTree = "<group>"; };
 		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
+		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
+		78D98F752577B93000199688 /* ShoppingListAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListAddProduct.swift; sourceTree = "<group>"; };
 		78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToolbarItem.swift; sourceTree = "<group>"; };
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
 		78F1FAC6255EEDD1007D2E8B /* StockTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTable.swift; sourceTree = "<group>"; };
@@ -301,6 +318,7 @@
 		78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterDataView.swift; sourceTree = "<group>"; };
 		78FA6A932567D40500941460 /* StockJournalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockJournalModel.swift; sourceTree = "<group>"; };
 		78FA6A9A2567D4E000941460 /* TransactionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionType.swift; sourceTree = "<group>"; };
+		78FD0676257649D8006E4946 /* ProductDetailsObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,9 +382,10 @@
 				7880F0F0256FB4CB00FB8431 /* ShoppingListView.swift */,
 				7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */,
 				78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */,
-				78D0F4C9257122B100E1B732 /* ShoppingListInteractionView.swift */,
+				78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */,
 				78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */,
 				7880F111256FC92800FB8431 /* ShoppingListFormView.swift */,
+				78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */,
 			);
 			path = ShoppingList;
 			sourceTree = "<group>";
@@ -399,6 +418,8 @@
 				7880F0F8256FB63800FB8431 /* ShoppingListModel.swift */,
 				7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */,
 				78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */,
+				78D98F752577B93000199688 /* ShoppingListAddProduct.swift */,
+				78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */,
 			);
 			path = ShoppingList;
 			sourceTree = "<group>";
@@ -420,6 +441,15 @@
 				7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */,
 			);
 			path = StockInteraction;
+			sourceTree = "<group>";
+		};
+		78A33CB8257528AB00C450D4 /* Details */ = {
+			isa = PBXGroup;
+			children = (
+				78A33CB9257528B900C450D4 /* ProductOverviewView.swift */,
+				78FD0676257649D8006E4946 /* ProductDetailsObject.swift */,
+			);
+			path = Details;
 			sourceTree = "<group>";
 		};
 		78CB748D255E9EF600319108 = {
@@ -515,6 +545,7 @@
 			isa = PBXGroup;
 			children = (
 				78CB74D4255E9FCD00319108 /* Navigation */,
+				78A33CB8257528AB00C450D4 /* Details */,
 				78CB764A255EBAEC00319108 /* Components */,
 				78CB7628255EBA2600319108 /* Stock */,
 				78262728256E8FFF00ECED03 /* ShoppingList */,
@@ -566,6 +597,7 @@
 				78CB75A5255EA5A900319108 /* DateFormatter.swift */,
 				78CB75A4255EA5A900319108 /* Localization.swift */,
 				7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */,
+				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -626,7 +658,7 @@
 				78CB764B255EBB0400319108 /* SearchBar.swift */,
 				78F1FAF6255F0347007D2E8B /* ToolbarSearch.swift */,
 				78396E8B25629FE600B9878F /* MyTextField.swift */,
-				781A25BC2566B5AF00560026 /* MyNumberStepper.swift */,
+				781A25BC2566B5AF00560026 /* MyIntStepper.swift */,
 				781A25C72566B84600560026 /* MyDoubleStepper.swift */,
 				781A25D22566BB9100560026 /* MyToggle.swift */,
 			);
@@ -822,8 +854,10 @@
 				78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
 				7880F0F1256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
 				78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */,
+				78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */,
 				78CB760A255EB9A000319108 /* ProductBuyModel.swift in Sources */,
 				78CB764C255EBB0400319108 /* SearchBar.swift in Sources */,
+				78A33CBA257528B900C450D4 /* ProductOverviewView.swift in Sources */,
 				78512060256FE94600171390 /* UserRowView.swift in Sources */,
 				7880F104256FB6E400FB8431 /* ShoppingListDescriptionModel.swift in Sources */,
 				7885B8A72567ED14003439F5 /* SharedModel.swift in Sources */,
@@ -839,6 +873,7 @@
 				78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */,
 				78CB7584255EA3D000319108 /* SystemInfoModel.swift in Sources */,
 				78CB762F255EBA3F00319108 /* StockFilterActionsView.swift in Sources */,
+				78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */,
 				78CB75A6255EA5A900319108 /* Localization.swift in Sources */,
 				781A25A3256690C200560026 /* MDProductGroupFormView.swift in Sources */,
 				78CB7588255EA3D000319108 /* SystemConfigModel.swift in Sources */,
@@ -856,6 +891,7 @@
 				78CB7637255EBA3F00319108 /* ProductStatus.swift in Sources */,
 				7826270E256E847F00ECED03 /* StockProductPriceHistory.swift in Sources */,
 				786F6E992564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
+				78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */,
 				7885B8BB2567F723003439F5 /* PurchaseProductView.swift in Sources */,
 				78CB756F255EA39200319108 /* GrocyModel.swift in Sources */,
 				78CB7618255EB9C600319108 /* MDProductsModel.swift in Sources */,
@@ -863,6 +899,7 @@
 				7880F10B256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78CB7599255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */,
+				78FD0677257649D8006E4946 /* ProductDetailsObject.swift in Sources */,
 				78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
 				7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
@@ -870,7 +907,7 @@
 				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
 				78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */,
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
-				781A25BD2566B5AF00560026 /* MyNumberStepper.swift in Sources */,
+				781A25BD2566B5AF00560026 /* MyIntStepper.swift in Sources */,
 				7880F112256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				78CB758F255EA53F00319108 /* Errors.swift in Sources */,
 				786F6E842563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */,
@@ -884,6 +921,7 @@
 				7848A0D4256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */,
 				786F6EC025640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */,
+				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				786F6EB925640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB75B0255EAB1400319108 /* Animations.swift in Sources */,
@@ -893,7 +931,7 @@
 				78CB759D255EA56D00319108 /* SettingsView.swift in Sources */,
 				78CB7616255EB9C600319108 /* MDLocationsModel.swift in Sources */,
 				7885B8AF2567F08F003439F5 /* GrocyUserModel.swift in Sources */,
-				78D0F4CA257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */,
+				78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
 				781A25C82566B84600560026 /* MyDoubleStepper.swift in Sources */,
 				78CB761E255EB9C600319108 /* MDShoppingLocationsModel.swift in Sources */,
 			);
@@ -906,11 +944,13 @@
 				78CB7585255EA3D000319108 /* SystemInfoModel.swift in Sources */,
 				78CB759A255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				7880F105256FB6E400FB8431 /* ShoppingListDescriptionModel.swift in Sources */,
+				78FD0678257649D8006E4946 /* ProductDetailsObject.swift in Sources */,
 				78512061256FE94600171390 /* UserRowView.swift in Sources */,
 				786F6EB325640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				78CB7601255EB9A000319108 /* StockModel.swift in Sources */,
 				78CB7645255EBA6C00319108 /* Colors.swift in Sources */,
 				7848A0D5256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */,
+				78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */,
 				7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				788EFFEC255F10970076FE0F /* NSTableView.swift in Sources */,
 				78CB7619255EB9C600319108 /* MDProductsModel.swift in Sources */,
@@ -936,6 +976,7 @@
 				78CB7636255EBA3F00319108 /* StockView.swift in Sources */,
 				78262708256E83A900ECED03 /* StockLocationModel.swift in Sources */,
 				7885B8B02567F08F003439F5 /* GrocyUserModel.swift in Sources */,
+				78B67B7D2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */,
 				78CB7570255EA39200319108 /* GrocyModel.swift in Sources */,
 				7826271F256E884F00ECED03 /* ProductTransferModel.swift in Sources */,
 				78CB7617255EB9C600319108 /* MDLocationsModel.swift in Sources */,
@@ -967,7 +1008,7 @@
 				782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */,
 				78CB7630255EBA3F00319108 /* StockFilterActionsView.swift in Sources */,
 				78CB761B255EB9C600319108 /* MDQuantityUnitsModel.swift in Sources */,
-				781A25BE2566B5AF00560026 /* MyNumberStepper.swift in Sources */,
+				781A25BE2566B5AF00560026 /* MyIntStepper.swift in Sources */,
 				78CB7589255EA3D000319108 /* SystemConfigModel.swift in Sources */,
 				7885B8A82567ED14003439F5 /* SharedModel.swift in Sources */,
 				7880F0FA256FB63800FB8431 /* ShoppingListModel.swift in Sources */,
@@ -978,11 +1019,14 @@
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
-				78D0F4CB257122B100E1B732 /* ShoppingListInteractionView.swift in Sources */,
+				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,
+				78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
+				78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */,
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB7632255EBA3F00319108 /* StockTableRow.swift in Sources */,
 				78CB7590255EA53F00319108 /* Errors.swift in Sources */,
 				78512068256FF0E400171390 /* UserFormView.swift in Sources */,
+				78D98F772577B93000199688 /* ShoppingListAddProduct.swift in Sources */,
 				78F1FAC8255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */,
 				78CB757B255EA39900319108 /* GrocyAPI.swift in Sources */,

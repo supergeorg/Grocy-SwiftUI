@@ -8,13 +8,16 @@
 
 // MARK: - Generic
 "str.cancel" = "Abbrechen";
+"str.ok" = "OK";
 "str.delete" = "Löschen";
 "str.edit" = "Bearbeiten";
 "str.save" = "Speichern";
 "str.search" = "Suchen";
 "str.noSearchResult" = "Kein Suchergebnis gefunden.";
-"str.days" = "Tag(e)";
+"str.day" = "Tag";
+"str.days" = "Tage";
 "str.refresh" = "Aktualisieren";
+"str.close" = "Schließen";
 
 // MARK: - Transaktionen
 "tr.purchase" = "Einkauf";
@@ -45,6 +48,22 @@
 "str.nav.md.batteries" = "Batterien";
 "str.nav.md.taskCategories" = "Aufgabenkategorien";
 "str.nav.settings" = "Einstellungen";
+
+// MARK: - Details
+"str.details.title" = "Produktübersicht";
+"str.details.amount" = "Bestand";
+"str.details.stockValue" = "Bestandswert";
+"str.details.defaultLocation" = "Standard-Standort";
+"str.details.lastPurchaseDate" = "Zuletzt gekauft";
+"str.details.lastUseDate" = "Zuletzt verbraucht";
+"str.details.lastPrice" = "Letzter Preis";
+"str.details.averagePrice" = "Durchschnittlicher Preis";
+"str.details.averageShelfLife" = "Durchschnittliche Haltbarkeit";
+"str.details.spoilRate" = "Verderblichkeitsrate";
+
+"str.details.stockEntries" = "Bestandseinträge";
+"str.details.stockJournal" = "Bestandsjournal";
+"str.details.edit" = "Produkt bearbeiten";
 
 // MARK: - Stock
 "str.stock.stockOverview" = "Bestand";
@@ -134,9 +153,11 @@
 
 // MARK: - Shopping List
 "str.shL" = "Einkaufszettel";
+"str.shL.manage" = "Einkaufszettel verwalten";
 "str.shL.new" = "Neuer Einkaufszettel";
 "str.shL.edit" = "Einkaufszettel bearbeiten";
 "str.shL.delete" = "Einkaufszettel löschen";
+"str.shL.delete.confirm" = "Bist du dir sicher, dass du diese Einkaufsliste löschen möchtest?";
 "str.shL.print" = "Drucken";
 "str.shL.amount" = "Menge";
 
@@ -163,6 +184,20 @@
 "str.shL.filter.undone" = "unerledigte Einträge";
 "str.shL.filter.productAmount1" = "1 Produkt ist";
 "str.shL.filter.productAmount" = "Produkte sind";
+
+"str.shL.newEntry.new.title" = "Einkaufszettel Eintrag erstellen";
+"str.shL.newEntry.edit.title" = "Einkaufszettel Eintrag bearbeiten";
+"str.shL.newEntry.shoppingList" = "Einkaufszettel";
+"str.shL.newEntry.product" = "Produkt";
+"str.shL.newEntry.amount" = "Menge";
+"str.shL.newEntry.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.shL.newEntry.quantityUnit" = "Mengeneinheit";
+"str.shL.newEntry.note" = "Notiz";
+
+"str.shL.entry.done" = "Diesen Eintrag als erledigt markieren";
+"str.shL.entry.edit" = "Diesen Eintrag bearbeiten";
+"str.shL.entry.delete" = "Diesen Eintrag löschen";
+"str.shL.entry.add %@" = "Füge %@ dem Bestand hinzu";
 
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";

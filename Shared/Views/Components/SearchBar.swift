@@ -11,15 +11,16 @@ struct SearchBar: View {
     @Binding var text: String
     
     var placeholder: String
-
+    
     @State private var isEditing = false
-        
+    
     var body: some View {
         HStack {
             TextField(placeholder, text: $text)
                 .padding(7)
                 .padding(.horizontal, 25)
                 .background(Color.systemGray6)
+                .foregroundColor(.black)
                 .keyboardShortcut("f", modifiers: .command)
                 .cornerRadius(8)
                 .overlay(
@@ -36,18 +37,14 @@ struct SearchBar: View {
                 }
             
             if isEditing && !text.isEmpty {
-                Button(action: {
-                    self.isEditing = false
-                    self.text = ""
-                    
-                    // Dismiss the keyboard
-//                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }) {
-                    Image(systemName: "delete.left")
-                }
-                .padding(.trailing, 10)
-                .transition(.move(edge: .trailing))
-                .animation(.default)
+                Image(systemName: "delete.left")
+                    .padding(.trailing, 10)
+                    .transition(.move(edge: .trailing))
+                    .animation(.default)
+                    .onTapGesture {
+                        self.isEditing = false
+                        self.text = ""
+                    }
             }
         }
     }

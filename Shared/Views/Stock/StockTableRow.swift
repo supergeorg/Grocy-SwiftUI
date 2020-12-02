@@ -38,36 +38,61 @@ struct StockTableRow: View {
     
     var stockElement: StockElement
     
+    @State private var showDetailView: Bool = false
+    
+    var caloriesSum: String {
+        if let calories = Double(stockElement.product.calories) {
+            let sum = calories * Double(stockElement.amount)!
+            return String(format: "%.0f", sum)
+        } else { return stockElement.product.calories }
+    }
+    
+    var quantityUnit: MDQuantityUnit {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+    }
+    
     var body: some View {
         HStack{
             if showProduct {
                 Text(stockElement.product.name)
             }
             if showProductGroup {
-                Divider()
+                Spacer()
                 Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "ProduktGruppe")
             }
             if showAmount {
-                Divider()
-                Text(stockElement.amount)
+                Spacer()
+                Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
             }
             if showValue {
-                Divider()
-                Text("Value")
+                Spacer()
+                Text("\(stockElement.value) \(grocyVM.systemConfig?.currency ?? "[Currency]")")
             }
             if showNextBestBeforeDate {
-                Divider()
-                Text(stockElement.bestBeforeDate)
+                Spacer()
+                Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
             }
             if showCaloriesPerStockQU {
-                Divider()
-                Text("Calories (per stock qu)")
+                Spacer()
+                Text(stockElement.product.calories)
             }
             if showCalories {
-                Divider()
-                Text("Calories")
+                Spacer()
+                Text(caloriesSum)
             }
         }
+        .onTapGesture {
+            showDetailView.toggle()
+        }
+        .sheet(isPresented: $showDetailView, content: {
+            #if os(macOS)
+            ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
+            #elseif os(iOS)
+            NavigationView{
+                ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
+            }
+            #endif
+        })
     }
 }
 

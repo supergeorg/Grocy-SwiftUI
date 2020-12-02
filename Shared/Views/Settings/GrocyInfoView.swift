@@ -13,7 +13,7 @@ struct GrocyInfoView: View {
     var body: some View {
         Form(){
             Text("str.settings.grocyVersion \(systemInfo.grocyVersion.version)")
-            Text("str.settings.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate))")
+            Text("str.settings.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? "Release Date error")")
             Text("str.settings.grocyPHPVersion \(systemInfo.phpVersion)")
             Text("str.settings.grocySQLiteVersion \(systemInfo.sqliteVersion)")
         }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension AppSidebarNavigation {
-    private enum NavigationItem: String {
+    enum NavigationItem: String {
         case stockOverview = "books.vertical"
         case shoppingList = "cart"
         case recipes = "list.bullet.below.rectangle"
@@ -42,7 +42,8 @@ extension AppSidebarNavigation {
 
 struct AppSidebarNavigation: View {
     @State private var selection: NavigationItem? = NavigationItem.shoppingList
-    //    @AppStorage("viewSelection") var viewSelection: NavigationItem? = .stockoverview
+//        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
+//    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
     
     private func toggleSidebar() {
         #if os(macOS)

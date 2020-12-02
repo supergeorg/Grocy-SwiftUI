@@ -12,14 +12,25 @@ struct ShoppingListView: View {
     
     @State private var reloadRotationDeg: Double = 0.0
     
-    @State private var selectedShoppingListID: String = ""
+    @State private var selectedShoppingListID: String = "1"
     
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
     
+    @State private var showDeleteAlert: Bool = false
+    
     #if os(macOS)
     @State private var showNewShoppingList: Bool = false
     @State private var showEditShoppingList: Bool = false
+    #elseif os(iOS)
+    @State private var isShowingSheet: Bool = false
+    private enum InteractionSheet: Identifiable {
+        case none, newShoppingList, editShoppingList
+        var id: Int {
+            self.hashValue
+        }
+    }
+    @State private var activeSheet: InteractionSheet = .newShoppingList //.none
     #endif
     
     var selectedShoppingList: ShoppingList {
@@ -29,16 +40,16 @@ struct ShoppingListView: View {
             }
             .filter{shLItem in
                 if !searchString.isEmpty {
-                if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
-                    return product.name.localizedCaseInsensitiveContains(searchString)
-                } else { return false }} else { return true }
+                    if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
+                        return product.name.localizedCaseInsensitiveContains(searchString)
+                    } else { return false }} else { return true }
             }
             .filter{shLItem in
                 switch filteredStatus {
                 case .all:
                     return true
-//                case .belowMinStock:
-//                    return shLItem.amount
+                //                case .belowMinStock:
+                //                    return shLItem.amount
                 case .undone:
                     return shLItem.done == "0"
                 default: return true
@@ -76,15 +87,20 @@ struct ShoppingListView: View {
         return dict
     }
     
+    func deleteShoppingList() {
+        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
+        grocyVM.getShoppingListDescriptions()
+    }
+    
     func refreshData() {
         grocyVM.getMDProducts()
         grocyVM.getMDProductGroups()
         grocyVM.getMDQuantityUnits()
         grocyVM.getShoppingListDescriptions()
         grocyVM.getShoppingList()
-        if selectedShoppingListID.isEmpty {
-            selectedShoppingListID = grocyVM.shoppingListDescriptions.first?.id ?? ""
-        }
+        //        if selectedShoppingListID.isEmpty {
+        //            selectedShoppingListID = grocyVM.shoppingListDescriptions.sorted(by: {$0.id < $1.id}).first?.id ?? ""
+        //        }
     }
     
     var body: some View {
@@ -118,11 +134,16 @@ struct ShoppingListView: View {
                             .frame(width: 250, height: 150)
                     })
                     Button(action: {
-                        print("delete")
+                        showDeleteAlert.toggle()
                     }, label: {
-                        Label("str.shL.delete", systemImage: "trash")
+                        Label("str.shL.delete".localized, systemImage: "trash")
                             .foregroundColor(.red)
                     })
+                    .alert(isPresented: $showDeleteAlert) {
+                        Alert(title: Text("str.shL.delete.confirm".localized), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Fehler"), primaryButton: .destructive(Text("str.delete".localized)) {
+                            deleteShoppingList()
+                        }, secondaryButton: .cancel())
+                    }
                     Button(action: {
                         withAnimation {
                             self.reloadRotationDeg += 360
@@ -136,14 +157,69 @@ struct ShoppingListView: View {
             })
         #elseif os(iOS)
         content
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .automatic) {
+                    HStack{
+                        Menu(content: {
+                            Button(action: {
+                                activeSheet = .newShoppingList
+                                isShowingSheet.toggle()
+                            }, label: {
+                                Label("str.shL.new", systemImage: "plus")
+                            })
+                            Button(action: {
+                                activeSheet = .editShoppingList
+                                isShowingSheet.toggle()
+                            }, label: {
+                                Label("str.shL.edit", systemImage: "square.and.pencil")
+                            })
+                            Button(action: {
+                                showDeleteAlert.toggle()
+                            }, label: {
+                                Label("str.shL.delete".localized, systemImage: "trash")
+                                    .foregroundColor(.red)
+                            })
+                            Picker(selection: $selectedShoppingListID, label: Text("list: "), content: {
+                                ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shoppingListDescription in
+                                    Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+                                }
+                            })
+                            //                        }, label: {Text("str.shL.manage".localized)})
+                        }, label: { HStack(spacing: 2){
+                                Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
+                                Image(systemName: "chevron.down.square.fill")
+                            }})
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .foregroundColor(.blue)
+                            .onTapGesture {
+                                refreshData()
+                            }
+                    }
+                }
+            })
+            .sheet(isPresented: $isShowingSheet, content: {
+                switch activeSheet {
+                case .newShoppingList:
+                    ShoppingListFormView(isNewShoppingListDescription: true)
+                case .editShoppingList:
+                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
+                case .none:
+                    EmptyView()
+                }
+            })
+            .alert(isPresented: $showDeleteAlert) {
+                Alert(title: Text("str.shL.delete.confirm".localized), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Fehler"), primaryButton: .destructive(Text("str.delete".localized)) {
+                    deleteShoppingList()
+                }, secondaryButton: .cancel())
+            }
         #endif
     }
     
     var content: some View {
         List{
             Group {
-                ShoppingListFilterActionView()
-                ShoppingListInteractionView()
+//                ShoppingListFilterActionView()
+                ShoppingListActionView(selectedShoppingListID: $selectedShoppingListID)
                 ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
             }
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in

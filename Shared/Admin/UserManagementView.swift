@@ -33,6 +33,8 @@ struct UserManagementView: View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
+//                    ToolbarSearch(isSearching: <#T##Binding<Bool>#>, searchString: <#T##Binding<String>#>)
+//                    ToolbarSearch(searchString: $searchString)
                     SearchBar(text: $searchString, placeholder: "str.search".localized)
                     Button(action: {
                         withAnimation {

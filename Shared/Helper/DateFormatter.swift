@@ -27,7 +27,7 @@ extension String {
     var iso8601withFractionalSeconds: Date? { return Formatter.iso8601withFractionalSeconds.date(from: self) }
 }
 
-func formatDateOutput(_ dateStrIN: String) -> String {
+func formatDateOutput(_ dateStrIN: String) -> String? {
     if dateStrIN == "2999-12-31" {
         return "unbegrenzt"
     }
@@ -40,7 +40,7 @@ func formatDateOutput(_ dateStrIN: String) -> String {
         let dateStrOut = dateFormatterOUT.string(from: dateToFormat!)
         return dateStrOut
     } else {
-        return "Fehler bei Datum"
+        return nil//"Fehler bei Datum"
     }
 }
 
@@ -66,6 +66,13 @@ func getDateFromString(_ dateStrIN: String) -> Date? {
     return dateToFormat
 }
 
+func getDateFromTimestamp(_ timeStampIN: String) -> Date? {
+    let dateFormatterIN = DateFormatter()
+    dateFormatterIN.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    let dateToFormat = dateFormatterIN.date(from: timeStampIN)
+    return dateToFormat
+}
+
 func getTimeDistanceFromNow(date: Date) -> Int? {
     let startDate = Date()
     let endDate = date
@@ -77,4 +84,13 @@ func getTimeDistanceFromString(_ dateStrIN: String) -> Int? {
     if let date = getDateFromString(dateStrIN) {
         return getTimeDistanceFromNow(date: date)
     } else {return nil}
+}
+
+func formatDays(daysToFormat: Int?) -> String? {
+    let datecomponents = DateComponents(day: daysToFormat)
+    
+    let dcf = DateComponentsFormatter()
+    dcf.allowedUnits = [.day, .month, .year]
+    dcf.unitsStyle = .abbreviated
+    return dcf.string(from: datecomponents)
 }

@@ -48,6 +48,21 @@ struct ShoppingListFormView: View {
         NavigationView {
             content
                 .navigationTitle(isNewShoppingListDescription ? "str.shL.new.title" : "str.shL.edit.title")
+                .toolbar{
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("str.cancel") {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                        .keyboardShortcut(.cancelAction)
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("str.save") {
+                            saveShoppingList()
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                        .keyboardShortcut(.defaultAction)
+                    }
+                }
         }
         #endif
     }

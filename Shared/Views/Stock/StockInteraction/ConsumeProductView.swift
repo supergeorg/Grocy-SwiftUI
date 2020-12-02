@@ -69,6 +69,14 @@ struct ConsumeProductView: View {
         grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
     }
     
+    private func updateData() {
+        if grocyVM.mdProducts.isEmpty {
+            grocyVM.getMDProducts()
+            grocyVM.getMDQuantityUnits()
+            grocyVM.getMDLocations()
+        }
+    }
+    
     var body: some View {
         #if os(macOS)
         content
@@ -111,17 +119,19 @@ struct ConsumeProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    HStack{
-                        Button("str.stock.consume.product.open") {
-                            openProduct()
-                            resetForm()
-                        }.disabled(!isFormValid)
-                        Button("str.stock.consume.product.consume") {
-                            consumeProduct()
-                            resetForm()
-                        }.disabled(!isFormValid)
-                    }
+//                ToolbarItem(placement: .confirmationAction) {
+//                    
+//                }
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button("str.stock.consume.product.open") {
+                        openProduct()
+                        resetForm()
+                    }.disabled(!isFormValid)
+                    Spacer()
+                    Button("str.stock.consume.product.consume") {
+                        consumeProduct()
+                        resetForm()
+                    }.disabled(!isFormValid)
                 }
             })
         #endif
@@ -141,7 +151,7 @@ struct ConsumeProductView: View {
                 grocyVM.getStockProductEntries(productID: productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     locationID = selectedProduct.locationID
-                    quantityUnitID = selectedProduct.quIDPurchase
+                    quantityUnitID = selectedProduct.quIDStock
                 }
             }
             
@@ -165,7 +175,7 @@ struct ConsumeProductView: View {
                 if useSpecificStockEntry && !productID.isEmpty {
                     Picker(selection: $stockEntryID, label: Label("str.stock.consume.product.stockEntry", systemImage: "tag"), content: {
                         ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.id) { stockProduct in
-                            Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate)), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
+                            Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error"), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
                         }
                     })
                 }
@@ -176,11 +186,7 @@ struct ConsumeProductView: View {
             }
         }
         .onAppear(perform: {
-            if grocyVM.mdProducts.isEmpty {
-                grocyVM.getMDProducts()
-                grocyVM.getMDQuantityUnits()
-                grocyVM.getMDLocations()
-            }
+            updateData()
         })
         .animation(.default)
         .navigationTitle("str.stock.consume".localized)

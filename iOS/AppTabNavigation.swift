@@ -18,7 +18,7 @@ extension AppTabNavigation {
 }
 
 struct AppTabNavigation: View {
-    @State private var selection: Tab = .stockOverview
+    @State private var selection: Tab = .shoppingList
     
     var body: some View {
         TabView(selection: $selection) {
@@ -31,15 +31,15 @@ struct AppTabNavigation: View {
             }
             .tag(Tab.stockOverview)
             
-//            NavigationView {
-//                EmptyView()
-//            }
-//            .tabItem {
-//                Label("str.nav.shoppingList", systemImage: Tab.shoppingList.rawValue)
-//                    .accessibility(label: Text("str.nav.shoppingList"))
-//            }
-//            .tag(Tab.shoppingList)
-//            
+            NavigationView {
+                ShoppingListView()
+            }
+            .tabItem {
+                Label("str.nav.shoppingList", systemImage: Tab.shoppingList.rawValue)
+                    .accessibility(label: Text("str.nav.shoppingList"))
+            }
+            .tag(Tab.shoppingList)
+            
             NavigationView {
                 MasterDataView()
             }

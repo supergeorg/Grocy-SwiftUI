@@ -19,13 +19,12 @@ struct ShoppingListFilterView: View {
                 Text(ShoppingListStatus.belowMinStock.rawValue.localized).tag(ShoppingListStatus.belowMinStock)
                 Text(ShoppingListStatus.undone.rawValue.localized).tag(ShoppingListStatus.undone)
 
-            })
-            Button(action: {
-                searchString = ""
-                filteredStatus = .all
-            }, label: {
-                Text("str.shL.filter.reset")
-            })
+            }).pickerStyle(MenuPickerStyle())
+            Text("str.shL.filter.reset")
+                .onTapGesture {
+                    searchString = ""
+                    filteredStatus = .all
+                }
         }
         .padding(.trailing, 5)
     }

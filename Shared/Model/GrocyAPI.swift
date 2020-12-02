@@ -35,6 +35,10 @@ public enum StockProductGet: String {
     case details, locations, entries, priceHistory
 }
 
+public enum ShoppingListActionType: String {
+    case clear, addExpired, addOverdue, addMissing
+}
+
 public enum ResponseCodes: Int {
     case GetSuccessful = 200
     case PostSuccessful = 204
@@ -63,6 +67,8 @@ protocol GrocyAPIProvider {
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
+    func shoppingListAddProduct<T: Codable>(content: Data) -> AnyPublisher<T, APIError>
+    func shoppingListAction<T: Codable>(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<T, APIError>
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
@@ -273,6 +279,26 @@ extension GrocyApi {
     
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError> {
         return call(.stockBookingWithIdUndo, method: .POST, id: id)
+    }
+    
+    // SHOPPING LIST
+    
+    func shoppingListAddProduct<T: Codable>(content: Data) -> AnyPublisher<T, APIError> {
+        return call(.stockShoppingListAddProduct, method: .POST, content: content)
+    }
+    
+    func shoppingListAction<T: Codable>(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<T, APIError> {
+        switch actionType {
+        case .clear:
+            return call(.stockShoppingListClear, method: .POST, content: content)
+        case .addExpired:
+            return call(.stockShoppingListAddExpired, method: .POST, content: content)
+        case .addMissing:
+            return call(.stockShoppingListAddMissing, method: .POST, content: content)
+        case .addOverdue:
+            return call(.stockShoppingListAddOverdue, method: .POST, content: content)
+        }
+        
     }
     
     // MARK: - Master Data
