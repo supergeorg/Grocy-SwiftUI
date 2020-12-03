@@ -41,6 +41,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdShoppingLocations: MDShoppingLocations = []
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdProductGroups: MDProductGroups = []
+    @Published var mdProductBarcodes: MDProductBarcodes = []
     
     @Published var stockProductDetails: [String: StockProductDetails] = [:]
     @Published var stockProductLocations: [String: StockLocations] = [:]
@@ -123,6 +124,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.shoppingListDescriptions.map{ Int($0.id) ?? 0 }
         case .shopping_list:
             ints = self.shoppingList.map{ Int($0.id) ?? 0 }
+        case .product_barcodes:
+            ints = self.mdProductBarcodes.map{ Int($0.id) ?? 0 }
         default:
             print("findnextid not impl")
         }
@@ -334,6 +337,13 @@ class GrocyViewModel: ObservableObject {
             .replaceError(with: [])
             .assign(to: \.mdProductGroups, on: self)
         cancellables.insert(cancellable)
+    }
+    
+    func getMDProductBarcodes() {
+        grocyApi.getObject(object: .product_barcodes)
+            .replaceError(with: [])
+            .assign(to: \.mdProductBarcodes, on: self)
+            .store(in: &cancellables)
     }
     
     // Generic POST and DELETE

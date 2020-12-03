@@ -12,8 +12,8 @@ struct MDShoppingLocationRowView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-                Text(shoppingLocation.name)
-                    .font(.largeTitle)
+            Text(shoppingLocation.name)
+                .font(.largeTitle)
             if shoppingLocation.mdShoppingLocationDescription != nil {
                 if !shoppingLocation.mdShoppingLocationDescription!.isEmpty {
                     Text(shoppingLocation.mdShoppingLocationDescription!)
@@ -23,10 +23,10 @@ struct MDShoppingLocationRowView: View {
         }
         .padding(10)
         .multilineTextAlignment(.leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color.primary, lineWidth: 1)
-        )
+//        .overlay(
+//            RoundedRectangle(cornerRadius: 12, style: .continuous)
+//                .stroke(Color.primary, lineWidth: 1)
+//        )
     }
 }
 
@@ -60,6 +60,68 @@ struct MDShoppingLocationsView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        NavigationView{
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            grocyVM.getMDLocations()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddShoppingLocation.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .popover(isPresented: self.$showAddShoppingLocation, content: {
+                            MDShoppingLocationFormView(isNewShoppingLocation: true)
+                                .padding()
+                                .frame(maxWidth: 300, maxHeight: 250)
+                        })
+                    }
+                }
+            }
+        }
+        #elseif os(iOS)
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            grocyVM.getMDLocations()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddShoppingLocation.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .sheet(isPresented: self.$showAddShoppingLocation, content: {
+                                NavigationView {
+                                    MDShoppingLocationFormView(isNewShoppingLocation: true)
+                                } })
+                    }
+                }
+            }
+        #endif
+    }
+    
+    var content: some View {
         List(){
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -70,17 +132,23 @@ struct MDShoppingLocationsView: View {
                 Text("str.noSearchResult")
             }
             #if os(macOS)
-            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-                    .onTapGesture {
-                        shownEditPopover = shoppingLocation
-                    }
-                    .popover(isPresented: makeIsPresented(shoppingLocation: shoppingLocation), arrowEdge: .trailing, content: {
-                        MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)
+            //            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
+            //                MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
+            //                    .onTapGesture {
+            //                        shownEditPopover = shoppingLocation
+            //                    }
+            //                    .popover(isPresented: makeIsPresented(shoppingLocation: shoppingLocation), arrowEdge: .trailing, content: {
+            //                        MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)
+            //                            .padding()
+            //                            .frame(maxWidth: 300, maxHeight: 250)
+            //                    })
+            //            }
+                ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
+                    NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+                        MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                             .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-            }
+                    }
+                }
             #else
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
                 NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
@@ -94,45 +162,6 @@ struct MDShoppingLocationsView: View {
         .onAppear(perform: {
             grocyVM.getMDShoppingLocations()
         })
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                HStack{
-                    #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
-                    #endif
-                    Button(action: {
-                        isSearching.toggle()
-                    }, label: {Image(systemName: "magnifyingglass")})
-                    Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        grocyVM.getMDLocations()
-                    }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    #if os(macOS)
-                    Button(action: {
-                        showAddShoppingLocation.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .popover(isPresented: self.$showAddShoppingLocation, content: {
-                        MDShoppingLocationFormView(isNewShoppingLocation: true)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-                    #else
-                    Button(action: {
-                        showAddShoppingLocation.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddShoppingLocation, content: {
-                            NavigationView {
-                                MDShoppingLocationFormView(isNewShoppingLocation: true)
-                            } })
-                    #endif
-                }
-            }
-        }
     }
 }
 

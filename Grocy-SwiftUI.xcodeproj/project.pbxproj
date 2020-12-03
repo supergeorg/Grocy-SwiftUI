@@ -18,6 +18,10 @@
 		781A25C92566B84600560026 /* MyDoubleStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25C72566B84600560026 /* MyDoubleStepper.swift */; };
 		781A25D32566BB9100560026 /* MyToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25D22566BB9100560026 /* MyToggle.swift */; };
 		781A25D42566BB9100560026 /* MyToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25D22566BB9100560026 /* MyToggle.swift */; };
+		781DD5B52578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */; };
+		781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */; };
+		781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
+		781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
 		782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F7256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */; };
@@ -218,6 +222,8 @@
 		781A25BC2566B5AF00560026 /* MyIntStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyIntStepper.swift; sourceTree = "<group>"; };
 		781A25C72566B84600560026 /* MyDoubleStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDoubleStepper.swift; sourceTree = "<group>"; };
 		781A25D22566BB9100560026 /* MyToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyToggle.swift; sourceTree = "<group>"; };
+		781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodeFormView.swift; sourceTree = "<group>"; };
+		781DD5C62579028800A30ECA /* MDBarcodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodesView.swift; sourceTree = "<group>"; };
 		782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductDetailsModel.swift; sourceTree = "<group>"; };
 		782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductBarcodeModel.swift; sourceTree = "<group>"; };
 		78262706256E83A900ECED03 /* StockLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockLocationModel.swift; sourceTree = "<group>"; };
@@ -394,6 +400,8 @@
 			isa = PBXGroup;
 			children = (
 				781A25AD2566952A00560026 /* MDProductFormView.swift */,
+				781DD5C62579028800A30ECA /* MDBarcodesView.swift */,
+				781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */,
 				783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */,
 				786F6E8A2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift */,
 				786F6EBF25640562004D8DE0 /* MDQuantityUnitFormView.swift */,
@@ -849,6 +857,7 @@
 				78CB761C255EB9C600319108 /* MDProductGroupsModel.swift in Sources */,
 				78262707256E83A900ECED03 /* StockLocationModel.swift in Sources */,
 				786F6EB225640383004D8DE0 /* MDBatteriesView.swift in Sources */,
+				781DD5B52578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
 				78CB7604255EB9A000319108 /* ProductConsumeModel.swift in Sources */,
 				78CB7608255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
@@ -904,6 +913,7 @@
 				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
 				7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
+				781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */,
 				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
 				78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */,
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
@@ -999,6 +1009,7 @@
 				78396E7725629F7700B9878F /* MDLocationFormView.swift in Sources */,
 				781A25AF2566952A00560026 /* MDProductFormView.swift in Sources */,
 				78CB7587255EA3D000319108 /* SystemDBChangedTimeModel.swift in Sources */,
+				781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */,
 				781A25C92566B84600560026 /* MyDoubleStepper.swift in Sources */,
 				7885B8BC2567F723003439F5 /* PurchaseProductView.swift in Sources */,
 				78CB7638255EBA3F00319108 /* ProductStatus.swift in Sources */,
@@ -1021,6 +1032,7 @@
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
 				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
+				781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
 				78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */,
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB7632255EBA3F00319108 /* StockTableRow.swift in Sources */,

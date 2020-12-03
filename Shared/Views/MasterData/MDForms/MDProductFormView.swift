@@ -35,7 +35,7 @@ struct MDProductFormView: View {
     @State private var defaultBestBeforeDaysAfterThawing: String = "0"
     @State private var quickConsumeAmount: Double = 1.0
     
-    @State private var barcodes: Set<String> = [] // wie läuft das denn ab?
+    @State private var barcodes: MDProductBarcodes = [] // wie läuft das denn ab?
     
     @State private var showDeleteAlert: Bool = false
     
@@ -68,7 +68,7 @@ struct MDProductFormView: View {
                                                                            quIDPurchase: quIDPurchase,
                                                                            quIDStock: quIDStock,
                                                                            quFactorPurchaseToStock: String(quFactorPurchaseToStock),
-                                                                           barcode: barcodes.joined(separator: ","),
+                                                                           barcode: "",
                                                                            minStockAmount: String(minStockAmount),
                                                                            defaultBestBeforeDays: String(defaultBestBeforeDays),
                                                                            rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
@@ -94,7 +94,7 @@ struct MDProductFormView: View {
                                                                                                  quIDPurchase: quIDPurchase,
                                                                                                  quIDStock: quIDStock,
                                                                                                  quFactorPurchaseToStock: String(quFactorPurchaseToStock),
-                                                                                                 barcode: barcodes.joined(separator: ","),
+                                                                                                 barcode: "",
                                                                                                  minStockAmount: String(minStockAmount),
                                                                                                  defaultBestBeforeDays: String(defaultBestBeforeDays),
                                                                                                  rowCreatedTimestamp: product!.rowCreatedTimestamp,
@@ -136,7 +136,7 @@ struct MDProductFormView: View {
             Group {
                 
                 // Name - REQUIRED
-                MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.location.name.required")
+                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.product.name.required")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
@@ -220,6 +220,10 @@ struct MDProductFormView: View {
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id)
                     }
                 })
+            }
+            
+            if !isNewProduct {
+                MDBarcodesView(productID: product!.id)
             }
             
             #if os(macOS)

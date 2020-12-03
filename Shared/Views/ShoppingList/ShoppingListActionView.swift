@@ -47,16 +47,16 @@ struct ShoppingListActionView: View {
                     .onTapGesture {
                         slAction(.clear)
                     }
-                Text("str.shL.action.addListItemsToStock".localized)
-                    .padding(paddingAmount)
-                    .foregroundColor(.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
-                    .onTapGesture {
-                        print("not implemented")
-                    }
+//                Text("str.shL.action.addListItemsToStock".localized)
+//                    .padding(paddingAmount)
+//                    .foregroundColor(.blue)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: cornerRadiusValue)
+//                            .stroke(Color.blue, lineWidth: 1)
+//                    )
+//                    .onTapGesture {
+//                        print("not implemented")
+//                    }
                 Text("str.shL.action.addBelowMinStock".localized)
                     .padding(paddingAmount)
                     .foregroundColor(.blue)

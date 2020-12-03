@@ -18,6 +18,7 @@
 "str.days" = "Tage";
 "str.refresh" = "Aktualisieren";
 "str.close" = "Schließen";
+"str.add" = "Hinzufügen";
 
 // MARK: - Transaktionen
 "tr.purchase" = "Einkauf";
@@ -257,6 +258,16 @@
 "str.md.product.defaultBestBeforeDaysAfterThawing.info" = "TODO";
 "str.md.product.quickConsumeAmount" = "Schnell-Verbrauchs-Menge";
 "str.md.product.quickConsumeAmount.info" = "TODO";
+
+"str.md.barcodes" = "Barcodes";
+"str.md.barcode" = "Barcode";
+"str.md.barcode.new" = "Barcode erstellen";
+"str.md.barcode.edit" = "Barcode bearbeiten";
+"str.md.barcode.for %@" = "Barcode für Produkt %@";
+"str.md.barcode.amount" = "Menge";
+"str.md.barcode.quantityUnit" = "Mengeneinheit";
+"str.md.barcode.shoppingLocation" = "Geschäft";
+"str.md.barcode.info %@ %@" = "Menge: %@, Geschäft: %@";
 
 "str.md.locations" = "Standorte";
 "str.md.location" = "Standort";

@@ -12,6 +12,9 @@ struct PurchaseProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    var productToPurchaseID: String?
+    var productToPurchaseAmount: Double?
+    
     @State private var productID: String = ""
     @State private var amount: Double = 0.0
     @State private var quantityUnitID: String = ""
@@ -46,15 +49,17 @@ struct PurchaseProductView: View {
     }
     
     private func resetForm() {
-        productID = ""
-        amount = 0.0
-        quantityUnitID = ""
-        dueDate = Date()
-        productDoesntSpoil = false
-        price = 0.0
-        isTotalPrice = false
-//        shoppingLocationID = ""
-//        locationID = ""
+        self.productID = productToPurchaseID ?? ""
+        self.amount = productToPurchaseAmount ?? 0
+        self.productID = ""
+        self.amount = 0.0
+        self.quantityUnitID = ""
+        self.dueDate = Date()
+        self.productDoesntSpoil = false
+        self.price = 0.0
+        self.isTotalPrice = false
+        //        shoppingLocationID = ""
+        //        locationID = ""
     }
     
     private func purchaseProduct() {
@@ -67,6 +72,13 @@ struct PurchaseProductView: View {
         let numShoppingLocationID = Int(shoppingLocationID) ?? nil
         let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
         grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
+    }
+    
+    private func updateData() {
+        if grocyVM.mdProducts.isEmpty { grocyVM.getMDProducts() }
+        if grocyVM.mdQuantityUnits.isEmpty { grocyVM.getMDQuantityUnits() }
+        if grocyVM.mdLocations.isEmpty { grocyVM.getMDLocations() }
+        if grocyVM.mdShoppingLocations.isEmpty { grocyVM.getMDShoppingLocations() }
     }
     
     var body: some View {
@@ -118,6 +130,7 @@ struct PurchaseProductView: View {
                 }
             })
             .onChange(of: productID) { newProduct in
+                print(productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     if locationID.isEmpty { locationID = selectedProduct.locationID }
                     if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
@@ -174,12 +187,8 @@ struct PurchaseProductView: View {
             }
         }
         .onAppear(perform: {
-            if grocyVM.mdProducts.isEmpty {
-                grocyVM.getMDProducts()
-                grocyVM.getMDQuantityUnits()
-                grocyVM.getMDLocations()
-                grocyVM.getMDShoppingLocations()
-            }
+            updateData()
+            resetForm()
         })
         .animation(.default)
         .navigationTitle("str.stock.buy".localized)

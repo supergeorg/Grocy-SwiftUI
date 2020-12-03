@@ -17,6 +17,7 @@ struct ShoppingListRowActionsView: View {
     let fontSizeValue: CGFloat = 15
     
     @State private var showEdit: Bool = false
+    @State private var showPurchase: Bool = false
     
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id==shoppingListItem.quID}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
@@ -86,8 +87,12 @@ struct ShoppingListRowActionsView: View {
                 //                .help("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")".localized)
                 .help(LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
                 .onTapGesture {
-                    print("add to stock")
+                    showPurchase.toggle()
                 }
+                .popover(isPresented: $showPurchase, content: {
+                    PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: Double(shoppingListItem.amount)!)
+                        .padding()
+                })
         }
     }
 }

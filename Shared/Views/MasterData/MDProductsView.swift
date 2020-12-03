@@ -92,9 +92,11 @@ struct MDProductsView: View {
                         shownEditPopover = product
                     }
                     .popover(isPresented: makeIsPresented(product: product), arrowEdge: .trailing, content: {
+                        ScrollView{
                         MDProductFormView(isNewProduct: false, product: product)
                             .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
+                        }
+                            .frame(width: 400, height: 400)
                     })
             }
             #else
@@ -134,10 +136,10 @@ struct MDProductsView: View {
                         showAddProduct.toggle()
                     }, label: {Image(systemName: "plus")})
                     .popover(isPresented: self.$showAddProduct, content: {
-//                        ScrollView{
+                        ScrollView{
                             MDProductFormView(isNewProduct: true)
                                 .padding()
-//                        }
+                        }
                                                     .frame(maxWidth: 500, maxHeight: 500)
                     })
                     #else
