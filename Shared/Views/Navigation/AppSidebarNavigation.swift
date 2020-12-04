@@ -41,7 +41,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.mdShoppingLocations
+    @State private var selection: NavigationItem? = NavigationItem.stockOverview
 //        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
 //    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
     

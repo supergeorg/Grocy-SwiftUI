@@ -28,6 +28,8 @@ import SwiftUI
 struct StockTableRow: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @AppStorage("expiringDays") var expiringDays: Int = 5
+    
     @Binding var showProduct: Bool
     @Binding var showProductGroup: Bool
     @Binding var showAmount: Bool
@@ -51,39 +53,78 @@ struct StockTableRow: View {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
     }
     
+    var backgroundColor: Color {
+        if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
+            return Color.grocyYellowLight
+        }
+        if (stockElement.dueType == "1" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+            return Color.grocyGrayLight
+        }
+        if (stockElement.dueType == "2" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+            return Color.grocyRedLight
+        }
+        if (Int(stockElement.amount) ?? 1 < Int(stockElement.product.minStockAmount) ?? 0) {
+            return Color.grocyBlueLight
+        }
+        return Color.clear
+    }
+    
+    var formattedAmountAggregated: String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.numberStyle = .decimal
+        return formatter.string(from: Double(stockElement.amountAggregated)! as NSNumber) ?? "?"
+    }
+    
     var body: some View {
         HStack{
             if showProduct {
                 Text(stockElement.product.name)
+                    .onTapGesture {
+                        showDetailView.toggle()
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showProductGroup {
-                Spacer()
-                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "ProduktGruppe")
+                Divider()
+                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showAmount {
-                Spacer()
-                Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                Divider()
+                HStack{
+                    Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                    if stockElement.amount != formattedAmountAggregated {
+                        Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                            .foregroundColor(Color.grocyGray)
+                    }
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showValue {
-                Spacer()
+                Divider()
                 Text("\(stockElement.value) \(grocyVM.systemConfig?.currency ?? "[Currency]")")
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showNextBestBeforeDate {
-                Spacer()
+                Divider()
                 Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showCaloriesPerStockQU {
-                Spacer()
+                Divider()
                 Text(stockElement.product.calories)
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showCalories {
-                Spacer()
+                Divider()
                 Text(caloriesSum)
+                    .frame(minWidth: 0, maxWidth: .infinity)
             }
         }
-        .onTapGesture {
-            showDetailView.toggle()
-        }
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .background(backgroundColor)
         .sheet(isPresented: $showDetailView, content: {
             #if os(macOS)
             ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
@@ -96,8 +137,8 @@ struct StockTableRow: View {
     }
 }
 
-//struct StockRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StockRowView(stockElement: StockElement(amount: 3, amountAggregated: "3", bestBeforeDate: "2020-12-12", amountOpened: "2", amountOpenedAggregated: "2", isAggregatedAmount: "false", productID: "3", product: MDProduct(id: <#T##String#>, name: <#T##String#>, mdProductDescription: <#T##String#>, locationID: <#T##String#>, quIDPurchase: <#T##String#>, quIDStock: <#T##String#>, quFactorPurchaseToStock: <#T##String#>, barcode: <#T##String#>, minStockAmount: <#T##String#>, defaultBestBeforeDays: <#T##String#>, rowCreatedTimestamp: <#T##String#>, productGroupID: <#T##String#>, pictureFileName: <#T##String?#>, defaultBestBeforeDaysAfterOpen: <#T##String#>, allowPartialUnitsInStock: <#T##String#>, enableTareWeightHandling: <#T##String#>, tareWeight: <#T##String#>, notCheckStockFulfillmentForRecipes: <#T##String#>, parentProductID: <#T##String?#>, calories: <#T##String#>, cumulateMinStockAmountOfSubProducts: <#T##String#>, defaultBestBeforeDaysAfterFreezing: <#T##String#>, defaultBestBeforeDaysAfterThawing: <#T##String#>, shoppingLocationID: <#T##String#>, userfields: <#T##String?#>)))
-//    }
-//}
+struct StockTableRow_Previews: PreviewProvider {
+    static var previews: some View {
+        StockTableRow(expiringDays: 5, showProduct: Binding.constant(true), showProductGroup: Binding.constant(true), showAmount: Binding.constant(true), showValue: Binding.constant(true), showNextBestBeforeDate: Binding.constant(true), showCaloriesPerStockQU: Binding.constant(true), showCalories: Binding.constant(true), stockElement: StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil)))
+    }
+}

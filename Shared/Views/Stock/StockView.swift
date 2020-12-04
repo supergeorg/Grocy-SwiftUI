@@ -29,17 +29,6 @@ struct StockView: View {
     @State private var filteredProductGroup: String = ""
     @State private var filteredStatus: ProductStatus = .all
     
-    @State private var showTableSettings: Bool = false
-    @AppStorage("stockShowProduct") var stockShowProduct: Bool = true
-    @AppStorage("stockShowProductGroup") var stockShowProductGroup: Bool = false
-    @AppStorage("stockShowAmount") var stockShowAmount: Bool = true
-    @AppStorage("stockShowValue") var stockShowValue: Bool = false
-    @AppStorage("stockShowNextBestBeforeDate") var stockShowNextBestBeforeDate: Bool = true
-    @AppStorage("stockShowCaloriesPerStockQU") var stockShowCaloriesPerStockQU: Bool = false
-    @AppStorage("stockShowCalories") var stockShowCalories: Bool = false
-    @State private var sortedStockColumn: StockColumn = .product
-    @State private var sortAscending: Bool = true
-    
     #if os(macOS)
     @State private var showStockJournal: Bool = false
     #else
@@ -107,20 +96,11 @@ struct StockView: View {
             .filter {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
             }
-            .sorted {
-                switch sortedStockColumn {
-                case .product:
-                    return sortAscending ? ($0.product.name < $1.product.name) : ($0.product.name > $1.product.name)
-                case .productGroup:
-                    return sortAscending ? ($0.product.productGroupID < $1.product.productGroupID) : ($0.product.productGroupID > $1.product.productGroupID)
-                case .amount:
-                    return sortAscending ? ($0.amount < $1.amount) : ($0.amount > $1.amount)
-                case .nextBestBeforeDate:
-                    return sortAscending ? ($0.bestBeforeDate < $1.bestBeforeDate) : ($0.bestBeforeDate > $1.bestBeforeDate)
-                default:
-                    return ($0.productID < $1.productID)
-                }
-            }
+    }
+    
+    var summedValue: Double {
+        let values = grocyVM.stock.map{ Double($0.value) ?? 0 }
+        return values.reduce(0, +)
     }
     
     private func updateData() {
@@ -220,23 +200,11 @@ struct StockView: View {
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }
-            Button(action: {
-                showTableSettings.toggle()
-            }, label: {
-                Image(systemName: "eye.fill")
-            })
-            .popover(isPresented: $showTableSettings, content: {
-                StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
-                    .padding()
-//                    .frame(width: 400, height: 400)
-            })
-            StockTable(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, filteredStock: filteredProducts, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            //            ForEach(filteredProducts, id:\.productID) { stock in
-            //                StockRowView(stockElement: stock)
-            //            }
+            StockTable(filteredStock: filteredProducts)
         }.listStyle(InsetListStyle())
         .animation(.default)
         .navigationTitle("str.stock.stockOverview".localized)
+        .navigationSubtitle("str.stock.stockOverviewInfo \(grocyVM.stock.count) \("\(String(format: "%.2f", summedValue)) \(grocyVM.systemConfig?.currency ?? "[CURRENCY]")")".localized)
         .onAppear(perform: {
             updateData()
         })

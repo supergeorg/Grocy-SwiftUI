@@ -350,7 +350,7 @@ class GrocyViewModel: ObservableObject {
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
-        print(String(data: jsonContent, encoding: .utf8)!)
+//        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .replaceError(with: [])
             .assign(to: \.lastErrors, on: self)

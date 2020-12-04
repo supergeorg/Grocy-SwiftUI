@@ -42,10 +42,20 @@ struct StockFilterBar: View {
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
                 Picker(selection: $filteredStatus, label: Text("Status"), content: {
-                    Text(ProductStatus.all.rawValue.localized).tag(ProductStatus.all)
-                    Text(ProductStatus.expiringSoon.rawValue.localized).tag(ProductStatus.expiringSoon)
-                    Text(ProductStatus.expired.rawValue.localized).tag(ProductStatus.expired)
-                    Text(ProductStatus.belowMinStock.rawValue.localized).tag(ProductStatus.belowMinStock)
+                    Text(ProductStatus.all.rawValue.localized)
+                        .tag(ProductStatus.all)
+                    Text(ProductStatus.expiringSoon.rawValue.localized)
+                        .tag(ProductStatus.expiringSoon)
+                        .background(Color.grocyYellowLight)
+                    Text(ProductStatus.overdue.rawValue.localized)
+                        .tag(ProductStatus.overdue)
+                        .background(Color.grocyGrayLight)
+                    Text(ProductStatus.expired.rawValue.localized)
+                        .tag(ProductStatus.expired)
+                        .background(Color.grocyRedLight)
+                    Text(ProductStatus.belowMinStock.rawValue.localized)
+                        .tag(ProductStatus.belowMinStock)
+                        .background(Color.grocyBlueLight)
                 }).pickerStyle(MenuPickerStyle())
             }
         }

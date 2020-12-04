@@ -68,6 +68,8 @@
 
 // MARK: - Stock
 "str.stock.stockOverview" = "Bestand";
+// Products, Summed Value
+"str.stock.stockOverviewInfo %d %@" = "%d Produkte, %@ Gesamtwert";
 "str.stock.search" = "Durchsuche Bestand";
 "str.stock.empty" = "Nichts auf Lager.";
 "str.stock.location" = "Standort";
@@ -84,10 +86,10 @@
 "str.stock.tbl.product" = "Produkt";
 "str.stock.tbl.productGroup" = "Produktgruppe";
 "str.stock.tbl.amount" = "Menge";
-"str.stock.tbl.value" = "Value";
-"str.stock.tbl.nextBestBefore" = "Next best before date";
-"str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
-"str.stock.tbl.calories" = "Calories";
+"str.stock.tbl.value" = "Wert";
+"str.stock.tbl.nextBestBefore" = "Nächstes Fälligkeitsdatum";
+"str.stock.tbl.caloriesPerStockQU" = "Kalorien (Pro Bestandsmengeneinheit)";
+"str.stock.tbl.calories" = "Kalorien";
 
 "str.stock.buy" = "Einkauf";
 "str.stock.buy.product" = "Produkt";
@@ -258,6 +260,7 @@
 "str.md.product.defaultBestBeforeDaysAfterThawing.info" = "TODO";
 "str.md.product.quickConsumeAmount" = "Schnell-Verbrauchs-Menge";
 "str.md.product.quickConsumeAmount.info" = "TODO";
+"str.md.product.delete.confirm" = "Möchtest du wirklich dieses Produkt löschen?";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";

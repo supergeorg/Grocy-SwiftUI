@@ -52,6 +52,36 @@ struct MDShoppingLocationFormView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        content
+            .padding()
+        #elseif os(iOS)
+        content
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewShoppingLocation {
+                        Button("str.cancel") {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("str.md.save \("str.md.location".localized)") {
+                        saveShoppingLocation()
+                        presentationMode.wrappedValue.dismiss()
+                    }.disabled(!isNameCorrect)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewShoppingLocation{
+                        Text("")
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         Form {
             Section(header: Text("str.md.shoppingLocation.info")){
                 MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.shoppingLocation.name.required")
@@ -98,29 +128,6 @@ struct MDShoppingLocationFormView: View {
         .animation(.default)
         .onAppear(perform: {
             resetForm()
-        })
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                if isNewShoppingLocation {
-                    Button("str.cancel") {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("str.md.save \("str.md.location".localized)") {
-                    saveShoppingLocation()
-                    presentationMode.wrappedValue.dismiss()
-                }.disabled(!isNameCorrect)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                // Back not shown without it
-                if !isNewShoppingLocation{
-                    Text("")
-                }
-            }
-            #endif
         })
     }
 }

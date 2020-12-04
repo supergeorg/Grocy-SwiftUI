@@ -23,10 +23,10 @@ struct MDShoppingLocationRowView: View {
         }
         .padding(10)
         .multilineTextAlignment(.leading)
-//        .overlay(
-//            RoundedRectangle(cornerRadius: 12, style: .continuous)
-//                .stroke(Color.primary, lineWidth: 1)
-//        )
+        //        .overlay(
+        //            RoundedRectangle(cornerRadius: 12, style: .continuous)
+        //                .stroke(Color.primary, lineWidth: 1)
+        //        )
     }
 }
 
@@ -42,6 +42,9 @@ struct MDShoppingLocationsView: View {
     @State private var shownEditPopover: MDShoppingLocation? = nil
     
     @State private var reloadRotationDeg: Double = 0
+    
+    @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
+    @State private var showDeleteAlert: Bool = false
     
     func makeIsPresented(shoppingLocation: MDShoppingLocation) -> Binding<Bool> {
         return .init(get: {
@@ -59,37 +62,52 @@ struct MDShoppingLocationsView: View {
             }
     }
     
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            shoppingLocationToDelete = filteredShoppingLocations[offset]
+            showDeleteAlert.toggle()
+        }
+    }
+    private func deleteShoppingLocation(toDelID: String) {
+        grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
+        updateData()
+    }
+    
+    private func updateData() {
+        grocyVM.getMDShoppingLocations()
+    }
+    
     var body: some View {
         #if os(macOS)
         NavigationView{
-        content
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: "magnifyingglass")})
-                        Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            grocyVM.getMDLocations()
-                        }, label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
-                        })
-                        Button(action: {
-                            showAddShoppingLocation.toggle()
-                        }, label: {Image(systemName: "plus")})
-                        .popover(isPresented: self.$showAddShoppingLocation, content: {
-                            MDShoppingLocationFormView(isNewShoppingLocation: true)
-                                .padding()
-                                .frame(maxWidth: 300, maxHeight: 250)
-                        })
+            content
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack{
+                            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                            Button(action: {
+                                isSearching.toggle()
+                            }, label: {Image(systemName: "magnifyingglass")})
+                            Button(action: {
+                                withAnimation {
+                                    self.reloadRotationDeg += 360
+                                }
+                                updateData()
+                            }, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
+                            })
+                            Button(action: {
+                                showAddShoppingLocation.toggle()
+                            }, label: {Image(systemName: "plus")})
+                            .popover(isPresented: self.$showAddShoppingLocation, content: {
+                                MDShoppingLocationFormView(isNewShoppingLocation: true)
+                                    .padding()
+                                    .frame(maxWidth: 300, maxHeight: 250)
+                            })
+                        }
                     }
                 }
-            }
         }
         #elseif os(iOS)
         content
@@ -100,13 +118,9 @@ struct MDShoppingLocationsView: View {
                             isSearching.toggle()
                         }, label: {Image(systemName: "magnifyingglass")})
                         Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            grocyVM.getMDLocations()
+                            updateData()
                         }, label: {
                             Image(systemName: "arrow.triangle.2.circlepath")
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
                         })
                         Button(action: {
                             showAddShoppingLocation.toggle()
@@ -132,36 +146,32 @@ struct MDShoppingLocationsView: View {
                 Text("str.noSearchResult")
             }
             #if os(macOS)
-            //            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-            //                MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-            //                    .onTapGesture {
-            //                        shownEditPopover = shoppingLocation
-            //                    }
-            //                    .popover(isPresented: makeIsPresented(shoppingLocation: shoppingLocation), arrowEdge: .trailing, content: {
-            //                        MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)
-            //                            .padding()
-            //                            .frame(maxWidth: 300, maxHeight: 250)
-            //                    })
-            //            }
-                ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                    NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
-                        MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-                            .padding()
-                    }
+            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
+                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
+                        .padding()
                 }
+            }
+            .onDelete(perform: delete)
             #else
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
                 NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
                     MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                 }
             }
+            .onDelete(perform: delete)
             #endif
         }
         .animation(.default)
         .navigationTitle("str.md.shoppingLocations".localized)
         .onAppear(perform: {
-            grocyVM.getMDShoppingLocations()
+            updateData()
         })
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(title: Text("str.md.shoppingLocation.delete.confirm"), message: Text(shoppingLocationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+                deleteShoppingLocation(toDelID: shoppingLocationToDelete?.id ?? "")
+            }, secondaryButton: .cancel())
+        }
     }
 }
 

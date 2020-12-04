@@ -53,6 +53,9 @@ struct MDProductsView: View {
     
     @State private var reloadRotationDeg: Double = 0
     
+    @State private var productToDelete: MDProduct? = nil
+    @State private var showDeleteAlert: Bool = false
+    
     func makeIsPresented(product: MDProduct) -> Binding<Bool> {
         return .init(get: {
             return self.shownEditPopover?.id == product.id
@@ -63,6 +66,17 @@ struct MDProductsView: View {
         grocyVM.getMDProducts()
         grocyVM.getMDLocations()
         grocyVM.getMDProductGroups()
+    }
+    
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            productToDelete = filteredProducts[offset]
+            showDeleteAlert.toggle()
+        }
+    }
+    private func deleteProduct(toDelID: String) {
+        grocyVM.deleteMDObject(object: .products, id: toDelID)
+        updateData()
     }
     
     private var filteredProducts: MDProducts {
@@ -76,6 +90,68 @@ struct MDProductsView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            updateData()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddProduct.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .popover(isPresented: self.$showAddProduct, content: {
+                            ScrollView{
+                                MDProductFormView(isNewProduct: true)
+                                    .padding()
+                            }
+                            .frame(maxWidth: 500, maxHeight: 500)
+                        })
+                    }
+                }
+            }
+        #elseif os(iOS)
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            updateData()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddProduct.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .sheet(isPresented: self.$showAddProduct, content: {
+                                NavigationView {
+                                    MDProductFormView(isNewProduct: true)
+                                } })
+                    }
+                }
+            }
+        #endif
+    }
+    
+    var content: some View {
         List(){
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -93,18 +169,20 @@ struct MDProductsView: View {
                     }
                     .popover(isPresented: makeIsPresented(product: product), arrowEdge: .trailing, content: {
                         ScrollView{
-                        MDProductFormView(isNewProduct: false, product: product)
-                            .padding()
+                            MDProductFormView(isNewProduct: false, product: product)
+                                .padding()
                         }
-                            .frame(width: 400, height: 400)
+                        .frame(width: 400, height: 400)
                     })
             }
+            .onDelete(perform: delete)
             #else
             ForEach(filteredProducts, id:\.id) { product in
                 NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product)) {
                     MDProductRowView(product: product)
                 }
             }
+            .onDelete(perform: delete)
             #endif
         }
         .animation(.default)
@@ -112,47 +190,10 @@ struct MDProductsView: View {
         .onAppear(perform: {
             updateData()
         })
-        .toolbar {
-//            ToolbarSearch(
-            ToolbarItem(placement: .primaryAction) {
-                HStack{
-                    #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
-                    #endif
-                    Button(action: {
-                        isSearching.toggle()
-                    }, label: {Image(systemName: "magnifyingglass")})
-                    Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        updateData()
-                    }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    #if os(macOS)
-                    Button(action: {
-                        showAddProduct.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .popover(isPresented: self.$showAddProduct, content: {
-                        ScrollView{
-                            MDProductFormView(isNewProduct: true)
-                                .padding()
-                        }
-                                                    .frame(maxWidth: 500, maxHeight: 500)
-                    })
-                    #else
-                    Button(action: {
-                        showAddProduct.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddProduct, content: {
-                            NavigationView {
-                                MDProductFormView(isNewProduct: true)
-                            } })
-                    #endif
-                }
-            }
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(title: Text("str.md.product.delete.confirm"), message: Text(productToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+                deleteProduct(toDelID: productToDelete?.id ?? "")
+            }, secondaryButton: .cancel())
         }
     }
 }
