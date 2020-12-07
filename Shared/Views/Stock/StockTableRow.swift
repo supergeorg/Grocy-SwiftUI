@@ -7,24 +7,6 @@
 
 import SwiftUI
 
-//struct StockTableRow: View {
-//    @StateObject var grocyVM: GrocyViewModel = .shared
-//    
-//    var stockElement: StockElement
-//    
-//    var body: some View {
-//        VStack(alignment: .leading){
-//            Text(stockElement.product.name).font(.title)
-//            HStack{
-//                Text("\(stockElement.amount) (\(stockElement.amountOpened) geöffnet)")
-//                Text("Nächstes MHD: \(formatDateOutput(stockElement.bestBeforeDate))")
-////                Text("Standort: \(grocyVM.mdLocations.first(where: { $0.id ==  stockElement.product.locationID})?.name ?? "Fehler")")
-//            }
-//            .font(.caption)
-//        }
-//    }
-//}
-
 struct StockTableRow: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
@@ -79,6 +61,9 @@ struct StockTableRow: View {
     
     var body: some View {
         HStack{
+            StockTableRowActionsView(stockElement: stockElement)
+                .frame(minWidth: 0, maxWidth: .infinity)
+            Divider()
             if showProduct {
                 Text(stockElement.product.name)
                     .onTapGesture {

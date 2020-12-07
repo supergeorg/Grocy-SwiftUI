@@ -27,14 +27,20 @@ struct MyDoubleStepper: View {
             HStack{
                 Text(description.localized)
                 if descriptionInfo != nil {
+                    #if os(macOS)
+                    Image(systemName: "questionmark.circle.fill")
+                        .help(LocalizedStringKey(descriptionInfo ?? ""))
+                    #elseif os(iOS)
                     Button(action: {
                         showInfo.toggle()
                     }, label: {
                         Image(systemName: "questionmark.circle.fill")
                     })
+                    .help(LocalizedStringKey(descriptionInfo ?? ""))
                     .popover(isPresented: $showInfo, content: {
                         Text(descriptionInfo!.localized)
                     })
+                    #endif
                 }
             }
             HStack{

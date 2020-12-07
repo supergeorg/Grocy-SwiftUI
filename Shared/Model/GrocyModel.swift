@@ -190,6 +190,17 @@ class GrocyViewModel: ObservableObject {
         cancellables.insert(cancellable)
     }
     
+    func getCurrencySymbol() -> String {
+        switch self.systemConfig?.currency {
+        case "EUR":
+            return "€"
+        case "USD":
+            return "$"
+        default:
+            return "CURRENCY"
+        }
+    }
+    
     // MARK: - USER MANAGEMENT
     
     func getUsers() {

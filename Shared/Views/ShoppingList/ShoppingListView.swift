@@ -33,6 +33,15 @@ struct ShoppingListView: View {
     @State private var activeSheet: InteractionSheet = .newShoppingList //.none
     #endif
     
+    func checkBelowStock(item: ShoppingListItem) -> Bool {
+        if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
+            if Double(product.minStockAmount) ?? 0 < Double(item.amount) ?? 1 {
+                return true
+            }
+        }
+        return false
+    }
+    
     var selectedShoppingList: ShoppingList {
         grocyVM.shoppingList
             .filter{
@@ -48,11 +57,10 @@ struct ShoppingListView: View {
                 switch filteredStatus {
                 case .all:
                     return true
-                //                case .belowMinStock:
-                //                    return shLItem.amount
+                case .belowMinStock:
+                    return checkBelowStock(item: shLItem)
                 case .undone:
                     return shLItem.done == "0"
-                default: return true
                 }
             }
     }
@@ -186,9 +194,9 @@ struct ShoppingListView: View {
                             })
                             //                        }, label: {Text("str.shL.manage".localized)})
                         }, label: { HStack(spacing: 2){
-                                Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
-                                Image(systemName: "chevron.down.square.fill")
-                            }})
+                            Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
+                            Image(systemName: "chevron.down.square.fill")
+                        }})
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .foregroundColor(.blue)
                             .onTapGesture {
@@ -218,7 +226,7 @@ struct ShoppingListView: View {
     var content: some View {
         List{
             Group {
-//                ShoppingListFilterActionView()
+                //                ShoppingListFilterActionView()
                 ShoppingListActionView(selectedShoppingListID: $selectedShoppingListID)
                 ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
             }

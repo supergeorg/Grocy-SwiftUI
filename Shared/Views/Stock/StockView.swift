@@ -33,7 +33,7 @@ struct StockView: View {
     @State private var showStockJournal: Bool = false
     #else
     private enum InteractionSheet: Identifiable {
-        case none, purchaseProduct, consumeProduct, transferProduct, stockJournal
+        case none, purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal
         var id: Int {
             self.hashValue
         }
@@ -139,6 +139,7 @@ struct StockView: View {
                     })
                 })
             })
+            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
         #elseif os(iOS)
         content
             .toolbar(content: {
@@ -153,19 +154,31 @@ struct StockView: View {
                             self.activeSheet = .stockJournal
                             self.isShowingSheet.toggle()
                         }, label: {
-                            Label("Journal", systemImage: "list.bullet.rectangle")
+                            Label(LocalizedStringKey("str.details.stockJournal"), systemImage: "list.bullet.rectangle")
+                        })
+                        Button(action: {
+                            self.activeSheet = .inventoryProduct
+                            self.isShowingSheet.toggle()
+                        }, label: {
+                            Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
+                        })
+                        Button(action: {
+                            self.activeSheet = .transferProduct
+                            self.isShowingSheet.toggle()
+                        }, label: {
+                            Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
                         })
                         Button(action: {
                             self.activeSheet = .consumeProduct
                             self.isShowingSheet.toggle()
                         }, label: {
-                            Label("Consume", systemImage: "tuningfork")
+                            Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
                         })
                         Button(action: {
                             self.activeSheet = .purchaseProduct
                             self.isShowingSheet.toggle()
                         }, label: {
-                            Label("Purchase", systemImage: "cart.badge.plus")
+                            Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart.badge.plus")
                         })
                     }
                 })
@@ -186,11 +199,19 @@ struct StockView: View {
                     NavigationView{
                         TransferProductView()
                     }
+                case .inventoryProduct:
+                    NavigationView{
+                        InventoryProductView()
+                    }
                 case .none:
                     EmptyView()
                 }
             })
         #endif
+    }
+    
+    var summedValueStr: String {
+        return "\(String(format: "%.2f", summedValue)) \(grocyVM.getCurrencySymbol())"
     }
     
     var content: some View {
@@ -204,7 +225,6 @@ struct StockView: View {
         }.listStyle(InsetListStyle())
         .animation(.default)
         .navigationTitle("str.stock.stockOverview".localized)
-        .navigationSubtitle("str.stock.stockOverviewInfo \(grocyVM.stock.count) \("\(String(format: "%.2f", summedValue)) \(grocyVM.systemConfig?.currency ?? "[CURRENCY]")")".localized)
         .onAppear(perform: {
             updateData()
         })

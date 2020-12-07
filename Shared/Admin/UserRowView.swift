@@ -20,33 +20,15 @@ struct UserRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            Image(systemName: "square.and.pencil")
-                .font(Font.system(size: 15, weight: .bold))
-                .padding(paddingValue)
-                .background(Color.grocyTurquoise)
-                .foregroundColor(.white)
-                .cornerRadius(cornerRadiusValue)
-                .help("str.admin.user.tooltip.edit".localized)
+            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color.grocyTurquoise, helpString: LocalizedStringKey("str.admin.user.tooltip.edit"))
                 .onTapGesture {
                     print("edit user")
                 }
-            Image(systemName: "lock.fill")
-                .font(Font.system(size: 15, weight: .bold))
-                .padding(paddingValue)
-                .background(Color.grocyTurquoise)
-                .foregroundColor(.white)
-                .cornerRadius(cornerRadiusValue)
-                .help("str.admin.user.tooltip.permissions".localized)
+            RowInteractionButton(image: "lock.fill", backgroundColor: Color.grocyTurquoise, helpString: LocalizedStringKey("str.admin.user.tooltip.permissions"))
                 .onTapGesture {
                     print("edit userpermissions")
                 }
-            Image(systemName: "trash.fill")
-                .font(Font.system(size: 15, weight: .bold))
-                .padding(paddingValue)
-                .background(isCurrentUser ? Color.grocyDeleteLocked : Color.grocyDelete)
-                .foregroundColor(.white)
-                .cornerRadius(cornerRadiusValue)
-                .help("str.admin.user.tooltip.delete".localized)
+            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color.grocyDeleteLocked : Color.grocyDelete, helpString: LocalizedStringKey("str.admin.user.tooltip.delete"))
                 .onTapGesture {
                     showDeleteAction.toggle()
                 }
