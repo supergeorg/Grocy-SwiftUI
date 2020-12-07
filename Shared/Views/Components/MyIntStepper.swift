@@ -12,7 +12,7 @@ struct MyIntStepper: View {
     
     var description: String
     var descriptionInfo: String?
-    var minAmount: Int = 0
+    var minAmount: Int? = 0
     var amountName: String? = nil
     
     var errorMessage: String?
@@ -45,17 +45,21 @@ struct MyIntStepper: View {
                 Stepper((amountName ?? "").localized, onIncrement: {
                     amount += 1
                 }, onDecrement: {
-                    if amount > minAmount {
-                        amount -= 1
-                    }
+                    if minAmount != nil {
+                        if amount > minAmount! {
+                            amount -= 1
+                        }
+                    } else {amount -= 1}
                 })
             }
-            if amount < minAmount {
-                if errorMessage != nil {
-                    Text(errorMessage!.localized)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .frame(width: 200)
+            if minAmount != nil {
+                if amount < minAmount! {
+                    if errorMessage != nil {
+                        Text(errorMessage!.localized)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                            .frame(width: 200)
+                    }
                 }
             }
         }
