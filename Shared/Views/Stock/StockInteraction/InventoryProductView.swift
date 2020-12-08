@@ -12,6 +12,8 @@ struct InventoryProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    var productToInventoryID: String?
+    
     @State private var productID: String = ""
     @State private var amount: Int = 1
     @State private var quantityUnitID: String = ""
@@ -58,7 +60,7 @@ struct InventoryProductView: View {
     }
     
     private func resetForm() {
-        productID = ""
+        productID = productToInventoryID ?? ""
         amount = 1
         quantityUnitID = ""
         dueDate = Date()

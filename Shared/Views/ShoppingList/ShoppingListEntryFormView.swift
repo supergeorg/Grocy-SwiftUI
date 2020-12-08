@@ -29,6 +29,7 @@ struct ShoppingListEntryFormView: View {
     var isNewShoppingListEntry: Bool
     var shoppingListEntry: ShoppingListItem?
     var selectedShoppingListID: String?
+    var product: MDProduct?
     
     var isFormValid: Bool {
         return (!shoppingListID.isEmpty && !productID.isEmpty && amount > 0 && !quantityUnitID.isEmpty)
@@ -65,6 +66,9 @@ struct ShoppingListEntryFormView: View {
             self.note = shoppingListEntry!.note ?? ""
         } else {
             self.shoppingListID = selectedShoppingListID ?? "1"
+            self.productID = product?.id ?? ""
+            self.amount = product != nil ? 1 : 0
+            self.quantityUnitID = product?.quIDPurchase ?? ""
         }
     }
     

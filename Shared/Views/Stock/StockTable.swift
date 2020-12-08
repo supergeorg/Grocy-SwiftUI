@@ -23,7 +23,7 @@ struct StockTableHeader: View {
                 if stockColumn == sortedStockColumn {
                     Image(systemName: sortAscending ? "arrow.up" : "arrow.down")
                 } else {
-                Image(systemName: "arrow.up.arrow.down")
+                    Image(systemName: "arrow.up.arrow.down")
                 }
             }
             .onTapGesture {
@@ -50,6 +50,19 @@ struct StockTable: View {
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
+    @Binding var selectedStockElement: StockElement?
+    @Binding var activeSheet: StockInteractionSheet
+    @Binding var isShowingSheet: Bool
+    
+    //    @State var actionSizeFactor: CGFloat = 0.2
+    //    @State var productSizeFactor: CGFloat = 0.1
+    //    @State var productGroupSizeFactor: CGFloat = 0.1
+    //    @State var amountSizeFactor: CGFloat = 0.1
+    //    @State var valueSizeFactor: CGFloat = 0.1
+    //    @State var nextDueSizeFactor: CGFloat = 0.1
+    //    @State var caloriesPerQUSizeFactor: CGFloat = 0.1
+    //    @State var caloriesSizeFactor: CGFloat = 0.1
+    
     var sortedStock: Stock {
         filteredStock
             .sorted {
@@ -71,15 +84,16 @@ struct StockTable: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
-                Button(action: {
-                    showTableSettings.toggle()
-                }, label: {
-                    Image(systemName: "eye.fill")
-                })
-                .popover(isPresented: $showTableSettings, content: {
-                    StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
-                        .padding()
-                })
+                Image(systemName: "eye.fill")
+                    .onTapGesture {
+                        showTableSettings.toggle()
+                    }
+                    .popover(isPresented: $showTableSettings, content: {
+                        StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
+                            .padding()
+                    })
+                Spacer()
+                
                 StockTableHeader(isShown: $stockShowProduct, description: "str.stock.tbl.product".localized, stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending, isFirst: true)
                 StockTableHeader(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup".localized, stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
                 StockTableHeader(isShown: $stockShowAmount, description: "str.stock.tbl.amount".localized, stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
@@ -90,14 +104,14 @@ struct StockTable: View {
             }
             Divider()
             ForEach(filteredStock, id:\.productID) { stockElement in
-                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement)
+                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
             }
         }
     }
 }
 
-struct StockTable_Previews: PreviewProvider {
-    static var previews: some View {
-        StockTable(filteredStock: [                            StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil))])
-    }
-}
+//struct StockTable_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StockTable(filteredStock: [                            StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil))])
+//    }
+//}

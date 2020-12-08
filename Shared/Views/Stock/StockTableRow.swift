@@ -21,6 +21,9 @@ struct StockTableRow: View {
     @Binding var showCalories: Bool
     
     var stockElement: StockElement
+    @Binding var selectedStockElement: StockElement?
+    @Binding var activeSheet: StockInteractionSheet
+    @Binding var isShowingSheet: Bool
     
     @State private var showDetailView: Bool = false
     
@@ -61,20 +64,17 @@ struct StockTableRow: View {
     
     var body: some View {
         HStack{
-            StockTableRowActionsView(stockElement: stockElement)
-                .frame(minWidth: 0, maxWidth: .infinity)
+            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
             Divider()
             if showProduct {
                 Text(stockElement.product.name)
                     .onTapGesture {
                         showDetailView.toggle()
                     }
-                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showProductGroup {
                 Divider()
                 Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
-                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showAmount {
                 Divider()
@@ -85,30 +85,24 @@ struct StockTableRow: View {
                             .foregroundColor(Color.grocyGray)
                     }
                 }
-                .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showValue {
                 Divider()
-                Text("\(stockElement.value) \(grocyVM.systemConfig?.currency ?? "[Currency]")")
-                    .frame(minWidth: 0, maxWidth: .infinity)
+                Text("\(stockElement.value) \(grocyVM.getCurrencySymbol())")
             }
             if showNextBestBeforeDate {
                 Divider()
                 Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
-                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showCaloriesPerStockQU {
                 Divider()
                 Text(stockElement.product.calories)
-                    .frame(minWidth: 0, maxWidth: .infinity)
             }
             if showCalories {
                 Divider()
                 Text(caloriesSum)
-                    .frame(minWidth: 0, maxWidth: .infinity)
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity)
         .background(backgroundColor)
         .sheet(isPresented: $showDetailView, content: {
             #if os(macOS)
@@ -122,8 +116,8 @@ struct StockTableRow: View {
     }
 }
 
-struct StockTableRow_Previews: PreviewProvider {
-    static var previews: some View {
-        StockTableRow(expiringDays: 5, showProduct: Binding.constant(true), showProductGroup: Binding.constant(true), showAmount: Binding.constant(true), showValue: Binding.constant(true), showNextBestBeforeDate: Binding.constant(true), showCaloriesPerStockQU: Binding.constant(true), showCalories: Binding.constant(true), stockElement: StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil)))
-    }
-}
+//struct StockTableRow_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StockTableRow(expiringDays: 5, showProduct: Binding.constant(true), showProductGroup: Binding.constant(true), showAmount: Binding.constant(true), showValue: Binding.constant(true), showNextBestBeforeDate: Binding.constant(true), showCaloriesPerStockQU: Binding.constant(true), showCalories: Binding.constant(true), stockElement: StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil)))
+//    }
+//}

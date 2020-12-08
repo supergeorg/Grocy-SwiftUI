@@ -28,7 +28,7 @@ struct StockJournalEntry: Codable {
     let productID: String
     let amount: String
     let bestBeforeDate: String
-    let purchasedDate: String
+    let purchasedDate: String?
     let usedDate: String?
     let spoiled: String
     let stockID: String

@@ -13,7 +13,9 @@ func formatTransactionType(_ transactionType: TransactionType) -> String {
         return "tr.consume".localized
     case .purchase:
         return "tr.purchase".localized
-    default:
-        return "tr not impl"
+    case .inventoryCorrection:
+        return "tr.inventory".localized
+    case .productOpened:
+        return "tr.opened".localized
     }
 }

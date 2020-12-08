@@ -12,6 +12,8 @@ struct TransferProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    var productToTransferID: String?
+    
     @State private var productID: String = ""
     @State private var locationIDFrom: String = ""
     @State private var amount: Double = 1.0
@@ -44,7 +46,7 @@ struct TransferProductView: View {
     }
     
     private func resetForm() {
-        productID = ""
+        productID = productToTransferID ?? ""
         locationIDFrom = ""
         amount = 1.0
         quantityUnitID = ""

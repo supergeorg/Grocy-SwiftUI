@@ -123,8 +123,6 @@ struct StockJournalView: View {
     private func updateData() {
         grocyVM.getStockJournal()
         grocyVM.getUsers()
-        //        grocyVM.getMDProducts()
-        //        grocyVM.getMDLocations()
     }
     
     var body: some View {

@@ -78,6 +78,12 @@
 		7880F10C256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */; };
 		7880F112256FC92800FB8431 /* ShoppingListFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F111256FC92800FB8431 /* ShoppingListFormView.swift */; };
 		7880F113256FC92800FB8431 /* ShoppingListFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F111256FC92800FB8431 /* ShoppingListFormView.swift */; };
+		78846059257F9E9D00671C97 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78846058257F9E9D00671C97 /* TestClasses.swift */; };
+		7884605A257F9E9D00671C97 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78846058257F9E9D00671C97 /* TestClasses.swift */; };
+		7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
+		78846064257F9F4A00671C97 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
+		78846069257F9FB700671C97 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
+		7884606E257F9FB800671C97 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
 		7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8972567E4C0003439F5 /* StockJournalView.swift */; };
 		7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8972567E4C0003439F5 /* StockJournalView.swift */; };
 		7885B8A72567ED14003439F5 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8A62567ED14003439F5 /* SharedModel.swift */; };
@@ -262,6 +268,7 @@
 		7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListDescriptionModel.swift; sourceTree = "<group>"; };
 		7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListRowView.swift; sourceTree = "<group>"; };
 		7880F111256FC92800FB8431 /* ShoppingListFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFormView.swift; sourceTree = "<group>"; };
+		78846058257F9E9D00671C97 /* TestClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClasses.swift; sourceTree = "<group>"; };
 		7885B8972567E4C0003439F5 /* StockJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockJournalView.swift; sourceTree = "<group>"; };
 		7885B8A62567ED14003439F5 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		7885B8AE2567F08F003439F5 /* GrocyUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserModel.swift; sourceTree = "<group>"; };
@@ -551,6 +558,7 @@
 			isa = PBXGroup;
 			children = (
 				78CB74B9255E9EF800319108 /* Tests_macOS.swift */,
+				78846058257F9E9D00671C97 /* TestClasses.swift */,
 				78CB74BB255E9EF800319108 /* Info.plist */,
 			);
 			path = "Tests macOS";
@@ -1080,6 +1088,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78846069257F9FB700671C97 /* TransactionType.swift in Sources */,
+				78846064257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
+				78846059257F9E9D00671C97 /* TestClasses.swift in Sources */,
 				78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1088,6 +1099,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7884606E257F9FB800671C97 /* TransactionType.swift in Sources */,
+				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
+				7884605A257F9E9D00671C97 /* TestClasses.swift in Sources */,
 				78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,6 +12,8 @@ struct ConsumeProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    var productToConsumeID: String?
+    
     @State private var productID: String = ""
     @State private var amount: Double = 1.0
     @State private var quantityUnitID: String = ""
@@ -45,7 +47,7 @@ struct ConsumeProductView: View {
     }
     
     private func resetForm() {
-        productID = ""
+        productID = productToConsumeID ?? ""
         amount = 1.0
         quantityUnitID = ""
         locationID = ""

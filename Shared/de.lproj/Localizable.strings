@@ -22,6 +22,9 @@
 
 // MARK: - Transaktionen
 "tr.purchase" = "Einkauf";
+"tr.consume" = "Verbrauch";
+"tr.opened" = "Geöffnet";
+"tr.inventory" = "Inventur";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Bestand";

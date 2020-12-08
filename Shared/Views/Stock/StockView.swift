@@ -11,6 +11,13 @@ enum StockColumn {
     case product, productGroup, amount, value, nextBestBeforeDate, caloriesPerStockQU, calories
 }
 
+enum StockInteractionSheet: Identifiable {
+    case none, purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory
+    var id: Int {
+        self.hashValue
+    }
+}
+
 struct StockView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
@@ -29,17 +36,13 @@ struct StockView: View {
     @State private var filteredProductGroup: String = ""
     @State private var filteredStatus: ProductStatus = .all
     
+    @State private var selectedStockElement: StockElement? = nil
+    
     #if os(macOS)
     @State private var showStockJournal: Bool = false
-    #else
-    private enum InteractionSheet: Identifiable {
-        case none, purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal
-        var id: Int {
-            self.hashValue
-        }
-    }
-    @State private var activeSheet: InteractionSheet = .none
     #endif
+    
+    @State private var activeSheet: StockInteractionSheet = .none
     
     var numExpiringSoon: Int {
         grocyVM.stock
@@ -118,16 +121,18 @@ struct StockView: View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                        Button(action: {
-                            self.showStockJournal.toggle()
-                        }, label: {
-                            Label("Journal", systemImage: "list.bullet.rectangle")
-                        })
-                        .popover(isPresented: $showStockJournal, content: {
-                            StockJournalView()
-                                .padding()
-                                .frame(width: 300, height: 300, alignment: .leading)
-                        })
+                    Button(action: {
+                        self.showStockJournal.toggle()
+                        //                        self.activeSheet = .stockJournal
+                        //                        self.isShowingSheet.toggle()
+                    }, label: {
+                        Label("Journal", systemImage: "list.bullet.rectangle")
+                    })
+                    .popover(isPresented: $showStockJournal, content: {
+                        StockJournalView()
+                            .padding()
+                            .frame(width: 300, height: 300, alignment: .leading)
+                    })
                     Button(action: {
                         withAnimation {
                             self.reloadRotationDeg += 360
@@ -180,6 +185,7 @@ struct StockView: View {
                         }, label: {
                             Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart.badge.plus")
                         })
+                        Button("test"){self.isShowingSheet.toggle()}
                     }
                 })
             })
@@ -203,6 +209,24 @@ struct StockView: View {
                     NavigationView{
                         InventoryProductView()
                     }
+                case .addToShL:
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
+                case .productPurchase:
+                    NavigationView{
+                        PurchaseProductView(productToPurchaseID: selectedStockElement?.product.id)
+                    }
+                case .productConsume:
+                    NavigationView{
+                        ConsumeProductView(productToConsumeID: selectedStockElement?.product.id)
+                    }
+                case .productTransfer:
+                    NavigationView{
+                        TransferProductView(productToTransferID: selectedStockElement?.product.id)
+                    }
+                case .productInventory:
+                    NavigationView{
+                        InventoryProductView(productToInventoryID: selectedStockElement?.product.id)
+                    }
                 case .none:
                     EmptyView()
                 }
@@ -221,8 +245,9 @@ struct StockView: View {
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }
-            StockTable(filteredStock: filteredProducts)
-        }.listStyle(InsetListStyle())
+            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+        }
+        .listStyle(InsetListStyle())
         .animation(.default)
         .navigationTitle("str.stock.stockOverview".localized)
         .onAppear(perform: {

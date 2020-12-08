@@ -48,6 +48,11 @@ struct PurchaseProductView: View {
         !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty)
     }
     
+//    init(productToPurchaseID: String? = nil, productToPurchaseAmount: Double? = nil) {
+//        self.productID = productToPurchaseID ?? ""
+//        self.amount = productToPurchaseAmount ?? 0
+//    }
+    
     private func resetForm() {
         self.productID = productToPurchaseID ?? ""
         self.amount = productToPurchaseAmount ?? 0
@@ -121,6 +126,7 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
+            Text(productID)
             Picker(selection: $productID, label: Label("str.stock.buy.product", systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
