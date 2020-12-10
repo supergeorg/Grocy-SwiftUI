@@ -60,6 +60,10 @@ struct ProductOverviewView: View {
             Text("\("str.details.averageShelfLife".localized): ").bold()
                 +
                 Text(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "Not recorded")
+            
+            if let pictureURL = productDetails.pictureURL {
+                RemoteImageView(withURL: pictureURL)
+            }
         }
         .navigationTitle("str.details.title".localized)
         .toolbar(content: {

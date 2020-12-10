@@ -42,7 +42,7 @@ struct TransferProductView: View {
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-                !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty) && !(locationIDFrom.isEmpty) && !(locationIDTo.isEmpty) && !(useSpecificStockEntry && stockEntryID.isEmpty) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
+        !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty) && !(locationIDFrom.isEmpty) && !(locationIDTo.isEmpty) && !(useSpecificStockEntry && stockEntryID.isEmpty) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
     }
     
     private func resetForm() {
@@ -69,23 +69,25 @@ struct TransferProductView: View {
     
     var body: some View {
         #if os(macOS)
-        content
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-            .toolbar(content: {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: {
-                        transferProduct()
-                        resetForm()
-                    }, label: {
-                        HStack{
-                            Text("str.stock.transfer.product.transfer".localized)
-                            Image(systemName: "arrow.left.arrow.right")
-                        }
-                    })
-                    .disabled(!isFormValid)
-                }
-            })
+        ScrollView{
+            content
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .toolbar(content: {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(action: {
+                            transferProduct()
+                            resetForm()
+                        }, label: {
+                            HStack{
+                                Text("str.stock.transfer.product.transfer".localized)
+                                Image(systemName: "arrow.left.arrow.right")
+                            }
+                        })
+                        .disabled(!isFormValid)
+                    }
+                })
+        }
         #else
         content
             .toolbar(content: {
@@ -140,12 +142,12 @@ struct TransferProductView: View {
             }
             
             VStack(alignment: .leading) {
-            Picker(selection: $locationIDTo, label: Label("str.stock.transfer.product.locationTo".localized, systemImage: "square.and.arrow.down"), content: {
-                Text("").tag("")
-                ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
-                    Text(locationTo.name).tag(locationTo.id)
-                }
-            })
+                Picker(selection: $locationIDTo, label: Label("str.stock.transfer.product.locationTo".localized, systemImage: "square.and.arrow.down"), content: {
+                    Text("").tag("")
+                    ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
+                        Text(locationTo.name).tag(locationTo.id)
+                    }
+                })
                 if !(locationIDFrom.isEmpty) && (locationIDFrom == locationIDTo) {
                     Text("str.stock.transfer.product.locationTO.same")
                         .font(.caption)

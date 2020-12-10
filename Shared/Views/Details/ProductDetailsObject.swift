@@ -35,6 +35,7 @@ class ProductDetailsModel: ObservableObject {
     @Published var averageShelfLife: Int?
     //    //    @Published var spoilRate: Double
     @Published var quantityUnit: MDQuantityUnit
+    @Published var pictureURL: String?
     
     init(product: MDProduct) {
         self.product = product
@@ -55,6 +56,13 @@ class ProductDetailsModel: ObservableObject {
         self.lastUseDate = stockEntries?.sorted(by: {$0.openedDate ?? "" < $1.openedDate ?? ""}).last?.openedDate ?? ""
         
         self.quantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+        
+        if let pictureFileName = product.pictureFileName {
+            let utf8str = pictureFileName.data(using: .utf8)
+            if let base64Encoded = utf8str?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
+                self.pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded)
+            }
+        }
         
         var amount: Double = 0
         var numPrice: Double = 0

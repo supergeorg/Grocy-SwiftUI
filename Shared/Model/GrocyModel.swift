@@ -282,6 +282,10 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getPictureURL(groupName: String, fileName: String) -> String? {
+        grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
+    }
+    
         // MARK: -Shopping Lists
         func getShoppingListDescriptions() {
             grocyApi.getObject(object: .shopping_lists)

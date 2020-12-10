@@ -67,6 +67,8 @@ protocol GrocyAPIProvider {
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
+    func getPictureURL(groupName: String, fileName: String) -> String?
+    // MARK: - Shopping List
     func shoppingListAddProduct<T: Codable>(content: Data) -> AnyPublisher<T, APIError>
     func shoppingListAction<T: Codable>(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<T, APIError>
     // MARK: - Master Data
@@ -116,7 +118,7 @@ public class GrocyApi: GrocyAPIProvider {
             .eraseToAnyPublisher()
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> URLRequest {
+    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, groupName: String? = nil, query: String? = nil) -> URLRequest {
         var path = "\(baseURL)/api\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: id!) }
@@ -125,6 +127,8 @@ public class GrocyApi: GrocyAPIProvider {
         if path.contains("{productId}") { path = path.replacingOccurrences(of: "{productId}", with: id!) }
         if path.contains("{bookingId}") { path = path.replacingOccurrences(of: "{bookingId}", with: id!) }
         if path.contains("{transactionId}") { path = path.replacingOccurrences(of: "{transactionId}", with: id!) }
+        if path.contains("{group}") { path = path.replacingOccurrences(of: "{group}", with: groupName!) }
+        if path.contains("{fileName}") { path = path.replacingOccurrences(of: "{fileName}", with: id!) }
         if query != nil { path += query! }
         
         guard let url = URL(string: path)
@@ -195,6 +199,7 @@ extension GrocyApi {
         //        Tasks
         //        Calendar
         //        Files
+        case filesGroupFilename = "/files/{group}/{fileName}"
     }
 }
 
@@ -279,6 +284,10 @@ extension GrocyApi {
     
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError> {
         return call(.stockBookingWithIdUndo, method: .POST, id: id)
+    }
+    
+    func getPictureURL(groupName: String, fileName: String) -> String? {
+        return request(for: .filesGroupFilename, method: .GET, id: fileName, groupName: groupName, query: "?force_serve_as=picture").url?.absoluteString
     }
     
     // SHOPPING LIST

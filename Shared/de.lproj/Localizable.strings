@@ -72,7 +72,7 @@
 // MARK: - Stock
 "str.stock.stockOverview" = "Bestand";
 // Products, Summed Value
-"str.stock.stockOverviewInfo %d %@" = "%d Produkte, %@ Gesamtwert";
+"str.stock.stockOverviewInfo %lld %@" = "%lld Produkte, %@ Gesamtwert";
 "str.stock.search" = "Durchsuche Bestand";
 "str.stock.empty" = "Nichts auf Lager.";
 "str.stock.location" = "Standort";

@@ -81,38 +81,40 @@ struct ConsumeProductView: View {
     
     var body: some View {
         #if os(macOS)
-        content
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-            .toolbar(content: {
-                ToolbarItem(placement: .confirmationAction) {
-                    HStack{
-                        Button(action: {
-                            openProduct()
-                            resetForm()
-                        }, label: {
-                            HStack{
-                                Text("str.stock.consume.product.open".localized)
-                                Image(systemName: "envelope.open")
-                            }
-                            //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
-                        })
-                        .disabled(!isFormValid)
-                        Button(action: {
-                            consumeProduct()
-                            resetForm()
-                        }, label: {
-                            HStack{
-                                Text("str.stock.consume.product.consume".localized)
-                                Image(systemName: "tuningfork")
-                            }
-                            //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
-                        })
-                        .disabled(!isFormValid)
-                        .keyboardShortcut("s", modifiers: [.command])
+        ScrollView{
+            content
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .toolbar(content: {
+                    ToolbarItem(placement: .confirmationAction) {
+                        HStack{
+                            Button(action: {
+                                openProduct()
+                                resetForm()
+                            }, label: {
+                                HStack{
+                                    Text("str.stock.consume.product.open".localized)
+                                    Image(systemName: "envelope.open")
+                                }
+                                //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                            })
+                            .disabled(!isFormValid)
+                            Button(action: {
+                                consumeProduct()
+                                resetForm()
+                            }, label: {
+                                HStack{
+                                    Text("str.stock.consume.product.consume".localized)
+                                    Image(systemName: "tuningfork")
+                                }
+                                //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                            })
+                            .disabled(!isFormValid)
+                            .keyboardShortcut("s", modifiers: [.command])
+                        }
                     }
-                }
-            })
+                })
+        }
         #else
         content
             .toolbar(content: {
@@ -121,9 +123,9 @@ struct ConsumeProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-//                ToolbarItem(placement: .confirmationAction) {
-//                    
-//                }
+                //                ToolbarItem(placement: .confirmationAction) {
+                //                    
+                //                }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Button("str.stock.consume.product.open") {
                         openProduct()

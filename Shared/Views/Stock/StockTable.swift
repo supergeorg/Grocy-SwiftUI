@@ -47,6 +47,7 @@ struct StockTable: View {
     @AppStorage("stockShowNextBestBeforeDate") var stockShowNextBestBeforeDate: Bool = true
     @AppStorage("stockShowCaloriesPerStockQU") var stockShowCaloriesPerStockQU: Bool = false
     @AppStorage("stockShowCalories") var stockShowCalories: Bool = false
+    
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
@@ -63,6 +64,13 @@ struct StockTable: View {
     //    @State var caloriesPerQUSizeFactor: CGFloat = 0.1
     //    @State var caloriesSizeFactor: CGFloat = 0.1
     
+    private func getCaloriesSum(_ stockElement: StockElement) -> Double {
+        if let calories = Double(stockElement.product.calories) {
+            let sum = calories * Double(stockElement.amount)!
+            return sum
+        } else { return 0 }
+    }
+    
     var sortedStock: Stock {
         filteredStock
             .sorted {
@@ -72,11 +80,15 @@ struct StockTable: View {
                 case .productGroup:
                     return sortAscending ? ($0.product.productGroupID < $1.product.productGroupID) : ($0.product.productGroupID > $1.product.productGroupID)
                 case .amount:
-                    return sortAscending ? ($0.amount < $1.amount) : ($0.amount > $1.amount)
+                    return sortAscending ? (Double($0.amountAggregated) ?? 0 < Double($1.amountAggregated) ?? 0) : (Double($0.amountAggregated) ?? 0 > Double($1.amountAggregated) ?? 0)
+                case .value:
+                    return sortAscending ? (Double($0.value) ?? 0 < Double($1.value) ?? 0) : (Double($0.value) ?? 0 > Double($1.value) ?? 0)
                 case .nextBestBeforeDate:
                     return sortAscending ? ($0.bestBeforeDate < $1.bestBeforeDate) : ($0.bestBeforeDate > $1.bestBeforeDate)
-                default:
-                    return ($0.productID < $1.productID)
+                case .caloriesPerStockQU:
+                    return sortAscending ? (Double($0.product.calories) ?? 0 < Double($1.product.calories) ?? 0) : (Double($0.product.calories) ?? 0 > Double($1.product.calories) ?? 0)
+                case .calories:
+                    return sortAscending ? (getCaloriesSum($0) < getCaloriesSum($1)) : (getCaloriesSum($0) > getCaloriesSum($1))
                 }
             }
     }
@@ -103,7 +115,7 @@ struct StockTable: View {
                 StockTableHeader(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             }
             Divider()
-            ForEach(filteredStock, id:\.productID) { stockElement in
+            ForEach(sortedStock, id:\.productID) { stockElement in
                 StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
             }
         }

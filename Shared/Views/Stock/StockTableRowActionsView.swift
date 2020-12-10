@@ -24,7 +24,7 @@ struct StockTableRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            RowInteractionButton(title: stockElement.product.quickConsumeAmount, image: "tuningfork", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
+            RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "tuningfork", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil))
                     print("consumed")
@@ -34,7 +34,7 @@ struct StockTableRowActionsView: View {
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil))
                     print("consumed all")
                 }
-            RowInteractionButton(title: stockElement.product.quickConsumeAmount, image: "shippingbox", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
+            RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "shippingbox", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil))
                     print("opened")

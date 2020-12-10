@@ -48,10 +48,10 @@ struct PurchaseProductView: View {
         !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty)
     }
     
-//    init(productToPurchaseID: String? = nil, productToPurchaseAmount: Double? = nil) {
-//        self.productID = productToPurchaseID ?? ""
-//        self.amount = productToPurchaseAmount ?? 0
-//    }
+    //    init(productToPurchaseID: String? = nil, productToPurchaseAmount: Double? = nil) {
+    //        self.productID = productToPurchaseID ?? ""
+    //        self.amount = productToPurchaseAmount ?? 0
+    //    }
     
     private func resetForm() {
         self.productID = productToPurchaseID ?? ""
@@ -88,24 +88,26 @@ struct PurchaseProductView: View {
     
     var body: some View {
         #if os(macOS)
-        content
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-            .toolbar(content: {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: {
-                        purchaseProduct()
-                        resetForm()
-                    }, label: {
-                        HStack{
-                            Text("str.stock.buy.product.buy".localized)
-                            Image(systemName: "cart")
-                        }
-                        //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
-                    })
-                    .disabled(!isFormValid)
-                }
-            })
+        ScrollView{
+            content
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .toolbar(content: {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(action: {
+                            purchaseProduct()
+                            resetForm()
+                        }, label: {
+                            HStack{
+                                Text("str.stock.buy.product.buy".localized)
+                                Image(systemName: "cart")
+                            }
+                            //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                        })
+                        .disabled(!isFormValid)
+                    }
+                })
+        }
         #else
         content
             .toolbar(content: {
@@ -126,7 +128,6 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
-            Text(productID)
             Picker(selection: $productID, label: Label("str.stock.buy.product", systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")

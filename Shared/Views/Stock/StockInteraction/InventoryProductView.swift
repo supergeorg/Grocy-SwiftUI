@@ -37,7 +37,7 @@ struct InventoryProductView: View {
         return qu
     }
     private var currentQuantityUnit: MDQuantityUnit {
-       getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
+        getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
     }
     private func getQUString(amount: Int) -> String {
         return amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural
@@ -82,23 +82,25 @@ struct InventoryProductView: View {
     
     var body: some View {
         #if os(macOS)
-        content
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-            .toolbar(content: {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: {
-                        inventoryProduct()
-                        resetForm()
-                    }, label: {
-                        HStack{
-                            Text("str.stock.inventory.product.inventory".localized)
-                            Image(systemName: "arrow.left.arrow.right")
-                        }
-                    })
-                    .disabled(!isFormValid)
-                }
-            })
+        ScrollView{
+            content
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .toolbar(content: {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(action: {
+                            inventoryProduct()
+                            resetForm()
+                        }, label: {
+                            HStack{
+                                Text("str.stock.inventory.product.inventory".localized)
+                                Image(systemName: "arrow.left.arrow.right")
+                            }
+                        })
+                        .disabled(!isFormValid)
+                    }
+                })
+        }
         #else
         content
             .toolbar(content: {

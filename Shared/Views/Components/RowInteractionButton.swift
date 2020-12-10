@@ -28,6 +28,8 @@ struct RowInteractionButton: View {
             if title != nil {
                 Text(title!)
                     .font(Font.system(size: fontSizeValue, weight: .regular))
+                    .lineLimit(1)
+                    .fixedSize()
             }
         }
         .frame(height: fontSizeValue)

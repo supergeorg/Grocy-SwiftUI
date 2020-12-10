@@ -145,6 +145,7 @@ struct StockView: View {
                 })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
+//            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo %d %@", grocyVM.stock.count, summedValueStr))
         #elseif os(iOS)
         content
             .toolbar(content: {
