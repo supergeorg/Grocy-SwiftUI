@@ -12,6 +12,8 @@ struct StockTableRow: View {
     
     @AppStorage("expiringDays") var expiringDays: Int = 5
     
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var showProduct: Bool
     @Binding var showProductGroup: Bool
     @Binding var showAmount: Bool
@@ -104,6 +106,7 @@ struct StockTableRow: View {
             }
         }
         .background(backgroundColor)
+        .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         .sheet(isPresented: $showDetailView, content: {
             #if os(macOS)
             ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))

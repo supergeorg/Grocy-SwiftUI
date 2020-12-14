@@ -1,65 +1,52 @@
 //
-//  MDShoppingLocationsView.swift
+//  MDUserFieldsView.swift
 //  Grocy-SwiftUI
 //
-//  Created by Georg Meissner on 17.11.20.
+//  Created by Georg Meissner on 11.12.20.
 //
 
 import SwiftUI
 
-struct MDShoppingLocationRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
-    
-    var shoppingLocation: MDShoppingLocation
+struct MDUserFieldRowView: View {
+    var userField: MDUserField
     
     var body: some View {
-        HStack{
-            if let uf = shoppingLocation.userfields?.first(where: {$0.key == AppSpecificUserFields.storeLogo.rawValue }) {
-                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
-                    RemoteImageView(withURL: pictureURL)
-                        .frame(width: 100, height: 100)
-                }
-            }
-            VStack(alignment: .leading) {
-                Text(shoppingLocation.name)
-                    .font(.largeTitle)
-                if shoppingLocation.mdShoppingLocationDescription != nil {
-                    if !shoppingLocation.mdShoppingLocationDescription!.isEmpty {
-                        Text(shoppingLocation.mdShoppingLocationDescription!)
-                            .font(.caption)
-                    }
-                }
-            }
-            .padding(10)
-            .multilineTextAlignment(.leading)
+        VStack(alignment: .leading) {
+            Text(userField.caption)
+                .font(.largeTitle)
+            Text(LocalizedStringKey("str.md.userFields.rowName \(userField.name)"))
+            Text(LocalizedStringKey("str.md.userFields.rowEntity \(userField.entity)"))
+            Text(LocalizedStringKey("str.md.userFields.rowType \(userField.type)"))
         }
+        .padding(10)
+        .multilineTextAlignment(.leading)
     }
 }
 
-struct MDShoppingLocationsView: View {
+struct MDUserFieldsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isSearching: Bool = false
     @State private var searchString: String = ""
-    @State private var showAddShoppingLocation: Bool = false
+    @State private var showAddUserField: Bool = false
     
-    @State private var shownEditPopover: MDShoppingLocation? = nil
+    @State private var shownEditPopover: MDUserField? = nil
     
     @State private var reloadRotationDeg: Double = 0
     
-    @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
+    @State private var userFieldToDelete: MDUserField? = nil
     @State private var showDeleteAlert: Bool = false
     
-    func makeIsPresented(shoppingLocation: MDShoppingLocation) -> Binding<Bool> {
+    func makeIsPresented(userField: MDUserField) -> Binding<Bool> {
         return .init(get: {
-            return self.shownEditPopover?.id == shoppingLocation.id
+            return self.shownEditPopover?.id == userField.id
         }, set: { _ in    })
     }
     
-    private var filteredShoppingLocations: MDShoppingLocations {
-        grocyVM.mdShoppingLocations
+    private var filteredUserFields: MDUserFields {
+        grocyVM.mdUserFields
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -70,17 +57,17 @@ struct MDShoppingLocationsView: View {
     
     private func delete(at offsets: IndexSet) {
         for offset in offsets {
-            shoppingLocationToDelete = filteredShoppingLocations[offset]
+            userFieldToDelete = filteredUserFields[offset]
             showDeleteAlert.toggle()
         }
     }
-    private func deleteShoppingLocation(toDelID: String) {
-        grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
+    private func deleteUserField(toDelID: String) {
+        grocyVM.deleteMDObject(object: .userfields, id: toDelID)
         updateData()
     }
     
     private func updateData() {
-        grocyVM.getMDShoppingLocations()
+        grocyVM.getMDUserFields()
     }
     
     var body: some View {
@@ -104,13 +91,13 @@ struct MDShoppingLocationsView: View {
                                     .rotationEffect(Angle.degrees(reloadRotationDeg))
                             })
                             Button(action: {
-                                showAddShoppingLocation.toggle()
+                                showAddUserField.toggle()
                             }, label: {Image(systemName: "plus")})
-                            .popover(isPresented: self.$showAddShoppingLocation, content: {
-                                MDShoppingLocationFormView(isNewShoppingLocation: true)
-                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
-                            })
+//                            .popover(isPresented: self.$showAddUserField, content: {
+//                                MDShoppingLocationFormView(isNewShoppingLocation: true)
+//                                    .padding()
+//                                    .frame(maxWidth: 300, maxHeight: 250)
+//                            })
                         }
                     }
                 }
@@ -147,17 +134,17 @@ struct MDShoppingLocationsView: View {
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
-            if grocyVM.mdShoppingLocations.isEmpty {
-                Text("str.md.empty \("str.md.shoppingLocations".localized)")
-            } else if filteredShoppingLocations.isEmpty {
+            if grocyVM.mdUserFields.isEmpty {
+                Text("str.md.empty \("str.md.userFields".localized)")
+            } else if filteredUserFields.isEmpty {
                 Text("str.noSearchResult")
             }
             #if os(macOS)
-            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
-                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-                        .padding()
-                }
+            ForEach(filteredUserFields, id:\.id) { userField in
+//                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+                    MDUserFieldRowView(userField: userField)
+//                        .padding()
+//                }
             }
             .onDelete(perform: delete)
             #else
@@ -170,27 +157,27 @@ struct MDShoppingLocationsView: View {
             #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.shoppingLocations".localized)
+        .navigationTitle("str.md.userFields".localized)
         .onAppear(perform: {
             updateData()
         })
         .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text("str.md.shoppingLocation.delete.confirm"), message: Text(shoppingLocationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
-                deleteShoppingLocation(toDelID: shoppingLocationToDelete?.id ?? "")
+            Alert(title: Text("str.md.userFields.delete.confirm"), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+                deleteUserField(toDelID: userFieldToDelete?.id ?? "")
             }, secondaryButton: .cancel())
         }
     }
 }
 
-struct MDShoppingLocationsView_Previews: PreviewProvider {
+struct MDUserFieldsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDShoppingLocationRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+//            MDUserFieldRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
             #if os(macOS)
-            MDShoppingLocationsView()
+            MDUserFieldsView()
             #else
             NavigationView() {
-                MDShoppingLocationsView()
+                MDUserFieldsView()
             }
             #endif
         }

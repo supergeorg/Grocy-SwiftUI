@@ -94,6 +94,16 @@ struct StockTable: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        content
+        #elseif os(iOS)
+        ScrollView(.horizontal){
+            content
+        }
+        #endif
+    }
+    
+    var content: some View {
         VStack(alignment: .leading) {
             HStack{
                 Image(systemName: "eye.fill")

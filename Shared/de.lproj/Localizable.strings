@@ -51,6 +51,8 @@
 "str.nav.md.chores" = "Hausarbeiten";
 "str.nav.md.batteries" = "Batterien";
 "str.nav.md.taskCategories" = "Aufgabenkategorien";
+"str.nav.md.userFields" = "Benutzerfelder";
+"str.nav.md.userEntities" = "Benutzerentitäten";
 "str.nav.settings" = "Einstellungen";
 
 // MARK: - Details
@@ -347,14 +349,19 @@
 "str.md.batteries" = "Batterien";
 "str.md.taskCategories" = "Aufgabenkategorien";
 
+"str.md.userFields" = "Benutzerfelder";
+"str.md.userFields.rowName %@" = "Name: %@";
+"str.md.userFields.rowEntity %@" = "Entität: %@";
+"str.md.userFields.rowType %@" = "Typ: %@";
+
 // MARK: - Settings
 "str.settings" = "Einstellungen";
 "str.settings.version %@" = "Grocy Version %@";
 "str.settings.logout" = "Von Server abmelden";
 "str.settings.grocyVersion %@" = "Version: %@";
-"str.settings.grocyRLSDate %@" = "Release Date: ";
-"str.settings.grocyPHPVersion %@" = "PHP Version: ";
-"str.settings.grocySQLiteVersion %@" = "SQLite Version: ";
+"str.settings.grocyRLSDate %@" = "Releasedatum: %@";
+"str.settings.grocyPHPVersion %@" = "PHP Version: %@";
+"str.settings.grocySQLiteVersion %@" = "SQLite Version: %@";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";

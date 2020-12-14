@@ -32,6 +32,10 @@
 		7826270F256E847F00ECED03 /* StockProductPriceHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7826270D256E847F00ECED03 /* StockProductPriceHistory.swift */; };
 		7826271E256E884F00ECED03 /* ProductTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7826271D256E884F00ECED03 /* ProductTransferModel.swift */; };
 		7826271F256E884F00ECED03 /* ProductTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7826271D256E884F00ECED03 /* ProductTransferModel.swift */; };
+		782A7F1325838C3E0010472F /* MDUserFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782A7F1225838C3E0010472F /* MDUserFieldsView.swift */; };
+		782A7F1425838C3E0010472F /* MDUserFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782A7F1225838C3E0010472F /* MDUserFieldsView.swift */; };
+		782A7F1A25838C630010472F /* MDUserFieldModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782A7F1925838C630010472F /* MDUserFieldModel.swift */; };
+		782A7F1B25838C630010472F /* MDUserFieldModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782A7F1925838C630010472F /* MDUserFieldModel.swift */; };
 		78396E7725629F7700B9878F /* MDLocationFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */; };
 		78396E8C25629FE600B9878F /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78396E8B25629FE600B9878F /* MyTextField.swift */; };
 		78396E8D25629FE600B9878F /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78396E8B25629FE600B9878F /* MyTextField.swift */; };
@@ -184,6 +188,8 @@
 		78CB764D255EBB0400319108 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB764B255EBB0400319108 /* SearchBar.swift */; };
 		78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7656255EC0B500319108 /* StockFilterBarView.swift */; };
 		78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7656255EC0B500319108 /* StockFilterBarView.swift */; };
+		78CECD0F258789E8007780B2 /* AppSpecificUserFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */; };
+		78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */; };
 		78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */; };
@@ -245,6 +251,8 @@
 		78262706256E83A900ECED03 /* StockLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockLocationModel.swift; sourceTree = "<group>"; };
 		7826270D256E847F00ECED03 /* StockProductPriceHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductPriceHistory.swift; sourceTree = "<group>"; };
 		7826271D256E884F00ECED03 /* ProductTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTransferModel.swift; sourceTree = "<group>"; };
+		782A7F1225838C3E0010472F /* MDUserFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldsView.swift; sourceTree = "<group>"; };
+		782A7F1925838C630010472F /* MDUserFieldModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldModel.swift; sourceTree = "<group>"; };
 		78396E8B25629FE600B9878F /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
 		7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
@@ -332,6 +340,7 @@
 		78CB7643255EBA6C00319108 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		78CB764B255EBB0400319108 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		78CB7656255EC0B500319108 /* StockFilterBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockFilterBarView.swift; sourceTree = "<group>"; };
+		78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpecificUserFields.swift; sourceTree = "<group>"; };
 		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
 		78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionView.swift; sourceTree = "<group>"; };
 		78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterView.swift; sourceTree = "<group>"; };
@@ -630,6 +639,7 @@
 				78CB75A4255EA5A900319108 /* Localization.swift */,
 				7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */,
 				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
+				78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -665,6 +675,7 @@
 				78CB7613255EB9C500319108 /* MDQuantityUnitsModel.swift */,
 				78CB7615255EB9C500319108 /* MDShoppingLocationsModel.swift */,
 				782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */,
+				782A7F1925838C630010472F /* MDUserFieldModel.swift */,
 			);
 			path = MasterData;
 			sourceTree = "<group>";
@@ -713,6 +724,7 @@
 				786F6EA32564035C004D8DE0 /* MDChoresView.swift */,
 				786F6EB125640383004D8DE0 /* MDBatteriesView.swift */,
 				786F6EB825640396004D8DE0 /* MDTaskCategoriesView.swift */,
+				782A7F1225838C3E0010472F /* MDUserFieldsView.swift */,
 			);
 			path = MasterData;
 			sourceTree = "<group>";
@@ -890,6 +902,7 @@
 				78CB7608255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78D0F4D5257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
 				7880F0F1256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
+				782A7F1A25838C630010472F /* MDUserFieldModel.swift in Sources */,
 				78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */,
 				78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */,
 				78CB760A255EB9A000319108 /* ProductBuyModel.swift in Sources */,
@@ -951,11 +964,13 @@
 				7880F112256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				78CB758F255EA53F00319108 /* Errors.swift in Sources */,
 				786F6E842563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */,
+				78CECD0F258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
 				78CB74BC255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */,
 				78CB7586255EA3D000319108 /* SystemDBChangedTimeModel.swift in Sources */,
 				78FA6A942567D40500941460 /* StockJournalModel.swift in Sources */,
 				7848A0E9256BE3EF004EAF18 /* InventoryProductView.swift in Sources */,
 				7826271E256E884F00ECED03 /* ProductTransferModel.swift in Sources */,
+				782A7F1325838C3E0010472F /* MDUserFieldsView.swift in Sources */,
 				7891C64E257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
 				78CB757A255EA39900319108 /* GrocyAPI.swift in Sources */,
 				78CB75C2255EAE2000319108 /* VisualEffectBlur.swift in Sources */,
@@ -1019,6 +1034,7 @@
 				78CB761D255EB9C600319108 /* MDProductGroupsModel.swift in Sources */,
 				78CB7605255EB9A000319108 /* ProductConsumeModel.swift in Sources */,
 				78F1FAC1255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */,
+				782A7F1B25838C630010472F /* MDUserFieldModel.swift in Sources */,
 				78CB7636255EBA3F00319108 /* StockView.swift in Sources */,
 				78262708256E83A900ECED03 /* StockLocationModel.swift in Sources */,
 				7885B8B02567F08F003439F5 /* GrocyUserModel.swift in Sources */,
@@ -1053,6 +1069,7 @@
 				78FA6A952567D40500941460 /* StockJournalModel.swift in Sources */,
 				78CB74BD255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */,
 				786F6E852563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */,
+				782A7F1425838C3E0010472F /* MDUserFieldsView.swift in Sources */,
 				782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */,
 				78CB7630255EBA3F00319108 /* StockFilterActionsView.swift in Sources */,
 				78CB761B255EB9C600319108 /* MDQuantityUnitsModel.swift in Sources */,
@@ -1067,6 +1084,7 @@
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
 				7891C64F257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
+				78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
 				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,

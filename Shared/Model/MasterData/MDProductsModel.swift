@@ -20,7 +20,7 @@ struct MDProduct: Codable, Hashable {
     let parentProductID: String?
     let calories, cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String
     let rowCreatedTimestamp: String
-    let userfields: String?
+    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name

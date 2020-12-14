@@ -14,7 +14,7 @@ struct MDProductBarcode: Codable {
     let amount, shoppingLocationID: String
     let lastPrice: String?
     let rowCreatedTimestamp: String
-    let userfields: String?
+    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id

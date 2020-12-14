@@ -145,7 +145,7 @@ struct StockView: View {
                 })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
-//            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo %d %@", grocyVM.stock.count, summedValueStr))
+        //            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo %d %@", grocyVM.stock.count, summedValueStr))
         #elseif os(iOS)
         content
             .toolbar(content: {
@@ -259,6 +259,9 @@ struct StockView: View {
 
 struct StockView_Previews: PreviewProvider {
     static var previews: some View {
-        StockView()
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            StockView()
+                .preferredColorScheme(scheme)
+        }
     }
 }

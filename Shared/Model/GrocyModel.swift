@@ -42,6 +42,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdProductGroups: MDProductGroups = []
     @Published var mdProductBarcodes: MDProductBarcodes = []
+    @Published var mdUserFields: MDUserFields = []
     
     @Published var stockProductDetails: [String: StockProductDetails] = [:]
     @Published var stockProductLocations: [String: StockLocations] = [:]
@@ -286,20 +287,20 @@ class GrocyViewModel: ObservableObject {
         grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
     }
     
-        // MARK: -Shopping Lists
-        func getShoppingListDescriptions() {
-            grocyApi.getObject(object: .shopping_lists)
-                .replaceError(with: [])
-                .assign(to: \.shoppingListDescriptions, on: self)
-                .store(in: &cancellables)
-        }
+    // MARK: -Shopping Lists
+    func getShoppingListDescriptions() {
+        grocyApi.getObject(object: .shopping_lists)
+            .replaceError(with: [])
+            .assign(to: \.shoppingListDescriptions, on: self)
+            .store(in: &cancellables)
+    }
     
-        func getShoppingList() {
-            grocyApi.getObject(object: .shopping_list)
-                .replaceError(with: [])
-                .assign(to: \.shoppingList, on: self)
-                .store(in: &cancellables)
-        }
+    func getShoppingList() {
+        grocyApi.getObject(object: .shopping_list)
+            .replaceError(with: [])
+            .assign(to: \.shoppingList, on: self)
+            .store(in: &cancellables)
+    }
     
     func addShoppingListProduct(content: ShoppingListAddProduct) {
         let jsonContent = try! jsonEncoder.encode(content)
@@ -361,11 +362,18 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getMDUserFields() {
+        grocyApi.getObject(object: .userfields)
+            .replaceError(with: [])
+            .assign(to: \.mdUserFields, on: self)
+            .store(in: &cancellables)
+    }
+    
     // Generic POST and DELETE
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
-//        print(String(data: jsonContent, encoding: .utf8)!)
+        //        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .replaceError(with: [])
             .assign(to: \.lastErrors, on: self)

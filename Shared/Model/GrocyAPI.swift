@@ -287,7 +287,12 @@ extension GrocyApi {
     }
     
     func getPictureURL(groupName: String, fileName: String) -> String? {
-        return request(for: .filesGroupFilename, method: .GET, id: fileName, groupName: groupName, query: "?force_serve_as=picture").url?.absoluteString
+        let filepath = request(for: .filesGroupFilename, method: .GET, id: fileName, groupName: groupName, query: "?force_serve_as=picture").url?.absoluteString
+        if groupName == "userfiles" {
+            return filepath?.replacingOccurrences(of: "/api", with: "")
+        } else {
+            return filepath
+        }
     }
     
     // SHOPPING LIST

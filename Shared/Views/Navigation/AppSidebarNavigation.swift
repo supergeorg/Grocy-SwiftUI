@@ -34,6 +34,8 @@ extension AppSidebarNavigation {
         case mdChores = "house.fill"
         case mdBatteries = "battery.100"
         case mdTaskCategories = "scale.3d"
+        case mdUserFields = "bookmark.fill"
+        case mdUserEntities = "bookmark"
         
         case settings = "gear"
         case userManagement = "person.3.fill"
@@ -41,9 +43,10 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.stockOverview
-//        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
-//    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
+    @State private var selection: NavigationItem? = NavigationItem.mdShoppingLocations
+//    @AppStorage("sidebarSelection") private var sidebarSelection: NavigationItem = .shoppingList
+    //        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
+    //    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
     
     private func toggleSidebar() {
         #if os(macOS)
@@ -54,6 +57,7 @@ struct AppSidebarNavigation: View {
     var body: some View {
         NavigationView {
             List(selection: $selection) {
+//            List(selection: sidebarSelection) {
                 #if os(macOS)
                 Image("grocy-logo")
                     .resizable()
@@ -74,50 +78,50 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-//                Group {
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.recipes, selection: $selection) {
-//                        Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
-//                    }
-//                    .tag(NavigationItem.recipes)
-//
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
-//                        Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
-//                    }
-//                    .tag(NavigationItem.mealPlan)
-//                    Divider()
-//                }
-
-//                Group {
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choresOverview, selection: $selection) {
-//                        Label("str.nav.choresOverview", systemImage: NavigationItem.choresOverview.rawValue)
-//                    }
-//                    .tag(NavigationItem.choresOverview)
-//
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.tasks, selection: $selection) {
-//                        Label("str.nav.tasks", systemImage: NavigationItem.tasks.rawValue)
-//                    }
-//                    .tag(NavigationItem.tasks)
-//
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.batteriesOverview, selection: $selection) {
-//                        Label("str.nav.batteriesOverview", systemImage: NavigationItem.batteriesOverview.rawValue)
-//                    }
-//                    .tag(NavigationItem.batteriesOverview)
-//
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.equipment, selection: $selection) {
-//                        Label("str.nav.equipment", systemImage: NavigationItem.equipment.rawValue)
-//                    }
-//                    .tag(NavigationItem.equipment)
-//                    Divider()
-//                }
-
-//                Group {
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.calendar, selection: $selection) {
-//                        Label("str.nav.calendar", systemImage: NavigationItem.calendar.rawValue)
-//                    }
-//                    .tag(NavigationItem.calendar)
-//                    Divider()
-//                }
-
+                //                Group {
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.recipes, selection: $selection) {
+                //                        Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.recipes)
+                //
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
+                //                        Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.mealPlan)
+                //                    Divider()
+                //                }
+                
+                //                Group {
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choresOverview, selection: $selection) {
+                //                        Label("str.nav.choresOverview", systemImage: NavigationItem.choresOverview.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.choresOverview)
+                //
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.tasks, selection: $selection) {
+                //                        Label("str.nav.tasks", systemImage: NavigationItem.tasks.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.tasks)
+                //
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.batteriesOverview, selection: $selection) {
+                //                        Label("str.nav.batteriesOverview", systemImage: NavigationItem.batteriesOverview.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.batteriesOverview)
+                //
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.equipment, selection: $selection) {
+                //                        Label("str.nav.equipment", systemImage: NavigationItem.equipment.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.equipment)
+                //                    Divider()
+                //                }
+                
+                //                Group {
+                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.calendar, selection: $selection) {
+                //                        Label("str.nav.calendar", systemImage: NavigationItem.calendar.rawValue)
+                //                    }
+                //                    .tag(NavigationItem.calendar)
+                //                    Divider()
+                //                }
+                
                 Group {
                     NavigationLink(destination: PurchaseProductView(), tag: NavigationItem.purchase, selection: $selection) {
                         Label("str.nav.purchase", systemImage: NavigationItem.purchase.rawValue)
@@ -139,15 +143,15 @@ struct AppSidebarNavigation: View {
                     }
                     .tag(NavigationItem.inventory)
                     
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choreTracking, selection: $selection) {
-//                        Label("str.nav.choreTracking", systemImage: NavigationItem.choreTracking.rawValue)
-//                    }
-//                    .tag(NavigationItem.choreTracking)
-//
-//                    NavigationLink(destination: EmptyView(), tag: NavigationItem.batteryTracking, selection: $selection) {
-//                        Label("str.nav.batteryTracking", systemImage: NavigationItem.batteryTracking.rawValue)
-//                    }
-//                    .tag(NavigationItem.batteryTracking)
+                    //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choreTracking, selection: $selection) {
+                    //                        Label("str.nav.choreTracking", systemImage: NavigationItem.choreTracking.rawValue)
+                    //                    }
+                    //                    .tag(NavigationItem.choreTracking)
+                    //
+                    //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.batteryTracking, selection: $selection) {
+                    //                        Label("str.nav.batteryTracking", systemImage: NavigationItem.batteryTracking.rawValue)
+                    //                    }
+                    //                    .tag(NavigationItem.batteryTracking)
                     Divider()
                 }
                 Group {
@@ -177,20 +181,25 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdProductGroups)
                         
-//                        NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
-//                            Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
-//                        }
-//                        .tag(NavigationItem.mdChores)
-//                        
-//                        NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
-//                            Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
-//                        }
-//                        .tag(NavigationItem.mdBatteries)
-//                        
-//                        NavigationLink(destination: MDTaskCategoriesView(), tag: NavigationItem.mdTaskCategories, selection: $selection) {
-//                            Label("str.nav.md.taskCategories", systemImage: NavigationItem.mdTaskCategories.rawValue)
-//                        }
-//                        .tag(NavigationItem.mdTaskCategories)
+                        //                        NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
+                        //                            Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
+                        //                        }
+                        //                        .tag(NavigationItem.mdChores)
+                        //
+                        //                        NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
+                        //                            Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
+                        //                        }
+                        //                        .tag(NavigationItem.mdBatteries)
+                        //
+                        //                        NavigationLink(destination: MDTaskCategoriesView(), tag: NavigationItem.mdTaskCategories, selection: $selection) {
+                        //                            Label("str.nav.md.taskCategories", systemImage: NavigationItem.mdTaskCategories.rawValue)
+                        //                        }
+                        //                        .tag(NavigationItem.mdTaskCategories)
+                        
+                        NavigationLink(destination: MDUserFieldsView(), tag: NavigationItem.mdUserFields, selection: $selection) {
+                            Label("str.nav.md.userFields", systemImage: NavigationItem.mdUserFields.rawValue)
+                        }
+                        .tag(NavigationItem.mdUserFields)
                     }
                     Divider()
                 }

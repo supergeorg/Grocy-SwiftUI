@@ -12,7 +12,8 @@ struct MDQuantityUnit: Codable {
     let id, name: String
     let mdQuantityUnitDescription: String?
     let rowCreatedTimestamp, namePlural: String
-    let pluralForms, userfields: String?
+    let pluralForms: String?
+    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name

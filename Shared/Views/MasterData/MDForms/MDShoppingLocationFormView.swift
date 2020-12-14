@@ -20,7 +20,7 @@ struct MDShoppingLocationFormView: View {
     var isNewShoppingLocation: Bool
     var shoppingLocation: MDShoppingLocation?
     
-    @State var isNameCorrect: Bool = false
+    @State var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundShoppingLocation = grocyVM.mdShoppingLocations.first(where: {$0.name == name})
         return isNewShoppingLocation ? !(name.isEmpty || foundShoppingLocation != nil) : !(name.isEmpty || (foundShoppingLocation != nil && foundShoppingLocation!.id != shoppingLocation!.id))

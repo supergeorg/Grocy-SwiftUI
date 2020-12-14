@@ -28,7 +28,7 @@ class ImageLoader: ObservableObject {
     }
 }
 
-
+#if os(macOS)
 struct RemoteImageView: View {
     @ObservedObject var imageLoader:ImageLoader
     @State var image:NSImage = NSImage()
@@ -48,9 +48,30 @@ struct RemoteImageView: View {
         }
     }
 }
+#elseif os(iOS)
+struct RemoteImageView: View {
+    @ObservedObject var imageLoader:ImageLoader
+    @State var image:UIImage = UIImage()
 
-//struct RemoteImageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        RemoteImageView()
-//    }
-//}
+    init(withURL url:String) {
+        imageLoader = ImageLoader(urlString:url)
+    }
+
+    var body: some View {
+        VStack {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width:100, height:100)
+        }.onReceive(imageLoader.didChange) { data in
+            self.image = UIImage(data: data) ?? UIImage()
+        }
+    }
+}
+#endif
+
+struct RemoteImageView_Previews: PreviewProvider {
+    static var previews: some View {
+        RemoteImageView(withURL: "https://www.google.com/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif")
+    }
+}
