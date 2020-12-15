@@ -8,10 +8,23 @@
 
 // MARK: - Generic
 "str.cancel" = "Cancel";
+"str.ok" = "OK";
 "str.delete" = "Delete";
 "str.edit" = "Edit";
 "str.save" = "Save";
-"str.noSearchResult" = "No search result found.";
+"str.search" = "Search";
+"str.noSearchResult" = "No searchresult found.";
+"str.day" = "Day";
+"str.days" = "Days";
+"str.refresh" = "Refresh";
+"str.close" = "Close";
+"str.add" = "Add";
+
+// MARK: - Transactions
+"tr.purchase" = "Purchase";
+"tr.consume" = "Consume";
+"tr.opened" = "Opened";
+"tr.inventory" = "Inventory";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Stock overview";
@@ -38,19 +51,42 @@
 "str.nav.md.chores" = "Chores";
 "str.nav.md.batteries" = "Batteries";
 "str.nav.md.taskCategories" = "Task categories";
+"str.nav.md.userFields" = "Benutzerfelder";
+"str.nav.md.userEntities" = "Benutzerentitäten";
 "str.nav.settings" = "Settings";
+
+// MARK: - Details
+"str.details.title" = "Product overview";
+"str.details.amount" = "Stock amount";
+"str.details.stockValue" = "Stock value";
+"str.details.defaultLocation" = "Default location";
+"str.details.lastPurchaseDate" = "Last purchased";
+"str.details.lastUseDate" = "Last used";
+"str.details.lastPrice" = "Last price";
+"str.details.averagePrice" = "Average price";
+"str.details.averageShelfLife" = "Average shelf life";
+"str.details.spoilRate" = "Spoil rate";
+
+"str.details.stockEntries" = "Stock entries";
+"str.details.stockJournal" = "Stock journal";
+"str.details.edit" = "Edit product";
 
 // MARK: - Stock
 "str.stock.stockOverview" = "Stock overview";
+// Products, Summed Value
+"str.stock.stockOverviewInfo %lld %@" = "%lld Products, %@ total value";
 "str.stock.search" = "Search stock";
 "str.stock.empty" = "Nothing on stock.";
 "str.stock.location" = "Location";
 "str.stock.productGroup" = "Product group";
 "str.stock.status" = "Status";
 "str.stock.all" = "All";
-"str.stock.expiringSoon" = "Expiring soon";
-"str.stock.expired" = "Already expired";
-"str.stock.belowMinStock" = "Below min. stock amount";
+"str.stock.productAmount1" = "1 product is";
+"str.stock.productAmount" = "products are";
+"str.stock.expiringSoon" = "expiring soon";
+"str.stock.overdue" = "overdue";
+"str.stock.expired" = "already expired";
+"str.stock.belowMinStock" = "below min. stock amount";
 
 "str.stock.tbl.product" = "Product";
 "str.stock.tbl.productGroup" = "Product group";
@@ -59,6 +95,10 @@
 "str.stock.tbl.nextBestBefore" = "Next best before date";
 "str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
 "str.stock.tbl.calories" = "Calories";
+"str.stock.tbl.action.all" = "All";
+"str.stock.tbl.action.consume %@" = "Consume %@";
+"str.stock.tbl.action.consume.all %@" = "Consume all %@ which are currently in stock";
+"str.stock.tbl.action.consume.open %@" = "Mark %@ as open";
 
 // MARK: - Master Data
 "str.md.masterData" = "Master Data";

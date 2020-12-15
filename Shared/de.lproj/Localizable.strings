@@ -20,7 +20,7 @@
 "str.close" = "Schließen";
 "str.add" = "Hinzufügen";
 
-// MARK: - Transaktionen
+// MARK: - Transactions
 "tr.purchase" = "Einkauf";
 "tr.consume" = "Verbrauch";
 "tr.opened" = "Geöffnet";
