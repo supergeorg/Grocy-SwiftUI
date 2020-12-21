@@ -127,6 +127,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.shoppingList.map{ Int($0.id) ?? 0 }
         case .product_barcodes:
             ints = self.mdProductBarcodes.map{ Int($0.id) ?? 0 }
+        case .userfields:
+            ints = self.mdUserFields.map{ Int($0.id) ?? 0 }
         default:
             print("findnextid not impl")
         }

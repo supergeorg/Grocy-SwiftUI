@@ -58,6 +58,18 @@ struct MasterDataView: View {
                     Text("str.md.taskCategories")
                 }
             }
+            NavigationLink(destination: MDUserFieldsView()) {
+                HStack{
+                    Image(systemName: "bookmark.fill")
+                    Text("str.md.userFields")
+                }
+            }
+            NavigationLink(destination: MDUserEntitiesView()) {
+                HStack{
+                    Image(systemName: "bookmark")
+                    Text("str.md.userEntities")
+                }
+            }
         }
         .animation(.default)
         .navigationTitle("str.md.masterData".localized)

@@ -23,10 +23,6 @@ struct MDProductGroupRowView: View {
         }
         .padding(10)
         .multilineTextAlignment(.leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.primary, lineWidth: 1)
-        )
     }
 }
 

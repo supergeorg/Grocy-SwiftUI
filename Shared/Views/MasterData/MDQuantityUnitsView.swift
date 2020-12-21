@@ -23,10 +23,6 @@ struct MDQuantityUnitRowView: View {
         }
         .padding(10)
         .multilineTextAlignment(.leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.primary, lineWidth: 1)
-        )
     }
 }
 
@@ -82,11 +78,11 @@ struct MDQuantityUnitsView: View {
                     })
             }
             #else
-//            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-//                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
-//                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
-//                }
-//            }
+            //            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
+            //                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
+            //                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
+            //                }
+            //            }
             #endif
         }
         .animation(.default)

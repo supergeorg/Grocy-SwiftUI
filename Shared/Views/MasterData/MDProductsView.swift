@@ -8,35 +8,48 @@
 import SwiftUI
 
 struct MDProductRowView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
     var product: MDProduct
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(product.name).font(.largeTitle)
-            HStack{
-                if let loc = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
-                    Text("Standort: ").font(.caption)
-                        +
-                        Text(GrocyViewModel.shared.mdLocations[loc].name).font(.caption)
-                }
-                if let pg = GrocyViewModel.shared.mdProductGroups.firstIndex { $0.id == product.productGroupID } {
-                    Text("Kategorie: ").font(.caption)
-                        +
-                        Text(GrocyViewModel.shared.mdProductGroups[pg].name).font(.caption)
+        HStack{
+            if let pictureFileName = product.pictureFileName {
+                let utf8str = pictureFileName.data(using: .utf8)
+                if let base64Encoded = utf8str?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
+                    if let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded) {
+                        RemoteImageView(withURL: pictureURL)
+                            .frame(width: 100, height: 100)
+                    }
                 }
             }
-            if let description = product.mdProductDescription {
-                if !description.isEmpty{
-                    Text(description).font(.caption)
+            VStack(alignment: .leading) {
+                Text(product.name).font(.largeTitle)
+                HStack{
+                    if let loc = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
+                        Text("Standort: ").font(.caption)
+                            +
+                            Text(GrocyViewModel.shared.mdLocations[loc].name).font(.caption)
+                    }
+                    if let pg = GrocyViewModel.shared.mdProductGroups.firstIndex { $0.id == product.productGroupID } {
+                        Text("Kategorie: ").font(.caption)
+                            +
+                            Text(GrocyViewModel.shared.mdProductGroups[pg].name).font(.caption)
+                    }
+                }
+                if let description = product.mdProductDescription {
+                    if !description.isEmpty{
+                        Text(description).font(.caption)
+                    }
                 }
             }
+            //        .padding(10)
+            //        .multilineTextAlignment(.leading)
+            //        .overlay(
+            //            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            //                .stroke(Color.primary, lineWidth: 1)
+            //        )
         }
-        .padding(10)
-        .multilineTextAlignment(.leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.primary, lineWidth: 1)
-        )
     }
 }
 

@@ -16,7 +16,7 @@ struct MDUserFieldRowView: View {
                 .font(.largeTitle)
             Text(LocalizedStringKey("str.md.userFields.rowName \(userField.name)"))
             Text(LocalizedStringKey("str.md.userFields.rowEntity \(userField.entity)"))
-            Text(LocalizedStringKey("str.md.userFields.rowType \(userField.type)"))
+            Text(LocalizedStringKey("str.md.userFields.rowType \(UserFieldType(rawValue: userField.type)?.getDescription().localized ?? userField.type)"))
         }
         .padding(10)
         .multilineTextAlignment(.leading)
@@ -93,11 +93,11 @@ struct MDUserFieldsView: View {
                             Button(action: {
                                 showAddUserField.toggle()
                             }, label: {Image(systemName: "plus")})
-//                            .popover(isPresented: self.$showAddUserField, content: {
-//                                MDShoppingLocationFormView(isNewShoppingLocation: true)
+                            .popover(isPresented: self.$showAddUserField, content: {
+                                MDUserFieldFormView(isNewUserField: true)
 //                                    .padding()
-//                                    .frame(maxWidth: 300, maxHeight: 250)
-//                            })
+                                    .frame(maxWidth: 300, maxHeight: 250)
+                            })
                         }
                     }
                 }
@@ -117,12 +117,12 @@ struct MDUserFieldsView: View {
                             Image(systemName: "arrow.triangle.2.circlepath")
                         })
                         Button(action: {
-                            showAddShoppingLocation.toggle()
+                            showAddUserField.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddShoppingLocation, content: {
-                                NavigationView {
-                                    MDShoppingLocationFormView(isNewShoppingLocation: true)
-                                } })
+                        //                        .sheet(isPresented: self.$showAddUserField, content: {
+                        //                                NavigationView {
+                        //                                    MDUserFieldFormView(isNewUserField: true)
+                        //                                } })
                     }
                 }
             }
@@ -139,22 +139,21 @@ struct MDUserFieldsView: View {
             } else if filteredUserFields.isEmpty {
                 Text("str.noSearchResult")
             }
-            #if os(macOS)
+            //            #if os(macOS)
             ForEach(filteredUserFields, id:\.id) { userField in
-//                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField)) {
                     MDUserFieldRowView(userField: userField)
-//                        .padding()
-//                }
-            }
-            .onDelete(perform: delete)
-            #else
-            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
-                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                 }
             }
             .onDelete(perform: delete)
-            #endif
+            //            #else
+            //            ForEach(filteredUserFields, id:\.id) { shoppingLocation in
+            //                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+            //                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
+            //                }
+            //            }
+            //            .onDelete(perform: delete)
+            //            #endif
         }
         .animation(.default)
         .navigationTitle("str.md.userFields".localized)
@@ -172,7 +171,7 @@ struct MDUserFieldsView: View {
 struct MDUserFieldsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-//            MDUserFieldRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+            //            MDUserFieldRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
             #if os(macOS)
             MDUserFieldsView()
             #else

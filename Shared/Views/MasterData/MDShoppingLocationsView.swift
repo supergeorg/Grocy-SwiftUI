@@ -115,7 +115,6 @@ struct MDShoppingLocationsView: View {
                     }
                 }
         }
-        .navigationViewStyle(DoubleColumnNavigationViewStyle())
         #elseif os(iOS)
         content
             .toolbar {

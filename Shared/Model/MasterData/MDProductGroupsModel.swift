@@ -12,7 +12,7 @@ struct MDProductGroup: Codable {
     let id, name: String
     let mdProductGroupDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: String?
+    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name

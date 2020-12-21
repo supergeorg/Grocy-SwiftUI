@@ -11,7 +11,7 @@ struct MyIntStepper: View {
     @Binding var amount: Int
     
     var description: String
-    var descriptionInfo: String?
+    var helpText: String?
     var minAmount: Int? = 0
     var amountName: String? = nil
     
@@ -25,15 +25,15 @@ struct MyIntStepper: View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(description.localized)
-                if descriptionInfo != nil {
-                    Button(action: {
-                        showInfo.toggle()
-                    }, label: {
-                        Image(systemName: "questionmark.circle.fill")
-                    })
-                    .popover(isPresented: $showInfo, content: {
-                        Text(descriptionInfo!.localized)
-                    })
+                if helpText != nil {
+                    Image(systemName: "questionmark.circle.fill")
+                        .font(.caption)
+                        .onTapGesture {
+                            showInfo.toggle()
+                        }
+                        .popover(isPresented: $showInfo, content: {
+                            Text(helpText!.localized).padding()
+                        })
                 }
             }
             HStack{
@@ -68,7 +68,7 @@ struct MyIntStepper: View {
 
 struct MyIntStepper_Previews: PreviewProvider {
     static var previews: some View {
-        MyIntStepper(amount: Binding.constant(1), description: "Description", descriptionInfo: "Description info Text", minAmount: 1, amountName: "QuantityUnit")
+        MyIntStepper(amount: Binding.constant(1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit")
             .padding()
     }
 }

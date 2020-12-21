@@ -353,6 +353,36 @@
 "str.md.userFields.rowName %@" = "Name: %@";
 "str.md.userFields.rowEntity %@" = "Entität: %@";
 "str.md.userFields.rowType %@" = "Typ: %@";
+"str.md.userField.new" = "Benutzerfeld erstellen";
+"str.md.userField.edit" = "Benutzerfeld bearbeiten";
+"str.md.userField.delete.confirm" = "Möchtest du wirklich dieses Benutzerfeld löschen?";
+"str.md.userField.entity" = "Entität";
+"str.md.userField.entity.required" = "Eine Entität muss ausgewählt werden";
+"str.md.userField.name" = "Name";
+"str.md.userField.name.info" = "Dies ist der interne Feldname (z.B. für die API)";
+"str.md.userField.name.required" = "Dies ist erforderlich und darf nur Buchstaben und Zahlen enthalten";
+"str.md.userField.caption" = "Titel";
+"str.md.userField.caption.info" = "Dies wird verwendet, wenn das Feld auf der Oberfläche angezeigt wird";
+"str.md.userField.caption.required" = "Ein Titel ist erforderlich";
+"str.md.userField.sortNumber" = "Sortiernummer";
+"str.md.userField.sortNumber.info" = "Mehrere Benutzerfelder werden nach dieser Nummer auf dem Eingabefeld sortiert";
+"str.md.userField.sortNumber.error" = "Dies darf nicht niedriger als 0 sein und muss eine gültige Zahl mit max. 0 Nachkommastellen sein";
+"str.md.userField.type" = "Typ";
+"str.md.userField.type.required" = "Ein Typ muss ausgewählt werden";
+"str.md.userField.showAsColumnInTables" = "Als Spalte in Tabellen anzeigen";
+
+"str.md.userField.type.textSingleLine" = "Text (einzeilig)";
+"str.md.userField.type.textMultiLine" = "Text (mehrzeilig)";
+"str.md.userField.type.numberIntegral" = "Zahl (ganzzahlig)";
+"str.md.userField.type.numberDezimal" = "Zahl (mit Dezimalstellen)";
+"str.md.userField.type.date" = "Datum (ohne Zeitanteil)";
+"str.md.userField.type.dateTime" = "Datum & Zeit";
+"str.md.userField.type.checkbox" = "Kontrollkästchen";
+"str.md.userField.type.presetList" = "Auswahlliste (feste Werte, einzelner Wert kann ausgewählt werden)";
+"str.md.userField.type.presetChecklist" = "Auswahlliste (feste Werte, mehrere Werte können ausgewählt werden)";
+"str.md.userField.type.link" = "Link";
+"str.md.userField.type.file" = "Datei";
+"str.md.userField.type.image" = "Bild";
 
 // MARK: - Settings
 "str.settings" = "Einstellungen";

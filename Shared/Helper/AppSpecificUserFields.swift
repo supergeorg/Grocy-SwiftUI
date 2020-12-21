@@ -9,4 +9,5 @@ import Foundation
 
 enum AppSpecificUserFields: String {
     case storeLogo = "storeLogo"
+    case locationPicture = "locationPicture"
 }

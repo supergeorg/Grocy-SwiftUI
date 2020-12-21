@@ -21,6 +21,7 @@ struct ProductOverviewView: View {
 //        }
         #elseif os(iOS)
         content
+                .navigationTitle(LocalizedStringKey("str.details.title"))
         #endif
     }
     
@@ -65,7 +66,6 @@ struct ProductOverviewView: View {
                 RemoteImageView(withURL: pictureURL)
             }
         }
-        .navigationTitle("str.details.title".localized)
         .toolbar(content: {
             ToolbarItem(placement: .automatic){
                 HStack{
@@ -77,11 +77,11 @@ struct ProductOverviewView: View {
                     }, label: {Text("str.details.stockJournal")})
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
-                    }, label: {Label("str.details.edit", systemImage: "square.and.pencil")})
+                    }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})
                 }
             }
             ToolbarItem(placement: .cancellationAction) {
-                Button("str.ok") {
+                Button(LocalizedStringKey("str.ok")) {
                     self.presentationMode.wrappedValue.dismiss()
                 }
             }

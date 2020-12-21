@@ -8,31 +8,37 @@
 import SwiftUI
 
 struct MDLocationRowView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
     var location: MDLocation
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack{
-                Text(location.name)
-                    .font(.largeTitle)
-                if Bool(location.isFreezer) ?? false {
-                    Image(systemName: "thermometer.snowflake")
-                        .font(.title)
+        HStack{
+            if let uf = location.userfields?.first(where: {$0.key == AppSpecificUserFields.locationPicture.rawValue }) {
+                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
+                    RemoteImageView(withURL: pictureURL)
+                        .frame(width: 100, height: 100)
                 }
             }
-            if location.mdLocationDescription != nil {
-                if !location.mdLocationDescription!.isEmpty {
-                    Text(location.mdLocationDescription!)
-                        .font(.caption)
+            VStack(alignment: .leading) {
+                HStack{
+                    Text(location.name)
+                        .font(.largeTitle)
+                    if Bool(location.isFreezer) ?? false {
+                        Image(systemName: "thermometer.snowflake")
+                            .font(.title)
+                    }
+                }
+                if location.mdLocationDescription != nil {
+                    if !location.mdLocationDescription!.isEmpty {
+                        Text(location.mdLocationDescription!)
+                            .font(.caption)
+                    }
                 }
             }
+            .padding(10)
+            .multilineTextAlignment(.leading)
         }
-        .padding(10)
-        .multilineTextAlignment(.leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color.primary, lineWidth: 1)
-        )
     }
 }
 

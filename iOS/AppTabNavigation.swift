@@ -18,10 +18,11 @@ extension AppTabNavigation {
 }
 
 struct AppTabNavigation: View {
-    @State private var selection: Tab = .shoppingList
+//    @State private var selection: Tab = .shoppingList
+    @AppStorage("tabSelection") private var tabSelection: Tab = .shoppingList
     
     var body: some View {
-        TabView(selection: $selection) {
+        TabView(selection: $tabSelection) {
             NavigationView {
                 StockView()
             }

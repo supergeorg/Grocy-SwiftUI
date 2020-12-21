@@ -151,6 +151,19 @@
 "str.md.batteries" = "Batteries";
 "str.md.taskCategories" = "Task Categories";
 
+"str.md.userField.type.textSingleLine" = "Text (single line)";
+"str.md.userField.type.textMultiLine" = "Text (multi line)";
+"str.md.userField.type.numberIntegral" = "Number (integral)";
+"str.md.userField.type.numberDezimal" = "Number (decimal)";
+"str.md.userField.type.date" = "Date (without time)";
+"str.md.userField.type.dateTime" = "Date & time";
+"str.md.userField.type.checkbox" = "Checkbox";
+"str.md.userField.type.presetList" = "Select list (a single item can be selected)";
+"str.md.userField.type.presetChecklist" = "Select list (multiple items can be selected)";
+"str.md.userField.type.link" = "Link";
+"str.md.userField.type.file" = "File";
+"str.md.userField.type.image" = "Image";
+
 // MARK: - Settings
 "str.settings" = "Settings";
 "str.settings.version %@" = "Grocy Version %@";

@@ -192,10 +192,10 @@ struct MDProductFormView: View {
                 }).pickerStyle(SegmentedPickerStyle())
                 
                 // Default due days
-                MyIntStepper(amount: $defaultBestBeforeDays, description: "str.md.product.defaultBestBeforeDays", descriptionInfo: "str.md.product.defaultBestBeforeDays.info", minAmount: 0, amountName: defaultBestBeforeDays == 1 ? "str.day" : "str.days")
+                MyIntStepper(amount: $defaultBestBeforeDays, description: "str.md.product.defaultBestBeforeDays", helpText: "str.md.product.defaultBestBeforeDays.info", minAmount: 0, amountName: defaultBestBeforeDays == 1 ? "str.day" : "str.days")
                 
                 // Default due days afer opening
-                MyIntStepper(amount: $defaultBestBeforeDaysAfterOpen, description: "str.md.product.defaultBestBeforeDaysAfterOpen", descriptionInfo: "str.md.product.defaultBestBeforeDaysAfterOpen.info", minAmount: 0, amountName: defaultBestBeforeDaysAfterOpen == 1 ? "str.day" : "str.days")
+                MyIntStepper(amount: $defaultBestBeforeDaysAfterOpen, description: "str.md.product.defaultBestBeforeDaysAfterOpen", helpText: "str.md.product.defaultBestBeforeDaysAfterOpen.info", minAmount: 0, amountName: defaultBestBeforeDaysAfterOpen == 1 ? "str.day" : "str.days")
                 
                 // Product group
                 Picker("str.md.product.productGroup", selection: $productGroupID, content: {

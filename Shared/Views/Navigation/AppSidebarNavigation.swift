@@ -43,7 +43,7 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = NavigationItem.mdShoppingLocations
+    @State private var selection: NavigationItem? = NavigationItem.stockOverview
 //    @AppStorage("sidebarSelection") private var sidebarSelection: NavigationItem = .shoppingList
     //        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
     //    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
@@ -200,6 +200,11 @@ struct AppSidebarNavigation: View {
                             Label("str.nav.md.userFields", systemImage: NavigationItem.mdUserFields.rawValue)
                         }
                         .tag(NavigationItem.mdUserFields)
+                        
+                        NavigationLink(destination: MDUserEntitiesView(), tag: NavigationItem.mdUserEntities, selection: $selection) {
+                            Label("str.nav.md.userEntities", systemImage: NavigationItem.mdUserEntities.rawValue)
+                        }
+                        .tag(NavigationItem.mdUserEntities)
                     }
                     Divider()
                 }

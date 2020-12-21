@@ -16,15 +16,19 @@ struct MyTextField: View {
     var isEditing: Bool
     var errorMessage: String?
     var description2: String
+    var helpText: String?
     
-    init(textToEdit: Binding<String>, description: String, isCorrect: Binding<Bool>, leadingIcon: String? = nil, isEditing: Bool? = true, errorMessage: String? = nil) {
+    @State private var showInfo: Bool = false
+    
+    init(textToEdit: Binding<String>, description: String, isCorrect: Binding<Bool>, leadingIcon: String? = nil, isEditing: Bool? = true, errorMessage: String? = nil, helpText: String? = nil) {
         self._textToEdit = textToEdit
         self.description = description
         self._isCorrect = isCorrect
         self.leadingIcon = leadingIcon
         self.isEditing = isEditing ?? true
         self.errorMessage = errorMessage
-//        self._editMode = editMode ?? Binding.constant(EditMode.active)
+        self.helpText = helpText
+        //        self._editMode = editMode ?? Binding.constant(EditMode.active)
         #if os(iOS)
         self.description2 = ""
         #else
@@ -36,6 +40,19 @@ struct MyTextField: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
+            HStack{
+                Spacer()
+                if helpText != nil {
+                    Image(systemName: "questionmark.circle.fill")
+                        .font(.caption)
+                        .onTapGesture {
+                            showInfo.toggle()
+                        }
+                        .popover(isPresented: $showInfo, content: {
+                            Text(helpText!.localized).padding()
+                        })
+                }
+            }
             VStack {
                 Text(LocalizedStringKey(description))
                     .font(isEnteringText ? .caption : .body)
@@ -52,14 +69,14 @@ struct MyTextField: View {
                 }
                 if isEditing {
                     TextField(description2.localized, text: self.$textToEdit)
-//                        .autocapitalization(.none)
+                        //                        .autocapitalization(.none)
                         .disableAutocorrection(true)
-//                        .textContentType(.URL)
+                        //                        .textContentType(.URL)
                         .font(.body)
                         .foregroundColor(.primary)
-//                        .shadow(color: .red, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
-//                                            .foregroundColor(.white)
-//                                            .padding(.bottom, 15)
+                        //                        .shadow(color: .red, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
+                        //                                            .foregroundColor(.white)
+                        //                                            .padding(.bottom, 15)
                         .padding(.top, 15)
                         .onTapGesture {
                             self.isEnteringText = true
