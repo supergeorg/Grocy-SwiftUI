@@ -186,7 +186,6 @@ struct StockView: View {
                         }, label: {
                             Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart.badge.plus")
                         })
-                        Button("test"){self.isShowingSheet.toggle()}
                     }
                 })
             })

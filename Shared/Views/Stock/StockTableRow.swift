@@ -65,57 +65,97 @@ struct StockTableRow: View {
     }
     
     var body: some View {
-        HStack{
-            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
-            Divider()
-            if showProduct {
+        StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+        
+        if showProduct {
+            HStack{
+                Divider()
+                Spacer()
                 Text(stockElement.product.name)
                     .onTapGesture {
                         showDetailView.toggle()
                     }
+                Spacer()
             }
-            if showProductGroup {
-                Divider()
-                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
-            }
-            if showAmount {
-                Divider()
-                HStack{
-                    Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                    if stockElement.amount != formattedAmountAggregated {
-                        Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                            .foregroundColor(Color.grocyGray)
-                    }
-                }
-            }
-            if showValue {
-                Divider()
-                Text("\(stockElement.value) \(grocyVM.getCurrencySymbol())")
-            }
-            if showNextBestBeforeDate {
-                Divider()
-                Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
-            }
-            if showCaloriesPerStockQU {
-                Divider()
-                Text(stockElement.product.calories)
-            }
-            if showCalories {
-                Divider()
-                Text(caloriesSum)
-            }
-        }
-        .background(backgroundColor)
-        .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
-        .sheet(isPresented: $showDetailView, content: {
-            #if os(macOS)
-            ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-            #elseif os(iOS)
-            NavigationView{
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+            .sheet(isPresented: $showDetailView, content: {
+                #if os(macOS)
                 ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
+                #elseif os(iOS)
+                NavigationView{
+                    ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
+                }
+                #endif
+            })
+        }
+        
+        if showProductGroup {
+            HStack{
+                Divider()
+                Spacer()
+                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
+                Spacer()
             }
-            #endif
-        })
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
+        
+        if showAmount {
+            HStack{
+                Divider()
+                Spacer()
+                Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                if stockElement.amount != formattedAmountAggregated {
+                    Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                        .foregroundColor(Color.grocyGray)
+                }
+                Spacer()
+            }
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
+        
+        if showValue {
+            HStack{
+                Divider()
+                Spacer()
+                Text("\(stockElement.value) \(grocyVM.getCurrencySymbol())")
+                Spacer()
+            }
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
+        if showNextBestBeforeDate {
+            HStack{
+                Divider()
+                Spacer()
+                Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
+                Spacer()
+            }
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
+        if showCaloriesPerStockQU {
+            HStack{
+                Divider()
+                Spacer()
+                Text(stockElement.product.calories)
+                Spacer()
+            }
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
+        if showCalories {
+            HStack {
+                Divider()
+                Spacer()
+                Text(caloriesSum)
+                Spacer()
+            }
+            .background(backgroundColor)
+            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+        }
     }
 }
 

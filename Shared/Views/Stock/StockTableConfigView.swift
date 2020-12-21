@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-//    var showProduct = true
-//    var showProductGroup = false
-//    var showAmount = true
-//    var showValue = false
-//    var showNextBestBeforeDate = true
-//    var showCaloriesPerStockQU = false
-//    var showCalories = false
-
 struct StockTableConfigView: View {
     @Binding var showProduct: Bool
     @Binding var showProductGroup: Bool
@@ -26,19 +18,19 @@ struct StockTableConfigView: View {
     
     var body: some View {
         Form() {
-            Toggle("str.stock.tbl.product", isOn: $showProduct)
-            Toggle("str.stock.tbl.productGroup", isOn: $showProductGroup)
-            Toggle("str.stock.tbl.amount", isOn: $showAmount)
-            Toggle("str.stock.tbl.value", isOn: $showValue)
-            Toggle("str.stock.tbl.nextBestBefore", isOn: $showNextBestBeforeDate)
-            Toggle("str.stock.tbl.caloriesPerStockQU", isOn: $showCaloriesPerStockQU)
-            Toggle("str.stock.tbl.calories", isOn: $showCalories)
+            Toggle(LocalizedStringKey("str.stock.tbl.product"), isOn: $showProduct)
+            Toggle(LocalizedStringKey("str.stock.tbl.productGroup"), isOn: $showProductGroup)
+            Toggle(LocalizedStringKey("str.stock.tbl.amount"), isOn: $showAmount)
+            Toggle(LocalizedStringKey("str.stock.tbl.value"), isOn: $showValue)
+            Toggle(LocalizedStringKey("str.stock.tbl.nextBestBefore"), isOn: $showNextBestBeforeDate)
+            Toggle(LocalizedStringKey("str.stock.tbl.caloriesPerStockQU"), isOn: $showCaloriesPerStockQU)
+            Toggle(LocalizedStringKey("str.stock.tbl.calories"), isOn: $showCalories)
         }
     }
 }
 
-//struct StockTableConfigView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StockTableConfigView(shownColumns: Binding.constant([(.product, false)]))
-//    }
-//}
+struct StockTableConfigView_Previews: PreviewProvider {
+    static var previews: some View {
+        StockTableConfigView(showProduct: Binding.constant(true), showProductGroup: Binding.constant(true), showAmount: Binding.constant(true), showValue: Binding.constant(true), showNextBestBeforeDate: Binding.constant(true), showCaloriesPerStockQU: Binding.constant(true), showCalories: Binding.constant(true))
+    }
+}
