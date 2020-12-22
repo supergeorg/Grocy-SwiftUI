@@ -69,7 +69,7 @@ struct ShoppingListView: View {
         var groupIDs = Set<String>()
         for shLItem in selectedShoppingList {
             if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
-                groupIDs.insert(product.productGroupID)
+                if let productGroupID = product.productGroupID {groupIDs.insert(productGroupID)}
             }
         }
         var groups: MDProductGroups = []
@@ -100,15 +100,14 @@ struct ShoppingListView: View {
         grocyVM.getShoppingListDescriptions()
     }
     
-    func refreshData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDProductGroups()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getShoppingListDescriptions()
-        grocyVM.getShoppingList()
-        //        if selectedShoppingListID.isEmpty {
-        //            selectedShoppingListID = grocyVM.shoppingListDescriptions.sorted(by: {$0.id < $1.id}).first?.id ?? ""
-        //        }
+    func updateData() {
+        if grocyVM.shoppingList.isEmpty {
+            grocyVM.getMDProducts()
+            grocyVM.getMDProductGroups()
+            grocyVM.getMDQuantityUnits()
+            grocyVM.getShoppingListDescriptions()
+            grocyVM.getShoppingList()
+        }
     }
     
     var body: some View {
@@ -156,7 +155,7 @@ struct ShoppingListView: View {
                         withAnimation {
                             self.reloadRotationDeg += 360
                         }
-                        refreshData()
+                        updateData()
                     }, label: {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -200,7 +199,7 @@ struct ShoppingListView: View {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .foregroundColor(.blue)
                             .onTapGesture {
-                                refreshData()
+                                updateData()
                             }
                     }
                 }
@@ -240,7 +239,7 @@ struct ShoppingListView: View {
         }
         .navigationTitle("str.shL".localized)
         .onAppear(perform: {
-            refreshData()
+            updateData()
         })
     }
 }

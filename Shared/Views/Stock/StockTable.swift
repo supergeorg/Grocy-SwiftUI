@@ -57,7 +57,7 @@ struct StockTable: View {
     @Binding var isShowingSheet: Bool
     
     private func getCaloriesSum(_ stockElement: StockElement) -> Double {
-        if let calories = Double(stockElement.product.calories) {
+        if let calories = Double(stockElement.product.calories ?? "") {
             let sum = calories * Double(stockElement.amount)!
             return sum
         } else { return 0 }
@@ -70,7 +70,7 @@ struct StockTable: View {
                 case .product:
                     return sortAscending ? ($0.product.name < $1.product.name) : ($0.product.name > $1.product.name)
                 case .productGroup:
-                    return sortAscending ? ($0.product.productGroupID < $1.product.productGroupID) : ($0.product.productGroupID > $1.product.productGroupID)
+                    return sortAscending ? ($0.product.productGroupID ?? "" < $1.product.productGroupID ?? "") : ($0.product.productGroupID ?? "" > $1.product.productGroupID ?? "")
                 case .amount:
                     return sortAscending ? (Double($0.amountAggregated) ?? 0 < Double($1.amountAggregated) ?? 0) : (Double($0.amountAggregated) ?? 0 > Double($1.amountAggregated) ?? 0)
                 case .value:
@@ -78,7 +78,7 @@ struct StockTable: View {
                 case .nextBestBeforeDate:
                     return sortAscending ? ($0.bestBeforeDate < $1.bestBeforeDate) : ($0.bestBeforeDate > $1.bestBeforeDate)
                 case .caloriesPerStockQU:
-                    return sortAscending ? (Double($0.product.calories) ?? 0 < Double($1.product.calories) ?? 0) : (Double($0.product.calories) ?? 0 > Double($1.product.calories) ?? 0)
+                    return sortAscending ? (Double($0.product.calories ?? "") ?? 0 < Double($1.product.calories ?? "") ?? 0) : (Double($0.product.calories ?? "") ?? 0 > Double($1.product.calories ?? "") ?? 0)
                 case .calories:
                     return sortAscending ? (getCaloriesSum($0) < getCaloriesSum($1)) : (getCaloriesSum($0) > getCaloriesSum($1))
                 }
@@ -133,126 +133,6 @@ struct StockTable: View {
             }
             .padding(.horizontal)
             .animation(.default)
-    }
-}
-
-struct StockTable2: View {
-    var filteredStock: Stock
-    
-    @State private var showTableSettings: Bool = false
-    @AppStorage("stockShowProduct") var stockShowProduct: Bool = true
-    @AppStorage("stockShowProductGroup") var stockShowProductGroup: Bool = false
-    @AppStorage("stockShowAmount") var stockShowAmount: Bool = true
-    @AppStorage("stockShowValue") var stockShowValue: Bool = false
-    @AppStorage("stockShowNextBestBeforeDate") var stockShowNextBestBeforeDate: Bool = true
-    @AppStorage("stockShowCaloriesPerStockQU") var stockShowCaloriesPerStockQU: Bool = false
-    @AppStorage("stockShowCalories") var stockShowCalories: Bool = false
-    
-    @State private var sortedStockColumn: StockColumn = .product
-    @State private var sortAscending: Bool = true
-    
-    @Binding var selectedStockElement: StockElement?
-    @Binding var activeSheet: StockInteractionSheet
-    @Binding var isShowingSheet: Bool
-    
-    //    @State var actionSizeFactor: CGFloat = 0.2
-    //    @State var productSizeFactor: CGFloat = 0.1
-    //    @State var productGroupSizeFactor: CGFloat = 0.1
-    //    @State var amountSizeFactor: CGFloat = 0.1
-    //    @State var valueSizeFactor: CGFloat = 0.1
-    //    @State var nextDueSizeFactor: CGFloat = 0.1
-    //    @State var caloriesPerQUSizeFactor: CGFloat = 0.1
-    //    @State var caloriesSizeFactor: CGFloat = 0.1
-    
-    private func getCaloriesSum(_ stockElement: StockElement) -> Double {
-        if let calories = Double(stockElement.product.calories) {
-            let sum = calories * Double(stockElement.amount)!
-            return sum
-        } else { return 0 }
-    }
-    
-    var sortedStock: Stock {
-        filteredStock
-            .sorted {
-                switch sortedStockColumn {
-                case .product:
-                    return sortAscending ? ($0.product.name < $1.product.name) : ($0.product.name > $1.product.name)
-                case .productGroup:
-                    return sortAscending ? ($0.product.productGroupID < $1.product.productGroupID) : ($0.product.productGroupID > $1.product.productGroupID)
-                case .amount:
-                    return sortAscending ? (Double($0.amountAggregated) ?? 0 < Double($1.amountAggregated) ?? 0) : (Double($0.amountAggregated) ?? 0 > Double($1.amountAggregated) ?? 0)
-                case .value:
-                    return sortAscending ? (Double($0.value) ?? 0 < Double($1.value) ?? 0) : (Double($0.value) ?? 0 > Double($1.value) ?? 0)
-                case .nextBestBeforeDate:
-                    return sortAscending ? ($0.bestBeforeDate < $1.bestBeforeDate) : ($0.bestBeforeDate > $1.bestBeforeDate)
-                case .caloriesPerStockQU:
-                    return sortAscending ? (Double($0.product.calories) ?? 0 < Double($1.product.calories) ?? 0) : (Double($0.product.calories) ?? 0 > Double($1.product.calories) ?? 0)
-                case .calories:
-                    return sortAscending ? (getCaloriesSum($0) < getCaloriesSum($1)) : (getCaloriesSum($0) > getCaloriesSum($1))
-                }
-            }
-    }
-    
-    let columns = Array(repeating: GridItem(.flexible(minimum: 32), spacing: 0), count: 8)
-    
-    var body: some View {
-        #if os(macOS)
-        content
-        #elseif os(iOS)
-        ScrollView(.horizontal){
-            content
-        }
-        #endif
-    }
-    
-    var content: some View {
-        LazyVGrid(columns: columns, spacing: 0) {
-            //                            ForEach(1...100, id: \.self) { item in
-            //                                Rectangle().fill(Color.clear)
-            //                                    .aspectRatio(1, contentMode: .fit)
-            //                                    .border(Color.black)
-            //                            }
-            Image(systemName: "eye.fill")
-                .onTapGesture {
-                    showTableSettings.toggle()
-                }
-                .popover(isPresented: $showTableSettings, content: {
-                    StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
-                        .padding()
-                })
-            StockTableHeaderItem(isShown: $stockShowProduct, description: "str.stock.tbl.product".localized, stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup".localized, stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowAmount, description: "str.stock.tbl.amount".localized, stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowValue, description: "str.stock.tbl.value".localized, stockColumn: .value, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowNextBestBeforeDate, description: "str.stock.tbl.nextBestBefore".localized, stockColumn: .nextBestBeforeDate, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU".localized, stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            //            ForEach(sortedStock, id:\.productID) { stockElement in
-            //                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
-            //            }
-            //            .background(Color.red)
-            //            .aspectRatio(contentMode: .fit)
-        }
-        
-        //        VStack(alignment: .leading) {
-        //            HStack{
-        //                Image(systemName: "eye.fill")
-        //                    .onTapGesture {
-        //                        showTableSettings.toggle()
-        //                    }
-        //                    .popover(isPresented: $showTableSettings, content: {
-        //                        StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
-        //                            .padding()
-        //                    })
-        //                Spacer()
-        //
-        
-        //            }
-        //            Divider()
-        //            ForEach(sortedStock, id:\.productID) { stockElement in
-        //                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
-        //            }
-        //        }
     }
 }
 
