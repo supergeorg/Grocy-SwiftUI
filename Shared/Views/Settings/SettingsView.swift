@@ -98,7 +98,7 @@ struct SettingsView: View {
                         showGrocyVersion.toggle()
                     }, label: {
                         HStack{
-                            Text("str.settings.version \(grocyVM.systemInfo?.grocyVersion.version ?? "Error")")
+                            Text("str.settings.info.version \(grocyVM.systemInfo?.grocyVersion.version ?? "Error")")
                         }
                     })
                     .popover(isPresented: $showGrocyVersion, content: {

@@ -166,9 +166,9 @@
 
 // MARK: - Settings
 "str.settings" = "Settings";
-"str.settings.version %@" = "Grocy Version %@";
 "str.settings.logout" = "Logout from server";
-"str.settings.grocyVersion %@" = "Version: %@";
-"str.settings.grocyRLSDate %@" = "Release Date: ";
-"str.settings.grocyPHPVersion %@" = "PHP Version: ";
-"str.settings.grocySQLiteVersion %@" = "SQLite Version: ";
+"str.settings.info.version %@" = "Grocy Version %@";
+"str.settings.info.grocyVersion %@" = "Version: %@";
+"str.settings.info.grocyRLSDate %@" = "Release Date: %@";
+"str.settings.info.grocyPHPVersion %@" = "PHP Version: %@";
+"str.settings.info.grocySQLiteVersion %@" = "SQLite Version: %@";

@@ -1300,6 +1300,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = iphoneos;
@@ -1322,6 +1323,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = iphoneos;
@@ -1349,6 +1351,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = macosx;
@@ -1374,6 +1377,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = macosx;

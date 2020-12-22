@@ -12,10 +12,10 @@ struct GrocyInfoView: View {
     
     var body: some View {
         Form(){
-            Text(LocalizedStringKey("str.settings.grocyVersion \(systemInfo.grocyVersion.version)"))
-            Text(LocalizedStringKey("str.settings.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? "Release Date error")"))
-            Text(LocalizedStringKey("str.settings.grocyPHPVersion \(systemInfo.phpVersion)"))
-            Text(LocalizedStringKey("str.settings.grocySQLiteVersion \(systemInfo.sqliteVersion)"))
+            Text(LocalizedStringKey("str.settings.info.grocyVersion \(systemInfo.grocyVersion.version)"))
+            Text(LocalizedStringKey("str.settings.info.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? "Release Date error")"))
+            Text(LocalizedStringKey("str.settings.info.grocyPHPVersion \(systemInfo.phpVersion)"))
+            Text(LocalizedStringKey("str.settings.info.grocySQLiteVersion \(systemInfo.sqliteVersion)"))
         }
         .navigationTitle("Grocy")
     }
