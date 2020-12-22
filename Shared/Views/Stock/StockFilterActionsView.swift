@@ -20,13 +20,11 @@ private struct StockFilterItemView: View {
             Divider()
                 .hidden()
                 .frame(height: 10)
-                .frame(width: 90)
                 .background(normalColor)
             HStack {
                 if filteredStatus == ownFilteredStatus {
                     Image(systemName: "line.horizontal.3.decrease.circle")
                 }
-//                Text("\(String(num)) \(ownFilteredStatus.rawValue.localized)")
                 Text(ownFilteredStatus.getDescription(amount: num))
                     .foregroundColor(darkColor)
             }
@@ -34,6 +32,7 @@ private struct StockFilterItemView: View {
             .padding(.bottom, 10)
             .background(lightColor)
         }
+        .fixedSize()
         .onTapGesture {
             if filteredStatus != ownFilteredStatus {
                 filteredStatus = ownFilteredStatus
