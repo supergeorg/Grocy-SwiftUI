@@ -33,7 +33,7 @@ struct StockJournalEntry: Codable {
     let spoiled: String
     let stockID: String
     let transactionType: TransactionType
-    let price: String
+    let price: String?
     let undone: String
     let undoneTimestamp: String?
     let openedDate: String?
@@ -45,7 +45,7 @@ struct StockJournalEntry: Codable {
     let stockRowID: String?
     let shoppingLocationID: String?
     let userID: String
-    let userfields: String?
+    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id

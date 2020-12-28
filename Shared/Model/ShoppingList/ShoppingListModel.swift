@@ -13,7 +13,7 @@ struct ShoppingListItem: Codable {
     let productID, note: String?
     let amount, rowCreatedTimestamp, shoppingListID, done: String
     let quID: String?
-    let userfields: String?
+    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id

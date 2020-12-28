@@ -12,7 +12,7 @@ struct ShoppingListDescription: Codable {
     let id, name: String
     let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: String?
+    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -29,7 +29,7 @@ struct ShoppingListDescriptionPOST: Codable {
     let name: String
     let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: String?
+    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
