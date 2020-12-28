@@ -101,13 +101,11 @@ struct ShoppingListView: View {
     }
     
     func updateData() {
-        if grocyVM.shoppingList.isEmpty {
-            grocyVM.getMDProducts()
-            grocyVM.getMDProductGroups()
-            grocyVM.getMDQuantityUnits()
-            grocyVM.getShoppingListDescriptions()
-            grocyVM.getShoppingList()
-        }
+        grocyVM.getMDProducts()
+        grocyVM.getMDProductGroups()
+        grocyVM.getMDQuantityUnits()
+        grocyVM.getShoppingListDescriptions()
+        grocyVM.getShoppingList()
     }
     
     var body: some View {

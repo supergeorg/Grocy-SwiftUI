@@ -107,15 +107,13 @@ struct StockView: View {
     }
     
     private func updateData() {
-        if grocyVM.stock.isEmpty {
-            grocyVM.getStock()
-            grocyVM.getMDProducts()
-            grocyVM.getMDShoppingLocations()
-            grocyVM.getMDLocations()
-            grocyVM.getMDProductGroups()
-            grocyVM.getMDQuantityUnits()
-            grocyVM.getSystemConfig()
-        }
+        grocyVM.getStock()
+        grocyVM.getMDProducts()
+        grocyVM.getMDShoppingLocations()
+        grocyVM.getMDLocations()
+        grocyVM.getMDProductGroups()
+        grocyVM.getMDQuantityUnits()
+        grocyVM.getSystemConfig()
     }
     
     var body: some View {

@@ -170,9 +170,9 @@ struct MDProductsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdProducts.isEmpty {
-                Text("str.md.empty \("str.md.products".localized)")
+                Text(LocalizedStringKey("str.md.empty \("str.md.products".localized)"))
             } else if filteredProducts.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             #if os(macOS)
             ForEach(filteredProducts, id:\.id) { product in
@@ -199,7 +199,7 @@ struct MDProductsView: View {
             #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.products".localized)
+        .navigationTitle(LocalizedStringKey("str.md.products"))
         .onAppear(perform: {
             updateData()
         })

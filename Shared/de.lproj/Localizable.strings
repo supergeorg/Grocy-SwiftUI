@@ -388,6 +388,8 @@
 "str.md.userField.type.file" = "Datei";
 "str.md.userField.type.image" = "Bild";
 
+"str.md.userEntities" = "Benutzerentitäten";
+
 // MARK: - Settings
 "str.settings" = "Einstellungen";
 "str.settings.logout" = "Von Server abmelden";
