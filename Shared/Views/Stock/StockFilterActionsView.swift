@@ -25,10 +25,19 @@ private struct StockFilterItemView: View {
                 if filteredStatus == ownFilteredStatus {
                     Image(systemName: "line.horizontal.3.decrease.circle")
                 }
-                Text(ownFilteredStatus.getDescription(amount: num))
+                if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+                    Text(ownFilteredStatus.getDescription(amount: num))
+                        .foregroundColor(darkColor)
+                } else {
+                    HStack{
+                        Text(String(num))
+                        Image(systemName: ownFilteredStatus.getIconName())
+                    }
                     .foregroundColor(darkColor)
+                }
             }
             .padding(.horizontal, 10)
+            .padding(.top, 10)
             .padding(.bottom, 10)
             .background(lightColor)
         }

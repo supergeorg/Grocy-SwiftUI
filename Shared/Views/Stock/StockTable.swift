@@ -49,6 +49,8 @@ struct StockTable: View {
     @AppStorage("stockShowCaloriesPerStockQU") var stockShowCaloriesPerStockQU: Bool = false
     @AppStorage("stockShowCalories") var stockShowCalories: Bool = false
     
+    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
+    
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
     
@@ -84,12 +86,12 @@ struct StockTable: View {
                 }
             }
     }
-
+    
     var shownColumns: Int {
         let shownArray = [stockShowProduct, stockShowProductGroup, stockShowAmount, stockShowValue, stockShowNextBestBeforeDate, stockShowCaloriesPerStockQU, stockShowCalories]
         return shownArray.filter{$0}.count
     }
-
+    
     var columns: [GridItem] {
         let actionHeader = [GridItem(.fixed(180))]
         let columnHeaders = Array(repeating: GridItem(.flexible(minimum: 50), spacing: 0), count: shownColumns)
@@ -97,42 +99,54 @@ struct StockTable: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        content
-        #elseif os(iOS)
-//        ScrollView(.horizontal){
-            content
-//        }
-        #endif
+        if !simplifiedStockView{
+            #if os(macOS)
+            contentTable
+            #elseif os(iOS)
+            //        ScrollView(.horizontal){
+            contentTable
+            //        }
+            #endif
+        } else {
+            contentSimplified
+        }
     }
     
-    var content: some View {
-            LazyVGrid(columns: columns, spacing: 10) {
-                HStack{
-                    Image(systemName: "eye.fill")
-                        .onTapGesture {
-                            showTableSettings.toggle()
-                        }
-                        .popover(isPresented: $showTableSettings, content: {
-                            StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
-                                .padding()
-                                .frame(minWidth: 300, minHeight: 400, alignment: .center)
-                        })
-                    Spacer()
-                }
-                StockTableHeaderItem(isShown: $stockShowProduct, description: "str.stock.tbl.product".localized, stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup".localized, stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowAmount, description: "str.stock.tbl.amount".localized, stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowValue, description: "str.stock.tbl.value".localized, stockColumn: .value, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowNextBestBeforeDate, description: "str.stock.tbl.nextBestBefore".localized, stockColumn: .nextBestBeforeDate, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU".localized, stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-                ForEach(sortedStock, id:\.productID) { stockElement in
-                                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
-                            }
+    var contentTable: some View {
+        LazyVGrid(columns: columns, spacing: 10) {
+            HStack{
+                Image(systemName: "eye.fill")
+                    .onTapGesture {
+                        showTableSettings.toggle()
+                    }
+                    .popover(isPresented: $showTableSettings, content: {
+                        StockTableConfigView(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories)
+                            .padding()
+                            .frame(minWidth: 300, minHeight: 400, alignment: .center)
+                    })
+                Spacer()
             }
-            .padding(.horizontal)
-            .animation(.default)
+            StockTableHeaderItem(isShown: $stockShowProduct, description: "str.stock.tbl.product".localized, stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup".localized, stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowAmount, description: "str.stock.tbl.amount".localized, stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowValue, description: "str.stock.tbl.value".localized, stockColumn: .value, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowNextBestBeforeDate, description: "str.stock.tbl.nextBestBefore".localized, stockColumn: .nextBestBeforeDate, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU".localized, stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            ForEach(sortedStock, id:\.productID) { stockElement in
+                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+            }
+        }
+        .padding(.horizontal)
+        .animation(.default)
+    }
+    
+    var contentSimplified: some View {
+        VStack() {
+            ForEach(sortedStock, id:\.productID) { stockElement in
+                StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+            }
+        }
     }
 }
 

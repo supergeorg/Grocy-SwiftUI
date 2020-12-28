@@ -16,12 +16,18 @@ struct StockFilterBar: View {
     @Binding var filteredStatus: ProductStatus
     
     var body: some View {
+        VStack{
+            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+                SearchBar(text: $searchString, placeholder: "str.search".localized)
+            }
         HStack{
-            SearchBar(text: $searchString, placeholder: "str.search".localized)
+            if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+                SearchBar(text: $searchString, placeholder: "str.search".localized)
+            }
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
-                Picker(selection: $filteredLocation, label: Text("Standort"), content: {
+                Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {
                     Text("str.stock.all").tag("")
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id)
@@ -31,7 +37,7 @@ struct StockFilterBar: View {
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
-                Picker(selection: $filteredProductGroup, label: Text("Produktgruppe"), content: {
+                Picker(selection: $filteredProductGroup, label: Text(LocalizedStringKey("str.stock.productGroup")), content: {
                     Text("str.stock.all").tag("")
                     ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id)
@@ -41,7 +47,7 @@ struct StockFilterBar: View {
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
-                Picker(selection: $filteredStatus, label: Text("Status"), content: {
+                Picker(selection: $filteredStatus, label: Text(LocalizedStringKey("str.stock.status")), content: {
                     Text(ProductStatus.all.rawValue.localized)
                         .tag(ProductStatus.all)
                     Text(ProductStatus.expiringSoon.rawValue.localized)
@@ -58,6 +64,7 @@ struct StockFilterBar: View {
                         .background(Color.grocyBlueLight)
                 }).pickerStyle(MenuPickerStyle())
             }
+        }
         }
     }
 }
