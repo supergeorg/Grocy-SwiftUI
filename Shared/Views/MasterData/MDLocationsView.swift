@@ -77,9 +77,9 @@ struct MDLocationsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdLocations.isEmpty {
-                Text("str.md.empty \("str.md.locations".localized)")
+                Text(LocalizedStringKey("str.md.empty \("str.md.locations".localized)"))
             } else if filteredLocations.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             #if os(macOS)
             ForEach(filteredLocations, id:\.id) {location in
@@ -102,7 +102,7 @@ struct MDLocationsView: View {
             #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.locations".localized)
+        .navigationTitle(LocalizedStringKey("str.md.locations"))
         .onAppear(perform: {
             grocyVM.getMDLocations()
         })
@@ -110,7 +110,7 @@ struct MDLocationsView: View {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
                     #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
                     #endif
                     Button(action: {
                         isSearching.toggle()

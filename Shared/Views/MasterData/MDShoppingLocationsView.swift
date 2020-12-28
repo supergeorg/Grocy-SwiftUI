@@ -147,9 +147,9 @@ struct MDShoppingLocationsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdShoppingLocations.isEmpty {
-                Text("str.md.empty \("str.md.shoppingLocations".localized)")
+                Text(LocalizedStringKey("str.md.empty \("str.md.shoppingLocations".localized)"))
             } else if filteredShoppingLocations.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             #if os(macOS)
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
@@ -169,14 +169,18 @@ struct MDShoppingLocationsView: View {
             #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.shoppingLocations".localized)
+        .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         .onAppear(perform: {
             updateData()
         })
         .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text("str.md.shoppingLocation.delete.confirm"), message: Text(shoppingLocationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
-                deleteShoppingLocation(toDelID: shoppingLocationToDelete?.id ?? "")
-            }, secondaryButton: .cancel())
+            Alert(title: Text(LocalizedStringKey("str.md.shoppingLocation.delete.confirm")),
+                  message: Text(shoppingLocationToDelete?.name ?? "error"),
+                  primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
+                    {
+                        deleteShoppingLocation(toDelID: shoppingLocationToDelete?.id ?? "")
+                    },
+                  secondaryButton: .cancel())
         }
     }
 }

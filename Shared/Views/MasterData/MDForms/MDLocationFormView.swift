@@ -59,16 +59,16 @@ struct MDLocationFormView: View {
     var body: some View {
         Form {
             Section(header: Text("str.md.location.info")){
-                MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.location.name.required")
+                MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.location.name.required", errorMessage: "str.md.location.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
                 MyTextField(textToEdit: $mdLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
             }
-            Section(header: Text("str.md.location.freezer")){
+            Section(header: Text(LocalizedStringKey("str.md.location.freezer"))){
                 HStack(alignment: .center) {
                     Image(systemName: "thermometer.snowflake")
-                    Toggle("str.md.location.isFreezing", isOn: $isFreezer)
+                    Toggle(LocalizedStringKey("str.md.location.isFreezing"), isOn: $isFreezer)
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer()
                     #if os(macOS)
@@ -76,32 +76,33 @@ struct MDLocationFormView: View {
                         Image(systemName: "info.circle")
                     })
                     .popover(isPresented: $showFreezerInfo, arrowEdge: .top, content: {
-                        Text("str.md.location.isFreezing.description")
+                        Text(LocalizedStringKey("str.md.location.isFreezing.description"))
                             .padding()
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: 300, maxHeight: 150)
                     })
                     #else
-                    Button(action: {showFreezerInfo.toggle()}, label: {
-                        Image(systemName: "info.circle")
-                    })
+                    Image(systemName: "info.circle")
+                        .onTapGesture {
+                            showFreezerInfo.toggle()
+                        }
                     #endif
                 }
                 #if os(iOS)
                 if showFreezerInfo {
-                    Text("str.md.location.isFreezing.description")
+                    Text(LocalizedStringKey("str.md.location.isFreezing.description"))
                         .font(.caption)
                 }
                 #endif
             }
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveLocation()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -112,12 +113,12 @@ struct MDLocationFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label("str.md.delete \("str.md.location".localized)", systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.delete \("str.md.location".localized)"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
                 .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text("str.md.location.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                    Alert(title: Text(LocalizedStringKey("str.md.location.delete.confirm")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                         deleteLocation()
                         #if os(macOS)
                         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
@@ -128,7 +129,7 @@ struct MDLocationFormView: View {
                 }
             }
         }
-        .navigationTitle(isNewLocation ? "str.md.location.new" : "str.md.location.edit")
+        .navigationTitle(isNewLocation ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
         .animation(.default)
         .onAppear(perform: {
             resetForm()
@@ -137,13 +138,13 @@ struct MDLocationFormView: View {
             #if os(iOS)
             ToolbarItem(placement: .cancellationAction) {
                 if isNewLocation {
-                    Button("str.cancel") {
+                    Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("str.md.save \("str.md.location".localized)") {
+                Button(LocalizedStringKey("str.md.save \("str.md.location".localized)")) {
                     saveLocation()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)

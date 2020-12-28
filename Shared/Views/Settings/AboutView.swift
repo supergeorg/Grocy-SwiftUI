@@ -15,7 +15,7 @@ struct AboutLineView: View {
         HStack{
             Image(systemName: iconName).font(.title)
             VStack(alignment: .leading) {
-                Text(caption).font(.title3)
+                Text(LocalizedStringKey(caption)).font(.title3)
                 Text(content).font(.body)
             }
         }
@@ -25,11 +25,11 @@ struct AboutLineView: View {
 struct AboutView: View {
     var body: some View {
         Form(){
-            Text("Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.")
-            AboutLineView(iconName: "info.circle", caption: "Version", content: "0.1")
-            AboutLineView(iconName: "person.circle", caption: "Entwickler", content: "Georg Meißner")
+            Text(LocalizedStringKey("str.settings.about.thanks"))
+            AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
+            AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
         }
-        .navigationTitle("Über diese App")
+        .navigationTitle(LocalizedStringKey("str.settings.about"))
     }
 }
 

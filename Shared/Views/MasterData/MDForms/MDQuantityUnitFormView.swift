@@ -56,7 +56,7 @@ struct MDQuantityUnitFormView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("str.md.quantityUnit.info")){
+            Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.quantityUnit.name.required")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
@@ -66,12 +66,12 @@ struct MDQuantityUnitFormView: View {
             }
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveQuantityUnit()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -82,12 +82,12 @@ struct MDQuantityUnitFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label("str.md.delete \("str.md.quantityUnit".localized)", systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.delete \("str.md.quantityUnit".localized)"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
                 .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text("str.md.quantityUnit.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                    Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                         deleteQuantityUnit()
                         #if os(macOS)
                         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
@@ -98,7 +98,7 @@ struct MDQuantityUnitFormView: View {
                 }
             }
         }
-        .navigationTitle(isNewQuantityUnit ? "str.md.quantityUnit.new" : "str.md.quantityUnit.edit")
+        .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
         .animation(.default)
         .onAppear(perform: {
             resetForm()
@@ -107,13 +107,13 @@ struct MDQuantityUnitFormView: View {
             #if os(iOS)
             ToolbarItem(placement: .cancellationAction) {
                 if isNewQuantityUnit {
-                    Button("str.cancel") {
+                    Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("str.md.save \("str.md.quantityUnit".localized)") {
+                Button(LocalizedStringKey("str.md.save \("str.md.quantityUnit".localized)")) {
                     saveQuantityUnit()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)

@@ -51,8 +51,8 @@
 "str.nav.md.chores" = "Chores";
 "str.nav.md.batteries" = "Batteries";
 "str.nav.md.taskCategories" = "Task categories";
-"str.nav.md.userFields" = "Benutzerfelder";
-"str.nav.md.userEntities" = "Benutzerentitäten";
+"str.nav.md.userFields" = "User fields";
+"str.nav.md.userEntities" = "User entities";
 "str.nav.settings" = "Settings";
 
 // MARK: - Details
@@ -100,6 +100,19 @@
 "str.stock.tbl.action.consume.all %@" = "Consume all %@ which are currently in stock";
 "str.stock.tbl.action.consume.open %@" = "Mark %@ as open";
 
+"str.stock.tbl.menu.addToShL" = "Add to shopping list";
+"str.stock.tbl.menu.consumeAsSpoiled %@" = "Consume %@ as spoiled";
+"str.stock.tbl.menu.searchRecipes" = "Search for recipes which contain this product";
+
+"str.stock.journal" = "Stock journal";
+"str.stock.journal.empty" = "No transactions found.";
+"str.stock.journal.product" = "Product";
+"str.stock.journal.amount" = "Amount";
+"str.stock.journal.transactionTime" = "Transaction time";
+"str.stock.journal.transactionType" = "Transaction type";
+"str.stock.journal.location" = "Location";
+"str.stock.journal.user" = "Done by";
+
 // MARK: - Master Data
 "str.md.masterData" = "Master Data";
 "str.md.description" = "Description";
@@ -111,45 +124,41 @@
 "str.md.new %@" = "New %@";
 "str.md.save %@" = "Save %@";
 "str.md.empty %@" = "No %@ found. Add some.";
-"str.md.delete.confirm" = "Möchtest du wirklich diesen Eintrag löschen?";
+"str.md.delete.confirm" = "Do you really want to delete this entry?";
 
-"str.md.masterData" = "Master Data";
-"str.md.products" = "Products";
 "str.md.locations" = "Locations";
-"str.md.location" = "Standort";
+"str.md.location" = "Location";
 "str.md.location.new" = "New location";
 "str.md.location.edit" = "Edit location";
 "str.md.location.info" = "Location info";
 "str.md.location.name" = "Location";
 "str.md.location.name.required" = "A name is required";
+"str.md.location.name.exists" = "Name already exists";
 "str.md.location.freezer" = "Freezer";
-"str.md.location.isFreezing" = "Ist ein Gefrier-Standort (also z. B. ein Gefrierschrank)";
-"str.md.location.isFreezing.description" = "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst";
+"str.md.location.isFreezing" = "Is freezer";
+"str.md.location.isFreezing.description" = "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings";
+"str.md.location.delete.confirm" = "Do you really want to delete this location?";
 
 "str.md.shoppingLocations" = "Shopping locations";
 "str.md.shoppingLocation" = "Shopping location";
-"str.md.shoppingLocation.new" = "New Shopping location";
-"str.md.shoppingLocation.edit" = "Edit Shopping location";
+"str.md.shoppingLocation.new" = "New shopping location";
+"str.md.shoppingLocation.edit" = "Edit shopping location";
 "str.md.shoppingLocation.info" = "Shopping location info";
-"str.md.shoppingLocation.name" = "Name of Shopping location";
-"str.md.shoppingLocation.name.required" = "An unused name is required";
+"str.md.shoppingLocation.name" = "Shopping location";
+"str.md.shoppingLocation.name.required" = "A name is required";
+"str.md.shoppingLocation.name.exists" = "Name already exists";
+"str.md.shoppingLocation.delete.confirm" = "Do you really want to delete this shopping location?";
 
-"str.md.quantityUnits" = "Quantity Units";
-"str.md.quantityUnit" = "Quantity Unit";
-"str.md.quantityUnit.new" = "Neue Mengeneinheit";
-"str.md.quantityUnit.edit" = "Bearbeite Mengeneinheit";
-"str.md.quantityUnit.info" = "Mengeneinheitsinfo";
-"str.md.quantityUnit.name" = "Name (singular)";
-"str.md.quantityUnit.name.required" = "Ein nicht verwendeter Name ist erforderlich";
-"str.md.quantityUnit.namePlural" = "Name (plural)";
-
-"str.md.productGroups" = "Product Groups";
-"str.md.productGroup" = "Product Group";
-"str.md.productGroup.name" = "Name of product group";
-
-"str.md.chores" = "Chores";
-"str.md.batteries" = "Batteries";
-"str.md.taskCategories" = "Task Categories";
+"str.md.quantityUnits" = "Quantity units";
+"str.md.quantityUnit" = "Quantity unit";
+"str.md.quantityUnit.new" = "New quantity unit";
+"str.md.quantityUnit.edit" = "Edit quantity unit";
+"str.md.quantityUnit.info" = "Quantity unit info";
+"str.md.quantityUnit.name" = "Name (in singular form)";
+"str.md.quantityUnit.name.required" = "A name is required";
+"str.md.quantityUnit.name.exists" = "Name already exists";
+"str.md.quantityUnit.namePlural" = "Name (in plural form)";
+"str.md.quantityUnit.delete.confirm" = "Do you really want to delete this quantity unit?";
 
 "str.md.userField.type.textSingleLine" = "Text (single line)";
 "str.md.userField.type.textMultiLine" = "Text (multi line)";
@@ -167,8 +176,13 @@
 // MARK: - Settings
 "str.settings" = "Settings";
 "str.settings.logout" = "Logout from server";
+"str.settings.info" = "Information about Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
 "str.settings.info.grocyVersion %@" = "Version: %@";
 "str.settings.info.grocyRLSDate %@" = "Release Date: %@";
 "str.settings.info.grocyPHPVersion %@" = "PHP Version: %@";
 "str.settings.info.grocySQLiteVersion %@" = "SQLite Version: %@";
+"str.settings.about" = "About this app";
+"str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
+"str.settings.about.version" = "Version";
+"str.settings.about.developer" = "Developer";

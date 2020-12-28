@@ -66,6 +66,6 @@ struct ShoppingListRowActionsView: View {
 
 struct ShoppingListRowActionsView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: ""))
+        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil))
     }
 }

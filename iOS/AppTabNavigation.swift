@@ -27,7 +27,7 @@ struct AppTabNavigation: View {
                 StockView()
             }
             .tabItem {
-                Label("str.nav.stockOverview", systemImage: Tab.stockOverview.rawValue)
+                Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: Tab.stockOverview.rawValue)
                     .accessibility(label: Text("str.nav.stockOverview"))
             }
             .tag(Tab.stockOverview)

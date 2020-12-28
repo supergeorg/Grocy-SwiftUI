@@ -9,10 +9,12 @@ import SwiftUI
 
 @main
 struct Grocy_SwiftUIApp: App {
+    @AppStorage("localizationKey") var localizationKey: String = "de"
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.locale, Locale(identifier: "de"))
+                .environment(\.locale, Locale(identifier: localizationKey))
         }
         .commands {
             SidebarCommands()

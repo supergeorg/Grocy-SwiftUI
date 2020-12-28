@@ -16,8 +16,8 @@ enum getDataMode {
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPIProvider
     
-    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo-prerelease.grocy.info"
-    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
+    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo-prerelease.grocy.info"
+    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
@@ -61,16 +61,16 @@ class GrocyViewModel: ObservableObject {
         if !isDemoModus {
             grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         } else {
-            //            grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
-            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+            grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+            //            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
         //        self.lastLoadingFailed = true
     }
     
     func setDemoModus() {
-        //        grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
-        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+        grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+        //        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         isDemoModus = true
         isLoggedIn = true
     }

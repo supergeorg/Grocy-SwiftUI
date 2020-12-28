@@ -14,13 +14,14 @@ struct MyTextField: View {
     @State var isEnteringText: Bool
     var leadingIcon: String?
     var isEditing: Bool
+    var emptyMessage: String?
     var errorMessage: String?
     var description2: String
     var helpText: String?
     
     @State private var showInfo: Bool = false
     
-    init(textToEdit: Binding<String>, description: String, isCorrect: Binding<Bool>, leadingIcon: String? = nil, isEditing: Bool? = true, errorMessage: String? = nil, helpText: String? = nil) {
+    init(textToEdit: Binding<String>, description: String, isCorrect: Binding<Bool>, leadingIcon: String? = nil, isEditing: Bool? = true, emptyMessage: String? = nil, errorMessage: String? = nil, helpText: String? = nil) {
         self._textToEdit = textToEdit
         self.description = description
         self._isCorrect = isCorrect
@@ -28,7 +29,7 @@ struct MyTextField: View {
         self.isEditing = isEditing ?? true
         self.errorMessage = errorMessage
         self.helpText = helpText
-        //        self._editMode = editMode ?? Binding.constant(EditMode.active)
+        self.emptyMessage = emptyMessage
         #if os(iOS)
         self.description2 = ""
         #else
@@ -102,10 +103,20 @@ struct MyTextField: View {
                         .background(isCorrect ? Color.primary : Color.red)
                         .padding(.top, 40)
                         .zIndex(2)
-                    if errorMessage != nil && !isCorrect {
-                        Text(errorMessage!.localized)
-                            .foregroundColor(.red)
-                            .font(.caption)
+                    if !isCorrect {
+                        if textToEdit.isEmpty {
+                            if let emptyMessageU = emptyMessage {
+                                Text(LocalizedStringKey(emptyMessageU))
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                            }
+                        } else {
+                            if let errorMessageU = errorMessage {
+                                Text(LocalizedStringKey(errorMessageU))
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                            }
+                        }
                     }
                 }
             }

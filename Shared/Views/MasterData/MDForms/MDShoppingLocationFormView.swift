@@ -15,8 +15,6 @@ struct MDShoppingLocationFormView: View {
     @State private var name: String = ""
     @State private var mdShoppingLocationDescription: String = ""
     
-    @State private var showDeleteAlert: Bool = false
-    
     var isNewShoppingLocation: Bool
     var shoppingLocation: MDShoppingLocation?
     
@@ -46,11 +44,6 @@ struct MDShoppingLocationFormView: View {
         grocyVM.getMDShoppingLocations()
     }
     
-    private func deleteShoppingLocation() {
-        grocyVM.deleteMDObject(object: .shopping_locations, id: shoppingLocation!.id)
-        grocyVM.getMDShoppingLocations()
-    }
-    
     var body: some View {
         #if os(macOS)
         content
@@ -60,13 +53,13 @@ struct MDShoppingLocationFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewShoppingLocation {
-                        Button("str.cancel") {
+                        Button(LocalizedStringKey("str.cancel")) {
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("str.md.save \("str.md.location".localized)") {
+                    Button(LocalizedStringKey("str.md.save \("str.md.shoppingLocation".localized)")) {
                         saveShoppingLocation()
                         presentationMode.wrappedValue.dismiss()
                     }.disabled(!isNameCorrect)
@@ -83,8 +76,8 @@ struct MDShoppingLocationFormView: View {
     
     var content: some View {
         Form {
-            Section(header: Text("str.md.shoppingLocation.info")){
-                MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.shoppingLocation.name.required")
+            Section(header: Text(LocalizedStringKey("str.md.shoppingLocation.info"))){
+                MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
@@ -92,39 +85,20 @@ struct MDShoppingLocationFormView: View {
             }
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveShoppingLocation()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
             }
             #endif
-            if !isNewShoppingLocation {
-                Button(action: {
-                    showDeleteAlert.toggle()
-                }, label: {
-                    Label("str.md.delete \("str.md.shoppingLocation".localized)", systemImage: "trash")
-                        .foregroundColor(.red)
-                })
-                .keyboardShortcut(.delete)
-                .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text("str.md.shoppingLocation.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
-                        deleteShoppingLocation()
-                        #if os(macOS)
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                        #else
-                        presentationMode.wrappedValue.dismiss()
-                        #endif
-                    }, secondaryButton: .cancel())
-                }
-            }
         }
-        .navigationTitle(isNewShoppingLocation ? "str.md.shoppingLocation.new" : "str.md.shoppingLocation.edit")
+        .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
         .animation(.default)
         .onAppear(perform: {
             resetForm()

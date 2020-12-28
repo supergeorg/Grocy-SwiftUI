@@ -181,6 +181,7 @@
 
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
+"str.stock.journal.product" = "Produkt";
 "str.stock.journal.amount" = "Menge";
 "str.stock.journal.transactionTime" = "Transaktionszeitpunkt";
 "str.stock.journal.transactionType" = "Transaktionstyp";
@@ -311,7 +312,8 @@
 "str.md.location.edit" = "Bearbeite Standort";
 "str.md.location.info" = "Standortinfo";
 "str.md.location.name" = "Standort";
-"str.md.location.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.location.name.required" = "Ein Name ist erforderlich";
+"str.md.location.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
 "str.md.location.freezer" = "Gefrier-Standort";
 "str.md.location.isFreezing" = "Ist ein Gefrier-Standort (also z. B. ein Gefrierschrank)";
 "str.md.location.isFreezing.description" = "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst";
@@ -323,7 +325,8 @@
 "str.md.shoppingLocation.edit" = "Bearbeite Geschäft";
 "str.md.shoppingLocation.info" = "Geschäftsinfo";
 "str.md.shoppingLocation.name" = "Geschäftsname";
-"str.md.shoppingLocation.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.shoppingLocation.name.required" = "Ein Name ist erforderlich";
+"str.md.shoppingLocation.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
 "str.md.shoppingLocation.delete.confirm" = "Möchtest du wirklich dieses Geschäft löschen?";
 
 "str.md.quantityUnits" = "Mengeneinheiten";
@@ -332,7 +335,8 @@
 "str.md.quantityUnit.edit" = "Bearbeite Mengeneinheit";
 "str.md.quantityUnit.info" = "Mengeneinheitsinfo";
 "str.md.quantityUnit.name" = "Name (singular)";
-"str.md.quantityUnit.name.required" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.quantityUnit.name.required" = "Ein Name ist erforderlich";
+"str.md.quantityUnit.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
 "str.md.quantityUnit.namePlural" = "Name (plural)";
 "str.md.quantityUnit.delete.confirm" = "Möchtest du wirklich diese Mengeneinheit löschen?";
 
@@ -387,11 +391,16 @@
 // MARK: - Settings
 "str.settings" = "Einstellungen";
 "str.settings.logout" = "Von Server abmelden";
+"str.settings.info" = "Informationen zum Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
 "str.settings.info.grocyVersion %@" = "Version: %@";
 "str.settings.info.grocyRLSDate %@" = "Releasedatum: %@";
 "str.settings.info.grocyPHPVersion %@" = "PHP Version: %@";
 "str.settings.info.grocySQLiteVersion %@" = "SQLite Version: %@";
+"str.settings.about" = "Über diese App";
+"str.settings.about.thanks" = "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.";
+"str.settings.about.version" = "Version";
+"str.settings.about.developer" = "Entwickler";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";

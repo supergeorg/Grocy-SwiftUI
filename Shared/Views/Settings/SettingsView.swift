@@ -17,6 +17,9 @@ struct SettingsView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
+    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
+    
+    @AppStorage("localizationKey") var localizationKey: String = "de"
     
     var body: some View {
         Group {
@@ -56,9 +59,9 @@ struct SettingsView: View {
                     NavigationLink(
                         destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")),
                         label: {
-                            Text("Infos zu Grocy-Server")
+                            Text(LocalizedStringKey("str.settings.info"))
                         })
-                    Button("Logout aus Grocy-Server") {
+                    Button(LocalizedStringKey("str.settings.logout")) {
                         isLoggedIn = false
                     }
                 } else {
@@ -74,17 +77,22 @@ struct SettingsView: View {
                 }
             }
             Section(header: Text("App")){
+                Toggle("Simplified Stock View", isOn: $simplifiedStockView)
+                Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
+                    Text("English").tag("en")
+                    Text("Deutsch").tag("de")
+                })
                 NavigationLink(
                     destination: AboutView(),
                     label: {
-                        Text("Infos zur App")
+                        Text(LocalizedStringKey("str.settings.about"))
                     })
             }
         }
         .onAppear(perform: {
             grocyVM.getSystemInfo()
         })
-        .navigationTitle("Settings")
+        .navigationTitle(LocalizedStringKey("str.settings"))
     }
     
     var contentMac: some View {
@@ -127,11 +135,16 @@ struct SettingsView: View {
                         }
                     }
                 }
+                Toggle("Simplified Stock View", isOn: $simplifiedStockView)
+                Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
+                    Text("English").tag("en")
+                    Text("Deutsch").tag("de")
+                })
                 Button(action: {
                     showAbout.toggle()
                 }, label: {
                     HStack{
-                        Text("About")
+                        Text(LocalizedStringKey("str.settings.about"))
                     }
                 })
                 .popover(isPresented: $showAbout, content: {

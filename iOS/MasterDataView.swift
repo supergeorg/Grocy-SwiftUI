@@ -13,66 +13,66 @@ struct MasterDataView: View {
             NavigationLink(destination: MDProductsView()) {
                 HStack{
                     Image(systemName: "archivebox")
-                    Text("str.md.products")
+                    Text(LocalizedStringKey("str.md.products"))
                 }
             }
             NavigationLink(destination: MDLocationsView()) {
                 HStack{
                     Image(systemName: "location")
-                    Text("str.md.locations")
+                    Text(LocalizedStringKey("str.md.locations"))
                 }
             }
             NavigationLink(destination: MDShoppingLocationsView()) {
                 HStack{
                     Image(systemName: "cart")
-                    Text("str.md.shoppingLocations")
+                    Text(LocalizedStringKey("str.md.shoppingLocations"))
                 }
             }
             NavigationLink(destination: MDQuantityUnitsView()) {
                 HStack{
                     Image(systemName: "number.circle")
-                    Text("str.md.quantityUnits")
+                    Text(LocalizedStringKey("str.md.quantityUnits"))
                 }
             }
             NavigationLink(destination: MDProductGroupsView()) {
                 HStack{
                     Image(systemName: "lessthan.circle")
-                    Text("str.md.productGroups")
+                    Text(LocalizedStringKey("str.md.productGroups"))
                 }
             }
             NavigationLink(destination: MDChoresView()) {
                 HStack{
                     Image(systemName: "house")
-                    Text("str.md.chores")
+                    Text(LocalizedStringKey("str.md.chores"))
                 }
             }
             NavigationLink(destination: MDBatteriesView()) {
                 HStack{
                     Image(systemName: "battery.25")
-                    Text("str.md.batteries")
+                    Text(LocalizedStringKey("str.md.batteries"))
                 }
             }
             NavigationLink(destination: MDTaskCategoriesView()) {
                 HStack{
                     Image(systemName: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
-                    Text("str.md.taskCategories")
+                    Text(LocalizedStringKey("str.md.taskCategories"))
                 }
             }
             NavigationLink(destination: MDUserFieldsView()) {
                 HStack{
                     Image(systemName: "bookmark.fill")
-                    Text("str.md.userFields")
+                    Text(LocalizedStringKey("str.md.userFields"))
                 }
             }
             NavigationLink(destination: MDUserEntitiesView()) {
                 HStack{
                     Image(systemName: "bookmark")
-                    Text("str.md.userEntities")
+                    Text(LocalizedStringKey("str.md.userEntities"))
                 }
             }
         }
         .animation(.default)
-        .navigationTitle("str.md.masterData".localized)
+        .navigationTitle(LocalizedStringKey("str.md.masterData"))
     }
 }
 

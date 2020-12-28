@@ -61,9 +61,9 @@ struct MDQuantityUnitsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdQuantityUnits.isEmpty {
-                Text("str.md.empty \("str.md.quantityUnits".localized)")
+                Text(LocalizedStringKey("str.md.empty \("str.md.quantityUnits".localized)"))
             } else if filteredQuantityUnits.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             #if os(macOS)
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
@@ -78,11 +78,11 @@ struct MDQuantityUnitsView: View {
                     })
             }
             #else
-            //            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-            //                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
-            //                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
-            //                }
-            //            }
+            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
+                    MDQuantityUnitRowView(quantityUnit: quantityUnit)
+                }
+            }
             #endif
         }
         .animation(.default)
