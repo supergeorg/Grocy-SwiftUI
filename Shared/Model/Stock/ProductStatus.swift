@@ -30,4 +30,17 @@ enum ProductStatus: String {
             return "\(amountString) \("str.stock.belowMinStock".localized)"
         }
     }
+    
+    func getIconName() -> String {
+        switch self {
+        case .expiringSoon:
+            return "clock.fill"
+        case .overdue, .expired:
+            return "xmark.circle.fill"
+        case .belowMinStock:
+            return "exclamationmark.circle.fill"
+        default:
+            return "tag.fill"
+        }
+    }
 }
