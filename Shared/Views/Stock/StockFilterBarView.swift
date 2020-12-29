@@ -17,13 +17,19 @@ struct StockFilterBar: View {
     
     var body: some View {
         VStack{
+            #if os(iOS)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                 SearchBar(text: $searchString, placeholder: "str.search".localized)
             }
+            #endif
         HStack{
+            #if os(iOS)
             if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                 SearchBar(text: $searchString, placeholder: "str.search".localized)
             }
+            #else
+            SearchBar(text: $searchString, placeholder: "str.search".localized)
+            #endif
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")

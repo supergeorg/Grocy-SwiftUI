@@ -34,16 +34,16 @@ struct StockTableRowSimplified: View {
     
     var backgroundColor: Color {
         if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
-            return Color.grocyYellowLight
+            return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellow
         }
         if (stockElement.dueType == "1" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
-            return Color.grocyGrayLight
+            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGray
         }
         if (stockElement.dueType == "2" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
-            return Color.grocyRedLight
+            return colorScheme == .light ? Color.grocyRedLight : Color.grocyRed
         }
         if (Int(stockElement.amount) ?? 1 < Int(stockElement.product.minStockAmount) ?? 0) {
-            return Color.grocyBlueLight
+            return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlue
         }
         return Color.clear
     }
@@ -82,7 +82,7 @@ struct StockTableRowSimplified: View {
             Spacer()
         }
         .background(backgroundColor)
-        .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//        .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         .sheet(isPresented: $showDetailView, content: {
             #if os(macOS)
             ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))

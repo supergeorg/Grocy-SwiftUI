@@ -42,16 +42,16 @@ struct StockTableRow: View {
     
     var backgroundColor: Color {
         if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
-            return Color.grocyYellowLight
+            return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
         if (stockElement.dueType == "1" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
-            return Color.grocyGrayLight
+            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
         }
         if (stockElement.dueType == "2" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
-            return Color.grocyRedLight
+            return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
         }
         if (Int(stockElement.amount) ?? 1 < Int(stockElement.product.minStockAmount) ?? 0) {
-            return Color.grocyBlueLight
+            return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
         }
         return Color.clear
     }
@@ -78,7 +78,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
             .sheet(isPresented: $showDetailView, content: {
                 #if os(macOS)
                 ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
@@ -98,7 +98,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         
         if showAmount {
@@ -108,12 +108,12 @@ struct StockTableRow: View {
                 Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
                 if stockElement.amount != formattedAmountAggregated {
                     Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                        .foregroundColor(Color.grocyGray)
+                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                 }
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         
         if showValue {
@@ -124,7 +124,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showNextBestBeforeDate {
             HStack{
@@ -134,7 +134,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showCaloriesPerStockQU {
             HStack{
@@ -144,7 +144,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showCalories {
             HStack {
@@ -154,7 +154,7 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
+//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
     }
 }

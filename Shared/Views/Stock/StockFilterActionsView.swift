@@ -25,6 +25,7 @@ private struct StockFilterItemView: View {
                 if filteredStatus == ownFilteredStatus {
                     Image(systemName: "line.horizontal.3.decrease.circle")
                 }
+                #if os(iOS)
                 if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                     Text(ownFilteredStatus.getDescription(amount: num))
                         .foregroundColor(darkColor)
@@ -35,6 +36,10 @@ private struct StockFilterItemView: View {
                     }
                     .foregroundColor(darkColor)
                 }
+                #elseif os(macOS)
+                Text(ownFilteredStatus.getDescription(amount: num))
+                    .foregroundColor(darkColor)
+                #endif
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)
