@@ -36,6 +36,20 @@ struct MDBarcodeFormView: View {
         shoppingLocationID = editBarcode?.shoppingLocationID ?? ""
     }
     
+    #if os(iOS)
+    @State private var isShowingScanner = false
+    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+       self.isShowingScanner = false
+        switch result {
+        case .success(let code):
+            barcode = code
+        case .failure(let error):
+            print("Scanning failed")
+            print(error)
+        }
+    }
+    #endif
+    
     var body: some View {
         #if os(macOS)
         content
@@ -56,7 +70,17 @@ struct MDBarcodeFormView: View {
                     .foregroundColor(.gray)
             }
             #endif
-            TextField(LocalizedStringKey("str.md.barcode"), text: $barcode)
+            HStack{
+                TextField(LocalizedStringKey("str.md.barcode"), text: $barcode)
+                #if os(iOS)
+                Button("Scan Barcode") {
+                    isShowingScanner = true
+                }
+                .sheet(isPresented: $isShowingScanner) {
+                    CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
+                }
+                #endif
+            }
             Section(header: Text("str.md.barcode.amount".localized).font(.headline)) {
                 MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label("str.md.barcode.quantityUnit".localized, systemImage: "scalemass"), content: {

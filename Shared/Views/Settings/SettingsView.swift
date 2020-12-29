@@ -21,6 +21,33 @@ struct SettingsView: View {
     
     @AppStorage("localizationKey") var localizationKey: String = "de"
     
+    #if os(iOS)
+    @State private var isShowingScanner = false
+    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+       self.isShowingScanner = false
+        switch result {
+        case .success(let code):
+            let grocyServerData = code.components(separatedBy: "|")
+            guard grocyServerData.count == 2 else { return }
+            
+            var serverURL = grocyServerData[0]
+            serverURL = serverURL.replacingOccurrences(of: "/api", with: "")
+            let apiKey = grocyServerData[1]
+
+            if apiKey.count == 50 {
+                grocyServerURL = serverURL
+                grocyAPIKey = apiKey
+            
+                grocyVM.setLoginModus()
+                grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+            }
+        case .failure(let error):
+            print("Scanning failed")
+            print(error)
+        }
+    }
+    #endif
+    
     var body: some View {
         Group {
             #if os(iOS)
@@ -36,8 +63,6 @@ struct SettingsView: View {
     
     var container: some View {
         VStack{
-            //        ZStack {
-            //            ScrollView {
             #if os(iOS)
             contentiOS
             #else
@@ -45,13 +70,10 @@ struct SettingsView: View {
                 .frame(maxWidth: 600)
                 .frame(maxWidth: .infinity)
             #endif
-            //            }
-            //                        VisualEffectBlur()
-            //                            .ignoresSafeArea()
-            //                            .opacity(selectedIngredientID != nil ? 1 : 0)
         }
     }
     
+    #if os(iOS)
     var contentiOS: some View {
         Form() {
             Section(header: Text("Grocy")){
@@ -67,6 +89,12 @@ struct SettingsView: View {
                 } else {
                     MyTextField(textToEdit: $grocyServerURL, description: "Grocy Server URL", isCorrect: Binding.constant(true), leadingIcon: "network")
                     MyTextField(textToEdit: $grocyAPIKey, description: "Valid API Key", isCorrect: Binding.constant(true), leadingIcon: "key")
+                    Button("Scan QR Code") {
+                        isShowingScanner = true
+                    }
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: [.qr], simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
+                    }
                     Button("Login") {
                         grocyVM.setLoginModus()
                         grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
@@ -94,6 +122,7 @@ struct SettingsView: View {
         })
         .navigationTitle(LocalizedStringKey("str.settings"))
     }
+    #endif
     
     var contentMac: some View {
         VStack(spacing: 0) {
