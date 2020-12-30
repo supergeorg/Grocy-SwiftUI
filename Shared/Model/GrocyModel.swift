@@ -16,7 +16,7 @@ enum getDataMode {
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPIProvider
     
-    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo-prerelease.grocy.info"
+    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo.grocy.info"
     //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
@@ -61,7 +61,7 @@ class GrocyViewModel: ObservableObject {
         if !isDemoModus {
             grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         } else {
-            grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+            grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
             //            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
@@ -69,7 +69,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func setDemoModus() {
-        grocyApi.setLoginData(baseURL: "https://demo-prerelease.grocy.info", apiKey: "")
+        grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
         //        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         isDemoModus = true
         isLoggedIn = true
@@ -271,11 +271,25 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-        //        print(String(data: jsonContent, encoding: .utf8)!)
+//        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: postStock \(error)")
+                case .finished:
+                    break
+                }
+                
+            }) { (lastError) in
+                DispatchQueue.main.async {
+                    self.lastErrors = lastError
+                }
+            }
             .store(in: &cancellables)
+//            .replaceError(with: [])
+//            .assign(to: \.lastErrors, on: self)
+//            .store(in: &cancellables)
     }
     
     func undoBookingWithID(id: String) {
@@ -377,8 +391,21 @@ class GrocyViewModel: ObservableObject {
         let jsonContent = try! JSONEncoder().encode(content)
         //        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: postMD\(error)")
+                case .finished:
+                    break
+                }
+                
+            }) { (lastError) in
+                DispatchQueue.main.async {
+                    self.lastErrors = lastError
+                }
+            }
+//            .replaceError(with: [])
+//            .assign(to: \.lastErrors, on: self)
             .store(in: &cancellables)
     }
     
