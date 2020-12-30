@@ -8,6 +8,7 @@
 import SwiftUI
 
 private struct StockFilterItemView: View {
+    @Environment(\.colorScheme) var colorScheme
     var num: Int
     @Binding var filteredStatus: ProductStatus
     var ownFilteredStatus: ProductStatus
@@ -28,23 +29,26 @@ private struct StockFilterItemView: View {
                 #if os(iOS)
                 if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                     Text(ownFilteredStatus.getDescription(amount: num))
-                        .foregroundColor(darkColor)
+                        .bold()
+                        .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 } else {
                     HStack{
                         Text(String(num))
+                            .bold()
                         Image(systemName: ownFilteredStatus.getIconName())
                     }
-                    .foregroundColor(darkColor)
+                    .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 }
                 #elseif os(macOS)
                 Text(ownFilteredStatus.getDescription(amount: num))
-                    .foregroundColor(darkColor)
+                    .bold()
+                    .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 #endif
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)
             .padding(.bottom, 10)
-            .background(lightColor)
+            .background(colorScheme == .light ? lightColor : darkColor)
         }
         .fixedSize()
         .onTapGesture {
@@ -79,6 +83,11 @@ struct StockFilterActionsView: View {
 
 struct StockFilterActionsView_Previews: PreviewProvider {
     static var previews: some View {
-        StockFilterActionsView(filteredStatus: .constant(.expired), numExpiringSoon: 1, numOverdue: 2, numExpired: 2, numBelowStock: 3)
+        Group {
+            StockFilterActionsView(filteredStatus: .constant(.expired), numExpiringSoon: 1, numOverdue: 2, numExpired: 2, numBelowStock: 3)
+                .environment(\.colorScheme, .light)
+            StockFilterActionsView(filteredStatus: .constant(.expired), numExpiringSoon: 1, numOverdue: 2, numExpired: 2, numBelowStock: 3)
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

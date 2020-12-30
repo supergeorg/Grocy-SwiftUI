@@ -78,7 +78,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
             .sheet(isPresented: $showDetailView, content: {
                 #if os(macOS)
                 ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
@@ -98,7 +97,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         
         if showAmount {
@@ -113,7 +111,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         
         if showValue {
@@ -124,7 +121,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showNextBestBeforeDate {
             HStack{
@@ -134,7 +130,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showCaloriesPerStockQU {
             HStack{
@@ -144,7 +139,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
         if showCalories {
             HStack {
@@ -154,7 +148,6 @@ struct StockTableRow: View {
                 Spacer()
             }
             .background(backgroundColor)
-//            .foregroundColor((backgroundColor == Color.clear || colorScheme == .light) ? Color.primary : Color.black)
         }
     }
 }

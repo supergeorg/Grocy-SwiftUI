@@ -58,8 +58,8 @@ struct PurchaseProductView: View {
         self.productDoesntSpoil = false
         self.price = 0.0
         self.isTotalPrice = false
-        //        shoppingLocationID = ""
-        //        locationID = ""
+        self.shoppingLocationID = ""
+        self.locationID = ""
     }
     
     private func purchaseProduct() {
