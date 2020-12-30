@@ -7,7 +7,7 @@
 //
 import SwiftUI
 
-struct SearchBar: View {
+struct SearchBarSwiftUI: View {
     @Binding var text: String
     
     var placeholder: String
@@ -50,8 +50,8 @@ struct SearchBar: View {
     }
 }
 
-struct SearchBar_Previews: PreviewProvider {
+struct SearchBarSwiftUI_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar(text: .constant(""), placeholder: "Platzhalter")
+        SearchBarSwiftUI(text: .constant(""), placeholder: "Platzhalter")
     }
 }
