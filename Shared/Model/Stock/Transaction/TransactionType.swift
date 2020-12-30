@@ -12,4 +12,6 @@ enum TransactionType: String, Codable {
     case consume = "consume"
     case inventoryCorrection = "inventory-correction"
     case productOpened = "product-opened"
+    case stockEditOld = "stock-edit-old"
+    case stockEditNew = "stock-edit-new"
 }

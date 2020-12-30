@@ -17,5 +17,9 @@ func formatTransactionType(_ transactionType: TransactionType) -> String {
         return "tr.inventory".localized
     case .productOpened:
         return "tr.opened".localized
+    case .stockEditOld:
+        return "tr.editOld".localized
+    case .stockEditNew:
+        return "tr.editNew".localized
     }
 }
