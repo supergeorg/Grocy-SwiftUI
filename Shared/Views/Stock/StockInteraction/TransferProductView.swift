@@ -80,7 +80,7 @@ struct TransferProductView: View {
                             resetForm()
                         }, label: {
                             HStack{
-                                Text("str.stock.transfer.product.transfer".localized)
+                                Text(LocalizedStringKey("str.stock.transfer.product.transfer"))
                                 Image(systemName: "arrow.left.arrow.right")
                             }
                         })
@@ -97,7 +97,7 @@ struct TransferProductView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("str.stock.transfer.product.transfer".localized) {
+                    Button(LocalizedStringKey("str.stock.transfer.product.transfer")) {
                         transferProduct()
                         resetForm()
                     }.disabled(!isFormValid)
@@ -106,9 +106,25 @@ struct TransferProductView: View {
         #endif
     }
     
+    //    "str.stock.transfer" = "Transfer";
+    //    "str.stock.transfer.product" = "Product";
+    //    "str.stock.transfer.product.transfer" = "Transfer product";
+    //    "str.stock.transfer.product.required" = "You have to select a product";
+    //    "str.stock.transfer.product.locationFrom" = "From location";
+    //    "str.stock.transfer.product.locationFrom.required" = "A location is required";
+    //    "str.stock.transfer.product.amount" = "Amount";
+    //    "str.stock.transfer.product.amount.required" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+    //    "str.stock.transfer.product.quantityUnit" = "Quantity unit";
+    //    "str.stock.transfer.product.quantityUnit.required" = "A quantity unit is required";
+    //    "str.stock.transfer.product.locationTo" = "To location";
+    //    "str.stock.transfer.product.locationTO.required" = "A location is required";
+    //    "str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
+    //    "str.stock.transfer.product.useStockEntry" = "Use a specific stock item";
+    //    "str.stock.transfer.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
+    
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label("str.stock.transfer.product", systemImage: "tag"), content: {
+            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.transfer.product"), systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
                 #endif
@@ -124,14 +140,14 @@ struct TransferProductView: View {
                 }
             }
             
-            Picker(selection: $locationIDFrom, label: Label("str.stock.transfer.product.locationFrom".localized, systemImage: "square.and.arrow.up"), content: {
+            Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
                 Text("").tag("")
                 ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
                     Text(locationFrom.name).tag(locationFrom.id)
                 }
             })
             
-            Section(header: Text("str.stock.consume.product.amount").font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.required", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label("str.stock.consume.product.quantityUnit", systemImage: "scalemass"), content: {
                     Text("").tag("")
@@ -142,28 +158,25 @@ struct TransferProductView: View {
             }
             
             VStack(alignment: .leading) {
-                Picker(selection: $locationIDTo, label: Label("str.stock.transfer.product.locationTo".localized, systemImage: "square.and.arrow.down"), content: {
+                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
                         Text(locationTo.name).tag(locationTo.id)
                     }
                 })
                 if !(locationIDFrom.isEmpty) && (locationIDFrom == locationIDTo) {
-                    Text("str.stock.transfer.product.locationTO.same")
+                    Text(LocalizedStringKey("str.stock.transfer.product.locationTO.same"))
                         .font(.caption)
                         .foregroundColor(.red)
                 }
             }
             
-            HStack {
-                Image(systemName: "tag")
-                MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description")
-            }
+            MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
             
             if useSpecificStockEntry && !productID.isEmpty {
-                Picker(selection: $stockEntryID, label: Label("str.stock.transfer.product.stockEntry", systemImage: "tag"), content: {
+                Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
                     ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.id) { stockProduct in
-                        Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate) ?? "Best before date error"), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
+                        Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
                     }
                 })
             }
@@ -176,7 +189,7 @@ struct TransferProductView: View {
             }
         })
         .animation(.default)
-        .navigationTitle("str.stock.transfer".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
 }
 

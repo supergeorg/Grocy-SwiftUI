@@ -25,6 +25,8 @@ struct ConsumeProductView: View {
     
     @State private var searchProductTerm: String = ""
     
+    @State private var showRecipeInfo: Bool = false
+    
     private var filteredProducts: MDProducts {
         grocyVM.mdProducts.filter {
             searchProductTerm.isEmpty ? true : $0.name.lowercased().contains(searchProductTerm.lowercased())
@@ -93,10 +95,10 @@ struct ConsumeProductView: View {
                                 resetForm()
                             }, label: {
                                 HStack{
-                                    Text("str.stock.consume.product.open".localized)
+                                    Text(LocalizedStringKey("str.stock.consume.product.open"))
                                     Image(systemName: "envelope.open")
                                 }
-                                //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                                //                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
                             })
                             .disabled(!isFormValid)
                             Button(action: {
@@ -104,10 +106,10 @@ struct ConsumeProductView: View {
                                 resetForm()
                             }, label: {
                                 HStack{
-                                    Text("str.stock.consume.product.consume".localized)
+                                    Text(LocalizedStringKey("str.stock.consume.product.consume"))
                                     Image(systemName: "tuningfork")
                                 }
-                                //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
+                                //                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
                             })
                             .disabled(!isFormValid)
                             .keyboardShortcut("s", modifiers: [.command])
@@ -123,9 +125,6 @@ struct ConsumeProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                //                ToolbarItem(placement: .confirmationAction) {
-                //                    
-                //                }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Button("str.stock.consume.product.open") {
                         openProduct()
@@ -143,7 +142,7 @@ struct ConsumeProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label("str.stock.consume.product".localized, systemImage: "tag"), content: {
+            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.consume.product"), systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
                 #endif
@@ -159,9 +158,9 @@ struct ConsumeProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.consume.product.amount".localized).font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.consume.product.quantityUnit".localized, systemImage: "scalemass"), content: {
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
@@ -169,31 +168,40 @@ struct ConsumeProductView: View {
                 }).disabled(true)
             }
             
-            Section(header: Text("str.stock.consume.product.details".localized).font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.consume.product.details")).font(.headline)) {
                 
                 MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: "trash")
                 
                 MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
                 
-                
                 if useSpecificStockEntry && !productID.isEmpty {
-                    Picker(selection: $stockEntryID, label: Label("str.stock.consume.product.stockEntry", systemImage: "tag"), content: {
+                    Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                         ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.id) { stockProduct in
-                            Text("Anz.: \(stockProduct.amount) \(stockProduct.stockEntryOpen == "0" ? "" : " (\(stockProduct.stockEntryOpen) offen)"), MHD: \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error"), Ort: \(grocyVM.mdLocations.first(where: { $0.id == stockProduct.locationID })?.name ?? "Standortfehler")").tag(stockProduct.stockID)
+                            Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
                         }
                     })
                 }
                 
-                Picker(selection: $recipeID, label: Label("str.stock.consume.product.recipe".localized, systemImage: "tag"), content: {
-                    Text("Not implemented").tag("nI")
-                })
+                HStack{
+                    Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
+                        Text("Not implemented").tag("nI")
+                    })
+                    Image(systemName: "questionmark.circle.fill")
+                        .onTapGesture {
+                            showRecipeInfo.toggle()
+                        }
+                        .popover(isPresented: $showRecipeInfo, content: {
+                            Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                                .padding()
+                        })
+                }
             }
         }
         .onAppear(perform: {
             updateData()
         })
         .animation(.default)
-        .navigationTitle("str.stock.consume".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }
 }
 

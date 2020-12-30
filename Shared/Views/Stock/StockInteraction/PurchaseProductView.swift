@@ -48,11 +48,6 @@ struct PurchaseProductView: View {
         !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty)
     }
     
-    //    init(productToPurchaseID: String? = nil, productToPurchaseAmount: Double? = nil) {
-    //        self.productID = productToPurchaseID ?? ""
-    //        self.amount = productToPurchaseAmount ?? 0
-    //    }
-    
     private func resetForm() {
         self.productID = productToPurchaseID ?? ""
         self.amount = productToPurchaseAmount ?? 0
@@ -99,10 +94,9 @@ struct PurchaseProductView: View {
                             resetForm()
                         }, label: {
                             HStack{
-                                Text("str.stock.buy.product.buy".localized)
+                                Text(LocalizedStringKey("str.stock.buy.product.buy"))
                                 Image(systemName: "cart")
                             }
-                            //                    Label("str.stock.buy.product.buy".localized, systemImage: "cart")
                         })
                         .disabled(!isFormValid)
                     }
@@ -112,12 +106,12 @@ struct PurchaseProductView: View {
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("str.cancel") {
+                    Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("str.stock.buy.product.buy") {
+                    Button(LocalizedStringKey("str.stock.buy.product.buy")) {
                         purchaseProduct()
                         resetForm()
                     }.disabled(!isFormValid)
@@ -128,7 +122,7 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label("str.stock.buy.product", systemImage: "tag"), content: {
+            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.buy.product"), systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
                 #endif
@@ -145,9 +139,9 @@ struct PurchaseProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.buy.product.amount").font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.buy.product.quantityUnit", systemImage: "scalemass"), content: {
+            Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
+                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
@@ -155,37 +149,37 @@ struct PurchaseProductView: View {
                 }).disabled(true)
             }
             
-            Section(header: Text("str.stock.buy.product.dueDate").font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.buy.product.dueDate")).font(.headline)) {
                 HStack {
                     Image(systemName: "calendar")
-                    DatePicker("str.stock.buy.product.dueDate".localized, selection: $dueDate, displayedComponents: .date)
+                    DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $dueDate, displayedComponents: .date)
                         .disabled(productDoesntSpoil)
                 }
                 
                 HStack {
                     Image(systemName: "trash.slash")
-                    Toggle("str.stock.buy.product.doesntSpoil", isOn: $productDoesntSpoil)
+                    Toggle(LocalizedStringKey("str.stock.buy.product.doesntSpoil"), isOn: $productDoesntSpoil)
                 }
             }
             
-            Section(header: Text("str.stock.buy.product.price").font(.headline)) {
-                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.required", systemImage: "eurosign.circle")
+            Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
+                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.invalid", systemImage: "eurosign.circle")
                 
                 Picker("", selection: $isTotalPrice, content: {
-                    Text("str.stock.buy.product.price.perUnit").tag(false)
-                    Text("str.stock.buy.product.price.summedUp").tag(true)
+                    Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
+                    Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
                 }).pickerStyle(SegmentedPickerStyle())
             }
             
-            Section(header: Text("str.stock.buy.product.location").font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label("str.stock.buy.product.shoppingLocation".localized, systemImage: "cart"), content: {
+            Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
+                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: "cart"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
                         Text(shoppingLocation.name).tag(shoppingLocation.id)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label("str.stock.buy.product.location".localized, systemImage: "location"), content: {
+                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: "location"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id)
@@ -198,7 +192,7 @@ struct PurchaseProductView: View {
             resetForm()
         })
         .animation(.default)
-        .navigationTitle("str.stock.buy".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.buy"))
     }
 }
 

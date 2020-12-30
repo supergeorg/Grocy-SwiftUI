@@ -88,6 +88,10 @@
 "str.stock.expired" = "bereits abgelaufen";
 "str.stock.belowMinStock" = "unter Mindestbestand";
 
+"str.stock.entry.description %@ %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; %@";
+"str.stock.entry.status.notOpened" = "Nicht geöffnet";
+"str.stock.entry.status.opened" = "Geöffnet";
+
 "str.stock.tbl.product" = "Produkt";
 "str.stock.tbl.productGroup" = "Produktgruppe";
 "str.stock.tbl.amount" = "Menge";
@@ -109,26 +113,26 @@
 "str.stock.buy.product.buy" = "Produkt einkaufen";
 "str.stock.buy.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.buy.product.amount" = "Menge";
-"str.stock.buy.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.buy.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.buy.product.quantityUnit" = "Mengeneinheit";
-"str.stock.buy.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.stock.buy.product.quantityUnit.invalid" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.buy.product.dueDate" = "Fälligkeitsdatum";
 "str.stock.buy.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
 "str.stock.buy.product.doesntSpoil" = "Nie überfällig";
 "str.stock.buy.product.price" = "Preis";
-"str.stock.buy.product.price.required" = "Dies darf nicht niedriger als 0.01 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
-"str.stock.buy.product.price.perUnit" = "Preis";
-"str.stock.buy.product.price.summedUp" = "Gesamtpreis";
+"str.stock.buy.product.price.invalid" = "Dies darf nicht niedriger als 0.01 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
+"str.stock.buy.product.price.unitPrice" = "Preis";
+"str.stock.buy.product.price.totalPrice" = "Gesamtpreis";
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
 
 "str.stock.consume" = "Verbrauch";
 "str.stock.consume.product" = "Produkt";
-"str.stock.consume.product.consume" = "Produkt einkaufen";
+"str.stock.consume.product.consume" = "Produkt verbrauchen";
 "str.stock.consume.product.open" = "Als geöffnet markieren";
 "str.stock.consume.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.consume.product.amount" = "Menge";
-"str.stock.consume.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.consume.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.consume.product.quantityUnit" = "Mengeneinheit";
 "str.stock.consume.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.consume.product.location" = "Standort";
@@ -136,10 +140,10 @@
 "str.stock.consume.product.details" = "Details";
 "str.stock.consume.product.spoiled" = "Verdorben";
 "str.stock.consume.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
-"str.stock.consume.product.useStockEntry.description" = "TODO";
+"str.stock.consume.product.useStockEntry.description" = "Der erste Eintrag in dieser Liste würde von der Standardregel \"Geöffnete zuerst, dann zuerst fällige, dann First In - First Out\" ausgewählt werden";
 "str.stock.consume.product.stockEntry" = "Bestandseintrag";
 "str.stock.consume.product.recipe" = "Rezept";
-"str.stock.consume.product.recipe.description" = "TODO";
+"str.stock.consume.product.recipe.info" = "Dies wird nur für Auswertezwecke benötigt";
 
 "str.stock.transfer" = "Umlagern";
 "str.stock.transfer.product" = "Produkt";
@@ -153,23 +157,26 @@
 "str.stock.transfer.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.transfer.product.locationTo" = "Nach Standort";
 "str.stock.transfer.product.locationTO.required" = "Ein Standort ist erforderlich";
-"str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie 'Von Standort' sein";
+"str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie \"Von Standort\" sein";
+"str.stock.transfer.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
+"str.stock.transfer.product.useStockEntry.description" = "Der erste Eintrag in dieser Liste würde von der Standardregel \"Geöffnete zuerst, dann zuerst fällige, dann First In - First Out\" ausgewählt werden";
 
 "str.stock.inventory" = "Inventur";
 "str.stock.inventory.product" = "Produkt";
 "str.stock.inventory.product.inventory" = "Inventur durchführen";
 "str.stock.inventory.product.amount" = "Neuer Bestand";
-"str.stock.inventory.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.inventory.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.inventory.product.amount.lower %@" = "Das bedeutet %@ wird aus dem Bestand entfernt";
 "str.stock.inventory.product.amount.higher %@" = "Das bedeutet %@ wird dem Bestand hinzugefügt";
 "str.stock.inventory.product.quantityUnit" = "Mengeneinheit";
 "str.stock.inventory.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.inventory.product.dueDate" = "Fälligkeitsdatum";
-"str.stock.inventory.product.dueDate.info" = "TODO";
+"str.stock.inventory.product.dueDate.info" = "Dies gilt für hinzugefügte Produkte";
 "str.stock.inventory.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
-"str.stock.inventory.product.doesntSpoil" = "Nie überfällig";
+"str.stock.inventory.product.neverOverdue" = "Nie überfällig";
 "str.stock.inventory.product.price" = "Preis";
 "str.stock.inventory.product.price.info" = "Pro Bestandsmengeneinheit";
+"str.stock.inventory.product.price.invalid" = "Dies darf nicht niedriger als 0 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
 "str.stock.inventory.product.shoppingLocation" = "Geschäft";
 "str.stock.inventory.product.location" = "Standort";
 "str.stock.inventory.product.location.info" = "Dies gilt nur für hinzugefügte Produkte";

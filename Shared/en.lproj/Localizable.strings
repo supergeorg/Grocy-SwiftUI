@@ -88,6 +88,10 @@
 "str.stock.expired" = "already expired";
 "str.stock.belowMinStock" = "below min. stock amount";
 
+"str.stock.entry.description %@ %@ %@ %@" = "Amount: %@; Due on %@; Bought on %@; %@";
+"str.stock.entry.status.notOpened" = "Not opened";
+"str.stock.entry.status.opened" = "Opened";
+
 "str.stock.tbl.product" = "Product";
 "str.stock.tbl.productGroup" = "Product group";
 "str.stock.tbl.amount" = "Amount";
@@ -103,6 +107,80 @@
 "str.stock.tbl.menu.addToShL" = "Add to shopping list";
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Consume %@ as spoiled";
 "str.stock.tbl.menu.searchRecipes" = "Search for recipes which contain this product";
+
+"str.stock.buy" = "Purchase";
+"str.stock.buy.product" = "Product";
+"str.stock.buy.product.buy" = "Purchase product";
+"str.stock.buy.product.required" = "You have to select a product";
+"str.stock.buy.product.amount" = "Amount";
+"str.stock.buy.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.buy.product.quantityUnit" = "Quantity unit";
+"str.stock.buy.product.quantityUnit.required" = "A quantity unit is required";
+"str.stock.buy.product.dueDate" = "Due date";
+"str.stock.buy.product.dueDate.required" = "A due date is required";
+"str.stock.buy.product.doesntSpoil" = "Never overdue";
+"str.stock.buy.product.price" = "Price";
+"str.stock.buy.product.price.invalid" = "This cannot be lower than 0.01 and needs to be a valid number with max. 2 decimal places";
+"str.stock.buy.product.price.unitPrice" = "Unit price";
+"str.stock.buy.product.price.totalPrice" = "Total price";
+"str.stock.buy.product.shoppingLocation" = "Store";
+"str.stock.buy.product.location" = "Location";
+
+"str.stock.consume" = "Consume";
+"str.stock.consume.product" = "Product";
+"str.stock.consume.product.consume" = "Consume product";
+"str.stock.consume.product.open" = "Mark as opened";
+"str.stock.consume.product.required" = "You have to select a product";
+"str.stock.consume.product.amount" = "Amount";
+"str.stock.consume.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.consume.product.quantityUnit" = "Quantity unit";
+"str.stock.consume.product.quantityUnit.required" = "A quantity unit is required";
+"str.stock.consume.product.location" = "Location";
+"str.stock.consume.product.location.required" = "A location is required";
+"str.stock.consume.product.details" = "Details";
+"str.stock.consume.product.spoiled" = "Spoiled";
+"str.stock.consume.product.useStockEntry" = "Use a specific stock item";
+"str.stock.consume.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
+"str.stock.consume.product.stockEntry" = "Stock entry";
+"str.stock.consume.product.recipe" = "Recipe";
+"str.stock.consume.product.recipe.info" = "This is for statistical purposes only";
+
+"str.stock.transfer" = "Transfer";
+"str.stock.transfer.product" = "Product";
+"str.stock.transfer.product.transfer" = "Transfer product";
+"str.stock.transfer.product.required" = "You have to select a product";
+"str.stock.transfer.product.locationFrom" = "From location";
+"str.stock.transfer.product.locationFrom.required" = "A location is required";
+"str.stock.transfer.product.amount" = "Amount";
+"str.stock.transfer.product.amount.required" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.transfer.product.quantityUnit" = "Quantity unit";
+"str.stock.transfer.product.quantityUnit.required" = "A quantity unit is required";
+"str.stock.transfer.product.locationTo" = "To location";
+"str.stock.transfer.product.locationTO.required" = "A location is required";
+"str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
+"str.stock.transfer.product.useStockEntry" = "Use a specific stock item";
+"str.stock.transfer.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
+
+"str.stock.inventory" = "Inventory";
+"str.stock.inventory.product" = "Product";
+"str.stock.inventory.product.inventory" = "Perform inventory";
+"str.stock.inventory.product.amount" = "New stock amount ";
+"str.stock.inventory.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.inventory.product.amount.lower %@" = "This means %@ will be removed from stock";
+"str.stock.inventory.product.amount.higher %@" = "This means %@ will be added to stock";
+"str.stock.inventory.product.quantityUnit" = "Quantity unit";
+"str.stock.inventory.product.quantityUnit.required" = "A quantity unit is required";
+"str.stock.inventory.product.dueDate" = "Due date";
+"str.stock.inventory.product.dueDate.info" = "This will apply to added products";
+"str.stock.inventory.product.dueDate.required" = "A due date is required";
+"str.stock.inventory.product.neverOverdue" = "Never overdue";
+"str.stock.inventory.product.price" = "Price";
+"str.stock.inventory.product.price.info" = "Per stock quantity unit";
+"str.stock.inventory.product.price.invalid" = "This cannot be lower than 0.01 and needs to be a valid number with max. 2 decimal places";
+"str.stock.inventory.product.shoppingLocation" = "Store";
+"str.stock.inventory.product.location" = "Location";
+"str.stock.inventory.product.location.info" = "This will apply to added products";
+"str.stock.inventory.product.location.required" = "A location is required";
 
 "str.stock.journal" = "Stock journal";
 "str.stock.journal.empty" = "No transactions found.";

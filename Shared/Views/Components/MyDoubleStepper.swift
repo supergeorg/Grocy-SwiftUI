@@ -25,7 +25,7 @@ struct MyDoubleStepper: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
-                Text(description.localized)
+                Text(LocalizedStringKey(description))
                 if descriptionInfo != nil {
                     #if os(macOS)
                     Image(systemName: "questionmark.circle.fill")
@@ -38,7 +38,7 @@ struct MyDoubleStepper: View {
                     })
                     .help(LocalizedStringKey(descriptionInfo ?? ""))
                     .popover(isPresented: $showInfo, content: {
-                        Text(descriptionInfo!.localized)
+                        Text(LocalizedStringKey(descriptionInfo!))
                     })
                     #endif
                 }
@@ -49,7 +49,7 @@ struct MyDoubleStepper: View {
                 }
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 50)
-                Stepper((amountName ?? "").localized, onIncrement: {
+                Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     amount += amountStep
                 }, onDecrement: {
                     if amount > minAmount {
@@ -59,7 +59,7 @@ struct MyDoubleStepper: View {
             }
             if amount < minAmount {
                 if errorMessage != nil {
-                    Text(errorMessage!.localized)
+                    Text(LocalizedStringKey(errorMessage!))
                         .font(.caption)
                         .foregroundColor(.red)
                         .frame(width: 200)

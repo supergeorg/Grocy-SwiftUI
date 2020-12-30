@@ -50,7 +50,7 @@ struct MyTextField: View {
                             showInfo.toggle()
                         }
                         .popover(isPresented: $showInfo, content: {
-                            Text(helpText!.localized).padding()
+                            Text(LocalizedStringKey(helpText!)).padding()
                         })
                 }
             }
@@ -69,7 +69,7 @@ struct MyTextField: View {
                         .frame(width: 20, height: 20)
                 }
                 if isEditing {
-                    TextField(description2.localized, text: self.$textToEdit)
+                    TextField(LocalizedStringKey(description2), text: self.$textToEdit)
                         //                        .autocapitalization(.none)
                         .disableAutocorrection(true)
                         //                        .textContentType(.URL)

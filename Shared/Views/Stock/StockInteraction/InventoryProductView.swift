@@ -18,7 +18,7 @@ struct InventoryProductView: View {
     @State private var amount: Int = 1
     @State private var quantityUnitID: String = ""
     @State private var dueDate: Date = Date()
-    @State private var productDoesntSpoil: Bool = false
+    @State private var productNeverOverdue: Bool = false
     @State private var price: Double = 0.0
     @State private var shoppingLocationID: String = ""
     @State private var locationID: String = ""
@@ -64,7 +64,7 @@ struct InventoryProductView: View {
         amount = 1
         quantityUnitID = ""
         dueDate = Date()
-        productDoesntSpoil = false
+        productNeverOverdue = false
         price = 0.0
         shoppingLocationID = ""
         locationID = ""
@@ -73,7 +73,7 @@ struct InventoryProductView: View {
     private func inventoryProduct() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
+        let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let intShoppingLocation = shoppingLocationID.isEmpty ? nil : Int(shoppingLocationID)!
         let intLocationID = locationID.isEmpty ? nil : Int(locationID)!
         let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
@@ -121,7 +121,7 @@ struct InventoryProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label("str.stock.inventory.product", systemImage: "tag"), content: {
+            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.inventory.product"), systemImage: "tag"), content: {
                 #if os(iOS)
                 SearchBar(text: $searchProductTerm, placeholder: "str.search")
                 #endif
@@ -138,9 +138,9 @@ struct InventoryProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.inventory.product.amount").font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.amount")).font(.headline)) {
                 MyIntStepper(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount), errorMessage: "str.stock.inventory.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.inventory.product.quantityUnit", systemImage: "scalemass"), content: {
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.inventory.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
@@ -151,30 +151,27 @@ struct InventoryProductView: View {
                 }
             }
             
-            Section(header: Text("str.stock.inventory.product.dueDate").font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
                 HStack {
                     Image(systemName: "calendar")
-                    DatePicker("str.stock.inventory.product.dueDate".localized, selection: $dueDate, displayedComponents: .date)
-                        .disabled(productDoesntSpoil)
+                    DatePicker(LocalizedStringKey("str.stock.inventory.product.dueDate"), selection: $dueDate, displayedComponents: .date)
+                        .disabled(productNeverOverdue)
                 }
                 
-                HStack {
-                    Image(systemName: "trash.slash")
-                    Toggle("str.stock.inventory.product.doesntSpoil", isOn: $productDoesntSpoil)
-                }
+                MyToggle(isOn: $productNeverOverdue, description: "str.stock.inventory.product.neverOverdue", icon: "trash.slash")
             }
             
             MyDoubleStepper(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: grocyVM.getCurrencySymbol(), errorMessage: "str.stock.inventory.product.price.required", systemImage: "eurosign.circle")
             
-            Section(header: Text("str.stock.inventory.product.location").font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label("str.stock.inventory.product.shoppingLocation".localized, systemImage: "cart"), content: {
+            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
+                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: "cart"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
                         Text(shoppingLocation.name).tag(shoppingLocation.id)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label("str.stock.inventory.product.location".localized, systemImage: "location"), content: {
+                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: "location"), content: {
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id)
                     }
@@ -189,7 +186,7 @@ struct InventoryProductView: View {
             }
         })
         .animation(.default)
-        .navigationTitle("str.stock.inventory".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.inventory"))
     }
 }
 

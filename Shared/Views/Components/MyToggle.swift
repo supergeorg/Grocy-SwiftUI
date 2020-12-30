@@ -20,14 +20,14 @@ struct MyToggle: View {
             if icon != nil {
                 Image(systemName: icon!)
             }
-            Toggle(description.localized, isOn: $isOn)
+            Toggle(LocalizedStringKey(description), isOn: $isOn)
             if descriptionInfo != nil {
                 Image(systemName: "questionmark.circle.fill")
                     .onTapGesture {
                         showInfo.toggle()
                     }
                     .popover(isPresented: $showInfo, content: {
-                        Text(descriptionInfo!.localized)
+                        Text(LocalizedStringKey(descriptionInfo!))
                             .padding()
                     })
             }
