@@ -21,8 +21,8 @@ struct MDProductFormView: View {
     @State private var minStockAmount: Int = 0
     @State private var cumulateMinStockAmountOfSubProducts: Bool = false
     @State private var dueType: DueType = DueType.bestBefore
-    @State private var defaultBestBeforeDays: Int = 0
-    @State private var defaultBestBeforeDaysAfterOpen: Int = 0
+    @State private var defaultDueDays: Int = 0
+    @State private var defaultDueDaysAfterOpen: Int = 0
     @State private var productGroupID: String = "0"
     @State private var quIDStock: String = "" // REQUIRED
     @State private var quIDPurchase: String = "" // REQUIRED
@@ -31,9 +31,10 @@ struct MDProductFormView: View {
     @State private var tareWeight: String = "0"
     @State private var notCheckStockFulfillmentForRecipes: String = "0"
     @State private var calories: Double = 0.0
-    @State private var defaultBestBeforeDaysAfterFreezing: String = "0"
-    @State private var defaultBestBeforeDaysAfterThawing: String = "0"
+    @State private var defaultDueDaysAfterFreezing: String = "0"
+    @State private var defaultDueDaysAfterThawing: String = "0"
     @State private var quickConsumeAmount: Double = 1.0
+    @State private var neverShowOnStockOverview: Bool = false
     
     @State private var barcodes: MDProductBarcodes = [] // wie läuft das denn ab?
     
@@ -70,11 +71,11 @@ struct MDProductFormView: View {
                                                                            quFactorPurchaseToStock: String(quFactorPurchaseToStock),
                                                                            barcode: "",
                                                                            minStockAmount: String(minStockAmount),
-                                                                           defaultBestBeforeDays: String(defaultBestBeforeDays),
+                                                                           defaultBestBeforeDays: String(defaultDueDays),
                                                                            rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
                                                                            productGroupID: productGroupID,
                                                                            pictureFileName: nil,
-                                                                           defaultBestBeforeDaysAfterOpen: String(defaultBestBeforeDaysAfterOpen),
+                                                                           defaultBestBeforeDaysAfterOpen: String(defaultDueDaysAfterOpen),
                                                                            allowPartialUnitsInStock: "0",
                                                                            enableTareWeightHandling: enableTareWeightHandling,
                                                                            tareWeight: tareWeight,
@@ -82,8 +83,8 @@ struct MDProductFormView: View {
                                                                            parentProductID: nil,
                                                                            calories: "",
                                                                            cumulateMinStockAmountOfSubProducts: String(cumulateMinStockAmountOfSubProducts),
-                                                                           defaultBestBeforeDaysAfterFreezing: defaultBestBeforeDaysAfterFreezing,
-                                                                           defaultBestBeforeDaysAfterThawing: defaultBestBeforeDaysAfterThawing,
+                                                                           defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing,
+                                                                           defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing,
                                                                            shoppingLocationID: shoppingLocationID,
                                                                            userfields: nil))
         } else {
@@ -96,11 +97,11 @@ struct MDProductFormView: View {
                                                                                                  quFactorPurchaseToStock: String(quFactorPurchaseToStock),
                                                                                                  barcode: "",
                                                                                                  minStockAmount: String(minStockAmount),
-                                                                                                 defaultBestBeforeDays: String(defaultBestBeforeDays),
+                                                                                                 defaultBestBeforeDays: String(defaultDueDays),
                                                                                                  rowCreatedTimestamp: product!.rowCreatedTimestamp,
                                                                                                  productGroupID: productGroupID,
                                                                                                  pictureFileName: nil,
-                                                                                                 defaultBestBeforeDaysAfterOpen: String(defaultBestBeforeDaysAfterOpen),
+                                                                                                 defaultBestBeforeDaysAfterOpen: String(defaultDueDaysAfterOpen),
                                                                                                  allowPartialUnitsInStock: "0",
                                                                                                  enableTareWeightHandling: enableTareWeightHandling,
                                                                                                  tareWeight: tareWeight,
@@ -108,8 +109,8 @@ struct MDProductFormView: View {
                                                                                                  parentProductID: nil,
                                                                                                  calories: "",
                                                                                                  cumulateMinStockAmountOfSubProducts: String(cumulateMinStockAmountOfSubProducts),
-                                                                                                 defaultBestBeforeDaysAfterFreezing: defaultBestBeforeDaysAfterFreezing,
-                                                                                                 defaultBestBeforeDaysAfterThawing: defaultBestBeforeDaysAfterThawing,
+                                                                                                 defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing,
+                                                                                                 defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing,
                                                                                                  shoppingLocationID: shoppingLocationID,
                                                                                                  userfields: nil))
         }
@@ -122,58 +123,78 @@ struct MDProductFormView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        content
+        #elseif os(iOS)
+        content
+            .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewProduct {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.md.save \("str.md.product".localized)")) {
+                        saveProduct()
+                        presentationMode.wrappedValue.dismiss()
+                    }.disabled(!isNameCorrect)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewProduct{
+                        Text("")
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         Form {
-            //            @State private var quIDStock: String = "" // REQUIRED
-            //            @State private var quIDPurchase: String = "" // REQUIRED
-            //            @State private var quFactorPurchaseToStock: Int = 1
-            //            @State private var enableTareWeightHandling: String = "0"
-            //            @State private var tareWeight: String = "0"
-            //            @State private var notCheckStockFulfillmentForRecipes: String = "0"
-            //            @State private var calories: Double = 0.0
-            //            @State private var defaultBestBeforeDaysAfterFreezing: String = "0"
-            //            @State private var defaultBestBeforeDaysAfterThawing: String = "0"
-            //            @State private var quickConsumeAmount: Double = 1.0
-            Group {
-                
+            Section(header: Text(LocalizedStringKey("str.md.product")).font(.headline)) {
                 // Name - REQUIRED
-                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.product.name.required")
+                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
                 
                 // Active
-                Toggle("str.md.product.active", isOn: $active)
+                Toggle(LocalizedStringKey("str.md.product.active"), isOn: $active)
                 
                 // Parent Product
-                Picker("str.md.product.parentProduct", selection: $parentProductID, content: {
+                Picker(LocalizedStringKey("str.md.product.parentProduct"), selection: $parentProductID, content: {
                     ForEach(grocyVM.mdProducts, id:\.id) { grocyProduct in
                         Text(grocyProduct.name).tag(grocyProduct.id)
                     }
                 })
                 
                 // Product Description
-                MyTextField(textToEdit: $mdProductDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
-                
+                MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
             }
             
-            Group {
-                
-                VStack(alignment: .leading) {
+            Section(header: Text(LocalizedStringKey("str.md.product.location")).font(.headline)) {
                 // Default Location - REQUIRED
-                Picker("str.md.product.locationID", selection: $locationID, content: {
-                    ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
-                        Text(grocyLocation.name).tag(grocyLocation.id)
-                    }
-                })
-                if locationID.isEmpty { Text("str.md.product.locationID.required").foregroundColor(.red) }
+                VStack(alignment: .leading) {
+                    Picker(LocalizedStringKey("str.md.product.location"), selection: $locationID, content: {
+                        ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                            Text(grocyLocation.name).tag(grocyLocation.id)
+                        }
+                    })
+                    if locationID.isEmpty { Text(LocalizedStringKey("str.md.product.location.required")).foregroundColor(.red) }
                 }
                 
                 // Default Shopping Location
-                Picker("str.md.product.shoppingLocationID", selection: $shoppingLocationID, content: {
+                Picker(LocalizedStringKey("str.md.product.shoppingLocation"), selection: $shoppingLocationID, content: {
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
                         Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id)
                     }
                 })
+            }
+            
+            Section(header: Text(LocalizedStringKey("str.md.product.minStockAmount")).font(.headline)) {
                 
                 // Min Stock amount
                 MyIntStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0)
@@ -183,43 +204,52 @@ struct MDProductFormView: View {
                 
             }
             
-            Group {
+            Section(header: Text(LocalizedStringKey("str.md.product.dueType")).font(.headline)) {
                 
-                // Due Type, default best before
-                Picker("str.md.product.dueType", selection: $dueType, content: {
-                    Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
-                    Text("str.md.product.dueType.expires").tag(DueType.expires)
-                }).pickerStyle(SegmentedPickerStyle())
+                HStack{
+                    // Due Type, default best before
+                    Picker(LocalizedStringKey("str.md.product.dueType"), selection: $dueType, content: {
+                        Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
+                        Text("str.md.product.dueType.expires").tag(DueType.expires)
+                    }).pickerStyle(SegmentedPickerStyle())
+                }
                 
                 // Default due days
-                MyIntStepper(amount: $defaultBestBeforeDays, description: "str.md.product.defaultBestBeforeDays", helpText: "str.md.product.defaultBestBeforeDays.info", minAmount: 0, amountName: defaultBestBeforeDays == 1 ? "str.day" : "str.days")
+                MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: 0, amountName: defaultDueDays == 1 ? "str.day" : "str.days")
                 
                 // Default due days afer opening
-                MyIntStepper(amount: $defaultBestBeforeDaysAfterOpen, description: "str.md.product.defaultBestBeforeDaysAfterOpen", helpText: "str.md.product.defaultBestBeforeDaysAfterOpen.info", minAmount: 0, amountName: defaultBestBeforeDaysAfterOpen == 1 ? "str.day" : "str.days")
+                MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days")
                 
-                // Product group
-                Picker("str.md.product.productGroup", selection: $productGroupID, content: {
-                    ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
-                        Text(grocyProductGroup.name).tag(grocyProductGroup.id)
-                    }
-                })
             }
             
-            Group {
+            // Product group
+            Picker(LocalizedStringKey("str.md.product.productGroup"), selection: $productGroupID, content: {
+                ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
+                    Text(grocyProductGroup.name).tag(grocyProductGroup.id)
+                }
+            })
+            
+            Section(header: Text(LocalizedStringKey("str.md.quantityUnits")).font(.headline)) {
                 // QU Stock - REQUIRED
                 // Product group
-                Picker("str.md.product.quIDStock", selection: $quIDStock, content: {
+                Picker(LocalizedStringKey("str.md.product.quStock"), selection: $quIDStock, content: {
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id)
                     }
                 })
                 
                 // QU Purchase - REQUIRED
-                Picker("str.md.product.quIDPurchase", selection: $quIDPurchase, content: {
+                Picker(LocalizedStringKey("str.md.product.quPurchase"), selection: $quIDPurchase, content: {
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id)
                     }
                 })
+            }
+            
+            Section(header: Text(LocalizedStringKey("str.stock.stockOverview")).font(.headline)) {
+                MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: "tuningfork")
+                
+                MyToggle(isOn: $neverShowOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: "tablecells")
             }
             
             if !isNewProduct {
@@ -260,7 +290,6 @@ struct MDProductFormView: View {
                 }
             }
         }
-        .navigationTitle(isNewProduct ? "str.md.product.new" : "str.md.product.edit")
         .animation(.default)
         .onAppear(perform: {
             grocyVM.getMDProducts()
@@ -268,29 +297,6 @@ struct MDProductFormView: View {
             grocyVM.getMDLocations()
             grocyVM.getMDShoppingLocations()
             resetForm()
-        })
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                if isNewProduct {
-                    Button("str.cancel") {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("str.md.save \("str.md.location".localized)") {
-                    saveProduct()
-                    presentationMode.wrappedValue.dismiss()
-                }.disabled(!isNameCorrect)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                // Back not shown without it
-                if !isNewProduct{
-                    Text("")
-                }
-            }
-            #endif
         })
     }
 }
@@ -300,7 +306,7 @@ struct MDProductFormView_Previews: PreviewProvider {
         #if os(macOS)
         Group {
             MDProductFormView(isNewProduct: true)
-            //            MDProductFormView(isNewProduct: false, product: MDProduct(id: "1", name: "Name", mdProductDescription: "Description", locationID: "locid", quIDPurchase: "quPurchase", quIDStock: <#T##String#>, quFactorPurchaseToStock: <#T##String#>, barcode: <#T##String?#>, minStockAmount: <#T##String#>, defaultBestBeforeDays: <#T##String#>, rowCreatedTimestamp: <#T##String#>, productGroupID: <#T##String?#>, pictureFileName: <#T##String?#>, defaultBestBeforeDaysAfterOpen: <#T##String#>, allowPartialUnitsInStock: <#T##String#>, enableTareWeightHandling: <#T##String#>, tareWeight: <#T##String#>, notCheckStockFulfillmentForRecipes: <#T##String#>, parentProductID: <#T##String?#>, calories: <#T##String?#>, cumulateMinStockAmountOfSubProducts: <#T##String#>, defaultBestBeforeDaysAfterFreezing: <#T##String#>, defaultBestBeforeDaysAfterThawing: <#T##String#>, shoppingLocationID: <#T##String?#>, userfields: <#T##Userfields?#>))
+            //            MDProductFormView(isNewProduct: false, product: MDProduct(id: "1", name: "Name", mdProductDescription: "Description", locationID: "locid", quIDPurchase: "quPurchase", quIDStock: <#T##String#>, quFactorPurchaseToStock: <#T##String#>, barcode: <#T##String?#>, minStockAmount: <#T##String#>, defaultDueDays: <#T##String#>, rowCreatedTimestamp: <#T##String#>, productGroupID: <#T##String?#>, pictureFileName: <#T##String?#>, defaultDueDaysAfterOpen: <#T##String#>, allowPartialUnitsInStock: <#T##String#>, enableTareWeightHandling: <#T##String#>, tareWeight: <#T##String#>, notCheckStockFulfillmentForRecipes: <#T##String#>, parentProductID: <#T##String?#>, calories: <#T##String?#>, cumulateMinStockAmountOfSubProducts: <#T##String#>, defaultDueDaysAfterFreezing: <#T##String#>, defaultDueDaysAfterThawing: <#T##String#>, shoppingLocationID: <#T##String?#>, userfields: <#T##Userfields?#>))
         }
         #else
         Group {

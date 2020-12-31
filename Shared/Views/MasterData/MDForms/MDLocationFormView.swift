@@ -58,7 +58,7 @@ struct MDLocationFormView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("str.md.location.info")){
+            Section(header: Text(LocalizedStringKey("str.md.location.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.location.name.required", errorMessage: "str.md.location.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
