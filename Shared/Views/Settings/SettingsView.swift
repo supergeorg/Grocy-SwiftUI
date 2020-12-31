@@ -107,8 +107,8 @@ struct SettingsView: View {
             Section(header: Text("App")){
                 Toggle("Simplified Stock View", isOn: $simplifiedStockView)
                 Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
-                    Text("English").tag("en")
-                    Text("Deutsch").tag("de")
+                    Text("🇬🇧 English").tag("en")
+                    Text("🇩🇪 Deutsch").tag("de")
                 })
                 NavigationLink(
                     destination: AboutView(),
@@ -166,8 +166,8 @@ struct SettingsView: View {
                 }
                 Toggle("Simplified Stock View", isOn: $simplifiedStockView)
                 Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
-                    Text("English").tag("en")
-                    Text("Deutsch").tag("de")
+                    Text("🇬🇧 English").tag("en")
+                    Text("🇩🇪 Deutsch").tag("de")
                 })
                 Button(action: {
                     showAbout.toggle()

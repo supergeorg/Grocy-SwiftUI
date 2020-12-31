@@ -77,7 +77,7 @@ struct MDUserFieldsView: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
-                            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
                                 isSearching.toggle()
                             }, label: {Image(systemName: "magnifyingglass")})
@@ -95,8 +95,8 @@ struct MDUserFieldsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddUserField, content: {
                                 MDUserFieldFormView(isNewUserField: true)
-//                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
+                                    //                                    .padding()
+                                    .frame(maxWidth: 400, maxHeight: 500)
                             })
                         }
                     }
@@ -119,10 +119,10 @@ struct MDUserFieldsView: View {
                         Button(action: {
                             showAddUserField.toggle()
                         }, label: {Image(systemName: "plus")})
-                        //                        .sheet(isPresented: self.$showAddUserField, content: {
-                        //                                NavigationView {
-                        //                                    MDUserFieldFormView(isNewUserField: true)
-                        //                                } })
+                        .sheet(isPresented: self.$showAddUserField, content: {
+                                NavigationView {
+                                    MDUserFieldFormView(isNewUserField: true)
+                                } })
                     }
                 }
             }
@@ -137,7 +137,7 @@ struct MDUserFieldsView: View {
             if grocyVM.mdUserFields.isEmpty {
                 Text("str.md.empty \("str.md.userFields".localized)")
             } else if filteredUserFields.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             //            #if os(macOS)
             ForEach(filteredUserFields, id:\.id) { userField in
@@ -156,12 +156,12 @@ struct MDUserFieldsView: View {
             //            #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.userFields".localized)
+        .navigationTitle(LocalizedStringKey("str.md.userFields"))
         .onAppear(perform: {
             updateData()
         })
         .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text("str.md.userFields.delete.confirm"), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+            Alert(title: Text(LocalizedStringKey("str.md.userFields.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                 deleteUserField(toDelID: userFieldToDelete?.id ?? "")
             }, secondaryButton: .cancel())
         }

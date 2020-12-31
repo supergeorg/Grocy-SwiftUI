@@ -33,7 +33,7 @@ struct SearchBar: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
         let searchBar = UISearchBar(frame: .zero)
         searchBar.delegate = context.coordinator
-        searchBar.placeholder = placeholder
+        searchBar.placeholder = placeholder.localized
         searchBar.searchBarStyle = .minimal
         searchBar.autocapitalizationType = .none
         return searchBar
@@ -51,7 +51,7 @@ struct SearchBar: NSViewRepresentable {
     public typealias NSViewType = NSSearchField
     
     public func makeNSView(context: Context) -> NSViewType {
-        let nsView = NSSearchField(string: placeholder)
+        let nsView = NSSearchField(string: placeholder.localized)
         
         nsView.delegate = context.coordinator
         nsView.target = context.coordinator

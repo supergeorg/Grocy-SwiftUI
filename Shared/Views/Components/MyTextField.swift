@@ -70,14 +70,9 @@ struct MyTextField: View {
                 }
                 if isEditing {
                     TextField(LocalizedStringKey(description2), text: self.$textToEdit)
-                        //                        .autocapitalization(.none)
                         .disableAutocorrection(true)
-                        //                        .textContentType(.URL)
                         .font(.body)
                         .foregroundColor(.primary)
-                        //                        .shadow(color: .red, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
-                        //                                            .foregroundColor(.white)
-                        //                                            .padding(.bottom, 15)
                         .padding(.top, 15)
                         .onTapGesture {
                             self.isEnteringText = true

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyDoubleStepper: View {
     @Binding var amount: Double
-
+    
     var description: String
     var descriptionInfo: String?
     var minAmount: Double
@@ -31,15 +31,15 @@ struct MyDoubleStepper: View {
                     Image(systemName: "questionmark.circle.fill")
                         .help(LocalizedStringKey(descriptionInfo ?? ""))
                     #elseif os(iOS)
-                    Button(action: {
-                        showInfo.toggle()
-                    }, label: {
-                        Image(systemName: "questionmark.circle.fill")
-                    })
-                    .help(LocalizedStringKey(descriptionInfo ?? ""))
-                    .popover(isPresented: $showInfo, content: {
-                        Text(LocalizedStringKey(descriptionInfo!))
-                    })
+                    Image(systemName: "questionmark.circle.fill")
+                        .onTapGesture {
+                            showInfo.toggle()
+                        }
+                        .help(LocalizedStringKey(descriptionInfo ?? ""))
+                        .popover(isPresented: $showInfo, content: {
+                            Text(LocalizedStringKey(descriptionInfo!))
+                                .padding()
+                        })
                     #endif
                 }
             }

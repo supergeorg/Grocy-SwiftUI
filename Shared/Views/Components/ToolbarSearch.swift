@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ToolbarSearch: View {
-    @Binding var searchString: String
+    @Binding var text: String
+    var placeholder: String
     
     @Namespace private var animationNameSpace
     
     @State private var isExpanded: Bool = false
     
     func checkIfShouldExpand() {
-        if !searchString.isEmpty {
+        if !text.isEmpty {
             isExpanded = true
         } else {
 //            isExpanded = false
@@ -27,7 +28,7 @@ struct ToolbarSearch: View {
         if !isExpanded {
             Image(systemName: "magnifyingglass")
                 .onTapGesture {
-                    searchString = ""
+                    text = ""
                     isExpanded.toggle()
                 }
                 .matchedGeometryEffect(id: "search", in: animationNameSpace)
@@ -37,12 +38,12 @@ struct ToolbarSearch: View {
                     Image(systemName: "xmark.circle")
                 })
                 .matchedGeometryEffect(id: "search", in: animationNameSpace)
-                TextField("str.md.search \("str.md.quantityUnits".localized)", text: $searchString)
+                TextField(LocalizedStringKey("str.md.search \("str.md.quantityUnits".localized)"), text: $text)
                     .padding()
             }
         }
         }
-        .onChange(of: searchString, perform: { value in
+        .onChange(of: text, perform: { value in
             checkIfShouldExpand()
         })
         .onAppear(perform: {
@@ -54,8 +55,8 @@ struct ToolbarSearch: View {
 struct ToolbarSearch_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ToolbarSearch(searchString: Binding.constant(""))
-            ToolbarSearch(searchString: Binding.constant("Suche"))
+            ToolbarSearch(text: Binding.constant(""), placeholder: "Search")
+            ToolbarSearch(text: Binding.constant("Searchstring"), placeholder: "Search")
         }
     }
 }
