@@ -25,7 +25,7 @@ struct ShoppingListActionView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(spacing: 5){
-                Text("str.shL.action.addItem".localized)
+                Text(LocalizedStringKey("str.shL.action.addItem"))
                     .padding(paddingAmount)
                     .foregroundColor(.white)
                     .background(Color.blue)
@@ -37,7 +37,7 @@ struct ShoppingListActionView: View {
                         ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
                             .padding()
                     })
-                Text("str.shL.action.clearList".localized)
+                Text(LocalizedStringKey("str.shL.action.clearList"))
                     .padding(paddingAmount)
                     .foregroundColor(.red)
                     .overlay(
@@ -47,17 +47,17 @@ struct ShoppingListActionView: View {
                     .onTapGesture {
                         slAction(.clear)
                     }
-//                Text("str.shL.action.addListItemsToStock".localized)
-//                    .padding(paddingAmount)
-//                    .foregroundColor(.blue)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-//                            .stroke(Color.blue, lineWidth: 1)
-//                    )
-//                    .onTapGesture {
-//                        print("not implemented")
-//                    }
-                Text("str.shL.action.addBelowMinStock".localized)
+                Text(LocalizedStringKey("str.shL.action.addListItemsToStock"))
+                    .padding(paddingAmount)
+                    .foregroundColor(.blue)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: cornerRadiusValue)
+                            .stroke(Color.blue, lineWidth: 1)
+                    )
+                    .onTapGesture {
+                        print("not implemented")
+                    }
+                Text(LocalizedStringKey("str.shL.action.addBelowMinStock"))
                     .padding(paddingAmount)
                     .foregroundColor(.blue)
                     .overlay(
@@ -67,7 +67,7 @@ struct ShoppingListActionView: View {
                     .onTapGesture {
                         slAction(.addMissing)
                     }
-                Text("str.shL.action.addOverdue".localized)
+                Text(LocalizedStringKey("str.shL.action.addOverdue"))
                     .padding(paddingAmount)
                     .foregroundColor(.blue)
                     .overlay(

@@ -20,6 +20,10 @@ struct ShoppingListRowView: View {
         grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock}) ?? MDQuantityUnit(id: "0", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
     }
     
+    var amountString: String {
+        return "\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)"
+    }
+    
     var body: some View {
         HStack{
             ShoppingListRowActionsView(shoppingListItem: shoppingListItem)
@@ -28,7 +32,7 @@ struct ShoppingListRowView: View {
                 Text(product.name)
                     .font(.headline)
                     .strikethrough(shoppingListItem.done == "1")
-                Text("\("str.shL.amount".localized): \(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))
                     .strikethrough(shoppingListItem.done == "1")
             }
             .foregroundColor(shoppingListItem.done == "1" ? Color.gray : Color.primary)

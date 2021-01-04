@@ -78,16 +78,16 @@ struct ShoppingListEntryFormView: View {
         #elseif os(iOS)
         NavigationView {
             content
-                .navigationTitle(isNewShoppingListEntry ? "str.shL.newEntry.new.title" : "str.shL.newEntry.edit.title")
+                .navigationTitle(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title"))
                 .toolbar{
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("str.cancel") {
+                        Button(LocalizedStringKey("str.cancel")) {
                             self.presentationMode.wrappedValue.dismiss()
                         }
                         .keyboardShortcut(.cancelAction)
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("str.save") {
+                        Button(LocalizedStringKey("str.save")) {
                             saveShoppingListEntry()
                             self.presentationMode.wrappedValue.dismiss()
                         }
@@ -95,6 +95,7 @@ struct ShoppingListEntryFormView: View {
                         .disabled(!isFormValid)
                     }
                 }
+                .animation(.default)
         }
         #endif
     }
@@ -102,14 +103,15 @@ struct ShoppingListEntryFormView: View {
     var content: some View {
         Form {
             #if os(macOS)
-            Text(isNewShoppingListEntry ? "str.shL.newEntry.new.title" : "str.shL.newEntry.edit.title").font(.headline)
+            Text(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title")).font(.headline)
             #endif
-            Picker(selection: $shoppingListID, label: Text("str.shL.newEntry.shoppingList"), content: {
+            Picker(selection: $shoppingListID, label: Text(LocalizedStringKey("str.shL.entryForm.shoppingList")), content: {
                 ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shLDescription in
                     Text(shLDescription.name).tag(shLDescription.id)
                 }
             })
-            Picker(selection: $productID, label: Text("str.shL.newEntry.product"), content: {
+            
+            Picker(selection: $productID, label: Text(LocalizedStringKey("str.shL.entryForm.product")), content: {
                 ForEach(grocyVM.mdProducts, id:\.id) { mdProduct in
                     Text(mdProduct.name).tag(mdProduct.id)
                 }
@@ -118,31 +120,34 @@ struct ShoppingListEntryFormView: View {
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     quantityUnitID = selectedProduct.quIDPurchase
                 }
+                print(productID)
             }
-            Section(header: Text("str.shL.newEntry.amount".localized).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.shL.newEntry.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.shL.newEntry.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.shL.newEntry.quantityUnit".localized, systemImage: "scalemass"), content: {
+            
+            Section(header: Text(LocalizedStringKey("str.shL.entryForm.amount")).font(.headline)) {
+                MyIntStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.shL.entryForm.amount.required", systemImage: "number.circle")
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.shL.entryForm.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
                     }
                 }).disabled(true)
             }
+            
             Section(header: HStack {
-                Text("str.shL.newEntry.note")
+                Text(LocalizedStringKey("str.shL.entryForm.note"))
                 Image(systemName: "square.and.pencil")
-            }) {
+            }.font(.headline)) {
                 TextEditor(text: $note)
                     .frame(height: 50)
             }
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveShoppingListEntry()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -151,7 +156,6 @@ struct ShoppingListEntryFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: insertToEditForm)
     }
 }

@@ -17,7 +17,9 @@ struct ShoppingListView: View {
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
     
-    @State private var showDeleteAlert: Bool = false
+    @State private var showSHLDeleteAlert: Bool = false
+    @State private var shlItemToDelete: ShoppingListItem? = nil
+    @State private var showEntryDeleteAlert: Bool = false
     
     #if os(macOS)
     @State private var showNewShoppingList: Bool = false
@@ -53,7 +55,11 @@ struct ShoppingListView: View {
                         return product.name.localizedCaseInsensitiveContains(searchString)
                     } else { return false }} else { return true }
             }
-            .filter{shLItem in
+    }
+    
+    var filteredShoppingList: ShoppingList {
+        selectedShoppingList
+            .filter{ shLItem in
                 switch filteredStatus {
                 case .all:
                     return true
@@ -67,7 +73,7 @@ struct ShoppingListView: View {
     
     var shoppingListProductGroups: MDProductGroups {
         var groupIDs = Set<String>()
-        for shLItem in selectedShoppingList {
+        for shLItem in filteredShoppingList {
             if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
                 if let productGroupID = product.productGroupID {groupIDs.insert(productGroupID)}
             }
@@ -84,7 +90,7 @@ struct ShoppingListView: View {
     
     var groupedShoppingList: [String : ShoppingList] {
         var dict: [String : ShoppingList] = [:]
-        for listItem in selectedShoppingList {
+        for listItem in filteredShoppingList {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID})
             let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID})
             if (dict[productGroup?.id ?? "?"] == nil) {
@@ -93,6 +99,25 @@ struct ShoppingListView: View {
             dict[productGroup?.id ?? "?"]?.append(listItem)
         }
         return dict
+    }
+    
+    var numBelowStock: Int {
+        selectedShoppingList
+            .filter{ shLItem in
+                checkBelowStock(item: shLItem)
+            }
+            .count
+    }
+    
+    private func deleteItem(at offsets: IndexSet) {
+        for offset in offsets {
+            shlItemToDelete = selectedShoppingList[offset]
+            showEntryDeleteAlert.toggle()
+        }
+    }
+    private func deleteSHLItem(toDelID: String) {
+        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
+        updateData()
     }
     
     func deleteShoppingList() {
@@ -121,7 +146,7 @@ struct ShoppingListView: View {
                     Button(action: {
                         showNewShoppingList.toggle()
                     }, label: {
-                        Label("str.shL.new", systemImage: "plus")
+                        Label(LocalizedStringKey("str.shL.new"), systemImage: "plus")
                     })
                     .popover(isPresented: $showNewShoppingList, content: {
                         ShoppingListFormView(isNewShoppingListDescription: true)
@@ -131,7 +156,7 @@ struct ShoppingListView: View {
                     Button(action: {
                         showEditShoppingList.toggle()
                     }, label: {
-                        Label("str.shL.edit", systemImage: "square.and.pencil")
+                        Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
                     })
                     .popover(isPresented: $showEditShoppingList, content: {
                         ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
@@ -139,13 +164,13 @@ struct ShoppingListView: View {
                             .frame(width: 250, height: 150)
                     })
                     Button(action: {
-                        showDeleteAlert.toggle()
+                        showSHLDeleteAlert.toggle()
                     }, label: {
-                        Label("str.shL.delete".localized, systemImage: "trash")
+                        Label(LocalizedStringKey("str.shL.delete"), systemImage: "trash")
                             .foregroundColor(.red)
                     })
-                    .alert(isPresented: $showDeleteAlert) {
-                        Alert(title: Text("str.shL.delete.confirm".localized), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Fehler"), primaryButton: .destructive(Text("str.delete".localized)) {
+                    .alert(isPresented: $showSHLDeleteAlert) {
+                        Alert(title: Text(LocalizedStringKey("str.shL.delete.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Fehler"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                             deleteShoppingList()
                         }, secondaryButton: .cancel())
                     }
@@ -170,21 +195,21 @@ struct ShoppingListView: View {
                                 activeSheet = .newShoppingList
                                 isShowingSheet.toggle()
                             }, label: {
-                                Label("str.shL.new", systemImage: "plus")
+                                Label(LocalizedStringKey("str.shL.new"), systemImage: "plus")
                             })
                             Button(action: {
                                 activeSheet = .editShoppingList
                                 isShowingSheet.toggle()
                             }, label: {
-                                Label("str.shL.edit", systemImage: "square.and.pencil")
+                                Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
                             })
                             Button(action: {
                                 showDeleteAlert.toggle()
                             }, label: {
-                                Label("str.shL.delete".localized, systemImage: "trash")
+                                Label(LocalizedStringKey("str.shL.delete"), systemImage: "trash")
                                     .foregroundColor(.red)
                             })
-                            Picker(selection: $selectedShoppingListID, label: Text("list: "), content: {
+                            Picker(selection: $selectedShoppingListID, label: Text(""), content: {
                                 ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shoppingListDescription in
                                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                                 }
@@ -213,7 +238,7 @@ struct ShoppingListView: View {
                 }
             })
             .alert(isPresented: $showDeleteAlert) {
-                Alert(title: Text("str.shL.delete.confirm".localized), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Fehler"), primaryButton: .destructive(Text("str.delete".localized)) {
+                Alert(title: Text(LocalizedStringKey("str.shL.delete.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                     deleteShoppingList()
                 }, secondaryButton: .cancel())
             }
@@ -223,7 +248,7 @@ struct ShoppingListView: View {
     var content: some View {
         List{
             Group {
-                //                ShoppingListFilterActionView()
+                ShoppingListFilterActionView(filteredStatus: $filteredStatus, numBelowStock: numBelowStock)
                 ShoppingListActionView(selectedShoppingListID: $selectedShoppingListID)
                 ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
             }
@@ -232,13 +257,21 @@ struct ShoppingListView: View {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) {shItem in
                         ShoppingListRowView(shoppingListItem: shItem)
                     }
+                    .onDelete(perform: deleteItem)
                 }
             }
         }
-        .navigationTitle("str.shL".localized)
+        .navigationTitle(LocalizedStringKey("str.shL"))
         .onAppear(perform: {
             updateData()
         })
+        .alert(isPresented: $showEntryDeleteAlert) {
+            Alert(title: Text(LocalizedStringKey("str.shL.entry.delete.confirm")), message: Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "product name error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
+                if let deleteID = shlItemToDelete?.id {
+                    deleteSHLItem(toDelID: deleteID)
+                } else {print("delete error")}
+            }, secondaryButton: .cancel())
+        }
     }
 }
 

@@ -47,40 +47,41 @@ struct ShoppingListFormView: View {
         #elseif os(iOS)
         NavigationView {
             content
-                .navigationTitle(isNewShoppingListDescription ? "str.shL.new.title" : "str.shL.edit.title")
+                .navigationTitle(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit"))
                 .toolbar{
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("str.cancel") {
+                        Button(LocalizedStringKey("str.cancel")) {
                             self.presentationMode.wrappedValue.dismiss()
                         }
                         .keyboardShortcut(.cancelAction)
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("str.save") {
+                        Button(LocalizedStringKey("str.save")) {
                             saveShoppingList()
                             self.presentationMode.wrappedValue.dismiss()
                         }
                         .keyboardShortcut(.defaultAction)
                     }
                 }
+                .animation(.default)
         }
         #endif
     }
-
+    
     var content: some View {
         Form {
             #if os(macOS)
-            Text(isNewShoppingListDescription ? "str.shL.new.title" : "str.shL.edit.title").font(.headline)
+            Text(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit")).font(.headline)
             #endif
-            MyTextField(textToEdit: $name, description: "str.shL.new.name", isCorrect: $isNameCorrect, leadingIcon: "rectangle.and.pencil.and.ellipsis", isEditing: true, errorMessage: "str.shL.new.name.required")
+            MyTextField(textToEdit: $name, description: "str.shL.form.name", isCorrect: $isNameCorrect, leadingIcon: "rectangle.and.pencil.and.ellipsis", isEditing: true, emptyMessage: "str.shL.form.name.required", errorMessage: "str.shL.form.name.exists")
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveShoppingList()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -88,7 +89,6 @@ struct ShoppingListFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: resetForm)
     }
 }

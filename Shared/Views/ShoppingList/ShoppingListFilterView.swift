@@ -14,17 +14,12 @@ struct ShoppingListFilterView: View {
     var body: some View {
         HStack{
             SearchBar(text: $searchString, placeholder: "str.search".localized)
-            Picker(selection: $filteredStatus, label: Label("str.shL.filter.status".localized, systemImage: "line.horizontal.3.decrease.circle"), content: {
+            Picker(selection: $filteredStatus, label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: "line.horizontal.3.decrease.circle"), content: {
                 Text(ShoppingListStatus.all.rawValue.localized).tag(ShoppingListStatus.all)
                 Text(ShoppingListStatus.belowMinStock.rawValue.localized).tag(ShoppingListStatus.belowMinStock)
                 Text(ShoppingListStatus.undone.rawValue.localized).tag(ShoppingListStatus.undone)
 
             }).pickerStyle(MenuPickerStyle())
-            Text("str.shL.filter.reset")
-                .onTapGesture {
-                    searchString = ""
-                    filteredStatus = .all
-                }
         }
         .padding(.trailing, 5)
     }

@@ -432,11 +432,11 @@
 			isa = PBXGroup;
 			children = (
 				7880F0F0256FB4CB00FB8431 /* ShoppingListView.swift */,
-				7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */,
-				7891C64D257E43460014C59E /* ShoppingListRowActionsView.swift */,
 				78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */,
 				78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */,
 				78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */,
+				7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */,
+				7891C64D257E43460014C59E /* ShoppingListRowActionsView.swift */,
 				7880F111256FC92800FB8431 /* ShoppingListFormView.swift */,
 				78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */,
 			);

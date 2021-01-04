@@ -211,15 +211,12 @@
 "str.shL.print" = "Drucken";
 "str.shL.amount" = "Menge";
 
-"str.shL.new.title" = "Einkaufszettel erstellen";
-"str.shL.new.name" = "Name";
-"str.shL.new.name.required" = "Name";
-"str.shL.new.save" = "Speichern";
-
-"str.shL.edit.title" = "Einkaufszettel bearbeiten";
-"str.shL.edit.name" = "Name";
-"str.shL.edit.name.required" = "Name";
-"str.shL.edit.save" = "Speichern";
+"str.shL.form.new" = "Einkaufszettel erstellen";
+"str.shL.form.edit" = "Einkaufszettel bearbeiten";
+"str.shL.form.name" = "Name";
+"str.shL.form.name.required" = "Ein Name ist erforderlich";
+"str.shL.form.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
+"str.shL.form.save" = "Speichern";
 
 "str.shL.action.addItem" = "Eintrag hinzufügen";
 "str.shL.action.clearList" = "Liste leeren";
@@ -230,24 +227,28 @@
 "str.shL.filter.status" = "Status";
 "str.shL.filter.reset" = "Filter zurücksetzen";
 "str.shL.filter.all" = "Alle";
-"str.shL.filter.belowMinStock" = "unter Mindestbestand";
-"str.shL.filter.undone" = "unerledigte Einträge";
-"str.shL.filter.productAmount1" = "1 Produkt ist";
-"str.shL.filter.productAmount" = "Produkte sind";
+"str.shL.filter.belowMinStock" = "Unter Mindestbestand";
+"str.shL.filter.undone" = "Nur unerledigte Einträge";
+"str.shL.filter.info.1belowMinStock" = "1 Produkt ist unter Mindestbestand";
+"str.shL.filter.info.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
+"str.shL.filter.info.1undone" = "1 Eintrag ist noch nicht erledigt";
+"str.shL.filter.info.undone %lld" = "%lld Einträge sind noch nicht erledigt";
 
-"str.shL.newEntry.new.title" = "Einkaufszettel Eintrag erstellen";
-"str.shL.newEntry.edit.title" = "Einkaufszettel Eintrag bearbeiten";
-"str.shL.newEntry.shoppingList" = "Einkaufszettel";
-"str.shL.newEntry.product" = "Produkt";
-"str.shL.newEntry.amount" = "Menge";
-"str.shL.newEntry.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
-"str.shL.newEntry.quantityUnit" = "Mengeneinheit";
-"str.shL.newEntry.note" = "Notiz";
+"str.shL.entryForm.new.title" = "Einkaufszettel Eintrag erstellen";
+"str.shL.entryForm.edit.title" = "Einkaufszettel Eintrag bearbeiten";
+"str.shL.entryForm.shoppingList" = "Einkaufszettel";
+"str.shL.entryForm.product" = "Produkt";
+"str.shL.entryForm.amount" = "Menge";
+"str.shL.entryForm.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.shL.entryForm.quantityUnit" = "Mengeneinheit";
+"str.shL.entryForm.note" = "Notiz";
 
 "str.shL.entry.done" = "Diesen Eintrag als erledigt markieren";
 "str.shL.entry.edit" = "Diesen Eintrag bearbeiten";
 "str.shL.entry.delete" = "Diesen Eintrag löschen";
+"str.shL.entry.delete.confirm" = "Möchtest du wirklich diesen Eintrag löschen?";
 "str.shL.entry.add %@" = "Füge %@ dem Bestand hinzu";
+"str.shL.entry.info.amount %@" = "Menge: %@";
 
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";

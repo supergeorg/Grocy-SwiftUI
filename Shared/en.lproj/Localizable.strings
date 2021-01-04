@@ -197,6 +197,55 @@
 "str.stock.journal.location" = "Location";
 "str.stock.journal.user" = "Done by";
 
+// MARK: - Shopping List
+"str.shL" = "Shopping list";
+"str.shL.manage" = "Manage shopping lists";
+"str.shL.new" = "New shopping list";
+"str.shL.edit" = "Edit shopping list";
+"str.shL.delete" = "Delete shopping list";
+"str.shL.delete.confirm" = "Do you really want to delete this shopping list?";
+"str.shL.print" = "Print";
+"str.shL.amount" = "Amount";
+
+"str.shL.form.new" = "Create shopping list";
+"str.shL.form.edit" = "Edit shopping list";
+"str.shL.form.name" = "Name";
+"str.shL.form.name.required" = "A name is required";
+"str.shL.form.name.exists" = "Name already exists";
+"str.shL.form.save" = "Save";
+
+"str.shL.action.addItem" = "Add item";
+"str.shL.action.clearList" = "Clear list";
+"str.shL.action.addListItemsToStock" = "Add all list items to stock";
+"str.shL.action.addBelowMinStock" = "Add products that are below defined min. stock amount";
+"str.shL.action.addOverdue" = "Add overdue/expired products";
+
+"str.shL.filter.status" = "Status";
+"str.shL.filter.reset" = "Reset filter";
+"str.shL.filter.all" = "All";
+"str.shL.filter.belowMinStock" = "Below min. stock amount";
+"str.shL.filter.undone" = "Only undone items";
+"str.shL.filter.info.1belowMinStock" = "1 product is below min. defined stock amount";
+"str.shL.filter.info.belowMinStock %lld" = "%lld products are below min. defined stock amount";
+"str.shL.filter.info.1undone" = "1 Entry is undone";
+"str.shL.filter.info.undone %lld" = "%lld entries are undone";
+
+"str.shL.entryForm.new.title" = "Create shopping list item";
+"str.shL.entryForm.edit.title" = "Edit shopping list item";
+"str.shL.entryForm.shoppingList" = "Shopping list";
+"str.shL.entryForm.product" = "Product";
+"str.shL.entryForm.amount" = "Amount";
+"str.shL.entryForm.amount.required" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.shL.entryForm.quantityUnit" = "Quantity unit";
+"str.shL.entryForm.note" = "Note";
+
+"str.shL.entry.done" = "Mark this item as done";
+"str.shL.entry.edit" = "Edit this item";
+"str.shL.entry.delete" = "Delete this item";
+"str.shL.entry.delete.confirm" = "Do you really want to delete this item?";
+"str.shL.entry.add %@" = "Add %@ to stock";
+"str.shL.entry.info.amount %@" = "Amount: %@";
+
 // MARK: - Master Data
 "str.md.masterData" = "Master Data";
 "str.md.description" = "Description";
