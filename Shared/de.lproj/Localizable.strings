@@ -81,12 +81,14 @@
 "str.stock.productGroup" = "Produktgruppe";
 "str.stock.status" = "Status";
 "str.stock.all" = "Alle";
-"str.stock.productAmount1" = "1 Produkt ist";
-"str.stock.productAmount" = "Produkte sind";
-"str.stock.expiringSoon" = "bald ablaufend";
-"str.stock.overdue" = "überfällig";
-"str.stock.expired" = "bereits abgelaufen";
-"str.stock.belowMinStock" = "unter Mindestbestand";
+"str.stock.1expiringSoon %lld" = "1 Produkt ist fällig innerhalb der nächsten %lld Tage";
+"str.stock.1overdue" = "1 Produkt ist überfällig";
+"str.stock.1expired" = "1 Produkt ist bereits abgelaufen";
+"str.stock.1belowMinStock" = "1 Produkt ist unter Mindestbestand";
+"str.stock.expiringSoon %lld %lld" = "%lld Produkte sind fällig innerhalb der nächsten %lld Tage";
+"str.stock.overdue %lld" = "%lld Produkte sind überfällig";
+"str.stock.expired %lld" = "%lld Produkte sind bereits abgelaufen";
+"str.stock.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
 
 "str.stock.entry.description %@ %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; %@";
 "str.stock.entry.status.notOpened" = "Nicht geöffnet";

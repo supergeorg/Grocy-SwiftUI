@@ -81,12 +81,14 @@
 "str.stock.productGroup" = "Product group";
 "str.stock.status" = "Status";
 "str.stock.all" = "All";
-"str.stock.productAmount1" = "1 product is";
-"str.stock.productAmount" = "products are";
-"str.stock.expiringSoon" = "expiring soon";
-"str.stock.overdue" = "overdue";
-"str.stock.expired" = "already expired";
-"str.stock.belowMinStock" = "below min. stock amount";
+"str.stock.1expiringSoon %lld" = "1 product is due within the next %lld days";
+"str.stock.1overdue" = "1 product is overdue";
+"str.stock.1expired" = "1 product is expired";
+"str.stock.1belowMinStock" = "1 product is below min. defined stock amount";
+"str.stock.expiringSoon %lld %lld" = "%lld products are due within the next %lld days";
+"str.stock.overdue %lld" = "%lld products are overdue";
+"str.stock.expired %lld" = "%lld products are expired";
+"str.stock.belowMinStock %lld" = "%lld products are below min. defined stock amount";
 
 "str.stock.entry.description %@ %@ %@ %@" = "Amount: %@; Due on %@; Bought on %@; %@";
 "str.stock.entry.status.notOpened" = "Not opened";

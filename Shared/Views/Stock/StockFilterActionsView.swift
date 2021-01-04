@@ -8,6 +8,7 @@
 import SwiftUI
 
 private struct StockFilterItemView: View {
+    @AppStorage("expiringDays") var expiringDays: Int = 5
     @Environment(\.colorScheme) var colorScheme
     var num: Int
     @Binding var filteredStatus: ProductStatus
@@ -28,7 +29,7 @@ private struct StockFilterItemView: View {
                 }
                 #if os(iOS)
                 if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                    Text(ownFilteredStatus.getDescription(amount: num))
+                    Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
                         .bold()
                         .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 } else {
@@ -40,7 +41,7 @@ private struct StockFilterItemView: View {
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 }
                 #elseif os(macOS)
-                Text(ownFilteredStatus.getDescription(amount: num))
+                Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
                     .bold()
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 #endif

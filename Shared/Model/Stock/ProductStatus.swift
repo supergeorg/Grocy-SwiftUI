@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum ProductStatus: String {
     case all = "str.stock.all"
@@ -14,20 +15,18 @@ enum ProductStatus: String {
     case expired = "str.stock.expired"
     case belowMinStock = "str.stock.belowMinStock"
     
-    func getDescription(amount: Int) -> String {
-        let amountString = amount > 1 ? "\(amount) \("str.stock.productAmount".localized)" : "str.stock.productAmount1".localized
-        //        let amountString = amount > 1 ? "str.stock.productAmount \(amount)".localized : "str.stock.productAmount1".localized
+    func getDescription(amount: Int, expiringDays: Int? = 5) -> LocalizedStringKey {
         switch self {
         case .all:
-            return "\(amountString)"
+            return "no description"
         case .expiringSoon:
-            return "\(amountString) \("str.stock.expiringSoon".localized)"
+            return amount == 1 ? LocalizedStringKey("str.stock.1expiringSoon \(expiringDays ?? 5)") : LocalizedStringKey("str.stock.expiringSoon \(amount) \(expiringDays ?? 5)")
         case .overdue:
-            return "\(amountString) \("str.stock.overdue".localized)"
+            return amount == 1 ? LocalizedStringKey("str.stock.1overdue") : LocalizedStringKey("str.stock.overdue \(amount)")
         case .expired:
-            return "\(amountString) \("str.stock.expired".localized)"
+            return amount == 1 ? LocalizedStringKey("str.stock.1expired") : LocalizedStringKey("str.stock.expired \(amount)")
         case .belowMinStock:
-            return "\(amountString) \("str.stock.belowMinStock".localized)"
+            return amount == 1 ? LocalizedStringKey("str.stock.1belowMinStock") : LocalizedStringKey("str.stock.belowMinStock \(amount)")
         }
     }
     
