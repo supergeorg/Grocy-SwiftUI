@@ -19,22 +19,22 @@ struct StockFilterBar: View {
         VStack{
             #if os(iOS)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                SearchBar(text: $searchString, placeholder: "str.search".localized)
+                SearchBar(text: $searchString, placeholder: "str.search")
             }
             #endif
         HStack{
             #if os(iOS)
             if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                SearchBar(text: $searchString, placeholder: "str.search".localized)
+                SearchBar(text: $searchString, placeholder: "str.search")
             }
             #else
-            SearchBar(text: $searchString, placeholder: "str.search".localized)
+            SearchBar(text: $searchString, placeholder: "str.search")
             #endif
             Spacer()
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
                 Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {
-                    Text("str.stock.all").tag("")
+                    Text(LocalizedStringKey("str.stock.all")).tag("")
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id)
                     }
@@ -44,7 +44,7 @@ struct StockFilterBar: View {
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
                 Picker(selection: $filteredProductGroup, label: Text(LocalizedStringKey("str.stock.productGroup")), content: {
-                    Text("str.stock.all").tag("")
+                    Text(LocalizedStringKey("str.stock.all")).tag("")
                     ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id)
                     }
@@ -54,18 +54,18 @@ struct StockFilterBar: View {
             HStack{
                 Image(systemName: "line.horizontal.3.decrease.circle")
                 Picker(selection: $filteredStatus, label: Text(LocalizedStringKey("str.stock.status")), content: {
-                    Text(ProductStatus.all.rawValue.localized)
+                    Text(LocalizedStringKey(ProductStatus.all.rawValue))
                         .tag(ProductStatus.all)
-                    Text(ProductStatus.expiringSoon.rawValue.localized)
+                    Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
                         .tag(ProductStatus.expiringSoon)
                         .background(Color.grocyYellowLight)
-                    Text(ProductStatus.overdue.rawValue.localized)
+                    Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
                         .tag(ProductStatus.overdue)
                         .background(Color.grocyGrayLight)
-                    Text(ProductStatus.expired.rawValue.localized)
+                    Text(LocalizedStringKey(ProductStatus.expired.rawValue))
                         .tag(ProductStatus.expired)
                         .background(Color.grocyRedLight)
-                    Text(ProductStatus.belowMinStock.rawValue.localized)
+                    Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
                         .tag(ProductStatus.belowMinStock)
                         .background(Color.grocyBlueLight)
                 }).pickerStyle(MenuPickerStyle())

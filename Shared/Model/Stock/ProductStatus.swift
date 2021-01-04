@@ -10,23 +10,23 @@ import SwiftUI
 
 enum ProductStatus: String {
     case all = "str.stock.all"
-    case expiringSoon = "str.stock.expiringSoon"
-    case overdue = "str.stock.overdue"
-    case expired = "str.stock.expired"
-    case belowMinStock = "str.stock.belowMinStock"
+    case expiringSoon = "str.stock.status.expiringSoon"
+    case overdue = "str.stock.status.overdue"
+    case expired = "str.stock.status.expired"
+    case belowMinStock = "str.stock.status.belowMinStock"
     
     func getDescription(amount: Int, expiringDays: Int? = 5) -> LocalizedStringKey {
         switch self {
         case .all:
             return "no description"
         case .expiringSoon:
-            return amount == 1 ? LocalizedStringKey("str.stock.1expiringSoon \(expiringDays ?? 5)") : LocalizedStringKey("str.stock.expiringSoon \(amount) \(expiringDays ?? 5)")
+            return amount == 1 ? LocalizedStringKey("str.stock.info.1expiringSoon \(expiringDays ?? 5)") : LocalizedStringKey("str.stock.info.expiringSoon \(amount) \(expiringDays ?? 5)")
         case .overdue:
-            return amount == 1 ? LocalizedStringKey("str.stock.1overdue") : LocalizedStringKey("str.stock.overdue \(amount)")
+            return amount == 1 ? LocalizedStringKey("str.stock.info.1overdue") : LocalizedStringKey("str.stock.info.overdue \(amount)")
         case .expired:
-            return amount == 1 ? LocalizedStringKey("str.stock.1expired") : LocalizedStringKey("str.stock.expired \(amount)")
+            return amount == 1 ? LocalizedStringKey("str.stock.info.1expired") : LocalizedStringKey("str.stock.info.expired \(amount)")
         case .belowMinStock:
-            return amount == 1 ? LocalizedStringKey("str.stock.1belowMinStock") : LocalizedStringKey("str.stock.belowMinStock \(amount)")
+            return amount == 1 ? LocalizedStringKey("str.stock.info.1belowMinStock") : LocalizedStringKey("str.stock.info.belowMinStock \(amount)")
         }
     }
     
