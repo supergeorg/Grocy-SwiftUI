@@ -51,11 +51,13 @@ protocol GrocyAPIProvider {
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
     func getSystemConfig() -> AnyPublisher<SystemConfig, APIError>
-    // MARK: - User
+    // MARK: - User management
     func getUsers() -> AnyPublisher<GrocyUsers, APIError>
     func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError>
     func putUserWithID(id: String, user: Data) -> AnyPublisher<ErrorMessage, APIError>
     func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError>
+    // MARK: - Current user
+    func getUser() -> AnyPublisher<GrocyUsers, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
@@ -83,11 +85,6 @@ public class GrocyApi: GrocyAPIProvider {
     
     private var baseURL: String = ""
     private var apiKey: String = ""
-    
-//    init(baseURL: String, apiKey: String) {
-//            self.baseURL = baseURL
-//            self.apiKey = apiKey
-//        }
     
     func setLoginData(baseURL: String, apiKey: String) {
         self.baseURL = baseURL
@@ -251,7 +248,7 @@ extension GrocyApi {
         return call(.systemConfig, method: .GET)
     }
     
-    // MARK: - User
+    // MARK: - User management
     
     func getUsers() -> AnyPublisher<GrocyUsers, APIError> {
         return call(.users, method: .GET)
@@ -267,6 +264,11 @@ extension GrocyApi {
     
     func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError> {
         return call(.usersWithID, method: .DELETE, id: id)
+    }
+    
+    // MARK: - Current user
+    func getUser() -> AnyPublisher<GrocyUsers, APIError> {
+        return call(.user, method: .GET)
     }
     
     // MARK: - Stock
@@ -321,7 +323,7 @@ extension GrocyApi {
     
     func getPictureURL(groupName: String, fileName: String) -> String? {
         let filepath = request(for: .filesGroupFilename, method: .GET, id: fileName, groupName: groupName, query: "?force_serve_as=picture").url?.absoluteString
-        if groupName == "userfiles" {
+        if groupName == "userfiles" || groupName == "userpictures" {
             return filepath?.replacingOccurrences(of: "/api", with: "")
         } else {
             return filepath

@@ -12,6 +12,7 @@ struct GrocyUser: Codable {
     let id, username: String
     let firstName, lastName: String?
     let rowCreatedTimestamp, displayName: String
+    let pictureFileName: String?
 
     enum CodingKeys: String, CodingKey {
         case id, username
@@ -19,6 +20,7 @@ struct GrocyUser: Codable {
         case lastName = "last_name"
         case rowCreatedTimestamp = "row_created_timestamp"
         case displayName = "display_name"
+        case pictureFileName = "picture_file_name"
     }
 }
 

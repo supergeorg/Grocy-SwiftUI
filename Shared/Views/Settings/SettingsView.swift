@@ -11,6 +11,7 @@ struct SettingsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @State var showGrocyVersion: Bool = false
+    @State var showUserInfo: Bool = false
     @State var showAbout: Bool = false
     
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
@@ -19,12 +20,17 @@ struct SettingsView: View {
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
     
-    @AppStorage("localizationKey") var localizationKey: String = "de"
+    @AppStorage("localizationKey") var localizationKey: String = "en"
+    
+    func updateData() {
+        grocyVM.getSystemInfo()
+        grocyVM.getUser()
+    }
     
     #if os(iOS)
     @State private var isShowingScanner = false
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
-       self.isShowingScanner = false
+        self.isShowingScanner = false
         switch result {
         case .success(let code):
             let grocyServerData = code.components(separatedBy: "|")
@@ -33,11 +39,11 @@ struct SettingsView: View {
             var serverURL = grocyServerData[0]
             serverURL = serverURL.replacingOccurrences(of: "/api", with: "")
             let apiKey = grocyServerData[1]
-
+            
             if apiKey.count == 50 {
                 grocyServerURL = serverURL
                 grocyAPIKey = apiKey
-            
+                
                 grocyVM.setLoginModus()
                 grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
             }
@@ -58,7 +64,7 @@ struct SettingsView: View {
             #endif
         }
         .background(Rectangle().fill(BackgroundStyle()).ignoresSafeArea())
-        .navigationTitle("str.settings")
+        .navigationTitle(LocalizedStringKey("str.settings"))
     }
     
     var container: some View {
@@ -95,11 +101,11 @@ struct SettingsView: View {
                     .sheet(isPresented: $isShowingScanner) {
                         CodeScannerView(codeTypes: [.qr], simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
                     }
-                    Button("Login") {
+                    Button(LocalizedStringKey("str.settings.login")) {
                         grocyVM.setLoginModus()
                         grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
                     }
-                    Button("Demo") {
+                    Button(LocalizedStringKey("str.settings.login.demo")) {
                         grocyVM.setDemoModus()
                     }
                 }
@@ -118,7 +124,7 @@ struct SettingsView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.getSystemInfo()
+            updateData()
         })
         .navigationTitle(LocalizedStringKey("str.settings"))
     }
@@ -141,6 +147,21 @@ struct SettingsView: View {
                     .popover(isPresented: $showGrocyVersion, content: {
                         GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")).padding()
                     })
+                    Button(action: {
+                        showUserInfo.toggle()
+                    }, label: {
+                        HStack{
+                            Image(systemName: "person")
+                            Text("user")
+                        }
+                    })
+                    .popover(isPresented: $showUserInfo, content: {
+                        if let currentUser = grocyVM.currentUser.first {
+                            GrocyUserInfoView(grocyUser: currentUser)
+                                .padding()
+                        } else {Text("cant load user data")}
+                    })
+                    Text(isDemoModus ? "Demo server" : grocyServerURL)
                     Button("str.settings.logout") {
                         isLoggedIn = false
                     }
@@ -184,7 +205,7 @@ struct SettingsView: View {
         }
         .padding(.bottom, 90)
         .onAppear(perform: {
-            grocyVM.getSystemInfo()
+            updateData()
         })
     }
 }

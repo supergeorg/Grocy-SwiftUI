@@ -16,8 +16,8 @@ enum getDataMode {
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPIProvider
     
-    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo.grocy.info"
-    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
+    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo.grocy.info"
+    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
@@ -31,6 +31,7 @@ class GrocyViewModel: ObservableObject {
     @Published var systemConfig: SystemConfig?
     
     @Published var users: GrocyUsers = []
+    @Published var currentUser: GrocyUsers = []
     @Published var stock: Stock = []
     @Published var stockJournal: StockJournal = []
     @Published var shoppingListDescriptions: ShoppingListDescriptions = []
@@ -61,16 +62,16 @@ class GrocyViewModel: ObservableObject {
         if !isDemoModus {
             grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         } else {
-            grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
-            //            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+            //            grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
+            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
         //        self.lastLoadingFailed = true
     }
     
     func setDemoModus() {
-        grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
-        //        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+        //        grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
+        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
         isDemoModus = true
         isLoggedIn = true
     }
@@ -217,7 +218,15 @@ class GrocyViewModel: ObservableObject {
         let jsonUser = try! JSONEncoder().encode(user)
         //                print(String(data: jsonUser, encoding: .utf8)!)
         grocyApi.postUser(user: jsonUser)
-            .replaceError(with: ErrorMessage(errorMessage: "delete user error"))
+            .replaceError(with: ErrorMessage(errorMessage: "post user error"))
+            .assign(to: \.lastError, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func putUser(id: String, user: GrocyUserPOST) {
+        let jsonUser = try! JSONEncoder().encode(user)
+        grocyApi.putUserWithID(id: id, user: jsonUser)
+            .replaceError(with: ErrorMessage(errorMessage: "put user error"))
             .assign(to: \.lastError, on: self)
             .store(in: &cancellables)
     }
@@ -234,6 +243,14 @@ class GrocyViewModel: ObservableObject {
         var startvar = 0
         while ints.contains(startvar) { startvar += 1 }
         return startvar
+    }
+    
+    // MARK: - Current user
+    func getUser() {
+        grocyApi.getUser()
+            .replaceError(with: [])
+            .assign(to: \.currentUser, on: self)
+            .store(in: &cancellables)
     }
     
     // MARK: - Stock management
@@ -271,7 +288,7 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-//        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
+        //        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -287,9 +304,9 @@ class GrocyViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-//            .replaceError(with: [])
-//            .assign(to: \.lastErrors, on: self)
-//            .store(in: &cancellables)
+        //            .replaceError(with: [])
+        //            .assign(to: \.lastErrors, on: self)
+        //            .store(in: &cancellables)
     }
     
     func undoBookingWithID(id: String) {
@@ -404,8 +421,8 @@ class GrocyViewModel: ObservableObject {
                     self.lastErrors = lastError
                 }
             }
-//            .replaceError(with: [])
-//            .assign(to: \.lastErrors, on: self)
+            //            .replaceError(with: [])
+            //            .assign(to: \.lastErrors, on: self)
             .store(in: &cancellables)
     }
     
