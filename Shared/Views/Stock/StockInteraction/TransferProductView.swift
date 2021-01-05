@@ -16,7 +16,7 @@ struct TransferProductView: View {
     
     @State private var productID: String = ""
     @State private var locationIDFrom: String = ""
-    @State private var amount: Double = 1.0
+    @State private var amount: Double = 0.0
     @State private var quantityUnitID: String = ""
     @State private var locationIDTo: String = ""
     @State private var useSpecificStockEntry: Bool = false
@@ -48,7 +48,7 @@ struct TransferProductView: View {
     private func resetForm() {
         productID = productToTransferID ?? ""
         locationIDFrom = ""
-        amount = 1.0
+        amount = 0.0
         quantityUnitID = ""
         locationIDTo = ""
         useSpecificStockEntry = false
@@ -147,9 +147,9 @@ struct TransferProductView: View {
                 }
             })
             
-            Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.consume.product.quantityUnit", systemImage: "scalemass"), content: {
+            Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
+                MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: "number.circle")
+                Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)

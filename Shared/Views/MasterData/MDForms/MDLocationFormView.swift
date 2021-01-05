@@ -66,34 +66,7 @@ struct MDLocationFormView: View {
                 MyTextField(textToEdit: $mdLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
             }
             Section(header: Text(LocalizedStringKey("str.md.location.freezer"))){
-                HStack(alignment: .center) {
-                    Image(systemName: "thermometer.snowflake")
-                    Toggle(LocalizedStringKey("str.md.location.isFreezing"), isOn: $isFreezer)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer()
-                    #if os(macOS)
-                    Button(action: {showFreezerInfo.toggle()}, label: {
-                        Image(systemName: "info.circle")
-                    })
-                    .popover(isPresented: $showFreezerInfo, arrowEdge: .top, content: {
-                        Text(LocalizedStringKey("str.md.location.isFreezing.description"))
-                            .padding()
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: 300, maxHeight: 150)
-                    })
-                    #else
-                    Image(systemName: "info.circle")
-                        .onTapGesture {
-                            showFreezerInfo.toggle()
-                        }
-                    #endif
-                }
-                #if os(iOS)
-                if showFreezerInfo {
-                    Text(LocalizedStringKey("str.md.location.isFreezing.description"))
-                        .font(.caption)
-                }
-                #endif
+                MyToggle(isOn: $isFreezer, description: "str.md.location.isFreezing", descriptionInfo: "str.md.location.isFreezing.description", icon: "thermometer.snowflake")
             }
             #if os(macOS)
             HStack{

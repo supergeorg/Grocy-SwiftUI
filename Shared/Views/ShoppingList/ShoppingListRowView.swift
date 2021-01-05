@@ -10,6 +10,8 @@ import SwiftUI
 struct ShoppingListRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var shoppingListItem: ShoppingListItem
     
     var product: MDProduct {
@@ -24,6 +26,22 @@ struct ShoppingListRowView: View {
         return "\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)"
     }
     
+    func checkBelowStock(item: ShoppingListItem) -> Bool {
+        if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
+            if Double(product.minStockAmount) ?? 0 < Double(item.amount) ?? 1 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    var backgroundColor: Color {
+        if checkBelowStock(item: shoppingListItem) {
+            return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
+        }
+        return Color.clear
+    }
+    
     var body: some View {
         HStack{
             ShoppingListRowActionsView(shoppingListItem: shoppingListItem)
@@ -36,7 +54,9 @@ struct ShoppingListRowView: View {
                     .strikethrough(shoppingListItem.done == "1")
             }
             .foregroundColor(shoppingListItem.done == "1" ? Color.gray : Color.primary)
+            Spacer()
         }
+        .background(backgroundColor)
     }
 }
 

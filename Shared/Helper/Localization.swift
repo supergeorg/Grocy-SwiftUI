@@ -9,7 +9,8 @@ import Foundation
 
 extension String {
     var localized: String {
-        let language = Locale.current.languageCode
+//        let language = Locale.current.languageCode
+        let language = Locale.autoupdatingCurrent.languageCode
         let path = Bundle.main.path(forResource: language, ofType: "lproj")!
         let bundle = Bundle(path: path)!
         return NSLocalizedString(self, bundle: bundle, comment: "")

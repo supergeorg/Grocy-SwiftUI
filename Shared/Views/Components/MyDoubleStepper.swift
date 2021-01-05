@@ -62,7 +62,7 @@ struct MyDoubleStepper: View {
                     Text(LocalizedStringKey(errorMessage!))
                         .font(.caption)
                         .foregroundColor(.red)
-                        .frame(width: 200)
+                        .frame(width: 250)
                 }
             }
         }

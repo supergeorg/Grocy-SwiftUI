@@ -15,7 +15,7 @@ struct ConsumeProductView: View {
     var productToConsumeID: String?
     
     @State private var productID: String = ""
-    @State private var amount: Double = 1.0
+    @State private var amount: Double = 0.0
     @State private var quantityUnitID: String = ""
     @State private var locationID: String = ""
     @State private var spoiled: Bool = false
@@ -50,7 +50,7 @@ struct ConsumeProductView: View {
     
     private func resetForm() {
         productID = productToConsumeID ?? ""
-        amount = 1.0
+        amount = 0.0
         quantityUnitID = ""
         locationID = ""
         spoiled = false
@@ -159,7 +159,7 @@ struct ConsumeProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.required", systemImage: "number.circle")
+                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.consume.product.amount.invalid", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
@@ -186,14 +186,20 @@ struct ConsumeProductView: View {
                     Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
                         Text("Not implemented").tag("nI")
                     })
+                    #if os(macOS)
+                    Image(systemName: "questionmark.circle.fill")
+                        .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                    #elseif os(iOS)
                     Image(systemName: "questionmark.circle.fill")
                         .onTapGesture {
-                            showRecipeInfo.toggle()
+                            showInfo.toggle()
                         }
-                        .popover(isPresented: $showRecipeInfo, content: {
+                        .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                        .popover(isPresented: $showInfo, content: {
                             Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
                                 .padding()
                         })
+                    #endif
                 }
             }
         }

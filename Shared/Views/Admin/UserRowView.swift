@@ -33,7 +33,7 @@ struct UserRowActionsView: View {
                     showDeleteAction.toggle()
                 }
                 .alert(isPresented:$showDeleteAction) {
-                    Alert(title: Text("str.admin.user.delete.question".localized), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                    Alert(title: Text(LocalizedStringKey("str.admin.user.delete.question")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                         grocyVM.deleteUser(id: user.id)
                         grocyVM.getUsers()
                     }, secondaryButton: .cancel())
@@ -64,6 +64,6 @@ struct UserRowView: View {
 
 struct UserRowView_Previews: PreviewProvider {
     static var previews: some View {
-        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name"), isCurrentUser: false)
+        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false)
     }
 }

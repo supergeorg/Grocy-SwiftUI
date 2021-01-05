@@ -204,7 +204,7 @@ struct ShoppingListView: View {
                                 Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
                             })
                             Button(action: {
-                                showDeleteAlert.toggle()
+                                showSHLDeleteAlert.toggle()
                             }, label: {
                                 Label(LocalizedStringKey("str.shL.delete"), systemImage: "trash")
                                     .foregroundColor(.red)
@@ -237,7 +237,7 @@ struct ShoppingListView: View {
                     EmptyView()
                 }
             })
-            .alert(isPresented: $showDeleteAlert) {
+            .alert(isPresented: $showSHLDeleteAlert) {
                 Alert(title: Text(LocalizedStringKey("str.shL.delete.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                     deleteShoppingList()
                 }, secondaryButton: .cancel())

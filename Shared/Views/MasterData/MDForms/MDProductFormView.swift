@@ -162,7 +162,7 @@ struct MDProductFormView: View {
                     })
                 
                 // Active
-                Toggle(LocalizedStringKey("str.md.product.active"), isOn: $active)
+                MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
                 
                 // Parent Product
                 Picker(LocalizedStringKey("str.md.product.parentProduct"), selection: $parentProductID, content: {

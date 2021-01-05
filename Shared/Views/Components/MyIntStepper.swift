@@ -25,15 +25,21 @@ struct MyIntStepper: View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(LocalizedStringKey(description))
-                if helpText != nil {
+                if let helpTextU = helpText {
+                    #if os(macOS)
                     Image(systemName: "questionmark.circle.fill")
-                        .font(.caption)
+                        .help(LocalizedStringKey(helpTextU))
+                    #elseif os(iOS)
+                    Image(systemName: "questionmark.circle.fill")
                         .onTapGesture {
                             showInfo.toggle()
                         }
+                        .help(LocalizedStringKey(helpTextU))
                         .popover(isPresented: $showInfo, content: {
-                            Text(LocalizedStringKey(helpText!)).padding()
+                            Text(LocalizedStringKey(helpTextU))
+                                .padding()
                         })
+                    #endif
                 }
             }
             HStack{
@@ -58,7 +64,7 @@ struct MyIntStepper: View {
                         Text(LocalizedStringKey(errorMessage!))
                             .font(.caption)
                             .foregroundColor(.red)
-                            .frame(width: 200)
+                            .frame(width: 250)
                     }
                 }
             }

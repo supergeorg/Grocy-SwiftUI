@@ -156,10 +156,7 @@ struct PurchaseProductView: View {
                         .disabled(productDoesntSpoil)
                 }
                 
-                HStack {
-                    Image(systemName: "trash.slash")
-                    Toggle(LocalizedStringKey("str.stock.buy.product.doesntSpoil"), isOn: $productDoesntSpoil)
-                }
+                MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: "trash.slash")
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {

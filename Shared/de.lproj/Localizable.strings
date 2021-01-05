@@ -54,6 +54,7 @@
 "str.nav.md.userFields" = "Benutzerfelder";
 "str.nav.md.userEntities" = "Benutzerentitäten";
 "str.nav.settings" = "Einstellungen";
+"str.nav.userManagement" = "Benutzerverwaltung";
 
 // MARK: - Details
 "str.details.title" = "Produktübersicht";
@@ -158,7 +159,7 @@
 "str.stock.transfer.product.locationFrom" = "Von Standort";
 "str.stock.transfer.product.locationFrom.required" = "Ein Standort ist erforderlich";
 "str.stock.transfer.product.amount" = "Menge";
-"str.stock.transfer.product.amount.required" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.transfer.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.transfer.product.quantityUnit" = "Mengeneinheit";
 "str.stock.transfer.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.transfer.product.locationTo" = "Nach Standort";
@@ -166,6 +167,7 @@
 "str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie \"Von Standort\" sein";
 "str.stock.transfer.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
 "str.stock.transfer.product.useStockEntry.description" = "Der erste Eintrag in dieser Liste würde von der Standardregel \"Geöffnete zuerst, dann zuerst fällige, dann First In - First Out\" ausgewählt werden";
+"str.stock.transfer.product.stockEntry" = "Bestandseintrag";
 
 "str.stock.inventory" = "Inventur";
 "str.stock.inventory.product" = "Produkt";
@@ -187,10 +189,6 @@
 "str.stock.inventory.product.location" = "Standort";
 "str.stock.inventory.product.location.info" = "Dies gilt nur für hinzugefügte Produkte";
 "str.stock.inventory.product.location.required" = "Ein Standort muss ausgewählt werden";
-
-"str.stock.transfer.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
-"str.stock.transfer.product.useStockEntry.description" = "TODO";
-"str.stock.transfer.product.stockEntry" = "Bestandseintrag";
 
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
@@ -419,6 +417,8 @@
 
 // MARK: - Settings
 "str.settings" = "Einstellungen";
+"str.settings.login" = "Anmelden";
+"str.settings.login.demo" = "Demo-Server benutzen";
 "str.settings.logout" = "Von Server abmelden";
 "str.settings.info" = "Informationen zum Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
@@ -433,6 +433,7 @@
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";
+"str.admin.user.empty" = "Keine Benutzer gefunden";
 "str.admin.user.tooltip.edit" = "Diesen Eintrag bearbeiten";
 "str.admin.user.tooltip.permissions" = "Benutzerberechtigungen konfigurieren";
 "str.admin.user.tooltip.delete" = "Diesen Eintrag löschen";
@@ -442,6 +443,7 @@
 "str.admin.user.new.edit" = "Benutzer bearbeiten";
 "str.admin.user.new.userName" = "Benutzername";
 "str.admin.user.new.userName.required" = "Ein Benutzername ist erforderlich";
+"str.admin.user.new.userName.exists" = "Ein nicht verwendeter Benutzername ist erforderlich";
 "str.admin.user.new.firstName" = "Vorname";
 "str.admin.user.new.lastName" = "Nachname";
 "str.admin.user.new.password" = "Passwort";

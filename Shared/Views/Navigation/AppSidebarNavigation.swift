@@ -66,12 +66,12 @@ struct AppSidebarNavigation: View {
                 #endif
                 Group {
                     NavigationLink(destination: StockView(), tag: NavigationItem.stockOverview, selection: $selection) {
-                        Label("str.nav.stockOverview", systemImage: NavigationItem.stockOverview.rawValue)
+                        Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: NavigationItem.stockOverview.rawValue)
                     }
                     .tag(NavigationItem.stockOverview)
                     
                     NavigationLink(destination: ShoppingListView(), tag: NavigationItem.shoppingList, selection: $selection) {
-                        Label("str.nav.shoppingList", systemImage: NavigationItem.shoppingList.rawValue)
+                        Label(LocalizedStringKey("str.nav.shoppingList"), systemImage: NavigationItem.shoppingList.rawValue)
                     }
                     .tag(NavigationItem.shoppingList)
                     
@@ -124,22 +124,22 @@ struct AppSidebarNavigation: View {
                 
                 Group {
                     NavigationLink(destination: PurchaseProductView(), tag: NavigationItem.purchase, selection: $selection) {
-                        Label("str.nav.purchase", systemImage: NavigationItem.purchase.rawValue)
+                        Label(LocalizedStringKey("str.nav.purchase"), systemImage: NavigationItem.purchase.rawValue)
                     }
                     .tag(NavigationItem.purchase)
                     
                     NavigationLink(destination: ConsumeProductView(), tag: NavigationItem.consume, selection: $selection) {
-                        Label("str.nav.consume", systemImage: NavigationItem.consume.rawValue)
+                        Label(LocalizedStringKey("str.nav.consume"), systemImage: NavigationItem.consume.rawValue)
                     }
                     .tag(NavigationItem.consume)
                     
                     NavigationLink(destination: TransferProductView(), tag: NavigationItem.transfer, selection: $selection) {
-                        Label("str.nav.transfer", systemImage: NavigationItem.transfer.rawValue)
+                        Label(LocalizedStringKey("str.nav.transfer"), systemImage: NavigationItem.transfer.rawValue)
                     }
                     .tag(NavigationItem.transfer)
                     
                     NavigationLink(destination: InventoryProductView(), tag: NavigationItem.inventory, selection: $selection) {
-                        Label("str.nav.inventory", systemImage: NavigationItem.inventory.rawValue)
+                        Label(LocalizedStringKey("str.nav.inventory"), systemImage: NavigationItem.inventory.rawValue)
                     }
                     .tag(NavigationItem.inventory)
                     
@@ -155,29 +155,29 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 Group {
-                    Section(header: Label("str.nav.md".localized, systemImage: NavigationItem.masterData.rawValue)) {
+                    Section(header: Label(LocalizedStringKey("str.nav.md"), systemImage: NavigationItem.masterData.rawValue)) {
                         NavigationLink(destination: MDProductsView(), tag: NavigationItem.mdProducts, selection: $selection) {
-                            Label("str.nav.md.products", systemImage: NavigationItem.mdProducts.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.products"), systemImage: NavigationItem.mdProducts.rawValue)
                         }
                         .tag(NavigationItem.mdProducts)
                         
                         NavigationLink(destination: MDLocationsView(), tag: NavigationItem.mdLocations, selection: $selection) {
-                            Label("str.nav.md.locations", systemImage: NavigationItem.mdLocations.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.locations"), systemImage: NavigationItem.mdLocations.rawValue)
                         }
                         .tag(NavigationItem.mdLocations)
                         
                         NavigationLink(destination: MDShoppingLocationsView(), tag: NavigationItem.mdShoppingLocations, selection: $selection) {
-                            Label("str.nav.md.shoppingLocations", systemImage: NavigationItem.mdShoppingLocations.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.shoppingLocations"), systemImage: NavigationItem.mdShoppingLocations.rawValue)
                         }
                         .tag(NavigationItem.mdShoppingLocations)
                         
                         NavigationLink(destination: MDQuantityUnitsView(), tag: NavigationItem.mdQuantityUnits, selection: $selection) {
-                            Label("str.nav.md.quantityUnits", systemImage: NavigationItem.mdQuantityUnits.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.quantityUnits"), systemImage: NavigationItem.mdQuantityUnits.rawValue)
                         }
                         .tag(NavigationItem.mdQuantityUnits)
                         
                         NavigationLink(destination: MDProductGroupsView(), tag: NavigationItem.mdProductGroups, selection: $selection) {
-                            Label("str.nav.md.productGroups", systemImage: NavigationItem.mdProductGroups.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.productGroups"), systemImage: NavigationItem.mdProductGroups.rawValue)
                         }
                         .tag(NavigationItem.mdProductGroups)
                         
@@ -197,12 +197,12 @@ struct AppSidebarNavigation: View {
                         //                        .tag(NavigationItem.mdTaskCategories)
                         
                         NavigationLink(destination: MDUserFieldsView(), tag: NavigationItem.mdUserFields, selection: $selection) {
-                            Label("str.nav.md.userFields", systemImage: NavigationItem.mdUserFields.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.userFields"), systemImage: NavigationItem.mdUserFields.rawValue)
                         }
                         .tag(NavigationItem.mdUserFields)
                         
                         NavigationLink(destination: MDUserEntitiesView(), tag: NavigationItem.mdUserEntities, selection: $selection) {
-                            Label("str.nav.md.userEntities", systemImage: NavigationItem.mdUserEntities.rawValue)
+                            Label(LocalizedStringKey("str.nav.md.userEntities"), systemImage: NavigationItem.mdUserEntities.rawValue)
                         }
                         .tag(NavigationItem.mdUserEntities)
                     }
@@ -211,12 +211,12 @@ struct AppSidebarNavigation: View {
                 
                 #if os(iOS)
                 NavigationLink(destination: SettingsView(), tag: NavigationItem.settings, selection: $selection) {
-                    Label("str.nav.settings", systemImage: NavigationItem.settings.rawValue)
+                    Label(LocalizedStringKey("str.nav.settings"), systemImage: NavigationItem.settings.rawValue)
                 }
                 #endif
                 
                 NavigationLink(destination: UserManagementView(), tag: NavigationItem.userManagement, selection: $selection) {
-                    Label("User Management", systemImage: NavigationItem.userManagement.rawValue)
+                    Label(LocalizedStringKey("str.nav.userManagement"), systemImage: NavigationItem.userManagement.rawValue)
                 }
                 .tag(NavigationItem.userManagement)
             }

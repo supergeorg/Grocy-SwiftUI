@@ -54,6 +54,7 @@
 "str.nav.md.userFields" = "User fields";
 "str.nav.md.userEntities" = "User entities";
 "str.nav.settings" = "Settings";
+"str.nav.userManagement" = "User management";
 
 // MARK: - Details
 "str.details.title" = "Product overview";
@@ -158,7 +159,7 @@
 "str.stock.transfer.product.locationFrom" = "From location";
 "str.stock.transfer.product.locationFrom.required" = "A location is required";
 "str.stock.transfer.product.amount" = "Amount";
-"str.stock.transfer.product.amount.required" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.transfer.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.stock.transfer.product.quantityUnit" = "Quantity unit";
 "str.stock.transfer.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.transfer.product.locationTo" = "To location";
@@ -166,6 +167,7 @@
 "str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
 "str.stock.transfer.product.useStockEntry" = "Use a specific stock item";
 "str.stock.transfer.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
+"str.stock.transfer.product.stockEntry" = "Stock entry";
 
 "str.stock.inventory" = "Inventory";
 "str.stock.inventory.product" = "Product";
@@ -402,6 +404,8 @@
 
 // MARK: - Settings
 "str.settings" = "Settings";
+"str.settings.login" = "Login";
+"str.settings.login.demo" = "Use demo server";
 "str.settings.logout" = "Logout from server";
 "str.settings.info" = "Information about Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
@@ -413,3 +417,22 @@
 "str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Developer";
+
+// MARK: - Admin
+"str.admin.user" = "User management";
+"str.admin.user.empty" = "No users found";
+"str.admin.user.tooltip.edit" = "Edit this item";
+"str.admin.user.tooltip.permissions" = "Configure user permissions";
+"str.admin.user.tooltip.delete" = "Delete this item";
+"str.admin.user.delete.question" = "Do you really want to delete this user?";
+"str.admin.user.new" = "New user";
+"str.admin.user.new.create" = "Create user";
+"str.admin.user.new.edit" = "Edit user";
+"str.admin.user.new.userName" = "Username";
+"str.admin.user.new.userName.required" = "A username is required";
+"str.admin.user.new.userName.exists" = "Username already exists";
+"str.admin.user.new.firstName" = "First name";
+"str.admin.user.new.lastName" = "Last name";
+"str.admin.user.new.password" = "Password";
+"str.admin.user.new.password.confirm" = "Confirm password";
+"str.admin.user.new.password.mismatch" = "Passwords do not match";

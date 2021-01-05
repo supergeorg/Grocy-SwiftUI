@@ -21,15 +21,21 @@ struct MyToggle: View {
                 Image(systemName: icon!)
             }
             Toggle(LocalizedStringKey(description), isOn: $isOn)
-            if descriptionInfo != nil {
+            if let descriptionInfoU = descriptionInfo {
+                #if os(macOS)
+                Image(systemName: "questionmark.circle.fill")
+                    .help(LocalizedStringKey(descriptionInfoU))
+                #elseif os(iOS)
                 Image(systemName: "questionmark.circle.fill")
                     .onTapGesture {
                         showInfo.toggle()
                     }
+                    .help(LocalizedStringKey(descriptionInfoU))
                     .popover(isPresented: $showInfo, content: {
                         Text(LocalizedStringKey(descriptionInfo!))
                             .padding()
                     })
+                #endif
             }
         }
     }

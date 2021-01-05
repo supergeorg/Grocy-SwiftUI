@@ -33,9 +33,7 @@ struct UserManagementView: View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-//                    ToolbarSearch(isSearching: <#T##Binding<Bool>#>, searchString: <#T##Binding<String>#>)
-//                    ToolbarSearch(searchString: $searchString)
-                    SearchBar(text: $searchString, placeholder: "str.search".localized)
+                    SearchBarSwiftUI(text: $searchString, placeholder: "str.search")
                     Button(action: {
                         withAnimation {
                             self.reloadRotationDeg += 360
@@ -49,7 +47,7 @@ struct UserManagementView: View {
                         showAddUser.toggle()
                     }, label: {
                         HStack{
-                            Text("str.admin.user.new".localized)
+                            Text(LocalizedStringKey("str.admin.user.new"))
                             Image(systemName: "plus")
                         }
                     })
@@ -67,13 +65,13 @@ struct UserManagementView: View {
     var content: some View {
         List{
             if grocyVM.users.isEmpty {
-                Text("Keine Nutzer gefunden.").padding()
+                Text(LocalizedStringKey("str.admin.user.empty")).padding()
             }
             ForEach(filteredUsers, id:\.id) {user in
                 UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
             }
         }
-        .navigationTitle("str.admin.user".localized)
+        .navigationTitle(LocalizedStringKey("str.admin.user"))
         .onAppear(perform: updateData)
         .animation(.default)
     }

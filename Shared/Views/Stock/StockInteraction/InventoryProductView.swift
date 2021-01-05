@@ -15,7 +15,7 @@ struct InventoryProductView: View {
     var productToInventoryID: String?
     
     @State private var productID: String = ""
-    @State private var amount: Int = 1
+    @State private var amount: Int = 0
     @State private var quantityUnitID: String = ""
     @State private var dueDate: Date = Date()
     @State private var productNeverOverdue: Bool = false
@@ -61,7 +61,7 @@ struct InventoryProductView: View {
     
     private func resetForm() {
         productID = productToInventoryID ?? ""
-        amount = 1
+        amount = 0
         quantityUnitID = ""
         dueDate = Date()
         productNeverOverdue = false
