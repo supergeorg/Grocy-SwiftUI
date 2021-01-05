@@ -84,11 +84,15 @@ struct StockJournalRowView: View {
                     .font(.title)
                     .strikethrough(journalEntry.undone == "1", color: .primary)
                 Group {
-                    Text("\("str.stock.journal.amount".localized): \(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                    Text("\("str.stock.journal.transactionTime".localized): \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))")
-                    Text("\("str.stock.journal.transactionType".localized): \(formatTransactionType(journalEntry.transactionType))").font(.caption)
-                    Text("\("str.stock.journal.location".localized): \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
-                    Text("\("str.stock.journal.user".localized): \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
+                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")"))
+                    Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
+                    Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
+                        .font(.caption)
+                        +
+                        Text(journalEntry.transactionType.formatTransactionType())
+                        .font(.caption)
+                    Text(LocalizedStringKey("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")"))
+                    Text(LocalizedStringKey("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")"))
                 }
                 .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
                 .font(.caption)
@@ -148,16 +152,16 @@ struct StockJournalView: View {
         List() {
             StockJournalFilterBar(searchString: $searchString, filteredProduct: $filteredProduct, filteredTransactionType: $filteredTransactionType, filteredLocation: $filteredLocation, filteredUser: $filteredUser)
             if grocyVM.stockJournal.isEmpty {
-                Text("str.stock.journal.empty").padding()
+                Text(LocalizedStringKey("str.stock.journal.empty")).padding()
             } else if filteredJournal.isEmpty {
-                Text("str.noSearchResult").padding()
+                Text(LocalizedStringKey("str.noSearchResult")).padding()
             }
             ForEach(filteredJournal, id: \.id) { journalEntry in
                 StockJournalRowView(journalEntry: journalEntry)
             }
         }
         .onAppear(perform: updateData)
-        .navigationTitle("str.stock.journal".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.journal"))
     }
 }
 

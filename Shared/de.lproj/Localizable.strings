@@ -24,7 +24,11 @@
 "tr.purchase" = "Einkauf";
 "tr.consume" = "Verbrauch";
 "tr.opened" = "Geöffnet";
-"tr.inventory" = "Inventur";
+"tr.inventoryCorrection" = "Inventur";
+"tr.stockEditOld" = "Bestands-Bearbeitung (alt)";
+"tr.stockEditNew" = "Bestands-Bearbeitung (neu)";
+"tr.transferFrom" = "Transfer von";
+"tr.transferTo" = "Transfer nach";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Bestand";
@@ -192,12 +196,12 @@
 
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
-"str.stock.journal.product" = "Produkt";
-"str.stock.journal.amount" = "Menge";
-"str.stock.journal.transactionTime" = "Transaktionszeitpunkt";
-"str.stock.journal.transactionType" = "Transaktionstyp";
-"str.stock.journal.location" = "Standort";
-"str.stock.journal.user" = "Nutzer";
+"str.stock.journal.product.info %@" = "Produkt: %@";
+"str.stock.journal.amount.info %@" = "Menge: %@";
+"str.stock.journal.transactionTime.info %@" = "Transaktionszeitpunkt: %@";
+"str.stock.journal.transactionType.info %@" = "Transaktionstyp: %@";
+"str.stock.journal.location.info %@" = "Standort: %@";
+"str.stock.journal.user.info %@" = "Nutzer: %@";
 
 // MARK: - Shopping List
 "str.shL" = "Einkaufszettel";

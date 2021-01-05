@@ -192,10 +192,10 @@ struct ConsumeProductView: View {
                     #elseif os(iOS)
                     Image(systemName: "questionmark.circle.fill")
                         .onTapGesture {
-                            showInfo.toggle()
+                            showRecipeInfo.toggle()
                         }
                         .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
-                        .popover(isPresented: $showInfo, content: {
+                        .popover(isPresented: $showRecipeInfo, content: {
                             Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
                                 .padding()
                         })

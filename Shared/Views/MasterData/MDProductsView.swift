@@ -108,7 +108,7 @@ struct MDProductsView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     HStack{
-                        if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                        if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                         Button(action: {
                             isSearching.toggle()
                         }, label: {Image(systemName: "magnifyingglass")})

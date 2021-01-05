@@ -24,7 +24,11 @@
 "tr.purchase" = "Purchase";
 "tr.consume" = "Consume";
 "tr.opened" = "Opened";
-"tr.inventory" = "Inventory";
+"tr.inventoryCorrection" = "Inventory";
+"tr.stockEditOld" = "Stock edit (old)";
+"tr.stockEditNew" = "Stock edit (new)";
+"tr.transferFrom" = "Transfer from";
+"tr.transferTo" = "Transfer to";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Stock overview";
@@ -192,12 +196,12 @@
 
 "str.stock.journal" = "Stock journal";
 "str.stock.journal.empty" = "No transactions found.";
-"str.stock.journal.product" = "Product";
-"str.stock.journal.amount" = "Amount";
-"str.stock.journal.transactionTime" = "Transaction time";
-"str.stock.journal.transactionType" = "Transaction type";
-"str.stock.journal.location" = "Location";
-"str.stock.journal.user" = "Done by";
+"str.stock.journal.product.info %@" = "Product: %@";
+"str.stock.journal.amount.info %@" = "Amount: %@";
+"str.stock.journal.transactionTime.info %@" = "Transaction time: %@";
+"str.stock.journal.transactionType.info %@" = "Transaction type: %@";
+"str.stock.journal.location.info %@" = "Location: %@";
+"str.stock.journal.user.info %@" = "Done by: %@";
 
 // MARK: - Shopping List
 "str.shL" = "Shopping list";

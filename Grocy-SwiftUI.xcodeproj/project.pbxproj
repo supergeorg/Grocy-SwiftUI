@@ -44,8 +44,6 @@
 		78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
 		7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */; };
 		7848A0CE256BD2C3004EAF18 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */; };
-		7848A0D4256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */; };
-		7848A0D5256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */; };
 		7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */; };
 		7848A0DC256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */; };
 		7848A0E2256BE3E3004EAF18 /* TransferProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0E1256BE3E3004EAF18 /* TransferProductView.swift */; };
@@ -268,7 +266,6 @@
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
 		78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserInfoView.swift; sourceTree = "<group>"; };
 		7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
-		7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionTypeFormatter.swift; sourceTree = "<group>"; };
 		7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeProductView.swift; sourceTree = "<group>"; };
 		7848A0E1256BE3E3004EAF18 /* TransferProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferProductView.swift; sourceTree = "<group>"; };
 		7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryProductView.swift; sourceTree = "<group>"; };
@@ -663,7 +660,6 @@
 			children = (
 				78CB75A5255EA5A900319108 /* DateFormatter.swift */,
 				78CB75A4255EA5A900319108 /* Localization.swift */,
-				7848A0D3256BDB26004EAF18 /* TransactionTypeFormatter.swift */,
 				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
 				78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */,
 			);
@@ -1010,7 +1006,6 @@
 				7891C64E257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
 				78CB757A255EA39900319108 /* GrocyAPI.swift in Sources */,
 				78CB75C2255EAE2000319108 /* VisualEffectBlur.swift in Sources */,
-				7848A0D4256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */,
 				786F6EC025640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */,
 				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
@@ -1046,7 +1041,6 @@
 				786F6EB325640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				78CB7601255EB9A000319108 /* StockModel.swift in Sources */,
 				78CB7645255EBA6C00319108 /* Colors.swift in Sources */,
-				7848A0D5256BDB26004EAF18 /* TransactionTypeFormatter.swift in Sources */,
 				78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */,
 				7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				78CECD1725879364007780B2 /* MDUserEntitiesView.swift in Sources */,
