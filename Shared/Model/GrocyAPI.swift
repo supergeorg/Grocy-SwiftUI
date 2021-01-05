@@ -125,8 +125,17 @@ public class GrocyApi: GrocyAPIProvider {
         if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: id!) }
         if path.contains("{entryId}") { path = path.replacingOccurrences(of: "{entryId}", with: id!) }
         if path.contains("{productId}") { path = path.replacingOccurrences(of: "{productId}", with: id!) }
+        if path.contains("{productIdToKeep}") { path = path.replacingOccurrences(of: "{productIdToKeep}", with: id!) }
+        if path.contains("{productIdToRemove}") { path = path.replacingOccurrences(of: "{productIdToRemove}", with: id!) }
         if path.contains("{bookingId}") { path = path.replacingOccurrences(of: "{bookingId}", with: id!) }
         if path.contains("{transactionId}") { path = path.replacingOccurrences(of: "{transactionId}", with: id!) }
+        if path.contains("{barcode}") { path = path.replacingOccurrences(of: "{barcode}", with: id!) }
+        if path.contains("{recipeId}") { path = path.replacingOccurrences(of: "{recipeId}", with: id!) }
+        if path.contains("{choreId}") { path = path.replacingOccurrences(of: "{choreId}", with: id!) }
+        if path.contains("{executionId}") { path = path.replacingOccurrences(of: "{executionId}", with: id!) }
+        if path.contains("{batteryId}") { path = path.replacingOccurrences(of: "{batteryId}", with: id!) }
+        if path.contains("{chargeCycleId}") { path = path.replacingOccurrences(of: "{chargeCycleId}", with: id!) }
+        if path.contains("{taskId}") { path = path.replacingOccurrences(of: "{taskId}", with: id!) }
         if path.contains("{group}") { path = path.replacingOccurrences(of: "{group}", with: groupName!) }
         if path.contains("{fileName}") { path = path.replacingOccurrences(of: "{fileName}", with: id!) }
         if query != nil { path += query! }
@@ -149,36 +158,38 @@ public class GrocyApi: GrocyAPIProvider {
 
 extension GrocyApi {
     private enum Endpoint: String {
-        //        Generic
+        //        Generic entity interactions
         case objectsEntity = "/objects/{entity}"
         case objectsEntityWithID = "/objects/{entity}/{objectId}"
-        case objectsEntitySearch = "/objects/{entity}/search/{searchString}"
         case userfieldsEntity = "/userfields/{entity}/{objectId}"
         //        System
         case systemInfo = "/system/info"
         case systemDBChangedTime = "/system/db-changed-time"
         case systemConfig = "/system/config"
+        case systemTime = "/system/time"
         case systemLogMissingLocalization = "/system/log-missing/localization"
         //        User management
         case users = "/users"
         case usersWithID = "/users/{userId}"
-        //        User settings
+        case usersWithIDPermissions = "/users/{userId}/permissions"
+        //        Current user
+        case user = "/user"
         case userSettings = "/user/settings"
         case userSettingsWithKey = "/user/settings/{settingKey}"
         //        Stock
         case stock = "/stock"
-        case stockEntry = "/stock/entry/{entryId}"
+        case stockEntryWithID = "/stock/entry/{entryId}"
         case stockVolatile = "/stock/volatile"
         case stockProductWithId = "/stock/products/{productId}"
         case stockProductWithIdLocations = "/stock/products/{productId}/locations"
         case stockProductWithIdEntries = "/stock/products/{productId}/entries"
         case stockProductWithIdPriceHistory = "/stock/products/{productId}/price-history"
-        case stockProductAdd = "/stock/products/{productId}/add"
-        case stockProductConsume = "/stock/products/{productId}/consume"
-        case stockProductTransfer = "/stock/products/{productId}/transfer"
-        case stockProductInventory = "/stock/products/{productId}/inventory"
-        case stockProductOpen = "/stock/products/{productId}/open"
-        
+        case stockProductWithIDAdd = "/stock/products/{productId}/add"
+        case stockProductWithIDConsume = "/stock/products/{productId}/consume"
+        case stockProductWithIDTransfer = "/stock/products/{productId}/transfer"
+        case stockProductWithIDInventory = "/stock/products/{productId}/inventory"
+        case stockProductWithIDOpen = "/stock/products/{productId}/open"
+        case stockProductMergeWithIDs = "/stock/products/{productIdToKeep}/merge/{productIdToRemove}"
         case stockShoppingListAddMissing = "/stock/shoppinglist/add-missing-products"
         case stockShoppingListAddOverdue = "/stock/shoppinglist/add-overdue-products"
         case stockShoppingListAddExpired = "/stock/shoppinglist/add-expired-products"
@@ -190,14 +201,36 @@ extension GrocyApi {
         case stockTransactionWithID = "/stock/transactions/{transactionId}"
         case stockTransactionWithIDUndo = "/stock/transactions/{transactionId}/undo"
         case stockBarcodeExternalLookup = "/stock/barcodes/external-lookup/{barcode}"
-        
-        //        TODO
         //        Stock by-barcode
+        case stockByBarcode = "​/stock​/products​/by-barcode​/{barcode}"
+        case stockByBarcodeAdd = "​/stock/products/by-barcode/{barcode}/add"
+        case stockByBarcodeConsume = "​/stock/products/by-barcode/{barcode}/consume"
+        case stockByBarcodeTransfer = "​/stock​/products​/by-barcode​/{barcode}/transfer"
+        case stockByBarcodeInventory = "​/stock​/products​/by-barcode​/{barcode}/inventory"
+        case stockByBarcodeOpen = "​/stock​/products​/by-barcode​/{barcode}/open"
         //        Recipes
+        case recipeWithIDAddNotFulfilledShoppingList = "/recipes/{recipeId}/add-not-fulfilled-products-to-shoppinglist"
+        case recipeWithIDFulfillment = "/recipes/{recipeId}/fulfillment"
+        case recipeWithIDConsume = "/recipes/{recipeId}/consume"
+        case recipesFulfillment = "/recipes/fulfillment"
         //        Chores
+        case chores = "/chores"
+        case choreWithID = "/chores/{choreId}"
+        case choreWithIDExecute = "/chores/{choreId}/execute"
+        case choreExecutionWithIDUndo = "/chores/executions/{executionId}/undo"
+        case choreExecutionsCalculateNext = "/chores/executions/calculate-next-assignments"
         //        Batteries
+        case batteries = "/batteries"
+        case batteryWithID = "/batteries/{batteryId}"
+        case batteryWithIDCharge = "/batteries/{batteryId}/charge"
+        case batteryChargeCycleUndo = "/batteries/charge-cycles/{chargeCycleId}/undo"
         //        Tasks
+        case tasks = "/tasks"
+        case taskWithIDComplete = "/tasks/{taskId}/complete"
+        case taskWithIDUndo = "/tasks/{taskId}/undo"
         //        Calendar
+        case calendariCal = "/calendar/ical"
+        case calendariCalSharingLink = "/calendar/ical/sharing-link"
         //        Files
         case filesGroupFilename = "/files/{group}/{fileName}"
     }
@@ -266,15 +299,15 @@ extension GrocyApi {
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError> {
         switch stockModePost {
         case .add:
-            return call(.stockProductAdd, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDAdd, method: .POST, id: id, content: content)
         case .consume:
-            return call(.stockProductConsume, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDConsume, method: .POST, id: id, content: content)
         case .inventory:
-            return call(.stockProductInventory, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDInventory, method: .POST, id: id, content: content)
         case .open:
-            return call(.stockProductOpen, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDOpen, method: .POST, id: id, content: content)
         case .transfer:
-            return call(.stockProductTransfer, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDTransfer, method: .POST, id: id, content: content)
         }
     }
     
