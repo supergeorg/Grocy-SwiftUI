@@ -9,6 +9,7 @@ import SwiftUI
 
 extension AppTabNavigation {
     private enum Tab: String {
+        case quickScanMode = "barcode.viewfinder"
         case stockOverview = "books.vertical"
         case shoppingList = "cart"
         case more = "ellipsis.circle"
@@ -18,11 +19,19 @@ extension AppTabNavigation {
 }
 
 struct AppTabNavigation: View {
-//    @State private var selection: Tab = .shoppingList
     @AppStorage("tabSelection") private var tabSelection: Tab = .shoppingList
     
     var body: some View {
         TabView(selection: $tabSelection) {
+            NavigationView {
+                QuickScanModeView()
+            }
+            .tabItem {
+                Label(LocalizedStringKey("str.nav.quickScan"), systemImage: Tab.quickScanMode.rawValue)
+                    .accessibility(label: Text(LocalizedStringKey("str.nav.quickScan")))
+            }
+            .tag(Tab.quickScanMode)
+            
             NavigationView {
                 StockView()
             }

@@ -59,18 +59,22 @@
 "str.nav.md.userEntities" = "User entities";
 "str.nav.settings" = "Settings";
 "str.nav.userManagement" = "User management";
+"str.nav.quickScan" = "Quick-Scan mode";
 
 // MARK: - Details
 "str.details.title" = "Product overview";
-"str.details.amount" = "Stock amount";
-"str.details.stockValue" = "Stock value";
-"str.details.defaultLocation" = "Default location";
-"str.details.lastPurchaseDate" = "Last purchased";
-"str.details.lastUseDate" = "Last used";
-"str.details.lastPrice" = "Last price";
-"str.details.averagePrice" = "Average price";
-"str.details.averageShelfLife" = "Average shelf life";
-"str.details.spoilRate" = "Spoil rate";
+"str.details.amount" = "Stock amount: ";
+"str.details.stockValue" = "Stock value: ";
+"str.details.defaultLocation" = "Default location: ";
+"str.details.lastPurchaseDate" = "Last purchased: ";
+"str.details.lastUseDate" = "Last used: ";
+"str.details.lastPrice" = "Last price: ";
+"str.details.averagePrice" = "Average price: ";
+"str.details.averageShelfLife" = "Average shelf life: ";
+"str.details.spoilRate" = "Spoil rate: ";
+
+"str.details.never" = "Never";
+"str.details.unknown" = "Unknown";
 
 "str.details.stockEntries" = "Stock entries";
 "str.details.stockJournal" = "Stock journal";
@@ -266,6 +270,7 @@
 
 "str.md.products" = "Products";
 "str.md.product" = "Product";
+"str.md.products.empty" = "No products found.";
 "str.md.product.rowLocation %@" = "Location: %@";
 "str.md.product.rowProductGroup %@" = "Product group: %@";
 "str.md.product.new" = "Create product";
@@ -320,10 +325,23 @@
 "str.md.product.quickConsumeAmount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.dontShowOnStockOverview" = "Never show on stock overview ";
 "str.md.product.dontShowOnStockOverview.info" = "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always";
+"str.md.product.delete.confirm" = "Delete this product";
 "str.md.product.delete.confirm" = "Do you really want to delete this product?";
+
+"str.md.barcodes" = "Barcodes";
+"str.md.barcode" = "Barcode";
+"str.md.barcodes.empty" = "No Barcodes added.";
+"str.md.barcode.new" = "Create barcode";
+"str.md.barcode.edit" = "Edit barcode";
+"str.md.barcode.for %@" = "Barcode for product %@";
+"str.md.barcode.amount" = "Amount";
+"str.md.barcode.quantityUnit" = "Quantity unit";
+"str.md.barcode.shoppingLocation" = "Store";
+"str.md.barcode.info %@ %@" = "Amount: %@, Store: %@";
 
 "str.md.locations" = "Locations";
 "str.md.location" = "Location";
+"str.md.locations.empty" = "No locations found.";
 "str.md.location.new" = "New location";
 "str.md.location.edit" = "Edit location";
 "str.md.location.info" = "Location info";
@@ -333,20 +351,24 @@
 "str.md.location.freezer" = "Freezer";
 "str.md.location.isFreezing" = "Is freezer";
 "str.md.location.isFreezing.description" = "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings";
+"str.md.location.delete.confirm" = "Delete this location";
 "str.md.location.delete.confirm" = "Do you really want to delete this location?";
 
 "str.md.shoppingLocations" = "Shopping locations";
 "str.md.shoppingLocation" = "Shopping location";
+"str.md.shoppingLocations.empty" = "No shopping locations found.";
 "str.md.shoppingLocation.new" = "New shopping location";
 "str.md.shoppingLocation.edit" = "Edit shopping location";
 "str.md.shoppingLocation.info" = "Shopping location info";
 "str.md.shoppingLocation.name" = "Shopping location";
 "str.md.shoppingLocation.name.required" = "A name is required";
 "str.md.shoppingLocation.name.exists" = "Name already exists";
+"str.md.shoppingLocation.delete" = "Delete this shopping location";
 "str.md.shoppingLocation.delete.confirm" = "Do you really want to delete this shopping location?";
 
 "str.md.quantityUnits" = "Quantity units";
 "str.md.quantityUnit" = "Quantity unit";
+"str.md.quantityUnits.empty" = "No quantity units found.";
 "str.md.quantityUnit.new" = "New quantity unit";
 "str.md.quantityUnit.edit" = "Edit quantity unit";
 "str.md.quantityUnit.info" = "Quantity unit info";
@@ -354,16 +376,20 @@
 "str.md.quantityUnit.name.required" = "A name is required";
 "str.md.quantityUnit.name.exists" = "Name already exists";
 "str.md.quantityUnit.namePlural" = "Name (in plural form)";
+"str.md.quantityUnit.delete" = "Delete this quantity unit";
 "str.md.quantityUnit.delete.confirm" = "Do you really want to delete this quantity unit?";
 
 "str.md.productGroups" = "Product groups";
 "str.md.productGroup" = "Product group";
+"str.md.productGroups.empty" = "No product groups found.";
 "str.md.productGroup.new" = "Create product group";
 "str.md.productGroup.edit" = "Edit product group";
 "str.md.productGroup.info" = "Product group info";
 "str.md.productGroup.name" = "Product group name";
 "str.md.productGroup.name.required" = "A name is required";
 "str.md.productGroup.name.exists" = "Name already exists";
+"str.md.productGroup.delete" = "Delete this product group";
+"str.md.productGroup.delete.confirm" = "Do you really want to delete this product group?";
 
 "str.md.chores" = "Hausarbeiten";
 "str.md.batteries" = "Batterien";
@@ -371,6 +397,7 @@
 
 "str.md.userFields" = "Userfields";
 "str.md.userField" = "Userfield";
+"str.md.userFields.empty" = "No userfields found.";
 "str.md.userFields.rowName %@" = "Name: %@";
 "str.md.userFields.rowEntity %@" = "Entity: %@";
 "str.md.userFields.rowType %@" = "Type: %@";
@@ -391,6 +418,7 @@
 "str.md.userField.type" = "Type";
 "str.md.userField.type.required" = "A type is required";
 "str.md.userField.showAsColumnInTables" = "Show as column in tables";
+"str.md.userField.delete" = "Delete this userfield";
 "str.md.userField.delete.confirm" = "Do you really want to delete this userfield?";
 
 "str.md.userField.type.textSingleLine" = "Text (single line)";
@@ -411,6 +439,7 @@
 "str.settings.login" = "Login";
 "str.settings.login.demo" = "Use demo server";
 "str.settings.logout" = "Logout from server";
+"str.settings.loggedInAs %@" = "Logged in as user %@";
 "str.settings.info" = "Information about Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
 "str.settings.info.grocyVersion %@" = "Version: %@";
@@ -421,6 +450,13 @@
 "str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Developer";
+"str.settings.loginQRcode.scan" = "Scan QR-Code for fast login";
+"str.settings.simplifiedStockView" = "Simplified stock view";
+"str.settings.appLanguage" = "App language";
+"str.settings.grocy.server" = "Grocy-Server";
+"str.settings.grocy.serverURL" = "Grocy server adress";
+"str.settings.grocy.apiKey" = "Valid API key";
+"str.settings.grocy.demoServer" = "Demo server";
 
 // MARK: - Admin
 "str.admin.user" = "User management";
@@ -440,3 +476,18 @@
 "str.admin.user.new.password" = "Password";
 "str.admin.user.new.password.confirm" = "Confirm password";
 "str.admin.user.new.password.mismatch" = "Passwords do not match";
+
+// MARK: - Quick Scan
+"str.quickScan.consume" = "Consume";
+"str.quickScan.markAsOpened" = "Mark as opened";
+"str.quickScan.purchase" = "Purchase";
+"str.quickScan.settings" = "Quick-Scan settings";
+"str.quickScan.settings.state.always" = "Always";
+"str.quickScan.settings.state.never" = "Never";
+"str.quickScan.settings.state.onlyFirstInSession" = "Only first in session";
+"str.quickScan.settings.askLocation" = "Ask for location";
+"str.quickScan.settings.askSpecificEntry" = "Ask for specific entry";
+"str.quickScan.settings.consumeAll" = "Consume all entries of the product";
+"str.quickScan.settings.askDueDate" = "Ask for due date";
+"str.quickScan.settings.askPrice" = "Ask for price";
+"str.quickScan.settings.askStore" = "Ask for store";

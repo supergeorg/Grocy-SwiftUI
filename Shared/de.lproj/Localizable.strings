@@ -59,18 +59,22 @@
 "str.nav.md.userEntities" = "Benutzerentitäten";
 "str.nav.settings" = "Einstellungen";
 "str.nav.userManagement" = "Benutzerverwaltung";
+"str.nav.quickScan" = "Quick-Scan-Modus";
 
 // MARK: - Details
 "str.details.title" = "Produktübersicht";
-"str.details.amount" = "Bestand";
-"str.details.stockValue" = "Bestandswert";
-"str.details.defaultLocation" = "Standard-Standort";
-"str.details.lastPurchaseDate" = "Zuletzt gekauft";
-"str.details.lastUseDate" = "Zuletzt verbraucht";
-"str.details.lastPrice" = "Letzter Preis";
-"str.details.averagePrice" = "Durchschnittlicher Preis";
-"str.details.averageShelfLife" = "Durchschnittliche Haltbarkeit";
-"str.details.spoilRate" = "Verderblichkeitsrate";
+"str.details.amount" = "Bestand: ";
+"str.details.stockValue" = "Bestandswert: ";
+"str.details.defaultLocation" = "Standard-Standort: ";
+"str.details.lastPurchaseDate" = "Zuletzt gekauft: ";
+"str.details.lastUseDate" = "Zuletzt verbraucht: ";
+"str.details.lastPrice" = "Letzter Preis: ";
+"str.details.averagePrice" = "Durchschnittlicher Preis: ";
+"str.details.averageShelfLife" = "Durchschnittliche Haltbarkeit: ";
+"str.details.spoilRate" = "Verderblichkeitsrate: ";
+
+"str.details.never" = "Nie";
+"str.details.unknown" = "Unbekannt";
 
 "str.details.stockEntries" = "Bestandseinträge";
 "str.details.stockJournal" = "Bestandsjournal";
@@ -266,6 +270,7 @@
 
 "str.md.products" = "Produkte";
 "str.md.product" = "Produkt";
+"str.md.products.empty" = "Keine Produkte gefunden.";
 "str.md.product.rowLocation %@" = "Standort: %@";
 "str.md.product.rowProductGroup %@" = "Produktgruppe: %@";
 "str.md.product.new" = "Neues Produkt";
@@ -320,10 +325,12 @@
 "str.md.product.quickConsumeAmount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.md.product.dontShowOnStockOverview" = "Nie auf der Bestand-Seite anzeigen";
 "str.md.product.dontShowOnStockOverview.info" = "Die Bestand-Seite listet alle Produkte auf, die derzeit im Bestand oder unter ihrem Mindestbestand sind - aktiviere dies, um dieses Produkt dort nie anzuzeigen";
+"str.md.product.delete" = "Produkt löschen";
 "str.md.product.delete.confirm" = "Möchtest du wirklich dieses Produkt löschen?";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";
+"str.md.barcodes.empty" = "Keine Barcodes eingetragen.";
 "str.md.barcode.new" = "Barcode erstellen";
 "str.md.barcode.edit" = "Barcode bearbeiten";
 "str.md.barcode.for %@" = "Barcode für Produkt %@";
@@ -334,6 +341,7 @@
 
 "str.md.locations" = "Standorte";
 "str.md.location" = "Standort";
+"str.md.locations.empty" = "Keine Standorte gefunden.";
 "str.md.location.new" = "Neuer Standort";
 "str.md.location.edit" = "Bearbeite Standort";
 "str.md.location.info" = "Standortinfo";
@@ -343,20 +351,24 @@
 "str.md.location.freezer" = "Gefrier-Standort";
 "str.md.location.isFreezing" = "Ist ein Gefrier-Standort (also z. B. ein Gefrierschrank)";
 "str.md.location.isFreezing.description" = "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst";
+"str.md.location.delete" = "Standort löschen";
 "str.md.location.delete.confirm" = "Möchtest du wirklich diesen Standort löschen?";
 
 "str.md.shoppingLocations" = "Geschäfte";
 "str.md.shoppingLocation" = "Geschäft";
+"str.md.shoppingLocations.empty" = "Keine Geschäfte gefunden.";
 "str.md.shoppingLocation.new" = "Neues Geschäft";
 "str.md.shoppingLocation.edit" = "Bearbeite Geschäft";
 "str.md.shoppingLocation.info" = "Geschäftsinfo";
 "str.md.shoppingLocation.name" = "Geschäftsname";
 "str.md.shoppingLocation.name.required" = "Ein Name ist erforderlich";
 "str.md.shoppingLocation.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.shoppingLocation.delete" = "Geschäft löschen";
 "str.md.shoppingLocation.delete.confirm" = "Möchtest du wirklich dieses Geschäft löschen?";
 
 "str.md.quantityUnits" = "Mengeneinheiten";
 "str.md.quantityUnit" = "Mengeneinheit";
+"str.md.quantityUnits.empty" = "Keine Mengeneinheiten gefunden.";
 "str.md.quantityUnit.new" = "Neue Mengeneinheit";
 "str.md.quantityUnit.edit" = "Bearbeite Mengeneinheit";
 "str.md.quantityUnit.info" = "Mengeneinheitsinfo";
@@ -364,16 +376,19 @@
 "str.md.quantityUnit.name.required" = "Ein Name ist erforderlich";
 "str.md.quantityUnit.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
 "str.md.quantityUnit.namePlural" = "Name (plural)";
+"str.md.quantityUnit.delete" = "Mengeneinheit löschen";
 "str.md.quantityUnit.delete.confirm" = "Möchtest du wirklich diese Mengeneinheit löschen?";
 
 "str.md.productGroups" = "Produktgruppen";
 "str.md.productGroup" = "Produktgruppe";
+"str.md.productGroups.empty" = "Keine Produktgruppen gefunden.";
 "str.md.productGroup.new" = "Neue Produktgruppe";
 "str.md.productGroup.edit" = "Bearbeite Produktgruppe";
 "str.md.productGroup.info" = "Produktgruppeninfo";
 "str.md.productGroup.name" = "Name der Produktgruppe";
 "str.md.productGroup.name.required" = "Ein Name ist erforderlich";
 "str.md.productGroup.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.productGroup.delete" = "Produktgruppe löschen";
 "str.md.productGroup.delete.confirm" = "Möchtest du wirklich diese Produktgruppe löschen?";
 
 "str.md.chores" = "Hausarbeiten";
@@ -382,6 +397,7 @@
 
 "str.md.userFields" = "Benutzerfelder";
 "str.md.userField" = "Benutzerfeld";
+"str.md.userFields.empty" = "Keine Benutzerfelder gefunden.";
 "str.md.userFields.rowName %@" = "Name: %@";
 "str.md.userFields.rowEntity %@" = "Entität: %@";
 "str.md.userFields.rowType %@" = "Typ: %@";
@@ -402,6 +418,7 @@
 "str.md.userField.type" = "Typ";
 "str.md.userField.type.required" = "Ein Typ muss ausgewählt werden";
 "str.md.userField.showAsColumnInTables" = "Als Spalte in Tabellen anzeigen";
+"str.md.userField.delete" = "Benutzerfeld löschen";
 "str.md.userField.delete.confirm" = "Möchtest du wirklich dieses Benutzerfeld löschen?";
 
 "str.md.userField.type.textSingleLine" = "Text (einzeilig)";
@@ -424,6 +441,7 @@
 "str.settings.login" = "Anmelden";
 "str.settings.login.demo" = "Demo-Server benutzen";
 "str.settings.logout" = "Von Server abmelden";
+"str.settings.loggedInAs %@" = "Als Benutzer %@ angemeldet";
 "str.settings.info" = "Informationen zum Grocy-Server";
 "str.settings.info.version %@" = "Grocy Version %@";
 "str.settings.info.grocyVersion %@" = "Version: %@";
@@ -434,6 +452,13 @@
 "str.settings.about.thanks" = "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Entwickler";
+"str.settings.loginQRcode.scan" = "QR-Code scannen";
+"str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
+"str.settings.appLanguage" = "App-Sprache";
+"str.settings.grocy.server" = "Grocy-Server";
+"str.settings.grocy.serverURL" = "Grocy Server-Adresse";
+"str.settings.grocy.apiKey" = "gültiger API-Key";
+"str.settings.grocy.demoServer" = "Demo-Server";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";
@@ -453,3 +478,18 @@
 "str.admin.user.new.password" = "Passwort";
 "str.admin.user.new.password.confirm" = "Passwort bestätigen";
 "str.admin.user.new.password.mismatch" = "Passwörter stimmen nicht überein";
+
+// MARK: - Quick Scan
+"str.quickScan.consume" = "Verbrauchen";
+"str.quickScan.markAsOpened" = "Als geöffnet markieren";
+"str.quickScan.purchase" = "Einkaufen";
+"str.quickScan.settings" = "Quick-Scan-Einstellungen";
+"str.quickScan.settings.state.always" = "Immer";
+"str.quickScan.settings.state.never" = "Nie";
+"str.quickScan.settings.state.onlyFirstInSession" = "Nur bei ersten Vorgang fragen";
+"str.quickScan.settings.askLocation" = "Nach Standort fragen";
+"str.quickScan.settings.askSpecificEntry" = "Nach bestimmten Eintrag fragen";
+"str.quickScan.settings.consumeAll" = "Alle Einträge eines Produkt verbrauchen";
+"str.quickScan.settings.askDueDate" = "Nach Haltbarkeitsdatum fragen";
+"str.quickScan.settings.askPrice" = "Nach Preis fragen";
+"str.quickScan.settings.askStore" = "Nach Geschäft fragen";
