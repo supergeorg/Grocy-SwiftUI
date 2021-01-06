@@ -175,8 +175,9 @@ struct TransferProductView: View {
             
             if useSpecificStockEntry && !productID.isEmpty {
                 Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
-                    ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.id) { stockProduct in
+                    ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
                         Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
+                            .tag(stockProduct.stockID)
                     }
                 })
             }
