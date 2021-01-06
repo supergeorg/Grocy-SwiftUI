@@ -87,17 +87,22 @@ struct SettingsView: View {
                     NavigationLink(
                         destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")),
                         label: {
-                            Text(LocalizedStringKey("str.settings.info"))
+                            Label(LocalizedStringKey("str.settings.info"), systemImage: "info.circle")
                         })
+                    if let currentUser = grocyVM.currentUser.first {
+                    NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
+                        Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
+                    })
+                    }
                     Button(LocalizedStringKey("str.settings.logout")) {
                         isLoggedIn = false
                     }
                 } else {
-                    MyTextField(textToEdit: $grocyServerURL, description: "Grocy Server URL", isCorrect: Binding.constant(true), leadingIcon: "network")
-                    MyTextField(textToEdit: $grocyAPIKey, description: "Valid API Key", isCorrect: Binding.constant(true), leadingIcon: "key")
-                    Button("Scan QR Code") {
-                        isShowingScanner = true
-                    }
+                    MyTextField(textToEdit: $grocyServerURL, description: "str.settings.grocy.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
+                    MyTextField(textToEdit: $grocyAPIKey, description: "str.settings.grocy.apiKey", isCorrect: Binding.constant(true), leadingIcon: "key")
+                    Button(action: {isShowingScanner = true}, label: {
+                        Label(LocalizedStringKey("str.settings.loginQRcode.scan"), systemImage: "qrcode.viewfinder")
+                    })
                     .sheet(isPresented: $isShowingScanner) {
                         CodeScannerView(codeTypes: [.qr], simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
                     }
@@ -111,15 +116,15 @@ struct SettingsView: View {
                 }
             }
             Section(header: Text("App")){
-                Toggle("Simplified Stock View", isOn: $simplifiedStockView)
-                Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
+                MyToggle(isOn: $simplifiedStockView, description: "str.settings.simplifiedStockView", descriptionInfo: nil, icon: "tablecells")
+                Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag"), content: {
                     Text("🇬🇧 English").tag("en")
                     Text("🇩🇪 Deutsch").tag("de")
                 })
                 NavigationLink(
                     destination: AboutView(),
                     label: {
-                        Text(LocalizedStringKey("str.settings.about"))
+                        Label(LocalizedStringKey("str.settings.about"), systemImage: "info.circle")
                     })
             }
         }
@@ -133,16 +138,14 @@ struct SettingsView: View {
     var contentMac: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading) {
-                Text("Server")
+                Text(LocalizedStringKey("str.settings.grocy.server"))
                     .font(Font.title).bold()
                     .foregroundColor(.secondary)
                 if isLoggedIn {
                     Button(action: {
                         showGrocyVersion.toggle()
                     }, label: {
-                        HStack{
-                            Text("str.settings.info.version \(grocyVM.systemInfo?.grocyVersion.version ?? "Error")")
-                        }
+                        Label(LocalizedStringKey("str.settings.info.version \(grocyVM.systemInfo?.grocyVersion.version ?? "Error")"), systemImage: "info.circle")
                     })
                     .popover(isPresented: $showGrocyVersion, content: {
                         GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")).padding()
@@ -150,10 +153,7 @@ struct SettingsView: View {
                     Button(action: {
                         showUserInfo.toggle()
                     }, label: {
-                        HStack{
-                            Image(systemName: "person")
-                            Text("user")
-                        }
+                        Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
                     })
                     .popover(isPresented: $showUserInfo, content: {
                         if let currentUser = grocyVM.currentUser.first {
@@ -161,32 +161,32 @@ struct SettingsView: View {
                                 .padding()
                         } else {Text("cant load user data")}
                     })
-                    Text(isDemoModus ? "Demo server" : grocyServerURL)
-                    Button("str.settings.logout") {
+                    Text(LocalizedStringKey(isDemoModus ? "str.settings.grocy.demoServer" : grocyServerURL))
+                    Button(LocalizedStringKey("str.settings.logout")) {
                         isLoggedIn = false
                     }
                 } else {
-                    MyTextField(textToEdit: $grocyServerURL, description: "Grocy Server URL", isCorrect: Binding.constant(true), leadingIcon: "network")
+                    MyTextField(textToEdit: $grocyServerURL, description: "str.settings.grocy.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
                     //                                    .onChange(of: grocyServerURL, perform: { value in
                     //                                        checkGrocyURL()
                     //                                    })
-                    MyTextField(textToEdit: $grocyAPIKey, description: "Valid API Key", isCorrect: Binding.constant(true), leadingIcon: "key")
+                    MyTextField(textToEdit: $grocyAPIKey, description: "str.settings.grocy.apiKey", isCorrect: Binding.constant(true), leadingIcon: "key")
                     //                                    .onChange(of: grocyAPIKey, perform: { value in
                     //                                        checkAPIKey()
                     //                                    })
                     HStack{
-                        Button("Login") {
+                        Button(LocalizedStringKey("str.settings.login")) {
                             grocyVM.setLoginModus()
                             grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
                         }
                         Spacer()
-                        Button("Demo") {
+                        Button(LocalizedStringKey("str.settings.login.demo")) {
                             grocyVM.setDemoModus()
                         }
                     }
                 }
-                Toggle("Simplified Stock View", isOn: $simplifiedStockView)
-                Picker(selection: $localizationKey, label: Label("Language", systemImage: "flag"), content: {
+                Toggle(LocalizedStringKey("str.settings.simplifiedStockView"), isOn: $simplifiedStockView)
+                Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag"), content: {
                     Text("🇬🇧 English").tag("en")
                     Text("🇩🇪 Deutsch").tag("de")
                 })

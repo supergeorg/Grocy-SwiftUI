@@ -19,27 +19,12 @@ struct MyIntStepper: View {
     
     var systemImage: String?
     
-    @State private var showInfo: Bool = false
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(LocalizedStringKey(description))
                 if let helpTextU = helpText {
-                    #if os(macOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .help(LocalizedStringKey(helpTextU))
-                    #elseif os(iOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .onTapGesture {
-                            showInfo.toggle()
-                        }
-                        .help(LocalizedStringKey(helpTextU))
-                        .popover(isPresented: $showInfo, content: {
-                            Text(LocalizedStringKey(helpTextU))
-                                .padding()
-                        })
-                    #endif
+                    FieldDescription(description: helpTextU)
                 }
             }
             HStack{

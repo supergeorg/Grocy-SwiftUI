@@ -20,27 +20,12 @@ struct MyDoubleStepper: View {
     
     var systemImage: String?
     
-    @State private var showInfo: Bool = false
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(LocalizedStringKey(description))
-                if descriptionInfo != nil {
-                    #if os(macOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .help(LocalizedStringKey(descriptionInfo ?? ""))
-                    #elseif os(iOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .onTapGesture {
-                            showInfo.toggle()
-                        }
-                        .help(LocalizedStringKey(descriptionInfo ?? ""))
-                        .popover(isPresented: $showInfo, content: {
-                            Text(LocalizedStringKey(descriptionInfo!))
-                                .padding()
-                        })
-                    #endif
+                if let descriptionU = descriptionInfo {
+                    FieldDescription(description: descriptionU)
                 }
             }
             HStack{

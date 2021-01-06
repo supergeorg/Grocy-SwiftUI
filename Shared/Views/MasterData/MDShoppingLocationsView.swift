@@ -138,6 +138,7 @@ struct MDShoppingLocationsView: View {
                     }
                 }
             }
+            .animation(.default)
         #endif
     }
     
@@ -168,7 +169,6 @@ struct MDShoppingLocationsView: View {
             .onDelete(perform: delete)
             #endif
         }
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         .onAppear(perform: {
             updateData()

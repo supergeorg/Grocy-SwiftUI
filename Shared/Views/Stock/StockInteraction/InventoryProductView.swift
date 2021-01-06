@@ -105,12 +105,12 @@ struct InventoryProductView: View {
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("str.cancel") {
+                    Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("str.stock.inventory.product.inventory".localized) {
+                    Button(LocalizedStringKey("str.stock.inventory.product.inventory")) {
                         inventoryProduct()
                         resetForm()
                     }.disabled(!isFormValid)

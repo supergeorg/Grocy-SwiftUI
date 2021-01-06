@@ -19,8 +19,6 @@ struct MyTextField: View {
     var description2: String
     var helpText: String?
     
-    @State private var showInfo: Bool = false
-    
     init(textToEdit: Binding<String>, description: String, isCorrect: Binding<Bool>, leadingIcon: String? = nil, isEditing: Bool? = true, emptyMessage: String? = nil, errorMessage: String? = nil, helpText: String? = nil) {
         self._textToEdit = textToEdit
         self.description = description
@@ -43,15 +41,8 @@ struct MyTextField: View {
         ZStack(alignment: .topLeading) {
             HStack{
                 Spacer()
-                if helpText != nil {
-                    Image(systemName: "questionmark.circle.fill")
-                        .font(.caption)
-                        .onTapGesture {
-                            showInfo.toggle()
-                        }
-                        .popover(isPresented: $showInfo, content: {
-                            Text(LocalizedStringKey(helpText!)).padding()
-                        })
+                if let helpTextU = helpText {
+                    FieldDescription(description: helpTextU)
                 }
             }
             VStack {

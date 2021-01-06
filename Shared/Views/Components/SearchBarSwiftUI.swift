@@ -16,7 +16,7 @@ struct SearchBarSwiftUI: View {
     
     var body: some View {
         HStack {
-            TextField(placeholder.localized, text: $text)
+            TextField(LocalizedStringKey(placeholder), text: $text)
                 .padding(7)
                 .padding(.horizontal, 25)
                 .background(Color.systemGray6)

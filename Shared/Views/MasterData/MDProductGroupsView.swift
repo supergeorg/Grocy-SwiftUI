@@ -86,7 +86,7 @@ struct MDProductGroupsView: View {
             #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.productGroups".localized)
+        .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         .onAppear(perform: {
             grocyVM.getMDProductGroups()
         })
@@ -94,7 +94,7 @@ struct MDProductGroupsView: View {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
                     #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
                     #endif
                     Button(action: {
                         isSearching.toggle()

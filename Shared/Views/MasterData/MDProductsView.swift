@@ -104,6 +104,7 @@ struct MDProductsView: View {
     
     var body: some View {
         #if os(macOS)
+        NavigationView{
         content
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -134,6 +135,7 @@ struct MDProductsView: View {
                     }
                 }
             }
+        }
         #elseif os(iOS)
         content
             .toolbar {

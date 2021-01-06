@@ -135,7 +135,7 @@ struct MDUserFieldsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdUserFields.isEmpty {
-                Text("str.md.empty \("str.md.userFields".localized)")
+                Text(LocalizedStringKey("str.md.userFields.empty"))
             } else if filteredUserFields.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }

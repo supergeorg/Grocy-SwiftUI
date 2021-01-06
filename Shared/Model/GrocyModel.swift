@@ -288,7 +288,7 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-        //        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
+                print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {

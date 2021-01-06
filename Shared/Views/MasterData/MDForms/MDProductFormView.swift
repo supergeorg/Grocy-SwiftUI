@@ -125,6 +125,7 @@ struct MDProductFormView: View {
     var body: some View {
         #if os(macOS)
         content
+            .padding()
         #elseif os(iOS)
         content
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
@@ -258,12 +259,12 @@ struct MDProductFormView: View {
             
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveProduct()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -274,12 +275,12 @@ struct MDProductFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label("str.md.delete \("str.md.product".localized)", systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.product.delete"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
                 .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text("str.md.product.delete.confirm"), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
+                    Alert(title: Text(LocalizedStringKey("str.md.product.delete.confirm")), message: Text(""), primaryButton: .destructive(Text("str.delete")) {
                         deleteLocation()
                         #if os(macOS)
                         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)

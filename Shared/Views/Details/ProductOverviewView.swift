@@ -30,37 +30,37 @@ struct ProductOverviewView: View {
             Text(productDetails.name)
                 .font(.title)
             
-            Text("\("str.details.amount".localized): ").bold()
+            Text(LocalizedStringKey("str.details.amount")).bold()
                 +
                 Text("\(formatAmount(productDetails.stockEntriesAmount)) \(productDetails.stockEntriesAmount == 1 ? productDetails.quantityUnit.name : productDetails.quantityUnit.namePlural)")
             
-            Text("\("str.details.stockValue".localized): ").bold()
+            Text(LocalizedStringKey("str.details.stockValue")).bold()
                 +
                 Text("\(String(format: "%.2f", productDetails.stockValue)) \(productDetails.currency)")
             
-            Text("\("str.details.defaultLocation".localized): ").bold()
+            Text(LocalizedStringKey("str.details.defaultLocation")).bold()
                 +
-                Text("\(productDetails.defaultLocationName)")
+                Text(productDetails.defaultLocationName)
             
-            Text("\("str.details.lastPurchaseDate".localized): ").bold()
+            Text(LocalizedStringKey("str.details.lastPurchaseDate")).bold()
                 +
-                Text("\(formatDateOutput(productDetails.lastPurchaseDate) ?? "Never")")
+                Text(formatDateOutput(productDetails.lastPurchaseDate) ?? "str.details.never")
             
-            Text("\("str.details.lastUseDate".localized): ").bold()
+            Text(LocalizedStringKey("str.details.lastUseDate")).bold()
                 +
-                Text("\(formatDateOutput(productDetails.lastUseDate) ?? "Never")")
+                Text(LocalizedStringKey(formatDateOutput(productDetails.lastUseDate) ?? "str.details.never"))
             
-            Text("\("str.details.lastPrice".localized): ").bold()
+            Text(LocalizedStringKey("str.details.lastPrice")).bold()
                 +
-                Text("\(productDetails.lastPrice > 0 ? String(productDetails.lastPrice) : "No last price") \(productDetails.currency) per \(productDetails.quantityUnit.name)")
+                Text("\(productDetails.lastPrice > 0 ? String(productDetails.lastPrice) : "str.details.unknown") \(productDetails.currency) per \(productDetails.quantityUnit.name)")
             
-            Text("\("str.details.averagePrice".localized): ").bold()
+            Text(LocalizedStringKey("str.details.averagePrice")).bold()
                 +
                 Text("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)")
             
-            Text("\("str.details.averageShelfLife".localized): ").bold()
+            Text(LocalizedStringKey("str.details.averageShelfLife")).bold()
                 +
-                Text(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "Not recorded")
+                Text(LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown"))
             
             if let pictureURL = productDetails.pictureURL {
                 RemoteImageView(withURL: pictureURL)
@@ -71,10 +71,10 @@ struct ProductOverviewView: View {
                 HStack{
                     Button(action: {
                         print("")
-                    }, label: {Text("str.details.stockEntries")})
+                    }, label: {Text(LocalizedStringKey("str.details.stockEntries"))})
                     Button(action: {
                         print("")
-                    }, label: {Text("str.details.stockJournal")})
+                    }, label: {Text(LocalizedStringKey("str.details.stockJournal"))})
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
                     }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})

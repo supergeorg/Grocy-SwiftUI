@@ -5,16 +5,6 @@
 //  Created by Georg Meissner on 01.12.20.
 //
 
-//Text("\("str.details.amount".localized) \(formatAmount(stockEntriesAmount)) \(stockEntriesAmount == 1 ? quantityUnit.name : quantityUnit.namePlural)")
-//Text("\("str.details.stockValue".localized): \("")")
-//Text("\("str.details.defaultLocation".localized): \(grocyVM.mdLocations.first(where: {$0.id == product.locationID})?.name ?? "Location error")")
-//Text("\("str.details.lastPurchaseDate".localized): \(formatDateOutput(stockEntries?.last?.purchasedDate ?? "") ?? "Never")")
-//Text("\("str.details.lastUseDate".localized): \(formatDateOutput(lastUsedDate ?? "") ?? "Never")")
-//Text("\("str.details.lastPrice".localized): \(stockEntries?.last?.price ?? "No last price")")
-//Text("\("str.details.averagePrice".localized): \(String(format: "%.2f", averagePrice)) \(grocyVM.systemConfig?.currency ?? "[Currency]")")
-//Text("\("str.details.averageShelfLife".localized): \("")")
-//Text("\("str.details.spoilRate".localized): \("")")
-
 import Foundation
 
 class ProductDetailsModel: ObservableObject {
