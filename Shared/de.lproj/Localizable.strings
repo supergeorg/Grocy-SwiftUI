@@ -19,6 +19,7 @@
 "str.refresh" = "Aktualisieren";
 "str.close" = "Schließen";
 "str.add" = "Hinzufügen";
+"str.misc" = "Diverses";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";
@@ -308,6 +309,7 @@
 "str.md.product.quPurchase.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.md.product.quFactorPurchaseToStock" = "Faktor Mengeneinheit Einkauf zu Mengeneinheit Bestand";
 "str.md.product.quFactorPurchaseToStock.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Das bedeutet 1 %@ im Einkauf entsprechen %@ %@ im Bestand";
 "str.md.product.enableTareWeightHandling" = "Taragewichtbehandlung aktivieren";
 "str.md.product.enableTareWeightHandling.info" = "Dies ist z.B. für Mehl im Glas nützlich - beim Buchen eines Kaufs/Verbrauchs oder bei der Inventur musst du dann immer das gesamte Glas wiegen, die zu buchende Menge wird dann automatisch basierend auf dem Bestand und dem unten definierten Eigengewicht berechnet";
 "str.md.product.tareWeight" = "Taragewicht";
@@ -316,10 +318,13 @@
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dies wird als Standardeinstellung verwendet wenn dieses Produkt als Rezeptzutat hinzugefügt wird";
 "str.md.product.calories" = "Energie (kcal)";
 "str.md.product.calories.info" = "Pro Bestandsmengeneinheit";
+"str.md.product.calories.invalid" = "Dies darf nicht niedriger als 0 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.md.product.defaultDueDaysAfterFreezing" = "Standard-Fälligkeitstage nach dem Einfrieren";
 "str.md.product.defaultDueDaysAfterFreezing.info" = "Wenn dieses Produkt zu einem Gefrier-Standort umgelagert (sprich eingefroren) wird, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt";
+"str.md.product.defaultDueDaysAfterFreezing.invalid" = "Dies darf nicht niedriger als -1 sein und muss eine gültige Zahl mit max. 0 Nachkommastellen sein";
 "str.md.product.defaultDueDaysAfterThawing" = "Standard-Fälligkeitstage nach dem Auftauen";
 "str.md.product.defaultDueDaysAfterThawing.info" = "Wenn dieses Produkt von einem Gefrier-Standort umgelagert (sprich aufgetaut) wird, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt";
+"str.md.product.defaultDueDaysAfterThawing.invalid" = "Dies darf nicht niedriger als 0 sein und muss eine gültige Zahl mit max. 0 Nachkommastellen sein";
 "str.md.product.quickConsumeAmount" = "Schnell-Verbrauchs-Menge";
 "str.md.product.quickConsumeAmount.info" = "Diese Menge wird für die \"Schnell-Verbrauch/Öffnen-Buttons\" auf der Bestandsübersicht benutzt (bezieht sich auf die Bestandsmengeneinheit)";
 "str.md.product.quickConsumeAmount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";

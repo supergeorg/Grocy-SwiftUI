@@ -56,6 +56,68 @@ struct MDQuantityUnitsView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        NavigationView {
+            content
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack{
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search".localized) }
+                            Button(action: {
+                                isSearching.toggle()
+                            }, label: {Image(systemName: "magnifyingglass")})
+                            Button(action: {
+                                withAnimation {
+                                    self.reloadRotationDeg += 360
+                                }
+                                grocyVM.getMDLocations()
+                            }, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
+                            })
+                            Button(action: {
+                                showAddQuantityUnit.toggle()
+                            }, label: {Image(systemName: "plus")})
+                            .popover(isPresented: self.$showAddQuantityUnit, content: {
+                                MDQuantityUnitFormView(isNewQuantityUnit: true)
+                                    .padding()
+                                    .frame(maxWidth: 300, maxHeight: 250)
+                            })
+                        }
+                    }
+                }
+        }
+        #elseif os(iOS)
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            grocyVM.getMDLocations()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddQuantityUnit.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .sheet(isPresented: self.$showAddQuantityUnit, content: {
+                                NavigationView {
+                                    MDQuantityUnitFormView(isNewQuantityUnit: true)
+                                } })
+                    }
+                }
+            }
+        #endif
+    }
+    
+    var content: some View {
         List(){
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -65,70 +127,17 @@ struct MDQuantityUnitsView: View {
             } else if filteredQuantityUnits.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
-            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-                MDQuantityUnitRowView(quantityUnit: quantityUnit)
-                    .onTapGesture {
-                        shownEditPopover = quantityUnit
-                    }
-                    .popover(isPresented: makeIsPresented(quantityUnit: quantityUnit), arrowEdge: .trailing, content: {
-                        MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-            }
-            #else
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
                 NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
             }
-            #endif
         }
         .animation(.default)
-        .navigationTitle("str.md.quantityUnits".localized)
+        .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         .onAppear(perform: {
             grocyVM.getMDQuantityUnits()
         })
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                HStack{
-                    #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
-                    #endif
-                    Button(action: {
-                        isSearching.toggle()
-                    }, label: {Image(systemName: "magnifyingglass")})
-                    Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        grocyVM.getMDLocations()
-                    }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    #if os(macOS)
-                    Button(action: {
-                        showAddQuantityUnit.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .popover(isPresented: self.$showAddQuantityUnit, content: {
-                        MDQuantityUnitFormView(isNewQuantityUnit: true)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-                    #else
-                    Button(action: {
-                        showAddQuantityUnit.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddQuantityUnit, content: {
-                            NavigationView {
-                                MDQuantityUnitFormView(isNewQuantityUnit: true)
-                            } })
-                    #endif
-                }
-            }
-        }
     }
 }
 

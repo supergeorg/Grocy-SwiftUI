@@ -22,6 +22,7 @@
 		781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */; };
 		781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
 		781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
+		78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */; };
 		782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F7256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */; };
@@ -259,6 +260,7 @@
 		781A25D22566BB9100560026 /* MyToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyToggle.swift; sourceTree = "<group>"; };
 		781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodeFormView.swift; sourceTree = "<group>"; };
 		781DD5C62579028800A30ECA /* MDBarcodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodesView.swift; sourceTree = "<group>"; };
+		78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeInputView.swift; sourceTree = "<group>"; };
 		782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductDetailsModel.swift; sourceTree = "<group>"; };
 		782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductBarcodeModel.swift; sourceTree = "<group>"; };
 		78262706256E83A900ECED03 /* StockLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockLocationModel.swift; sourceTree = "<group>"; };
@@ -450,6 +452,16 @@
 			path = ShoppingList;
 			sourceTree = "<group>";
 		};
+		783454EB25A74E100024F556 /* QuickScan */ = {
+			isa = PBXGroup;
+			children = (
+				78E4802F25A5D14300661FDB /* QuickScanModeView.swift */,
+				78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */,
+				78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */,
+			);
+			path = QuickScan;
+			sourceTree = "<group>";
+		};
 		783F4F9A25629C6A00CD52B7 /* MDForms */ = {
 			isa = PBXGroup;
 			children = (
@@ -564,8 +576,7 @@
 			children = (
 				78CB749D255E9EF800319108 /* Info.plist */,
 				78CB74E0255EA04A00319108 /* AppTabNavigation.swift */,
-				78E4802F25A5D14300661FDB /* QuickScanModeView.swift */,
-				78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */,
+				783454EB25A74E100024F556 /* QuickScan */,
 				78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */,
 				78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */,
 			);
@@ -1024,6 +1035,7 @@
 				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				786F6EB925640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
+				78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */,
 				7891C640257E33430014C59E /* StockTableRowActionsView.swift in Sources */,
 				78CB75B0255EAB1400319108 /* Animations.swift in Sources */,
 				7891C65C257E539A0014C59E /* ProductInventoryModel.swift in Sources */,

@@ -43,12 +43,6 @@ struct MDProductRowView: View {
                     }
                 }
             }
-            //        .padding(10)
-            //        .multilineTextAlignment(.leading)
-            //        .overlay(
-            //            RoundedRectangle(cornerRadius: 12, style: .continuous)
-            //                .stroke(Color.primary, lineWidth: 1)
-            //        )
         }
     }
 }
@@ -68,12 +62,6 @@ struct MDProductsView: View {
     
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteAlert: Bool = false
-    
-    func makeIsPresented(product: MDProduct) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == product.id
-        }, set: { _ in    })
-    }
     
     private func updateData() {
         grocyVM.getMDProducts()
@@ -176,29 +164,12 @@ struct MDProductsView: View {
             } else if filteredProducts.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
-            ForEach(filteredProducts, id:\.id) { product in
-                MDProductRowView(product: product)
-                    .onTapGesture {
-                        shownEditPopover = product
-                    }
-                    .popover(isPresented: makeIsPresented(product: product), arrowEdge: .trailing, content: {
-                        ScrollView{
-                            MDProductFormView(isNewProduct: false, product: product)
-                                .padding()
-                        }
-                        .frame(width: 400, height: 400)
-                    })
-            }
-            .onDelete(perform: delete)
-            #else
             ForEach(filteredProducts, id:\.id) { product in
                 NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product)) {
                     MDProductRowView(product: product)
                 }
             }
             .onDelete(perform: delete)
-            #endif
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.products"))

@@ -19,6 +19,7 @@
 "str.refresh" = "Refresh";
 "str.close" = "Close";
 "str.add" = "Add";
+"str.misc" = "Miscellaneous";
 
 // MARK: - Transactions
 "tr.purchase" = "Purchase";
@@ -308,6 +309,7 @@
 "str.md.product.quPurchase.required" = "A quantity unit is required";
 "str.md.product.quFactorPurchaseToStock" = "Factor purchase to stock quantity unit ";
 "str.md.product.quFactorPurchaseToStock.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "This means 1 %@ purchased will be converted into %@ %@ in stock";
 "str.md.product.enableTareWeightHandling" = "Enable tare weight handling";
 "str.md.product.enableTareWeightHandling.info" = "This is useful e.g. for flour in jars - on purchase/consume/inventory you always weigh the whole jar, the amount to be posted is then automatically calculated based on what is in stock and the tare weight defined below";
 "str.md.product.tareWeight" = "Tare weight";
@@ -316,10 +318,13 @@
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "This will be used as the default setting when adding this product as a recipe ingredient";
 "str.md.product.calories" = "Energy (kcal)";
 "str.md.product.calories.info" = "Per stock quantity unit";
+"str.md.product.calories.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.defaultDueDaysAfterFreezing" = "Default due days after freezing";
 "str.md.product.defaultDueDaysAfterFreezing.info" = "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days";
+"str.md.product.defaultDueDaysAfterFreezing.invalid" = "This cannot be lower than -1 and needs to be a valid number with max. 0 decimal places";
 "str.md.product.defaultDueDaysAfterThawing" = "Default due days after thawing";
 "str.md.product.defaultDueDaysAfterThawing.info" = "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days";
+"str.md.product.defaultDueDaysAfterThawing.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 0 decimal places";
 "str.md.product.quickConsumeAmount" = "Quick consume amount";
 "str.md.product.quickConsumeAmount.info" = "This amount is used for the \"quick consume/open buttons\" on the stock overview page (related to quantity unit stock)";
 "str.md.product.quickConsumeAmount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";

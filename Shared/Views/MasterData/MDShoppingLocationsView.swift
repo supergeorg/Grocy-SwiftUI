@@ -52,12 +52,6 @@ struct MDShoppingLocationsView: View {
     @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
     @State private var showDeleteAlert: Bool = false
     
-    func makeIsPresented(shoppingLocation: MDShoppingLocation) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == shoppingLocation.id
-        }, set: { _ in    })
-    }
-    
     private var filteredShoppingLocations: MDShoppingLocations {
         grocyVM.mdShoppingLocations
             .filter {
@@ -152,22 +146,12 @@ struct MDShoppingLocationsView: View {
             } else if filteredShoppingLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
-            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
-                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-                        .padding()
-                }
-            }
-            .onDelete(perform: delete)
-            #else
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
                 NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
                     MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                 }
             }
             .onDelete(perform: delete)
-            #endif
         }
         .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         .onAppear(perform: {

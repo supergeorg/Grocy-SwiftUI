@@ -23,7 +23,7 @@ struct MDBarcodeRowView: View {
         VStack(alignment: .leading){
             Text(barcode.barcode)
                 .font(.title)
-            Text(LocalizedStringKey("str.md.barcode.info \("\(barcode.amount) \(quIDName)") \(shoppingLocationName)"))
+            Text(LocalizedStringKey("str.md.barcode.info \(barcode.amount != nil ? "\(barcode.amount!) \(quIDName)" : "") \(shoppingLocationName)"))
                 .font(.caption)
         }
     }
@@ -50,9 +50,9 @@ struct MDBarcodesView: View {
     var body: some View {
         VStack(alignment: .leading){
             HStack{
-                Text("str.md.barcodes")
+                Text(LocalizedStringKey("str.md.barcodes"))
                 Spacer()
-                Button("str.add") {
+                Button(LocalizedStringKey("str.add")) {
                     showAddBarcode.toggle()
                 }
                 .popover(isPresented: $showAddBarcode, content: {

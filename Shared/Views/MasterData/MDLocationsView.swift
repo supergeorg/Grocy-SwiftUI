@@ -55,12 +55,6 @@ struct MDLocationsView: View {
     
     @State private var reloadRotationDeg: Double = 0
     
-    func makeIsPresented(location: MDLocation) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == location.id
-        }, set: { _ in    })
-    }
-    
     private var filteredLocations: MDLocations {
         grocyVM.mdLocations
             .filter {
@@ -72,6 +66,68 @@ struct MDLocationsView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        NavigationView{
+            content
+                .toolbar(content: {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack{
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
+                            Button(action: {
+                                isSearching.toggle()
+                            }, label: {Image(systemName: "magnifyingglass")})
+                            Button(action: {
+                                withAnimation {
+                                    self.reloadRotationDeg += 360
+                                }
+                                grocyVM.getMDLocations()
+                            }, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
+                            })
+                            Button(action: {
+                                showAddLocation.toggle()
+                            }, label: {Image(systemName: "plus")})
+                            .popover(isPresented: self.$showAddLocation, content: {
+                                MDLocationFormView(isNewLocation: true)
+                                    .padding()
+                                    .frame(maxWidth: 300, maxHeight: 250)
+                            })
+                        }
+                    }
+                })
+        }
+        #elseif os(iOS)
+        content
+            .toolbar(content: {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            grocyVM.getMDLocations()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddLocation.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .sheet(isPresented: self.$showAddLocation, content: {
+                                NavigationView {
+                                    MDLocationFormView(isNewLocation: true)
+                                } })
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         List(){
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -81,70 +137,17 @@ struct MDLocationsView: View {
             } else if filteredLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
-            ForEach(filteredLocations, id:\.id) {location in
-                MDLocationRowView(location: location)
-                    .onTapGesture {
-                        shownEditPopover = location
-                    }
-                    .popover(isPresented: makeIsPresented(location: location), arrowEdge: .trailing, content: {
-                        MDLocationFormView(isNewLocation: false, location: location)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-            }
-            #else
             ForEach(filteredLocations, id:\.id) {location in
                 NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location)) {
                     MDLocationRowView(location: location)
                 }
             }
-            #endif
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.locations"))
         .onAppear(perform: {
             grocyVM.getMDLocations()
         })
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                HStack{
-                    #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-                    #endif
-                    Button(action: {
-                        isSearching.toggle()
-                    }, label: {Image(systemName: "magnifyingglass")})
-                    Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        grocyVM.getMDLocations()
-                    }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    #if os(macOS)
-                    Button(action: {
-                        showAddLocation.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .popover(isPresented: self.$showAddLocation, content: {
-                        MDLocationFormView(isNewLocation: true)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-                    #else
-                    Button(action: {
-                        showAddLocation.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddLocation, content: {
-                            NavigationView {
-                                MDLocationFormView(isNewLocation: true)
-                            } })
-                    #endif
-                }
-            }
-        }
     }
 }
 

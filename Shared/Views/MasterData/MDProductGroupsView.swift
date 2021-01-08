@@ -56,6 +56,68 @@ struct MDProductGroupsView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        NavigationView {
+            content
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack{
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
+                            Button(action: {
+                                isSearching.toggle()
+                            }, label: {Image(systemName: "magnifyingglass")})
+                            Button(action: {
+                                withAnimation {
+                                    self.reloadRotationDeg += 360
+                                }
+                                grocyVM.getMDProductGroups()
+                            }, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
+                            })
+                            Button(action: {
+                                showAddProductGroup.toggle()
+                            }, label: {Image(systemName: "plus")})
+                            .popover(isPresented: self.$showAddProductGroup, content: {
+                                MDProductGroupFormView(isNewProductGroup: true)
+                                    .padding()
+                                    .frame(maxWidth: 300, maxHeight: 250)
+                            })
+                        }
+                    }
+                }
+        }
+        #elseif os(iOS)
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack{
+                        Button(action: {
+                            isSearching.toggle()
+                        }, label: {Image(systemName: "magnifyingglass")})
+                        Button(action: {
+                            withAnimation {
+                                self.reloadRotationDeg += 360
+                            }
+                            grocyVM.getMDProductGroups()
+                        }, label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .rotationEffect(Angle.degrees(reloadRotationDeg))
+                        })
+                        Button(action: {
+                            showAddProductGroup.toggle()
+                        }, label: {Image(systemName: "plus")})
+                        .sheet(isPresented: self.$showAddProductGroup, content: {
+                                NavigationView {
+                                    MDProductGroupFormView(isNewProductGroup: true)
+                                } })
+                    }
+                }
+            }
+        #endif
+    }
+    
+    var content: some View {
         List(){
             #if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -65,70 +127,17 @@ struct MDProductGroupsView: View {
             } else if filteredProductGroups.isEmpty {
                 Text("str.noSearchResult")
             }
-            #if os(macOS)
-            ForEach(filteredProductGroups, id:\.id) { productGroup in
-                MDProductGroupRowView(productGroup: productGroup)
-                    .onTapGesture {
-                        shownEditPopover = productGroup
-                    }
-                    .popover(isPresented: makeIsPresented(productGroup: productGroup), arrowEdge: .trailing, content: {
-                        MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-            }
-            #else
             ForEach(filteredProductGroups, id:\.id) { productGroup in
                 NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup)) {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
             }
-            #endif
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         .onAppear(perform: {
             grocyVM.getMDProductGroups()
         })
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                HStack{
-                    #if os(macOS)
-                    if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-                    #endif
-                    Button(action: {
-                        isSearching.toggle()
-                    }, label: {Image(systemName: "magnifyingglass")})
-                    Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        grocyVM.getMDProductGroups()
-                    }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    #if os(macOS)
-                    Button(action: {
-                        showAddProductGroup.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .popover(isPresented: self.$showAddProductGroup, content: {
-                        MDProductGroupFormView(isNewProductGroup: true)
-                            .padding()
-                            .frame(maxWidth: 300, maxHeight: 250)
-                    })
-                    #else
-                    Button(action: {
-                        showAddProductGroup.toggle()
-                    }, label: {Image(systemName: "plus")})
-                    .sheet(isPresented: self.$showAddProductGroup, content: {
-                            NavigationView {
-                                MDProductGroupFormView(isNewProductGroup: true)
-                            } })
-                    #endif
-                }
-            }
-        }
     }
 }
 

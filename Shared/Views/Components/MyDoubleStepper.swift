@@ -20,6 +20,14 @@ struct MyDoubleStepper: View {
     
     var systemImage: String?
     
+    var formatter: NumberFormatter {
+        let f = NumberFormatter()
+        f.allowsFloats = true
+        f.numberStyle = .decimal
+        f.maximumFractionDigits = 4
+        return f
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
@@ -32,7 +40,7 @@ struct MyDoubleStepper: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
-                TextField("", value: $amount, formatter: NumberFormatter())
+                TextField("", value: $amount, formatter: formatter)
                     .frame(width: 50)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     amount += amountStep

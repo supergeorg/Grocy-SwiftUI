@@ -20,6 +20,7 @@ struct MDProduct: Codable, Hashable {
     let parentProductID, calories: String?
     let cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String
     let rowCreatedTimestamp: String
+    let hideOnStockOverview: String?
     let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
@@ -47,6 +48,7 @@ struct MDProduct: Codable, Hashable {
         case dueType = "due_type"
         case quickConsumeAmount = "quick_consume_amount"
         case rowCreatedTimestamp = "row_created_timestamp"
+        case hideOnStockOverview = "hide_on_stock_overview"
         case userfields
     }
 }
@@ -61,14 +63,18 @@ struct MDProductPOST: Codable {
     let active, locationID: String
     let shoppingLocationID: String?
     let quIDPurchase, quIDStock: String
-    let quFactorPurchaseToStock, minStockAmount, defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
+    let quFactorPurchaseToStock, minStockAmount: Double?
+    let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int?
     let pictureFileName: String?
-    let enableTareWeightHandling, tareWeight, notCheckStockFulfillmentForRecipes: String
+    let enableTareWeightHandling: String?
+    let tareWeight: Double?
+    let notCheckStockFulfillmentForRecipes: String?
     let parentProductID: String?
     let calories: Double?
-    let cumulateMinStockAmountOfSubProducts, dueType: String
+    let cumulateMinStockAmountOfSubProducts, dueType: String?
     let quickConsumeAmount: Double?
     let rowCreatedTimestamp: String
+    let hideOnStockOverview: String?
     let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
@@ -96,6 +102,7 @@ struct MDProductPOST: Codable {
         case dueType = "due_type"
         case quickConsumeAmount = "quick_consume_amount"
         case rowCreatedTimestamp = "row_created_timestamp"
+        case hideOnStockOverview = "hide_on_stock_overview"
         case userfields
     }
 }

@@ -121,7 +121,11 @@ struct MDUserFieldFormView: View {
             #if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    if isNewUserField{
+                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    } else {
+                        resetForm()
+                    }
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
