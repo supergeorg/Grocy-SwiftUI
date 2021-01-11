@@ -16,16 +16,20 @@ struct MDBarcodeFormView: View {
     @State private var amount: Int = 0
     @State private var quantityUnitID: String = ""
     @State private var shoppingLocationID: String = ""
+    @State private var note: String = ""
     
     var isNewBarcode: Bool
     var productID: String
     var editBarcode: MDProductBarcode?
     
     private func saveBarcode() {
-        let quID = quantityUnitID.isEmpty ? nil : quantityUnitID
+        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: String(amount), shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
         if isNewBarcode{
-            let saveBarcode = MDProductBarcode(id: String(grocyVM.findNextID(.product_barcodes)), productID: productID, barcode: barcode, quID: quID, amount: String(amount), shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil)
             grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
+        } else {
+            if let id = editBarcode?.id {
+                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode)
+            }
         }
     }
     
@@ -34,12 +38,13 @@ struct MDBarcodeFormView: View {
         amount = Int(editBarcode?.amount ?? "") ?? 0
         quantityUnitID = editBarcode?.quID ?? ""
         shoppingLocationID = editBarcode?.shoppingLocationID ?? ""
+        note = editBarcode?.note ?? ""
     }
     
     #if os(iOS)
     @State private var isShowingScanner = false
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
-       self.isShowingScanner = false
+        self.isShowingScanner = false
         switch result {
         case .success(let code):
             barcode = code
@@ -55,6 +60,28 @@ struct MDBarcodeFormView: View {
         content
         #elseif os(iOS)
         content
+            .navigationTitle(isNewBarcode ? LocalizedStringKey("str.md.barcode.new") : LocalizedStringKey("str.md.barcode.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewBarcode {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.md.save \("str.md.barcode".localized)")) {
+                        saveBarcode()
+                        presentationMode.wrappedValue.dismiss()
+                    }.disabled(barcode.isEmpty)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewBarcode{
+                        Text("")
+                    }
+                }
+            })
         #endif
     }
     
@@ -73,36 +100,42 @@ struct MDBarcodeFormView: View {
             HStack{
                 TextField(LocalizedStringKey("str.md.barcode"), text: $barcode)
                 #if os(iOS)
-                Button("Scan Barcode") {
-                    isShowingScanner = true
-                }
+                Button(action: {
+                    isShowingScanner.toggle()
+                }, label: {
+                    Image(systemName: "barcode.viewfinder")
+                })
                 .sheet(isPresented: $isShowingScanner) {
                     CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
                 }
                 #endif
             }
-            Section(header: Text("str.md.barcode.amount".localized).font(.headline)) {
+            Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
                 MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.md.barcode.quantityUnit".localized, systemImage: "scalemass"), content: {
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag("")
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
                     }
                 }).disabled(true)
             }
-            Picker("str.md.barcode.shoppingLocation", selection: $shoppingLocationID, content: {
+            Text("shl: \(shoppingLocationID)")
+            Picker(LocalizedStringKey("str.md.barcode.shoppingLocation"), selection: $shoppingLocationID, content: {
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
                     Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id)
                 }
             })
+            
+            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+            
             #if os(macOS)
             HStack{
-                Button("str.cancel") {
+                Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button("str.save") {
+                Button(LocalizedStringKey("str.save")) {
                     saveBarcode()
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
@@ -110,11 +143,21 @@ struct MDBarcodeFormView: View {
             }
             #endif
         }
+        .onAppear(perform: {
+            initForm()
+        })
     }
 }
 
 struct MDBarcodeFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDBarcodeFormView(isNewBarcode: true, productID: "1")
+        Group{
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: true, productID: "1")
+            }
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil))
+            }
+        }
     }
 }

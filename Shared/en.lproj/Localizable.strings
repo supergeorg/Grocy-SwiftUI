@@ -342,6 +342,7 @@
 "str.md.barcode.amount" = "Amount";
 "str.md.barcode.quantityUnit" = "Quantity unit";
 "str.md.barcode.shoppingLocation" = "Store";
+"str.md.barcode.note" = "Note";
 "str.md.barcode.info %@ %@" = "Amount: %@, Store: %@";
 
 "str.md.locations" = "Locations";

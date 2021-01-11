@@ -10,10 +10,9 @@ import Foundation
 // MARK: - MDProductBarcode
 struct MDProductBarcode: Codable {
     let id, productID, barcode: String
-    let quID: String?
-    let amount, shoppingLocationID: String
-    let lastPrice: String?
+    let quID, amount, shoppingLocationID, lastPrice: String?
     let rowCreatedTimestamp: String
+    let note: String?
     let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
@@ -25,6 +24,7 @@ struct MDProductBarcode: Codable {
         case shoppingLocationID = "shopping_location_id"
         case lastPrice = "last_price"
         case rowCreatedTimestamp = "row_created_timestamp"
+        case note
         case userfields
     }
 }

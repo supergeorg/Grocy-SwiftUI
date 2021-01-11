@@ -46,23 +46,51 @@ struct MDBarcodesView: View {
                 $0.productID == productID
             }
     }
+
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            grocyVM.deleteMDObject(object: .product_barcodes, id: filteredBarcodes[offset].id)
+            updateData()
+        }
+    }
     
     var body: some View {
-        VStack(alignment: .leading){
-            HStack{
-                Text(LocalizedStringKey("str.md.barcodes"))
-                Spacer()
-                Button(LocalizedStringKey("str.add")) {
-                    showAddBarcode.toggle()
-                }
+        #if os(iOS)
+        content
+        #elseif os(macOS)
+            content
+        #endif
+    }
+    
+    var content: some View {
+        Section(header: Text(LocalizedStringKey("str.md.barcodes")).font(.headline)) {
+            #if os(macOS)
+            Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: "plus")})
                 .popover(isPresented: $showAddBarcode, content: {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID)
                         .padding()
                 })
-            }
-            Spacer()
-            ForEach(filteredBarcodes, id:\.id) {productBarcode in
-                MDBarcodeRowView(barcode: productBarcode)
+            #elseif os(iOS)
+            Button(action: {showAddBarcode.toggle()}, label: {
+                Label("str.md.barcode.new", systemImage: "plus")
+            })
+            .sheet(isPresented: $showAddBarcode, content: {
+                NavigationView{
+                    MDBarcodeFormView(isNewBarcode: true, productID: productID)
+                }
+            })
+            #endif
+            List{
+                if filteredBarcodes.isEmpty {
+                    Text(LocalizedStringKey("str.md.barcodes.empty"))
+                }
+                ForEach(filteredBarcodes, id:\.id) {productBarcode in
+                    NavigationLink(
+                        destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode),
+                        label: {
+                            MDBarcodeRowView(barcode: productBarcode)
+                        })
+                }.onDelete(perform: delete)
             }
         }
         .onAppear(perform: updateData)
@@ -70,7 +98,17 @@ struct MDBarcodesView: View {
 }
 
 struct MDBarcodesView_Previews: PreviewProvider {
+    @StateObject var grocyVM: GrocyViewModel = .shared
     static var previews: some View {
-        MDBarcodesView(productID: "1")
+        Group {
+            Form{
+                MDBarcodesView(productID: "1")
+            }
+        }
+        Group {
+            Form{
+                MDBarcodesView(productID: "27")
+            }
+        }
     }
 }
