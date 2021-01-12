@@ -139,21 +139,12 @@ struct MDUserFieldsView: View {
             } else if filteredUserFields.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            //            #if os(macOS)
             ForEach(filteredUserFields, id:\.id) { userField in
                 NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField)) {
                     MDUserFieldRowView(userField: userField)
                 }
             }
             .onDelete(perform: delete)
-            //            #else
-            //            ForEach(filteredUserFields, id:\.id) { shoppingLocation in
-            //                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
-            //                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
-            //                }
-            //            }
-            //            .onDelete(perform: delete)
-            //            #endif
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.userFields"))

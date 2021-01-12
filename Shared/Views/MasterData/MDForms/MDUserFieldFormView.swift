@@ -12,6 +12,8 @@ struct MDUserFieldFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var entity: ObjectEntities = ObjectEntities.none
     @State private var name: String = ""
     @State private var caption: String = ""
@@ -42,6 +44,10 @@ struct MDUserFieldFormView: View {
         showAsColumnInTables = Bool(userField?.showAsColumnInTables ?? "0") ?? false
         isNameCorrect = checkNameCorrect()
         isCaptionCorrect = checkCaptionCorrect()
+    }
+    
+    private func updateData() {
+        
     }
     
     private func saveUserField() {
@@ -139,7 +145,11 @@ struct MDUserFieldFormView: View {
         }
         .animation(.default)
         .onAppear(perform: {
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
     }
 }
