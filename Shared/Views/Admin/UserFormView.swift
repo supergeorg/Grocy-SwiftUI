@@ -10,6 +10,8 @@ import SwiftUI
 struct UserFormView: View {
     @StateObject private var grocyVM: GrocyViewModel = .shared
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @State var username: String = ""
     @State var firstName: String = ""
     @State var lastName: String = ""
@@ -53,6 +55,22 @@ struct UserFormView: View {
         #elseif os(iOS)
         content
             .navigationTitle(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(LocalizedStringKey("str.cancel")) {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
+                    Button(LocalizedStringKey("str.save")) {
+                        saveUser()
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)
+                }
+            })
         #endif
     }
     
@@ -70,7 +88,6 @@ struct UserFormView: View {
                 MyTextField(textToEdit: $firstName, description: "str.admin.user.new.firstName", isCorrect: Binding.constant(true), leadingIcon: "person", isEditing: true, errorMessage: nil)
                 MyTextField(textToEdit: $lastName, description: "str.admin.user.new.lastName", isCorrect: Binding.constant(true), leadingIcon: "person.2", isEditing: true, errorMessage: nil)
             }
-            Divider()
             Section(header: Text(LocalizedStringKey("str.admin.user.new.password")).font(.title)){
                 MyTextField(textToEdit: $password, description: "str.admin.user.new.password", isCorrect: Binding.constant(true), leadingIcon: "key", isEditing: true, errorMessage: nil)
                 MyTextField(textToEdit: $passwordConfirm, description: "str.admin.user.new.password.confirm", isCorrect: $isMatchingPassword, leadingIcon: "key", isEditing: true, errorMessage: "str.admin.user.new.password.mismatch")

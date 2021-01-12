@@ -59,6 +59,32 @@ struct UserManagementView: View {
             })
         #elseif os(iOS)
         content
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .automatic, content: {
+                    Button(action: {
+                        withAnimation {
+                            self.reloadRotationDeg += 360
+                        }
+                        updateData()
+                    }, label: {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .rotationEffect(Angle.degrees(reloadRotationDeg))
+                    })
+                    Button(action: {
+                        showAddUser.toggle()
+                    }, label: {
+                        HStack{
+                            Text(LocalizedStringKey("str.admin.user.new"))
+                            Image(systemName: "plus")
+                        }
+                    })
+                    .sheet(isPresented: $showAddUser, content: {
+                        NavigationView{
+                            UserFormView(isNewUser: true)
+                        }
+                    })
+                })
+            })
         #endif
     }
     
