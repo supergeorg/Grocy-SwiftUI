@@ -12,6 +12,8 @@ struct MDBarcodeFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var barcode: String = ""
     @State private var amount: Int = 0
     @State private var quantityUnitID: String = ""
@@ -33,12 +35,16 @@ struct MDBarcodeFormView: View {
         }
     }
     
-    private func initForm() {
+    private func resetForm() {
         barcode = editBarcode?.barcode ?? ""
         amount = Int(editBarcode?.amount ?? "") ?? 0
         quantityUnitID = editBarcode?.quID ?? ""
         shoppingLocationID = editBarcode?.shoppingLocationID ?? ""
         note = editBarcode?.note ?? ""
+    }
+    
+    private func updateData() {
+        
     }
     
     #if os(iOS)
@@ -119,7 +125,6 @@ struct MDBarcodeFormView: View {
                     }
                 }).disabled(true)
             }
-            Text("shl: \(shoppingLocationID)")
             Picker(LocalizedStringKey("str.md.barcode.shoppingLocation"), selection: $shoppingLocationID, content: {
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
                     Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id)
@@ -144,7 +149,11 @@ struct MDBarcodeFormView: View {
             #endif
         }
         .onAppear(perform: {
-            initForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
     }
 }

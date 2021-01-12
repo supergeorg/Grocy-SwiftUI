@@ -33,11 +33,7 @@ struct ShoppingListFormView: View {
     }
     
     private func resetForm() {
-        if isNewShoppingListDescription {
-            self.name = ""
-        } else {
-            self.name = shoppingListDescription!.name
-        }
+        self.name = shoppingListDescription?.name ?? ""
         isNameCorrect = checkNameCorrect()
     }
     

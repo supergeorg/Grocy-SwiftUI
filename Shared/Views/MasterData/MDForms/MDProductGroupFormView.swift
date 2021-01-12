@@ -12,6 +12,8 @@ struct MDProductGroupFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var name: String = ""
     @State private var mdProductGroupDescription: String = ""
     
@@ -27,14 +29,13 @@ struct MDProductGroupFormView: View {
     }
     
     private func resetForm() {
-        if isNewProductGroup {
-            self.name = ""
-            self.mdProductGroupDescription = ""
-        } else {
-            self.name = productGroup!.name
-            self.mdProductGroupDescription = productGroup!.mdProductGroupDescription ?? ""
-        }
+        self.name = productGroup?.name ?? ""
+        self.mdProductGroupDescription = productGroup?.mdProductGroupDescription ?? ""
         isNameCorrect = checkNameCorrect()
+    }
+    
+    private func updateData() {
+        
     }
     
     private func saveProductGroup() {
@@ -101,7 +102,11 @@ struct MDProductGroupFormView: View {
         .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
         .animation(.default)
         .onAppear(perform: {
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
         .toolbar(content: {
             #if os(iOS)

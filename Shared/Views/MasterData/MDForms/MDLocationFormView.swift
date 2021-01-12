@@ -12,6 +12,8 @@ struct MDLocationFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var name: String = ""
     @State private var mdLocationDescription: String = ""
     @State private var isFreezer: Bool = false
@@ -30,16 +32,14 @@ struct MDLocationFormView: View {
     }
     
     private func resetForm() {
-        if isNewLocation {
-            self.name = ""
-            self.mdLocationDescription = ""
-            self.isFreezer = false
-        } else {
-            self.name = location!.name
-            self.mdLocationDescription = location!.mdLocationDescription ?? ""
-            self.isFreezer = Bool(location!.isFreezer) ?? false
-        }
+        self.name = location?.name ?? ""
+        self.mdLocationDescription = location?.mdLocationDescription ?? ""
+        self.isFreezer = Bool(location?.isFreezer ?? "0") ?? false
         isNameCorrect = checkNameCorrect()
+    }
+    
+    private func updateData() {
+        
     }
     
     private func saveLocation() {
@@ -109,7 +109,11 @@ struct MDLocationFormView: View {
         .navigationTitle(isNewLocation ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
         .animation(.default)
         .onAppear(perform: {
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
         .toolbar(content: {
             #if os(iOS)

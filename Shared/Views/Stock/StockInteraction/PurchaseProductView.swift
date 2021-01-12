@@ -12,6 +12,8 @@ struct PurchaseProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     var productToPurchaseID: String?
     var productToPurchaseAmount: Double?
     
@@ -75,10 +77,10 @@ struct PurchaseProductView: View {
     }
     
     private func updateData() {
-        if grocyVM.mdProducts.isEmpty { grocyVM.getMDProducts() }
-        if grocyVM.mdQuantityUnits.isEmpty { grocyVM.getMDQuantityUnits() }
-        if grocyVM.mdLocations.isEmpty { grocyVM.getMDLocations() }
-        if grocyVM.mdShoppingLocations.isEmpty { grocyVM.getMDShoppingLocations() }
+        grocyVM.getMDProducts()
+        grocyVM.getMDQuantityUnits()
+        grocyVM.getMDLocations()
+        grocyVM.getMDShoppingLocations()
     }
     
     var body: some View {
@@ -110,7 +112,8 @@ struct PurchaseProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
                     Button(LocalizedStringKey("str.stock.buy.product.buy")) {
                         purchaseProduct()
                         resetForm()
@@ -185,8 +188,11 @@ struct PurchaseProductView: View {
             }
         }
         .onAppear(perform: {
-            updateData()
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.buy"))

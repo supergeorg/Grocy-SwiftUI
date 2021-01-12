@@ -7,18 +7,12 @@
 
 import SwiftUI
 
-//"str.shL.newEntry.new.title" = "Einkaufszettel Eintrag erstellen";
-//"str.shL.newEntry.edit.title" = "Einkaufszettel Eintrag bearbeiten";
-//"str.shL.newEntry.shoppingList" = "Einkaufszettel";
-//"str.shL.newEntry.product" = "Produkt";
-//"str.shL.newEntry.amount" = "Menge";
-//"str.shL.newEntry.quantityUnit" = "Mengeneinheit";
-//"str.shL.newEntry.note" = "Notiz";
-
 struct ShoppingListEntryFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.presentationMode) var presentationMode
+    
+    @State private var firstAppear: Bool = true
     
     @State private var shoppingListID: String = "1"
     @State private var productID: String = ""
@@ -57,19 +51,16 @@ struct ShoppingListEntryFormView: View {
         grocyVM.getShoppingList()
     }
     
-    private func insertToEditForm() {
-        if !isNewShoppingListEntry {
-            self.shoppingListID = shoppingListEntry!.shoppingListID
-            self.productID = shoppingListEntry!.productID ?? ""
-            self.amount = Int(shoppingListEntry!.amount) ?? 0
-            self.quantityUnitID = shoppingListEntry!.quID ?? ""
+    private func resetForm() {
+            self.shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? "1"
+            self.productID = shoppingListEntry?.productID ?? product?.id ?? ""
+            self.amount = Int(shoppingListEntry?.amount ?? "") ?? (product != nil ? 1 : 0)
+            self.quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase ?? ""
             self.note = shoppingListEntry!.note ?? ""
-        } else {
-            self.shoppingListID = selectedShoppingListID ?? "1"
-            self.productID = product?.id ?? ""
-            self.amount = product != nil ? 1 : 0
-            self.quantityUnitID = product?.quIDPurchase ?? ""
-        }
+    }
+    
+    private func updateData() {
+        
     }
     
     var body: some View {
@@ -156,7 +147,13 @@ struct ShoppingListEntryFormView: View {
             }
             #endif
         }
-        .onAppear(perform: insertToEditForm)
+        .onAppear(perform: {
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
+        })
     }
 }
 

@@ -12,6 +12,8 @@ struct MDProductFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var name: String = "" // REQUIRED
     @State private var active: Bool = true
     @State private var parentProductID: String = ""
@@ -56,7 +58,6 @@ struct MDProductFormView: View {
         return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDStock})
     }
     
-    //    {"name":"Test1234567","active":"1","description":"<p>Asdf<br></p>","location_id":"2","shopping_location_id":"1","min_stock_amount":"1","cumulate_min_stock_amount_of_sub_products":"1","due_type":"2","default_best_before_days":"1","default_best_before_days_after_open":"2","product_group_id":"3","qu_id_stock":"2","qu_id_purchase":"11","qu_factor_purchase_to_stock":"3.1","enable_tare_weight_handling":"1","tare_weight":"2.2","not_check_stock_fulfillment_for_recipes":"1","calories":"3.2","default_best_before_days_after_freezing":"1","default_best_before_days_after_thawing":"5","quick_consume_amount":"1.2","hide_on_stock_overview":"1","parent_product_id":"27"}
     private func resetForm() {
         name = product?.name ?? ""
         active = (product?.active ?? "1") == "1"
@@ -84,6 +85,13 @@ struct MDProductFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private func updateData() {
+        grocyVM.getMDProducts()
+        grocyVM.getMDQuantityUnits()
+        grocyVM.getMDLocations()
+        grocyVM.getMDShoppingLocations()
+    }
+    
     private var isFormValid: Bool {
         !name.isEmpty && isNameCorrect && !locationID.isEmpty && !quIDStock.isEmpty && !quIDPurchase.isEmpty
     }
@@ -96,11 +104,6 @@ struct MDProductFormView: View {
             grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST)
         }
         grocyVM.getMDLocations()
-    }
-    
-    private func deleteLocation() {
-        grocyVM.deleteMDObject(object: .products, id: product!.id)
-        grocyVM.getMDProducts()
     }
     
     var body: some View {
@@ -309,11 +312,11 @@ struct MDProductFormView: View {
         }
         .animation(.default)
         .onAppear(perform: {
-            grocyVM.getMDProducts()
-            grocyVM.getMDQuantityUnits()
-            grocyVM.getMDLocations()
-            grocyVM.getMDShoppingLocations()
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
     }
 }

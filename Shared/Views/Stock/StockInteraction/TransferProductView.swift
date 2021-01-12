@@ -12,6 +12,8 @@ struct TransferProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     var productToTransferID: String?
     
     @State private var productID: String = ""
@@ -55,8 +57,13 @@ struct TransferProductView: View {
         stockEntryID = ""
     }
     
+    private func updateData() {
+        grocyVM.getMDProducts()
+        grocyVM.getMDLocations()
+        grocyVM.getMDQuantityUnits()
+    }
+    
     private func transferProduct() {
-        
         if let intLocationIDFrom = Int(locationIDFrom) {
             if let intLocationIDTo = Int(locationIDTo) {
                 let cStockEntryID = stockEntryID.isEmpty ? nil : stockEntryID
@@ -96,7 +103,8 @@ struct TransferProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
                     Button(LocalizedStringKey("str.stock.transfer.product.transfer")) {
                         transferProduct()
                         resetForm()
@@ -105,22 +113,6 @@ struct TransferProductView: View {
             })
         #endif
     }
-    
-    //    "str.stock.transfer" = "Transfer";
-    //    "str.stock.transfer.product" = "Product";
-    //    "str.stock.transfer.product.transfer" = "Transfer product";
-    //    "str.stock.transfer.product.required" = "You have to select a product";
-    //    "str.stock.transfer.product.locationFrom" = "From location";
-    //    "str.stock.transfer.product.locationFrom.required" = "A location is required";
-    //    "str.stock.transfer.product.amount" = "Amount";
-    //    "str.stock.transfer.product.amount.required" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-    //    "str.stock.transfer.product.quantityUnit" = "Quantity unit";
-    //    "str.stock.transfer.product.quantityUnit.required" = "A quantity unit is required";
-    //    "str.stock.transfer.product.locationTo" = "To location";
-    //    "str.stock.transfer.product.locationTO.required" = "A location is required";
-    //    "str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
-    //    "str.stock.transfer.product.useStockEntry" = "Use a specific stock item";
-    //    "str.stock.transfer.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
     
     var content: some View {
         Form {
@@ -183,10 +175,10 @@ struct TransferProductView: View {
             }
         }
         .onAppear(perform: {
-            if grocyVM.mdProducts.isEmpty {
-                grocyVM.getMDProducts()
-                grocyVM.getMDLocations()
-                grocyVM.getMDQuantityUnits()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
             }
         })
         .animation(.default)

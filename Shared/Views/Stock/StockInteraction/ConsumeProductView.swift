@@ -12,6 +12,8 @@ struct ConsumeProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     var productToConsumeID: String?
     
     @State private var productID: String = ""
@@ -205,7 +207,11 @@ struct ConsumeProductView: View {
             }
         }
         .onAppear(perform: {
-            updateData()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.consume"))

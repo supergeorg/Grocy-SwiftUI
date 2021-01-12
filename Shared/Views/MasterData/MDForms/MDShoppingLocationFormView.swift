@@ -12,6 +12,8 @@ struct MDShoppingLocationFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var name: String = ""
     @State private var mdShoppingLocationDescription: String = ""
     
@@ -25,14 +27,13 @@ struct MDShoppingLocationFormView: View {
     }
     
     private func resetForm() {
-        if isNewShoppingLocation {
-            self.name = ""
-            self.mdShoppingLocationDescription = ""
-        } else {
-            self.name = shoppingLocation!.name
-            self.mdShoppingLocationDescription = shoppingLocation!.mdShoppingLocationDescription ?? ""
-        }
+        self.name = shoppingLocation?.name ?? ""
+        self.mdShoppingLocationDescription = shoppingLocation?.mdShoppingLocationDescription ?? ""
         isNameCorrect = checkNameCorrect()
+    }
+    
+    private func updateData() {
+        
     }
     
     private func saveShoppingLocation() {
@@ -105,7 +106,11 @@ struct MDShoppingLocationFormView: View {
         .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
         .animation(.default)
         .onAppear(perform: {
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
     }
 }

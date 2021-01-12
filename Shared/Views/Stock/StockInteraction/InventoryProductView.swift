@@ -12,6 +12,8 @@ struct InventoryProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     var productToInventoryID: String?
     
     @State private var productID: String = ""
@@ -70,6 +72,12 @@ struct InventoryProductView: View {
         locationID = ""
     }
     
+    private func updateData() {
+        grocyVM.getMDProducts()
+        grocyVM.getMDLocations()
+        grocyVM.getMDQuantityUnits()
+    }
+    
     private func inventoryProduct() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -109,7 +117,8 @@ struct InventoryProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
                     Button(LocalizedStringKey("str.stock.inventory.product.inventory")) {
                         inventoryProduct()
                         resetForm()
@@ -135,6 +144,9 @@ struct InventoryProductView: View {
                     shoppingLocationID = selectedProduct.shoppingLocationID ?? ""
                     locationID = selectedProduct.locationID
                     quantityUnitID = selectedProduct.quIDStock
+                    if let productStock = selectedProductStock {
+                        amount = Int(productStock.amount) ?? 0
+                    }
                 }
             }
             
@@ -179,10 +191,10 @@ struct InventoryProductView: View {
             }
         }
         .onAppear(perform: {
-            if grocyVM.mdProducts.isEmpty {
-                grocyVM.getMDProducts()
-                grocyVM.getMDLocations()
-                grocyVM.getMDQuantityUnits()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
             }
         })
         .animation(.default)

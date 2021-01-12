@@ -12,6 +12,8 @@ struct MDQuantityUnitFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var firstAppear: Bool = true
+    
     @State private var name: String = ""
     @State private var namePlural: String = ""
     @State private var mdQuantityUnitDescription: String = ""
@@ -28,16 +30,14 @@ struct MDQuantityUnitFormView: View {
     }
     
     private func resetForm() {
-        if isNewQuantityUnit {
-            self.name = ""
-            self.namePlural = ""
-            self.mdQuantityUnitDescription = ""
-        } else {
-            self.name = quantityUnit!.name
-            self.namePlural = quantityUnit!.namePlural
-            self.mdQuantityUnitDescription = quantityUnit!.mdQuantityUnitDescription ?? ""
-        }
+        self.name = quantityUnit?.name ?? ""
+        self.namePlural = quantityUnit?.namePlural ?? ""
+        self.mdQuantityUnitDescription = quantityUnit?.mdQuantityUnitDescription ?? ""
         isNameCorrect = checkNameCorrect()
+    }
+    
+    private func updateData() {
+        
     }
     
     private func saveQuantityUnit() {
@@ -105,7 +105,11 @@ struct MDQuantityUnitFormView: View {
         .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
         .animation(.default)
         .onAppear(perform: {
-            resetForm()
+            if firstAppear {
+                updateData()
+                resetForm()
+                firstAppear = false
+            }
         })
         .toolbar(content: {
             #if os(iOS)
