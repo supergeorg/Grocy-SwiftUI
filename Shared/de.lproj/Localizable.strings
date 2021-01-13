@@ -217,6 +217,7 @@
 "str.shL.delete.confirm" = "Bist du dir sicher, dass du diese Einkaufsliste löschen möchtest?";
 "str.shL.print" = "Drucken";
 "str.shL.amount" = "Menge";
+"str.shL.ungrouped" = "Ungruppiert";
 
 "str.shL.form.new" = "Einkaufszettel erstellen";
 "str.shL.form.edit" = "Einkaufszettel bearbeiten";
@@ -343,7 +344,8 @@
 "str.md.barcode.quantityUnit" = "Mengeneinheit";
 "str.md.barcode.shoppingLocation" = "Geschäft";
 "str.md.barcode.note" = "Notiz";
-"str.md.barcode.info %@ %@" = "Menge: %@, Geschäft: %@";
+"str.md.barcode.info.amount %@" = "Menge: %@";
+"str.md.barcode.info.store %@" = "Geschäft: %@";
 
 "str.md.locations" = "Standorte";
 "str.md.location" = "Standort";

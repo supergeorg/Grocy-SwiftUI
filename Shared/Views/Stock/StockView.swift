@@ -21,6 +21,8 @@ enum StockInteractionSheet: Identifiable {
 struct StockView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @State private var firstAppear: Bool = true
+    
     @AppStorage("expiringDays") var expiringDays: Int = 5
     
     @State private var reloadRotationDeg: Double = 0.0

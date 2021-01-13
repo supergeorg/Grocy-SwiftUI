@@ -217,6 +217,7 @@
 "str.shL.delete.confirm" = "Do you really want to delete this shopping list?";
 "str.shL.print" = "Print";
 "str.shL.amount" = "Amount";
+"str.shL.ungrouped" = "Ungrouped";
 
 "str.shL.form.new" = "Create shopping list";
 "str.shL.form.edit" = "Edit shopping list";
@@ -343,7 +344,8 @@
 "str.md.barcode.quantityUnit" = "Quantity unit";
 "str.md.barcode.shoppingLocation" = "Store";
 "str.md.barcode.note" = "Note";
-"str.md.barcode.info %@ %@" = "Amount: %@, Store: %@";
+"str.md.barcode.info.amount %@" = "Amount: %@";
+"str.md.barcode.info.store %@" = "Store: %@";
 
 "str.md.locations" = "Locations";
 "str.md.location" = "Location";
@@ -439,6 +441,8 @@
 "str.md.userField.type.link" = "Link";
 "str.md.userField.type.file" = "File";
 "str.md.userField.type.image" = "Image";
+
+"str.md.userEntities" = "User entities";
 
 // MARK: - Settings
 "str.settings" = "Settings";

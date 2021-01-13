@@ -25,6 +25,7 @@ struct ShoppingListActionView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(spacing: 5){
+                #if os(macOS)
                 Text(LocalizedStringKey("str.shL.action.addItem"))
                     .padding(paddingAmount)
                     .foregroundColor(.white)
@@ -37,6 +38,19 @@ struct ShoppingListActionView: View {
                         ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
                             .padding()
                     })
+                #elseif os(iOS)
+                Text(LocalizedStringKey("str.shL.action.addItem"))
+                    .padding(paddingAmount)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(cornerRadiusValue)
+                    .onTapGesture {
+                        showAddItem.toggle()
+                    }
+                    .sheet(isPresented: $showAddItem, content: {
+                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                    })
+                #endif
                 Text(LocalizedStringKey("str.shL.action.clearList"))
                     .padding(paddingAmount)
                     .foregroundColor(.red)

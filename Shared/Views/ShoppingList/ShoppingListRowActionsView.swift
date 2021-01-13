@@ -52,6 +52,7 @@ struct ShoppingListRowActionsView: View {
                 .onTapGesture {
                     deleteSHItem()
                 }
+            #if os(macOS)
             RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
@@ -60,6 +61,17 @@ struct ShoppingListRowActionsView: View {
                     PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: Double(shoppingListItem.amount)!)
                         .padding()
                 })
+            #elseif os(iOS)
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
+                .onTapGesture {
+                    showPurchase.toggle()
+                }
+                .sheet(isPresented: $showPurchase, content: {
+                        NavigationView{
+                            PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: Double(shoppingListItem.amount)!)
+                        }
+                })
+            #endif
         }
     }
 }

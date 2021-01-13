@@ -12,19 +12,25 @@ struct MDBarcodeRowView: View {
     
     var barcode: MDProductBarcode
     
-    var shoppingLocationName: String {
-        grocyVM.mdShoppingLocations.first(where: {$0.id == barcode.shoppingLocationID})?.name ?? "ShopID ERROR"
+    var shoppingLocationName: String? {
+        grocyVM.mdShoppingLocations.first(where: {$0.id == barcode.shoppingLocationID})?.name
     }
-    var quIDName: String {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name ?? "quID ERROR"
+    var quIDName: String? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name
     }
     
     var body: some View {
         VStack(alignment: .leading){
             Text(barcode.barcode)
                 .font(.title)
-            Text(LocalizedStringKey("str.md.barcode.info \(barcode.amount != nil ? "\(barcode.amount!) \(quIDName)" : "") \(shoppingLocationName)"))
-                .font(.caption)
+            HStack{
+                if let amount = barcode.amount {
+                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(formatStringAmount(amount)) \(quIDName ?? barcode.quID ?? "noQU")")"))
+                }
+                if let storeName = shoppingLocationName {
+                    Text(LocalizedStringKey("str.md.barcode.info.store \(storeName)"))
+                }
+            }.font(.caption)
         }
     }
 }

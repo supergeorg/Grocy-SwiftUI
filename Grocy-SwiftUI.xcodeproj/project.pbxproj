@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78138F4925AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
+		78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
 		781A25572566838C00560026 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25552566838C00560026 /* AppCommands.swift */; };
 		781A25A3256690C200560026 /* MDProductGroupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25A2256690C200560026 /* MDProductGroupFormView.swift */; };
 		781A25A4256690C200560026 /* MDProductGroupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25A2256690C200560026 /* MDProductGroupFormView.swift */; };
@@ -252,6 +254,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		78138F4825AEF95800B9A50A /* ProductField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductField.swift; sourceTree = "<group>"; };
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		781A25A2256690C200560026 /* MDProductGroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductGroupFormView.swift; sourceTree = "<group>"; };
 		781A25AD2566952A00560026 /* MDProductFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductFormView.swift; sourceTree = "<group>"; };
@@ -754,6 +757,7 @@
 				788D41242580E444009F9A5E /* RemoteImageView.swift */,
 				78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */,
 				78E4802825A5CC2600661FDB /* FieldDescription.swift */,
+				78138F4825AEF95800B9A50A /* ProductField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1014,6 +1018,7 @@
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
 				781A25BD2566B5AF00560026 /* MyIntStepper.swift in Sources */,
 				7880F112256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
+				78138F4925AEF95800B9A50A /* ProductField.swift in Sources */,
 				78CB758F255EA53F00319108 /* Errors.swift in Sources */,
 				786F6E842563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */,
 				78CECD0F258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
@@ -1109,6 +1114,7 @@
 				78CB760B255EB9A000319108 /* ProductBuyModel.swift in Sources */,
 				7891C65D257E539A0014C59E /* ProductInventoryModel.swift in Sources */,
 				78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */,
+				78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */,
 				786F6E9A2564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
 				78CB7609255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,

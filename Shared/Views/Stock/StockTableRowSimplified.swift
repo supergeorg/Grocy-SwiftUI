@@ -73,7 +73,7 @@ struct StockTableRowSimplified: View {
                     if stockElement.amount != formattedAmountAggregated {
                         Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
                             .font(.caption)
-                            .foregroundColor(Color.grocyGray)
+                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                     }
                 }
                 Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")

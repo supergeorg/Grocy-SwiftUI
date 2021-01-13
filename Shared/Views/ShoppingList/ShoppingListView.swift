@@ -253,8 +253,16 @@ struct ShoppingListView: View {
                 ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
             }
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in
-                Section(header: Text(productGroup.name)) {
+                Section(header: Text(productGroup.name).bold()) {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) {shItem in
+                        ShoppingListRowView(shoppingListItem: shItem)
+                    }
+                    .onDelete(perform: deleteItem)
+                }
+            }
+            if !(groupedShoppingList["?"]?.isEmpty ?? true) {
+                Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
+                    ForEach(groupedShoppingList["?"] ?? [], id:\.id) {shItem in
                         ShoppingListRowView(shoppingListItem: shItem)
                     }
                     .onDelete(perform: deleteItem)
