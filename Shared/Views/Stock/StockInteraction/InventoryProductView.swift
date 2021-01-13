@@ -27,12 +27,6 @@ struct InventoryProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    private var filteredProducts: MDProducts {
-        grocyVM.mdProducts.filter {
-            searchProductTerm.isEmpty ? true : $0.name.lowercased().contains(searchProductTerm.lowercased())
-        }
-    }
-    
     private func getQuantityUnit() -> MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -130,14 +124,7 @@ struct InventoryProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.inventory.product"), systemImage: "tag"), content: {
-                #if os(iOS)
-                SearchBar(text: $searchProductTerm, placeholder: "str.search")
-                #endif
-                ForEach(filteredProducts, id: \.id) { productElement in
-                    Text(productElement.name).tag(productElement.id)
-                }
-            })
+            ProductField(productID: $productID, description: "str.stock.inventory.product")
             .onChange(of: productID) { newProduct in
                 grocyVM.getStockProductEntries(productID: productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {

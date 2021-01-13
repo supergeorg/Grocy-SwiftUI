@@ -56,7 +56,7 @@ struct ShoppingListEntryFormView: View {
             self.productID = shoppingListEntry?.productID ?? product?.id ?? ""
             self.amount = Int(shoppingListEntry?.amount ?? "") ?? (product != nil ? 1 : 0)
             self.quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase ?? ""
-            self.note = shoppingListEntry!.note ?? ""
+            self.note = shoppingListEntry?.note ?? ""
     }
     
     private func updateData() {
@@ -102,11 +102,7 @@ struct ShoppingListEntryFormView: View {
                 }
             })
             
-            Picker(selection: $productID, label: Text(LocalizedStringKey("str.shL.entryForm.product")), content: {
-                ForEach(grocyVM.mdProducts, id:\.id) { mdProduct in
-                    Text(mdProduct.name).tag(mdProduct.id)
-                }
-            })
+            ProductField(productID: $productID, description: "str.shL.entryForm.product")
             .onChange(of: productID) { newProduct in
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                     quantityUnitID = selectedProduct.quIDPurchase

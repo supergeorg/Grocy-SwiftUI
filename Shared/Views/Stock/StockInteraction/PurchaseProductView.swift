@@ -29,12 +29,6 @@ struct PurchaseProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    private var filteredProducts: MDProducts {
-        grocyVM.mdProducts.filter {
-            searchProductTerm.isEmpty ? true : $0.name.lowercased().contains(searchProductTerm.lowercased())
-        }
-    }
-    
     private func getQuantityUnit() -> MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -52,7 +46,7 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         self.productID = productToPurchaseID ?? ""
-        self.amount = productToPurchaseAmount ?? 0
+        self.amount = productToPurchaseAmount ?? 0.0
         self.productID = ""
         self.amount = 0.0
         self.quantityUnitID = ""
@@ -81,6 +75,7 @@ struct PurchaseProductView: View {
         grocyVM.getMDQuantityUnits()
         grocyVM.getMDLocations()
         grocyVM.getMDShoppingLocations()
+        grocyVM.getMDProductBarcodes()
     }
     
     var body: some View {
@@ -125,22 +120,15 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.buy.product"), systemImage: "tag"), content: {
-                #if os(iOS)
-                SearchBar(text: $searchProductTerm, placeholder: "str.search")
-                #endif
-                ForEach(filteredProducts, id: \.id) { productElement in
-                    Text(productElement.name).tag(productElement.id)
+            ProductField(productID: $productID, description: "str.stock.buy.product")
+                .onChange(of: productID) { newProduct in
+                    print(productID)
+                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        if locationID.isEmpty { locationID = selectedProduct.locationID }
+                        if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
+                        quantityUnitID = selectedProduct.quIDPurchase
+                    }
                 }
-            })
-            .onChange(of: productID) { newProduct in
-                print(productID)
-                if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                    if locationID.isEmpty { locationID = selectedProduct.locationID }
-                    if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
-                    quantityUnitID = selectedProduct.quIDPurchase
-                }
-            }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
@@ -201,6 +189,12 @@ struct PurchaseProductView: View {
 
 struct PurchaseProductView_Previews: PreviewProvider {
     static var previews: some View {
+        #if os(iOS)
+        NavigationView{
+            PurchaseProductView()
+        }
+        #else
         PurchaseProductView()
+        #endif
     }
 }

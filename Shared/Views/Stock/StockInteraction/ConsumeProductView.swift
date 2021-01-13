@@ -29,12 +29,6 @@ struct ConsumeProductView: View {
     
     @State private var showRecipeInfo: Bool = false
     
-    private var filteredProducts: MDProducts {
-        grocyVM.mdProducts.filter {
-            searchProductTerm.isEmpty ? true : $0.name.lowercased().contains(searchProductTerm.lowercased())
-        }
-    }
-    
     private func getQuantityUnit() -> MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -144,14 +138,7 @@ struct ConsumeProductView: View {
     
     var content: some View {
         Form {
-            Picker(selection: $productID, label: Label(LocalizedStringKey("str.stock.consume.product"), systemImage: "tag"), content: {
-                #if os(iOS)
-                SearchBar(text: $searchProductTerm, placeholder: "str.search")
-                #endif
-                ForEach(filteredProducts, id: \.id) { productElement in
-                    Text(productElement.name).tag(productElement.id)
-                }
-            })
+            ProductField(productID: $productID, description: "str.stock.consume.product")
             .onChange(of: productID) { newProduct in
                 grocyVM.getStockProductEntries(productID: productID)
                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
