@@ -13,7 +13,6 @@ struct StockTableRowActionsView: View {
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
-    @Binding var isShowingSheet: Bool
     
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
@@ -40,7 +39,7 @@ struct StockTableRowActionsView: View {
                     print("opened")
                 }
             Menu(content: {
-                StockTableMenuView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+                StockTableMenuView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             }, label: {
                     RowInteractionButton(image: "ellipsis", backgroundColor: .white, foregroundColor: Color.gray)
             })

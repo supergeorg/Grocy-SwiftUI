@@ -25,7 +25,6 @@ struct StockTableRow: View {
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
-    @Binding var isShowingSheet: Bool
     
     @State private var showDetailView: Bool = false
     
@@ -65,7 +64,7 @@ struct StockTableRow: View {
     }
     
     var body: some View {
-        StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+        StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
         
         if showProduct {
             HStack{

@@ -505,3 +505,5 @@
 "str.quickScan.settings.askDueDate" = "Ask for due date";
 "str.quickScan.settings.askPrice" = "Ask for price";
 "str.quickScan.settings.askStore" = "Ask for store";
+"str.quickScan.input.consumeDefault" = "Default (1)";
+"str.quickScan.input.consumeBarcodeAmount %@" = "Quick consume (%@)";

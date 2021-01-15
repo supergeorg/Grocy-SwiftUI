@@ -28,8 +28,6 @@ struct StockView: View {
     
     @State private var reloadRotationDeg: Double = 0.0
     
-    @State private var isShowingSheet: Bool = false
-    
     @State private var showSearch: Bool = false
     @State private var showFilter: Bool = false
     
@@ -126,15 +124,13 @@ struct StockView: View {
                 ToolbarItemGroup(placement: .automatic, content: {
                     Button(action: {
                         self.showStockJournal.toggle()
-                        //                        self.activeSheet = .stockJournal
-                        //                        self.isShowingSheet.toggle()
                     }, label: {
                         Label("Journal", systemImage: "list.bullet.rectangle")
                     })
                     .popover(isPresented: $showStockJournal, content: {
                         StockJournalView()
                             .padding()
-                            .frame(width: 300, height: 300, alignment: .leading)
+                            .frame(width: 700, height: 500, alignment: .leading)
                     })
                     Button(action: {
                         withAnimation {
@@ -148,7 +144,6 @@ struct StockView: View {
                 })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
-        //            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo %d %@", grocyVM.stock.count, summedValueStr))
         #elseif os(iOS)
         content
             .toolbar(content: {
@@ -161,31 +156,26 @@ struct StockView: View {
                         })
                         Button(action: {
                             self.activeSheet = .stockJournal
-                            self.isShowingSheet.toggle()
                         }, label: {
                             Label(LocalizedStringKey("str.details.stockJournal"), systemImage: "list.bullet.rectangle")
                         })
                         Button(action: {
                             self.activeSheet = .inventoryProduct
-                            self.isShowingSheet.toggle()
                         }, label: {
                             Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
                         })
                         Button(action: {
                             self.activeSheet = .transferProduct
-                            self.isShowingSheet.toggle()
                         }, label: {
                             Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
                         })
                         Button(action: {
                             self.activeSheet = .consumeProduct
-                            self.isShowingSheet.toggle()
                         }, label: {
                             Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
                         })
                         Button(action: {
                             self.activeSheet = .purchaseProduct
-                            self.isShowingSheet.toggle()
                         }, label: {
                             Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart.badge.plus")
                         })
@@ -246,11 +236,11 @@ struct StockView: View {
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }
-            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
         }
         .listStyle(InsetListStyle())
         .animation(.default)
-        .navigationTitle("str.stock.stockOverview".localized)
+        .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {
                 updateData()

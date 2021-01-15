@@ -225,8 +225,6 @@
 		78F1FAC8255EEDD1007D2E8B /* StockTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAC6255EEDD1007D2E8B /* StockTable.swift */; };
 		78F1FADB255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
 		78F1FADC255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
-		78F1FAF7255F0347007D2E8B /* ToolbarSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAF6255F0347007D2E8B /* ToolbarSearch.swift */; };
-		78F1FAF8255F0347007D2E8B /* ToolbarSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAF6255F0347007D2E8B /* ToolbarSearch.swift */; };
 		78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */; };
 		78FA6A942567D40500941460 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
 		78FA6A952567D40500941460 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
@@ -377,7 +375,6 @@
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
 		78F1FAC6255EEDD1007D2E8B /* StockTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTable.swift; sourceTree = "<group>"; };
 		78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MDLocationsView.swift; sourceTree = "<group>"; };
-		78F1FAF6255F0347007D2E8B /* ToolbarSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarSearch.swift; sourceTree = "<group>"; };
 		78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterDataView.swift; sourceTree = "<group>"; };
 		78FA6A932567D40500941460 /* StockJournalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockJournalModel.swift; sourceTree = "<group>"; };
 		78FA6A9A2567D4E000941460 /* TransactionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionType.swift; sourceTree = "<group>"; };
@@ -748,7 +745,6 @@
 			children = (
 				78CB764B255EBB0400319108 /* SearchBarSwiftUI.swift */,
 				78CBE4EC259C919600406B7F /* SearchBarWrapped.swift */,
-				78F1FAF6255F0347007D2E8B /* ToolbarSearch.swift */,
 				78396E8B25629FE600B9878F /* MyTextField.swift */,
 				781A25BC2566B5AF00560026 /* MyIntStepper.swift */,
 				781A25C72566B84600560026 /* MyDoubleStepper.swift */,
@@ -973,7 +969,6 @@
 				78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */,
 				78CB7635255EBA3F00319108 /* StockView.swift in Sources */,
 				78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */,
-				78F1FAF7255F0347007D2E8B /* ToolbarSearch.swift in Sources */,
 				786F6E9225640332004D8DE0 /* MDProductsView.swift in Sources */,
 				78CB74D6255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */,
@@ -1119,7 +1114,6 @@
 				78CB7609255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,
 				78CB75BC255EAE0000319108 /* VisualEffectBlur.swift in Sources */,
-				78F1FAF8255F0347007D2E8B /* ToolbarSearch.swift in Sources */,
 				7848A0CE256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
 				789C2DC7258A118E00D3A3B9 /* MDUserFieldFormView.swift in Sources */,
 				78F0DAC92599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */,

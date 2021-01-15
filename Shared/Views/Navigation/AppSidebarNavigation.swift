@@ -9,6 +9,7 @@ import SwiftUI
 
 extension AppSidebarNavigation {
     enum NavigationItem: String {
+        case quickScan = "barcode.viewfinder"
         case stockOverview = "books.vertical"
         case shoppingList = "cart"
         case recipes = "list.bullet.below.rectangle"
@@ -43,10 +44,11 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
+    #if os(iOS)
+    @State private var selection: NavigationItem? = NavigationItem.quickScan
+    #else
     @State private var selection: NavigationItem? = NavigationItem.stockOverview
-//    @AppStorage("sidebarSelection") private var sidebarSelection: NavigationItem = .shoppingList
-    //        @AppStorage("viewSelection") var selection: NavigationItem? = NavigationItem.stockOverview
-    //    @AppStorage("viewSelection") var viewSelection: NavigationItem = NavigationItem.stockOverview
+    #endif
     
     private func toggleSidebar() {
         #if os(macOS)
@@ -57,7 +59,6 @@ struct AppSidebarNavigation: View {
     var body: some View {
         NavigationView {
             List(selection: $selection) {
-//            List(selection: sidebarSelection) {
                 #if os(macOS)
                 Image("grocy-logo")
                     .resizable()
@@ -65,6 +66,13 @@ struct AppSidebarNavigation: View {
                 Divider()
                 #endif
                 Group {
+                    #if os(iOS)
+                    NavigationLink(destination: QuickScanModeView(), tag: NavigationItem.quickScan, selection: $selection) {
+                        Label(LocalizedStringKey("str.nav.quickScan"), systemImage: NavigationItem.quickScan.rawValue)
+                    }
+                    .tag(NavigationItem.quickScan)
+                    #endif
+                    
                     NavigationLink(destination: StockView(), tag: NavigationItem.stockOverview, selection: $selection) {
                         Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: NavigationItem.stockOverview.rawValue)
                     }

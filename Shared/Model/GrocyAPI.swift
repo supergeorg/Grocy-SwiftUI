@@ -43,6 +43,7 @@ public enum ResponseCodes: Int {
     case GetSuccessful = 200
     case PostSuccessful = 204
     case Unsuccessful = 400
+    case NotFound = 404
 }
 
 protocol GrocyAPIProvider {
@@ -104,7 +105,7 @@ public class GrocyApi: GrocyAPIProvider {
             .mapError{ _ in APIError.serverError }
             .tryMap() { data, response -> Data in
                 guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
+                      httpResponse.statusCode == ResponseCodes.GetSuccessful.rawValue else {
                     throw URLError(.badServerResponse)
                 }
                 return data

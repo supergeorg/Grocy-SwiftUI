@@ -13,7 +13,6 @@ struct StockTableMenuView: View {
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
-    @Binding var isShowingSheet: Bool
     
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
@@ -27,7 +26,6 @@ struct StockTableMenuView: View {
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .addToShL
-                isShowingSheet.toggle()
             }, label: {
                 Label(LocalizedStringKey("str.stock.tbl.menu.addToShL"), systemImage: "cart")
             })
@@ -36,28 +34,24 @@ struct StockTableMenuView: View {
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productPurchase
-                    isShowingSheet.toggle()
                 }, label: {
                     Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart")
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productConsume
-                    isShowingSheet.toggle()
                 }, label: {
                     Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productTransfer
-                    isShowingSheet.toggle()
                 }, label: {
                     Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productInventory
-                    isShowingSheet.toggle()
                 }, label: {
                     Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
                 })

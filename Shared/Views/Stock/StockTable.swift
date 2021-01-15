@@ -56,7 +56,6 @@ struct StockTable: View {
     
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
-    @Binding var isShowingSheet: Bool
     
     private func getCaloriesSum(_ stockElement: StockElement) -> Double {
         if let calories = Double(stockElement.product.calories ?? "") {
@@ -134,7 +133,7 @@ struct StockTable: View {
             StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU".localized, stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             ForEach(sortedStock, id:\.productID) { stockElement in
-                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             }
         }
         .padding(.horizontal)
@@ -144,7 +143,7 @@ struct StockTable: View {
     var contentSimplified: some View {
         VStack() {
             ForEach(sortedStock, id:\.productID) { stockElement in
-                StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+                StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             }
         }
     }

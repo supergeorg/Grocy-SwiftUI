@@ -30,17 +30,17 @@ func checkForTorch() -> Bool {
 
 func toggleTorch(on: Bool) {
     guard let device = AVCaptureDevice.default(for: .video) else { return }
-
+    
     if device.hasTorch {
         do {
             try device.lockForConfiguration()
-
+            
             if on == true {
                 device.torchMode = .on
             } else {
                 device.torchMode = .off
             }
-
+            
             device.unlockForConfiguration()
         } catch {
             print("Torch could not be used")
@@ -50,18 +50,52 @@ func toggleTorch(on: Bool) {
     }
 }
 
+enum ActiveSheet: Identifiable {
+    case config, input
+    
+    var id: Int {
+        hashValue
+    }
+}
+
 struct QuickScanModeView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
     @State private var flashOn: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
-    @State private var showConfig: Bool = false
+
+    @State private var activeSheet: ActiveSheet?
+    
+    @State private var firstInSession: Bool = true
+    
+    @State private var recognizedBarcode: MDProductBarcode? = nil
+    
+    func updateData() {
+//        grocyVM.getSystemConfig()
+        grocyVM.getMDProductBarcodes()
+        grocyVM.getMDProducts()
+        grocyVM.getMDLocations()
+        grocyVM.getMDShoppingLocations()
+    }
+    
+    func searchForBarcode(barcodeString: String) -> MDProductBarcode? {
+        return grocyVM.mdProductBarcodes.first(where: {$0.barcode == barcodeString})
+    }
     
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         switch result {
-        case .success(let barcode):
-            print(barcode)
-            guard barcode.count == 13 else {return}
-            
-            print("sucess")
+        case .success(let barcodeString):
+            guard barcodeString.count == 13 else {return}
+            if let barcode = searchForBarcode(barcodeString: barcodeString) {
+                recognizedBarcode = barcode
+                activeSheet = .input
+                //                showSheet = true
+                print(barcode.productID)
+                //                if let product = grocyVM.mdProducts.first(where: {$0.id == barcode.productID}) {
+                //                    print(product.name)
+                //                }
+                ////                showIn
+            }
         case .failure(let error):
             print("Scanning failed")
             print(error)
@@ -70,10 +104,11 @@ struct QuickScanModeView: View {
     
     var body: some View {
         ZStack(alignment: .top){
-            CodeScannerView(codeTypes: [.ean13], simulatedData: "5901234123457", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
             HStack{
                 Button(action: {
-                    showConfig.toggle()
+                    activeSheet = .config
+                    //                    showSheet.toggle()
                 }, label: {
                     Image(systemName: "gear")
                 })
@@ -93,11 +128,18 @@ struct QuickScanModeView: View {
                 })
                 .disabled(!checkForTorch())
             }
+            .font(.title)
             .padding(.horizontal)
         }
-        .popover(isPresented: $showConfig, content: {
-            QuickScanModeConfigView()
-        })
+        .sheet(item: $activeSheet) { item in
+            switch item {
+            case .config:
+                QuickScanModeConfigView()
+            case .input:
+                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession)
+            }
+        }
+        .onAppear(perform: updateData)
     }
 }
 

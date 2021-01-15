@@ -16,8 +16,10 @@ enum getDataMode {
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPIProvider
     
-    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://demo.grocy.info"
-    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
+    let demoServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
+    
+    @AppStorage("grocyServerURL") var grocyServerURL: String = ""
+    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
@@ -62,16 +64,14 @@ class GrocyViewModel: ObservableObject {
         if !isDemoModus {
             grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         } else {
-            //            grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
-            grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+            grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
         //        self.lastLoadingFailed = true
     }
     
     func setDemoModus() {
-        //        grocyApi.setLoginData(baseURL: "https://demo.grocy.info", apiKey: "")
-        grocyApi.setLoginData(baseURL: "https://test-xjixc1minhzshgy6o142.demo.grocy.info", apiKey: "")
+        grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         isDemoModus = true
         isLoggedIn = true
     }
@@ -88,11 +88,10 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: sysinfo\(error)")
+                    print("Handle error: sysinfo \(error)")
                 case .finished:
                     break
                 }
-                
             }) { (systemInfo) in
                 DispatchQueue.main.async {
                     if !systemInfo.grocyVersion.version.isEmpty {
@@ -145,7 +144,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: sysinfo\(error)")
+                    print("Handle error: sysinfo \(error)")
                 case .finished:
                     break
                 }
@@ -288,7 +287,7 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-                print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
+        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -304,9 +303,6 @@ class GrocyViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-        //            .replaceError(with: [])
-        //            .assign(to: \.lastErrors, on: self)
-        //            .store(in: &cancellables)
     }
     
     func undoBookingWithID(id: String) {
@@ -353,39 +349,74 @@ class GrocyViewModel: ObservableObject {
     
     // MARK: -Master Data
     
+    //    func getEntity(entity: ObjectEntities) {
+    //        grocyApi.getObject(object: entity)
+    //            .sink(receiveCompletion: { result in
+    //                switch result {
+    //                case .failure(let error):
+    //                    print("Handle error: getEntity \(error)")
+    //                case .finished:
+    //                    break
+    //                }
+    //                
+    //            }, receiveValue: { entityResponse in
+    ////                self.user = user
+    //                if mdLocations.isEmpty{
+    //                self.mdLocations = entityResponse
+    //                } else {self.mdProducts = entityResponse}
+    //            })
+    //            { (entityResponse) in
+    //                DispatchQueue.main.async {
+    //                    switch entity {
+    //                    case .batteries:
+    //                        print("not implemented")
+    //                    case .chores:
+    //                        print("not implemented")
+    //                    case .equipment:
+    //                        print("not implemented")
+    //                    case .locations:
+    //                        self.mdLocations = entityResponse
+    //                    default:
+    //                        print("not implemented")
+    //                    }
+    //                }
+    //            }
+    //            .store(in: &cancellables)
+    //    }
+    
     func getMDProducts() {
-        let cancellable = grocyApi.getObject(object: .products)
+        grocyApi.getObject(object: .products)
             .replaceError(with: [])
             .assign(to: \.mdProducts, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func getMDLocations() {
-        let cancellable = grocyApi.getObject(object: .locations)
+        grocyApi.getObject(object: .locations)
             .replaceError(with: [])
             .assign(to: \.mdLocations, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func getMDShoppingLocations() {
-        let cancellable = grocyApi.getObject(object: .shopping_locations)
+        grocyApi.getObject(object: .shopping_locations)
             .replaceError(with: [])
             .assign(to: \.mdShoppingLocations, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func getMDQuantityUnits() {
-        let cancellable = grocyApi.getObject(object: .quantity_units)
+        grocyApi.getObject(object: .quantity_units)
             .replaceError(with: [])
             .assign(to: \.mdQuantityUnits, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func getMDProductGroups() {
-        let cancellable = grocyApi.getObject(object: .product_groups)
+        grocyApi.getObject(object: .product_groups)
             .replaceError(with: [])
             .assign(to: \.mdProductGroups, on: self)
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func getMDProductBarcodes() {
@@ -406,7 +437,7 @@ class GrocyViewModel: ObservableObject {
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
-        //        print(String(data: jsonContent, encoding: .utf8)!)
+        //                print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {

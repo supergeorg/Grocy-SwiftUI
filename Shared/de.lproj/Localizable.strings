@@ -505,3 +505,5 @@
 "str.quickScan.settings.askDueDate" = "Nach Haltbarkeitsdatum fragen";
 "str.quickScan.settings.askPrice" = "Nach Preis fragen";
 "str.quickScan.settings.askStore" = "Nach Geschäft fragen";
+"str.quickScan.input.consumeDefault" = "Standard (1)";
+"str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";

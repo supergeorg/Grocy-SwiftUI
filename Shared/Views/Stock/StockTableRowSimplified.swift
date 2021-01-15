@@ -17,7 +17,6 @@ struct StockTableRowSimplified: View {
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
-    @Binding var isShowingSheet: Bool
     
     @State private var showDetailView: Bool = false
     
@@ -58,7 +57,7 @@ struct StockTableRowSimplified: View {
     
     var body: some View {
         HStack{
-            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, isShowingSheet: $isShowingSheet)
+            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             VStack(alignment: .leading){
                 Text(stockElement.product.name)
                     .font(.headline)
