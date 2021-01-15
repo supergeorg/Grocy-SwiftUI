@@ -16,7 +16,7 @@ struct StockTableRowSimplified: View {
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-    @Binding var activeSheet: StockInteractionSheet
+    @Binding var activeSheet: StockInteractionSheet?
     @Binding var isShowingSheet: Bool
     
     @State private var showDetailView: Bool = false

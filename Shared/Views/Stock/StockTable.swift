@@ -55,7 +55,7 @@ struct StockTable: View {
     @State private var sortAscending: Bool = true
     
     @Binding var selectedStockElement: StockElement?
-    @Binding var activeSheet: StockInteractionSheet
+    @Binding var activeSheet: StockInteractionSheet?
     @Binding var isShowingSheet: Bool
     
     private func getCaloriesSum(_ stockElement: StockElement) -> Double {

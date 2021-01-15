@@ -12,7 +12,7 @@ struct StockTableRowActionsView: View {
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-    @Binding var activeSheet: StockInteractionSheet
+    @Binding var activeSheet: StockInteractionSheet?
     @Binding var isShowingSheet: Bool
     
     var quantityUnit: MDQuantityUnit {

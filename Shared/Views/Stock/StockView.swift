@@ -12,7 +12,8 @@ enum StockColumn {
 }
 
 enum StockInteractionSheet: Identifiable {
-    case none, purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory
+    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory
+    
     var id: Int {
         self.hashValue
     }
@@ -44,7 +45,7 @@ struct StockView: View {
     @State private var showStockJournal: Bool = false
     #endif
     
-    @State private var activeSheet: StockInteractionSheet = .none
+    @State private var activeSheet: StockInteractionSheet?
     
     var numExpiringSoon: Int {
         grocyVM.stock
@@ -191,8 +192,8 @@ struct StockView: View {
                     }
                 })
             })
-            .sheet(isPresented: $isShowingSheet, content: {
-                switch activeSheet {
+            .sheet(item: $activeSheet, content: { item in
+                switch item {
                 case .stockJournal:
                     StockJournalView()
                 case .purchaseProduct:
@@ -229,8 +230,6 @@ struct StockView: View {
                     NavigationView{
                         InventoryProductView(productToInventoryID: selectedStockElement?.product.id)
                     }
-                case .none:
-                    EmptyView()
                 }
             })
         #endif
@@ -253,7 +252,10 @@ struct StockView: View {
         .animation(.default)
         .navigationTitle("str.stock.stockOverview".localized)
         .onAppear(perform: {
-            updateData()
+            if firstAppear {
+                updateData()
+                firstAppear = false
+            }
         })
     }
 }
