@@ -123,9 +123,9 @@ struct MDProductGroupsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdProductGroups.isEmpty {
-                Text("str.md.empty \("str.md.productGroups".localized)")
+                Text(LocalizedStringKey("str.md.productGroups.empty"))
             } else if filteredProductGroups.isEmpty {
-                Text("str.noSearchResult")
+                Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredProductGroups, id:\.id) { productGroup in
                 NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup)) {

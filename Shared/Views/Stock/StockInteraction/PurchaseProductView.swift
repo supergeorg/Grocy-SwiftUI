@@ -151,7 +151,7 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "Euro", errorMessage: "str.stock.buy.product.price.invalid", systemImage: "eurosign.circle")
+                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: grocyVM.getCurrencySymbol(), errorMessage: "str.stock.buy.product.price.invalid", systemImage: "eurosign.circle")
                 
                 Picker("", selection: $isTotalPrice, content: {
                     Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
