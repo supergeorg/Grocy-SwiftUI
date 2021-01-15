@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum TransactionType: String, Codable {
+enum TransactionType: String, Codable, CaseIterable {
     case purchase = "purchase"
     case consume = "consume"
     case inventoryCorrection = "inventory-correction"
@@ -25,13 +25,13 @@ enum TransactionType: String, Codable {
         case .purchase:
             return LocalizedStringKey("tr.purchase")
         case .inventoryCorrection:
-            return LocalizedStringKey("tr.inventory")
+            return LocalizedStringKey("tr.inventoryCorrection")
         case .productOpened:
             return LocalizedStringKey("tr.opened")
         case .stockEditOld:
-            return LocalizedStringKey("tr.editOld")
+            return LocalizedStringKey("tr.stockEditOld")
         case .stockEditNew:
-            return LocalizedStringKey("tr.editNew")
+            return LocalizedStringKey("tr.stockEditNew")
         case .transferFrom:
             return LocalizedStringKey("tr.transferFrom")
         case .transferTo:

@@ -201,11 +201,15 @@
 
 "str.stock.journal" = "Stock journal";
 "str.stock.journal.empty" = "No transactions found.";
+"str.stock.journal.product" = "Product";
 "str.stock.journal.product.info %@" = "Product: %@";
 "str.stock.journal.amount.info %@" = "Amount: %@";
 "str.stock.journal.transactionTime.info %@" = "Transaction time: %@";
+"str.stock.journal.transactionType" = "Transaction type";
 "str.stock.journal.transactionType.info %@" = "Transaction type: %@";
+"str.stock.journal.location" = "Location";
 "str.stock.journal.location.info %@" = "Location: %@";
+"str.stock.journal.user" = "User";
 "str.stock.journal.user.info %@" = "Done by: %@";
 
 // MARK: - Shopping List

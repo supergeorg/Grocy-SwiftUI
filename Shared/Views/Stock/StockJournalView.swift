@@ -11,47 +11,46 @@ struct StockJournalFilterBar: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var searchString: String
-    @Binding var filteredProduct: MDProduct?
+    @Binding var filteredProductID: String?
     @Binding var filteredTransactionType: TransactionType?
-    @Binding var filteredLocation: MDLocation?
-    @Binding var filteredUser: GrocyUser?
+    @Binding var filteredLocationID: String?
+    @Binding var filteredUserID: String?
     
     var body: some View {
-        HStack{
+        VStack{
+            SearchBar(text: $searchString, placeholder: "str.search")
             HStack{
-                Image(systemName: "magnifyingglass")
-                TextField("Search", text: $searchString)
+                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                    Text("str.stock.all").tag(nil as String?)
+                    ForEach(grocyVM.mdProducts, id:\.id) { product in
+                        Text(product.name).tag(product.id as String?)
+                    }
+                }).pickerStyle(MenuPickerStyle())
+                Spacer()
+                
+                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                    Text("str.stock.all").tag(nil as TransactionType?)
+                    ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
+                        Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
+                    }
+                }).pickerStyle(MenuPickerStyle())
+                Spacer()
+                
+                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                    Text("str.stock.all").tag(nil as String?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                        Text(location.name).tag(location.id as String?)
+                    }
+                }).pickerStyle(MenuPickerStyle())
+                Spacer()
+                
+                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                    Text("str.stock.all").tag(nil as String?)
+                    ForEach(grocyVM.users, id:\.id) { user in
+                        Text(user.displayName).tag(user.id as String?)
+                    }
+                }).pickerStyle(MenuPickerStyle())
             }
-            Spacer()
-            //            HStack{
-            //                Image(systemName: "line.horizontal.3.decrease.circle")
-            //                Picker(selection: $filteredLocation, label: Text("Standort"), content: {
-            //                    Text("str.stock.all").tag("")
-            //                    ForEach(grocyVM.mdLocations, id:\.id) { location in
-            //                        Text(location.name).tag(location.id)
-            //                    }
-            //                }).pickerStyle(MenuPickerStyle())
-            //            }
-            //            Spacer()
-            //            HStack{
-            //                Image(systemName: "line.horizontal.3.decrease.circle")
-            //                Picker(selection: $filteredProductGroup, label: Text("Produktgruppe"), content: {
-            //                    Text("str.stock.all").tag("")
-            //                    ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
-            //                        Text(productGroup.name).tag(productGroup.id)
-            //                    }
-            //                }).pickerStyle(MenuPickerStyle())
-            //            }
-            //            Spacer()
-            //            HStack{
-            //                Image(systemName: "line.horizontal.3.decrease.circle")
-            //                Picker(selection: $filteredStatus, label: Text("Status"), content: {
-            //                    Text(ProductStatus.all.rawValue.localized).tag(ProductStatus.all)
-            //                    Text(ProductStatus.expiringSoon.rawValue.localized).tag(ProductStatus.expiringSoon)
-            //                    Text(ProductStatus.expired.rawValue.localized).tag(ProductStatus.expired)
-            //                    Text(ProductStatus.belowMinStock.rawValue.localized).tag(ProductStatus.belowMinStock)
-            //                }).pickerStyle(MenuPickerStyle())
-            //            }
         }
     }
 }
@@ -107,10 +106,10 @@ struct StockJournalView: View {
     
     @State private var searchString: String = ""
     
-    @State private var filteredProduct: MDProduct? = nil
-    @State private var filteredLocation: MDLocation? = nil
-    @State private var filteredTransactionType: TransactionType? = nil
-    @State private var filteredUser: GrocyUser? = nil
+    @State private var filteredProductID: String?
+    @State private var filteredLocationID: String?
+    @State private var filteredTransactionType: TransactionType?
+    @State private var filteredUserID: String?
     
     var filteredJournal: StockJournal {
         grocyVM.stockJournal
@@ -118,6 +117,18 @@ struct StockJournalView: View {
                 !searchString.isEmpty ? grocyVM.mdProducts.first(where: { product in
                     product.name.localizedCaseInsensitiveContains(searchString)
                 })?.id == journalEntry.productID : true
+            }
+            .filter { journalEntry in
+                filteredProductID == nil ? true : (journalEntry.productID == filteredProductID)
+            }
+            .filter { journalEntry in
+                filteredLocationID == nil ? true : (journalEntry.locationID == filteredLocationID)
+            }
+            .filter { journalEntry in
+                filteredTransactionType == nil ? true : (journalEntry.transactionType == filteredTransactionType)
+            }
+            .filter { journalEntry in
+                filteredUserID == nil ? true : (journalEntry.userID == filteredUserID)
             }
             .sorted {
                 $0.rowCreatedTimestamp > $1.rowCreatedTimestamp
@@ -133,16 +144,14 @@ struct StockJournalView: View {
         #if os(iOS)
         NavigationView {
             content
-        }
-        .toolbar(content: {
-            ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "x.circle")
+                .toolbar(content: {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
                 })
-            })
-        })
+        }
         #else
         content
         #endif
@@ -150,7 +159,7 @@ struct StockJournalView: View {
     
     var content: some View {
         List() {
-            StockJournalFilterBar(searchString: $searchString, filteredProduct: $filteredProduct, filteredTransactionType: $filteredTransactionType, filteredLocation: $filteredLocation, filteredUser: $filteredUser)
+            StockJournalFilterBar(searchString: $searchString, filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
             if grocyVM.stockJournal.isEmpty {
                 Text(LocalizedStringKey("str.stock.journal.empty")).padding()
             } else if filteredJournal.isEmpty {
