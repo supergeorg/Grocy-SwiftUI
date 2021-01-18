@@ -63,7 +63,7 @@ struct QuickScanModeView: View {
     
     @State private var flashOn: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
-
+    
     @State private var activeSheet: ActiveSheet?
     
     @State private var firstInSession: Bool = true
@@ -71,7 +71,7 @@ struct QuickScanModeView: View {
     @State private var recognizedBarcode: MDProductBarcode? = nil
     
     func updateData() {
-//        grocyVM.getSystemConfig()
+        //        grocyVM.getSystemConfig()
         grocyVM.getMDProductBarcodes()
         grocyVM.getMDProducts()
         grocyVM.getMDLocations()
@@ -108,7 +108,6 @@ struct QuickScanModeView: View {
             HStack{
                 Button(action: {
                     activeSheet = .config
-                    //                    showSheet.toggle()
                 }, label: {
                     Image(systemName: "gear")
                 })

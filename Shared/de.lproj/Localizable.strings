@@ -507,3 +507,4 @@
 "str.quickScan.settings.askStore" = "Nach Geschäft fragen";
 "str.quickScan.input.consumeDefault" = "Standard (1)";
 "str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";
+"str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";

@@ -57,7 +57,7 @@ struct ConsumeProductView: View {
     
     private func openProduct() {
         let cStockEntryID = stockEntryID.isEmpty ? nil : stockEntryID
-        let openInfo = ProductOpen(amount: amount, stockEntryID: cStockEntryID)
+        let openInfo = ProductOpen(amount: amount, stockEntryID: cStockEntryID, allowSubproductSubstitution: nil)
         grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
     }
     
@@ -65,7 +65,7 @@ struct ConsumeProductView: View {
         let cStockEntryID = stockEntryID.isEmpty ? nil : stockEntryID
         let intRecipeID = Int(recipeID)
         let intLocationID = Int(locationID)
-        let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: cStockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil)
+        let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: cStockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
         grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
     }
     
@@ -121,7 +121,7 @@ struct ConsumeProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
+                ToolbarItemGroup(placement: .confirmationAction) {
                     Button("str.stock.consume.product.open") {
                         openProduct()
                         resetForm()

@@ -97,8 +97,7 @@ struct TransferProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
+                ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.stock.transfer.product.transfer")) {
                         transferProduct()
                         resetForm()

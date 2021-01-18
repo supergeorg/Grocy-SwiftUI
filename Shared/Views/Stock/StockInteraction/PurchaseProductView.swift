@@ -107,8 +107,7 @@ struct PurchaseProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
+                ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.stock.buy.product.buy")) {
                         purchaseProduct()
                         resetForm()

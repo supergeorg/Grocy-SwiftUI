@@ -45,7 +45,6 @@ struct QuickScanModeConfigView: View {
     @AppStorage("quickScanConsumeAskSpecificItem") var quickScanConsumeAskSpecificItem: QuickScanAskMode = QuickScanAskMode.always
     @AppStorage("quickScanConsumeConsumeAll") var quickScanConsumeConsumeAll: Bool = false
     
-    @AppStorage("quickScanMarkAsOpenedAskLocation") var quickScanMarkAsOpenedAskLocation: QuickScanAskMode = QuickScanAskMode.always
     @AppStorage("quickScanMarkAsOpenedAskSpecificItem") var quickScanMarkAsOpenedAskSpecificItem: QuickScanAskMode = QuickScanAskMode.always
     
     @AppStorage("quickScanPurchaseAskDueDate") var quickScanPurchaseAskDueDate: QuickScanAskMode = QuickScanAskMode.always
@@ -63,7 +62,6 @@ struct QuickScanModeConfigView: View {
                 }
                 
                 Section(header: Text(LocalizedStringKey("str.quickScan.markAsOpened"))) {
-                    QuickScanModeConfigPicker(pickerSetting: $quickScanMarkAsOpenedAskLocation, description: "str.quickScan.settings.askLocation", icon: "mappin.circle.fill", enableFirstInSession: false)
                     QuickScanModeConfigPicker(pickerSetting: $quickScanMarkAsOpenedAskSpecificItem, description: "str.quickScan.settings.askSpecificEntry", icon: "line.3.crossed.swirl.circle.fill", enableFirstInSession: false)
                 }
                 

@@ -111,8 +111,7 @@ struct InventoryProductView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
+                ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.stock.inventory.product.inventory")) {
                         inventoryProduct()
                         resetForm()

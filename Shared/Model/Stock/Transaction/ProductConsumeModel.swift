@@ -27,6 +27,9 @@ import Foundation
 //exact_amount    boolean
 //For tare weight handling enabled products, true when the given is the absolute amount to be consumed, not the amount including the container weight
 
+//allow_subproduct_substitution    boolean
+//True when any in-stock sub product should be used when the given product is a parent product and currently not in-stock
+
 struct ProductConsume: Codable {
     let amount: Double
     let transactionType: TransactionType
@@ -35,6 +38,7 @@ struct ProductConsume: Codable {
     let recipeID: Int?
     let locationID: Int?
     let exactAmount: Bool?
+    let allowSubproductSubstitution: Bool?
 
     enum CodingKeys: String, CodingKey {
         case amount
@@ -44,5 +48,6 @@ struct ProductConsume: Codable {
         case recipeID = "recipe_id"
         case locationID = "location_id"
         case exactAmount = "exact_amount"
+        case allowSubproductSubstitution = "allow_subproduct_substitution"
     }
 }
