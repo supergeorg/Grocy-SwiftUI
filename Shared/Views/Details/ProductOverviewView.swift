@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct ProductOverviewView: View {
     var productDetails: ProductDetailsModel
@@ -63,7 +64,15 @@ struct ProductOverviewView: View {
                 Text(LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown"))
             
             if let pictureURL = productDetails.pictureURL {
-                RemoteImageView(withURL: pictureURL)
+                if let url = URL(string: pictureURL) {
+                    URLImage(url: url) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                    }
+                    .frame(width: 50, height: 50)
+                }
             }
         }
         .toolbar(content: {

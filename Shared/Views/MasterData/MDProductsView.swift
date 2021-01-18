@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct MDProductRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -18,8 +19,15 @@ struct MDProductRowView: View {
                 let utf8str = pictureFileName.data(using: .utf8)
                 if let base64Encoded = utf8str?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
                     if let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded) {
-                        RemoteImageView(withURL: pictureURL)
-                            .frame(width: 100, height: 100)
+                        if let url = URL(string: pictureURL) {
+                            URLImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .background(Color.white)
+                            }
+                            .frame(width: 75, height: 75)
+                        }
                     }
                 }
             }
@@ -39,7 +47,7 @@ struct MDProductRowView: View {
                 }
                 if let description = product.mdProductDescription {
                     if !description.isEmpty{
-                        Text(description).font(.caption)
+                        Text(description).font(.caption).italic()
                     }
                 }
             }

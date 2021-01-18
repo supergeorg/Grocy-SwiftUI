@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct MDLocationRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -16,8 +17,15 @@ struct MDLocationRowView: View {
         HStack{
             if let uf = location.userfields?.first(where: {$0.key == AppSpecificUserFields.locationPicture.rawValue }) {
                 if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
-                    RemoteImageView(withURL: pictureURL)
+                    if let url = URL(string: pictureURL) {
+                        URLImage(url: url) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .background(Color.white)
+                        }
                         .frame(width: 100, height: 100)
+                    }
                 }
             }
             VStack(alignment: .leading) {

@@ -3,10 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78113B7625B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */; };
+		78113B7725B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */; };
+		78113B7E25B5A19F0000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B7D25B5A19F0000B237 /* URLImage */; };
+		78113B8425B5A3A50000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B8325B5A3A50000B237 /* URLImage */; };
 		78138F4925AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
 		78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
 		781A25572566838C00560026 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A25552566838C00560026 /* AppCommands.swift */; };
@@ -252,6 +256,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTextIconStyle.swift; sourceTree = "<group>"; };
 		78138F4825AEF95800B9A50A /* ProductField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductField.swift; sourceTree = "<group>"; };
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		781A25A2256690C200560026 /* MDProductGroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductGroupFormView.swift; sourceTree = "<group>"; };
@@ -386,6 +391,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78113B7E25B5A19F0000B237 /* URLImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +399,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78113B8425B5A3A50000B237 /* URLImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,6 +689,7 @@
 				78CB75A4255EA5A900319108 /* Localization.swift */,
 				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
 				78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */,
+				78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -794,6 +802,7 @@
 			);
 			name = "Grocy-SwiftUI (iOS)";
 			packageProductDependencies = (
+				78113B7D25B5A19F0000B237 /* URLImage */,
 			);
 			productName = "Grocy-SwiftUI (iOS)";
 			productReference = 78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */;
@@ -813,6 +822,7 @@
 			);
 			name = "Grocy-SwiftUI (macOS)";
 			packageProductDependencies = (
+				78113B8325B5A3A50000B237 /* URLImage */,
 			);
 			productName = "Grocy-SwiftUI (macOS)";
 			productReference = 78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */;
@@ -889,6 +899,7 @@
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
+				78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */,
 			);
 			productRefGroup = 78CB749B255E9EF800319108 /* Products */;
 			projectDirPath = "";
@@ -964,6 +975,7 @@
 				78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */,
 				7891C647257E3BDD0014C59E /* RowInteractionButton.swift in Sources */,
 				786F6E8B2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
+				78113B7625B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */,
 				78408AD125A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
 				786F6EA42564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */,
@@ -1141,6 +1153,7 @@
 				7826270F256E847F00ECED03 /* StockProductPriceHistory.swift in Sources */,
 				78CB75A9255EA5A900319108 /* DateFormatter.swift in Sources */,
 				782626F8256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
+				78113B7725B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */,
 				78CB75B1255EAB1400319108 /* Animations.swift in Sources */,
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
@@ -1342,7 +1355,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = iphoneos;
@@ -1365,7 +1378,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = iphoneos;
@@ -1393,7 +1406,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = macosx;
@@ -1419,7 +1432,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
 				PRODUCT_NAME = "Grocy-SwiftUI";
 				SDKROOT = macosx;
@@ -1565,6 +1578,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		78113B7D25B5A19F0000B237 /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+		78113B8325B5A3A50000B237 /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 78CB748E255E9EF600319108 /* Project object */;
 }

@@ -54,6 +54,7 @@ class GrocyViewModel: ObservableObject {
     
     @Published var lastErrors: [ErrorMessage] = []
     @Published var lastError: ErrorMessage = ErrorMessage(errorMessage: "")
+    @Published var lastStockActions: StockJournal = []
     
     var cancellables = Set<AnyCancellable>()
     
@@ -297,9 +298,9 @@ class GrocyViewModel: ObservableObject {
                     break
                 }
                 
-            }) { (lastError) in
+            }) { (stockReturn) in
                 DispatchQueue.main.async {
-                    self.lastErrors = lastError
+                    self.lastStockActions.append(stockReturn)
                 }
             }
             .store(in: &cancellables)
