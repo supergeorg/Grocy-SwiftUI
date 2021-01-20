@@ -452,6 +452,7 @@
 "str.settings" = "Settings";
 "str.settings.login" = "Login";
 "str.settings.login.demo" = "Use demo server";
+"str.settings.login.createAPIKey" = "Create API key";
 "str.settings.logout" = "Logout from server";
 "str.settings.loggedInAs %@" = "Logged in as user %@";
 "str.settings.info" = "Information about Grocy-Server";
@@ -508,3 +509,10 @@
 "str.quickScan.input.consumeDefault" = "Default (1)";
 "str.quickScan.input.consumeBarcodeAmount %@" = "Quick consume (%@)";
 "str.quickScan.input.info.consumeAmount %@" = "Quick consume amount: %@";
+
+// MARK: - Onboarding
+"str.onboard.start" = "Let's get started!";
+"str.onboard.grocy.title" = "grocy - ERP beyond your fridge";
+"str.onboard.grocy.subtitle" = "grocy is a web-based self-hosted groceries & household management solution for your home.";
+"str.onboard.app.title" = "Grocy for iOS/macOS";
+"str.onboard.app.subtitle" = "An app in native design, allowing a comfortable use of Grocy at home and on the go.";

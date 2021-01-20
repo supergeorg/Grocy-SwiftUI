@@ -23,13 +23,31 @@ struct AboutLineView: View {
 }
 
 struct AboutView: View {
+    @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
     var body: some View {
         Form(){
+            Section{
             Text(LocalizedStringKey("str.settings.about.thanks"))
+            
             AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
+            
             AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
-            AboutLineView(iconName: "barcode.viewfinder", caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
-            AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
+            
+            Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
+                AboutLineView(iconName: "barcode.viewfinder", caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
+            })
+            .foregroundColor(.primary)
+            
+            Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
+                AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
+            })
+            .foregroundColor(.primary)
+            }
+            Button(action: {
+                self.onboardingNeeded = true
+            }, label: {
+                Text("SHOW ONBOARDING")
+            })
         }
         .navigationTitle(LocalizedStringKey("str.settings.about"))
     }

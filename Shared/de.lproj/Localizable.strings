@@ -452,6 +452,7 @@
 "str.settings" = "Einstellungen";
 "str.settings.login" = "Anmelden";
 "str.settings.login.demo" = "Demo-Server benutzen";
+"str.settings.login.createAPIKey" = "API-Key erstellen";
 "str.settings.logout" = "Von Server abmelden";
 "str.settings.loggedInAs %@" = "Als Benutzer %@ angemeldet";
 "str.settings.info" = "Informationen zum Grocy-Server";
@@ -508,3 +509,10 @@
 "str.quickScan.input.consumeDefault" = "Standard (1)";
 "str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";
 "str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";
+
+// MARK: - Onboarding and Login
+"str.onboard.start" = "Los geht's!";
+"str.onboard.grocy.title" = "grocy - ERP für deinen Kühlschrank";
+"str.onboard.grocy.subtitle" = "grocy ist eine selbst gehostete Webanwendung zur Lebensmittel- und Haushaltsverwaltung.";
+"str.onboard.app.title" = "Grocy für iOS/macOS";
+"str.onboard.app.subtitle" = "Eine App in nativen Design, welche eine komfortable Nutzung von Grocy zuhause und unterwegs ermöglicht.";
