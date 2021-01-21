@@ -62,7 +62,7 @@ struct MDQuantityUnitsView: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
-                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search".localized) }
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
                                 isSearching.toggle()
                             }, label: {Image(systemName: "magnifyingglass")})
@@ -123,7 +123,7 @@ struct MDQuantityUnitsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdQuantityUnits.isEmpty {
-                Text(LocalizedStringKey("str.md.empty \("str.md.quantityUnits".localized)"))
+                Text(LocalizedStringKey("str.md.quantityUnits.empty"))
             } else if filteredQuantityUnits.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }

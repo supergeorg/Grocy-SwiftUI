@@ -168,7 +168,7 @@ struct MDProductsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdProducts.isEmpty {
-                Text(LocalizedStringKey("str.md.empty \("str.md.products".localized)"))
+                Text(LocalizedStringKey("str.md.products.empty"))
             } else if filteredProducts.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }

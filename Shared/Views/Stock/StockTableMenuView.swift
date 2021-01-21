@@ -28,6 +28,7 @@ struct StockTableMenuView: View {
                 activeSheet = .addToShL
             }, label: {
                 Label(LocalizedStringKey("str.stock.tbl.menu.addToShL"), systemImage: "cart")
+                    .labelStyle(TextIconLabelStyle())
             })
             Divider()
             Group{
@@ -36,38 +37,71 @@ struct StockTableMenuView: View {
                     activeSheet = .productPurchase
                 }, label: {
                     Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart")
+                        .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productConsume
                 }, label: {
                     Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
+                        .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productTransfer
                 }, label: {
                     Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
+                        .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productInventory
                 }, label: {
                     Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
+                        .labelStyle(TextIconLabelStyle())
                 })
             }
             Divider()
             Group{
-                Button(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount) \(quString)")")){}
-                Button(LocalizedStringKey("str.stock.tbl.menu.searchRecipes")){}
+                Button(action: {
+                    print("cas")
+                }, label: {
+                    Text(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount) \(quString)")"))
+                })
+                
+                Button(action: {
+                    print("recip")
+                }, label: {
+                    Text(LocalizedStringKey("str.stock.tbl.menu.searchRecipes"))
+                })
             }
             Divider()
             Group{
-                Button(LocalizedStringKey("str.details.title")) {}
-                Button(LocalizedStringKey("str.details.stockEntries")) {}
-                Button(LocalizedStringKey("str.details.stockJournal")) {}
-//                Button(LocalizedStringKey("str.details.title")) {}
-                Button(LocalizedStringKey("str.details.edit")) {}
+                Button(action: {
+                    print("overv")
+                }, label: {
+                    Text(LocalizedStringKey("str.details.title"))
+                })
+                Button(action: {
+                    print("stocken")
+                }, label: {
+                    Text(LocalizedStringKey("str.details.stockEntries"))
+                })
+                Button(action: {
+                    print("stockj")
+                }, label: {
+                    Text(LocalizedStringKey("str.details.stockJournal"))
+                })
+                Button(action: {
+                    print("summ")
+                }, label: {
+                    Text(LocalizedStringKey("str.stock.journal.summary"))
+                })
+                Button(action: {
+                    print("edit")
+                }, label: {
+                    Text(LocalizedStringKey("str.details.edit"))
+                })
             }
         }
     }

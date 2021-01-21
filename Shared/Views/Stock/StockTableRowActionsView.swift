@@ -28,7 +28,7 @@ struct StockTableRowActionsView: View {
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
                     print("consumed")
                 }
-            RowInteractionButton(title: "str.stock.tbl.action.all".localized, image: "tuningfork", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
+            RowInteractionButton(title: "str.stock.tbl.action.all", image: "tuningfork", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
                 .onTapGesture {
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
                     print("consumed all")

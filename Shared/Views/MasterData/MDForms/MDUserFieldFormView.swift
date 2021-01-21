@@ -78,7 +78,7 @@ struct MDUserFieldFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.save \("str.md.userField".localized)")) {
+                    Button(LocalizedStringKey("str.md.userField.save")) {
                         saveUserField()
                         presentationMode.wrappedValue.dismiss()
                     }.disabled(!isNameCorrect)

@@ -90,7 +90,7 @@ struct MDLocationFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.md.delete \("str.md.location".localized)"), systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.location.delete"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
@@ -125,7 +125,7 @@ struct MDLocationFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.save \("str.md.location".localized)")) {
+                Button(LocalizedStringKey("str.md.location.save")) {
                     saveLocation()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)

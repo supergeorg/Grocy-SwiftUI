@@ -214,7 +214,6 @@ struct ShoppingListView: View {
                                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                                 }
                             })
-                            //                        }, label: {Text("str.shL.manage".localized)})
                         }, label: { HStack(spacing: 2){
                             Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
                             Image(systemName: "chevron.down.square.fill")

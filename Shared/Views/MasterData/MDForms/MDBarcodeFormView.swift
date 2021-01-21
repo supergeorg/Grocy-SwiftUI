@@ -77,7 +77,7 @@ struct MDBarcodeFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.save \("str.md.barcode".localized)")) {
+                    Button(LocalizedStringKey("str.md.barcode.save")) {
                         saveBarcode()
                         presentationMode.wrappedValue.dismiss()
                     }.disabled(barcode.isEmpty)

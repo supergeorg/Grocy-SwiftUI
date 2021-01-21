@@ -146,7 +146,7 @@ struct StockJournalView: View {
             content
                 .toolbar(content: {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button(LocalizedStringKey("str.close")) {
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     }

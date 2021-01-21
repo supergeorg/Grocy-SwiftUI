@@ -19,7 +19,7 @@ struct StockTableHeaderItem: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(description).bold()
+                Text(LocalizedStringKey(description)).bold()
                 if stockColumn == sortedStockColumn {
                     Image(systemName: sortAscending ? "arrow.up" : "arrow.down")
                 } else {
@@ -125,13 +125,13 @@ struct StockTable: View {
                     })
                 Spacer()
             }
-            StockTableHeaderItem(isShown: $stockShowProduct, description: "str.stock.tbl.product".localized, stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup".localized, stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowAmount, description: "str.stock.tbl.amount".localized, stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowValue, description: "str.stock.tbl.value".localized, stockColumn: .value, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowNextBestBeforeDate, description: "str.stock.tbl.nextBestBefore".localized, stockColumn: .nextBestBeforeDate, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU".localized, stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
-            StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories".localized, stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowProduct, description: "str.stock.tbl.product", stockColumn: .product, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowProductGroup, description: "str.stock.tbl.productGroup", stockColumn: .productGroup, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowAmount, description: "str.stock.tbl.amount", stockColumn: .amount, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowValue, description: "str.stock.tbl.value", stockColumn: .value, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowNextBestBeforeDate, description: "str.stock.tbl.nextBestBefore", stockColumn: .nextBestBeforeDate, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU", stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
+            StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories", stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             ForEach(sortedStock, id:\.productID) { stockElement in
                 StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             }

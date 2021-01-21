@@ -25,8 +25,8 @@ struct RowInteractionButton: View {
         HStack(alignment: .center, spacing: 2){
             Image(systemName: image)
                 .font(Font.system(size: fontSizeValue, weight: .bold))
-            if title != nil {
-                Text(title!)
+            if let title = title {
+                Text(LocalizedStringKey(title))
                     .font(Font.system(size: fontSizeValue, weight: .regular))
                     .lineLimit(1)
                     .fixedSize()
@@ -35,9 +35,9 @@ struct RowInteractionButton: View {
         .frame(height: fontSizeValue)
         .padding(paddingValue)
         .background(backgroundColor)
-        .foregroundColor(foregroundColor != nil ? foregroundColor! : Color.white)
+        .foregroundColor(foregroundColor ?? Color.white)
         .cornerRadius(cornerRadiusValue)
-        .help(helpString != nil ? helpString! : "")
+        .help(helpString ?? "")
     }
 }
 

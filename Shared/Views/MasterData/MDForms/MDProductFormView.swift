@@ -128,7 +128,7 @@ struct MDProductFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.save \("str.md.product".localized)")) {
+                    Button(LocalizedStringKey("str.md.product.save")) {
                         saveProduct()
                         presentationMode.wrappedValue.dismiss()
                     }.disabled(!isFormValid)

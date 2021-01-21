@@ -92,7 +92,7 @@ struct MDShoppingLocationsView: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
-                            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search".localized) }
+                            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
                                 isSearching.toggle()
                             }, label: {Image(systemName: "magnifyingglass")})
@@ -150,7 +150,7 @@ struct MDShoppingLocationsView: View {
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
             #endif
             if grocyVM.mdShoppingLocations.isEmpty {
-                Text(LocalizedStringKey("str.md.empty \("str.md.shoppingLocations".localized)"))
+                Text(LocalizedStringKey("str.md.shoppingLocations.empty"))
             } else if filteredShoppingLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }

@@ -60,7 +60,7 @@ struct MDShoppingLocationFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.save \("str.md.shoppingLocation".localized)")) {
+                    Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
                         saveShoppingLocation()
                         presentationMode.wrappedValue.dismiss()
                     }.disabled(!isNameCorrect)

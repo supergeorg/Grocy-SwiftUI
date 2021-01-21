@@ -83,7 +83,7 @@ struct MDProductGroupFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.md.delete \("str.md.productGroup".localized)"), systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.productGroup.delete"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
@@ -118,7 +118,7 @@ struct MDProductGroupFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.save \("str.md.productGroup".localized)")) {
+                Button(LocalizedStringKey("str.md.productGroup.save")) {
                     saveProductGroup()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)

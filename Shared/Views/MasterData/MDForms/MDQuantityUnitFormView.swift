@@ -86,7 +86,7 @@ struct MDQuantityUnitFormView: View {
                 Button(action: {
                     showDeleteAlert.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.md.delete \("str.md.quantityUnit".localized)"), systemImage: "trash")
+                    Label(LocalizedStringKey("str.md.quantityUnit.delete"), systemImage: "trash")
                         .foregroundColor(.red)
                 })
                 .keyboardShortcut(.delete)
@@ -121,7 +121,7 @@ struct MDQuantityUnitFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.save \("str.md.quantityUnit".localized)")) {
+                Button(LocalizedStringKey("str.md.quantityUnit.save")) {
                     saveQuantityUnit()
                     presentationMode.wrappedValue.dismiss()
                 }.disabled(!isNameCorrect)

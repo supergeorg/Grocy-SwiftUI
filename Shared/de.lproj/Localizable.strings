@@ -266,14 +266,7 @@
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";
 "str.md.description" = "Beschreibung";
-
 "str.md.search" = "Suche";
-"str.md.searchFailed %@" = "Keine %@ gefunden.";
-"str.md.delete %@" = "Lösche %@";
-"str.md.edit %@" = "Bearbeite %@";
-"str.md.new %@" = "Neue %@";
-"str.md.save %@" = "Speichere %@";
-"str.md.empty %@" = "Keine %@ gefunden. Füge welche hinzu.";
 
 "str.md.products" = "Produkte";
 "str.md.product" = "Produkt";
@@ -282,6 +275,7 @@
 "str.md.product.rowProductGroup %@" = "Produktgruppe: %@";
 "str.md.product.new" = "Neues Produkt";
 "str.md.product.edit" = "Bearbeite Produkt";
+"str.md.product.save" = "Speichere Produkt";
 "str.md.product.info" = "Produktinfo";
 "str.md.product.name" = "Produktname";
 "str.md.product.name.required" = "Ein Produktname ist erforderlich";
@@ -344,6 +338,7 @@
 "str.md.barcodes.empty" = "Keine Barcodes eingetragen.";
 "str.md.barcode.new" = "Barcode erstellen";
 "str.md.barcode.edit" = "Barcode bearbeiten";
+"str.md.barcode.save" = "Speichere Barcode";
 "str.md.barcode.for %@" = "Barcode für Produkt %@";
 "str.md.barcode.amount" = "Menge";
 "str.md.barcode.quantityUnit" = "Mengeneinheit";
@@ -357,6 +352,7 @@
 "str.md.locations.empty" = "Keine Standorte gefunden.";
 "str.md.location.new" = "Neuer Standort";
 "str.md.location.edit" = "Bearbeite Standort";
+"str.md.location.save" = "Speichere Standort";
 "str.md.location.info" = "Standortinfo";
 "str.md.location.name" = "Standort";
 "str.md.location.name.required" = "Ein Name ist erforderlich";
@@ -372,6 +368,7 @@
 "str.md.shoppingLocations.empty" = "Keine Geschäfte gefunden.";
 "str.md.shoppingLocation.new" = "Neues Geschäft";
 "str.md.shoppingLocation.edit" = "Bearbeite Geschäft";
+"str.md.shoppingLocation.save" = "Speichere Geschäft";
 "str.md.shoppingLocation.info" = "Geschäftsinfo";
 "str.md.shoppingLocation.name" = "Geschäftsname";
 "str.md.shoppingLocation.name.required" = "Ein Name ist erforderlich";
@@ -384,6 +381,7 @@
 "str.md.quantityUnits.empty" = "Keine Mengeneinheiten gefunden.";
 "str.md.quantityUnit.new" = "Neue Mengeneinheit";
 "str.md.quantityUnit.edit" = "Bearbeite Mengeneinheit";
+"str.md.quantityUnit.save" = "Speichere Mengeneinheit";
 "str.md.quantityUnit.info" = "Mengeneinheitsinfo";
 "str.md.quantityUnit.name" = "Name (singular)";
 "str.md.quantityUnit.name.required" = "Ein Name ist erforderlich";
@@ -397,6 +395,7 @@
 "str.md.productGroups.empty" = "Keine Produktgruppen gefunden.";
 "str.md.productGroup.new" = "Neue Produktgruppe";
 "str.md.productGroup.edit" = "Bearbeite Produktgruppe";
+"str.md.productGroup.save" = "Speichere Produktgruppe";
 "str.md.productGroup.info" = "Produktgruppeninfo";
 "str.md.productGroup.name" = "Name der Produktgruppe";
 "str.md.productGroup.name.required" = "Ein Name ist erforderlich";
@@ -416,6 +415,7 @@
 "str.md.userFields.rowType %@" = "Typ: %@";
 "str.md.userField.new" = "Benutzerfeld erstellen";
 "str.md.userField.edit" = "Benutzerfeld bearbeiten";
+"str.md.userField.save" = "Speichere Benutzerfeld";
 "str.md.userField.entity" = "Entität";
 "str.md.userField.entity.required" = "Eine Entität muss ausgewählt werden";
 "str.md.userField.name" = "Name";
@@ -511,6 +511,7 @@
 "str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";
 "str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";
 "str.quickScan.add.product" = "Produkt für Barcode";
+"str.quickScan.add.product.add" = "Barcode hinzufügen";
 
 // MARK: - Onboarding and Login
 "str.onboard.start" = "Los geht's!";
