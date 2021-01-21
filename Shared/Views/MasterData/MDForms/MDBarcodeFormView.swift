@@ -15,9 +15,9 @@ struct MDBarcodeFormView: View {
     @State private var firstAppear: Bool = true
     
     @State private var barcode: String = ""
-    @State private var amount: Int = 0
-    @State private var quantityUnitID: String = ""
-    @State private var shoppingLocationID: String = ""
+    @State private var amount: Int?
+    @State private var quantityUnitID: String?
+    @State private var shoppingLocationID: String?
     @State private var note: String = ""
     
     var isNewBarcode: Bool
@@ -25,7 +25,8 @@ struct MDBarcodeFormView: View {
     var editBarcode: MDProductBarcode?
     
     private func saveBarcode() {
-        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: String(amount), shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
+        let amountStr = amount != nil ? String(amount!) : nil
+        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: amountStr, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
         if isNewBarcode{
             grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
         } else {
@@ -37,9 +38,9 @@ struct MDBarcodeFormView: View {
     
     private func resetForm() {
         barcode = editBarcode?.barcode ?? ""
-        amount = Int(editBarcode?.amount ?? "") ?? 0
-        quantityUnitID = editBarcode?.quID ?? ""
-        shoppingLocationID = editBarcode?.shoppingLocationID ?? ""
+        amount = Int(editBarcode?.amount ?? "")
+        quantityUnitID = editBarcode?.quID
+        shoppingLocationID = editBarcode?.shoppingLocationID
         note = editBarcode?.note ?? ""
     }
     
@@ -119,15 +120,15 @@ struct MDBarcodeFormView: View {
             Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
                 MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
                     }
                 }).disabled(true)
             }
             Picker(LocalizedStringKey("str.md.barcode.shoppingLocation"), selection: $shoppingLocationID, content: {
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
-                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id)
+                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
                 }
             })
             

@@ -17,15 +17,15 @@ struct PurchaseProductView: View {
     var productToPurchaseID: String?
     var productToPurchaseAmount: Double?
     
-    @State private var productID: String = ""
-    @State private var amount: Double = 0.0
-    @State private var quantityUnitID: String = ""
+    @State private var productID: String?
+    @State private var amount: Double?
+    @State private var quantityUnitID: String?
     @State private var dueDate: Date = Date()
     @State private var productDoesntSpoil: Bool = false
-    @State private var price: Double = 0.0
+    @State private var price: Double?
     @State private var isTotalPrice: Bool = false
-    @State private var shoppingLocationID: String = ""
-    @State private var locationID: String = ""
+    @State private var shoppingLocationID: String?
+    @State private var locationID: String?
     
     @State private var searchProductTerm: String = ""
     
@@ -41,33 +41,39 @@ struct PurchaseProductView: View {
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty)
+        (productID != nil) && (amount != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil)
     }
     
     private func resetForm() {
-        self.productID = productToPurchaseID ?? ""
-        self.amount = productToPurchaseAmount ?? 0.0
-        self.productID = ""
-        self.amount = 0.0
-        self.quantityUnitID = ""
+        self.productID = productToPurchaseID
+        self.amount = productToPurchaseAmount
+        self.productID = nil
+        self.amount = nil
+        self.quantityUnitID = nil
         self.dueDate = Date()
         self.productDoesntSpoil = false
-        self.price = 0.0
+        self.price = nil
         self.isTotalPrice = false
-        self.shoppingLocationID = ""
-        self.locationID = ""
+        self.shoppingLocationID = nil
+        self.locationID = nil
+        self.searchProductTerm = ""
     }
     
     private func purchaseProduct() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let calculatedPrice = isTotalPrice ? price : amount * price
-        let strPrice = calculatedPrice.isZero ? nil : String(format: "%.2f", calculatedPrice)
-        let numLocationID = Int(locationID) ?? nil
-        let numShoppingLocationID = Int(shoppingLocationID) ?? nil
-        let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
-        grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
+        let calculatedPrice = isTotalPrice ? price : (amount ?? 0.0) * (price ?? 0.0)
+        //        let strPrice = calculatedPrice?.isZero ?? nil ? nil : String(format: "%.2f", calculatedPrice)
+        let strPrice = (calculatedPrice == nil || (calculatedPrice ?? 0).isZero) ? nil : String(format: "%.2f", calculatedPrice!)
+        let numLocationID = Int(locationID ?? "")
+        let numShoppingLocationID = Int(shoppingLocationID ?? "")
+        if let amount = amount {
+            let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
+            if let productID = productID {
+                grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
+            }
+        }
     }
     
     private func updateData() {
@@ -121,10 +127,9 @@ struct PurchaseProductView: View {
         Form {
             ProductField(productID: $productID, description: "str.stock.buy.product")
                 .onChange(of: productID) { newProduct in
-                    print(productID)
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                        if locationID.isEmpty { locationID = selectedProduct.locationID }
-                        if shoppingLocationID.isEmpty { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
+                        if locationID == nil { locationID = selectedProduct.locationID }
+                        if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
                         quantityUnitID = selectedProduct.quIDPurchase
                     }
                 }
@@ -132,9 +137,9 @@ struct PurchaseProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
                     }
                 }).disabled(true)
             }
@@ -160,16 +165,16 @@ struct PurchaseProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
                 Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: "cart"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                        Text(shoppingLocation.name).tag(shoppingLocation.id)
+                        Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
                     }
                 })
                 
                 Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: "location"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id)
+                        Text(location.name).tag(location.id as String?)
                     }
                 })
             }

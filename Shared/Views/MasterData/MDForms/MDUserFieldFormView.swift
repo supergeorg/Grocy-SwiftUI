@@ -17,7 +17,7 @@ struct MDUserFieldFormView: View {
     @State private var entity: ObjectEntities = ObjectEntities.none
     @State private var name: String = ""
     @State private var caption: String = ""
-    @State private var sortNumber: Int = -1
+    @State private var sortNumber: Int? = -1 // TODO ???
     @State private var type: UserFieldType = UserFieldType.none
     @State private var showAsColumnInTables: Bool = false
     
@@ -51,7 +51,7 @@ struct MDUserFieldFormView: View {
     }
     
     private func saveUserField() {
-        let sortNumberStr = sortNumber < 0 ? nil : String(sortNumber)
+        let sortNumberStr = sortNumber ?? 0 < 0 ? nil : String(sortNumber ?? 0)
         if isNewUserField {
             grocyVM.postMDObject(object: .userfields, content: MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil))
         } else {

@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct MyDoubleStepper: View {
-    @Binding var amount: Double
+    @Binding var amount: Double?
     
     var description: String
     var descriptionInfo: String?
-    var minAmount: Double
-    var amountStep: Double
+    var minAmount: Double? = 0.0
+    var amountStep: Double? = 1.0
     var amountName: String? = nil
     
     var errorMessage: String?
@@ -43,19 +43,29 @@ struct MyDoubleStepper: View {
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 50)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    amount += amountStep
+                    if amount != nil {
+                        amount! += amountStep ?? 1.0
+                    } else { amount = amountStep }
                 }, onDecrement: {
-                    if amount > minAmount {
-                        amount -= amountStep
-                    }
+                    if amount != nil {
+                        if minAmount != nil {
+                            if amount! > minAmount! {
+                                amount! -= amountStep ?? 1.0
+                            }
+                        } else { amount! -= amountStep ?? 1.0 }
+                    } else { amount = 0 }
                 })
             }
-            if amount < minAmount {
-                if errorMessage != nil {
-                    Text(LocalizedStringKey(errorMessage!))
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .frame(width: 250)
+            if minAmount != nil {
+                if let amount = amount {
+                    if amount < minAmount! {
+                        if errorMessage != nil {
+                            Text(LocalizedStringKey(errorMessage!))
+                                .font(.caption)
+                                .foregroundColor(.red)
+                                .frame(width: 250)
+                        }
+                    }
                 }
             }
         }

@@ -46,6 +46,7 @@
 		78396E7725629F7700B9878F /* MDLocationFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */; };
 		78396E8C25629FE600B9878F /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78396E8B25629FE600B9878F /* MyTextField.swift */; };
 		78396E8D25629FE600B9878F /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78396E8B25629FE600B9878F /* MyTextField.swift */; };
+		7839E30B25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */; };
 		783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */; };
 		78408AD125A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
 		78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
@@ -279,6 +280,7 @@
 		782A7F1225838C3E0010472F /* MDUserFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldsView.swift; sourceTree = "<group>"; };
 		782A7F1925838C630010472F /* MDUserFieldModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldModel.swift; sourceTree = "<group>"; };
 		78396E8B25629FE600B9878F /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
+		7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeSelectProductView.swift; sourceTree = "<group>"; };
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
 		78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserInfoView.swift; sourceTree = "<group>"; };
 		7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 			children = (
 				78E4802F25A5D14300661FDB /* QuickScanModeView.swift */,
 				78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */,
+				7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */,
 				78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */,
 			);
 			path = QuickScan;
@@ -1015,6 +1018,7 @@
 				78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */,
 				78CB74E1255EA04A00319108 /* AppTabNavigation.swift in Sources */,
 				78E4803625A5EEF800661FDB /* QuickScanModeConfigView.swift in Sources */,
+				7839E30B25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift in Sources */,
 				782626F7256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
 				782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */,
 				786F6EAB25640372004D8DE0 /* MDQuantityUnitsView.swift in Sources */,

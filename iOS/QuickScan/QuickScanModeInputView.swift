@@ -43,7 +43,7 @@ struct QuickScanModeInputView: View {
     @AppStorage("quickScanPurchaseAskDueDate") var quickScanPurchaseAskDueDate: QuickScanAskMode = QuickScanAskMode.always
     @State private var purchaseDueDate: Date = Date()
     @AppStorage("quickScanPurchaseAskPrice") var quickScanPurchaseAskPrice: QuickScanAskMode = QuickScanAskMode.always
-    @State private var purchasePrice: Double = 0.0
+    @State private var purchasePrice: Double?
     @AppStorage("quickScanPurchaseAskStore") var quickScanPurchaseAskStore: QuickScanAskMode = QuickScanAskMode.always
     @State private var purchaseShoppingLocationID: String?
     @AppStorage("quickScanPurchaseAskLocation") var quickScanPurchaseAskLocation: QuickScanAskMode = QuickScanAskMode.always
@@ -70,7 +70,7 @@ struct QuickScanModeInputView: View {
         if let id = productBarcode?.productID {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let priceStr = purchasePrice == 0 ? nil : String(purchasePrice)
+            let priceStr = purchasePrice != nil ? String(purchasePrice ?? 0) : nil
             let productBuy = ProductBuy(amount: 1.0, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: priceStr, locationID: Int(purchaseLocationID ?? ""), shoppingLocationID: Int(purchaseShoppingLocationID ?? ""))
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy)
             finalizeQuickInput()
@@ -153,9 +153,10 @@ struct QuickScanModeInputView: View {
                     Group {
                         if quickScanMarkAsOpenedAskSpecificItem == .always {
                             Picker(selection: $markAsOpenItemID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
+                                Text("").tag(nil as String?)
                                 ForEach(grocyVM.stockProductEntries[barcode.productID] ?? [], id: \.stockID) { stockProduct in
                                     Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
-                                        .tag(stockProduct.stockID)
+                                        .tag(stockProduct.stockID as String?)
                                 }
                             })
                         }

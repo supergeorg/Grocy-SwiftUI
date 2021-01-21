@@ -13,7 +13,7 @@
 "str.edit" = "Edit";
 "str.save" = "Save";
 "str.search" = "Search";
-"str.noSearchResult" = "No searchresult found.";
+"str.noSearchResult" = "No search result found.";
 "str.day" = "Day";
 "str.days" = "Days";
 "str.refresh" = "Refresh";
@@ -200,6 +200,7 @@
 "str.stock.inventory.product.location.required" = "A location is required";
 
 "str.stock.journal" = "Stock journal";
+"str.stock.journal.summary" = "Stock journal summary";
 "str.stock.journal.empty" = "No transactions found.";
 "str.stock.journal.product" = "Product";
 "str.stock.journal.product.info %@" = "Product: %@";
@@ -509,6 +510,7 @@
 "str.quickScan.input.consumeDefault" = "Default (1)";
 "str.quickScan.input.consumeBarcodeAmount %@" = "Quick consume (%@)";
 "str.quickScan.input.info.consumeAmount %@" = "Quick consume amount: %@";
+"str.quickScan.add.product" = "Product for this barcode";
 
 // MARK: - Onboarding
 "str.onboard.start" = "Let's get started!";

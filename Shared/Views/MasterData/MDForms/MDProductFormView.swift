@@ -16,29 +16,27 @@ struct MDProductFormView: View {
     
     @State private var name: String = "" // REQUIRED
     @State private var active: Bool = true
-    @State private var parentProductID: String = ""
+    @State private var parentProductID: String?
     @State private var mdProductDescription: String = ""
-    @State private var locationID: String = "" // REQUIRED
-    @State private var shoppingLocationID: String = ""
-    @State private var minStockAmount: Double = 0.0
+    @State private var locationID: String? // REQUIRED
+    @State private var shoppingLocationID: String?
+    @State private var minStockAmount: Double?
     @State private var cumulateMinStockAmountOfSubProducts: Bool = false
     @State private var dueType: DueType = DueType.bestBefore
-    @State private var defaultDueDays: Int = 0
-    @State private var defaultDueDaysAfterOpen: Int = 0
-    @State private var productGroupID: String = "0"
-    @State private var quIDStock: String = "" // REQUIRED
-    @State private var quIDPurchase: String = "" // REQUIRED
-    @State private var quFactorPurchaseToStock: Double = 1.0
+    @State private var defaultDueDays: Int?
+    @State private var defaultDueDaysAfterOpen: Int?
+    @State private var productGroupID: String?
+    @State private var quIDStock: String? // REQUIRED
+    @State private var quIDPurchase: String? // REQUIRED
+    @State private var quFactorPurchaseToStock: Double? = 1.0
     @State private var enableTareWeightHandling: Bool = false
-    @State private var tareWeight: Double = 0.0
+    @State private var tareWeight: Double?
     @State private var notCheckStockFulfillmentForRecipes: Bool = false
-    @State private var calories: Double = 0.0
-    @State private var defaultDueDaysAfterFreezing: Int = 0
-    @State private var defaultDueDaysAfterThawing: Int = 0
-    @State private var quickConsumeAmount: Double = 1.0
+    @State private var calories: Double?
+    @State private var defaultDueDaysAfterFreezing: Int?
+    @State private var defaultDueDaysAfterThawing: Int?
+    @State private var quickConsumeAmount: Double? = 1.0
     @State private var hideOnStockOverview: Bool = false
-    
-    @State private var barcodes: MDProductBarcodes = [] // wie läuft das denn ab?
     
     @State private var showDeleteAlert: Bool = false
     
@@ -61,25 +59,25 @@ struct MDProductFormView: View {
     private func resetForm() {
         name = product?.name ?? ""
         active = (product?.active ?? "1") == "1"
-        parentProductID = product?.parentProductID ?? ""
+        parentProductID = product?.parentProductID
         mdProductDescription = product?.mdProductDescription ?? ""
-        locationID = product?.locationID ?? ""
-        shoppingLocationID = product?.shoppingLocationID ?? ""
-        minStockAmount = Double(product?.minStockAmount ?? "") ?? 0.0
+        locationID = product?.locationID
+        shoppingLocationID = product?.shoppingLocationID
+        minStockAmount = Double(product?.minStockAmount ?? "")
         cumulateMinStockAmountOfSubProducts = Bool(product?.cumulateMinStockAmountOfSubProducts ?? "") ?? false
         dueType = product?.dueType == DueType.bestBefore.rawValue ? DueType.bestBefore : DueType.expires
-        defaultDueDays = Int(product?.defaultBestBeforeDays ?? "") ?? 0
-        defaultDueDaysAfterOpen = Int(product?.defaultBestBeforeDaysAfterOpen ?? "") ?? 0
-        productGroupID = product?.productGroupID ?? "0"
-        quIDStock = product?.quIDStock ?? ""
-        quIDPurchase = product?.quIDPurchase ?? ""
+        defaultDueDays = Int(product?.defaultBestBeforeDays ?? "")
+        defaultDueDaysAfterOpen = Int(product?.defaultBestBeforeDaysAfterOpen ?? "")
+        productGroupID = product?.productGroupID
+        quIDStock = product?.quIDStock
+        quIDPurchase = product?.quIDPurchase
         quFactorPurchaseToStock = Double(product?.quFactorPurchaseToStock ?? "") ?? 1.0
         enableTareWeightHandling = (product?.enableTareWeightHandling ?? "0") == "1"
-        tareWeight = Double(product?.tareWeight ?? "") ?? 0.0
+        tareWeight = Double(product?.tareWeight ?? "")
         notCheckStockFulfillmentForRecipes = (product?.notCheckStockFulfillmentForRecipes ?? "0") == "1"
-        calories = Double(product?.calories ?? "") ?? 0.0
-        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "") ?? 0
-        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "") ?? 0
+        calories = Double(product?.calories ?? "")
+        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
+        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
         quickConsumeAmount = Double(product?.quickConsumeAmount ?? "") ?? 1.0
         hideOnStockOverview = (product?.hideOnStockOverview ?? "0") == "1"
         isNameCorrect = checkNameCorrect()
@@ -93,25 +91,31 @@ struct MDProductFormView: View {
     }
     
     private var isFormValid: Bool {
-        !name.isEmpty && isNameCorrect && !locationID.isEmpty && !quIDStock.isEmpty && !quIDPurchase.isEmpty
+        !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil)
     }
     
     private func saveProduct() {
-        let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: nil, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
-        if isNewProduct {
-            grocyVM.postMDObject(object: .products, content: productPOST)
-        } else {
-            grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST)
+        if let locationID = locationID {
+            if let quIDPurchase = quIDPurchase {
+                if let quIDStock = quIDStock {
+                    let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: nil, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
+                    if isNewProduct {
+                        grocyVM.postMDObject(object: .products, content: productPOST)
+                    } else {
+                        grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST)
+                    }
+                    grocyVM.getMDLocations()
+                }
+            }
         }
-        grocyVM.getMDLocations()
     }
     
     var body: some View {
         #if os(macOS)
         ScrollView{
             content
-                .padding()
         }
+        .padding()
         #elseif os(iOS)
         content
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
@@ -154,8 +158,9 @@ struct MDProductFormView: View {
                     
                     // Parent Product
                     Picker(LocalizedStringKey("str.md.product.parentProduct"), selection: $parentProductID, content: {
+                        Text("").tag(nil as String?)
                         ForEach(grocyVM.mdProducts, id:\.id) { grocyProduct in
-                            Text(grocyProduct.name).tag(grocyProduct.id)
+                            Text(grocyProduct.name).tag(grocyProduct.id as String?)
                         }
                     })
                     
@@ -168,16 +173,17 @@ struct MDProductFormView: View {
                     VStack(alignment: .trailing) {
                         Picker(LocalizedStringKey("str.md.product.location"), selection: $locationID, content: {
                             ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
-                                Text(grocyLocation.name).tag(grocyLocation.id)
+                                Text(grocyLocation.name).tag(grocyLocation.id as String?)
                             }
                         })
-                        if locationID.isEmpty { Text(LocalizedStringKey("str.md.product.location.required")).foregroundColor(.red) }
+                        if locationID == nil { Text(LocalizedStringKey("str.md.product.location.required")).foregroundColor(.red) }
                     }
                     
                     // Default Shopping Location
                     Picker(LocalizedStringKey("str.md.product.shoppingLocation"), selection: $shoppingLocationID, content: {
+                        Text("").tag(nil as String?)
                         ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
-                            Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id)
+                            Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
                         }
                     })
                 }
@@ -214,8 +220,9 @@ struct MDProductFormView: View {
                 
                 // Product group
                 Picker(LocalizedStringKey("str.md.product.productGroup"), selection: $productGroupID, content: {
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
-                        Text(grocyProductGroup.name).tag(grocyProductGroup.id)
+                        Text(grocyProductGroup.name).tag(grocyProductGroup.id as String?)
                     }
                 })
                 
@@ -225,17 +232,15 @@ struct MDProductFormView: View {
                         HStack{
                             Picker(LocalizedStringKey("str.md.product.quStock"), selection: $quIDStock, content: {
                                 ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
-                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id)
+                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
                                 }
                             })
                             .onChange(of: quIDStock, perform: { newValue in
-                                if quIDPurchase.isEmpty {
-                                    quIDPurchase = quIDStock
-                                }
+                                if quIDPurchase == nil { quIDPurchase = quIDStock }
                             })
                             FieldDescription(description: "str.md.product.quStock.info")
                         }
-                        if quIDStock.isEmpty { Text(LocalizedStringKey("str.md.product.quStock.required")).foregroundColor(.red) }
+                        if quIDStock == nil { Text(LocalizedStringKey("str.md.product.quStock.required")).foregroundColor(.red) }
                     }
                     
                     // QU Purchase - REQUIRED
@@ -243,17 +248,17 @@ struct MDProductFormView: View {
                         HStack{
                             Picker(LocalizedStringKey("str.md.product.quPurchase"), selection: $quIDPurchase, content: {
                                 ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
-                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id)
+                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
                                 }
                             })
                             FieldDescription(description: "str.md.product.quPurchase.info")
                         }
-                        if quIDPurchase.isEmpty { Text(LocalizedStringKey("str.md.product.quPurchase.required")).foregroundColor(.red) }
+                        if quIDPurchase == nil { Text(LocalizedStringKey("str.md.product.quPurchase.required")).foregroundColor(.red) }
                     }
                     
                     VStack(alignment: .trailing) {
                         MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", errorMessage: "str.md.product.quFactorPurchaseToStock.invalid", systemImage: "tag")
-                        if quFactorPurchaseToStock != 1 { Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock)) \(currentQUStock?.namePlural ?? "QU ERROR")")) }
+                        if quFactorPurchaseToStock != 1 { Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")")) }
                     }
                 }
             }

@@ -16,14 +16,14 @@ struct InventoryProductView: View {
     
     var productToInventoryID: String?
     
-    @State private var productID: String = ""
-    @State private var amount: Int = 0
-    @State private var quantityUnitID: String = ""
+    @State private var productID: String?
+    @State private var amount: Int?
+    @State private var quantityUnitID: String?
     @State private var dueDate: Date = Date()
     @State private var productNeverOverdue: Bool = false
-    @State private var price: Double = 0.0
-    @State private var shoppingLocationID: String = ""
-    @State private var locationID: String = ""
+    @State private var price: Double?
+    @State private var shoppingLocationID: String?
+    @State private var locationID: String?
     
     @State private var searchProductTerm: String = ""
     
@@ -42,7 +42,7 @@ struct InventoryProductView: View {
     private let priceFormatter = NumberFormatter()
     
     private var isFormValid: Bool {
-        !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty) && !(locationID.isEmpty)
+        (productID != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationID != nil)
     }
     
     private var selectedProductStock: StockElement? {
@@ -51,19 +51,20 @@ struct InventoryProductView: View {
     
     private var stockAmountDifference: Int {
         if let intStockAmount = Int(selectedProductStock?.amount ?? "") {
-            return amount - intStockAmount
+            return amount ?? 0 - intStockAmount
         } else {return 0}
     }
     
     private func resetForm() {
-        productID = productToInventoryID ?? ""
-        amount = 0
-        quantityUnitID = ""
+        productID = productToInventoryID
+        amount = Int(selectedProductStock?.amount ?? "")
+        quantityUnitID = nil
         dueDate = Date()
         productNeverOverdue = false
-        price = 0.0
-        shoppingLocationID = ""
-        locationID = ""
+        price = nil
+        shoppingLocationID = nil
+        locationID = nil
+        searchProductTerm = ""
     }
     
     private func updateData() {
@@ -76,10 +77,14 @@ struct InventoryProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let intShoppingLocation = shoppingLocationID.isEmpty ? nil : Int(shoppingLocationID)!
-        let intLocationID = locationID.isEmpty ? nil : Int(locationID)!
-        let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
-        grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo)
+        let intShoppingLocation = Int(shoppingLocationID ?? "")
+        let intLocationID = Int(locationID ?? "")
+        if let amount = amount {
+            if let productID = productID {
+                let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
+                grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo)
+            }
+        }
     }
     
     var body: some View {
@@ -124,24 +129,24 @@ struct InventoryProductView: View {
     var content: some View {
         Form {
             ProductField(productID: $productID, description: "str.stock.inventory.product")
-            .onChange(of: productID) { newProduct in
-                grocyVM.getStockProductEntries(productID: productID)
-                if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                    shoppingLocationID = selectedProduct.shoppingLocationID ?? ""
-                    locationID = selectedProduct.locationID
-                    quantityUnitID = selectedProduct.quIDStock
-                    if let productStock = selectedProductStock {
-                        amount = Int(productStock.amount) ?? 0
+                .onChange(of: productID) { newProduct in
+                    grocyVM.getStockProductEntries(productID: productID ?? "")
+                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        shoppingLocationID = selectedProduct.shoppingLocationID ?? ""
+                        locationID = selectedProduct.locationID
+                        quantityUnitID = selectedProduct.quIDStock
+                        if let productStock = selectedProductStock {
+                            amount = Int(productStock.amount) ?? 0
+                        }
                     }
                 }
-            }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount), errorMessage: "str.stock.inventory.product.amount.required", systemImage: "number.circle")
+                MyIntStepper(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount ?? 0), errorMessage: "str.stock.inventory.product.amount.required", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.inventory.product.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
                     }
                 }).disabled(true)
                 if stockAmountDifference != 0 {
@@ -163,15 +168,16 @@ struct InventoryProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
                 Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: "cart"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                        Text(shoppingLocation.name).tag(shoppingLocation.id)
+                        Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
                     }
                 })
                 
                 Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: "location"), content: {
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id)
+                        Text(location.name).tag(location.id as String?)
                     }
                 })
             }

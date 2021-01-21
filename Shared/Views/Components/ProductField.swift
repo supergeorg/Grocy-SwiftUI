@@ -10,7 +10,7 @@ import SwiftUI
 struct ProductField: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Binding var productID: String
+    @Binding var productID: String?
     var description: String
     
     @State private var searchTerm: String = ""
@@ -56,16 +56,18 @@ struct ProductField: View {
                     CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
                 }
             }
+            Text("").tag(nil as String?)
             ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name).tag(productElement.id)
+                Text(productElement.name).tag(productElement.id as String?)
             }
         }).pickerStyle(DefaultPickerStyle())
     }
     #elseif os(macOS)
     var body: some View {
         Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: "tag"), content: {
+            Text("").tag(nil as String?)
             ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name).tag(productElement.id)
+                Text(productElement.name).tag(productElement.id as String?)
             }
         })
     }

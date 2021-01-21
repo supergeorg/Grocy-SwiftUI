@@ -200,6 +200,7 @@
 "str.stock.inventory.product.location.required" = "Ein Standort muss ausgewählt werden";
 
 "str.stock.journal" = "Bestandsjournal";
+"str.stock.journal.summary" = "Bestandsjournal-Zusammenfassung";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
 "str.stock.journal.product" = "Produkt";
 "str.stock.journal.product.info %@" = "Produkt: %@";
@@ -509,6 +510,7 @@
 "str.quickScan.input.consumeDefault" = "Standard (1)";
 "str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";
 "str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";
+"str.quickScan.add.product" = "Produkt für Barcode";
 
 // MARK: - Onboarding and Login
 "str.onboard.start" = "Los geht's!";

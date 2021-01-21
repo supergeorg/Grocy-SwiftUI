@@ -13,7 +13,7 @@ struct MDProductGroup: Codable {
     let mdProductGroupDescription: String?
     let rowCreatedTimestamp: String
     let userfields: [String: String]?
-
+    
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdProductGroupDescription = "description"
@@ -26,9 +26,11 @@ typealias MDProductGroups = [MDProductGroup]
 
 struct MDProductGroupPOST: Codable {
     let id: Int
-    let name, mdProductGroupDescription, rowCreatedTimestamp: String
-    let userfields: String?
-
+    let name: String
+    let mdProductGroupDescription: String?
+    let rowCreatedTimestamp: String
+    let userfields: [String: String]?
+    
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdProductGroupDescription = "description"

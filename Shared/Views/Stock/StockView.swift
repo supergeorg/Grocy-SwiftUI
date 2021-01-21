@@ -33,8 +33,8 @@ struct StockView: View {
     
     @State private var searchString: String = ""
     
-    @State private var filteredLocation: String = ""
-    @State private var filteredProductGroup: String = ""
+    @State private var filteredLocationID: String?
+    @State private var filteredProductGroupID: String?
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
@@ -92,10 +92,10 @@ struct StockView: View {
                 filteredStatus == .belowMinStock ? Int($0.amount) ?? 1 < Int($0.product.minStockAmount) ?? 0 : true
             }
             .filter {
-                !filteredLocation.isEmpty ? $0.product.locationID == filteredLocation : true
+                filteredLocationID != nil ? $0.product.locationID == filteredLocationID : true
             }
             .filter {
-                !filteredProductGroup.isEmpty ? $0.product.productGroupID == filteredProductGroup : true
+                filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
             }
             .filter {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
@@ -206,19 +206,20 @@ struct StockView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
                 case .productPurchase:
                     NavigationView{
-                        PurchaseProductView(productToPurchaseID: selectedStockElement?.product.id)
+//                        PurchaseProductView(productToPurchaseID: selectedStockElement?.productID)
+                        PurchaseProductView(productToPurchaseID: selectedStockElement!.productID)
                     }
                 case .productConsume:
                     NavigationView{
-                        ConsumeProductView(productToConsumeID: selectedStockElement?.product.id)
+                        ConsumeProductView(productToConsumeID: selectedStockElement?.productID)
                     }
                 case .productTransfer:
                     NavigationView{
-                        TransferProductView(productToTransferID: selectedStockElement?.product.id)
+                        TransferProductView(productToTransferID: selectedStockElement?.productID)
                     }
                 case .productInventory:
                     NavigationView{
-                        InventoryProductView(productToInventoryID: selectedStockElement?.product.id)
+                        InventoryProductView(productToInventoryID: selectedStockElement?.productID)
                     }
                 }
             })
@@ -232,7 +233,7 @@ struct StockView: View {
     var content: some View {
         List() {
             StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-            StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocation, filteredProductGroup: $filteredProductGroup, filteredStatus: $filteredStatus)
+            StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }

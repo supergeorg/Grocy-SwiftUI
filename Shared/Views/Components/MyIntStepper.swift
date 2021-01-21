@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyIntStepper: View {
-    @Binding var amount: Int
+    @Binding var amount: Int?
     
     var description: String
     var helpText: String?
@@ -34,22 +34,28 @@ struct MyIntStepper: View {
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 50)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    amount += 1
+                    if amount != nil {
+                        amount! += 1
+                    } else { amount = 1 }
                 }, onDecrement: {
-                    if minAmount != nil {
-                        if amount > minAmount! {
-                            amount -= 1
-                        }
-                    } else {amount -= 1}
+                    if amount != nil {
+                        if minAmount != nil {
+                            if amount! > minAmount! {
+                                amount! -= 1
+                            }
+                        } else {amount! -= 1}
+                    } else { amount = minAmount }
                 })
             }
             if minAmount != nil {
-                if amount < minAmount! {
-                    if errorMessage != nil {
-                        Text(LocalizedStringKey(errorMessage!))
-                            .font(.caption)
-                            .foregroundColor(.red)
-                            .frame(width: 250)
+                if let amount = amount {
+                    if amount < minAmount! {
+                        if errorMessage != nil {
+                            Text(LocalizedStringKey(errorMessage!))
+                                .font(.caption)
+                                .foregroundColor(.red)
+                                .frame(width: 250)
+                        }
                     }
                 }
             }

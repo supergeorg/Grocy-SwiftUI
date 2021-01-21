@@ -16,13 +16,13 @@ struct TransferProductView: View {
     
     var productToTransferID: String?
     
-    @State private var productID: String = ""
-    @State private var locationIDFrom: String = ""
-    @State private var amount: Double = 0.0
-    @State private var quantityUnitID: String = ""
-    @State private var locationIDTo: String = ""
+    @State private var productID: String?
+    @State private var locationIDFrom: String?
+    @State private var amount: Double?
+    @State private var quantityUnitID: String?
+    @State private var locationIDTo: String?
     @State private var useSpecificStockEntry: Bool = false
-    @State private var stockEntryID: String = ""
+    @State private var stockEntryID: String?
     
     @State private var searchProductTerm: String = ""
     
@@ -38,17 +38,18 @@ struct TransferProductView: View {
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        !(productID.isEmpty) && (amount > 0) && !(quantityUnitID.isEmpty) && !(locationIDFrom.isEmpty) && !(locationIDTo.isEmpty) && !(useSpecificStockEntry && stockEntryID.isEmpty) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
+        (productID != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationIDFrom != nil) && (locationIDTo != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
     }
     
     private func resetForm() {
-        productID = productToTransferID ?? ""
-        locationIDFrom = ""
-        amount = 0.0
-        quantityUnitID = ""
-        locationIDTo = ""
+        productID = productToTransferID
+        locationIDFrom = nil
+        amount = nil
+        quantityUnitID = nil
+        locationIDTo = nil
         useSpecificStockEntry = false
-        stockEntryID = ""
+        stockEntryID = nil
+        searchProductTerm = ""
     }
     
     private func updateData() {
@@ -58,12 +59,14 @@ struct TransferProductView: View {
     }
     
     private func transferProduct() {
-        if let intLocationIDFrom = Int(locationIDFrom) {
-            if let intLocationIDTo = Int(locationIDTo) {
-                let cStockEntryID = stockEntryID.isEmpty ? nil : stockEntryID
-                let transferInfo = ProductTransfer(amount: amount, locationIDFrom: intLocationIDFrom, locationIDTo: intLocationIDTo, stockEntryID: cStockEntryID)
-                grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
-                
+        if let intLocationIDFrom = Int(locationIDFrom ?? "") {
+            if let intLocationIDTo = Int(locationIDTo ?? "") {
+                if let productID = productID {
+                    if let amount = amount {
+                        let transferInfo = ProductTransfer(amount: amount, locationIDFrom: intLocationIDFrom, locationIDTo: intLocationIDTo, stockEntryID: stockEntryID)
+                        grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
+                    }
+                }
             }
         }
     }
@@ -110,39 +113,39 @@ struct TransferProductView: View {
     var content: some View {
         Form {
             ProductField(productID: $productID, description: "str.stock.transfer.product")
-            .onChange(of: productID) { newProduct in
-                grocyVM.getStockProductEntries(productID: productID)
-                if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                    locationIDFrom = selectedProduct.locationID
-                    quantityUnitID = selectedProduct.quIDStock
+                .onChange(of: productID) { newProduct in
+                    grocyVM.getStockProductEntries(productID: productID ?? "")
+                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        locationIDFrom = selectedProduct.locationID
+                        quantityUnitID = selectedProduct.quIDStock
+                    }
                 }
-            }
             
             Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
-                Text("").tag("")
+                Text("").tag(nil as String?)
                 ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
-                    Text(locationFrom.name).tag(locationFrom.id)
+                    Text(locationFrom.name).tag(locationFrom.id as String?)
                 }
             })
             
             Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: "scalemass"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
                     }
                 }).disabled(true)
             }
             
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down"), content: {
-                    Text("").tag("")
+                    Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
-                        Text(locationTo.name).tag(locationTo.id)
+                        Text(locationTo.name).tag(locationTo.id as String?)
                     }
                 })
-                if !(locationIDFrom.isEmpty) && (locationIDFrom == locationIDTo) {
+                if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
                     Text(LocalizedStringKey("str.stock.transfer.product.locationTO.same"))
                         .font(.caption)
                         .foregroundColor(.red)
@@ -151,11 +154,11 @@ struct TransferProductView: View {
             
             MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
             
-            if useSpecificStockEntry && !productID.isEmpty {
+            if (useSpecificStockEntry) && (productID != nil) {
                 Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
-                    ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
+                    ForEach(grocyVM.stockProductEntries[productID ?? ""] ?? [], id: \.stockID) { stockProduct in
                         Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
-                            .tag(stockProduct.stockID)
+                            .tag(stockProduct.stockID as String?)
                     }
                 })
             }
