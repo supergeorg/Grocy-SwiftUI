@@ -24,6 +24,15 @@ struct MDBarcodeFormView: View {
     var productID: String
     var editBarcode: MDProductBarcode?
     
+    @State var isBarcodeCorrect: Bool = false
+    private func checkBarcodeCorrect() -> Bool {
+        return (barcode.count == 8 || barcode.count == 13)
+    }
+    
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
+    
     private func saveBarcode() {
         let amountStr = amount != nil ? String(amount!) : nil
         let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: amountStr, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
@@ -38,8 +47,10 @@ struct MDBarcodeFormView: View {
     
     private func resetForm() {
         barcode = editBarcode?.barcode ?? ""
-        amount = Int(editBarcode?.amount ?? "")
-        quantityUnitID = editBarcode?.quID
+        if let doubleAmount = Double(editBarcode?.amount ?? "") {
+            amount = Int(doubleAmount)
+        } else {amount = nil}
+        quantityUnitID = editBarcode?.quID ?? product?.quIDPurchase
         shoppingLocationID = editBarcode?.shoppingLocationID
         note = editBarcode?.note ?? ""
     }
@@ -95,17 +106,22 @@ struct MDBarcodeFormView: View {
     var content: some View {
         Form {
             #if os(macOS)
-            HStack(alignment: .center){
-                Text(LocalizedStringKey("str.md.barcode.new"))
-                    .font(.title)
-                Spacer()
-                Text(LocalizedStringKey("str.md.barcode.for \("pr")"))
-                    .font(.title2)
-                    .foregroundColor(.gray)
+            if isNewBarcode {
+                HStack(alignment: .center){
+                    Text(LocalizedStringKey("str.md.barcode.new"))
+                        .font(.title)
+                    Spacer()
+                    Text(LocalizedStringKey("str.md.barcode.for \(product?.name ?? "PRODUCT")"))
+                        .font(.title2)
+                        .foregroundColor(.gray)
+                }
             }
             #endif
             HStack{
-                TextField(LocalizedStringKey("str.md.barcode"), text: $barcode)
+                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: "barcode", isEditing: true, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
+                    .onChange(of: barcode, perform: {newBC in
+                        isBarcodeCorrect = checkBarcodeCorrect()
+                    })
                 #if os(iOS)
                 Button(action: {
                     isShowingScanner.toggle()
@@ -137,13 +153,16 @@ struct MDBarcodeFormView: View {
             #if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    if isNewBarcode{
+                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    } else {
+                        resetForm()
+                    }
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
                     saveBarcode()
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
             }

@@ -52,7 +52,7 @@ struct MDBarcodesView: View {
                 $0.productID == productID
             }
     }
-
+    
     private func delete(at offsets: IndexSet) {
         for offset in offsets {
             grocyVM.deleteMDObject(object: .product_barcodes, id: filteredBarcodes[offset].id)
@@ -64,7 +64,7 @@ struct MDBarcodesView: View {
         #if os(iOS)
         content
         #elseif os(macOS)
-            content
+        content
         #endif
     }
     
@@ -76,6 +76,23 @@ struct MDBarcodesView: View {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID)
                         .padding()
                 })
+            if filteredBarcodes.isEmpty {
+                Text(LocalizedStringKey("str.md.barcodes.empty"))
+            }
+            NavigationView{
+                List{
+                    ForEach(filteredBarcodes, id:\.id) {productBarcode in
+                        NavigationLink(
+                            destination: ScrollView{
+                                MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode)
+                            },
+                            label: {
+                                MDBarcodeRowView(barcode: productBarcode)
+                            })
+                    }.onDelete(perform: delete)
+                }
+            }
+            .frame(width: 400, height: 200)
             #elseif os(iOS)
             Button(action: {showAddBarcode.toggle()}, label: {
                 Label("str.md.barcode.new", systemImage: "plus")
@@ -85,7 +102,6 @@ struct MDBarcodesView: View {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID)
                 }
             })
-            #endif
             List{
                 if filteredBarcodes.isEmpty {
                     Text(LocalizedStringKey("str.md.barcodes.empty"))
@@ -98,6 +114,7 @@ struct MDBarcodesView: View {
                         })
                 }.onDelete(perform: delete)
             }
+            #endif
         }
         .onAppear(perform: updateData)
     }

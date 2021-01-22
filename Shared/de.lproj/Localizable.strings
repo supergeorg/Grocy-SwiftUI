@@ -340,6 +340,9 @@
 "str.md.barcode.edit" = "Barcode bearbeiten";
 "str.md.barcode.save" = "Speichere Barcode";
 "str.md.barcode.for %@" = "Barcode für Produkt %@";
+"str.md.barcode.barcode" = "Barcode";
+"str.md.barcode.barcode.required" = "Ein Barcode wird benötigt";
+"str.md.barcode.barcode.invalid" = "Der Barcode muss im Format EAN-13 oder EAN-8 sein";
 "str.md.barcode.amount" = "Menge";
 "str.md.barcode.quantityUnit" = "Mengeneinheit";
 "str.md.barcode.shoppingLocation" = "Geschäft";
@@ -466,6 +469,7 @@
 "str.settings.about.thanks" = "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Entwickler";
+"str.settings.about.showOnboarding" = "App-Einführung wiederholen";
 "str.settings.loginQRcode.scan" = "QR-Code scannen";
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
