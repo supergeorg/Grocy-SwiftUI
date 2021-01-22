@@ -19,10 +19,9 @@ class GrocyViewModel: ObservableObject {
     let demoServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
-    //    @AppStorage("grocyServerURL") var grocyServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
-    @AppStorage("isDemoModus") var isDemoModus: Bool = true
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("isDemoModus") var isDemoModus: Bool = false
     
     static let shared = GrocyViewModel()
     
@@ -46,6 +45,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdProductGroups: MDProductGroups = []
     @Published var mdProductBarcodes: MDProductBarcodes = []
     @Published var mdUserFields: MDUserFields = []
+    @Published var mdUserEntities: MDUserEntities = []
     
     @Published var stockProductDetails: [String: StockProductDetails] = [:]
     @Published var stockProductLocations: [String: StockLocations] = [:]
@@ -130,6 +130,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.mdProductBarcodes.map{ Int($0.id) ?? 0 }
         case .userfields:
             ints = self.mdUserFields.map{ Int($0.id) ?? 0 }
+        case .userentities:
+            ints = self.mdUserEntities.map{ Int($0.id) ?? 0 }
         default:
             print("findnextid not impl")
         }
@@ -434,11 +436,27 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getMDUserEntities() {
+        grocyApi.getObject(object: .userentities)
+            .replaceError(with: [])
+            .assign(to: \.mdUserEntities, on: self)
+            .store(in: &cancellables)
+    }
+    
     // Generic POST and DELETE
+    
+    func updateAfterPost(object: ObjectEntities) {
+        switch object {
+        case .product_barcodes:
+            self.getMDProductBarcodes()
+        default:
+            print("nix")
+        }
+    }
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
-        //                print(String(data: jsonContent, encoding: .utf8)!)
+        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -453,8 +471,6 @@ class GrocyViewModel: ObservableObject {
                     self.lastErrors = lastError
                 }
             }
-            //            .replaceError(with: [])
-            //            .assign(to: \.lastErrors, on: self)
             .store(in: &cancellables)
     }
     

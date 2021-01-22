@@ -46,7 +46,7 @@ struct AboutView: View {
             Button(action: {
                 self.onboardingNeeded = true
             }, label: {
-                Text("SHOW ONBOARDING")
+                Text(LocalizedStringKey("str.settings.about.showOnboarding"))
             })
         }
         .navigationTitle(LocalizedStringKey("str.settings.about"))

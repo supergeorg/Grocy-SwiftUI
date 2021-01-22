@@ -87,19 +87,19 @@ struct SettingsView: View {
                     destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")),
                     label: {
                         Label(LocalizedStringKey("str.settings.info"), systemImage: "info.circle")
+                            .foregroundColor(.primary)
                     })
                 if let currentUser = grocyVM.currentUser.first {
                     NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
                         Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
+                            .foregroundColor(.primary)
                     })
                 }
-                Button(LocalizedStringKey("str.settings.logout")) {
-                    isLoggedIn = false
-                }
+                Button(action: {isLoggedIn = false}, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
             }
             Section(header: Text("App")){
                 MyToggle(isOn: $simplifiedStockView, description: "str.settings.simplifiedStockView", descriptionInfo: nil, icon: "tablecells")
-                Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag"), content: {
+                Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {
                     Text("🇬🇧 English").tag("en")
                     Text("🇩🇪 Deutsch").tag("de")
                 })
@@ -107,6 +107,7 @@ struct SettingsView: View {
                     destination: AboutView(),
                     label: {
                         Label(LocalizedStringKey("str.settings.about"), systemImage: "info.circle")
+                            .foregroundColor(.primary)
                     })
             }
         }
@@ -118,7 +119,7 @@ struct SettingsView: View {
     #endif
     
     var contentMac: some View {
-        VStack(spacing: 0) {
+        VStack {
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey("str.settings.grocy.server"))
                     .font(Font.title).bold()

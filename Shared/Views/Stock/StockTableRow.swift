@@ -92,7 +92,11 @@ struct StockTableRow: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
+                if let productGroup = grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
+                    Text(productGroup.name)
+                } else {
+                    Text("")
+                }
                 Spacer()
             }
             .background(backgroundColor)

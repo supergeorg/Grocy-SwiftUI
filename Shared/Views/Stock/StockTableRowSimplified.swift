@@ -64,8 +64,12 @@ struct StockTableRowSimplified: View {
                     .onTapGesture {
                         showDetailView.toggle()
                     }
-                Text(grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID})?.name ?? "Produkt group error")
-                    .font(.caption)
+                
+                if let productGroup = grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
+                    Text(productGroup.name)
+                        .font(.caption)
+                } else {Text("")}
+                    
                 HStack{
                     Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
                         .font(.caption)
