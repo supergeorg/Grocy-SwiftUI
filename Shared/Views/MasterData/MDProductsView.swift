@@ -126,7 +126,6 @@ struct MDProductsView: View {
                                 MDProductFormView(isNewProduct: true)
                                     .padding()
                             }
-//                            .frame(maxWidth: 500, maxHeight: 500)
                         })
                     }
                 }

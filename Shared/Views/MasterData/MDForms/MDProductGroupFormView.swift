@@ -47,11 +47,6 @@ struct MDProductGroupFormView: View {
         grocyVM.getMDProductGroups()
     }
     
-    private func deleteProductGroup() {
-        grocyVM.deleteMDObject(object: .product_groups, id: productGroup!.id)
-        grocyVM.getMDProductGroups()
-    }
-    
     var body: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
@@ -79,25 +74,6 @@ struct MDProductGroupFormView: View {
                 .keyboardShortcut(.defaultAction)
             }
             #endif
-            if !isNewProductGroup {
-                Button(action: {
-                    showDeleteAlert.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.md.productGroup.delete"), systemImage: "trash")
-                        .foregroundColor(.red)
-                })
-                .keyboardShortcut(.delete)
-                .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                        deleteProductGroup()
-                        #if os(macOS)
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                        #else
-                        presentationMode.wrappedValue.dismiss()
-                        #endif
-                    }, secondaryButton: .cancel())
-                }
-            }
         }
         .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
         .animation(.default)

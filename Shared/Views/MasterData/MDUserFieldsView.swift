@@ -39,12 +39,6 @@ struct MDUserFieldsView: View {
     @State private var userFieldToDelete: MDUserField? = nil
     @State private var showDeleteAlert: Bool = false
     
-    func makeIsPresented(userField: MDUserField) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == userField.id
-        }, set: { _ in    })
-    }
-    
     private var filteredUserFields: MDUserFields {
         grocyVM.mdUserFields
             .filter {
@@ -152,7 +146,7 @@ struct MDUserFieldsView: View {
             updateData()
         })
         .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text(LocalizedStringKey("str.md.userFields.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
+            Alert(title: Text(LocalizedStringKey("str.md.userField.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                 deleteUserField(toDelID: userFieldToDelete?.id ?? "")
             }, secondaryButton: .cancel())
         }

@@ -82,25 +82,6 @@ struct MDQuantityUnitFormView: View {
                 .keyboardShortcut(.defaultAction)
             }
             #endif
-            if !isNewQuantityUnit {
-                Button(action: {
-                    showDeleteAlert.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.md.quantityUnit.delete"), systemImage: "trash")
-                        .foregroundColor(.red)
-                })
-                .keyboardShortcut(.delete)
-                .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                        deleteQuantityUnit()
-                        #if os(macOS)
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                        #else
-                        presentationMode.wrappedValue.dismiss()
-                        #endif
-                    }, secondaryButton: .cancel())
-                }
-            }
         }
         .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
         .animation(.default)

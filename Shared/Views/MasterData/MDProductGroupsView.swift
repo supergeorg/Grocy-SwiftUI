@@ -39,10 +39,11 @@ struct MDProductGroupsView: View {
     
     @State private var reloadRotationDeg: Double = 0
     
-    func makeIsPresented(productGroup: MDProductGroup) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == productGroup.id
-        }, set: { _ in    })
+    @State private var productGroupToDelete: MDProductGroup? = nil
+    @State private var showDeleteAlert: Bool = false
+    
+    private func updateData() {
+        grocyVM.getMDProductGroups()
     }
     
     private var filteredProductGroups: MDProductGroups {
@@ -53,6 +54,17 @@ struct MDProductGroupsView: View {
             .sorted {
                 $0.name < $1.name
             }
+    }
+    
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            productGroupToDelete = filteredProductGroups[offset]
+            showDeleteAlert.toggle()
+        }
+    }
+    private func deleteProductGroup(toDelID: String) {
+        grocyVM.deleteMDObject(object: .product_groups, id: toDelID)
+        updateData()
     }
     
     var body: some View {
@@ -132,12 +144,20 @@ struct MDProductGroupsView: View {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
             }
+            .onDelete(perform: delete)
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.productGroups"))
-        .onAppear(perform: {
-            grocyVM.getMDProductGroups()
-        })
+        .onAppear(perform: updateData)
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),
+                  message: Text(productGroupToDelete?.name ?? "error"),
+                  primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
+                    {
+                        deleteProductGroup(toDelID: productGroupToDelete?.id ?? "")
+                    },
+                  secondaryButton: .cancel())
+        }
     }
 }
 

@@ -289,7 +289,9 @@ struct MDProductFormView: View {
                 }
                 
                 if !isNewProduct {
-                    MDBarcodesView(productID: product!.id)
+                    if let product = product {
+                        MDBarcodesView(productID: product.id)
+                    }
                 }
             }
             

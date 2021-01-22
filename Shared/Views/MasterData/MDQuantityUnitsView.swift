@@ -39,10 +39,11 @@ struct MDQuantityUnitsView: View {
     
     @State private var reloadRotationDeg: Double = 0
     
-    func makeIsPresented(quantityUnit: MDQuantityUnit) -> Binding<Bool> {
-        return .init(get: {
-            return self.shownEditPopover?.id == quantityUnit.id
-        }, set: { _ in    })
+    @State private var quantityUnitToDelete: MDQuantityUnit? = nil
+    @State private var showDeleteAlert: Bool = false
+    
+    private func updateData() {
+        grocyVM.getMDQuantityUnits()
     }
     
     private var filteredQuantityUnits: MDQuantityUnits {
@@ -53,6 +54,17 @@ struct MDQuantityUnitsView: View {
             .sorted {
                 $0.name < $1.name
             }
+    }
+    
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            quantityUnitToDelete = filteredQuantityUnits[offset]
+            showDeleteAlert.toggle()
+        }
+    }
+    private func deleteQuantityUnit(toDelID: String) {
+        grocyVM.deleteMDObject(object: .quantity_units, id: toDelID)
+        updateData()
     }
     
     var body: some View {
@@ -132,12 +144,20 @@ struct MDQuantityUnitsView: View {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
             }
+            .onDelete(perform: delete)
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
-        .onAppear(perform: {
-            grocyVM.getMDQuantityUnits()
-        })
+        .onAppear(perform: updateData)
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),
+                  message: Text(quantityUnitToDelete?.name ?? "error"),
+                  primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
+                    {
+                        deleteQuantityUnit(toDelID: quantityUnitToDelete?.id ?? "")
+                    },
+                  secondaryButton: .cancel())
+        }
     }
 }
 

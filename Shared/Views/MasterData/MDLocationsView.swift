@@ -63,6 +63,13 @@ struct MDLocationsView: View {
     
     @State private var reloadRotationDeg: Double = 0
     
+    @State private var locationToDelete: MDLocation? = nil
+    @State private var showDeleteAlert: Bool = false
+    
+    private func updateData() {
+        grocyVM.getMDLocations()
+    }
+    
     private var filteredLocations: MDLocations {
         grocyVM.mdLocations
             .filter {
@@ -71,6 +78,17 @@ struct MDLocationsView: View {
             .sorted {
                 $0.name < $1.name
             }
+    }
+    
+    private func delete(at offsets: IndexSet) {
+        for offset in offsets {
+            locationToDelete = filteredLocations[offset]
+            showDeleteAlert.toggle()
+        }
+    }
+    private func deleteLocation(toDelID: String) {
+        grocyVM.deleteMDObject(object: .locations, id: toDelID)
+        updateData()
     }
     
     var body: some View {
@@ -150,12 +168,16 @@ struct MDLocationsView: View {
                     MDLocationRowView(location: location)
                 }
             }
+            .onDelete(perform: delete)
         }
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.locations"))
-        .onAppear(perform: {
-            grocyVM.getMDLocations()
-        })
+        .onAppear(perform: updateData)
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(title: Text("str.md.location.delete.confirm"), message: Text(locationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+                deleteLocation(toDelID: locationToDelete?.id ?? "")
+            }, secondaryButton: .cancel())
+        }
     }
 }
 

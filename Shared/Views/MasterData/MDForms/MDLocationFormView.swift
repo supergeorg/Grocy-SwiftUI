@@ -86,25 +86,6 @@ struct MDLocationFormView: View {
                 .keyboardShortcut(.defaultAction)
             }
             #endif
-            if !isNewLocation {
-                Button(action: {
-                    showDeleteAlert.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.md.location.delete"), systemImage: "trash")
-                        .foregroundColor(.red)
-                })
-                .keyboardShortcut(.delete)
-                .alert(isPresented: $showDeleteAlert) {
-                    Alert(title: Text(LocalizedStringKey("str.md.location.delete.confirm")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                        deleteLocation()
-                        #if os(macOS)
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                        #else
-                        presentationMode.wrappedValue.dismiss()
-                        #endif
-                    }, secondaryButton: .cancel())
-                }
-            }
         }
         .navigationTitle(isNewLocation ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
         .animation(.default)
