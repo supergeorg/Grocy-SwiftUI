@@ -51,7 +51,7 @@ func toggleTorch(on: Bool) {
 }
 
 enum ActiveSheet: Identifiable {
-    case config, input
+    case config, input, selectProduct
     
     var id: Int {
         hashValue
@@ -69,9 +69,9 @@ struct QuickScanModeView: View {
     @State private var firstInSession: Bool = true
     
     @State private var recognizedBarcode: MDProductBarcode? = nil
+    @State private var notRecognizedBarcode: String? = nil
     
     func updateData() {
-        //        grocyVM.getSystemConfig()
         grocyVM.getMDProductBarcodes()
         grocyVM.getMDProducts()
         grocyVM.getMDLocations()
@@ -85,16 +85,13 @@ struct QuickScanModeView: View {
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         switch result {
         case .success(let barcodeString):
-            guard barcodeString.count == 13 else {return}
+            guard ((barcodeString.count == 13) || (barcodeString.count == 8)) else {return}
             if let barcode = searchForBarcode(barcodeString: barcodeString) {
                 recognizedBarcode = barcode
                 activeSheet = .input
-                //                showSheet = true
-                print(barcode.productID)
-                //                if let product = grocyVM.mdProducts.first(where: {$0.id == barcode.productID}) {
-                //                    print(product.name)
-                //                }
-                ////                showIn
+            } else {
+                notRecognizedBarcode = barcodeString
+                activeSheet = .selectProduct
             }
         case .failure(let error):
             print("Scanning failed")
@@ -104,7 +101,8 @@ struct QuickScanModeView: View {
     
     var body: some View {
         ZStack(alignment: .top){
-            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
+            //            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123333", completion: self.handleScan)
             HStack{
                 Button(action: {
                     activeSheet = .config
@@ -136,6 +134,8 @@ struct QuickScanModeView: View {
                 QuickScanModeConfigView()
             case .input:
                 QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession)
+            case .selectProduct:
+                QuickScanModeSelectProductView(barcode: $notRecognizedBarcode)
             }
         }
         .onAppear(perform: updateData)
