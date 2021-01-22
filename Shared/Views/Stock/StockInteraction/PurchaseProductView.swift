@@ -90,20 +90,6 @@ struct PurchaseProductView: View {
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                .toolbar(content: {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(action: {
-                            purchaseProduct()
-                            resetForm()
-                        }, label: {
-                            HStack{
-                                Text(LocalizedStringKey("str.stock.buy.product.buy"))
-                                Image(systemName: "cart")
-                            }
-                        })
-                        .disabled(!isFormValid)
-                    }
-                })
         }
         #else
         content
@@ -112,12 +98,6 @@ struct PurchaseProductView: View {
                     Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.stock.buy.product.buy")) {
-                        purchaseProduct()
-                        resetForm()
-                    }.disabled(!isFormValid)
                 }
             })
         #endif
@@ -184,6 +164,18 @@ struct PurchaseProductView: View {
                 updateData()
                 resetForm()
                 firstAppear = false
+            }
+        })
+        .toolbar(content: {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(action: {
+                    purchaseProduct()
+                    resetForm()
+                }, label: {
+                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
+                        .labelStyle(TextIconLabelStyle())
+                })
+                .disabled(!isFormValid)
             }
         })
         .animation(.default)

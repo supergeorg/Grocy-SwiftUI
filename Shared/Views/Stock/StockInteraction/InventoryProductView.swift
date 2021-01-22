@@ -93,20 +93,6 @@ struct InventoryProductView: View {
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                .toolbar(content: {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(action: {
-                            inventoryProduct()
-                            resetForm()
-                        }, label: {
-                            HStack{
-                                Text("str.stock.inventory.product.inventory".localized)
-                                Image(systemName: "arrow.left.arrow.right")
-                            }
-                        })
-                        .disabled(!isFormValid)
-                    }
-                })
         }
         #else
         content
@@ -115,12 +101,6 @@ struct InventoryProductView: View {
                     Button(LocalizedStringKey("str.cancel")) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.stock.inventory.product.inventory")) {
-                        inventoryProduct()
-                        resetForm()
-                    }.disabled(!isFormValid)
                 }
             })
         #endif
@@ -187,6 +167,18 @@ struct InventoryProductView: View {
                 updateData()
                 resetForm()
                 firstAppear = false
+            }
+        })
+        .toolbar(content: {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(action: {
+                    inventoryProduct()
+                    resetForm()
+                }, label: {
+                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: "arrow.left.arrow.right")
+                        .labelStyle(TextIconLabelStyle())
+                })
+                .disabled(!isFormValid)
             }
         })
         .animation(.default)

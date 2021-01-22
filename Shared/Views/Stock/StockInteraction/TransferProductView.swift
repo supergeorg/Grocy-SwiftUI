@@ -77,20 +77,6 @@ struct TransferProductView: View {
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                .toolbar(content: {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(action: {
-                            transferProduct()
-                            resetForm()
-                        }, label: {
-                            HStack{
-                                Text(LocalizedStringKey("str.stock.transfer.product.transfer"))
-                                Image(systemName: "arrow.left.arrow.right")
-                            }
-                        })
-                        .disabled(!isFormValid)
-                    }
-                })
         }
         #else
         content
@@ -99,12 +85,6 @@ struct TransferProductView: View {
                     Button("str.cancel") {
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.stock.transfer.product.transfer")) {
-                        transferProduct()
-                        resetForm()
-                    }.disabled(!isFormValid)
                 }
             })
         #endif
@@ -168,6 +148,18 @@ struct TransferProductView: View {
                 updateData()
                 resetForm()
                 firstAppear = false
+            }
+        })
+        .toolbar(content: {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(action: {
+                    transferProduct()
+                    resetForm()
+                }, label: {
+                    Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: "arrow.left.arrow.right")
+                        .labelStyle(TextIconLabelStyle())
+                })
+                .disabled(!isFormValid)
             }
         })
         .animation(.default)

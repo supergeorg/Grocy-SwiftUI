@@ -90,29 +90,6 @@ struct ConsumeProductView: View {
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                .toolbar(content: {
-                    ToolbarItem(placement: .confirmationAction) {
-                        HStack{
-                            Button(action: {
-                                openProduct()
-                                resetForm()
-                            }, label: {
-                                Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: "envelope.open")
-                                    .labelStyle(TextIconLabelStyle())
-                            })
-                            .disabled(!isFormValid)
-                            Button(action: {
-                                consumeProduct()
-                                resetForm()
-                            }, label: {
-                                Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: "tuningfork")
-                                    .labelStyle(TextIconLabelStyle())
-                            })
-                            .disabled(!isFormValid)
-                            .keyboardShortcut("s", modifiers: [.command])
-                        }
-                    }
-                })
         }
         #else
         content
@@ -121,17 +98,6 @@ struct ConsumeProductView: View {
                     Button("str.cancel") {
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                }
-                ToolbarItemGroup(placement: .confirmationAction) {
-                    Button("str.stock.consume.product.open") {
-                        openProduct()
-                        resetForm()
-                    }.disabled(!isFormValid)
-                    Spacer()
-                    Button("str.stock.consume.product.consume") {
-                        consumeProduct()
-                        resetForm()
-                    }.disabled(!isFormValid)
                 }
             })
         #endif
@@ -166,9 +132,10 @@ struct ConsumeProductView: View {
                 
                 if useSpecificStockEntry && productID != nil {
                     Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
+                        Text("").tag(nil as String?)
                         ForEach(grocyVM.stockProductEntries[productID ?? ""] ?? [], id: \.stockID) { stockProduct in
                             Text(LocalizedStringKey("str.stock.entry.description \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error") \(stockProduct.stockEntryOpen == "0" ? "str.stock.entry.status.notOpened".localized : "str.stock.entry.status.opened".localized)"))
-                                .tag(stockProduct.stockID)
+                                .tag(stockProduct.stockID as String?)
                         }
                     })
                 }
@@ -202,6 +169,29 @@ struct ConsumeProductView: View {
             }
         })
         .animation(.default)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .confirmationAction) {
+                HStack{
+                    Button(action: {
+                        openProduct()
+                        resetForm()
+                    }, label: {
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: "envelope.open")
+                            .labelStyle(TextIconLabelStyle())
+                    })
+                    .disabled(!isFormValid)
+                    Button(action: {
+                        consumeProduct()
+                        resetForm()
+                    }, label: {
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: "tuningfork")
+                            .labelStyle(TextIconLabelStyle())
+                    })
+                    .disabled(!isFormValid)
+                    .keyboardShortcut("s", modifiers: [.command])
+                }
+            }
+        })
         .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }
 }
