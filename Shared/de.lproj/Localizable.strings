@@ -451,6 +451,23 @@
 "str.md.userField.type.image" = "Bild";
 
 "str.md.userEntities" = "Benutzerentitäten";
+"str.md.userEntity" = "Benutzerentität";
+"str.md.userEntities.empty" = "Keine Benutzerentitäten gefunden.";
+"str.md.userEntity.new" = "Neue Benutzerentität";
+"str.md.userEntity.edit" = "Bearbeite Benutzerentität";
+"str.md.userEntity.save" = "Speichere Benutzerentität";
+"str.md.userEntity.info" = "Benutzerentitäteninfo";
+"str.md.userEntity.name" = "Name der Benutzerentität";
+"str.md.userEntity.name.required" = "Dies ist erforderlich und darf nur Buchstaben und Zahlen enthalten";
+"str.md.userEntity.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.userEntity.caption" = "Titel der Benutzerentität";
+"str.md.userEntity.caption.required" = "Ein Titel ist erforderlich";
+"str.md.userEntity.description" = "Beschreibung";
+"str.md.userEntity.showInSideBarMenu" = "Im Seitenleisten-Menü anzeigen";
+"str.md.userEntity.iconCSSClass" = "Icon CSS-Klasse";
+"str.md.userEntity.iconCSSClass.example" = "Zum Beispiel \"fas fa-smile\"";
+"str.md.userEntity.delete" = "Benutzerentität löschen";
+"str.md.userEntity.delete.confirm" = "Möchtest du wirklich diese Benutzerentität löschen?";
 
 // MARK: - Settings
 "str.settings" = "Einstellungen";

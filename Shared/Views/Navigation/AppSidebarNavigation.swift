@@ -25,6 +25,7 @@ extension AppSidebarNavigation {
         case inventory = "list.bullet"
         case choreTracking = "play.fill"
         case batteryTracking = "flame.fill"
+        case userEntity = "questionmark.circle.fill"
         
         case masterData = "tablecells"
         case mdProducts = "p.circle.fill"
@@ -44,6 +45,10 @@ extension AppSidebarNavigation {
 }
 
 struct AppSidebarNavigation: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
+    @State private var firstAppear: Bool = true
+    
     #if os(iOS)
     @State private var selection: NavigationItem? = NavigationItem.quickScan
     #else
@@ -86,18 +91,18 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-                //                Group {
-                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.recipes, selection: $selection) {
-                //                        Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
-                //                    }
-                //                    .tag(NavigationItem.recipes)
+                //                                Group {
+                //                                    NavigationLink(destination: EmptyView(), tag: NavigationItem.recipes, selection: $selection) {
+                //                                        Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
+                //                                    }
+                //                                    .tag(NavigationItem.recipes)
                 //
-                //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
-                //                        Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
-                //                    }
-                //                    .tag(NavigationItem.mealPlan)
-                //                    Divider()
-                //                }
+                //                                    NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
+                //                                        Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
+                //                                    }
+                //                                    .tag(NavigationItem.mealPlan)
+                //                                    Divider()
+                //                                }
                 
                 //                Group {
                 //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choresOverview, selection: $selection) {
@@ -162,6 +167,19 @@ struct AppSidebarNavigation: View {
                     //                    .tag(NavigationItem.batteryTracking)
                     Divider()
                 }
+                
+                if grocyVM.mdUserEntities.count > 0 {
+                Group {
+                    ForEach(grocyVM.mdUserEntities, id:\.id) {userEntity in
+                        NavigationLink(destination: UserEntityView(userEntity: userEntity), tag: NavigationItem.userEntity, selection: $selection) {
+                            Label(userEntity.name, systemImage: getSFSymbolForFA(faName: userEntity.iconCSSClass ?? ""))
+                        }
+                        .tag(NavigationItem.userEntity)
+                    }
+                    Divider()
+                }
+                }
+                
                 Group {
                     Section(header: Label(LocalizedStringKey("str.nav.md"), systemImage: NavigationItem.masterData.rawValue)) {
                         NavigationLink(destination: MDProductsView(), tag: NavigationItem.mdProducts, selection: $selection) {
@@ -189,20 +207,20 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdProductGroups)
                         
-                        //                        NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
-                        //                            Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
-                        //                        }
-                        //                        .tag(NavigationItem.mdChores)
-                        //
-                        //                        NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
-                        //                            Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
-                        //                        }
-                        //                        .tag(NavigationItem.mdBatteries)
-                        //
-                        //                        NavigationLink(destination: MDTaskCategoriesView(), tag: NavigationItem.mdTaskCategories, selection: $selection) {
-                        //                            Label("str.nav.md.taskCategories", systemImage: NavigationItem.mdTaskCategories.rawValue)
-                        //                        }
-                        //                        .tag(NavigationItem.mdTaskCategories)
+                        NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
+                            Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
+                        }
+                        .tag(NavigationItem.mdChores)
+                        
+                        NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
+                            Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
+                        }
+                        .tag(NavigationItem.mdBatteries)
+                        
+                        NavigationLink(destination: MDTaskCategoriesView(), tag: NavigationItem.mdTaskCategories, selection: $selection) {
+                            Label("str.nav.md.taskCategories", systemImage: NavigationItem.mdTaskCategories.rawValue)
+                        }
+                        .tag(NavigationItem.mdTaskCategories)
                         
                         NavigationLink(destination: MDUserFieldsView(), tag: NavigationItem.mdUserFields, selection: $selection) {
                             Label(LocalizedStringKey("str.nav.md.userFields"), systemImage: NavigationItem.mdUserFields.rawValue)
@@ -239,6 +257,12 @@ struct AppSidebarNavigation: View {
             }
             .listStyle(SidebarListStyle())
             .navigationTitle("Grocy")
+            .onAppear(perform: {
+                if firstAppear {
+                    grocyVM.getMDUserEntities()
+                    firstAppear = false
+                }
+            })
         }
     }
 }

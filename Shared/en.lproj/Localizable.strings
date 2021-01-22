@@ -406,9 +406,9 @@
 "str.md.productGroup.delete" = "Delete this product group";
 "str.md.productGroup.delete.confirm" = "Do you really want to delete this product group?";
 
-"str.md.chores" = "Hausarbeiten";
-"str.md.batteries" = "Batterien";
-"str.md.taskCategories" = "Aufgabenkategorien";
+"str.md.chores" = "Chores";
+"str.md.batteries" = "Batteries";
+"str.md.taskCategories" = "Task Categories";
 
 "str.md.userFields" = "Userfields";
 "str.md.userField" = "Userfield";
@@ -451,6 +451,23 @@
 "str.md.userField.type.image" = "Image";
 
 "str.md.userEntities" = "User entities";
+"str.md.userEntity" = "User entity";
+"str.md.userEntities.empty" = "No user entities found.";
+"str.md.userEntity.new" = "New user entity";
+"str.md.userEntity.edit" = "Edit user entity";
+"str.md.userEntity.save" = "Save user entity";
+"str.md.userEntity.info" = "User entity info";
+"str.md.userEntity.name" = "Name of the user entity";
+"str.md.userEntity.name.required" = "This is required and can only contain letters and numbers";
+"str.md.userEntity.name.exists" = "Name already exists";
+"str.md.userEntity.caption" = "Caption";
+"str.md.userEntity.caption.required" = "A caption is required";
+"str.md.userEntity.description" = "Description";
+"str.md.userEntity.showInSideBarMenu" = "Show in sidebar menu";
+"str.md.userEntity.iconCSSClass" = "Icon CSS class";
+"str.md.userEntity.iconCSSClass.example" = "For example \"fas fa-smile\"";
+"str.md.userEntity.delete" = "Delete user entity";
+"str.md.userEntity.delete.confirm" = "Do you really want to delete this user entity?";
 
 // MARK: - Settings
 "str.settings" = "Settings";
