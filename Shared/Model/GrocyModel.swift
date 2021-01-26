@@ -39,11 +39,12 @@ class GrocyViewModel: ObservableObject {
     @Published var shoppingList: ShoppingList = []
     
     @Published var mdProducts: MDProducts = []
+    @Published var mdProductBarcodes: MDProductBarcodes = []
     @Published var mdLocations: MDLocations = []
     @Published var mdShoppingLocations: MDShoppingLocations = []
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdProductGroups: MDProductGroups = []
-    @Published var mdProductBarcodes: MDProductBarcodes = []
+    @Published var mdBatteries: MDBatteries = []
     @Published var mdUserFields: MDUserFields = []
     @Published var mdUserEntities: MDUserEntities = []
     
@@ -52,7 +53,7 @@ class GrocyViewModel: ObservableObject {
     @Published var stockProductEntries: [String: StockEntries] = [:]
     @Published var stockProductPriceHistories: [String: ProductPriceHistories] = [:]
     
-    @Published var lastErrors: [ErrorMessage] = []
+    @Published var lastErrors: [Error] = []
     @Published var lastError: ErrorMessage = ErrorMessage(errorMessage: "")
     @Published var lastStockActions: StockJournal = []
     
@@ -85,11 +86,12 @@ class GrocyViewModel: ObservableObject {
     
     func checkLoginInfo(baseURL: String, apiKey: String) {
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey)
-        let cancellable = grocyApi.getSystemInfo()
+        grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     print("Handle error: sysinfo \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
@@ -106,7 +108,7 @@ class GrocyViewModel: ObservableObject {
                     }
                 }
             }
-        cancellables.insert(cancellable)
+            .store(in: &cancellables)
     }
     
     func findNextID(_ object: ObjectEntities) -> Int {
@@ -143,57 +145,51 @@ class GrocyViewModel: ObservableObject {
     //MARK: - SYSTEM
     
     func getSystemInfo() {
-        let cancellable = grocyApi.getSystemInfo()
+        grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: sysinfo \(error)")
+                    print("Handle error: system info \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
-                
-            }) { (systemInfoOut) in
-                DispatchQueue.main.async {
-                    self.systemInfo = systemInfoOut
-                }
-            }
-        cancellables.insert(cancellable)
+            }, receiveValue: { (sysinfo) in
+                DispatchQueue.main.async { self.systemInfo = sysinfo }
+            })
+            .store(in: &cancellables)
     }
     
     func getSystemDBChangedTime() {
-        let cancellable = grocyApi.getSystemDBChangedTime()
+        grocyApi.getSystemDBChangedTime()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: sysct\(error)")
+                    print("Handle error: db changed time \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
-                
-            }) { (systemDBChangedTimeOut) in
-                DispatchQueue.main.async {
-                    self.systemDBChangedTime = systemDBChangedTimeOut
-                }
-            }
-        cancellables.insert(cancellable)
+            }, receiveValue: { (dbchangedtime) in
+                DispatchQueue.main.async { self.systemDBChangedTime = dbchangedtime }
+            })
+            .store(in: &cancellables)
     }
     
     func getSystemConfig() {
-        let cancellable = grocyApi.getSystemConfig()
+        grocyApi.getSystemConfig()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: sysconfig\(error)")
+                    print("Handle error: systemconfig \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
-                
-            }) { (systemConfigOut) in
-                DispatchQueue.main.async {
-                    self.systemConfig = systemConfigOut
-                }
-            }
-        cancellables.insert(cancellable)
+            }, receiveValue: { (syscfg) in
+                DispatchQueue.main.async { self.systemConfig = syscfg }
+            })
+            .store(in: &cancellables)
     }
     
     func getCurrencySymbol() -> String {
@@ -211,8 +207,17 @@ class GrocyViewModel: ObservableObject {
     
     func getUsers() {
         grocyApi.getUsers()
-            .replaceError(with: [])
-            .assign(to: \.users, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: users \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (usersOut) in
+                DispatchQueue.main.async { self.users = usersOut }
+            })
             .store(in: &cancellables)
     }
     
@@ -250,25 +255,52 @@ class GrocyViewModel: ObservableObject {
     // MARK: - Current user
     func getUser() {
         grocyApi.getUser()
-            .replaceError(with: [])
-            .assign(to: \.currentUser, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: currentuser \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (currentUserOut) in
+                DispatchQueue.main.async { self.currentUser = currentUserOut }
+            })
             .store(in: &cancellables)
     }
     
     // MARK: - Stock management
     
     func getStock() {
-        let cancellable = grocyApi.getStock()
-            .replaceError(with: [])
-            .assign(to: \.stock, on: self)
-        cancellables.insert(cancellable)
+        grocyApi.getStock()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: stock \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (stockOut) in
+                DispatchQueue.main.async { self.stock = stockOut }
+            })
+            .store(in: &cancellables)
     }
     
     func getStockJournal() {
-        let cancellable = grocyApi.getStockJournal()
-            .replaceError(with: [])
-            .assign(to: \.stockJournal, on: self)
-        cancellables.insert(cancellable)
+        grocyApi.getStockJournal()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: stock journal \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (stockJOut) in
+                DispatchQueue.main.async { self.stockJournal = stockJOut }
+            })
+            .store(in: &cancellables)
     }
     
     func getStockEntry() {}
@@ -290,12 +322,13 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T) {
         let jsonContent = try! jsonEncoder.encode(content)
-        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
+        //        print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     print("Handle error: postStock \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
@@ -310,8 +343,17 @@ class GrocyViewModel: ObservableObject {
     
     func undoBookingWithID(id: String) {
         grocyApi.undoBookingWithID(id: id)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: undoBooking \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (lastError) in
+                DispatchQueue.main.async { self.lastError = lastError }
+            })
             .store(in: &cancellables)
     }
     
@@ -322,124 +364,249 @@ class GrocyViewModel: ObservableObject {
     // MARK: -Shopping Lists
     func getShoppingListDescriptions() {
         grocyApi.getObject(object: .shopping_lists)
-            .replaceError(with: [])
-            .assign(to: \.shoppingListDescriptions, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: shopping list descr \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (shLDesc) in
+                DispatchQueue.main.async { self.shoppingListDescriptions = shLDesc }
+            })
             .store(in: &cancellables)
     }
     
     func getShoppingList() {
         grocyApi.getObject(object: .shopping_list)
-            .replaceError(with: [])
-            .assign(to: \.shoppingList, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: shopping list \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (shoppingListOut) in
+                DispatchQueue.main.async { self.shoppingList = shoppingListOut }
+            })
             .store(in: &cancellables)
     }
     
     func addShoppingListProduct(content: ShoppingListAddProduct) {
         let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.shoppingListAddProduct(content: jsonContent)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: shLAddProd \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (lastError) in
+                DispatchQueue.main.async { self.lastError = lastError }
+            })
             .store(in: &cancellables)
     }
     
     func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType) {
         let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: shLAct \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (lastError) in
+                DispatchQueue.main.async { self.lastError = lastError }
+            })
             .store(in: &cancellables)
     }
     
     // MARK: -Master Data
     
-    //    func getEntity(entity: ObjectEntities) {
-    //        grocyApi.getObject(object: entity)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    print("Handle error: getEntity \(error)")
-    //                case .finished:
-    //                    break
-    //                }
-    //                
-    //            }, receiveValue: { entityResponse in
-    ////                self.user = user
-    //                if mdLocations.isEmpty{
-    //                self.mdLocations = entityResponse
-    //                } else {self.mdProducts = entityResponse}
-    //            })
-    //            { (entityResponse) in
-    //                DispatchQueue.main.async {
-    //                    switch entity {
-    //                    case .batteries:
-    //                        print("not implemented")
-    //                    case .chores:
-    //                        print("not implemented")
-    //                    case .equipment:
-    //                        print("not implemented")
-    //                    case .locations:
-    //                        self.mdLocations = entityResponse
-    //                    default:
-    //                        print("not implemented")
+    //        func getEntity(entity: ObjectEntities) {
+    
+    //            grocyApi.getObject(object: entity)
+    //                .sink(receiveCompletion: { result in
+    //                    switch result {
+    //                    case .failure(let error):
+    //                        print("Handle error: getEntity \(error)")
+    //                    case .finished:
+    //                        break
+    //                    }
+    //
+    //                }, receiveValue: { entityResponse in
+    //    //                self.user = user
+    //                    if mdLocations.isEmpty{
+    //                    self.mdLocations = entityResponse
+    //                    } else {self.mdProducts = entityResponse}
+    //                })
+    //                { (entityResponse) in
+    //                    DispatchQueue.main.async {
+    //                        switch entity {
+    //                        case .batteries:
+    //                            print("not implemented")
+    //                        case .chores:
+    //                            print("not implemented")
+    //                        case .equipment:
+    //                            print("not implemented")
+    //                        case .locations:
+    //                            self.mdLocations = entityResponse
+    //                        default:
+    //                            print("not implemented")
+    //                        }
     //                    }
     //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
+    //                .store(in: &cancellables)
+    //        }
     
     func getMDProducts() {
         grocyApi.getObject(object: .products)
-            .replaceError(with: [])
-            .assign(to: \.mdProducts, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: products \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (products) in
+                DispatchQueue.main.async { self.mdProducts = products }
+            })
             .store(in: &cancellables)
     }
     
     func getMDLocations() {
         grocyApi.getObject(object: .locations)
-            .replaceError(with: [])
-            .assign(to: \.mdLocations, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: locations \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (locations) in
+                DispatchQueue.main.async { self.mdLocations = locations }
+            })
             .store(in: &cancellables)
     }
     
     func getMDShoppingLocations() {
         grocyApi.getObject(object: .shopping_locations)
-            .replaceError(with: [])
-            .assign(to: \.mdShoppingLocations, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: shopping locations \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (shoppingLocations) in
+                DispatchQueue.main.async { self.mdShoppingLocations = shoppingLocations }
+            })
             .store(in: &cancellables)
     }
     
     func getMDQuantityUnits() {
         grocyApi.getObject(object: .quantity_units)
-            .replaceError(with: [])
-            .assign(to: \.mdQuantityUnits, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: quantity units \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (quantityUnits) in
+                DispatchQueue.main.async { self.mdQuantityUnits = quantityUnits }
+            })
             .store(in: &cancellables)
     }
     
     func getMDProductGroups() {
         grocyApi.getObject(object: .product_groups)
-            .replaceError(with: [])
-            .assign(to: \.mdProductGroups, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: product groups \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (productGroups) in
+                DispatchQueue.main.async { self.mdProductGroups = productGroups }
+            })
             .store(in: &cancellables)
     }
     
     func getMDProductBarcodes() {
         grocyApi.getObject(object: .product_barcodes)
-            .replaceError(with: [])
-            .assign(to: \.mdProductBarcodes, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: product barcodes \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (productBarcodes) in
+                DispatchQueue.main.async { self.mdProductBarcodes = productBarcodes }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func getMDBatteries() {
+        grocyApi.getObject(object: .batteries)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: batteries \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (batteries) in
+                DispatchQueue.main.async { self.mdBatteries = batteries }
+            })
             .store(in: &cancellables)
     }
     
     func getMDUserFields() {
         grocyApi.getObject(object: .userfields)
-            .replaceError(with: [])
-            .assign(to: \.mdUserFields, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: userfields \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (userfields) in
+                DispatchQueue.main.async { self.mdUserFields = userfields }
+            })
             .store(in: &cancellables)
     }
     
     func getMDUserEntities() {
         grocyApi.getObject(object: .userentities)
-            .replaceError(with: [])
-            .assign(to: \.mdUserEntities, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: userentities \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (userentities) in
+                DispatchQueue.main.async { self.mdUserEntities = userentities }
+            })
             .store(in: &cancellables)
     }
     
@@ -456,19 +623,19 @@ class GrocyViewModel: ObservableObject {
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
-        print(String(data: jsonContent, encoding: .utf8)!)
         grocyApi.postObject(object: object, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    print("Handle error: postMD\(error)")
+                    print("Handle error: postMD \(error)")
+                    self.lastErrors.append(error)
                 case .finished:
                     break
                 }
                 
             }) { (lastError) in
                 DispatchQueue.main.async {
-                    self.lastErrors = lastError
+                    self.lastError = lastError
                 }
             }
             .store(in: &cancellables)
@@ -476,16 +643,34 @@ class GrocyViewModel: ObservableObject {
     
     func deleteMDObject(object: ObjectEntities, id: String) {
         grocyApi.deleteObjectWithID(object: object, id: id)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: deleteMDObj \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (lastError) in
+                DispatchQueue.main.async { self.lastError = lastError }
+            })
             .store(in: &cancellables)
     }
     
     func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: T) {
         let jsonContent = try! JSONEncoder().encode(content)
         grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
-            .replaceError(with: [])
-            .assign(to: \.lastErrors, on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: putMDOBjWithID \(error)")
+                    self.lastErrors.append(error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (lastError) in
+                DispatchQueue.main.async { self.lastError = lastError }
+            })
             .store(in: &cancellables)
     }
 }
