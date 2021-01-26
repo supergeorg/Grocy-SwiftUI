@@ -17,7 +17,7 @@ public enum APIError: Error {
     case errorString(description: String)
     case timeout
     case invalidEndpoint(endpoint: String)
-    case decodingError(description: String)
+    case decodingError(error: Error)
 }
 
 public enum ObjectEntities: String, CaseIterable {
@@ -61,9 +61,9 @@ protocol GrocyAPIProvider {
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
     func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<T, APIError>
-//    func getStockProductLocations(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockLocations, APIError>
-//    func getStockProductEntries(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockEntries, APIError>
-//    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
+    //    func getStockProductLocations(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockLocations, APIError>
+    //    func getStockProductEntries(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<StockEntries, APIError>
+    //    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
@@ -88,7 +88,7 @@ public class GrocyApi: GrocyAPIProvider {
         self.baseURL = baseURL
         self.apiKey = apiKey
     }
-
+    
     private enum Method: String {
         case GET
         case POST
@@ -100,32 +100,24 @@ public class GrocyApi: GrocyAPIProvider {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ _ in APIError.serverError }
-            .tryMap() { data, response -> Data in
-                // no http response
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw APIError.invalidResponse
+            .flatMap({ result -> AnyPublisher<T, APIError> in
+                guard let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) else {
+                    return Just(result.data)
+                        // decode if it is an error message
+                        .decode(type: ErrorMessage.self, decoder: JSONDecoder())
+                        // neither valid response nor error message
+                        .mapError { error in APIError.decodingError(error: error) }
+                        // display error message
+                        .tryMap { throw APIError.errorString(description: $0.errorMessage) }
+                        .mapError { $0 as! APIError }
+                        .eraseToAnyPublisher()
                 }
-                // no known status code
-                if ResponseCodes.init(rawValue: (httpResponse.statusCode)) == nil {
-                    throw APIError.invalidResponse
-                }
-                return data
-            }
-            .flatMap { v in
-                  Just(v)
-                    // decode if it is a valid command
-                     .decode(type: T.self, decoder: JSONDecoder())
-                     .tryCatch { _ in
-                        Just(v)
-                           // decode if it is an error message
-                           .decode(type: ErrorMessage.self, decoder: JSONDecoder())
-                           // neither valid response nor error message
-                           .mapError { _ in APIError.decodingError(description: "error decoding") }
-                           // display error message
-                           .tryMap { throw APIError.errorString(description: $0.errorMessage) }
-                     }
-               }
-            .mapError { $0 as! APIError }
+                
+                return Just(result.data)
+                    .decode(type: T.self, decoder: JSONDecoder())
+                    .mapError{ error in APIError.decodingError(error: error) }
+                    .eraseToAnyPublisher()
+            })
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
