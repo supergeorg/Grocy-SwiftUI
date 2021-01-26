@@ -11,64 +11,43 @@ struct MasterDataView: View {
     var body: some View {
         List(){
             NavigationLink(destination: MDProductsView()) {
-                HStack{
-                    Image(systemName: "archivebox")
-                    Text(LocalizedStringKey("str.md.products"))
-                }
+                Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
+            
             NavigationLink(destination: MDLocationsView()) {
-                HStack{
-                    Image(systemName: "location")
-                    Text(LocalizedStringKey("str.md.locations"))
-                }
+                Label(LocalizedStringKey("str.md.locations"), systemImage: "location")
             }
+            
             NavigationLink(destination: MDShoppingLocationsView()) {
-                HStack{
-                    Image(systemName: "cart")
-                    Text(LocalizedStringKey("str.md.shoppingLocations"))
-                }
+                Label(LocalizedStringKey("str.md.shoppingLocations"), systemImage: "cart")
             }
+            
             NavigationLink(destination: MDQuantityUnitsView()) {
-                HStack{
-                    Image(systemName: "number.circle")
-                    Text(LocalizedStringKey("str.md.quantityUnits"))
-                }
+                Label(LocalizedStringKey("str.md.quantityUnits"), systemImage: "number.circle")
             }
+            
             NavigationLink(destination: MDProductGroupsView()) {
-                HStack{
-                    Image(systemName: "lessthan.circle")
-                    Text(LocalizedStringKey("str.md.productGroups"))
-                }
+                Label(LocalizedStringKey("str.md.productGroups"), systemImage: "lessthan.circle")
             }
+            
             NavigationLink(destination: MDChoresView()) {
-                HStack{
-                    Image(systemName: "house")
-                    Text(LocalizedStringKey("str.md.chores"))
-                }
+                Label(LocalizedStringKey("str.md.chores"), systemImage: "house")
             }
+            
             NavigationLink(destination: MDBatteriesView()) {
-                HStack{
-                    Image(systemName: "battery.25")
-                    Text(LocalizedStringKey("str.md.batteries"))
-                }
+                Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
             }
+            
             NavigationLink(destination: MDTaskCategoriesView()) {
-                HStack{
-                    Image(systemName: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
-                    Text(LocalizedStringKey("str.md.taskCategories"))
-                }
+                Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
             }
+            
             NavigationLink(destination: MDUserFieldsView()) {
-                HStack{
-                    Image(systemName: "bookmark.fill")
-                    Text(LocalizedStringKey("str.md.userFields"))
-                }
+                Label(LocalizedStringKey("str.md.userFields"), systemImage: "bookmark.fill")
             }
+            
             NavigationLink(destination: MDUserEntitiesView()) {
-                HStack{
-                    Image(systemName: "bookmark")
-                    Text(LocalizedStringKey("str.md.userEntities"))
-                }
+                Label(LocalizedStringKey("str.md.userEntities"), systemImage: "bookmark")
             }
         }
         .animation(.default)
