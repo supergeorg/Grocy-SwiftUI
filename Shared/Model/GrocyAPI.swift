@@ -11,17 +11,14 @@ import Combine
 public enum APIError: Error {
     case internalError
     case serverError
-    case decodingError
     case encodingError
     case invalidResponse
     case unsuccessful
-    case errorString(String)
+    case errorString(description: String)
     case timeout
+    case invalidEndpoint(endpoint: String)
+    case decodingError(description: String)
 }
-
-//public enum Mode {
-//    case Generic, System, UserManagement, UserSettings, Stock, StockByBarcode, Recipes, Chores, Batteries, Tasks, Calendar, Files
-//}
 
 public enum ObjectEntities: String, CaseIterable {
     case none, products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
@@ -104,14 +101,31 @@ public class GrocyApi: GrocyAPIProvider {
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ _ in APIError.serverError }
             .tryMap() { data, response -> Data in
-                guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == ResponseCodes.GetSuccessful.rawValue else {
-                    throw URLError(.badServerResponse)
+                // no http response
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw APIError.invalidResponse
+                }
+                // no known status code
+                if ResponseCodes.init(rawValue: (httpResponse.statusCode)) == nil {
+                    throw APIError.invalidResponse
                 }
                 return data
             }
-            .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { _ in APIError.decodingError }
+            .flatMap { v in
+                  Just(v)
+                    // decode if it is a valid command
+                     .decode(type: T.self, decoder: JSONDecoder())
+                     .tryCatch { _ in
+                        Just(v)
+                           // decode if it is an error message
+                           .decode(type: ErrorMessage.self, decoder: JSONDecoder())
+                           // neither valid response nor error message
+                           .mapError { _ in APIError.decodingError(description: "error decoding") }
+                           // display error message
+                           .tryMap { throw APIError.errorString(description: $0.errorMessage) }
+                     }
+               }
+            .mapError { $0 as! APIError }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
