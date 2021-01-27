@@ -47,8 +47,6 @@ struct PurchaseProductView: View {
     private func resetForm() {
         self.productID = productToPurchaseID
         self.amount = productToPurchaseAmount
-        self.productID = nil
-        self.amount = nil
         self.quantityUnitID = nil
         self.dueDate = Date()
         self.productDoesntSpoil = false
@@ -64,7 +62,6 @@ struct PurchaseProductView: View {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let calculatedPrice = isTotalPrice ? price : (amount ?? 0.0) * (price ?? 0.0)
-        //        let strPrice = calculatedPrice?.isZero ?? nil ? nil : String(format: "%.2f", calculatedPrice)
         let strPrice = (calculatedPrice == nil || (calculatedPrice ?? 0).isZero) ? nil : String(format: "%.2f", calculatedPrice!)
         let numLocationID = Int(locationID ?? "")
         let numShoppingLocationID = Int(shoppingLocationID ?? "")
