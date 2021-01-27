@@ -78,7 +78,8 @@ struct StockTableMenuView: View {
             Divider()
             Group{
                 Button(action: {
-                    print("overv")
+                    selectedStockElement = stockElement
+                    activeSheet = .productOverview
                 }, label: {
                     Text(LocalizedStringKey("str.details.title"))
                 })

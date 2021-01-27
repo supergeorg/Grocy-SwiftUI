@@ -63,6 +63,8 @@ struct StockTableRowSimplified: View {
                     .font(.headline)
                     .onTapGesture {
                         showDetailView.toggle()
+                        selectedStockElement = stockElement
+                        activeSheet = .productOverview
                     }
                 
                 if let productGroup = grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
@@ -88,10 +90,6 @@ struct StockTableRowSimplified: View {
         .sheet(isPresented: $showDetailView, content: {
             #if os(macOS)
             ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-            #elseif os(iOS)
-            NavigationView{
-                ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-            }
             #endif
         })
     }

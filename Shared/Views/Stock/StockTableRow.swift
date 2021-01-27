@@ -73,6 +73,8 @@ struct StockTableRow: View {
                 Text(stockElement.product.name)
                     .onTapGesture {
                         showDetailView.toggle()
+                        selectedStockElement = stockElement
+                        activeSheet = .productOverview
                     }
                 Spacer()
             }
@@ -80,10 +82,6 @@ struct StockTableRow: View {
             .sheet(isPresented: $showDetailView, content: {
                 #if os(macOS)
                 ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-                #elseif os(iOS)
-                NavigationView{
-                    ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-                }
                 #endif
             })
         }

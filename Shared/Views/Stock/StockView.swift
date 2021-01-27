@@ -12,7 +12,7 @@ enum StockColumn {
 }
 
 enum StockInteractionSheet: Identifiable {
-    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory
+    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview
     
     var id: Int {
         self.hashValue
@@ -206,8 +206,7 @@ struct StockView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
                 case .productPurchase:
                     NavigationView{
-//                        PurchaseProductView(productToPurchaseID: selectedStockElement?.productID)
-                        PurchaseProductView(productToPurchaseID: selectedStockElement!.productID)
+                        PurchaseProductView(productToPurchaseID: selectedStockElement?.productID)
                     }
                 case .productConsume:
                     NavigationView{
@@ -220,6 +219,10 @@ struct StockView: View {
                 case .productInventory:
                     NavigationView{
                         InventoryProductView(productToInventoryID: selectedStockElement?.productID)
+                    }
+                case .productOverview:
+                    NavigationView{
+                        ProductOverviewView(productDetails: ProductDetailsModel(product: selectedStockElement?.product))
                     }
                 }
             })
