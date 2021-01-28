@@ -41,6 +41,7 @@
 "str.nav.batteriesOverview" = "Batteries overview";
 "str.nav.equipment" = "Equipment";
 "str.nav.calendar" = "Calendar";
+"str.nav.activities" = "Activities";
 "str.nav.purchase" = "Purchase";
 "str.nav.consume" = "Consume";
 "str.nav.transfer" = "Transfer";
@@ -127,6 +128,8 @@
 "str.stock.buy" = "Purchase";
 "str.stock.buy.product" = "Product";
 "str.stock.buy.product.buy" = "Purchase product";
+"str.stock.buy.product.buy.success %@" = "%@ purchased";
+"str.stock.buy.product.buy.fail" = "Purchase failed";
 "str.stock.buy.product.required" = "You have to select a product";
 "str.stock.buy.product.amount" = "Amount";
 "str.stock.buy.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
@@ -145,7 +148,11 @@
 "str.stock.consume" = "Consume";
 "str.stock.consume.product" = "Product";
 "str.stock.consume.product.consume" = "Consume product";
+"str.stock.consume.product.consume.success %@" = "%@ consumed";
+"str.stock.consume.product.consume.fail" = "Consume failed";
 "str.stock.consume.product.open" = "Mark as opened";
+"str.stock.consume.product.open.success %@" = "%@ opened";
+"str.stock.consume.product.open.fail" = "Open failed";
 "str.stock.consume.product.required" = "You have to select a product";
 "str.stock.consume.product.amount" = "Amount";
 "str.stock.consume.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
@@ -164,6 +171,8 @@
 "str.stock.transfer" = "Transfer";
 "str.stock.transfer.product" = "Product";
 "str.stock.transfer.product.transfer" = "Transfer product";
+"str.stock.transfer.product.transfer.success %@" = "%@ transfered";
+"str.stock.transfer.product.transfer.fail" = "Transfer failed";
 "str.stock.transfer.product.required" = "You have to select a product";
 "str.stock.transfer.product.locationFrom" = "From location";
 "str.stock.transfer.product.locationFrom.required" = "A location is required";
@@ -181,6 +190,8 @@
 "str.stock.inventory" = "Inventory";
 "str.stock.inventory.product" = "Product";
 "str.stock.inventory.product.inventory" = "Perform inventory";
+"str.stock.inventory.product.inventory.success %@" = "%@ inventoried";
+"str.stock.inventory.product.inventory.fail" = "Inventory failed";
 "str.stock.inventory.product.amount" = "New stock amount ";
 "str.stock.inventory.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.stock.inventory.product.amount.lower %@" = "This means %@ will be removed from stock";

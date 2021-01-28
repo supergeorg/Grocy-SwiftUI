@@ -25,3 +25,18 @@ struct MDBattery: Codable {
 }
 
 typealias MDBatteries = [MDBattery]
+
+// MARK: - MDBatteryPOST
+struct MDBatteryPOST: Codable {
+    let id, name: String
+    let mdBatteryDescription: String?
+    let chargeIntervalDays, rowCreatedTimestamp, active: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case mdBatteryDescription = "description"
+        case chargeIntervalDays = "charge_interval_days"
+        case rowCreatedTimestamp = "row_created_timestamp"
+        case active
+    }
+}

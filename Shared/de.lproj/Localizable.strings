@@ -41,6 +41,7 @@
 "str.nav.batteriesOverview" = "Batterien";
 "str.nav.equipment" = "Ausstattungen";
 "str.nav.calendar" = "Kalender";
+"str.nav.activities" = "Aktivitäten";
 "str.nav.purchase" = "Einkauf";
 "str.nav.consume" = "Verbrauch";
 "str.nav.transfer" = "Transfer";
@@ -127,6 +128,8 @@
 "str.stock.buy" = "Einkauf";
 "str.stock.buy.product" = "Produkt";
 "str.stock.buy.product.buy" = "Produkt einkaufen";
+"str.stock.buy.product.buy.success %@" = "%@ eingekauft";
+"str.stock.buy.product.buy.fail" = "Einkauf fehlgeschlagen";
 "str.stock.buy.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.buy.product.amount" = "Menge";
 "str.stock.buy.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
@@ -145,7 +148,11 @@
 "str.stock.consume" = "Verbrauch";
 "str.stock.consume.product" = "Produkt";
 "str.stock.consume.product.consume" = "Produkt verbrauchen";
+"str.stock.consume.product.consume.success %@" = "%@ verbraucht";
+"str.stock.consume.product.consume.fail" = "Verbrauchen fehlgeschlagen";
 "str.stock.consume.product.open" = "Als geöffnet markieren";
+"str.stock.consume.product.open.success %@" = "%@ geöffnet";
+"str.stock.consume.product.open.fail" = "Öffnen fehlgeschlagen";
 "str.stock.consume.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.consume.product.amount" = "Menge";
 "str.stock.consume.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
@@ -164,6 +171,8 @@
 "str.stock.transfer" = "Umlagern";
 "str.stock.transfer.product" = "Produkt";
 "str.stock.transfer.product.transfer" = "Produkt umlagern";
+"str.stock.transfer.product.transfer.success %@" = "%@ transferiert";
+"str.stock.transfer.product.transfer.fail" = "Transfer fehlgeschlagen";
 "str.stock.transfer.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.transfer.product.locationFrom" = "Von Standort";
 "str.stock.transfer.product.locationFrom.required" = "Ein Standort ist erforderlich";
@@ -181,6 +190,8 @@
 "str.stock.inventory" = "Inventur";
 "str.stock.inventory.product" = "Produkt";
 "str.stock.inventory.product.inventory" = "Inventur durchführen";
+"str.stock.inventory.product.inventory.success %@" = "%@ inventarisiert";
+"str.stock.inventory.product.inventory.fail" = "Inventarisierung fehlgeschlagen";
 "str.stock.inventory.product.amount" = "Neuer Bestand";
 "str.stock.inventory.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.inventory.product.amount.lower %@" = "Das bedeutet %@ wird aus dem Bestand entfernt";

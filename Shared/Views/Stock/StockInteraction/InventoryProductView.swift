@@ -27,16 +27,18 @@ struct InventoryProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    private func getQuantityUnit() -> MDQuantityUnit? {
+    @State private var showToast: Bool = false
+    @State private var toastType: ToastType?
+
+    private var currentQuantityUnit: MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
-        let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
-        return qu
-    }
-    private var currentQuantityUnit: MDQuantityUnit {
-        getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
     }
     private func getQUString(amount: Int) -> String {
-        return amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural
+        return amount == 1 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? ""
+    }
+    private var productName: String {
+        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
     }
     
     private let priceFormatter = NumberFormatter()
@@ -82,7 +84,19 @@ struct InventoryProductView: View {
         if let amount = amount {
             if let productID = productID {
                 let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
-                grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo)
+                grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
+                    switch result {
+                    case let .success(prod):
+                        print(prod)
+                        toastType = .success
+                        showToast = true
+                        resetForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .fail
+                        showToast = true
+                    }
+                }
             }
         }
     }
@@ -169,13 +183,21 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         })
+        .toast(isPresented: $showToast, content: {
+            switch toastType{
+            case .success:
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \("\(amount ?? 1) \(getQUString(amount: amount ?? 1)) \(productName)")"), systemImage: "checkmark")
+            default:
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: "xmark")
+            }
+        })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: {
                     inventoryProduct()
                     resetForm()
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: "arrow.left.arrow.right")
+                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: "list.bullet")
                         .labelStyle(TextIconLabelStyle())
                 })
                 .disabled(!isFormValid)

@@ -20,6 +20,9 @@ struct QuickScanModeInputView: View {
     
     @State private var useBarcodeAmount: Bool = true
     
+    @State private var showToast: Bool = false
+    @State private var toastType: ToastType?
+    
     var barcode: MDProductBarcode {
         productBarcode ?? MDProductBarcode(id: "", productID: "", barcode: "", quID: nil, amount: nil, shoppingLocationID: nil, lastPrice: nil, rowCreatedTimestamp: "", note: nil, userfields: nil)
     }
@@ -53,16 +56,38 @@ struct QuickScanModeInputView: View {
         if let id = productBarcode?.productID {
             let amount = useBarcodeAmount ? Double(productBarcode?.amount ?? "") ?? 1.0 : 1.0
             let productConsume = ProductConsume(amount: amount, transactionType: .consume, spoiled: false, stockEntryID: consumeItemID, recipeID: nil, locationID: Int(consumeLocationID ?? ""), exactAmount: nil, allowSubproductSubstitution: nil)
-            grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume)
-            finalizeQuickInput()
+            grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume) { result in
+                switch result {
+                case let .success(prod):
+                    print(prod)
+                    toastType = .success
+                    showToast = true
+                    finalizeQuickInput()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .fail
+                    showToast = true
+                }
+            }
         }
     }
     
     private func markAsOpenedItem() {
         if let id = productBarcode?.productID {
             let productOpen = ProductOpen(amount: 1.0, stockEntryID: markAsOpenItemID, allowSubproductSubstitution: nil)
-            grocyVM.postStockObject(id: id, stockModePost: .open, content: productOpen)
-            finalizeQuickInput()
+            grocyVM.postStockObject(id: id, stockModePost: .open, content: productOpen) { result in
+                switch result {
+                case let .success(prod):
+                    print(prod)
+                    toastType = .success
+                    showToast = true
+                    finalizeQuickInput()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .fail
+                    showToast = true
+                }
+            }
         }
     }
     
@@ -72,8 +97,19 @@ struct QuickScanModeInputView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let priceStr = purchasePrice != nil ? String(purchasePrice ?? 0) : nil
             let productBuy = ProductBuy(amount: 1.0, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: priceStr, locationID: Int(purchaseLocationID ?? ""), shoppingLocationID: Int(purchaseShoppingLocationID ?? ""))
-            grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy)
-            finalizeQuickInput()
+            grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
+                switch result {
+                case let .success(prod):
+                    print(prod)
+                    toastType = .success
+                    showToast = true
+                    finalizeQuickInput()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .fail
+                    showToast = true
+                }
+            }
         }
     }
     

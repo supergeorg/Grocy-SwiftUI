@@ -14,6 +14,9 @@ struct StockTableRowActionsView: View {
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
     
+    @State private var showToast: Bool = false
+    @State private var toastType: ToastType?
+    
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
     }
@@ -25,23 +28,56 @@ struct StockTableRowActionsView: View {
         HStack(spacing: 2){
             RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "tuningfork", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
-                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+                        switch result {
+                        case let .success(prod):
+                            print(prod)
+                            toastType = .success
+                            showToast = true
+                        case let .failure(error):
+                            print("\(error)")
+                            toastType = .fail
+                            showToast = true
+                        }
+                    }
                     print("consumed")
                 }
             RowInteractionButton(title: "str.stock.tbl.action.all", image: "tuningfork", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
                 .onTapGesture {
-                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+                        switch result {
+                        case let .success(prod):
+                            print(prod)
+                            toastType = .success
+                            showToast = true
+                        case let .failure(error):
+                            print("\(error)")
+                            toastType = .fail
+                            showToast = true
+                        }
+                    }
                     print("consumed all")
                 }
             RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "shippingbox", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
-                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+                        switch result {
+                        case let .success(prod):
+                            print(prod)
+                            toastType = .success
+                            showToast = true
+                        case let .failure(error):
+                            print("\(error)")
+                            toastType = .fail
+                            showToast = true
+                        }
+                    }
                     print("opened")
                 }
             Menu(content: {
                 StockTableMenuView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             }, label: {
-                    RowInteractionButton(image: "ellipsis", backgroundColor: .white, foregroundColor: Color.gray)
+                RowInteractionButton(image: "ellipsis", backgroundColor: .white, foregroundColor: Color.gray)
             })
             .frame(width: 35)
         }

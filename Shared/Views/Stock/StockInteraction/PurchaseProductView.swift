@@ -29,13 +29,16 @@ struct PurchaseProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    private func getQuantityUnit() -> MDQuantityUnit? {
+    @State private var showToast: Bool = false
+    @State private var toastType: ToastType?
+
+    private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
-        return qu
+        return amount == 1 ? qu?.name : qu?.namePlural
     }
-    private var currentQuantityUnit: MDQuantityUnit {
-        getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
+    private var productName: String {
+        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
     }
     
     private let priceFormatter = NumberFormatter()
@@ -68,7 +71,19 @@ struct PurchaseProductView: View {
         if let amount = amount {
             let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
             if let productID = productID {
-                grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
+                grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
+                    switch result {
+                    case let .success(prod):
+                        print(prod)
+                        toastType = .success
+                        showToast = true
+                        resetForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .fail
+                        showToast = true
+                    }
+                }
             }
         }
     }
@@ -112,7 +127,7 @@ struct PurchaseProductView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
+                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
@@ -163,12 +178,17 @@ struct PurchaseProductView: View {
                 firstAppear = false
             }
         })
+        .toast(isPresented: $showToast, content: {
+            switch toastType{
+            case .success:
+                Label(LocalizedStringKey("str.stock.buy.product.buy.success \("\(amount ?? 1) \(currentQuantityUnitName ?? "") \(productName)")"), systemImage: "checkmark")
+            default:
+                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
+            }
+        })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    purchaseProduct()
-                    resetForm()
-                }, label: {
+                Button(action: purchaseProduct, label: {
                     Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
                         .labelStyle(TextIconLabelStyle())
                 })

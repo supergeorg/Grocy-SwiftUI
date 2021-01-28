@@ -43,7 +43,12 @@ public enum ResponseCodes: Int {
     case NotFound = 404
 }
 
-protocol GrocyAPIProvider {
+//enum Result<T> {
+//  case success(T)
+//  case error(Error)
+//}
+
+protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
@@ -79,7 +84,7 @@ protocol GrocyAPIProvider {
     func deleteObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
 }
 
-public class GrocyApi: GrocyAPIProvider {
+public class GrocyApi: GrocyAPI {
     
     private var baseURL: String = ""
     private var apiKey: String = ""
