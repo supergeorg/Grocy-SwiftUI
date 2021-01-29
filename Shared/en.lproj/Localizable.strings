@@ -278,6 +278,10 @@
 "str.md.masterData" = "Master Data";
 "str.md.description" = "Description";
 "str.md.search" = "Search";
+"str.md.new.success" = "Entry added";
+"str.md.new.fail" = "Adding failed";
+"str.md.edit.success" = "Editing successful";
+"str.md.edit.fail" = "Editing failed";
 
 "str.md.products" = "Products";
 "str.md.product" = "Product";
@@ -544,6 +548,8 @@
 "str.quickScan.input.info.consumeAmount %@" = "Quick consume amount: %@";
 "str.quickScan.add.product" = "Product for this barcode";
 "str.quickScan.add.product.add" = "Add barcode";
+"str.quickScan.add.product.add.success" = "Barcode added";
+"str.quickScan.add.product.add.fail" = "Adding barcode failed";
 
 // MARK: - Onboarding
 "str.onboard.start" = "Let's get started!";

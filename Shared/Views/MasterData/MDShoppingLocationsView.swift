@@ -60,6 +60,8 @@ struct MDShoppingLocationsView: View {
     @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private var filteredShoppingLocations: MDShoppingLocations {
         grocyVM.mdShoppingLocations
             .filter {
@@ -109,7 +111,7 @@ struct MDShoppingLocationsView: View {
                                 showAddShoppingLocation.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddShoppingLocation, content: {
-                                MDShoppingLocationFormView(isNewShoppingLocation: true)
+                                MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
                                     .padding()
                                     .frame(maxWidth: 300, maxHeight: 250)
                             })
@@ -137,8 +139,9 @@ struct MDShoppingLocationsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddShoppingLocation, content: {
                                 NavigationView {
-                                    MDShoppingLocationFormView(isNewShoppingLocation: true)
-                                } })
+                                    MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
+                                }
+                        })
                     }
                 }
             }
@@ -157,7 +160,7 @@ struct MDShoppingLocationsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation)) {
+                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation, toastType: $toastType)) {
                     MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                 }
             }

@@ -8,38 +8,13 @@
 
 import SwiftUI
 
-extension View {
-    func toast<Content>(isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
-        ToastMessage(
-            isPresented: isPresented,
-            presenter: { self },
-            content: content
-        )
-    }
-    
-//    public func toast<Item, Content>(item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
-    public func toast<Item, Content>(item: Binding<Item?>, content: @escaping () -> Content) -> some View where Item: Identifiable, Content : View {
-        ToastMessageI(
-            item: item,
-//            presenter: { self },
-            content: content
-        )
-    }
-}
-
-enum ToastType: Identifiable {
-    case success, successAlt, fail, failAlt
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-struct ToastMessageI<Item, Content>: View where Item: Identifiable, Content: View {
+struct ToastMessageItem<Presenting, Item, Content>: View where Item: Identifiable, Presenting: View, Content: View {
     @Binding var item: Item?
-    let content: () -> Content
+    let presenter: () -> Presenting
+    let content: (Item) -> Content
+    @Binding var isSuccess: Bool
     let delay: TimeInterval = 2
-    
+
     var body: some View {
         if self.item != nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + self.delay) {
@@ -50,13 +25,16 @@ struct ToastMessageI<Item, Content>: View where Item: Identifiable, Content: Vie
         }
         return GeometryReader { geometry in
             ZStack(alignment: .bottom) {
-//                self.presenter()
-                
+                self.presenter()
+
                 ZStack {
                     Capsule()
-                        .fill(Color.gray)
-                    
-                    self.content()
+                        .fill(isSuccess ? Color.green : Color.red)
+
+                    if let item = item {
+                        self.content(item)
+                            .padding()
+                    }
                 }
                 .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
                 .opacity(self.item != nil ? 1 : 0)
@@ -65,7 +43,6 @@ struct ToastMessageI<Item, Content>: View where Item: Identifiable, Content: Vie
         }
     }
 }
-
 
 struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: View {
     @Binding var isPresented: Bool

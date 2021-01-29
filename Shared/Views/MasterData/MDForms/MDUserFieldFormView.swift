@@ -24,6 +24,8 @@ struct MDUserFieldFormView: View {
     var isNewUserField: Bool
     var userField: MDUserField?
     
+    @Binding var toastType: MDToastType?
+    
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundUserField = grocyVM.mdUserFields.first(where: {$0.name == name})
@@ -47,17 +49,52 @@ struct MDUserFieldFormView: View {
     }
     
     private func updateData() {
-        
+        grocyVM.getMDUserFields()
+    }
+    
+    private func finishForm() {
+        #if os(iOS)
+        presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+        if isNewUserField {
+            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        }
+        #endif
     }
     
     private func saveUserField() {
         let sortNumberStr = sortNumber ?? 0 < 0 ? nil : String(sortNumber ?? 0)
         if isNewUserField {
-            grocyVM.postMDObject(object: .userfields, content: MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil))
+            let userFieldPOST = MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil)
+            grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    toastType = .successAdd
+                    resetForm()
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failAdd
+                }
+            })
         } else {
-            grocyVM.putMDObjectWithID(object: .userfields, id: userField!.id, content: MDUserFieldPOST(id: Int(userField!.id)!, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: userField!.rowCreatedTimestamp, config: nil, sortNumber: sortNumberStr, userfields: nil))
+            let userFieldPOST = MDUserFieldPOST(id: Int(userField!.id)!, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: userField!.rowCreatedTimestamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
+            grocyVM.putMDObjectWithID(object: .userfields, id: userField!.id, content: userFieldPOST, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    toastType = .successEdit
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failEdit
+                }
+            })
         }
-        grocyVM.getMDUserFields()
+        
     }
     
     var body: some View {
@@ -73,14 +110,13 @@ struct MDUserFieldFormView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserField {
                         Button(LocalizedStringKey("str.cancel")) {
-                            self.presentationMode.wrappedValue.dismiss()
+                            finishForm()
                         }
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.userField.save")) {
                         saveUserField()
-                        presentationMode.wrappedValue.dismiss()
                     }.disabled(!isNameCorrect)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -128,7 +164,7 @@ struct MDUserFieldFormView: View {
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewUserField{
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        finishForm()
                     } else {
                         resetForm()
                     }
@@ -137,7 +173,6 @@ struct MDUserFieldFormView: View {
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
                     saveUserField()
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
             }
@@ -156,6 +191,6 @@ struct MDUserFieldFormView: View {
 
 struct MDUserFieldFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDUserFieldFormView(isNewUserField: true)
+        MDUserFieldFormView(isNewUserField: true, toastType: Binding.constant(.successAdd))
     }
 }

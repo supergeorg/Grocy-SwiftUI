@@ -66,6 +66,8 @@ struct MDLocationsView: View {
     @State private var locationToDelete: MDLocation? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private func updateData() {
         grocyVM.getMDLocations()
     }
@@ -115,7 +117,7 @@ struct MDLocationsView: View {
                                 showAddLocation.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddLocation, content: {
-                                MDLocationFormView(isNewLocation: true)
+                                MDLocationFormView(isNewLocation: true, toastType: $toastType)
                                     .padding()
                                     .frame(maxWidth: 300, maxHeight: 250)
                             })
@@ -147,7 +149,7 @@ struct MDLocationsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddLocation, content: {
                                 NavigationView {
-                                    MDLocationFormView(isNewLocation: true)
+                                    MDLocationFormView(isNewLocation: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -167,7 +169,7 @@ struct MDLocationsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredLocations, id:\.id) {location in
-                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location)) {
+                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, toastType: $toastType)) {
                     MDLocationRowView(location: location)
                 }
             }
@@ -175,6 +177,18 @@ struct MDLocationsView: View {
         }
         .onAppear(perform: updateData)
         .animation(.default)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+            switch item {
+            case .successAdd:
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+            case .failAdd:
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+            case .successEdit:
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+            case .failEdit:
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+            }
+        })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.location.delete.confirm"), message: Text(locationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
                 deleteLocation(toDelID: locationToDelete?.id ?? "")

@@ -24,6 +24,8 @@ struct MDBarcodeFormView: View {
     var productID: String
     var editBarcode: MDProductBarcode?
     
+    @Binding var toastType: MDToastType?
+    
     @State var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
         return (barcode.count == 8 || barcode.count == 13)
@@ -31,18 +33,6 @@ struct MDBarcodeFormView: View {
     
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == productID})
-    }
-    
-    private func saveBarcode() {
-        let amountStr = amount != nil ? String(amount!) : nil
-        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: amountStr, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
-        if isNewBarcode{
-            grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
-        } else {
-            if let id = editBarcode?.id {
-                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode)
-            }
-        }
     }
     
     private func resetForm() {
@@ -56,7 +46,50 @@ struct MDBarcodeFormView: View {
     }
     
     private func updateData() {
-        
+        grocyVM.getMDProductBarcodes()
+    }
+    
+    private func finishForm() {
+        #if os(iOS)
+        presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+//        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        #endif
+    }
+    
+    private func saveBarcode() {
+        let amountStr = amount != nil ? String(amount!) : nil
+        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: amountStr, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
+        if isNewBarcode{
+            grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    toastType = .successAdd
+                    resetForm()
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failAdd
+                }
+            })
+        } else {
+            if let id = editBarcode?.id {
+                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successEdit
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failEdit
+                    }
+                })
+            }
+        }
     }
     
     #if os(iOS)
@@ -154,7 +187,7 @@ struct MDBarcodeFormView: View {
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewBarcode{
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        finishForm()
                     } else {
                         resetForm()
                     }
@@ -182,10 +215,10 @@ struct MDBarcodeFormView_Previews: PreviewProvider {
     static var previews: some View {
         Group{
             NavigationView{
-                MDBarcodeFormView(isNewBarcode: true, productID: "1")
+                MDBarcodeFormView(isNewBarcode: true, productID: "1", toastType: Binding.constant(.successAdd))
             }
             NavigationView{
-                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil))
+                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil), toastType: Binding.constant(.successAdd))
             }
         }
     }

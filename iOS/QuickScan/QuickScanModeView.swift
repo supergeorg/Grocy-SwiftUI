@@ -50,7 +50,7 @@ func toggleTorch(on: Bool) {
     }
 }
 
-enum ActiveSheet: Identifiable {
+enum QSActiveSheet: Identifiable {
     case config, input, selectProduct
     
     var id: Int {
@@ -64,12 +64,15 @@ struct QuickScanModeView: View {
     @State private var flashOn: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
     
-    @State private var activeSheet: ActiveSheet?
+    @State private var activeSheet: QSActiveSheet?
     
     @State private var firstInSession: Bool = true
     
     @State private var recognizedBarcode: MDProductBarcode? = nil
     @State private var notRecognizedBarcode: String? = nil
+    
+    @State private var toastType: QSToastType?
+    @State private var infoString: String?
     
     func updateData() {
         grocyVM.getMDProductBarcodes()
@@ -102,7 +105,7 @@ struct QuickScanModeView: View {
     var body: some View {
         ZStack(alignment: .top){
             //            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
-            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123333", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123323", completion: self.handleScan)
             HStack{
                 Button(action: {
                     activeSheet = .config
@@ -133,11 +136,31 @@ struct QuickScanModeView: View {
             case .config:
                 QuickScanModeConfigView()
             case .input:
-                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession)
+                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession, toastType: $toastType, infoString: $infoString)
             case .selectProduct:
-                QuickScanModeSelectProductView(barcode: $notRecognizedBarcode)
+                QuickScanModeSelectProductView(barcode: $notRecognizedBarcode, toastType: $toastType)
             }
         }
+        .toast(item: $toastType, isSuccess: Binding.constant(true), content: { item in
+            switch item {
+            case .successQSAddProduct:
+                Label("str.quickScan.add.product.add.success", systemImage: "checkmark")
+            case .failQSAddProduct:
+                Label("str.quickScan.add.product.add.fail", systemImage: "xmark")
+            case .successQSConsume:
+                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failQSConsume:
+                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: "xmark")
+            case .successQSOpen:
+                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failQSOpen:
+                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
+            case .successQSPurchase:
+                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failQSPurchase:
+                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
+            }
+        })
         .onAppear(perform: updateData)
     }
 }

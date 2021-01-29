@@ -71,6 +71,8 @@ struct MDProductsView: View {
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private func updateData() {
         grocyVM.getMDProducts()
         grocyVM.getMDLocations()
@@ -123,7 +125,7 @@ struct MDProductsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddProduct, content: {
                                 ScrollView{
-                                    MDProductFormView(isNewProduct: true)
+                                    MDProductFormView(isNewProduct: true, toastType: $toastType)
                                         .padding()
                                 }
                             })
@@ -155,7 +157,7 @@ struct MDProductsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddProduct, content: {
                                 NavigationView {
-                                    MDProductFormView(isNewProduct: true)
+                                    MDProductFormView(isNewProduct: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -175,7 +177,7 @@ struct MDProductsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredProducts, id:\.id) { product in
-                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product)) {
+                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, toastType: $toastType)) {
                     MDProductRowView(product: product)
                 }
             }

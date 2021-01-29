@@ -26,8 +26,15 @@ struct TransferProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var showToast: Bool = false
-    @State private var toastType: ToastType?
+    @State private var toastType: TransferToastType?
+    private enum TransferToastType: Identifiable {
+        case successTransfer, failTransfer
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
+    @State private var infoString: String?
     
     private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
@@ -67,17 +74,16 @@ struct TransferProductView: View {
                 if let productID = productID {
                     if let amount = amount {
                         let transferInfo = ProductTransfer(amount: amount, locationIDFrom: intLocationIDFrom, locationIDTo: intLocationIDTo, stockEntryID: stockEntryID)
+                        infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
                         grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
                             switch result {
                             case let .success(prod):
                                 print(prod)
-                                toastType = .success
-                                showToast = true
+                                toastType = .successTransfer
                                 resetForm()
                             case let .failure(error):
                                 print("\(error)")
-                                toastType = .fail
-                                showToast = true
+                                toastType = .failTransfer
                             }
                         }
                     }
@@ -165,11 +171,11 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         })
-        .toast(isPresented: $showToast, content: {
-            switch toastType{
-            case .success:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \("\(amount ?? 1) \(currentQuantityUnitName ?? "") \(productName)")"), systemImage: "checkmark")
-            default:
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), content: { item in
+            switch item {
+            case .successTransfer:
+                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failTransfer:
                 Label(LocalizedStringKey("str.stock.transfer.product.transfer.fail"), systemImage: "xmark")
             }
         })

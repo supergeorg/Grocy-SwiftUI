@@ -29,8 +29,15 @@ struct PurchaseProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var showToast: Bool = false
-    @State private var toastType: ToastType?
+    @State private var toastType: PurchaseToastType?
+    private enum PurchaseToastType: Identifiable {
+        case successPurchase, failPurchase
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
+    @State private var infoString: String?
 
     private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
@@ -71,17 +78,16 @@ struct PurchaseProductView: View {
         if let amount = amount {
             let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
             if let productID = productID {
+                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
                 grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
                     switch result {
                     case let .success(prod):
                         print(prod)
-                        toastType = .success
-                        showToast = true
+                        toastType = .successPurchase
                         resetForm()
                     case let .failure(error):
                         print("\(error)")
-                        toastType = .fail
-                        showToast = true
+                        toastType = .failPurchase
                     }
                 }
             }
@@ -178,11 +184,11 @@ struct PurchaseProductView: View {
                 firstAppear = false
             }
         })
-        .toast(isPresented: $showToast, content: {
-            switch toastType{
-            case .success:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.success \("\(amount ?? 1) \(currentQuantityUnitName ?? "") \(productName)")"), systemImage: "checkmark")
-            default:
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successPurchase), content: { item in
+            switch item {
+            case .successPurchase:
+                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failPurchase:
                 Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
             }
         })

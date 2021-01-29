@@ -278,6 +278,10 @@
 "str.md.masterData" = "Stammdaten";
 "str.md.description" = "Beschreibung";
 "str.md.search" = "Suche";
+"str.md.new.success" = "Eintrag erfolgreich hinzugefügt";
+"str.md.new.fail" = "Hinzufügen fehlgeschlagen";
+"str.md.edit.success" = "Bearbeiten erfolgreich";
+"str.md.edit.fail" = "Bearbeiten fehlgeschlagen";
 
 "str.md.products" = "Produkte";
 "str.md.product" = "Produkt";
@@ -544,6 +548,8 @@
 "str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";
 "str.quickScan.add.product" = "Produkt für Barcode";
 "str.quickScan.add.product.add" = "Barcode hinzufügen";
+"str.quickScan.add.product.add.success" = "Barcode erfolgreich zugewiesen";
+"str.quickScan.add.product.add.fail" = "Zuweisung fehlgeschlagen";
 
 // MARK: - Onboarding and Login
 "str.onboard.start" = "Los geht's!";

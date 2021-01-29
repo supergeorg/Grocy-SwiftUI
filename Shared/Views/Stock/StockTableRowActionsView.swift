@@ -14,8 +14,14 @@ struct StockTableRowActionsView: View {
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionSheet?
     
-    @State private var showToast: Bool = false
-    @State private var toastType: ToastType?
+    @State private var toastType: RowActionToastType?
+    private enum RowActionToastType: Identifiable {
+        case successConsumeOne, successConsumeAll, successOpenOne, fail
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
     
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
@@ -32,12 +38,10 @@ struct StockTableRowActionsView: View {
                         switch result {
                         case let .success(prod):
                             print(prod)
-                            toastType = .success
-                            showToast = true
+                            toastType = .successConsumeOne
                         case let .failure(error):
                             print("\(error)")
                             toastType = .fail
-                            showToast = true
                         }
                     }
                     print("consumed")
@@ -48,12 +52,10 @@ struct StockTableRowActionsView: View {
                         switch result {
                         case let .success(prod):
                             print(prod)
-                            toastType = .success
-                            showToast = true
+                            toastType = .successConsumeAll
                         case let .failure(error):
                             print("\(error)")
                             toastType = .fail
-                            showToast = true
                         }
                     }
                     print("consumed all")
@@ -64,12 +66,10 @@ struct StockTableRowActionsView: View {
                         switch result {
                         case let .success(prod):
                             print(prod)
-                            toastType = .success
-                            showToast = true
+                            toastType = .successOpenOne
                         case let .failure(error):
                             print("\(error)")
                             toastType = .fail
-                            showToast = true
                         }
                     }
                     print("opened")

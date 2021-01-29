@@ -25,9 +25,9 @@ struct ShoppingListFormView: View {
     
     func saveShoppingList() {
         if isNewShoppingListDescription{
-            grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescriptionPOST(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil))
+//            grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescriptionPOST(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil))
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: Int(shoppingListDescription!.id)!, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp, userfields: nil))
+//            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: Int(shoppingListDescription!.id)!, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp, userfields: nil))
         }
         grocyVM.getShoppingListDescriptions()
     }

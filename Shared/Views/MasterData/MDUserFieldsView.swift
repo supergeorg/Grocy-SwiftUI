@@ -39,6 +39,8 @@ struct MDUserFieldsView: View {
     @State private var userFieldToDelete: MDUserField? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private var filteredUserFields: MDUserFields {
         grocyVM.mdUserFields
             .filter {
@@ -88,7 +90,7 @@ struct MDUserFieldsView: View {
                                 showAddUserField.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddUserField, content: {
-                                MDUserFieldFormView(isNewUserField: true)
+                                MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
                                     //                                    .padding()
                                     .frame(maxWidth: 400, maxHeight: 500)
                             })
@@ -116,7 +118,7 @@ struct MDUserFieldsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddUserField, content: {
                                 NavigationView {
-                                    MDUserFieldFormView(isNewUserField: true)
+                                    MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -136,7 +138,7 @@ struct MDUserFieldsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredUserFields, id:\.id) { userField in
-                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField)) {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, toastType: $toastType)) {
                     MDUserFieldRowView(userField: userField)
                 }
             }

@@ -42,6 +42,8 @@ struct MDBarcodesView: View {
     
     @State private var showAddBarcode: Bool = false
     
+    @Binding var toastType: MDToastType?
+    
     private func updateData() {
         grocyVM.getMDProductBarcodes()
     }
@@ -73,7 +75,7 @@ struct MDBarcodesView: View {
             #if os(macOS)
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: "plus")})
                 .popover(isPresented: $showAddBarcode, content: {
-                    MDBarcodeFormView(isNewBarcode: true, productID: productID)
+                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
                         .padding()
                 })
             if filteredBarcodes.isEmpty {
@@ -84,7 +86,7 @@ struct MDBarcodesView: View {
                     ForEach(filteredBarcodes, id:\.id) {productBarcode in
                         NavigationLink(
                             destination: ScrollView{
-                                MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode)
+                                MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode, toastType: $toastType)
                             },
                             label: {
                                 MDBarcodeRowView(barcode: productBarcode)
@@ -99,7 +101,7 @@ struct MDBarcodesView: View {
             })
             .sheet(isPresented: $showAddBarcode, content: {
                 NavigationView{
-                    MDBarcodeFormView(isNewBarcode: true, productID: productID)
+                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
                 }
             })
             List{
@@ -108,7 +110,7 @@ struct MDBarcodesView: View {
                 }
                 ForEach(filteredBarcodes, id:\.id) {productBarcode in
                     NavigationLink(
-                        destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode),
+                        destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode, toastType: $toastType),
                         label: {
                             MDBarcodeRowView(barcode: productBarcode)
                         })
@@ -125,12 +127,12 @@ struct MDBarcodesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Form{
-                MDBarcodesView(productID: "1")
+                MDBarcodesView(productID: "1", toastType: Binding.constant(nil))
             }
         }
         Group {
             Form{
-                MDBarcodesView(productID: "27")
+                MDBarcodesView(productID: "27", toastType: Binding.constant(nil))
             }
         }
     }

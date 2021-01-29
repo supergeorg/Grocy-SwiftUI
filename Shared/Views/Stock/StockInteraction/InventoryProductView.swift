@@ -27,8 +27,15 @@ struct InventoryProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var showToast: Bool = false
-    @State private var toastType: ToastType?
+    @State private var toastType: InventoryToastType?
+    private enum InventoryToastType: Identifiable {
+        case successInventory, failInventory
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
+    @State private var infoString: String?
 
     private var currentQuantityUnit: MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
@@ -84,17 +91,16 @@ struct InventoryProductView: View {
         if let amount = amount {
             if let productID = productID {
                 let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
+                infoString = "\(amount) \(getQUString(amount: amount)) \(productName)"
                 grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
                     switch result {
                     case let .success(prod):
                         print(prod)
-                        toastType = .success
-                        showToast = true
+                        toastType = .successInventory
                         resetForm()
                     case let .failure(error):
                         print("\(error)")
-                        toastType = .fail
-                        showToast = true
+                        toastType = .failInventory
                     }
                 }
             }
@@ -183,11 +189,11 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         })
-        .toast(isPresented: $showToast, content: {
-            switch toastType{
-            case .success:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \("\(amount ?? 1) \(getQUString(amount: amount ?? 1)) \(productName)")"), systemImage: "checkmark")
-            default:
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), content: { item in
+            switch item {
+            case .successInventory:
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failInventory:
                 Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: "xmark")
             }
         })

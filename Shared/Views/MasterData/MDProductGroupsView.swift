@@ -42,6 +42,8 @@ struct MDProductGroupsView: View {
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private func updateData() {
         grocyVM.getMDProductGroups()
     }
@@ -91,7 +93,7 @@ struct MDProductGroupsView: View {
                                 showAddProductGroup.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddProductGroup, content: {
-                                MDProductGroupFormView(isNewProductGroup: true)
+                                MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
                                     .padding()
                                     .frame(maxWidth: 300, maxHeight: 250)
                             })
@@ -123,7 +125,7 @@ struct MDProductGroupsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddProductGroup, content: {
                                 NavigationView {
-                                    MDProductGroupFormView(isNewProductGroup: true)
+                                    MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -143,7 +145,7 @@ struct MDProductGroupsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredProductGroups, id:\.id) { productGroup in
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup)) {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, toastType: $toastType)) {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
             }

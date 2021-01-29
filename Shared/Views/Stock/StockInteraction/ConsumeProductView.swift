@@ -27,11 +27,18 @@ struct ConsumeProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var showToast: Bool = false
-    @State private var toastType: ToastType?
+    @State private var toastType: ConsumeToastType?
+    private enum ConsumeToastType: Identifiable {
+        case successConsume, successOpen, failConsume, failOpen
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
+    @State private var infoString: String?
     
     @State private var showRecipeInfo: Bool = false
-
+    
     private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -49,7 +56,7 @@ struct ConsumeProductView: View {
     
     private func resetForm() {
         productID = productToConsumeID
-        amount = 0.0
+        amount = nil
         quantityUnitID = nil
         locationID = nil
         spoiled = false
@@ -63,17 +70,16 @@ struct ConsumeProductView: View {
         if let amount = amount {
             if let productID = productID {
                 let openInfo = ProductOpen(amount: amount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
+                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
                 grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
                     switch result {
                     case let .success(prod):
                         print(prod)
-                        toastType = .successAlt
-                        showToast = true
+                        toastType = .successOpen
                         resetForm()
                     case let .failure(error):
                         print("\(error)")
-                        toastType = .failAlt
-                        showToast = true
+                        toastType = .failOpen
                     }
                 }
             }
@@ -86,17 +92,16 @@ struct ConsumeProductView: View {
                 let intRecipeID = Int(recipeID ?? "")
                 let intLocationID = Int(locationID ?? "")
                 let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
+                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
                 grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
                     switch result {
                     case let .success(prod):
                         print(prod)
-                        toastType = .success
-                        showToast = true
+                        toastType = .successConsume
                         resetForm()
                     case let .failure(error):
                         print("\(error)")
-                        toastType = .fail
-                        showToast = true
+                        toastType = .failConsume
                     }
                 }
             }
@@ -196,16 +201,16 @@ struct ConsumeProductView: View {
             }
         })
         .animation(.default)
-        .toast(isPresented: $showToast, content: {
-            switch toastType{
-            case .success:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \("\(amount ?? 1) \(currentQuantityUnitName ?? "") \(productName)")"), systemImage: "checkmark")
-            case .successAlt:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \("\(amount ?? 1) \(currentQuantityUnitName ?? "") \(productName)")"), systemImage: "checkmark")
-            case .failAlt:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
-            default:
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), content: { item in
+            switch item {
+            case .successConsume:
+                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failConsume:
                 Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: "xmark")
+            case .successOpen:
+                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: "checkmark")
+            case .failOpen:
+                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
             }
         })
         .toolbar(content: {
@@ -213,7 +218,6 @@ struct ConsumeProductView: View {
                 HStack{
                     Button(action: {
                         openProduct()
-                        resetForm()
                     }, label: {
                         Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: "envelope.open")
                             .labelStyle(TextIconLabelStyle())
@@ -221,7 +225,6 @@ struct ConsumeProductView: View {
                     .disabled(!isFormValid)
                     Button(action: {
                         consumeProduct()
-                        resetForm()
                     }, label: {
                         Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: "tuningfork")
                             .labelStyle(TextIconLabelStyle())

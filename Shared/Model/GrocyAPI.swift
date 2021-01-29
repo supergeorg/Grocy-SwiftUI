@@ -43,6 +43,10 @@ public enum ResponseCodes: Int {
     case NotFound = 404
 }
 
+struct EmptyResponse: Codable {
+    
+}
+
 //enum Result<T> {
 //  case success(T)
 //  case error(Error)
@@ -81,6 +85,7 @@ protocol GrocyAPI {
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
     func putObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<T, APIError>
+    func putObjectWithIDESC(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<URLResponse, APIError>
     func deleteObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
 }
 
@@ -99,6 +104,15 @@ public class GrocyApi: GrocyAPI {
         case POST
         case DELETE
         case PUT
+    }
+    
+    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<URLResponse, APIError> {
+        let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
+        return URLSession.shared.dataTaskPublisher(for: urlRequest)
+            .mapError{ _ in APIError.serverError }
+            .map{$0.response}
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
@@ -378,6 +392,10 @@ extension GrocyApi {
     
     func putObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<T, APIError> {
         return call(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
+    }
+    
+    func putObjectWithIDESC(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<URLResponse, APIError> {
+        return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
     }
     
     func deleteObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError> {

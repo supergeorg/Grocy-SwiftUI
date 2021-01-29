@@ -42,6 +42,8 @@ struct MDQuantityUnitsView: View {
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private func updateData() {
         grocyVM.getMDQuantityUnits()
     }
@@ -91,7 +93,7 @@ struct MDQuantityUnitsView: View {
                                 showAddQuantityUnit.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddQuantityUnit, content: {
-                                MDQuantityUnitFormView(isNewQuantityUnit: true)
+                                MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
                                     .padding()
                                     .frame(maxWidth: 300, maxHeight: 250)
                             })
@@ -123,7 +125,7 @@ struct MDQuantityUnitsView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddQuantityUnit, content: {
                                 NavigationView {
-                                    MDQuantityUnitFormView(isNewQuantityUnit: true)
+                                    MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -143,7 +145,7 @@ struct MDQuantityUnitsView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit)) {
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, toastType: $toastType)) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
             }

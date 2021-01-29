@@ -43,6 +43,8 @@ struct MDProductFormView: View {
     var isNewProduct: Bool
     var product: MDProduct?
     
+    @Binding var toastType: MDToastType?
+    
     @State var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundProduct = grocyVM.mdProducts.first(where: {$0.name == name})
@@ -90,6 +92,16 @@ struct MDProductFormView: View {
         grocyVM.getMDShoppingLocations()
     }
     
+    private func finishForm() {
+        #if os(iOS)
+        presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+        if isNewProduct {
+            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        }
+        #endif
+    }
+    
     private var isFormValid: Bool {
         !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil)
     }
@@ -100,11 +112,32 @@ struct MDProductFormView: View {
                 if let quIDStock = quIDStock {
                     let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: nil, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
                     if isNewProduct {
-                        grocyVM.postMDObject(object: .products, content: productPOST)
+                        grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
+                            switch result {
+                            case let .success(message):
+                                print(message)
+                                toastType = .successAdd
+                                updateData()
+                                finishForm()
+                            case let .failure(error):
+                                print("\(error)")
+                                toastType = .failAdd
+                            }
+                        })
                     } else {
-                        grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST)
+                        grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST, completion: { result in
+                            switch result {
+                            case let .success(message):
+                                print(message)
+                                toastType = .successEdit
+                                updateData()
+                                finishForm()
+                            case let .failure(error):
+                                print("\(error)")
+                                toastType = .failEdit
+                            }
+                        })
                     }
-                    grocyVM.getMDLocations()
                 }
             }
         }
@@ -123,14 +156,13 @@ struct MDProductFormView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewProduct {
                         Button(LocalizedStringKey("str.cancel")) {
-                            self.presentationMode.wrappedValue.dismiss()
+                            finishForm()
                         }
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.product.save")) {
                         saveProduct()
-                        presentationMode.wrappedValue.dismiss()
                     }.disabled(!isFormValid)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -290,7 +322,7 @@ struct MDProductFormView: View {
                 
                 if !isNewProduct {
                     if let product = product {
-                        MDBarcodesView(productID: product.id)
+                        MDBarcodesView(productID: product.id, toastType: $toastType)
                     }
                 }
             }
@@ -299,7 +331,7 @@ struct MDProductFormView: View {
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewProduct{
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                        finishForm()
                     } else {
                         resetForm()
                     }
@@ -308,9 +340,6 @@ struct MDProductFormView: View {
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
                     saveProduct()
-                    if isNewProduct{
-                        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-                    }
                 }
                 .disabled(!isFormValid)
                 .keyboardShortcut(.defaultAction)
@@ -332,13 +361,13 @@ struct MDProductFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDProductFormView(isNewProduct: true)
+            MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
             //            MDProductFormView(isNewProduct: false, product: MDProduct(id: "1", name: "Name", mdProductDescription: "Description", locationID: "locid", quIDPurchase: "quPurchase", quIDStock: <#T##String#>, quFactorPurchaseToStock: <#T##String#>, barcode: <#T##String?#>, minStockAmount: <#T##String#>, defaultDueDays: <#T##String#>, rowCreatedTimestamp: <#T##String#>, productGroupID: <#T##String?#>, pictureFileName: <#T##String?#>, defaultDueDaysAfterOpen: <#T##String#>, allowPartialUnitsInStock: <#T##String#>, enableTareWeightHandling: <#T##String#>, tareWeight: <#T##String#>, notCheckStockFulfillmentForRecipes: <#T##String#>, parentProductID: <#T##String?#>, calories: <#T##String?#>, cumulateMinStockAmountOfSubProducts: <#T##String#>, defaultDueDaysAfterFreezing: <#T##String#>, defaultDueDaysAfterThawing: <#T##String#>, shoppingLocationID: <#T##String?#>, userfields: <#T##Userfields?#>))
         }
         #else
         Group {
             NavigationView {
-                MDProductFormView(isNewProduct: true)
+                MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
             }
             //            NavigationView {
             //                MDProductFormView(isNewProduct: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil))

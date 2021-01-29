@@ -8,5 +8,7 @@
 import Foundation
 
 struct Constants {
+    #if os(macOS)
      static let macOSNavWidth: CGFloat = 300
+    #endif
  }

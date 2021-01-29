@@ -38,6 +38,18 @@ struct ShoppingListEntryFormView: View {
         getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
     }
     
+    private func updateData() {
+        grocyVM.getShoppingList()
+    }
+    
+    private func finishForm() {
+        #if os(iOS)
+        self.presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        #endif
+    }
+    
     func saveShoppingListEntry() {
         let intProductID = Int(productID ?? "")!
         let intShoppingListID = Int(shoppingListID)!
@@ -46,11 +58,19 @@ struct ShoppingListEntryFormView: View {
                 grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note))
             } else {
                 if let entry = shoppingListEntry {
-                    grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields))
+                    grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
+                        switch result {
+                        case let .success(message):
+                            print(message)
+                            updateData()
+                            finishForm()
+                        case let .failure(error):
+                            print("\(error)")
+                        }
+                    })
                 }
             }
         }
-        grocyVM.getShoppingList()
     }
     
     private func resetForm() {
@@ -59,10 +79,6 @@ struct ShoppingListEntryFormView: View {
         self.amount = Int(shoppingListEntry?.amount ?? "") ?? (product != nil ? 1 : 0)
         self.quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase
         self.note = shoppingListEntry?.note ?? ""
-    }
-    
-    private func updateData() {
-        
     }
     
     var body: some View {
@@ -75,14 +91,13 @@ struct ShoppingListEntryFormView: View {
                 .toolbar{
                     ToolbarItem(placement: .cancellationAction) {
                         Button(LocalizedStringKey("str.cancel")) {
-                            self.presentationMode.wrappedValue.dismiss()
+                            finishForm()
                         }
                         .keyboardShortcut(.cancelAction)
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button(LocalizedStringKey("str.save")) {
                             saveShoppingListEntry()
-                            self.presentationMode.wrappedValue.dismiss()
                         }
                         .keyboardShortcut(.defaultAction)
                         .disabled(!isFormValid)
@@ -131,13 +146,12 @@ struct ShoppingListEntryFormView: View {
             #if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    finishForm()
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
                     saveShoppingListEntry()
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isFormValid)

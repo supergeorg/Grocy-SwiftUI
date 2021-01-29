@@ -37,6 +37,8 @@ struct MDUserEntitiesView: View {
     @State private var userEntityToDelete: MDUserEntity? = nil
     @State private var showDeleteAlert: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     private var filteredUserEntities: MDUserEntities {
         grocyVM.mdUserEntities
             .filter {
@@ -86,7 +88,7 @@ struct MDUserEntitiesView: View {
                                 showAddUserEntity.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddUserEntity, content: {
-                                MDUserEntityFormView(isNewUserEntity: true)
+                                MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
                                     .padding()
                                     .frame(maxWidth: 400, maxHeight: 500)
                             })
@@ -114,7 +116,7 @@ struct MDUserEntitiesView: View {
                         }, label: {Image(systemName: "plus")})
                         .sheet(isPresented: self.$showAddUserEntity, content: {
                                 NavigationView {
-                                    MDUserEntityFormView(isNewUserEntity: true)
+                                    MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
                                 } })
                     }
                 }
@@ -134,7 +136,7 @@ struct MDUserEntitiesView: View {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
             ForEach(filteredUserEntities, id:\.id) { userEntity in
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity)) {
+                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, toastType: $toastType)) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
             }
