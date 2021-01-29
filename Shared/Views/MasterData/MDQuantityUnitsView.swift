@@ -71,7 +71,7 @@ struct MDQuantityUnitsView: View {
         #if os(macOS)
         NavigationView {
             content
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
@@ -97,7 +97,8 @@ struct MDQuantityUnitsView: View {
                             })
                         }
                     }
-                }
+                })
+                .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         #elseif os(iOS)
@@ -127,7 +128,6 @@ struct MDQuantityUnitsView: View {
                     }
                 }
             }
-            .animation(.default)
             .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         #endif
     }
@@ -150,6 +150,7 @@ struct MDQuantityUnitsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: updateData)
+        .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),
                   message: Text(quantityUnitToDelete?.name ?? "error"),

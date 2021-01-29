@@ -89,7 +89,7 @@ struct MDShoppingLocationsView: View {
         #if os(macOS)
         NavigationView{
             content
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
                             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
@@ -115,7 +115,8 @@ struct MDShoppingLocationsView: View {
                             })
                         }
                     }
-                }
+                })
+                .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         #elseif os(iOS)
@@ -141,7 +142,6 @@ struct MDShoppingLocationsView: View {
                     }
                 }
             }
-            .animation(.default)
             .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         #endif
     }
@@ -166,6 +166,7 @@ struct MDShoppingLocationsView: View {
         .onAppear(perform: {
             updateData()
         })
+        .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.shoppingLocation.delete.confirm")),
                   message: Text(shoppingLocationToDelete?.name ?? "error"),

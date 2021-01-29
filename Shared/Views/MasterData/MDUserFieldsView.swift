@@ -68,7 +68,7 @@ struct MDUserFieldsView: View {
         #if os(macOS)
         NavigationView{
             content
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
@@ -94,7 +94,8 @@ struct MDUserFieldsView: View {
                             })
                         }
                     }
-                }
+                })
+                .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.userFields"))
         #elseif os(iOS)
@@ -120,7 +121,6 @@ struct MDUserFieldsView: View {
                     }
                 }
             }
-            .animation(.default)
             .navigationTitle(LocalizedStringKey("str.md.userFields"))
         #endif
     }
@@ -145,6 +145,7 @@ struct MDUserFieldsView: View {
         .onAppear(perform: {
             updateData()
         })
+        .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.userField.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                 deleteUserField(toDelID: userFieldToDelete?.id ?? "")

@@ -71,7 +71,7 @@ struct MDProductGroupsView: View {
         #if os(macOS)
         NavigationView {
             content
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .primaryAction) {
                         HStack{
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
@@ -97,7 +97,8 @@ struct MDProductGroupsView: View {
                             })
                         }
                     }
-                }
+                })
+                .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         #elseif os(iOS)
@@ -127,7 +128,6 @@ struct MDProductGroupsView: View {
                     }
                 }
             }
-            .animation(.default)
             .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         #endif
     }
@@ -150,6 +150,7 @@ struct MDProductGroupsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: updateData)
+        .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),
                   message: Text(productGroupToDelete?.name ?? "error"),

@@ -122,6 +122,7 @@ struct MDLocationsView: View {
                         }
                     }
                 })
+                .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.locations"))
         #elseif os(iOS)
@@ -151,7 +152,6 @@ struct MDLocationsView: View {
                     }
                 }
             })
-            .animation(.default)
             .navigationTitle(LocalizedStringKey("str.md.locations"))
         #endif
     }
@@ -174,6 +174,7 @@ struct MDLocationsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: updateData)
+        .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.location.delete.confirm"), message: Text(locationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
                 deleteLocation(toDelID: locationToDelete?.id ?? "")
