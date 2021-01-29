@@ -117,6 +117,7 @@ struct MDShoppingLocationsView: View {
                     }
                 }
         }
+        .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -141,6 +142,7 @@ struct MDShoppingLocationsView: View {
                 }
             }
             .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         #endif
     }
     
@@ -161,7 +163,6 @@ struct MDShoppingLocationsView: View {
             }
             .onDelete(perform: delete)
         }
-        .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         .onAppear(perform: {
             updateData()
         })

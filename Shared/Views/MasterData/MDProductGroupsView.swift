@@ -99,6 +99,7 @@ struct MDProductGroupsView: View {
                     }
                 }
         }
+        .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -126,6 +127,8 @@ struct MDProductGroupsView: View {
                     }
                 }
             }
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         #endif
     }
     
@@ -146,8 +149,6 @@ struct MDProductGroupsView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         .onAppear(perform: updateData)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),

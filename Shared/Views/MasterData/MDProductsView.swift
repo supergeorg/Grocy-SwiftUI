@@ -101,36 +101,37 @@ struct MDProductsView: View {
     var body: some View {
         #if os(macOS)
         NavigationView{
-        content
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: "magnifyingglass")})
-                        Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            updateData()
-                        }, label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
-                        })
-                        Button(action: {
-                            showAddProduct.toggle()
-                        }, label: {Image(systemName: "plus")})
-                        .popover(isPresented: self.$showAddProduct, content: {
-                            ScrollView{
-                                MDProductFormView(isNewProduct: true)
-                                    .padding()
-                            }
-                        })
+            content
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack{
+                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
+                            Button(action: {
+                                isSearching.toggle()
+                            }, label: {Image(systemName: "magnifyingglass")})
+                            Button(action: {
+                                withAnimation {
+                                    self.reloadRotationDeg += 360
+                                }
+                                updateData()
+                            }, label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
+                            })
+                            Button(action: {
+                                showAddProduct.toggle()
+                            }, label: {Image(systemName: "plus")})
+                            .popover(isPresented: self.$showAddProduct, content: {
+                                ScrollView{
+                                    MDProductFormView(isNewProduct: true)
+                                        .padding()
+                                }
+                            })
+                        }
                     }
                 }
-            }
         }
+        .navigationTitle(LocalizedStringKey("str.md.products"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -158,6 +159,8 @@ struct MDProductsView: View {
                     }
                 }
             }
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.products"))
         #endif
     }
     
@@ -178,8 +181,6 @@ struct MDProductsView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.products"))
         .onAppear(perform: {
             updateData()
         })

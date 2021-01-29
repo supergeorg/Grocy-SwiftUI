@@ -123,6 +123,7 @@ struct MDLocationsView: View {
                     }
                 })
         }
+        .navigationTitle(LocalizedStringKey("str.md.locations"))
         #elseif os(iOS)
         content
             .toolbar(content: {
@@ -150,6 +151,8 @@ struct MDLocationsView: View {
                     }
                 }
             })
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.locations"))
         #endif
     }
     
@@ -170,8 +173,6 @@ struct MDLocationsView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.locations"))
         .onAppear(perform: updateData)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.location.delete.confirm"), message: Text(locationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {

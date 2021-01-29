@@ -94,7 +94,7 @@ struct MDUserEntitiesView: View {
                     }
                 }
         }
-        .navigationViewStyle(DoubleColumnNavigationViewStyle())
+        .navigationTitle(LocalizedStringKey("str.md.userEntities"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -118,6 +118,8 @@ struct MDUserEntitiesView: View {
                     }
                 }
             }
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.userEntities"))
         #endif
     }
     
@@ -138,8 +140,6 @@ struct MDUserEntitiesView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.userEntities"))
         .onAppear(perform: {
             updateData()
         })

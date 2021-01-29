@@ -96,7 +96,7 @@ struct MDUserFieldsView: View {
                     }
                 }
         }
-        .navigationViewStyle(DoubleColumnNavigationViewStyle())
+        .navigationTitle(LocalizedStringKey("str.md.userFields"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -120,6 +120,8 @@ struct MDUserFieldsView: View {
                     }
                 }
             }
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.userFields"))
         #endif
     }
     
@@ -140,8 +142,6 @@ struct MDUserFieldsView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.userFields"))
         .onAppear(perform: {
             updateData()
         })

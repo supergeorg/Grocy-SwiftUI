@@ -99,6 +99,7 @@ struct MDQuantityUnitsView: View {
                     }
                 }
         }
+        .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         #elseif os(iOS)
         content
             .toolbar {
@@ -126,6 +127,8 @@ struct MDQuantityUnitsView: View {
                     }
                 }
             }
+            .animation(.default)
+            .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         #endif
     }
     
@@ -146,8 +149,6 @@ struct MDQuantityUnitsView: View {
             }
             .onDelete(perform: delete)
         }
-        .animation(.default)
-        .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         .onAppear(perform: updateData)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),
