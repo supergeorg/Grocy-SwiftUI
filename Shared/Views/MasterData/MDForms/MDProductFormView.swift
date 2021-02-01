@@ -189,12 +189,7 @@ struct MDProductFormView: View {
                     MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
                     
                     // Parent Product
-                    Picker(LocalizedStringKey("str.md.product.parentProduct"), selection: $parentProductID, content: {
-                        Text("").tag(nil as String?)
-                        ForEach(grocyVM.mdProducts, id:\.id) { grocyProduct in
-                            Text(grocyProduct.name).tag(grocyProduct.id as String?)
-                        }
-                    })
+                    ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
                     
                     // Product Description
                     MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
