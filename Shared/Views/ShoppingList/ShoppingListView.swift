@@ -25,14 +25,13 @@ struct ShoppingListView: View {
     @State private var showNewShoppingList: Bool = false
     @State private var showEditShoppingList: Bool = false
     #elseif os(iOS)
-    @State private var isShowingSheet: Bool = false
     private enum InteractionSheet: Identifiable {
-        case none, newShoppingList, editShoppingList
+        case newShoppingList, editShoppingList
         var id: Int {
             self.hashValue
         }
     }
-    @State private var activeSheet: InteractionSheet = .newShoppingList //.none
+    @State private var activeSheet: InteractionSheet?
     #endif
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
@@ -193,13 +192,11 @@ struct ShoppingListView: View {
                         Menu(content: {
                             Button(action: {
                                 activeSheet = .newShoppingList
-                                isShowingSheet.toggle()
                             }, label: {
                                 Label(LocalizedStringKey("str.shL.new"), systemImage: "plus")
                             })
                             Button(action: {
                                 activeSheet = .editShoppingList
-                                isShowingSheet.toggle()
                             }, label: {
                                 Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
                             })
@@ -226,14 +223,12 @@ struct ShoppingListView: View {
                     }
                 }
             })
-            .sheet(isPresented: $isShowingSheet, content: {
-                switch activeSheet {
+            .sheet(item: $activeSheet, content: { item in
+                switch item {
                 case .newShoppingList:
                     ShoppingListFormView(isNewShoppingListDescription: true)
                 case .editShoppingList:
                     ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
-                case .none:
-                    EmptyView()
                 }
             })
             .alert(isPresented: $showSHLDeleteAlert) {
