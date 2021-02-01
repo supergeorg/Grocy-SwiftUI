@@ -123,14 +123,14 @@ struct MDProductGroupsView: View {
                         Button(action: {
                             showAddProductGroup.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddProductGroup, content: {
-                                NavigationView {
-                                    MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
-                                } })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.productGroups"))
+            .sheet(isPresented: self.$showAddProductGroup, content: {
+                    NavigationView {
+                        MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
+                    } })
         #endif
     }
     

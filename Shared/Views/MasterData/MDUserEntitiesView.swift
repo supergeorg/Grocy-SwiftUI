@@ -114,14 +114,14 @@ struct MDUserEntitiesView: View {
                         Button(action: {
                             showAddUserEntity.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddUserEntity, content: {
-                                NavigationView {
-                                    MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
-                                } })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.userEntities"))
+            .sheet(isPresented: self.$showAddUserEntity, content: {
+                    NavigationView {
+                        MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
+                    } })
         #endif
     }
     

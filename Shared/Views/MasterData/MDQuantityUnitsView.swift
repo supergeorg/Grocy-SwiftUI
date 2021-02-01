@@ -123,14 +123,14 @@ struct MDQuantityUnitsView: View {
                         Button(action: {
                             showAddQuantityUnit.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddQuantityUnit, content: {
-                                NavigationView {
-                                    MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
-                                } })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
+            .sheet(isPresented: self.$showAddQuantityUnit, content: {
+                    NavigationView {
+                        MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
+                    } })
         #endif
     }
     

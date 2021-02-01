@@ -116,14 +116,14 @@ struct MDUserFieldsView: View {
                         Button(action: {
                             showAddUserField.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddUserField, content: {
-                                NavigationView {
-                                    MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
-                                } })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.userFields"))
+            .sheet(isPresented: self.$showAddUserField, content: {
+                    NavigationView {
+                        MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
+                    } })
         #endif
     }
     

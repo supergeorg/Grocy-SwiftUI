@@ -99,11 +99,6 @@ struct MDBarcodesView: View {
             Button(action: {showAddBarcode.toggle()}, label: {
                 Label("str.md.barcode.new", systemImage: "plus")
             })
-            .sheet(isPresented: $showAddBarcode, content: {
-                NavigationView{
-                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
-                }
-            })
             List{
                 if filteredBarcodes.isEmpty {
                     Text(LocalizedStringKey("str.md.barcodes.empty"))
@@ -119,6 +114,11 @@ struct MDBarcodesView: View {
             #endif
         }
         .onAppear(perform: updateData)
+        .sheet(isPresented: $showAddBarcode, content: {
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+            }
+        })
     }
 }
 

@@ -137,15 +137,15 @@ struct MDShoppingLocationsView: View {
                         Button(action: {
                             showAddShoppingLocation.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddShoppingLocation, content: {
-                                NavigationView {
-                                    MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
-                                }
-                        })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
+            .sheet(isPresented: self.$showAddShoppingLocation, content: {
+                NavigationView {
+                    MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
+                }
+            })
         #endif
     }
     

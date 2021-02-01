@@ -64,8 +64,6 @@ struct MDProductsView: View {
     @State private var searchString: String = ""
     @State private var showAddProduct: Bool = false
     
-    @State private var shownEditPopover: MDProduct? = nil
-    
     @State private var reloadRotationDeg: Double = 0
     
     @State private var productToDelete: MDProduct? = nil
@@ -155,14 +153,15 @@ struct MDProductsView: View {
                         Button(action: {
                             showAddProduct.toggle()
                         }, label: {Image(systemName: "plus")})
-                        .sheet(isPresented: self.$showAddProduct, content: {
-                                NavigationView {
-                                    MDProductFormView(isNewProduct: true, toastType: $toastType)
-                                } })
                     }
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.products"))
+            .sheet(isPresented: $showAddProduct, content: {
+                NavigationView {
+                    MDProductFormView(isNewProduct: true, toastType: $toastType)
+                }
+            })
         #endif
     }
     
