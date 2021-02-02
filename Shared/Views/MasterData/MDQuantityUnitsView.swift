@@ -94,8 +94,6 @@ struct MDQuantityUnitsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddQuantityUnit, content: {
                                 MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
-                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
                             })
                         }
                     }

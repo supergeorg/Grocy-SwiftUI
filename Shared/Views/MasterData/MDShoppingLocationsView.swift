@@ -112,8 +112,6 @@ struct MDShoppingLocationsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddShoppingLocation, content: {
                                 MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
-                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
                             })
                         }
                     }

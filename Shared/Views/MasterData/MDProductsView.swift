@@ -122,10 +122,7 @@ struct MDProductsView: View {
                                 showAddProduct.toggle()
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddProduct, content: {
-                                ScrollView{
-                                    MDProductFormView(isNewProduct: true, toastType: $toastType)
-                                        .padding()
-                                }
+                                MDProductFormView(isNewProduct: true, toastType: $toastType)
                             })
                         }
                     }

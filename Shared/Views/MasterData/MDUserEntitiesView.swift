@@ -89,8 +89,6 @@ struct MDUserEntitiesView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddUserEntity, content: {
                                 MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
-                                    .padding()
-                                    .frame(maxWidth: 400, maxHeight: 500)
                             })
                         }
                     }

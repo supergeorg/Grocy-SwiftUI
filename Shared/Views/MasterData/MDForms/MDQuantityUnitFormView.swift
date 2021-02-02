@@ -89,6 +89,38 @@ struct MDQuantityUnitFormView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        ScrollView {
+            content
+                .padding()
+        }
+        #elseif os(iOS)
+        content
+            .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewQuantityUnit {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            finishForm()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.md.quantityUnit.save")) {
+                        saveQuantityUnit()
+                    }.disabled(!isNameCorrect)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewQuantityUnit{
+                        Text("")
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.quantityUnit.name.required")
@@ -116,7 +148,6 @@ struct MDQuantityUnitFormView: View {
             }
             #endif
         }
-        .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
@@ -124,28 +155,6 @@ struct MDQuantityUnitFormView: View {
                 resetForm()
                 firstAppear = false
             }
-        })
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                if isNewQuantityUnit {
-                    Button(LocalizedStringKey("str.cancel")) {
-                        finishForm()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.quantityUnit.save")) {
-                    saveQuantityUnit()
-                }.disabled(!isNameCorrect)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                // Back not shown without it
-                if !isNewQuantityUnit{
-                    Text("")
-                }
-            }
-            #endif
         })
     }
 }

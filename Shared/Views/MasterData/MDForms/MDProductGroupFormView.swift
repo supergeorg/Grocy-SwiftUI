@@ -82,6 +82,38 @@ struct MDProductGroupFormView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        ScrollView {
+            content
+                .padding()
+        }
+        #elseif os(iOS)
+        content
+            .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewProductGroup {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            finishForm()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.md.productGroup.save")) {
+                        saveProductGroup()
+                    }.disabled(!isNameCorrect)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewProductGroup{
+                        Text("")
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.productGroup.name.required")
@@ -108,7 +140,6 @@ struct MDProductGroupFormView: View {
             }
             #endif
         }
-        .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
@@ -116,28 +147,6 @@ struct MDProductGroupFormView: View {
                 resetForm()
                 firstAppear = false
             }
-        })
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                if isNewProductGroup {
-                    Button(LocalizedStringKey("str.cancel")) {
-                        finishForm()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.productGroup.save")) {
-                    saveProductGroup()
-                }.disabled(!isNameCorrect)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                // Back not shown without it
-                if !isNewProductGroup{
-                    Text("")
-                }
-            }
-            #endif
         })
     }
 }

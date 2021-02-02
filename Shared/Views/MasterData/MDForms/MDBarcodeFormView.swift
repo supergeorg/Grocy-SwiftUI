@@ -53,7 +53,9 @@ struct MDBarcodeFormView: View {
         #if os(iOS)
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
-//        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        if isNewBarcode {
+            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        }
         #endif
     }
     
@@ -108,7 +110,10 @@ struct MDBarcodeFormView: View {
     
     var body: some View {
         #if os(macOS)
-        content
+        ScrollView {
+            content
+                .padding()
+        }
         #elseif os(iOS)
         content
             .navigationTitle(isNewBarcode ? LocalizedStringKey("str.md.barcode.new") : LocalizedStringKey("str.md.barcode.edit"))

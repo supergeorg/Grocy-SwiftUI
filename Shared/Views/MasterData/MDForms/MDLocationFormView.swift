@@ -90,6 +90,38 @@ struct MDLocationFormView: View {
     }
     
     var body: some View {
+        #if os(macOS)
+        ScrollView{
+            content
+                .padding()
+        }
+        #elseif os(iOS)
+        content
+            .navigationTitle(isNewLocation ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewLocation {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.md.location.save")) {
+                        saveLocation()
+                    }.disabled(!isNameCorrect)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    // Back not shown without it
+                    if !isNewLocation{
+                        Text("")
+                    }
+                }
+            })
+        #endif
+    }
+    
+    var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.location.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.location.name.required", errorMessage: "str.md.location.name.exists")
@@ -119,7 +151,6 @@ struct MDLocationFormView: View {
             }
             #endif
         }
-        .navigationTitle(isNewLocation ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
@@ -127,28 +158,6 @@ struct MDLocationFormView: View {
                 resetForm()
                 firstAppear = false
             }
-        })
-        .toolbar(content: {
-            #if os(iOS)
-            ToolbarItem(placement: .cancellationAction) {
-                if isNewLocation {
-                    Button(LocalizedStringKey("str.cancel")) {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("str.md.location.save")) {
-                    saveLocation()
-                }.disabled(!isNameCorrect)
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                // Back not shown without it
-                if !isNewLocation{
-                    Text("")
-                }
-            }
-            #endif
         })
     }
 }

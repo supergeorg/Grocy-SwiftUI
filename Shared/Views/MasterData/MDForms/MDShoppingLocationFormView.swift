@@ -83,10 +83,13 @@ struct MDShoppingLocationFormView: View {
     
     var body: some View {
         #if os(macOS)
-        content
-            .padding()
+        ScrollView {
+            content
+                .padding()
+        }
         #elseif os(iOS)
         content
+            .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewShoppingLocation {
@@ -137,7 +140,6 @@ struct MDShoppingLocationFormView: View {
             }
             #endif
         }
-        .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {

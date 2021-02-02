@@ -91,8 +91,6 @@ struct MDUserFieldsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddUserField, content: {
                                 MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
-                                    //                                    .padding()
-                                    .frame(maxWidth: 400, maxHeight: 500)
                             })
                         }
                     }

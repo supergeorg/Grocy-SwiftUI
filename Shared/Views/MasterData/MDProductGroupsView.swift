@@ -94,8 +94,6 @@ struct MDProductGroupsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddProductGroup, content: {
                                 MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
-                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
                             })
                         }
                     }

@@ -118,8 +118,6 @@ struct MDLocationsView: View {
                             }, label: {Image(systemName: "plus")})
                             .popover(isPresented: self.$showAddLocation, content: {
                                 MDLocationFormView(isNewLocation: true, toastType: $toastType)
-                                    .padding()
-                                    .frame(maxWidth: 300, maxHeight: 250)
                             })
                         }
                     }

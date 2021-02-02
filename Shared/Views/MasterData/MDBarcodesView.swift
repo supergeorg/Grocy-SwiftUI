@@ -65,6 +65,11 @@ struct MDBarcodesView: View {
     var body: some View {
         #if os(iOS)
         content
+            .sheet(isPresented: $showAddBarcode, content: {
+                NavigationView{
+                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+                }
+            })
         #elseif os(macOS)
         content
         #endif
@@ -76,7 +81,6 @@ struct MDBarcodesView: View {
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: "plus")})
                 .popover(isPresented: $showAddBarcode, content: {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
-                        .padding()
                 })
             if filteredBarcodes.isEmpty {
                 Text(LocalizedStringKey("str.md.barcodes.empty"))
@@ -114,11 +118,6 @@ struct MDBarcodesView: View {
             #endif
         }
         .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.product_barcodes]) })
-        .sheet(isPresented: $showAddBarcode, content: {
-            NavigationView{
-                MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
-            }
-        })
     }
 }
 

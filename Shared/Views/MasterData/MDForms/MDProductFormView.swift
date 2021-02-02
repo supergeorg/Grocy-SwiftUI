@@ -147,6 +147,7 @@ struct MDProductFormView: View {
         #if os(macOS)
         ScrollView{
             content
+                .padding()
         }
         .padding()
         #elseif os(iOS)
