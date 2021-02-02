@@ -1,5 +1,5 @@
 //
-//  MyDoublePicker.swift
+//  MyDoubleStepper.swift
 //  Grocy-SwiftUI
 //
 //  Created by Georg Meissner on 19.11.20.
@@ -20,10 +20,18 @@ struct MyDoubleStepper: View {
     
     var systemImage: String?
     
+    var currencySymbol: String?
+    
     var formatter: NumberFormatter {
         let f = NumberFormatter()
         f.allowsFloats = true
-        f.numberStyle = .decimal
+        if let currencySymbol = currencySymbol {
+            f.numberStyle = .currency
+            f.isLenient = true
+            f.currencySymbol = currencySymbol
+        } else {
+            f.numberStyle = .decimal
+        }
         f.maximumFractionDigits = 4
         return f
     }
@@ -41,7 +49,8 @@ struct MyDoubleStepper: View {
                     Image(systemName: systemImage!)
                 }
                 TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 50)
+                    .frame(width: 70)
+                    .keyboardType(.numberPad)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += amountStep ?? 1.0
@@ -63,7 +72,7 @@ struct MyDoubleStepper: View {
                             Text(LocalizedStringKey(errorMessage!))
                                 .font(.caption)
                                 .foregroundColor(.red)
-                                .frame(width: 250)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
