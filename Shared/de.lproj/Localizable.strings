@@ -105,7 +105,8 @@
 "str.stock.info.expired %lld" = "%lld Produkte sind bereits abgelaufen";
 "str.stock.info.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
 
-"str.stock.entry.description %@ %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; %@";
+"str.stock.entry.description.notOpened %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; Nicht geöffnet";
+"str.stock.entry.description.opened %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; Geöffnet";
 "str.stock.entry.status.notOpened" = "Nicht geöffnet";
 "str.stock.entry.status.opened" = "Geöffnet";
 
