@@ -188,6 +188,37 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
+    func deleteAllCachedData() {
+        systemInfo = nil
+        systemDBChangedTime = nil
+        systemConfig = nil
+        
+        users = []
+        currentUser = []
+        stock = []
+        stockJournal = []
+        shoppingListDescriptions = []
+        shoppingList = []
+        
+        mdProducts = []
+        mdProductBarcodes = []
+        mdLocations = []
+        mdShoppingLocations = []
+        mdQuantityUnits = []
+        mdProductGroups = []
+        mdBatteries = []
+        mdUserFields = []
+        mdUserEntities = []
+        
+        stockProductDetails = [:]
+        stockProductLocations = [:]
+        stockProductEntries = [:]
+        stockProductPriceHistories = [:]
+        
+        lastErrors = []
+        lastStockActions = []
+    }
+    
     //MARK: - SYSTEM
     
     func getSystemInfo() {

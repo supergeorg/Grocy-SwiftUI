@@ -95,7 +95,12 @@ struct SettingsView: View {
                             .foregroundColor(.primary)
                     })
                 }
-                Button(action: {isLoggedIn = false}, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
+                Button(action: {
+                    isLoggedIn = false
+                    grocyVM.deleteAllCachedData()
+                    updateData()
+                }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
+                Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
             }
             Section(header: Text("App")){
                 MyToggle(isOn: $simplifiedStockView, description: "str.settings.simplifiedStockView", descriptionInfo: nil, icon: "tablecells")
@@ -144,9 +149,12 @@ struct SettingsView: View {
                     } else {Text("cant load user data")}
                 })
                 Text(LocalizedStringKey(isDemoModus ? "str.settings.grocy.demoServer" : grocyServerURL))
-                Button(LocalizedStringKey("str.settings.logout")) {
+                Button(action: {
                     isLoggedIn = false
-                }
+                    grocyVM.deleteAllCachedData()
+                    updateData()
+                }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
+                Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
             }
             Toggle(LocalizedStringKey("str.settings.simplifiedStockView"), isOn: $simplifiedStockView)
             Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag"), content: {

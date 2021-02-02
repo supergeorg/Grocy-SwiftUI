@@ -509,6 +509,7 @@
 "str.settings.grocy.serverURL" = "Grocy Server-Adresse";
 "str.settings.grocy.apiKey" = "gültiger API-Key";
 "str.settings.grocy.demoServer" = "Demo-Server";
+"str.settings.resetCache" = "Cache löschen";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";
@@ -550,6 +551,7 @@
 "str.quickScan.add.product.add" = "Barcode hinzufügen";
 "str.quickScan.add.product.add.success" = "Barcode erfolgreich zugewiesen";
 "str.quickScan.add.product.add.fail" = "Zuweisung fehlgeschlagen";
+"str.quickScan.barcode.invalid" = "Ungültiger Barcode";
 
 // MARK: - Onboarding and Login
 "str.onboard.start" = "Los geht's!";

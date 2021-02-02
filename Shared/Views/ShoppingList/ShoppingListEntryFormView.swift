@@ -160,7 +160,7 @@ struct ShoppingListEntryFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.shopping_list])
                 resetForm()
                 firstAppear = false
             }

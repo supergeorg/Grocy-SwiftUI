@@ -265,7 +265,7 @@ struct ShoppingListView: View {
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
         .onAppear(perform: {
-            updateData()
+            grocyVM.requestDataIfUnavailable(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
         })
         .alert(isPresented: $showEntryDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.shL.entry.delete.confirm")), message: Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "product name error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
