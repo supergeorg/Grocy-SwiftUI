@@ -48,9 +48,14 @@ struct MyDoubleStepper: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
+                #if os(iOS)
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
                     .keyboardType(.numberPad)
+                #else
+                TextField("", value: $amount, formatter: formatter)
+                    .frame(width: 70)
+                #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += amountStep ?? 1.0

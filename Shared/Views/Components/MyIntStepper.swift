@@ -31,9 +31,14 @@ struct MyIntStepper: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
+                #if os(iOS)
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
                     .keyboardType(.numberPad)
+                #else
+                TextField("", value: $amount, formatter: NumberFormatter())
+                    .frame(width: 70)
+                #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += 1
