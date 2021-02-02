@@ -158,7 +158,7 @@ struct MDUserEntityFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.userentities])
                 resetForm()
                 firstAppear = false
             }

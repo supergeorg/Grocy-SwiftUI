@@ -21,7 +21,11 @@ public enum APIError: Error {
 }
 
 public enum ObjectEntities: String, CaseIterable {
-    case none, products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
+    case products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
+}
+
+public enum AdditionalEntities: String, CaseIterable {
+    case system_info, system_db_changed_time, system_config, stock, users
 }
 
 public enum StockProductPost: String {

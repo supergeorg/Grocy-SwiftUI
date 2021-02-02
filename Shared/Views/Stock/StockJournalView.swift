@@ -169,7 +169,7 @@ struct StockJournalView: View {
                 StockJournalRowView(journalEntry: journalEntry)
             }
         }
-        .onAppear(perform: updateData)
+        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.stock_log], additionalObjects: [.users]) })
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
     }
 }

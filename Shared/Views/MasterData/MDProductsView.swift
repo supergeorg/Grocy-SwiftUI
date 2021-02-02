@@ -183,7 +183,7 @@ struct MDProductsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            updateData()
+            grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .product_groups])
         })
         .animation(.default)
         .alert(isPresented: $showDeleteAlert) {

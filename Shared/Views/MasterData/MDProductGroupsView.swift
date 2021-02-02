@@ -151,7 +151,7 @@ struct MDProductGroupsView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: updateData)
+        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.product_groups]) })
         .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),

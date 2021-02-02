@@ -344,7 +344,7 @@ struct MDProductFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.products, .quantity_units, .locations, .shopping_locations])
                 resetForm()
                 firstAppear = false
             }

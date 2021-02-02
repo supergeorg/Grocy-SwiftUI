@@ -175,7 +175,7 @@ struct MDLocationsView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: updateData)
+        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.locations]) })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {

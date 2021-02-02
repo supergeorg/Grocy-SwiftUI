@@ -120,7 +120,7 @@ struct MDQuantityUnitFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.quantity_units])
                 resetForm()
                 firstAppear = false
             }

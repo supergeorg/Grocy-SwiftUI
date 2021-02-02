@@ -203,7 +203,7 @@ struct MDBarcodeFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.product_barcodes])
                 resetForm()
                 firstAppear = false
             }

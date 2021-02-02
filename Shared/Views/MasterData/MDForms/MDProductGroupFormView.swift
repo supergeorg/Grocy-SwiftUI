@@ -112,7 +112,7 @@ struct MDProductGroupFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.product_groups])
                 resetForm()
                 firstAppear = false
             }

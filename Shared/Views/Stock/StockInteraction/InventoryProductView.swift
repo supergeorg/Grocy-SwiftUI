@@ -80,6 +80,7 @@ struct InventoryProductView: View {
         grocyVM.getMDProducts()
         grocyVM.getMDLocations()
         grocyVM.getMDQuantityUnits()
+        grocyVM.getSystemConfig()
     }
     
     private func inventoryProduct() {
@@ -164,7 +165,7 @@ struct InventoryProductView: View {
                 MyToggle(isOn: $productNeverOverdue, description: "str.stock.inventory.product.neverOverdue", icon: "trash.slash")
             }
             
-            MyDoubleStepper(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: grocyVM.getCurrencySymbol(), errorMessage: "str.stock.inventory.product.price.required", systemImage: "eurosign.circle")
+            MyDoubleStepper(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.inventory.product.price.required", systemImage: "eurosign.circle", currencySymbol: grocyVM.getCurrencySymbol())
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
                 Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: "cart"), content: {
@@ -184,7 +185,7 @@ struct InventoryProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config])
                 resetForm()
                 firstAppear = false
             }

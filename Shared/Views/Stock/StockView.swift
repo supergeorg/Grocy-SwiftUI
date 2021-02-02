@@ -247,7 +247,7 @@ struct StockView: View {
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units], additionalObjects: [.stock, .system_config])
                 firstAppear = false
             }
         })

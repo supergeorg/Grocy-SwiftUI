@@ -143,7 +143,7 @@ struct MDUserEntitiesView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            updateData()
+            grocyVM.requestDataIfUnavailable(objects: [.userentities])
         })
         .animation(.default)
         .alert(isPresented: $showDeleteAlert) {

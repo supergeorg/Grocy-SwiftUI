@@ -123,7 +123,7 @@ struct MDLocationFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.locations])
                 resetForm()
                 firstAppear = false
             }

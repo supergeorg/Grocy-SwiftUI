@@ -113,7 +113,7 @@ struct MDBarcodesView: View {
             }
             #endif
         }
-        .onAppear(perform: updateData)
+        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.product_barcodes]) })
         .sheet(isPresented: $showAddBarcode, content: {
             NavigationView{
                 MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)

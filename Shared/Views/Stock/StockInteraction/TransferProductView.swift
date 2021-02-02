@@ -166,7 +166,7 @@ struct TransferProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .quantity_units])
                 resetForm()
                 firstAppear = false
             }

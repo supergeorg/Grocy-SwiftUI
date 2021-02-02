@@ -151,7 +151,7 @@ struct MDQuantityUnitsView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: updateData)
+        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.quantity_units]) })
         .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),

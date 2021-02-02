@@ -14,7 +14,7 @@ struct MDUserFieldFormView: View {
     
     @State private var firstAppear: Bool = true
     
-    @State private var entity: ObjectEntities = ObjectEntities.none
+    @State private var entity: ObjectEntities?
     @State private var name: String = ""
     @State private var caption: String = ""
     @State private var sortNumber: Int? = -1 // TODO ???
@@ -38,7 +38,7 @@ struct MDUserFieldFormView: View {
     }
     
     private func resetForm() {
-        entity = ObjectEntities(rawValue: userField?.entity ?? "") ?? ObjectEntities.none
+        entity = ObjectEntities(rawValue: userField?.entity ?? "")
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
         sortNumber = Int(userField?.sortNumber ?? "") ?? -1
@@ -64,37 +64,38 @@ struct MDUserFieldFormView: View {
     
     private func saveUserField() {
         let sortNumberStr = sortNumber ?? 0 < 0 ? nil : String(sortNumber ?? 0)
-        if isNewUserField {
-            let userFieldPOST = MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil)
-            grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    print(message)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    print("\(error)")
-                    toastType = .failAdd
-                }
-            })
-        } else {
-            let userFieldPOST = MDUserFieldPOST(id: Int(userField!.id)!, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: userField!.rowCreatedTimestamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
-            grocyVM.putMDObjectWithID(object: .userfields, id: userField!.id, content: userFieldPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    print(message)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    print("\(error)")
-                    toastType = .failEdit
-                }
-            })
+        if let entity = entity {
+            if isNewUserField {
+                let userFieldPOST = MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil)
+                grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successAdd
+                        resetForm()
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failAdd
+                    }
+                })
+            } else {
+                let userFieldPOST = MDUserFieldPOST(id: Int(userField!.id)!, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: userField!.rowCreatedTimestamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
+                grocyVM.putMDObjectWithID(object: .userfields, id: userField!.id, content: userFieldPOST, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successEdit
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failEdit
+                    }
+                })
+            }
         }
-        
     }
     
     var body: some View {
@@ -133,11 +134,12 @@ struct MDUserFieldFormView: View {
         Form {
             VStack(alignment: .leading){
                 Picker(selection: $entity, label: Text(LocalizedStringKey("str.md.userField.entity")), content: {
+                    Text("").tag(nil as ObjectEntities?)
                     ForEach(ObjectEntities.allCases, id:\.self){ objectEntity in
-                        Text(objectEntity.rawValue).tag(objectEntity)
+                        Text(objectEntity.rawValue).tag(objectEntity as ObjectEntities?)
                     }
                 })
-                if entity == .none {
+                if entity == nil {
                     Text(LocalizedStringKey("str.md.userField.entity.required"))
                         .foregroundColor(.red)
                 }
@@ -148,8 +150,8 @@ struct MDUserFieldFormView: View {
                     .onChange(of: name, perform: {newValue in
                                 isNameCorrect = checkNameCorrect() })
                 MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
-                        .onChange(of: caption, perform: {newValue in
-                                    isCaptionCorrect = checkCaptionCorrect() })
+                    .onChange(of: caption, perform: {newValue in
+                                isCaptionCorrect = checkCaptionCorrect() })
             }
             MyIntStepper(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
             
@@ -181,7 +183,7 @@ struct MDUserFieldFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                updateData()
+                grocyVM.requestDataIfUnavailable(objects: [.userfields])
                 resetForm()
                 firstAppear = false
             }

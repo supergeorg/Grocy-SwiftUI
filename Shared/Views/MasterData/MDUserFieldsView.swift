@@ -145,7 +145,7 @@ struct MDUserFieldsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            updateData()
+            grocyVM.requestDataIfUnavailable(objects: [.userfields])
         })
         .animation(.default)
         .alert(isPresented: $showDeleteAlert) {
