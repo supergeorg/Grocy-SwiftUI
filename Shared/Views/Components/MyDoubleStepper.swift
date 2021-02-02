@@ -11,14 +11,16 @@ struct MyDoubleStepper: View {
     @Binding var amount: Double?
     
     var description: String
-    var descriptionInfo: String?
+    var descriptionInfo: String? = nil
     var minAmount: Double? = 0.0
+    var maxAmount: Double? = nil
     var amountStep: Double? = 1.0
     var amountName: String? = nil
     
-    var errorMessage: String?
+    var errorMessage: String? = nil
+    var errorMessageMax: String? = nil
     
-    var systemImage: String?
+    var systemImage: String? = nil
     
     var currencySymbol: String?
     
@@ -70,11 +72,23 @@ struct MyDoubleStepper: View {
                     } else { amount = 0 }
                 })
             }
-            if minAmount != nil {
+            if let minAmount = minAmount {
                 if let amount = amount {
-                    if amount < minAmount! {
-                        if errorMessage != nil {
-                            Text(LocalizedStringKey(errorMessage!))
+                    if amount < minAmount {
+                        if let errorMessage = errorMessage {
+                            Text(LocalizedStringKey(errorMessage))
+                                .font(.caption)
+                                .foregroundColor(.red)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
+            }
+            if let maxAmount = maxAmount {
+                if let amount = amount {
+                    if amount > maxAmount {
+                        if let errorMessageMax = errorMessageMax {
+                            Text(LocalizedStringKey(errorMessageMax))
                                 .font(.caption)
                                 .foregroundColor(.red)
                                 .fixedSize(horizontal: false, vertical: true)

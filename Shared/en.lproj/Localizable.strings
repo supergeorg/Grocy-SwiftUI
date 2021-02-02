@@ -156,10 +156,12 @@
 "str.stock.consume.product.required" = "You have to select a product";
 "str.stock.consume.product.amount" = "Amount";
 "str.stock.consume.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.consume.product.amount.locMax" = "This amount is not available at the selected location";
 "str.stock.consume.product.quantityUnit" = "Quantity unit";
 "str.stock.consume.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.consume.product.location" = "Location";
 "str.stock.consume.product.location.required" = "A location is required";
+"str.stock.consume.product.location.default %@" = "%@ (Default location)";
 "str.stock.consume.product.details" = "Details";
 "str.stock.consume.product.spoiled" = "Spoiled";
 "str.stock.consume.product.useStockEntry" = "Use a specific stock item";

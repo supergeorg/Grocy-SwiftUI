@@ -156,10 +156,12 @@
 "str.stock.consume.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.consume.product.amount" = "Menge";
 "str.stock.consume.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.consume.product.amount.locMax" = "Diese Menge ist am gewählten Standort nicht vorhanden";
 "str.stock.consume.product.quantityUnit" = "Mengeneinheit";
 "str.stock.consume.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.consume.product.location" = "Standort";
 "str.stock.consume.product.location.required" = "Ein Standort ist erforderlich";
+"str.stock.consume.product.location.default %@" = "%@ (Standard-Standort)";
 "str.stock.consume.product.details" = "Details";
 "str.stock.consume.product.spoiled" = "Verdorben";
 "str.stock.consume.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";

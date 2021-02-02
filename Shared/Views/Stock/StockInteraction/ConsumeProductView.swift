@@ -48,10 +48,37 @@ struct ConsumeProductView: View {
         grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
     }
     
+    private var selectedProduct: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
+    
+    private var filteredLocations: MDLocations {
+        var locIDs: Set<String> = Set<String>()
+        if let entries = grocyVM.stockProductEntries[productID ?? ""] {
+            for entry in entries {
+                locIDs.insert(entry.locationID)
+            }
+        }
+        return grocyVM.mdLocations
+            .filter{ locIDs.contains($0.id) }
+    }
+    
+    private var maxAmount: Double? {
+        if let entries = grocyVM.stockProductEntries[productID ?? ""] {
+            var maxAmount: Double = 0
+            let filtEntries = entries.filter{ $0.locationID == locationID }
+            for filtEntry in filtEntries {
+                maxAmount += Double(filtEntry.amount) ?? 0
+            }
+            return maxAmount
+        }
+        return nil
+    }
+    
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        (productID != nil) && (amount != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0)
+        (productID != nil) && (amount != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount ?? 0 > maxAmount ?? 0)
     }
     
     private func resetForm() {
@@ -138,14 +165,14 @@ struct ConsumeProductView: View {
             ProductField(productID: $productID, description: "str.stock.consume.product")
                 .onChange(of: productID) { newProduct in
                     grocyVM.getStockProductEntries(productID: productID ?? "")
-                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                    if let selectedProduct = selectedProduct {
                         locationID = selectedProduct.locationID
                         quantityUnitID = selectedProduct.quIDStock
                     }
                 }
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", systemImage: "number.circle")
+                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, maxAmount: maxAmount, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", errorMessageMax: "str.stock.consume.product.amount.locMax", systemImage: "number.circle")
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
@@ -153,6 +180,13 @@ struct ConsumeProductView: View {
                     }
                 }).disabled(true)
             }
+            
+            Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: "location"), content: {
+                Text("").tag(nil as String?)
+                ForEach(filteredLocations, id:\.id) { location in
+                    Text(selectedProduct?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
+                }
+            })
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.details")).font(.headline)) {
                 
