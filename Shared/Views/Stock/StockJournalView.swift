@@ -111,6 +111,8 @@ struct StockJournalView: View {
     @State private var filteredTransactionType: TransactionType?
     @State private var filteredUserID: String?
     
+    var selectedProductID: String?
+    
     var filteredJournal: StockJournal {
         grocyVM.stockJournal
             .filter { journalEntry in
@@ -169,7 +171,10 @@ struct StockJournalView: View {
                 StockJournalRowView(journalEntry: journalEntry)
             }
         }
-        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.stock_log], additionalObjects: [.users]) })
+        .onAppear(perform: {
+            grocyVM.requestDataIfUnavailable(objects: [.stock_log], additionalObjects: [.users])
+            filteredProductID = selectedProductID
+        })
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
     }
 }

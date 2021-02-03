@@ -16,7 +16,12 @@ struct StockTableRowSimplified: View {
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
+    #if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
+    #elseif os(macOS)
+    @Binding var activeSheet: StockInteractionPopover?
+    #endif
+    @Binding var toastType: RowActionToastType?
     
     @State private var showDetailView: Bool = false
     
@@ -57,7 +62,7 @@ struct StockTableRowSimplified: View {
     
     var body: some View {
         HStack{
-            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
+            StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             VStack(alignment: .leading){
                 Text(stockElement.product.name)
                     .font(.headline)

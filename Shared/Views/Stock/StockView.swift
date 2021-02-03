@@ -11,13 +11,23 @@ enum StockColumn {
     case product, productGroup, amount, value, nextBestBeforeDate, caloriesPerStockQU, calories
 }
 
+#if os(iOS)
 enum StockInteractionSheet: Identifiable {
-    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview
+    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview, productJournal, editProduct
     
     var id: Int {
         self.hashValue
     }
 }
+#elseif os(macOS)
+enum StockInteractionPopover: Identifiable {
+    case addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview, productJournal, editProduct
+    
+    var id: Int {
+        self.hashValue
+    }
+}
+#endif
 
 struct StockView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -38,12 +48,15 @@ struct StockView: View {
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
+    @State private var toastType: RowActionToastType?
+    @State private var mdToastType: MDToastType?
     
-    #if os(macOS)
+    #if os(iOS)
+    @State private var activeSheet: StockInteractionSheet?
+    #elseif os(macOS)
+    @State private var activeSheet: StockInteractionPopover?
     @State private var showStockJournal: Bool = false
     #endif
-    
-    @State private var activeSheet: StockInteractionSheet?
     
     var numExpiringSoon: Int {
         grocyVM.stock
@@ -122,6 +135,36 @@ struct StockView: View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
+                    Text("")
+                        .popover(item: $activeSheet, content: { item in
+                            switch item {
+                            case .addToShL:
+                                ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
+                                    .padding()
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productPurchase:
+                                PurchaseProductView(productToPurchaseID: selectedStockElement?.productID)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productConsume:
+                                ConsumeProductView(productToConsumeID: selectedStockElement?.productID)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productTransfer:
+                                TransferProductView(productToTransferID: selectedStockElement?.productID)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productInventory:
+                                InventoryProductView(productToInventoryID: selectedStockElement?.productID)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productOverview:
+                                ProductOverviewView(productDetails: ProductDetailsModel(product: selectedStockElement?.product))
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .productJournal:
+                                StockJournalView(selectedProductID: selectedStockElement?.product.id)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            case .editProduct:
+                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, toastType: $mdToastType)
+                                    .frame(minWidth: 400, minHeight: 300)
+                            }
+                        })
                     Button(action: {
                         self.showStockJournal.toggle()
                     }, label: {
@@ -224,6 +267,12 @@ struct StockView: View {
                     NavigationView{
                         ProductOverviewView(productDetails: ProductDetailsModel(product: selectedStockElement?.product))
                     }
+                case .productJournal:
+                    StockJournalView(selectedProductID: selectedStockElement?.product.id)
+                case .editProduct:
+                    NavigationView{
+                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, toastType: $mdToastType)
+                    }
                 }
             })
         #endif
@@ -240,15 +289,33 @@ struct StockView: View {
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }
-            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
+            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+            // the sheets don't work without this
+            Text(selectedStockElement?.product.name ?? "no stockElement")
+                .font(.caption)
+                .hidden()
         }
         .listStyle(InsetListStyle())
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units], additionalObjects: [.stock, .system_config])
+                grocyVM.requestDataIfUnavailable(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists], additionalObjects: [.stock, .system_config])
                 firstAppear = false
+            }
+        })
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled), content: { item in
+            switch item {
+            case .successConsumeOne:
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+            case .successConsumeAll:
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+            case .successOpenOne:
+                Label(LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+            case .successConsumeAllSpoiled:
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+            case .fail:
+                Label(LocalizedStringKey("str.stock.tbl.action.fail"), systemImage: "xmark")
             }
         })
     }

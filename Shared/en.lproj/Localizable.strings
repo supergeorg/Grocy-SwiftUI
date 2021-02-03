@@ -121,6 +121,11 @@
 "str.stock.tbl.action.consume %@" = "Consume %@";
 "str.stock.tbl.action.consume.all %@" = "Consume all %@ which are currently in stock";
 "str.stock.tbl.action.consume.open %@" = "Mark %@ as open";
+"str.stock.tbl.action.successConsumeOne %@" = "1 %@ consumed";
+"str.stock.tbl.action.successConsumeAll %@" = "All %@ consumed";
+"str.stock.tbl.action.successOpenOne %@" = "1 %@ opened";
+"str.stock.tbl.action.successConsumeAllSpoiled %@" = "All %@ spoiled";
+"str.stock.tbl.action.fail" = "Action failed";
 
 "str.stock.tbl.menu.addToShL" = "Add to shopping list";
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Consume %@ as spoiled";

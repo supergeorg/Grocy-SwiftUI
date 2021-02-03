@@ -16,7 +16,15 @@ enum MDToastType: Identifiable {
 }
 
 enum QSToastType: Identifiable {
-    case successQSPurchase, failQSPurchase, successQSOpen, failQSOpen, successQSConsume, failQSConsume, successQSAddProduct, failQSAddProduct
+    case successQSPurchase, failQSPurchase, successQSOpen, failQSOpen, successQSConsume, failQSConsume, successQSAddProduct, failQSAddProduct, invalidBarcode
+    
+    var id: Int {
+        self.hashValue
+    }
+}
+
+enum RowActionToastType: Identifiable {
+    case successConsumeOne, successConsumeAll, successOpenOne, successConsumeAllSpoiled, fail
     
     var id: Int {
         self.hashValue

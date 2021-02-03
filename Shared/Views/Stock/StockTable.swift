@@ -55,7 +55,12 @@ struct StockTable: View {
     @State private var sortAscending: Bool = true
     
     @Binding var selectedStockElement: StockElement?
+    #if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
+    #elseif os(macOS)
+    @Binding var activeSheet: StockInteractionPopover?
+    #endif
+    @Binding var toastType: RowActionToastType?
     
     private func getCaloriesSum(_ stockElement: StockElement) -> Double {
         if let calories = Double(stockElement.product.calories ?? "") {
@@ -133,7 +138,7 @@ struct StockTable: View {
             StockTableHeaderItem(isShown: $stockShowCaloriesPerStockQU, description: "str.stock.tbl.caloriesPerStockQU", stockColumn: .caloriesPerStockQU, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             StockTableHeaderItem(isShown: $stockShowCalories, description: "str.stock.tbl.calories", stockColumn: .calories, sortedStockColumn: $sortedStockColumn, sortAscending: $sortAscending)
             ForEach(sortedStock, id:\.productID) { stockElement in
-                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
+                StockTableRow(showProduct: $stockShowProduct, showProductGroup: $stockShowProductGroup, showAmount: $stockShowAmount, showValue: $stockShowValue, showNextBestBeforeDate: $stockShowNextBestBeforeDate, showCaloriesPerStockQU: $stockShowCaloriesPerStockQU, showCalories: $stockShowCalories, stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             }
         }
         .padding(.horizontal)
@@ -143,7 +148,7 @@ struct StockTable: View {
     var contentSimplified: some View {
         VStack() {
             ForEach(sortedStock, id:\.productID) { stockElement in
-                StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
+                StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             }
         }
     }

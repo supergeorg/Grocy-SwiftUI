@@ -121,6 +121,11 @@
 "str.stock.tbl.action.consume %@" = "Verbrauche %@";
 "str.stock.tbl.action.consume.all %@" = "Verbrauche den kompletten Bestand von %@";
 "str.stock.tbl.action.consume.open %@" = "%@ als geöffnet markieren";
+"str.stock.tbl.action.successConsumeOne %@" = "1 %@ verbraucht";
+"str.stock.tbl.action.successConsumeAll %@" = "Alle %@ verbraucht";
+"str.stock.tbl.action.successOpenOne %@" = "1 %@ geöffnet";
+"str.stock.tbl.action.successConsumeAllSpoiled %@" = "Alle %@ verdorben";
+"str.stock.tbl.action.fail" = "Aktion fehlgeschlagen";
 
 "str.stock.tbl.menu.addToShL" = "Zum Einkaufszettel hinzufügen";
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Verbrauche %@ als verdorben";
