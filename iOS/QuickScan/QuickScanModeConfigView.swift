@@ -29,7 +29,8 @@ struct QuickScanModeConfigPicker: View {
                     Text(LocalizedStringKey("str.quickScan.settings.state.never")).tag(QuickScanAskMode.never)
                     Text(LocalizedStringKey("str.quickScan.settings.state.always")).tag(QuickScanAskMode.always)
                     if enableFirstInSession {
-                        Text(LocalizedStringKey("str.quickScan.settings.state.onlyFirstInSession")).tag(QuickScanAskMode.firstInSession)
+                        Text(LocalizedStringKey("str.quickScan.settings.state.onlyFirstInSession"))
+                            .tag(QuickScanAskMode.firstInSession)
                     }
                 })
                 .pickerStyle(SegmentedPickerStyle())

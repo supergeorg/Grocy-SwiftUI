@@ -50,14 +50,6 @@ func toggleTorch(on: Bool) {
     }
 }
 
-enum QSActiveSheet: Identifiable {
-    case config, input, selectProduct
-    
-    var id: Int {
-        hashValue
-    }
-}
-
 struct QuickScanModeView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
@@ -74,6 +66,11 @@ struct QuickScanModeView: View {
     @State private var toastType: QSToastType?
     @State private var infoString: String?
     
+    @State private var isScanPaused: Bool = false
+    func checkScanPause() {
+        isScanPaused = (activeSheet != nil)
+    }
+    
     func updateData() {
         grocyVM.getMDProductBarcodes()
         grocyVM.getMDProducts()
@@ -88,7 +85,10 @@ struct QuickScanModeView: View {
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         switch result {
         case .success(let barcodeString):
-            guard ((barcodeString.count == 13) || (barcodeString.count == 8)) else {return}
+            guard ((barcodeString.count == 13) || (barcodeString.count == 8)) else {
+                toastType = .invalidBarcode
+                return
+            }
             if let barcode = searchForBarcode(barcodeString: barcodeString) {
                 recognizedBarcode = barcode
                 activeSheet = .input
@@ -97,15 +97,13 @@ struct QuickScanModeView: View {
                 activeSheet = .selectProduct
             }
         case .failure(let error):
-            print("Scanning failed")
             print(error)
         }
     }
     
     var body: some View {
         ZStack(alignment: .top){
-            //            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123457", completion: self.handleScan)
-            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "5901234123323", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             HStack{
                 Button(action: {
                     activeSheet = .config
@@ -138,10 +136,10 @@ struct QuickScanModeView: View {
             case .input:
                 QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession, toastType: $toastType, infoString: $infoString)
             case .selectProduct:
-                QuickScanModeSelectProductView(barcode: $notRecognizedBarcode, toastType: $toastType)
+                QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastType: $toastType)
             }
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(true), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successQSAddProduct || toastType == .successQSConsume || toastType == .successQSOpen || toastType == .successQSPurchase), content: { item in
             switch item {
             case .successQSAddProduct:
                 Label("str.quickScan.add.product.add.success", systemImage: "checkmark")
@@ -159,9 +157,16 @@ struct QuickScanModeView: View {
                 Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
             case .failQSPurchase:
                 Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
+            case .invalidBarcode:
+                Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
             }
         })
-        .onAppear(perform: updateData)
+        .onAppear(perform: {
+            grocyVM.requestDataIfUnavailable(objects: [.product_barcodes, .products, .locations, .shopping_locations])
+        })
+        .onChange(of: activeSheet, perform: {newItem in
+            checkScanPause()
+        })
     }
 }
 

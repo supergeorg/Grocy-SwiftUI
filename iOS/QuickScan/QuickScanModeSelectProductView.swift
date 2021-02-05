@@ -13,7 +13,7 @@ struct QuickScanModeSelectProductView: View {
     
     @State private var firstOpen: Bool = true
     
-    @Binding var barcode: String?
+    var barcode: String?
     
     @State private var productID: String?
     
@@ -80,8 +80,8 @@ struct QuickScanModeSelectProductView: View {
     }
 }
 
-struct QuickScanModeSelectProductView_Previews: PreviewProvider {
-    static var previews: some View {
-        QuickScanModeSelectProductView(barcode: Binding.constant("12345"), toastType: Binding.constant(.successQSAddProduct))
-    }
-}
+//struct QuickScanModeSelectProductView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        QuickScanModeSelectProductView(barcode: Binding.constant("12345"), toastType: Binding.constant(.successQSAddProduct))
+//    }
+//}

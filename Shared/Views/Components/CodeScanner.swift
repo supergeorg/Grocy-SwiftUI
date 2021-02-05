@@ -32,16 +32,19 @@ public struct CodeScannerView: UIViewControllerRepresentable {
 
     public class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: CodeScannerView
+        @Binding var isPaused: Bool
         var codesFound: Set<String>
         var isFinishScanning = false
         var lastTime = Date(timeIntervalSince1970: 0)
 
-        init(parent: CodeScannerView) {
+        init(parent: CodeScannerView, isPaused: Binding<Bool>) {
             self.parent = parent
+            self._isPaused = isPaused
             self.codesFound = Set<String>()
         }
 
         public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+            if isPaused { return }
             if let metadataObject = metadataObjects.first {
                 guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
                 guard let stringValue = readableObject.stringValue else { return }
@@ -256,17 +259,19 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     public let scanInterval: Double
     public var simulatedData = ""
     public var completion: (Result<String, ScanError>) -> Void
+    @Binding var isPaused: Bool
 
-    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode = .once, scanInterval: Double = 2.0, simulatedData: String = "", completion: @escaping (Result<String, ScanError>) -> Void) {
+    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode, scanInterval: Double = 2.0, simulatedData: String = "", isPaused: Binding<Bool> = Binding.constant(false), completion: @escaping (Result<String, ScanError>) -> Void) {
         self.codeTypes = codeTypes
         self.scanMode = scanMode
         self.scanInterval = scanInterval
         self.simulatedData = simulatedData
         self.completion = completion
+        self._isPaused = isPaused
     }
 
     public func makeCoordinator() -> ScannerCoordinator {
-        return ScannerCoordinator(parent: self)
+        return ScannerCoordinator(parent: self, isPaused: $isPaused)
     }
 
     public func makeUIViewController(context: Context) -> ScannerViewController {
@@ -282,7 +287,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
 
 struct CodeScannerView_Previews: PreviewProvider {
     static var previews: some View {
-        CodeScannerView(codeTypes: [.qr]) { result in
+        CodeScannerView(codeTypes: [.qr], scanMode: .once) { result in
             // do nothing
         }
     }
