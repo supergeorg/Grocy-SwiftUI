@@ -540,21 +540,13 @@
 
 // MARK: - Quick Scan
 "str.quickScan.consume" = "Verbrauchen";
-"str.quickScan.markAsOpened" = "Als geöffnet markieren";
+"str.quickScan.markAsOpened" = "Öffnen";
 "str.quickScan.purchase" = "Einkaufen";
-"str.quickScan.settings" = "Quick-Scan-Einstellungen";
-"str.quickScan.settings.state.always" = "Immer";
-"str.quickScan.settings.state.never" = "Nie";
-"str.quickScan.settings.state.onlyFirstInSession" = "Nur bei ersten Vorgang fragen";
-"str.quickScan.settings.askLocation" = "Nach Standort fragen";
-"str.quickScan.settings.askSpecificEntry" = "Nach bestimmten Eintrag fragen";
-"str.quickScan.settings.consumeAll" = "Alle Einträge eines Produkt verbrauchen";
-"str.quickScan.settings.askDueDate" = "Nach Haltbarkeitsdatum fragen";
-"str.quickScan.settings.askPrice" = "Nach Preis fragen";
-"str.quickScan.settings.askStore" = "Nach Geschäft fragen";
-"str.quickScan.input.consumeDefault" = "Standard (1)";
-"str.quickScan.input.consumeBarcodeAmount %@" = "Schnellverbrauch (%@)";
-"str.quickScan.input.info.consumeAmount %@" = "Schnellverbrauchsmenge: %@";
+"str.quickScan.input.consume.amount" = "Verbrauchs-Menge";
+"str.quickScan.input.consume.default" = "Standard (1)";
+"str.quickScan.input.consume.barcodeAmount %@" = "Schnellverbrauch (%@)";
+"str.quickScan.input.consume.all" = "Alle verbrauchen";
+"str.quickScan.input.info.stockAmount %@" = "Bestandsmenge: %@";
 "str.quickScan.add.product" = "Produkt für Barcode";
 "str.quickScan.add.product.add" = "Barcode hinzufügen";
 "str.quickScan.add.product.add.success" = "Barcode erfolgreich zugewiesen";

@@ -17,7 +17,8 @@ struct QuickScanModeSelectProductView: View {
     
     @State private var productID: String?
     
-    @Binding var toastType: QSToastType?
+    @Binding var toastTypeSuccess: QSToastTypeSuccess?
+    @State private var toastTypeFail: QSToastTypeFail?
     
     private func resetForm() {
         productID = nil
@@ -39,13 +40,13 @@ struct QuickScanModeSelectProductView: View {
                     switch result {
                     case let .success(message):
                         print(message)
-                        toastType = .successQSAddProduct
+                        toastTypeSuccess = .successQSAddProduct
                         resetForm()
                         updateData()
                         finishForm()
                     case let .failure(error):
                         print("\(error)")
-                        toastType = .failQSAddProduct
+                        toastTypeFail = .failQSAddProduct
                     }
                 })
             }
@@ -77,6 +78,14 @@ struct QuickScanModeSelectProductView: View {
                 })
             })
         }
+        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), content: { item in
+            switch item {
+            case .failQSAddProduct:
+                Label("str.quickScan.add.product.add.fail", systemImage: "xmark")
+            default:
+                EmptyView()
+            }
+        })
     }
 }
 

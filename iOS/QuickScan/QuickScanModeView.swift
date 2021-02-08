@@ -63,8 +63,13 @@ struct QuickScanModeView: View {
     @State private var recognizedBarcode: MDProductBarcode? = nil
     @State private var notRecognizedBarcode: String? = nil
     
-    @State private var toastType: QSToastType?
+    @State private var toastTypeSuccess: QSToastTypeSuccess?
     @State private var infoString: String?
+    
+    @State private var lastConsumeLocationID: String?
+    @State private var lastPurchaseDueDate: Date = Date()
+    @State private var lastPurchaseShoppingLocationID: String?
+    @State private var lastPurchaseLocationID: String?
     
     @State private var isScanPaused: Bool = false
     func checkScanPause() {
@@ -86,7 +91,7 @@ struct QuickScanModeView: View {
         switch result {
         case .success(let barcodeString):
             guard ((barcodeString.count == 13) || (barcodeString.count == 8)) else {
-                toastType = .invalidBarcode
+                toastTypeSuccess = .invalidBarcode
                 return
             }
             if let barcode = searchForBarcode(barcodeString: barcodeString) {
@@ -102,67 +107,57 @@ struct QuickScanModeView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .top){
+        ZStack(alignment: .topLeading){
             CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             HStack{
-                Button(action: {
-                    activeSheet = .config
-                }, label: {
-                    Image(systemName: "gear")
-                })
-                Spacer()
                 Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: "chevron.down.circle"), content: {
-                    Text(QuickScanMode.consume.getDescription()).tag(QuickScanMode.consume)
-                    Text(QuickScanMode.markAsOpened.getDescription()).tag(QuickScanMode.markAsOpened)
-                    Text(QuickScanMode.purchase.getDescription()).tag(QuickScanMode.purchase)
+                    Label(QuickScanMode.consume.getDescription(), systemImage: "tuningfork")
+                        .labelStyle(IconAboveTextLabelStyle())
+                        .tag(QuickScanMode.consume)
+                    Label(QuickScanMode.markAsOpened.getDescription(), systemImage: "envelope.open")
+                        .labelStyle(IconAboveTextLabelStyle())
+                        .tag(QuickScanMode.markAsOpened)
+                    Label(QuickScanMode.purchase.getDescription(), systemImage: "cart")
+                        .labelStyle(IconAboveTextLabelStyle())
+                        .tag(QuickScanMode.purchase)
                 })
-                .pickerStyle(MenuPickerStyle())
+                .pickerStyle(SegmentedPickerStyle())
                 Spacer()
                 Button(action: {
                     flashOn.toggle()
                     toggleTorch(on: flashOn)
                 }, label: {
                     Image(systemName: flashOn ? "bolt.circle" : "bolt.slash.circle")
+                        .font(.title)
                 })
                 .disabled(!checkForTorch())
             }
-            .font(.title)
             .padding(.horizontal)
         }
         .sheet(item: $activeSheet) { item in
             switch item {
-            case .config:
-                QuickScanModeConfigView()
             case .input:
-                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, firstInSession: $firstInSession, toastType: $toastType, infoString: $infoString)
+                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
             case .selectProduct:
-                QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastType: $toastType)
+                QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
             }
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successQSAddProduct || toastType == .successQSConsume || toastType == .successQSOpen || toastType == .successQSPurchase), content: { item in
+        .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
             switch item {
             case .successQSAddProduct:
                 Label("str.quickScan.add.product.add.success", systemImage: "checkmark")
-            case .failQSAddProduct:
-                Label("str.quickScan.add.product.add.fail", systemImage: "xmark")
             case .successQSConsume:
                 Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: "checkmark")
-            case .failQSConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: "xmark")
             case .successQSOpen:
                 Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: "checkmark")
-            case .failQSOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
             case .successQSPurchase:
                 Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
-            case .failQSPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
             case .invalidBarcode:
                 Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
             }
         })
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.product_barcodes, .products, .locations, .shopping_locations])
+            grocyVM.requestDataIfUnavailable(objects: [.product_barcodes, .products, .locations, .shopping_locations], additionalObjects: [.stock, .system_config])
         })
         .onChange(of: activeSheet, perform: {newItem in
             checkScanPause()

@@ -540,21 +540,13 @@
 
 // MARK: - Quick Scan
 "str.quickScan.consume" = "Consume";
-"str.quickScan.markAsOpened" = "Mark as opened";
+"str.quickScan.markAsOpened" = "Open";
 "str.quickScan.purchase" = "Purchase";
-"str.quickScan.settings" = "Quick-Scan settings";
-"str.quickScan.settings.state.always" = "Always";
-"str.quickScan.settings.state.never" = "Never";
-"str.quickScan.settings.state.onlyFirstInSession" = "Only first in session";
-"str.quickScan.settings.askLocation" = "Ask for location";
-"str.quickScan.settings.askSpecificEntry" = "Ask for specific entry";
-"str.quickScan.settings.consumeAll" = "Consume all entries of the product";
-"str.quickScan.settings.askDueDate" = "Ask for due date";
-"str.quickScan.settings.askPrice" = "Ask for price";
-"str.quickScan.settings.askStore" = "Ask for store";
-"str.quickScan.input.consumeDefault" = "Default (1)";
-"str.quickScan.input.consumeBarcodeAmount %@" = "Quick consume (%@)";
-"str.quickScan.input.info.consumeAmount %@" = "Quick consume amount: %@";
+"str.quickScan.input.consume.amount" = "Consume amount";
+"str.quickScan.input.consume.default" = "Default (1)";
+"str.quickScan.input.consume.barcodeAmount %@" = "Quick consume (%@)";
+"str.quickScan.input.consume.all" = "Consume all";
+"str.quickScan.input.info.stockAmount %@" = "Stock amount: %@";
 "str.quickScan.add.product" = "Product for this barcode";
 "str.quickScan.add.product.add" = "Add barcode";
 "str.quickScan.add.product.add.success" = "Barcode added";
