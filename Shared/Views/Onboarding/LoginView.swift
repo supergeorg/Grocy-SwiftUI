@@ -60,7 +60,7 @@ struct LoginView: View {
                     .animation(.spring())
             })
             .sheet(isPresented: $isShowingScanner) {
-                CodeScannerView(codeTypes: [.qr], simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
+                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
             }
             #endif
             MyTextField(textToEdit: $grocyServerURL, description: "str.settings.grocy.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
