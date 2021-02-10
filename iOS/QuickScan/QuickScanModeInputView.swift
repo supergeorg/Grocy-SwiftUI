@@ -228,7 +228,7 @@ struct QuickScanModeInputView: View {
                             }).pickerStyle(SegmentedPickerStyle())
                         }
                         
-                        Picker(selection: $consumeLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: "location"), content: {
+                        Picker(selection: $consumeLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.mdLocations, id:\.id) {location in
                                 Text("\(location.name) (\(formatAmount(getAmountForLocation(lID: location.id))))").tag(location.id as String?)
@@ -260,20 +260,20 @@ struct QuickScanModeInputView: View {
                 if quickScanMode == .purchase {
                     Group {
                         HStack {
-                            Image(systemName: "calendar")
+                            Image(systemName: MySymbols.date)
                             DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
                         }
                         
-                        MyDoubleStepper(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: "eurosign.circle", currencySymbol: grocyVM.getCurrencySymbol())
+                        MyDoubleStepper(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                         
-                        Picker(selection: $purchaseShoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: "cart"), content: {
+                        Picker(selection: $purchaseShoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
                                 Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
                             }
                         })
                         
-                        Picker(selection: $purchaseLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: "location"), content: {
+                        Picker(selection: $purchaseLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.mdLocations, id:\.id) { location in
                                 Text(location.name).tag(location.id as String?)
@@ -293,21 +293,21 @@ struct QuickScanModeInputView: View {
                     switch quickScanMode {
                     case .consume:
                         Button(action: consumeItem, label: {
-                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: "tuningfork")
+                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
                                 .labelStyle(TextIconLabelStyle())
                         })
                         .disabled(!isValidForm)
                         .keyboardShortcut(.defaultAction)
                     case .markAsOpened:
                         Button(action: markAsOpenedItem, label: {
-                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: "envelope.open")
+                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
                                 .labelStyle(TextIconLabelStyle())
                         })
                         .disabled(!isValidForm)
                         .keyboardShortcut(.defaultAction)
                     case .purchase:
                         Button(action: purchaseItem, label: {
-                            Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
+                            Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
                                 .labelStyle(TextIconLabelStyle())
                         })
                         .disabled(!isValidForm)
@@ -319,11 +319,11 @@ struct QuickScanModeInputView: View {
         .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), content: { item in
             switch item {
             case .failQSConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: MySymbols.failure)
             case .failQSOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: MySymbols.failure)
             case .failQSPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: MySymbols.failure)
             default:
                 EmptyView()
             }

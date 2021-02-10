@@ -20,7 +20,7 @@ struct StockJournalFilterBar: View {
         VStack{
             SearchBar(text: $searchString, placeholder: "str.search")
             HStack{
-                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.mdProducts, id:\.id) { product in
                         Text(product.name).tag(product.id as String?)
@@ -28,7 +28,7 @@ struct StockJournalFilterBar: View {
                 }).pickerStyle(MenuPickerStyle())
                 Spacer()
                 
-                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as TransactionType?)
                     ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
                         Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
@@ -36,7 +36,7 @@ struct StockJournalFilterBar: View {
                 }).pickerStyle(MenuPickerStyle())
                 Spacer()
                 
-                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as String?)
@@ -44,7 +44,7 @@ struct StockJournalFilterBar: View {
                 }).pickerStyle(MenuPickerStyle())
                 Spacer()
                 
-                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.users, id:\.id) { user in
                         Text(user.displayName).tag(user.id as String?)

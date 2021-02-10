@@ -120,7 +120,7 @@ struct MDShoppingLocationFormView: View {
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
-                MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+                MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
             }
             #if os(macOS)
             HStack{

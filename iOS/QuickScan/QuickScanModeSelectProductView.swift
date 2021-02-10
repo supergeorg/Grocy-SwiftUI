@@ -81,7 +81,7 @@ struct QuickScanModeSelectProductView: View {
         .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), content: { item in
             switch item {
             case .failQSAddProduct:
-                Label("str.quickScan.add.product.add.fail", systemImage: "xmark")
+                Label("str.quickScan.add.product.add.fail", systemImage: MySymbols.failure)
             default:
                 EmptyView()
             }

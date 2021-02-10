@@ -40,7 +40,7 @@ struct UserManagementView: View {
                         }
                         updateData()
                     }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
                     Button(action: {
@@ -48,7 +48,7 @@ struct UserManagementView: View {
                     }, label: {
                         HStack{
                             Text(LocalizedStringKey("str.admin.user.new"))
-                            Image(systemName: "plus")
+                            Image(systemName: MySymbols.new)
                         }
                     })
                     .popover(isPresented: $showAddUser, content: {
@@ -67,7 +67,7 @@ struct UserManagementView: View {
                         }
                         updateData()
                     }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
                     Button(action: {
@@ -75,7 +75,7 @@ struct UserManagementView: View {
                     }, label: {
                         HStack{
                             Text(LocalizedStringKey("str.admin.user.new"))
-                            Image(systemName: "plus")
+                            Image(systemName: MySymbols.new)
                         }
                     })
                     .sheet(isPresented: $showAddUser, content: {

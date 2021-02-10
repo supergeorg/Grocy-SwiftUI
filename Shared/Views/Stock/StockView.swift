@@ -168,7 +168,7 @@ struct StockView: View {
                     Button(action: {
                         self.showStockJournal.toggle()
                     }, label: {
-                        Label("Journal", systemImage: "list.bullet.rectangle")
+                        Label("Journal", systemImage: MySymbols.stockJournal)
                     })
                     .popover(isPresented: $showStockJournal, content: {
                         StockJournalView()
@@ -181,7 +181,7 @@ struct StockView: View {
                         }
                         updateData()
                     }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
                 })
@@ -195,32 +195,32 @@ struct StockView: View {
                         Button(action: {
                             updateData()
                         }, label: {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: MySymbols.reload)
                         })
                         Button(action: {
                             self.activeSheet = .stockJournal
                         }, label: {
-                            Label(LocalizedStringKey("str.details.stockJournal"), systemImage: "list.bullet.rectangle")
+                            Label(LocalizedStringKey("str.details.stockJournal"), systemImage: MySymbols.stockJournal)
                         })
                         Button(action: {
                             self.activeSheet = .inventoryProduct
                         }, label: {
-                            Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
+                            Label(LocalizedStringKey("str.stock.inventory"), systemImage: MySymbols.inventory)
                         })
                         Button(action: {
                             self.activeSheet = .transferProduct
                         }, label: {
-                            Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
+                            Label(LocalizedStringKey("str.stock.transfer"), systemImage: MySymbols.transfer)
                         })
                         Button(action: {
                             self.activeSheet = .consumeProduct
                         }, label: {
-                            Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
+                            Label(LocalizedStringKey("str.stock.consume"), systemImage: MySymbols.consume)
                         })
                         Button(action: {
                             self.activeSheet = .purchaseProduct
                         }, label: {
-                            Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart.badge.plus")
+                            Label(LocalizedStringKey("str.stock.buy"), systemImage: MySymbols.purchase)
                         })
                     }
                 })
@@ -307,15 +307,15 @@ struct StockView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled), content: { item in
             switch item {
             case .successConsumeOne:
-                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")"), systemImage: MySymbols.success)
             case .successConsumeAll:
-                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")"), systemImage: MySymbols.success)
             case .successOpenOne:
-                Label(LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")"), systemImage: MySymbols.success)
             case .successConsumeAllSpoiled:
-                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")"), systemImage: MySymbols.success)
             case .fail:
-                Label(LocalizedStringKey("str.stock.tbl.action.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.tbl.action.fail"), systemImage: MySymbols.failure)
             }
         })
     }

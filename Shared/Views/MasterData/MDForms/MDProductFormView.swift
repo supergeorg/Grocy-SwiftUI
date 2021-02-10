@@ -193,7 +193,7 @@ struct MDProductFormView: View {
                     ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
                     
                     // Product Description
-                    MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+                    MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
                 }
                 
                 Section(header: Text(LocalizedStringKey("str.md.product.location")).font(.headline)) {
@@ -311,7 +311,7 @@ struct MDProductFormView: View {
                 }
                 
                 Section(header: Text(LocalizedStringKey("str.stock.stockOverview")).font(.headline)) {
-                    MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: "tuningfork")
+                    MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: MySymbols.consume)
                     
                     MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: "tablecells")
                 }

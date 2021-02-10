@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		78113B7625B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */; };
-		78113B7725B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */; };
+		78113B7625B59C8E0000B237 /* LabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelStyles.swift */; };
+		78113B7725B59C8E0000B237 /* LabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelStyles.swift */; };
 		78113B7E25B5A19F0000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B7D25B5A19F0000B237 /* URLImage */; };
 		78113B8425B5A3A50000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B8325B5A3A50000B237 /* URLImage */; };
 		7812FFA725BB0B6900377773 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7812FFA625BB0B6900377773 /* ActivitiesView.swift */; };
@@ -51,6 +51,8 @@
 		783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */; };
 		78408AD125A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
 		78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
+		7845120C25C84A5B006B7686 /* SheetTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7845120B25C84A5B006B7686 /* SheetTypes.swift */; };
+		7845120D25C84A5B006B7686 /* SheetTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7845120B25C84A5B006B7686 /* SheetTypes.swift */; };
 		78467E8A25C2C6D9000592EE /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78467E8925C2C6D9000592EE /* ToastMessage.swift */; };
 		78467E8B25C2C6D9000592EE /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78467E8925C2C6D9000592EE /* ToastMessage.swift */; };
 		7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */; };
@@ -65,6 +67,8 @@
 		78512061256FE94600171390 /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851205F256FE94600171390 /* UserRowView.swift */; };
 		78512067256FF0E400171390 /* UserFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78512066256FF0E400171390 /* UserFormView.swift */; };
 		78512068256FF0E400171390 /* UserFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78512066256FF0E400171390 /* UserFormView.swift */; };
+		785427B525D29C3000AFE726 /* MySymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785427B425D29C3000AFE726 /* MySymbols.swift */; };
+		785427B625D29C3000AFE726 /* MySymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785427B425D29C3000AFE726 /* MySymbols.swift */; };
 		786F6E842563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6E832563FDC7004D8DE0 /* MDShoppingLocationsView.swift */; };
 		786F6E852563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6E832563FDC7004D8DE0 /* MDShoppingLocationsView.swift */; };
 		786F6E8B2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6E8A2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift */; };
@@ -231,7 +235,6 @@
 		78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802F25A5D14300661FDB /* QuickScanModeView.swift */; };
-		78E4803625A5EEF800661FDB /* QuickScanModeConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */; };
 		78EB13AE255F09E40055A0A8 /* SearchToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */; };
 		78F0DAC82599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */; };
 		78F0DAC92599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */; };
@@ -350,7 +353,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTextIconStyle.swift; sourceTree = "<group>"; };
+		78113B7525B59C8E0000B237 /* LabelStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStyles.swift; sourceTree = "<group>"; };
 		7812FFA625BB0B6900377773 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		78138F4825AEF95800B9A50A /* ProductField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductField.swift; sourceTree = "<group>"; };
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
@@ -373,6 +376,7 @@
 		7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeSelectProductView.swift; sourceTree = "<group>"; };
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
 		78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserInfoView.swift; sourceTree = "<group>"; };
+		7845120B25C84A5B006B7686 /* SheetTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetTypes.swift; sourceTree = "<group>"; };
 		78467E8925C2C6D9000592EE /* ToastMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessage.swift; sourceTree = "<group>"; };
 		7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
 		7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeProductView.swift; sourceTree = "<group>"; };
@@ -380,6 +384,7 @@
 		7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryProductView.swift; sourceTree = "<group>"; };
 		7851205F256FE94600171390 /* UserRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRowView.swift; sourceTree = "<group>"; };
 		78512066256FF0E400171390 /* UserFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFormView.swift; sourceTree = "<group>"; };
+		785427B425D29C3000AFE726 /* MySymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySymbols.swift; sourceTree = "<group>"; };
 		786F6E832563FDC7004D8DE0 /* MDShoppingLocationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDShoppingLocationsView.swift; sourceTree = "<group>"; };
 		786F6E8A2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDShoppingLocationFormView.swift; sourceTree = "<group>"; };
 		786F6E9125640332004D8DE0 /* MDProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductsView.swift; sourceTree = "<group>"; };
@@ -475,7 +480,6 @@
 		78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		78E4802825A5CC2600661FDB /* FieldDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDescription.swift; sourceTree = "<group>"; };
 		78E4802F25A5D14300661FDB /* QuickScanModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeView.swift; sourceTree = "<group>"; };
-		78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeConfigView.swift; sourceTree = "<group>"; };
 		78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToolbarItem.swift; sourceTree = "<group>"; };
 		78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableRowSimplified.swift; sourceTree = "<group>"; };
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
@@ -572,7 +576,6 @@
 				78E4802F25A5D14300661FDB /* QuickScanModeView.swift */,
 				78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */,
 				7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */,
-				78E4803525A5EEF800661FDB /* QuickScanModeConfigView.swift */,
 			);
 			path = QuickScan;
 			sourceTree = "<group>";
@@ -801,10 +804,12 @@
 				78CB75A4255EA5A900319108 /* Localization.swift */,
 				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
 				78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */,
-				78113B7525B59C8E0000B237 /* LabelTextIconStyle.swift */,
+				78113B7525B59C8E0000B237 /* LabelStyles.swift */,
 				78FDCE3325BAEF190089CB5E /* FA2SFSymbols.swift */,
+				785427B425D29C3000AFE726 /* MySymbols.swift */,
 				789ADDA325C419C500D7EB35 /* Constants.swift */,
 				789ADDB125C45B3000D7EB35 /* ToastTypes.swift */,
+				7845120B25C84A5B006B7686 /* SheetTypes.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1114,7 +1119,7 @@
 				78F47E8525BF10CE00579B69 /* MDBatteriesModel.swift in Sources */,
 				7891C647257E3BDD0014C59E /* RowInteractionButton.swift in Sources */,
 				786F6E8B2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
-				78113B7625B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */,
+				78113B7625B59C8E0000B237 /* LabelStyles.swift in Sources */,
 				78408AD125A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
 				786F6EA42564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */,
@@ -1138,7 +1143,6 @@
 				781A25AE2566952A00560026 /* MDProductFormView.swift in Sources */,
 				78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */,
 				78CB74E1255EA04A00319108 /* AppTabNavigation.swift in Sources */,
-				78E4803625A5EEF800661FDB /* QuickScanModeConfigView.swift in Sources */,
 				7839E30B25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift in Sources */,
 				782626F7256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
 				782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */,
@@ -1155,6 +1159,7 @@
 				78F1FAC7255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7880F10B256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78CB7599255EA56D00319108 /* GrocyInfoView.swift in Sources */,
+				7845120C25C84A5B006B7686 /* SheetTypes.swift in Sources */,
 				78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */,
 				78FD0677257649D8006E4946 /* ProductDetailsObject.swift in Sources */,
 				7891C655257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
@@ -1165,6 +1170,7 @@
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
 				781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */,
 				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
+				785427B525D29C3000AFE726 /* MySymbols.swift in Sources */,
 				78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */,
 				789ADDB225C45B3000D7EB35 /* ToastTypes.swift in Sources */,
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
@@ -1268,6 +1274,7 @@
 				78CB7617255EB9C600319108 /* MDLocationsModel.swift in Sources */,
 				78396E8D25629FE600B9878F /* MyTextField.swift in Sources */,
 				78CB74D7255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
+				7845120D25C84A5B006B7686 /* SheetTypes.swift in Sources */,
 				78CB75A7255EA5A900319108 /* Localization.swift in Sources */,
 				786F6EAC25640372004D8DE0 /* MDQuantityUnitsView.swift in Sources */,
 				781A25572566838C00560026 /* AppCommands.swift in Sources */,
@@ -1290,6 +1297,7 @@
 				78CB75FF255EB9A000319108 /* StockEntryModel.swift in Sources */,
 				78396E7725629F7700B9878F /* MDLocationFormView.swift in Sources */,
 				789ADDAC25C427DD00D7EB35 /* View+ToastMessage.swift in Sources */,
+				785427B625D29C3000AFE726 /* MySymbols.swift in Sources */,
 				781A25AF2566952A00560026 /* MDProductFormView.swift in Sources */,
 				78CB7587255EA3D000319108 /* SystemDBChangedTimeModel.swift in Sources */,
 				781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */,
@@ -1313,7 +1321,7 @@
 				7826270F256E847F00ECED03 /* StockProductPriceHistory.swift in Sources */,
 				78CB75A9255EA5A900319108 /* DateFormatter.swift in Sources */,
 				782626F8256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
-				78113B7725B59C8E0000B237 /* LabelTextIconStyle.swift in Sources */,
+				78113B7725B59C8E0000B237 /* LabelStyles.swift in Sources */,
 				78CB75B1255EAB1400319108 /* Animations.swift in Sources */,
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,

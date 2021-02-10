@@ -123,7 +123,7 @@ struct MDQuantityUnitFormView: View {
                         isNameCorrect = checkNameCorrect()
                     })
                 MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag", isEditing: true)
-                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
             }
             #if os(macOS)
             HStack{

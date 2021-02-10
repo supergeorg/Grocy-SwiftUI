@@ -172,8 +172,8 @@ struct ConsumeProductView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, maxAmount: maxAmount, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", errorMessageMax: "str.stock.consume.product.amount.locMax", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: "scalemass"), content: {
+                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, maxAmount: maxAmount, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", errorMessageMax: "str.stock.consume.product.amount.locMax", systemImage: MySymbols.amount)
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
@@ -181,7 +181,7 @@ struct ConsumeProductView: View {
                 }).disabled(true)
             }
             
-            Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: "location"), content: {
+            Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                 Text("").tag(nil as String?)
                 ForEach(filteredLocations, id:\.id) { location in
                     Text(selectedProduct?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
@@ -190,7 +190,7 @@ struct ConsumeProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.details")).font(.headline)) {
                 
-                MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: "trash")
+                MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: MySymbols.spoiled)
                 
                 MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
                 
@@ -236,13 +236,13 @@ struct ConsumeProductView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), content: { item in
             switch item {
             case .successConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .failConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: MySymbols.failure)
             case .successOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .failOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: MySymbols.failure)
             }
         })
         .toolbar(content: {
@@ -251,14 +251,14 @@ struct ConsumeProductView: View {
                     Button(action: {
                         openProduct()
                     }, label: {
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: "envelope.open")
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
                             .labelStyle(TextIconLabelStyle())
                     })
                     .disabled(!isFormValid)
                     Button(action: {
                         consumeProduct()
                     }, label: {
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: "tuningfork")
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
                             .labelStyle(TextIconLabelStyle())
                     })
                     .disabled(!isFormValid)

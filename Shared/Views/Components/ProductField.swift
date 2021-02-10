@@ -44,13 +44,13 @@ struct ProductField: View {
     
     #if os(iOS)
     var body: some View {
-        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: "tag"), content: {
+        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
             HStack {
                 SearchBar(text: $searchTerm, placeholder: "str.search")
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
-                    Image(systemName: "barcode.viewfinder")
+                    Image(systemName: MySymbols.barcodeScan)
                 })
                 .sheet(isPresented: $isShowingScanner) {
                     CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
@@ -64,7 +64,7 @@ struct ProductField: View {
     }
     #elseif os(macOS)
     var body: some View {
-        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: "tag"), content: {
+        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
             Text("").tag(nil as String?)
             ForEach(filteredProducts, id: \.id) { productElement in
                 Text(productElement.name).tag(productElement.id as String?)

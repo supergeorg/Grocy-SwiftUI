@@ -159,7 +159,7 @@ struct ShoppingListView: View {
                     Button(action: {
                         showNewShoppingList.toggle()
                     }, label: {
-                        Label(LocalizedStringKey("str.shL.new"), systemImage: "plus")
+                        Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.new)
                     })
                     .popover(isPresented: $showNewShoppingList, content: {
                         ShoppingListFormView(isNewShoppingListDescription: true)
@@ -169,7 +169,7 @@ struct ShoppingListView: View {
                     Button(action: {
                         showEditShoppingList.toggle()
                     }, label: {
-                        Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
+                        Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
                     })
                     .popover(isPresented: $showEditShoppingList, content: {
                         ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
@@ -179,7 +179,7 @@ struct ShoppingListView: View {
                     Button(action: {
                         showSHLDeleteAlert.toggle()
                     }, label: {
-                        Label(LocalizedStringKey("str.shL.delete"), systemImage: "trash")
+                        Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
                             .foregroundColor(.red)
                     })
                     .alert(isPresented: $showSHLDeleteAlert) {
@@ -193,7 +193,7 @@ struct ShoppingListView: View {
                         }
                         updateData()
                     }, label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
                 })
@@ -207,17 +207,17 @@ struct ShoppingListView: View {
                             Button(action: {
                                 activeSheet = .newShoppingList
                             }, label: {
-                                Label(LocalizedStringKey("str.shL.new"), systemImage: "plus")
+                                Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.new)
                             })
                             Button(action: {
                                 activeSheet = .editShoppingList
                             }, label: {
-                                Label(LocalizedStringKey("str.shL.edit"), systemImage: "square.and.pencil")
+                                Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
                             })
                             Button(action: {
                                 showSHLDeleteAlert.toggle()
                             }, label: {
-                                Label(LocalizedStringKey("str.shL.delete"), systemImage: "trash")
+                                Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
                                     .foregroundColor(.red)
                             })
                             Picker(selection: $selectedShoppingListID, label: Text(""), content: {
@@ -229,7 +229,7 @@ struct ShoppingListView: View {
                             Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
                             Image(systemName: "chevron.down.square.fill")
                         }})
-                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Image(systemName: MySymbols.reload)
                             .foregroundColor(.blue)
                             .onTapGesture {
                                 updateData()

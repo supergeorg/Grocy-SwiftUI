@@ -164,7 +164,7 @@ struct MDBarcodeFormView: View {
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
-                    Image(systemName: "barcode.viewfinder")
+                    Image(systemName: MySymbols.barcodeScan)
                 })
                 .sheet(isPresented: $isShowingScanner) {
                     CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
@@ -172,7 +172,7 @@ struct MDBarcodeFormView: View {
                 #endif
             }
             Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: "number.circle")
+                MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
@@ -186,7 +186,7 @@ struct MDBarcodeFormView: View {
                 }
             })
             
-            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
             
             #if os(macOS)
             HStack{

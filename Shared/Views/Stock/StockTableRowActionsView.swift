@@ -29,7 +29,7 @@ struct StockTableRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "tuningfork", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
+            RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: MySymbols.consume, backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
                     selectedStockElement = stockElement
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.product.quickConsumeAmount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
@@ -43,7 +43,7 @@ struct StockTableRowActionsView: View {
                         }
                     }
                 }
-            RowInteractionButton(title: "str.stock.tbl.action.all", image: "tuningfork", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
+            RowInteractionButton(title: "str.stock.tbl.action.all", image: MySymbols.consume, backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
                 .onTapGesture {
                     selectedStockElement = stockElement
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in

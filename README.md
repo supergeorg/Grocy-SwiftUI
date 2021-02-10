@@ -32,7 +32,7 @@ Was Funktioniert bzw. was funktioniert nicht?
 - [x] Anzeige und Filterung des Bestands
 - [x] Einkaufsliste
 - [x] Onboarding und Konfiguration
-- [ ] Barcode-Scan (nur auf iOS)
+- [x] Barcode-Scan (nur auf iOS)
 - [ ] Rezepte, Speiseplan, Hausarbeit etc.
 
 Welche Features sind geplant?

@@ -25,7 +25,7 @@ private struct StockFilterItemView: View {
                 .background(normalColor)
             HStack {
                 if filteredStatus == ownFilteredStatus {
-                    Image(systemName: "line.horizontal.3.decrease.circle")
+                    Image(systemName: MySymbols.filter)
                 }
                 #if os(iOS)
                 if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {

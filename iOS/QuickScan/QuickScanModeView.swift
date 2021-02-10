@@ -111,13 +111,13 @@ struct QuickScanModeView: View {
             CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             HStack{
                 Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: "chevron.down.circle"), content: {
-                    Label(QuickScanMode.consume.getDescription(), systemImage: "tuningfork")
+                    Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
                         .labelStyle(IconAboveTextLabelStyle())
                         .tag(QuickScanMode.consume)
-                    Label(QuickScanMode.markAsOpened.getDescription(), systemImage: "envelope.open")
+                    Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
                         .labelStyle(IconAboveTextLabelStyle())
                         .tag(QuickScanMode.markAsOpened)
-                    Label(QuickScanMode.purchase.getDescription(), systemImage: "cart")
+                    Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
                         .labelStyle(IconAboveTextLabelStyle())
                         .tag(QuickScanMode.purchase)
                 })
@@ -145,13 +145,13 @@ struct QuickScanModeView: View {
         .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
             switch item {
             case .successQSAddProduct:
-                Label("str.quickScan.add.product.add.success", systemImage: "checkmark")
+                Label("str.quickScan.add.product.add.success", systemImage: MySymbols.success)
             case .successQSConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .successQSOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .successQSPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .invalidBarcode:
                 Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
             }

@@ -50,7 +50,7 @@ struct LoginView: View {
             Spacer()
             #if os(iOS)
             Button(action: {isShowingScanner = true}, label: {
-                Label(LocalizedStringKey("str.settings.loginQRcode.scan"), systemImage: "qrcode.viewfinder")
+                Label(LocalizedStringKey("str.settings.loginQRcode.scan"), systemImage: MySymbols.qrScan)
                     .padding(20)
                     .background(
                         RoundedRectangle(cornerRadius: 10, style: .continuous)

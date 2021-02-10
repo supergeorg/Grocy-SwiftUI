@@ -111,19 +111,19 @@ struct MDLocationsView: View {
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
                                 isSearching.toggle()
-                            }, label: {Image(systemName: "magnifyingglass")})
+                            }, label: {Image(systemName: MySymbols.search)})
                             Button(action: {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
                                 }
                                 grocyVM.getMDLocations()
                             }, label: {
-                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Image(systemName: MySymbols.reload)
                                     .rotationEffect(Angle.degrees(reloadRotationDeg))
                             })
                             Button(action: {
                                 showAddLocation.toggle()
-                            }, label: {Image(systemName: "plus")})
+                            }, label: {Image(systemName: MySymbols.new)})
                             .popover(isPresented: self.$showAddLocation, content: {
                                 MDLocationFormView(isNewLocation: true, toastType: $toastType)
                             })
@@ -140,19 +140,19 @@ struct MDLocationsView: View {
                     HStack{
                         Button(action: {
                             isSearching.toggle()
-                        }, label: {Image(systemName: "magnifyingglass")})
+                        }, label: {Image(systemName: MySymbols.search)})
                         Button(action: {
                             withAnimation {
                                 self.reloadRotationDeg += 360
                             }
                             grocyVM.getMDLocations()
                         }, label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Image(systemName: MySymbols.reload)
                                 .rotationEffect(Angle.degrees(reloadRotationDeg))
                         })
                         Button(action: {
                             showAddLocation.toggle()
-                        }, label: {Image(systemName: "plus")})
+                        }, label: {Image(systemName: MySymbols.new)})
                     }
                 }
             })
@@ -186,15 +186,15 @@ struct MDLocationsView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
             }
         })
         .alert(isPresented: $showDeleteAlert) {

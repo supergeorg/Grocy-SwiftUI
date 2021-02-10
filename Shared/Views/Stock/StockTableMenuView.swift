@@ -32,7 +32,7 @@ struct StockTableMenuView: View {
                 selectedStockElement = stockElement
                 activeSheet = .addToShL
             }, label: {
-                Label(LocalizedStringKey("str.stock.tbl.menu.addToShL"), systemImage: "cart.badge.plus")
+                Label(LocalizedStringKey("str.stock.tbl.menu.addToShL"), systemImage: MySymbols.addToShoppingList)
                     .labelStyle(TextIconLabelStyle())
             })
             Divider()
@@ -41,28 +41,28 @@ struct StockTableMenuView: View {
                     selectedStockElement = stockElement
                     activeSheet = .productPurchase
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.buy"), systemImage: "cart")
+                    Label(LocalizedStringKey("str.stock.buy"), systemImage: MySymbols.purchase)
                         .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productConsume
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.consume"), systemImage: "tuningfork")
+                    Label(LocalizedStringKey("str.stock.consume"), systemImage: MySymbols.consume)
                         .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productTransfer
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.transfer"), systemImage: "arrow.left.arrow.right")
+                    Label(LocalizedStringKey("str.stock.transfer"), systemImage: MySymbols.transfer)
                         .labelStyle(TextIconLabelStyle())
                 })
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .productInventory
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.inventory"), systemImage: "list.bullet")
+                    Label(LocalizedStringKey("str.stock.inventory"), systemImage: MySymbols.inventory)
                         .labelStyle(TextIconLabelStyle())
                 })
             }

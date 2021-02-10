@@ -134,7 +134,7 @@ struct MDUserEntityFormView: View {
                                     isCaptionCorrect = checkCaptionCorrect() })
             }
             
-            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: "text.justifyleft", isEditing: true)
+            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
             
             MyToggle(isOn: $showInSidebarMenu, description: "str.md.userEntity.showInSideBarMenu", icon: "tablecells")
             #if os(macOS)

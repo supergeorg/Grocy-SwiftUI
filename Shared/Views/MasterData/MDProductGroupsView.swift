@@ -87,19 +87,19 @@ struct MDProductGroupsView: View {
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
                                 isSearching.toggle()
-                            }, label: {Image(systemName: "magnifyingglass")})
+                            }, label: {Image(systemName: MySymbols.search)})
                             Button(action: {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
                                 }
                                 grocyVM.getMDProductGroups()
                             }, label: {
-                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Image(systemName: MySymbols.reload)
                                     .rotationEffect(Angle.degrees(reloadRotationDeg))
                             })
                             Button(action: {
                                 showAddProductGroup.toggle()
-                            }, label: {Image(systemName: "plus")})
+                            }, label: {Image(systemName: MySymbols.new)})
                             .popover(isPresented: self.$showAddProductGroup, content: {
                                 MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
                             })
@@ -116,19 +116,19 @@ struct MDProductGroupsView: View {
                     HStack{
                         Button(action: {
                             isSearching.toggle()
-                        }, label: {Image(systemName: "magnifyingglass")})
+                        }, label: {Image(systemName: MySymbols.search)})
                         Button(action: {
                             withAnimation {
                                 self.reloadRotationDeg += 360
                             }
                             grocyVM.getMDProductGroups()
                         }, label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Image(systemName: MySymbols.reload)
                                 .rotationEffect(Angle.degrees(reloadRotationDeg))
                         })
                         Button(action: {
                             showAddProductGroup.toggle()
-                        }, label: {Image(systemName: "plus")})
+                        }, label: {Image(systemName: MySymbols.new)})
                     }
                 }
             }
@@ -162,15 +162,15 @@ struct MDProductGroupsView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
             }
         })
         .alert(isPresented: $showDeleteAlert) {

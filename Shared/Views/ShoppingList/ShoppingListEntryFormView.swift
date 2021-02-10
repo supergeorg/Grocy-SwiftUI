@@ -127,7 +127,7 @@ struct ShoppingListEntryFormView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.shL.entryForm.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.shL.entryForm.amount.required", systemImage: "number.circle")
+                MyIntStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.shL.entryForm.amount.required", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.shL.entryForm.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in

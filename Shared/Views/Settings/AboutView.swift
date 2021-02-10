@@ -34,7 +34,7 @@ struct AboutView: View {
             AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
             
             Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
-                AboutLineView(iconName: "barcode.viewfinder", caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
+                AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
             })
             .foregroundColor(.primary)
             

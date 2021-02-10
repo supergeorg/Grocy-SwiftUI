@@ -24,7 +24,7 @@ private struct ShoppingListFilterItemView: View {
                 .background(normalColor)
             HStack {
                 if filteredStatus == ownFilteredStatus {
-                    Image(systemName: "line.horizontal.3.decrease.circle")
+                    Image(systemName: MySymbols.filter)
                 }
                 Text(ownFilteredStatus.getDescription(amount: num))
                     .bold()

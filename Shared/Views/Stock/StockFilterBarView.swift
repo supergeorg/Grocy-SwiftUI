@@ -32,7 +32,7 @@ struct StockFilterBar: View {
             #endif
             Spacer()
             HStack{
-                Image(systemName: "line.horizontal.3.decrease.circle")
+                Image(systemName: MySymbols.filter)
                 Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
@@ -42,7 +42,7 @@ struct StockFilterBar: View {
             }
             Spacer()
             HStack{
-                Image(systemName: "line.horizontal.3.decrease.circle")
+                Image(systemName: MySymbols.filter)
                 Picker(selection: $filteredProductGroup, label: Text(LocalizedStringKey("str.stock.productGroup")), content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
                     ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
@@ -52,7 +52,7 @@ struct StockFilterBar: View {
             }
             Spacer()
             HStack{
-                Image(systemName: "line.horizontal.3.decrease.circle")
+                Image(systemName: MySymbols.filter)
                 Picker(selection: $filteredStatus, label: Text(LocalizedStringKey("str.stock.status")), content: {
                     Text(LocalizedStringKey(ProductStatus.all.rawValue))
                         .tag(ProductStatus.all)

@@ -143,8 +143,8 @@ struct InventoryProductView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount ?? 0), errorMessage: "str.stock.inventory.product.amount.required", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.inventory.product.quantityUnit"), systemImage: "scalemass"), content: {
+                MyIntStepper(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount ?? 0), errorMessage: "str.stock.inventory.product.amount.required", systemImage: MySymbols.amount)
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.inventory.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
@@ -157,25 +157,25 @@ struct InventoryProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
                 HStack {
-                    Image(systemName: "calendar")
+                    Image(systemName: MySymbols.date)
                     DatePicker(LocalizedStringKey("str.stock.inventory.product.dueDate"), selection: $dueDate, displayedComponents: .date)
                         .disabled(productNeverOverdue)
                 }
                 
-                MyToggle(isOn: $productNeverOverdue, description: "str.stock.inventory.product.neverOverdue", icon: "trash.slash")
+                MyToggle(isOn: $productNeverOverdue, description: "str.stock.inventory.product.neverOverdue", icon: MySymbols.doesntSpoil)
             }
             
-            MyDoubleStepper(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.inventory.product.price.required", systemImage: "eurosign.circle", currencySymbol: grocyVM.getCurrencySymbol())
+            MyDoubleStepper(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.inventory.product.price.required", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: "cart"), content: {
+                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
                         Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: "location"), content: {
+                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: MySymbols.location), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as String?)
@@ -193,9 +193,9 @@ struct InventoryProductView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), content: { item in
             switch item {
             case .successInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .failInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: MySymbols.failure)
             }
         })
         .toolbar(content: {
@@ -204,7 +204,7 @@ struct InventoryProductView: View {
                     inventoryProduct()
                     resetForm()
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: "list.bullet")
+                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
                         .labelStyle(TextIconLabelStyle())
                 })
                 .disabled(!isFormValid)

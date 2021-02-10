@@ -17,6 +17,7 @@ struct SearchBarSwiftUI: View {
     var body: some View {
         HStack {
             TextField(LocalizedStringKey(placeholder), text: $text)
+                .frame(minWidth: 50)
                 .padding(7)
                 .padding(.horizontal, 25)
                 .background(Color.systemGray6)
@@ -25,7 +26,7 @@ struct SearchBarSwiftUI: View {
                 .cornerRadius(8)
                 .overlay(
                     HStack {
-                        Image(systemName: "magnifyingglass")
+                        Image(systemName: MySymbols.search)
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)

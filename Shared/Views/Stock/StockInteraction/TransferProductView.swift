@@ -130,8 +130,8 @@ struct TransferProductView: View {
             })
             
             Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: "scalemass"), content: {
+                MyDoubleStepper(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: MySymbols.amount)
+                Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
@@ -174,9 +174,9 @@ struct TransferProductView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), content: { item in
             switch item {
             case .successTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .failTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.transfer.product.transfer.fail"), systemImage: MySymbols.failure)
             }
         })
         .toolbar(content: {
@@ -185,7 +185,7 @@ struct TransferProductView: View {
                     transferProduct()
                     resetForm()
                 }, label: {
-                    Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: "arrow.left.arrow.right")
+                    Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
                         .labelStyle(TextIconLabelStyle())
                 })
                 .disabled(!isFormValid)

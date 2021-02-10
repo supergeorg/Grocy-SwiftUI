@@ -57,8 +57,16 @@ struct MDBarcodesView: View {
     
     private func delete(at offsets: IndexSet) {
         for offset in offsets {
-            grocyVM.deleteMDObject(object: .product_barcodes, id: filteredBarcodes[offset].id)
-            updateData()
+            grocyVM.deleteMDObject(object: .product_barcodes, id: filteredBarcodes[offset].id, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    updateData()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failDelete
+                }
+            })
         }
     }
     
@@ -78,7 +86,7 @@ struct MDBarcodesView: View {
     var content: some View {
         Section(header: Text(LocalizedStringKey("str.md.barcodes")).font(.headline)) {
             #if os(macOS)
-            Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: "plus")})
+            Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
                 .popover(isPresented: $showAddBarcode, content: {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
                 })

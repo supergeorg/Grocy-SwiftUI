@@ -55,8 +55,8 @@ struct PurchaseProductView: View {
     }
     
     private func resetForm() {
-        self.productID = productToPurchaseID
-        self.amount = productToPurchaseAmount
+        self.productID = firstAppear ? productToPurchaseID : nil
+        self.amount = firstAppear ? productToPurchaseAmount : nil
         self.quantityUnitID = nil
         self.dueDate = Date()
         self.productDoesntSpoil = false
@@ -134,8 +134,8 @@ struct PurchaseProductView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.buy.product.amount.invalid", systemImage: "number.circle")
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: "scalemass"), content: {
+                MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.buy.product.amount.invalid", systemImage: MySymbols.amount)
+                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
@@ -145,16 +145,16 @@ struct PurchaseProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.dueDate")).font(.headline)) {
                 HStack {
-                    Image(systemName: "calendar")
+                    Image(systemName: MySymbols.date)
                     DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $dueDate, displayedComponents: .date)
                         .disabled(productDoesntSpoil)
                 }
                 
-                MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: "trash.slash")
+                MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: "eurosign.circle", currencySymbol: grocyVM.getCurrencySymbol())
+                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                 
                 Picker("", selection: $isTotalPrice, content: {
                     Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
@@ -163,14 +163,14 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: "cart"), content: {
+                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
                         Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: "location"), content: {
+                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as String?)
@@ -188,15 +188,15 @@ struct PurchaseProductView: View {
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successPurchase), content: { item in
             switch item {
             case .successPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: "checkmark")
+                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
             case .failPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: "xmark")
+                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: MySymbols.failure)
             }
         })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: purchaseProduct, label: {
-                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: "cart")
+                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
                         .labelStyle(TextIconLabelStyle())
                 })
                 .disabled(!isFormValid)
