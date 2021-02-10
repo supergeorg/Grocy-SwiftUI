@@ -89,8 +89,16 @@ struct MDLocationsView: View {
         }
     }
     private func deleteLocation(toDelID: String) {
-        grocyVM.deleteMDObject(object: .locations, id: toDelID)
-        updateData()
+        grocyVM.deleteMDObject(object: .locations, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                updateData()
+            case let .failure(error):
+                print("\(error)")
+                toastType = .failDelete
+            }
+        })
     }
     
     var body: some View {
@@ -185,6 +193,8 @@ struct MDLocationsView: View {
                 Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
             case .failEdit:
                 Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+            case .failDelete:
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
             }
         })
         .alert(isPresented: $showDeleteAlert) {

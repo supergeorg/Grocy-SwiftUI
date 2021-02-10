@@ -88,9 +88,8 @@ protocol GrocyAPI {
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
-    func putObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<T, APIError>
-    func putObjectWithIDESC(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<URLResponse, APIError>
-    func deleteObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
+    func putObjectWithID(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<Int, APIError>
+    func deleteObjectWithID(object: ObjectEntities, id: String) -> AnyPublisher<Int, APIError>
 }
 
 public class GrocyApi: GrocyAPI {
@@ -110,11 +109,18 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<URLResponse, APIError> {
+    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ _ in APIError.serverError }
-            .map{$0.response}
+            .flatMap({ result -> Just<Int> in
+                guard let urlResponse = result.response as? HTTPURLResponse else {
+                    return Just(0)
+                }
+                return Just(urlResponse.statusCode)
+            })
+            .mapError { _ in APIError.invalidResponse }
+            .eraseToAnyPublisher()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
@@ -394,15 +400,11 @@ extension GrocyApi {
         return call(.objectsEntityWithID, method: .GET, object: object, id: id)
     }
     
-    func putObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
-    }
-    
-    func putObjectWithIDESC(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<URLResponse, APIError> {
+    func putObjectWithID(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<Int, APIError> {
         return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
     }
-    
-    func deleteObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntityWithID, method: .DELETE, object: object, id: id)
-    }
+
+    func deleteObjectWithID(object: ObjectEntities, id: String) -> AnyPublisher<Int, APIError> {
+            return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: id)
+        }
 }

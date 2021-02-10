@@ -58,8 +58,16 @@ struct MDUserFieldsView: View {
         }
     }
     private func deleteUserField(toDelID: String) {
-        grocyVM.deleteMDObject(object: .userfields, id: toDelID)
-        updateData()
+        grocyVM.deleteMDObject(object: .userfields, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                updateData()
+            case let .failure(error):
+                print("\(error)")
+                toastType = .failDelete
+            }
+        })
     }
     
     private func updateData() {
@@ -146,6 +154,20 @@ struct MDUserFieldsView: View {
             grocyVM.requestDataIfUnavailable(objects: [.userfields])
         })
         .animation(.default)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+            switch item {
+            case .successAdd:
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+            case .failAdd:
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+            case .successEdit:
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+            case .failEdit:
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+            case .failDelete:
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
+            }
+        })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.userField.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
                 deleteUserField(toDelID: userFieldToDelete?.id ?? "")

@@ -8,7 +8,7 @@
 import Foundation
 
 enum MDToastType: Identifiable {
-    case successAdd, failAdd, successEdit, failEdit
+    case successAdd, failAdd, successEdit, failEdit, failDelete
     
     var id: Int {
         self.hashValue

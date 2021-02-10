@@ -83,11 +83,6 @@ struct MDQuantityUnitFormView: View {
         }
     }
     
-    private func deleteQuantityUnit() {
-        grocyVM.deleteMDObject(object: .quantity_units, id: quantityUnit!.id)
-        grocyVM.getMDQuantityUnits()
-    }
-    
     var body: some View {
         #if os(macOS)
         ScrollView {

@@ -24,3 +24,13 @@ struct SucessfulMessage: Codable {
         case createdObjectID = "created_object_id"
     }
 }
+
+// MARK: - DeleteMessage
+struct DeleteMessage: Codable {
+    let deletedObjectID: String
+
+    enum CodingKeys: String, CodingKey {
+        case deletedObjectID = "deleted_object_id"
+    }
+}
+

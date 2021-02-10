@@ -79,8 +79,16 @@ struct MDShoppingLocationsView: View {
         }
     }
     private func deleteShoppingLocation(toDelID: String) {
-        grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
-        updateData()
+        grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                updateData()
+            case let .failure(error):
+                print("\(error)")
+                toastType = .failDelete
+            }
+        })
     }
     
     private func updateData() {
@@ -168,6 +176,20 @@ struct MDShoppingLocationsView: View {
             grocyVM.requestDataIfUnavailable(objects: [.shopping_locations])
         })
         .animation(.default)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+            switch item {
+            case .successAdd:
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+            case .failAdd:
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+            case .successEdit:
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+            case .failEdit:
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+            case .failDelete:
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
+            }
+        })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.shoppingLocation.delete.confirm")),
                   message: Text(shoppingLocationToDelete?.name ?? "error"),

@@ -290,6 +290,8 @@
 "str.md.new.fail" = "Adding failed";
 "str.md.edit.success" = "Editing successful";
 "str.md.edit.fail" = "Editing failed";
+"str.md.delete.success" = "Delete successful";
+"str.md.delete.fail" = "Delete failed";
 
 "str.md.products" = "Products";
 "str.md.product" = "Product";

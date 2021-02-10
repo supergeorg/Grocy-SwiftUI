@@ -84,8 +84,16 @@ struct MDProductsView: View {
         }
     }
     private func deleteProduct(toDelID: String) {
-        grocyVM.deleteMDObject(object: .products, id: toDelID)
-        updateData()
+        grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                updateData()
+            case let .failure(error):
+                print("\(error)")
+                toastType = .failDelete
+            }
+        })
     }
     
     private var filteredProducts: MDProducts {
@@ -183,6 +191,20 @@ struct MDProductsView: View {
             grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .product_groups])
         })
         .animation(.default)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+            switch item {
+            case .successAdd:
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: "checkmark")
+            case .failAdd:
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: "xmark")
+            case .successEdit:
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: "checkmark")
+            case .failEdit:
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: "xmark")
+            case .failDelete:
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: "xmark")
+            }
+        })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.product.delete.confirm"), message: Text(productToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
                 deleteProduct(toDelID: productToDelete?.id ?? "")

@@ -115,13 +115,27 @@ struct ShoppingListView: View {
         }
     }
     private func deleteSHLItem(toDelID: String) {
-        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
-        updateData()
+        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                updateData()
+            case let .failure(error):
+                print("\(error)")
+            }
+        })
     }
     
     func deleteShoppingList() {
-        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
-        grocyVM.getShoppingListDescriptions()
+        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                grocyVM.getShoppingListDescriptions()
+            case let .failure(error):
+                print("\(error)")
+            }
+        })
     }
     
     func updateData() {

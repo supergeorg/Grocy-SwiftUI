@@ -38,8 +38,15 @@ struct ShoppingListRowActionsView: View {
     }
     
     private func deleteSHItem() {
-        grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id)
-        grocyVM.getShoppingList()
+        grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                grocyVM.getShoppingList()
+            case let .failure(error):
+                print("\(error)")
+            }
+        })
     }
     
     var body: some View {

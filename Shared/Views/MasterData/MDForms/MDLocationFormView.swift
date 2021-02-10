@@ -84,11 +84,6 @@ struct MDLocationFormView: View {
         }
     }
     
-    private func deleteLocation() {
-        grocyVM.deleteMDObject(object: .locations, id: location!.id)
-        grocyVM.getMDLocations()
-    }
-    
     var body: some View {
         #if os(macOS)
         ScrollView{
