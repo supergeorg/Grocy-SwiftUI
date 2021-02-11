@@ -38,7 +38,7 @@ struct PurchaseProductView: View {
         }
     }
     @State private var infoString: String?
-
+    
     private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -156,10 +156,12 @@ struct PurchaseProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
                 MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                 
-                Picker("", selection: $isTotalPrice, content: {
-                    Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
-                    Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
-                }).pickerStyle(SegmentedPickerStyle())
+                if price != nil {
+                    Picker("", selection: $isTotalPrice, content: {
+                        Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
+                        Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
+                    }).pickerStyle(SegmentedPickerStyle())
+                }
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {

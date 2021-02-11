@@ -67,7 +67,7 @@ struct MyDoubleStepper: View {
                         if minAmount != nil {
                             if amount! > minAmount! {
                                 amount! -= amountStep ?? 1.0
-                            }
+                            } else if currencySymbol != nil && amount! == 0.0 { amount = nil}
                         } else { amount! -= amountStep ?? 1.0 }
                     } else { amount = 0 }
                 })
