@@ -15,6 +15,14 @@ struct ShoppingListRowActionsView: View {
     @State private var showEdit: Bool = false
     @State private var showPurchase: Bool = false
     
+    @Binding var toastType: ShoppingListToastType?
+    
+    #if os(macOS)
+    let ismacOS = true
+    #else
+    let ismacOS = false
+    #endif
+    
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id==shoppingListItem.quID}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
     }
@@ -32,6 +40,7 @@ struct ShoppingListRowActionsView: View {
                 grocyVM.getShoppingList()
             case let .failure(error):
                 print("\(error)")
+                toastType = .shLActionFail
             }
         })
         
@@ -43,8 +52,10 @@ struct ShoppingListRowActionsView: View {
             case let .success(message):
                 print(message)
                 grocyVM.getShoppingList()
+                toastType = .shLActionSuccess
             case let .failure(error):
                 print("\(error)")
+                toastType = .shLActionFail
             }
         })
     }
@@ -61,7 +72,7 @@ struct ShoppingListRowActionsView: View {
                 }
                 .popover(isPresented: $showEdit, content: {
                     ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
-                        .padding()
+                        .modifier(if: ismacOS, then: {$0.frame(width: 500, height: 400)})
                 })
             RowInteractionButton(image: "trash.fill", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.shL.entry.delete"))
                 .onTapGesture {
@@ -93,6 +104,6 @@ struct ShoppingListRowActionsView: View {
 
 struct ShoppingListRowActionsView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil))
+        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil), toastType: Binding.constant(nil))
     }
 }

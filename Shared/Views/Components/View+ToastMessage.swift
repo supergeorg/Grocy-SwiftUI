@@ -8,9 +8,10 @@
 import SwiftUI
 
 extension View {
-    func toast<Content>(isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
+    func toast<Content>(isPresented: Binding<Bool>, isSuccess: Bool? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
         ToastMessage(
             isPresented: isPresented,
+            isSuccess: isSuccess,
             presenter: { self },
             content: content
         )

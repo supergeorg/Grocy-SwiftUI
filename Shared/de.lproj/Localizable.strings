@@ -20,6 +20,7 @@
 "str.close" = "Schließen";
 "str.add" = "Hinzufügen";
 "str.misc" = "Diverses";
+"str.clear" = "Leeren";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";
@@ -252,6 +253,7 @@
 
 "str.shL.action.addItem" = "Eintrag hinzufügen";
 "str.shL.action.clearList" = "Liste leeren";
+"str.shL.action.clearList.confirm" = "Möchtest du wirklich diese Einkaufsliste leeren?";
 "str.shL.action.addListItemsToStock" = "Alle Einträge zum Bestand hinzufügen";
 "str.shL.action.addBelowMinStock" = "Produkte unter Mindestbestand hinzufügen";
 "str.shL.action.addOverdue" = "Überfällige/Abgelaufene Produkte hinzufügen";

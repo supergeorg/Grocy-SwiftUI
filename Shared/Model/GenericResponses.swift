@@ -16,8 +16,8 @@ struct ErrorMessage: Codable {
     }
 }
 
-// MARK: - SucessfulMessage
-struct SucessfulMessage: Codable {
+// MARK: - SuccessfulMessage
+struct SuccessfulMessage: Codable {
     let createdObjectID: String
 
     enum CodingKeys: String, CodingKey {

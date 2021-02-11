@@ -21,6 +21,8 @@ struct ShoppingListView: View {
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     
+    @State private var toastType: ShoppingListToastType?
+    
     #if os(macOS)
     @State private var showNewShoppingList: Bool = false
     @State private var showEditShoppingList: Bool = false
@@ -36,7 +38,7 @@ struct ShoppingListView: View {
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
         if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
-            if Double(product.minStockAmount) ?? 0 < Double(item.amount) ?? 1 {
+            if Double(product.minStockAmount) ?? 0 > Double(item.amount) ?? 1 {
                 return true
             }
         }
@@ -119,7 +121,7 @@ struct ShoppingListView: View {
             switch result {
             case let .success(message):
                 print(message)
-                updateData()
+                grocyVM.getShoppingList()
             case let .failure(error):
                 print("\(error)")
             }
@@ -220,6 +222,11 @@ struct ShoppingListView: View {
                                 Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
                                     .foregroundColor(.red)
                             })
+                            .alert(isPresented: $showSHLDeleteAlert) {
+                                Alert(title: Text(LocalizedStringKey("str.shL.delete.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
+                                    deleteShoppingList()
+                                }, secondaryButton: .cancel())
+                            }
                             Picker(selection: $selectedShoppingListID, label: Text(""), content: {
                                 ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shoppingListDescription in
                                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
@@ -245,11 +252,6 @@ struct ShoppingListView: View {
                     ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
                 }
             })
-            .alert(isPresented: $showSHLDeleteAlert) {
-                Alert(title: Text(LocalizedStringKey("str.shL.delete.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                    deleteShoppingList()
-                }, secondaryButton: .cancel())
-            }
         #endif
     }
     
@@ -257,13 +259,13 @@ struct ShoppingListView: View {
         List{
             Group {
                 ShoppingListFilterActionView(filteredStatus: $filteredStatus, numBelowStock: numBelowStock)
-                ShoppingListActionView(selectedShoppingListID: $selectedShoppingListID)
+                ShoppingListActionView(selectedShoppingListID: $selectedShoppingListID, toastType: $toastType)
                 ShoppingListFilterView(searchString: $searchString, filteredStatus: $filteredStatus)
             }
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in
                 Section(header: Text(productGroup.name).bold()) {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) {shItem in
-                        ShoppingListRowView(shoppingListItem: shItem)
+                        ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
                     .onDelete(perform: deleteItem)
                 }
@@ -271,13 +273,14 @@ struct ShoppingListView: View {
             if !(groupedShoppingList["?"]?.isEmpty ?? true) {
                 Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
                     ForEach(groupedShoppingList["?"] ?? [], id:\.id) {shItem in
-                        ShoppingListRowView(shoppingListItem: shItem)
+                        ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
                     .onDelete(perform: deleteItem)
                 }
             }
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
+        .animation(.default)
         .onAppear(perform: {
             grocyVM.requestDataIfUnavailable(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
         })

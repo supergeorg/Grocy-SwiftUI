@@ -82,8 +82,8 @@ protocol GrocyAPI {
     func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
     func getPictureURL(groupName: String, fileName: String) -> String?
     // MARK: - Shopping List
-    func shoppingListAddProduct<T: Codable>(content: Data) -> AnyPublisher<T, APIError>
-    func shoppingListAction<T: Codable>(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<T, APIError>
+    func shoppingListAddProduct(content: Data) -> AnyPublisher<Int, APIError>
+    func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError>
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
@@ -368,20 +368,20 @@ extension GrocyApi {
     
     // SHOPPING LIST
     
-    func shoppingListAddProduct<T: Codable>(content: Data) -> AnyPublisher<T, APIError> {
-        return call(.stockShoppingListAddProduct, method: .POST, content: content)
+    func shoppingListAddProduct(content: Data) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
     }
     
-    func shoppingListAction<T: Codable>(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<T, APIError> {
+    func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError> {
         switch actionType {
         case .clear:
-            return call(.stockShoppingListClear, method: .POST, content: content)
+            return callEmptyResponse(.stockShoppingListClear, method: .POST, content: content)
         case .addExpired:
-            return call(.stockShoppingListAddExpired, method: .POST, content: content)
+            return callEmptyResponse(.stockShoppingListAddExpired, method: .POST, content: content)
         case .addMissing:
-            return call(.stockShoppingListAddMissing, method: .POST, content: content)
+            return callEmptyResponse(.stockShoppingListAddMissing, method: .POST, content: content)
         case .addOverdue:
-            return call(.stockShoppingListAddOverdue, method: .POST, content: content)
+            return callEmptyResponse(.stockShoppingListAddOverdue, method: .POST, content: content)
         }
         
     }

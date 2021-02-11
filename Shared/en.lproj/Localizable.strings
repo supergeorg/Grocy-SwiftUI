@@ -20,6 +20,7 @@
 "str.close" = "Close";
 "str.add" = "Add";
 "str.misc" = "Miscellaneous";
+"str.clear" = "Clear";
 
 // MARK: - Transactions
 "tr.purchase" = "Purchase";
@@ -252,6 +253,7 @@
 
 "str.shL.action.addItem" = "Add item";
 "str.shL.action.clearList" = "Clear list";
+"str.shL.action.clearList.confirm" = "Do your really want to clear this shopping list?";
 "str.shL.action.addListItemsToStock" = "Add all list items to stock";
 "str.shL.action.addBelowMinStock" = "Add products that are below defined min. stock amount";
 "str.shL.action.addOverdue" = "Add overdue/expired products";

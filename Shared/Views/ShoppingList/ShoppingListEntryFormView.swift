@@ -20,6 +20,8 @@ struct ShoppingListEntryFormView: View {
     @State private var quantityUnitID: String?
     @State private var note: String = ""
     
+    @State private var showFailToast: Bool = false
+    
     var isNewShoppingListEntry: Bool
     var shoppingListEntry: ShoppingListItem?
     var selectedShoppingListID: String?
@@ -55,7 +57,17 @@ struct ShoppingListEntryFormView: View {
         let intShoppingListID = Int(shoppingListID)!
         if let amount = amount {
             if isNewShoppingListEntry{
-                grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note))
+                grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note), completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        showFailToast = true
+                    }
+                })
             } else {
                 if let entry = shoppingListEntry {
                     grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
@@ -66,6 +78,7 @@ struct ShoppingListEntryFormView: View {
                             finishForm()
                         case let .failure(error):
                             print("\(error)")
+                            showFailToast = true
                         }
                     })
                 }
@@ -83,7 +96,11 @@ struct ShoppingListEntryFormView: View {
     
     var body: some View {
         #if os(macOS)
-        content
+        ScrollView{
+            content
+                .padding()
+        }
+        .padding()
         #elseif os(iOS)
         NavigationView {
             content
@@ -136,10 +153,7 @@ struct ShoppingListEntryFormView: View {
                 }).disabled(true)
             }
             
-            Section(header: HStack {
-                Text(LocalizedStringKey("str.shL.entryForm.note"))
-                Image(systemName: "square.and.pencil")
-            }.font(.headline)) {
+            Section(header: Label(LocalizedStringKey("str.shL.entryForm.note"), systemImage: "square.and.pencil").labelStyle(TextIconLabelStyle()).font(.headline)) {
                 TextEditor(text: $note)
                     .frame(height: 50)
             }
@@ -164,6 +178,9 @@ struct ShoppingListEntryFormView: View {
                 resetForm()
                 firstAppear = false
             }
+        })
+        .toast(isPresented: $showFailToast, isSuccess: false, content: {
+            Text("Fail")
         })
     }
 }

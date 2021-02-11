@@ -46,6 +46,7 @@ struct ToastMessageItem<Presenting, Item, Content>: View where Item: Identifiabl
 
 struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: View {
     @Binding var isPresented: Bool
+    var isSuccess: Bool?
     let presenter: () -> Presenting
     let content: () -> Content
     let delay: TimeInterval = 2
@@ -64,7 +65,7 @@ struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: 
                 
                 ZStack {
                     Capsule()
-                        .fill(Color.gray)
+                        .fill(isSuccess != nil ? (isSuccess! ? Color.green : Color.red) : Color.gray)
                     
                     self.content()
                 }

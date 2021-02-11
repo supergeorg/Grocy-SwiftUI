@@ -7,98 +7,104 @@
 
 import SwiftUI
 
+struct ShoppingListActionItem: View {
+    var title: String
+    var foregroundColor: Color
+    var backgroundColor: Color?
+    var hasBorder: Bool?
+    
+    let cornerRadiusValue: CGFloat = 5.0
+    let paddingAmount: CGFloat = 10.0
+    
+    var body: some View {
+        Text(LocalizedStringKey(title))
+            .padding(paddingAmount)
+            .foregroundColor(foregroundColor)
+            .background(backgroundColor)
+            .cornerRadius(cornerRadiusValue)
+            .modifier(if: hasBorder ?? false, then: {$0.overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(foregroundColor, lineWidth: 1))})
+    }
+}
+
 struct ShoppingListActionView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    
-    let cornerRadiusValue: CGFloat = 3.0
-    let paddingAmount: CGFloat = 4.0
     
     @State private var showAddItem: Bool = false
     
     @Binding var selectedShoppingListID: String
+    @Binding var toastType: ShoppingListToastType?
+    
+    @State private var showClearListAlert: Bool = false
+    
+    #if os(macOS)
+    let ismacOS = true
+    #else
+    let ismacOS = false
+    #endif
     
     private func slAction(_ actionType: ShoppingListActionType) {
-        grocyVM.shoppingListAction(content: ShoppingListAction(listID: Int(selectedShoppingListID)!), actionType: actionType)
-        grocyVM.getShoppingList()
+        grocyVM.shoppingListAction(content: ShoppingListAction(listID: Int(selectedShoppingListID)!), actionType: actionType, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                toastType = .shLActionFail
+                grocyVM.getShoppingList()
+            case let .failure(error):
+                print("\(error)")
+                toastType = .shLActionSuccess
+            }
+        })
     }
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(spacing: 5){
-                #if os(macOS)
-                Text(LocalizedStringKey("str.shL.action.addItem"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(cornerRadiusValue)
+                ShoppingListActionItem(title: "str.shL.action.addItem", foregroundColor: .white, backgroundColor: .blue)
                     .onTapGesture {
                         showAddItem.toggle()
                     }
-                    .popover(isPresented: $showAddItem, content: {
+                    .modifier(if: ismacOS, then: {$0.popover(isPresented: $showAddItem, content: {
+                        ScrollView{
+                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                                .frame(width: 500, height: 400)
+                        }
+                    })}, else: {$0.sheet(isPresented: $showAddItem, content: {
                         ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                            .padding()
-                    })
-                #elseif os(iOS)
-                Text(LocalizedStringKey("str.shL.action.addItem"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(cornerRadiusValue)
+                    })})
+                
+                
+                ShoppingListActionItem(title: "str.shL.action.clearList", foregroundColor: .red, hasBorder: true)
                     .onTapGesture {
-                        showAddItem.toggle()
+                        showClearListAlert.toggle()
                     }
-                    .sheet(isPresented: $showAddItem, content: {
-                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                    })
-                #endif
-                Text(LocalizedStringKey("str.shL.action.clearList"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.red)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-                            .stroke(Color.red, lineWidth: 1)
-                    )
-                    .onTapGesture {
-                        slAction(.clear)
-                    }
-                Text(LocalizedStringKey("str.shL.action.addListItemsToStock"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
-                    .onTapGesture {
-                        print("not implemented")
-                    }
-                Text(LocalizedStringKey("str.shL.action.addBelowMinStock"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
+                
+                //                ShoppingListActionItem(title: "str.shL.action.addListItemsToStock", foregroundColor: .blue, hasBorder: true)
+                //                                    .onTapGesture {
+                //                                        print("not implemented")
+                //                                    }
+                
+                ShoppingListActionItem(title: "str.shL.action.addBelowMinStock", foregroundColor: .blue, hasBorder: true)
                     .onTapGesture {
                         slAction(.addMissing)
                     }
-                Text(LocalizedStringKey("str.shL.action.addOverdue"))
-                    .padding(paddingAmount)
-                    .foregroundColor(.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadiusValue)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
+                
+                ShoppingListActionItem(title: "str.shL.action.addOverdue", foregroundColor: .blue, hasBorder: true)
                     .onTapGesture {
                         slAction(.addExpired)
                         slAction(.addOverdue)
                     }
             }
+            .alert(isPresented: $showClearListAlert, content: {
+                Alert(title: Text(LocalizedStringKey("str.shL.action.clearList.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? ""), primaryButton: .destructive(Text(LocalizedStringKey("str.clear"))) {
+                    slAction(.clear)
+                }, secondaryButton: .cancel())
+            })
         }
     }
 }
 
 struct ShoppingListActionView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListActionView(selectedShoppingListID: Binding.constant("1"))
+        ShoppingListActionView(selectedShoppingListID: Binding.constant("1"), toastType: Binding.constant(nil))
     }
 }

@@ -14,7 +14,7 @@ struct ShoppingListFilterView: View {
     var body: some View {
         HStack{
             SearchBar(text: $searchString, placeholder: "str.search")
-            Picker(selection: $filteredStatus, label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: "line.horizontal.3.decrease.circle"), content: {
+            Picker(selection: $filteredStatus, label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: MySymbols.filter), content: {
                 Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
                 Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
                 Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
