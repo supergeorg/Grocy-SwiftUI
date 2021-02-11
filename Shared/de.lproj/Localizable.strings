@@ -250,6 +250,7 @@
 "str.shL.form.name.required" = "Ein Name ist erforderlich";
 "str.shL.form.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
 "str.shL.form.save" = "Speichern";
+"str.shL.form.save.failed" = "Speichern fehlgeschlagen";
 
 "str.shL.action.addItem" = "Eintrag hinzufügen";
 "str.shL.action.clearList" = "Liste leeren";
@@ -257,6 +258,7 @@
 "str.shL.action.addListItemsToStock" = "Alle Einträge zum Bestand hinzufügen";
 "str.shL.action.addBelowMinStock" = "Produkte unter Mindestbestand hinzufügen";
 "str.shL.action.addOverdue" = "Überfällige/Abgelaufene Produkte hinzufügen";
+"str.shL.action.failed" = "Aktion fehlgeschlagen";
 
 "str.shL.filter.status" = "Status";
 "str.shL.filter.reset" = "Filter zurücksetzen";
@@ -270,6 +272,7 @@
 
 "str.shL.entryForm.new.title" = "Einkaufszettel Eintrag erstellen";
 "str.shL.entryForm.edit.title" = "Einkaufszettel Eintrag bearbeiten";
+"str.shL.entryForm.save.failed" = "Speichern des Eintrags fehlgeschlagen.";
 "str.shL.entryForm.shoppingList" = "Einkaufszettel";
 "str.shL.entryForm.product" = "Produkt";
 "str.shL.entryForm.amount" = "Menge";

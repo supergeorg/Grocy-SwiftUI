@@ -40,7 +40,7 @@ enum RowActionToastType: Identifiable {
 }
 
 enum ShoppingListToastType: Identifiable {
-    case shLActionSuccess, shLActionFail
+    case shLActionFail
     
     var id: Int {
         self.hashValue

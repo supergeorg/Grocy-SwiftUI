@@ -179,9 +179,7 @@ struct ShoppingListEntryFormView: View {
                 firstAppear = false
             }
         })
-        .toast(isPresented: $showFailToast, isSuccess: false, content: {
-            Text("Fail")
-        })
+        .toast(isPresented: $showFailToast, isSuccess: false, content: {Label("str.shL.entryForm.save.failed", systemImage: MySymbols.failure)})
     }
 }
 

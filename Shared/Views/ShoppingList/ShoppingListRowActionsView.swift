@@ -52,7 +52,7 @@ struct ShoppingListRowActionsView: View {
             case let .success(message):
                 print(message)
                 grocyVM.getShoppingList()
-                toastType = .shLActionSuccess
+//                toastType = .shLActionSuccess
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail
@@ -70,10 +70,14 @@ struct ShoppingListRowActionsView: View {
                 .onTapGesture {
                     showEdit.toggle()
                 }
-                .popover(isPresented: $showEdit, content: {
+                .modifier(if: ismacOS, then: {$0.popover(isPresented: $showEdit, content: {
+                    ScrollView{
+                        ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
+                            .frame(width: 500, height: 400)
+                    }
+                })}, else: {$0.sheet(isPresented: $showEdit, content: {
                     ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
-                        .modifier(if: ismacOS, then: {$0.frame(width: 500, height: 400)})
-                })
+                })})
             RowInteractionButton(image: "trash.fill", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.shL.entry.delete"))
                 .onTapGesture {
                     deleteSHItem()

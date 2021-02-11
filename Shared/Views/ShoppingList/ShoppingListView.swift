@@ -281,6 +281,12 @@ struct ShoppingListView: View {
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
         .animation(.default)
+        .toast(item: $toastType, isSuccess: Binding.constant(false), content: {item in
+            switch item {
+            case .shLActionFail:
+                Label(LocalizedStringKey("str.shL.action.failed"), systemImage: MySymbols.failure)
+            }
+        })
         .onAppear(perform: {
             grocyVM.requestDataIfUnavailable(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
         })

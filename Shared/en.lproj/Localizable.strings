@@ -250,6 +250,7 @@
 "str.shL.form.name.required" = "A name is required";
 "str.shL.form.name.exists" = "Name already exists";
 "str.shL.form.save" = "Save";
+"str.shL.form.save.failed" = "Save failed";
 
 "str.shL.action.addItem" = "Add item";
 "str.shL.action.clearList" = "Clear list";
@@ -257,6 +258,7 @@
 "str.shL.action.addListItemsToStock" = "Add all list items to stock";
 "str.shL.action.addBelowMinStock" = "Add products that are below defined min. stock amount";
 "str.shL.action.addOverdue" = "Add overdue/expired products";
+"str.shL.action.failed" = "Action failed";
 
 "str.shL.filter.status" = "Status";
 "str.shL.filter.reset" = "Reset filter";
@@ -270,6 +272,7 @@
 
 "str.shL.entryForm.new.title" = "Create shopping list item";
 "str.shL.entryForm.edit.title" = "Edit shopping list item";
+"str.shL.entryForm.save.failed" = "Saving failed.";
 "str.shL.entryForm.shoppingList" = "Shopping list";
 "str.shL.entryForm.product" = "Product";
 "str.shL.entryForm.amount" = "Amount";

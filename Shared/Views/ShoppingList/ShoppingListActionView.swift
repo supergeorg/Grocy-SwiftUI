@@ -47,11 +47,11 @@ struct ShoppingListActionView: View {
             switch result {
             case let .success(message):
                 print(message)
-                toastType = .shLActionFail
+//                toastType = .shLActionFail
                 grocyVM.getShoppingList()
             case let .failure(error):
                 print("\(error)")
-                toastType = .shLActionSuccess
+                toastType = .shLActionFail
             }
         })
     }
