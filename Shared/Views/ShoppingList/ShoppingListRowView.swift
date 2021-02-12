@@ -56,9 +56,9 @@ struct ShoppingListRowView: View {
 
 struct ShoppingListRowView_Previews: PreviewProvider {
     static var previews: some View {
-        Group{
-            ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil), toastType: Binding.constant(nil))
+        List{
             ShoppingListRowView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "2", rowCreatedTimestamp: "ts", shoppingListID: "1", done: "0", quID: "1", userfields: nil), isBelowStock: false, toastType: Binding.constant(nil))
+            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "2", rowCreatedTimestamp: "ts", shoppingListID: "1", done: "1", quID: "1", userfields: nil), isBelowStock: false, toastType: Binding.constant(nil))
         }
     }
 }

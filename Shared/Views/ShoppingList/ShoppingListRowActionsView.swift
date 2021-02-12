@@ -52,7 +52,6 @@ struct ShoppingListRowActionsView: View {
             case let .success(message):
                 print(message)
                 grocyVM.getShoppingList()
-//                toastType = .shLActionSuccess
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail
@@ -62,7 +61,7 @@ struct ShoppingListRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            RowInteractionButton(image: shoppingListItem.done == "0" ? "checkmark" : "checkmark.circle", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.shL.entry.done"))
+            RowInteractionButton(image: "checkmark", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.shL.entry.done"))
                 .onTapGesture {
                     changeDoneStatus()
                 }

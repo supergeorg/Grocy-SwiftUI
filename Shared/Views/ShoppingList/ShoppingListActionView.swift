@@ -14,10 +14,11 @@ struct ShoppingListActionItem: View {
     var hasBorder: Bool?
     
     let cornerRadiusValue: CGFloat = 5.0
-    let paddingAmount: CGFloat = 10.0
+    let paddingAmount: CGFloat = 9.0
     
     var body: some View {
         Text(LocalizedStringKey(title))
+            .fontWeight(.regular)
             .padding(paddingAmount)
             .foregroundColor(foregroundColor)
             .background(backgroundColor)
@@ -47,7 +48,6 @@ struct ShoppingListActionView: View {
             switch result {
             case let .success(message):
                 print(message)
-//                toastType = .shLActionFail
                 grocyVM.getShoppingList()
             case let .failure(error):
                 print("\(error)")
