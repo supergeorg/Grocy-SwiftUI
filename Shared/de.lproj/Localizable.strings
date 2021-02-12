@@ -222,6 +222,9 @@
 "str.stock.journal" = "Bestandsjournal";
 "str.stock.journal.summary" = "Bestandsjournal-Zusammenfassung";
 "str.stock.journal.empty" = "Keine Transaktionen aufgezeichnet.";
+"str.stock.journal.undo" = "Transaktion rückgängig machen";
+"str.stock.journal.undo.failed" = "Rückgängig machen fehlgeschlagen";
+"str.stock.journal.undo.date %@" = "Rückgängig gemacht am %@";
 "str.stock.journal.product" = "Produkt";
 "str.stock.journal.product.info %@" = "Produkt: %@";
 "str.stock.journal.amount.info %@" = "Menge: %@";

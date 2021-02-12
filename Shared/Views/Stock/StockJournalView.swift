@@ -60,28 +60,55 @@ struct StockJournalRowView: View {
     
     var journalEntry: StockJournalEntry
     
+    @Binding var showToastUndoFailed: Bool
+    
     var quantityUnit: MDQuantityUnit {
         let product = grocyVM.mdProducts.first(where: {$0.id == journalEntry.productID})
         return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock}) ?? MDQuantityUnit(id: "0", name: "QU Error", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "QU Error", pluralForms: nil, userfields: nil)
+    }
+    
+    private func undoTransaction() {
+        grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
+            switch result {
+            case let .success(message):
+                print(message)
+                grocyVM.getStockJournal()
+            case let .failure(error):
+                print("\(error)")
+                showToastUndoFailed = true
+            }
+        })
     }
     
     var body: some View {
         HStack(alignment: .center) {
             Image(systemName: "arrow.counterclockwise")
                 .padding()
+                .help(LocalizedStringKey("str.stock.journal.undo.failed"))
                 .foregroundColor(Color.white)
                 .background(journalEntry.undone == "1" ? Color.grocyGrayLight : Color.grocyGray)
                 .cornerRadius(5)
                 .onTapGesture {
                     if journalEntry.undone == "0" {
-                        grocyVM.undoBookingWithID(id: journalEntry.id)
-                        grocyVM.getStockJournal()
+                        undoTransaction()
                     }
                 }
             VStack(alignment: .leading){
                 Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
                     .font(.title)
                     .strikethrough(journalEntry.undone == "1", color: .primary)
+                if journalEntry.undone == "1" {
+                    if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
+                        HStack(alignment: .bottom){
+                            Text(LocalizedStringKey("str.stock.journal.undo.date \(formatDateAsString(date))"))
+                                .font(.caption)
+                            Text(getTimeDistanceAsText(date: date))
+                                .font(.caption)
+                                .italic()
+                        }
+                        .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
+                    }
+                }
                 Group {
                     Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")"))
                     Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
@@ -110,6 +137,8 @@ struct StockJournalView: View {
     @State private var filteredLocationID: String?
     @State private var filteredTransactionType: TransactionType?
     @State private var filteredUserID: String?
+    
+    @State private var showToastUndoFailed: Bool = false
     
     var selectedProductID: String?
     
@@ -168,12 +197,15 @@ struct StockJournalView: View {
                 Text(LocalizedStringKey("str.noSearchResult")).padding()
             }
             ForEach(filteredJournal, id: \.id) { journalEntry in
-                StockJournalRowView(journalEntry: journalEntry)
+                StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
             }
         }
         .onAppear(perform: {
             grocyVM.requestDataIfUnavailable(objects: [.stock_log], additionalObjects: [.users])
             filteredProductID = selectedProductID
+        })
+        .toast(isPresented: $showToastUndoFailed, isSuccess: false, content: {
+            Label(LocalizedStringKey("str.stock.journal.undo.failed"), systemImage: MySymbols.failure)
         })
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
     }

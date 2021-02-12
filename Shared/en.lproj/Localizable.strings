@@ -222,6 +222,9 @@
 "str.stock.journal" = "Stock journal";
 "str.stock.journal.summary" = "Stock journal summary";
 "str.stock.journal.empty" = "No transactions found.";
+"str.stock.journal.undo" = "Undo transaction";
+"str.stock.journal.undo.failed" = "Undo transaction failed";
+"str.stock.journal.undo.date %@" = "Undone on %@";
 "str.stock.journal.product" = "Product";
 "str.stock.journal.product.info %@" = "Product: %@";
 "str.stock.journal.amount.info %@" = "Amount: %@";

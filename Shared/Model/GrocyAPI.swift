@@ -79,7 +79,7 @@ protocol GrocyAPI {
     //    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: String, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
     func postStock<T: Codable>(id: String, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: String) -> AnyPublisher<StockJournalEntry, APIError>
-    func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError>
+    func undoBookingWithID(id: String) -> AnyPublisher<Int, APIError>
     func getPictureURL(groupName: String, fileName: String) -> String?
     // MARK: - Shopping List
     func shoppingListAddProduct(content: Data) -> AnyPublisher<Int, APIError>
@@ -353,8 +353,8 @@ extension GrocyApi {
         return call(.stockBookingWithId, method: .GET)
     }
     
-    func undoBookingWithID<T: Codable>(id: String) -> AnyPublisher<T, APIError> {
-        return call(.stockBookingWithIdUndo, method: .POST, id: id)
+    func undoBookingWithID(id: String) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: id)
     }
     
     func getPictureURL(groupName: String, fileName: String) -> String? {

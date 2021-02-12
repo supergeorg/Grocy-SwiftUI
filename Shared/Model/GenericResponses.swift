@@ -16,13 +16,18 @@ struct ErrorMessage: Codable {
     }
 }
 
-// MARK: - SuccessfulMessage
-struct SuccessfulMessage: Codable {
+// MARK: - SuccessfulCreationMessage
+struct SuccessfulCreationMessage: Codable {
     let createdObjectID: String
-
+    
     enum CodingKeys: String, CodingKey {
         case createdObjectID = "created_object_id"
     }
+}
+
+// MARK: - SuccessfulActionMessage
+struct SuccessfulActionMessage: Codable {
+    let responseCode: Int
 }
 
 // MARK: - DeleteMessage

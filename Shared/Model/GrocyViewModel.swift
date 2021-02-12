@@ -420,18 +420,20 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func undoBookingWithID(id: String) {
+    func undoBookingWithID(id: String, completion: @escaping ((Result<SuccessfulActionMessage, Error>) -> ())) {
         grocyApi.undoBookingWithID(id: id)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     print("Handle error: undoBooking \(error)")
-                    self.lastErrors.append(error)
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
-            }, receiveValue: { (lastError) in
-                DispatchQueue.main.async { self.lastError = lastError }
+            }, receiveValue: { (responseCode: Int) in
+                DispatchQueue.main.async {
+                    completion(.success(SuccessfulActionMessage(responseCode: responseCode)))
+                }
             })
             .store(in: &cancellables)
     }
@@ -473,7 +475,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func addShoppingListProduct(content: ShoppingListAddProduct, completion: @escaping ((Result<SuccessfulMessage, Error>) -> ())) {
+    func addShoppingListProduct(content: ShoppingListAddProduct, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.shoppingListAddProduct(content: jsonContent)
             .sink(receiveCompletion: { result in
@@ -485,12 +487,12 @@ class GrocyViewModel: ObservableObject {
                     break
                 }
             }, receiveValue: { (responseCode: Int) in
-                completion(.success(SuccessfulMessage(createdObjectID: "\(content.productID)")))
+                completion(.success(SuccessfulCreationMessage(createdObjectID: "\(content.productID)")))
             })
             .store(in: &cancellables)
     }
     
-    func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType, completion: @escaping ((Result<SuccessfulMessage, Error>) -> ())) {
+    func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType, completion: @escaping ((Result<SuccessfulActionMessage, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
             .sink(receiveCompletion: { result in
@@ -503,7 +505,7 @@ class GrocyViewModel: ObservableObject {
                 }
             }, receiveValue: { (responseCode: Int) in
                 DispatchQueue.main.async {
-                    completion(.success(SuccessfulMessage(createdObjectID: "\(responseCode)")))
+                    completion(.success(SuccessfulActionMessage(responseCode: responseCode)))
                 }
             })
             .store(in: &cancellables)
@@ -685,7 +687,7 @@ class GrocyViewModel: ObservableObject {
     
     // Generic POST and DELETE
     
-    func postMDObject<T: Codable>(object: ObjectEntities, content: T, completion: @escaping ((Result<SuccessfulMessage, Error>) -> ())) {
+    func postMDObject<T: Codable>(object: ObjectEntities, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! JSONEncoder().encode(content)
         grocyApi.postObject(object: object, content: jsonContent)
             .sink(receiveCompletion: { result in
@@ -696,7 +698,7 @@ class GrocyViewModel: ObservableObject {
                 case .finished:
                     break
                 }
-            }, receiveValue: { (successfulMessage: SuccessfulMessage) in
+            }, receiveValue: { (successfulMessage: SuccessfulCreationMessage) in
                 DispatchQueue.main.async {
                     completion(.success(successfulMessage))
                 }
@@ -722,7 +724,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: T, completion: @escaping ((Result<SuccessfulMessage, Error>) -> ())) {
+    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! JSONEncoder().encode(content)
         print("id:\(id) \(String(data: jsonContent, encoding: .utf8)!)")
         grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
@@ -736,7 +738,7 @@ class GrocyViewModel: ObservableObject {
                 }
             }, receiveValue: { (response: Int) in
                 DispatchQueue.main.async {
-                    completion(.success(SuccessfulMessage(createdObjectID: id)))
+                    completion(.success(SuccessfulCreationMessage(createdObjectID: id)))
                 }
             })
             .store(in: &cancellables)
