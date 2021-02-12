@@ -109,13 +109,14 @@ struct ShoppingListView: View {
             }
             .count
     }
-    
-    private func deleteItem(at offsets: IndexSet) {
+
+    private func deleteItem(at offsets: IndexSet, shL: ShoppingList) {
         for offset in offsets {
-            shlItemToDelete = selectedShoppingList[offset]
+            shlItemToDelete = shL[offset]
             showEntryDeleteAlert.toggle()
         }
     }
+    
     private func deleteSHLItem(toDelID: String) {
         grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
             switch result {
@@ -124,6 +125,7 @@ struct ShoppingListView: View {
                 grocyVM.getShoppingList()
             case let .failure(error):
                 print("\(error)")
+                toastType = .shLActionFail
             }
         })
     }
@@ -136,6 +138,7 @@ struct ShoppingListView: View {
                 grocyVM.getShoppingListDescriptions()
             case let .failure(error):
                 print("\(error)")
+                toastType = .shLActionFail
             }
         })
     }
@@ -267,7 +270,9 @@ struct ShoppingListView: View {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) {shItem in
                         ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
-                    .onDelete(perform: deleteItem)
+                    .onDelete(perform: { indexSet in
+                                deleteItem(at: indexSet, shL: groupedShoppingList[productGroup.id] ?? [])
+                    })
                 }
             }
             if !(groupedShoppingList["?"]?.isEmpty ?? true) {
@@ -275,7 +280,9 @@ struct ShoppingListView: View {
                     ForEach(groupedShoppingList["?"] ?? [], id:\.id) {shItem in
                         ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
-                    .onDelete(perform: deleteItem)
+                    .onDelete(perform: { indexSet in
+                                deleteItem(at: indexSet, shL: groupedShoppingList["?"] ?? [])
+                    })
                 }
             }
         }
