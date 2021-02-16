@@ -16,6 +16,8 @@ struct UserManagementView: View {
     
     @State private var showAddUser: Bool = false
     
+    @State private var toastType: MDToastType?
+    
     var filteredUsers: GrocyUsers {
         grocyVM.users
             .filter {
@@ -52,7 +54,7 @@ struct UserManagementView: View {
                         }
                     })
                     .popover(isPresented: $showAddUser, content: {
-                        UserFormView(isNewUser: true)
+                        UserFormView(isNewUser: true, toastType: $toastType)
                             .padding()
                     })
                 })
@@ -80,7 +82,7 @@ struct UserManagementView: View {
                     })
                     .sheet(isPresented: $showAddUser, content: {
                         NavigationView{
-                            UserFormView(isNewUser: true)
+                            UserFormView(isNewUser: true, toastType: $toastType)
                         }
                     })
                 })
@@ -94,11 +96,23 @@ struct UserManagementView: View {
                 Text(LocalizedStringKey("str.admin.user.empty")).padding()
             }
             ForEach(filteredUsers, id:\.id) {user in
-                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
+                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username), toastType: $toastType)
             }
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
         .onAppear(perform: updateData)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+            switch item {
+            case .successAdd:
+                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
+            case .successEdit:
+                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
+            case .failDelete:
+                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
+            default:
+                EmptyView()
+            }
+        })
         .animation(.default)
     }
 }

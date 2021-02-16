@@ -22,8 +22,7 @@ struct ProductField: View {
         case .success(let code):
             searchTerm = code
         case .failure(let error):
-            print("Scanning failed")
-            print(error)
+            grocyVM.postLog(message: "Scanning for product failed. \(error)", type: .error)
         }
     }
     #endif

@@ -82,7 +82,7 @@ struct PurchaseProductView: View {
                 grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
                     switch result {
                     case let .success(prod):
-                        print(prod)
+                        grocyVM.postLog(message: "Purchase successful. \(prod)", type: .info)
                         toastType = .successPurchase
                         resetForm()
                     case let .failure(error):

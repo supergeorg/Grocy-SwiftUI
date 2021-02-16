@@ -64,9 +64,9 @@ protocol GrocyAPI {
     func getSystemConfig() -> AnyPublisher<SystemConfig, APIError>
     // MARK: - User management
     func getUsers() -> AnyPublisher<GrocyUsers, APIError>
-    func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError>
-    func putUserWithID(id: String, user: Data) -> AnyPublisher<ErrorMessage, APIError>
-    func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError>
+    func postUser(user: Data) -> AnyPublisher<Int, APIError>
+    func putUserWithID(id: String, user: Data) -> AnyPublisher<Int, APIError>
+    func deleteUserWithID(id: String) -> AnyPublisher<Int, APIError>
     // MARK: - Current user
     func getUser() -> AnyPublisher<GrocyUsers, APIError>
     // MARK: - Stock
@@ -290,16 +290,16 @@ extension GrocyApi {
         return call(.users, method: .GET)
     }
     
-    func postUser(user: Data) -> AnyPublisher<ErrorMessage, APIError> {
-        return call(.users, method: .POST, content: user)
+    func postUser(user: Data) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.users, method: .POST, content: user)
     }
     
-    func putUserWithID(id: String, user: Data) -> AnyPublisher<ErrorMessage, APIError> {
-        return call(.usersWithID, method: .PUT, id: id, content: user)
+    func putUserWithID(id: String, user: Data) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.usersWithID, method: .PUT, id: id, content: user)
     }
     
-    func deleteUserWithID(id: String) -> AnyPublisher<ErrorMessage, APIError> {
-        return call(.usersWithID, method: .DELETE, id: id)
+    func deleteUserWithID(id: String) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.usersWithID, method: .DELETE, id: id)
     }
     
     // MARK: - Current user

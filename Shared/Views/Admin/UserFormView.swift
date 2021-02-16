@@ -21,6 +21,8 @@ struct UserFormView: View {
     var isNewUser: Bool
     var user: GrocyUser?
     
+    @Binding var toastType: MDToastType?
+    
     @State var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
         let foundUsername = grocyVM.users.first(where: {$0.username == username})
@@ -36,17 +38,52 @@ struct UserFormView: View {
         }
     }
     
+    private func updateData() {
+        grocyVM.getUsers()
+    }
+    
+    private func finishForm() {
+        #if os(iOS)
+        presentationMode.wrappedValue.dismiss()
+        #elseif os(macOS)
+        if isNewUser {
+            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        }
+        #endif
+    }
+    
     private func saveUser() {
         if isNewUser {
             let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
-            grocyVM.postUser(user: userPost)
+            grocyVM.postUser(user: userPost, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    toastType = .successAdd
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failAdd
+                }
+            })
         } else {
             if let intID = Int(user?.id ?? "") {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
-                grocyVM.putUser(id: user!.id, user: userPost)
+                grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successEdit
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failAdd
+                    }
+                })
             }
         }
-        grocyVM.getUsers()
     }
     
     var body: some View {
@@ -115,11 +152,21 @@ struct UserFormView: View {
         .onChange(of: passwordConfirm) {  newValue in
             checkPWParity()
         }
+        .toast(item: $toastType, isSuccess: Binding.constant(false), content: { item in
+            switch item {
+            case .failAdd:
+                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
+            case .failEdit:
+                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
+            default:
+                EmptyView()
+            }
+        })
     }
 }
 
 struct UserFormView_Previews: PreviewProvider {
     static var previews: some View {
-        UserFormView(isNewUser: true)
+        UserFormView(isNewUser: true, toastType: Binding.constant(nil))
     }
 }

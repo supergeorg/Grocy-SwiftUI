@@ -25,6 +25,11 @@ struct SuccessfulCreationMessage: Codable {
     }
 }
 
+// MARK: - SuccessfulPutMessage
+struct SuccessfulPutMessage: Codable {
+    let changedObjectID: String
+}
+
 // MARK: - SuccessfulActionMessage
 struct SuccessfulActionMessage: Codable {
     let responseCode: Int
