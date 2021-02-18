@@ -21,6 +21,8 @@
 "str.add" = "Hinzufügen";
 "str.misc" = "Diverses";
 "str.clear" = "Leeren";
+"str.back" = "Zurück";
+"str.retry" = "Erneut versuchen";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";
@@ -504,9 +506,6 @@
 
 // MARK: - Settings
 "str.settings" = "Einstellungen";
-"str.settings.login" = "Anmelden";
-"str.settings.login.demo" = "Demo-Server benutzen";
-"str.settings.login.createAPIKey" = "API-Key erstellen";
 "str.settings.logout" = "Von Server abmelden";
 "str.settings.loggedInAs %@" = "Als Benutzer %@ angemeldet";
 "str.settings.info" = "Informationen zum Grocy-Server";
@@ -520,13 +519,8 @@
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Entwickler";
 "str.settings.about.showOnboarding" = "App-Einführung wiederholen";
-"str.settings.loginQRcode.scan" = "QR-Code scannen";
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
-"str.settings.grocy.server" = "Grocy-Server";
-"str.settings.grocy.serverURL" = "Grocy Server-Adresse";
-"str.settings.grocy.apiKey" = "gültiger API-Key";
-"str.settings.grocy.demoServer" = "Demo-Server";
 "str.settings.resetCache" = "Cache löschen";
 
 // MARK: - Admin
@@ -569,3 +563,22 @@
 "str.onboard.grocy.subtitle" = "grocy ist eine selbst gehostete Webanwendung zur Lebensmittel- und Haushaltsverwaltung.";
 "str.onboard.app.title" = "Grocy für iOS/macOS";
 "str.onboard.app.subtitle" = "Eine App in nativen Design, welche eine komfortable Nutzung von Grocy zuhause und unterwegs ermöglicht.";
+
+"str.login.info" = "Willkommen bei Grocy-SwiftUI!\n\n Um Grocy sinnvoll nutzen zu können, muss du es auf einen eigenen Server bereitstellen.\n Wenn du nur diese App ausprobieren willst, kannst du einen vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden können.";
+"str.login.select" = "Wähle einen Server-Typ aus:";
+"str.login.demoServer" = "Demo-Server";
+"str.login.demoServer %@" = "Demo-Server: %@";
+"str.login.demoServer.info" = "Wähle einen Demo-Server aus:";
+"str.login.demoServer.use" = "Demo-Server verwenden";
+"str.login.ownServer" = "Eigener Server";
+"str.login.ownServer.qr" = "QR-Scan";
+"str.login.ownServer.qr.info" = "Öffne auf einem anderen Gerät im Webinterface des Grocy-Servers die Seite 'API-Schlüssel'. Fall noch keiner vorhanden ist, füge einen hinzu. Öffne anschließend den Code durch einen Klick auf das kleine Symbol und scanne den Code mit der App.";
+"str.login.ownServer.manual" = "Daten manuell eingeben";
+"str.login.ownServer.manual.serverURL" = "Server-URL";
+"str.login.ownServer.manual.APIKey" = "Gültiger API-Schlüssel";
+"str.login.ownServer.manual.APIKey.create" = "API-Schlüssel erstellen";
+"str.login.ownServer.manual.login" = "Anmelden";
+"str.login.connect.fail" = "Verbidung mit Server fehlgeschlagen.";
+"str.login.connect.fail.info %@ %@" = "Server: %@\n\n Fehler: %@";
+"str.login.connect.unsupportedVersion %@" = "Die Serverversion %@ wird aktuell nicht von der App unterstützt. Du kannst die App trotzdem verwenden, es können aber Probleme auftreten.";
+"str.login.connect.unsupportedVersion.confirm" = "Trotzdem fortfahren";

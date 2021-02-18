@@ -110,7 +110,7 @@ struct QuickScanModeView: View {
         ZStack(alignment: .topLeading){
             CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             HStack{
-                Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: "chevron.down.circle"), content: {
+                Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
                     Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
                         .labelStyle(IconAboveTextLabelStyle())
                         .tag(QuickScanMode.consume)

@@ -13,6 +13,7 @@ struct SettingsView: View {
     @State var showGrocyVersion: Bool = false
     @State var showUserInfo: Bool = false
     @State var showAbout: Bool = false
+    @State var showLog: Bool = false
     
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -26,33 +27,6 @@ struct SettingsView: View {
         grocyVM.getSystemInfo()
         grocyVM.getUser()
     }
-    
-    #if os(iOS)
-    @State private var isShowingScanner = false
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
-        self.isShowingScanner = false
-        switch result {
-        case .success(let code):
-            let grocyServerData = code.components(separatedBy: "|")
-            guard grocyServerData.count == 2 else { return }
-            
-            var serverURL = grocyServerData[0]
-            serverURL = serverURL.replacingOccurrences(of: "/api", with: "")
-            let apiKey = grocyServerData[1]
-            
-            if apiKey.count == 50 {
-                grocyServerURL = serverURL
-                grocyAPIKey = apiKey
-                
-                grocyVM.setLoginModus()
-                grocyVM.checkLoginInfo(baseURL: grocyServerURL, apiKey: grocyAPIKey)
-            }
-        case .failure(let error):
-            print("Scanning failed")
-            print(error)
-        }
-    }
-    #endif
     
     var body: some View {
         Group {
@@ -82,25 +56,27 @@ struct SettingsView: View {
     #if os(iOS)
     var contentiOS: some View {
         Form() {
-            Section(header: Text("Grocy")){
-                NavigationLink(
-                    destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")),
-                    label: {
-                        Label(LocalizedStringKey("str.settings.info"), systemImage: "info.circle")
-                            .foregroundColor(.primary)
-                    })
-                if let currentUser = grocyVM.currentUser.first {
-                    NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
-                        Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
-                            .foregroundColor(.primary)
-                    })
+            if isLoggedIn {
+                Section(header: Text("Grocy")){
+                    NavigationLink(
+                        destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite")),
+                        label: {
+                            Label(LocalizedStringKey("str.settings.info"), systemImage: "info.circle")
+                                .foregroundColor(.primary)
+                        })
+                    if let currentUser = grocyVM.currentUser.first {
+                        NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
+                            Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
+                                .foregroundColor(.primary)
+                        })
+                    }
+                    Button(action: {
+                        isLoggedIn = false
+                        grocyVM.deleteAllCachedData()
+                        updateData()
+                    }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
+                    Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
                 }
-                Button(action: {
-                    isLoggedIn = false
-                    grocyVM.deleteAllCachedData()
-                    updateData()
-                }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
-                Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
             }
             Section(header: Text("App")){
                 MyToggle(isOn: $simplifiedStockView, description: "str.settings.simplifiedStockView", descriptionInfo: nil, icon: "tablecells")
@@ -114,6 +90,12 @@ struct SettingsView: View {
                         Label(LocalizedStringKey("str.settings.about"), systemImage: "info.circle")
                             .foregroundColor(.primary)
                     })
+                //                NavigationLink(
+                //                    destination: LogView(),
+                //                    label: {
+                //                        Label(LocalizedStringKey("LOG"), systemImage: "tag")
+                //                            .foregroundColor(.primary)
+                //                    })
             }
         }
         .onAppear(perform: {
@@ -126,7 +108,7 @@ struct SettingsView: View {
     var contentMac: some View {
         VStack {
             VStack(alignment: .leading) {
-                Text(LocalizedStringKey("str.settings.grocy.server"))
+                Text(LocalizedStringKey("str.settings.info"))
                     .font(Font.title).bold()
                     .foregroundColor(.secondary)
                 Button(action: {
@@ -171,6 +153,16 @@ struct SettingsView: View {
             .popover(isPresented: $showAbout, content: {
                 AboutView().padding()
             })
+            
+            //            Button(action: {
+            //                showLog.toggle()
+            //            }, label: {
+            //                Label(LocalizedStringKey("SHOW LOG"), systemImage: "tag")
+            //            })
+            //            .popover(isPresented: $showLog, content: {
+            //                LogView()
+            //                    .frame(width: 500, height: 500)
+            //            })
         }
         .padding(.bottom, 90)
         .onAppear(perform: {

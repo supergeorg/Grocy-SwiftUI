@@ -38,6 +38,7 @@ struct MySymbols {
     static let filter = "line.horizontal.3.decrease.circle"
     static let reload = "arrow.triangle.2.circlepath"
     static let search = "magnifyingglass"
+    static let menuPick = "chevron.down.circle"
     
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"

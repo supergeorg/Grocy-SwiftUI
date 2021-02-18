@@ -13,12 +13,11 @@ import OSLog
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPI
     
-    let demoServerURL: String = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
-    
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("isDemoModus") var isDemoModus: Bool = false
+    @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
     
     static let shared = GrocyViewModel()
     
@@ -87,29 +86,30 @@ class GrocyViewModel: ObservableObject {
         grocyLog.info("Switched to login modus")
     }
     
-    func checkLoginInfo(baseURL: String, apiKey: String) {
-        grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey)
+    func checkServer(baseURL: String, apiKey: String?, completion: @escaping ((Result<String, Error>) -> ())) {
+        grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
         grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Error at checkLoginInfo: \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
-            }) { (systemInfo) in
-                DispatchQueue.main.async {
-                    if !systemInfo.grocyVersion.version.isEmpty {
-                        self.grocyLog.info("Login info check successful. Logging in.")
-                        self.systemInfo = systemInfo
-                        self.isLoggedIn = true
-                        self.setLoginModus()
-                    } else {
-                        self.grocyLog.error("Selected server doesn't respond.")
-                        self.isLoggedIn = false
+            }, receiveValue: { (systemInfo: SystemInfo) in
+                    DispatchQueue.main.async {
+                        if !systemInfo.grocyVersion.version.isEmpty {
+                            self.grocyLog.info("Login info check successful. Logging in.")
+                            self.systemInfo = systemInfo
+                            completion(.success(systemInfo.grocyVersion.version))
+                        } else {
+                            self.grocyLog.error("Selected server doesn't respond.")
+                            self.isLoggedIn = false
+                            completion(.failure(APIError.invalidResponse))
+                        }
                     }
-                }
-            }
+            })
             .store(in: &cancellables)
     }
     

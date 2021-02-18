@@ -21,6 +21,8 @@
 "str.add" = "Add";
 "str.misc" = "Miscellaneous";
 "str.clear" = "Clear";
+"str.back" = "Back";
+"str.retry" = "Try again";
 
 // MARK: - Transactions
 "tr.purchase" = "Purchase";
@@ -504,9 +506,6 @@
 
 // MARK: - Settings
 "str.settings" = "Settings";
-"str.settings.login" = "Login";
-"str.settings.login.demo" = "Use demo server";
-"str.settings.login.createAPIKey" = "Create API key";
 "str.settings.logout" = "Logout from server";
 "str.settings.loggedInAs %@" = "Logged in as user %@";
 "str.settings.info" = "Information about Grocy-Server";
@@ -523,10 +522,6 @@
 "str.settings.loginQRcode.scan" = "Scan QR-Code for fast login";
 "str.settings.simplifiedStockView" = "Simplified stock view";
 "str.settings.appLanguage" = "App language";
-"str.settings.grocy.server" = "Grocy-Server";
-"str.settings.grocy.serverURL" = "Grocy server adress";
-"str.settings.grocy.apiKey" = "Valid API key";
-"str.settings.grocy.demoServer" = "Demo server";
 "str.settings.resetCache" = "Reset cache";
 
 // MARK: - Admin
@@ -569,3 +564,22 @@
 "str.onboard.grocy.subtitle" = "grocy is a web-based self-hosted groceries & household management solution for your home.";
 "str.onboard.app.title" = "Grocy for iOS/macOS";
 "str.onboard.app.subtitle" = "An app in native design, allowing a comfortable use of Grocy at home and on the go.";
+
+"str.login.info" = "Welcome to Grocy-SwiftUI!\n\n To properly use Grocy, you have to host it on a server yourself.\n If you just want to try this app, you can use the demo server provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.";
+"str.login.select" = "Select a server type:";
+"str.login.demoServer" = "Demo server";
+"str.login.demoServer %@" = "Demo server: %@";
+"str.login.demoServer.info" = "Select a demo server:";
+"str.login.demoServer.use" = "Use demo server";
+"str.login.ownServer" = "Own server";
+"str.login.ownServer.qr" = "QR-Scan";
+"str.login.ownServer.qr.info" = "Open the page API keys on the webinterface of Grocy. If no key is available, create one. Click the QR symbol afterwards to show the code and scan it with the app.";
+"str.login.ownServer.manual" = "Manual entry";
+"str.login.ownServer.manual.serverURL" = "Server URL";
+"str.login.ownServer.manual.APIKey" = "Valid API key";
+"str.login.ownServer.manual.APIKey.create" = "Create API key";
+"str.login.ownServer.manual.login" = "Login";
+"str.login.connect.fail" = "Connection to server failed.";
+"str.login.connect.fail.info %@ %@" = "Server: %@\n\n Error: %@";
+"str.login.connect.unsupportedVersion %@" = "The server version %@ is currently unsupported by the app. You can use it anyways, but there can be problems.";
+"str.login.connect.unsupportedVersion.confirm" = "Continue anyway";

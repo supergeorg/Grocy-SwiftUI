@@ -134,6 +134,12 @@
 		789ADDB325C45B3000D7EB35 /* ToastTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789ADDB125C45B3000D7EB35 /* ToastTypes.swift */; };
 		789C2DC6258A118E00D3A3B9 /* MDUserFieldFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C2DC5258A118E00D3A3B9 /* MDUserFieldFormView.swift */; };
 		789C2DC7258A118E00D3A3B9 /* MDUserFieldFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C2DC5258A118E00D3A3B9 /* MDUserFieldFormView.swift */; };
+		789D166625DE6C9B006FC33F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D166525DE6C9B006FC33F /* LoginView.swift */; };
+		789D166725DE6C9B006FC33F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D166525DE6C9B006FC33F /* LoginView.swift */; };
+		789D167125DE73C5006FC33F /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167025DE73C5006FC33F /* ButtonStyles.swift */; };
+		789D167225DE73C5006FC33F /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167025DE73C5006FC33F /* ButtonStyles.swift */; };
+		789D167825DE7996006FC33F /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
+		789D167925DE7996006FC33F /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
 		78A33CBA257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
@@ -229,6 +235,8 @@
 		78D0F4D6257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */; };
 		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
+		78D75D6325DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
+		78D75D6425DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
 		78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7975A25B6FB4800550C58 /* OnboardingView.swift */; };
 		78D7975C25B6FB4800550C58 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7975A25B6FB4800550C58 /* OnboardingView.swift */; };
 		78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
@@ -261,8 +269,6 @@
 		78F1FADB255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
 		78F1FADC255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
 		78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */; };
-		78F276A625B847E700DB30F9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F276A525B847E700DB30F9 /* LoginView.swift */; };
-		78F276A725B847E700DB30F9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F276A525B847E700DB30F9 /* LoginView.swift */; };
 		78F47E8525BF10CE00579B69 /* MDBatteriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F47E8425BF10CE00579B69 /* MDBatteriesModel.swift */; };
 		78F47E8625BF10CE00579B69 /* MDBatteriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F47E8425BF10CE00579B69 /* MDBatteriesModel.swift */; };
 		78F47E8725BF10CE00579B69 /* MDBatteriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F47E8425BF10CE00579B69 /* MDBatteriesModel.swift */; };
@@ -432,6 +438,9 @@
 		789ADDAA25C427DD00D7EB35 /* View+ToastMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ToastMessage.swift"; sourceTree = "<group>"; };
 		789ADDB125C45B3000D7EB35 /* ToastTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastTypes.swift; sourceTree = "<group>"; };
 		789C2DC5258A118E00D3A3B9 /* MDUserFieldFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldFormView.swift; sourceTree = "<group>"; };
+		789D166525DE6C9B006FC33F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		789D167025DE73C5006FC33F /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		789D167725DE7996006FC33F /* GrocySupportedServers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocySupportedServers.swift; sourceTree = "<group>"; };
 		78A33CB9257528B900C450D4 /* ProductOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductOverviewView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
 		78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionModel.swift; sourceTree = "<group>"; };
@@ -492,6 +501,7 @@
 		78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionView.swift; sourceTree = "<group>"; };
 		78D0F4D4257122DA00E1B732 /* ShoppingListFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterView.swift; sourceTree = "<group>"; };
 		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
+		78D75D6225DE9B71009F2C15 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		78D7975A25B6FB4800550C58 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
 		78D98F752577B93000199688 /* ShoppingListAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListAddProduct.swift; sourceTree = "<group>"; };
@@ -508,7 +518,6 @@
 		78F1FAC6255EEDD1007D2E8B /* StockTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTable.swift; sourceTree = "<group>"; };
 		78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MDLocationsView.swift; sourceTree = "<group>"; };
 		78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterDataView.swift; sourceTree = "<group>"; };
-		78F276A525B847E700DB30F9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		78F47E8425BF10CE00579B69 /* MDBatteriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBatteriesModel.swift; sourceTree = "<group>"; };
 		78FA6A932567D40500941460 /* StockJournalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockJournalModel.swift; sourceTree = "<group>"; };
 		78FA6A9A2567D4E000941460 /* TransactionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionType.swift; sourceTree = "<group>"; };
@@ -787,6 +796,7 @@
 			children = (
 				78CB7579255EA39900319108 /* GrocyAPI.swift */,
 				78CB756E255EA39200319108 /* GrocyViewModel.swift */,
+				789D167725DE7996006FC33F /* GrocySupportedServers.swift */,
 				7880F0F7256FB62D00FB8431 /* ShoppingList */,
 				78CB75F6255EB99400319108 /* Stock */,
 				78CB7610255EB9B800319108 /* MasterData */,
@@ -829,6 +839,7 @@
 				78A33CC025752DC100C450D4 /* AmountFormatter.swift */,
 				78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */,
 				78113B7525B59C8E0000B237 /* LabelStyles.swift */,
+				789D167025DE73C5006FC33F /* ButtonStyles.swift */,
 				78FDCE3325BAEF190089CB5E /* FA2SFSymbols.swift */,
 				785427B425D29C3000AFE726 /* MySymbols.swift */,
 				789ADDA325C419C500D7EB35 /* Constants.swift */,
@@ -911,6 +922,7 @@
 				78138F4825AEF95800B9A50A /* ProductField.swift */,
 				78467E8925C2C6D9000592EE /* ToastMessage.swift */,
 				789ADDAA25C427DD00D7EB35 /* View+ToastMessage.swift */,
+				78D75D6225DE9B71009F2C15 /* CardView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -919,7 +931,7 @@
 			isa = PBXGroup;
 			children = (
 				78D7975A25B6FB4800550C58 /* OnboardingView.swift */,
-				78F276A525B847E700DB30F9 /* LoginView.swift */,
+				789D166525DE6C9B006FC33F /* LoginView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -1197,6 +1209,7 @@
 				78F1FAC7255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7880F10B256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78E02CC625DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
+				789D167825DE7996006FC33F /* GrocySupportedServers.swift in Sources */,
 				78CB7599255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				7845120C25C84A5B006B7686 /* SheetTypes.swift in Sources */,
 				78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */,
@@ -1205,6 +1218,7 @@
 				78E02CE425DAC3BF00668403 /* OpenFoodFactsScannerView.swift in Sources */,
 				78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */,
+				789D166625DE6C9B006FC33F /* LoginView.swift in Sources */,
 				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
 				7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
@@ -1215,7 +1229,6 @@
 				789ADDB225C45B3000D7EB35 /* ToastTypes.swift in Sources */,
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
 				781A25BD2566B5AF00560026 /* MyIntStepper.swift in Sources */,
-				78F276A625B847E700DB30F9 /* LoginView.swift in Sources */,
 				7880F112256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				78138F4925AEF95800B9A50A /* ProductField.swift in Sources */,
 				78CB758F255EA53F00319108 /* GenericResponses.swift in Sources */,
@@ -1251,11 +1264,13 @@
 				7891C65C257E539A0014C59E /* ProductInventoryModel.swift in Sources */,
 				781A25D32566BB9100560026 /* MyToggle.swift in Sources */,
 				7880F0F9256FB63800FB8431 /* ShoppingListModel.swift in Sources */,
+				789D167125DE73C5006FC33F /* ButtonStyles.swift in Sources */,
 				78CECD1625879364007780B2 /* MDUserEntitiesView.swift in Sources */,
 				78CBE4ED259C919600406B7F /* SearchBarWrapped.swift in Sources */,
 				78CB7644255EBA6C00319108 /* Colors.swift in Sources */,
 				788D41252580E444009F9A5E /* RemoteImageView.swift in Sources */,
 				78CB759D255EA56D00319108 /* SettingsView.swift in Sources */,
+				78D75D6325DE9B71009F2C15 /* CardView.swift in Sources */,
 				78CB7616255EB9C600319108 /* MDLocationsModel.swift in Sources */,
 				7885B8AF2567F08F003439F5 /* GrocyUserModel.swift in Sources */,
 				78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
@@ -1276,6 +1291,7 @@
 				786F6EB325640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				78CB7601255EB9A000319108 /* StockModel.swift in Sources */,
 				78CB7645255EBA6C00319108 /* Colors.swift in Sources */,
+				789D167925DE7996006FC33F /* GrocySupportedServers.swift in Sources */,
 				78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */,
 				7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				78F47E8625BF10CE00579B69 /* MDBatteriesModel.swift in Sources */,
@@ -1325,15 +1341,16 @@
 				7891C65D257E539A0014C59E /* ProductInventoryModel.swift in Sources */,
 				78E02CC725DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
 				78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */,
-				78F276A725B847E700DB30F9 /* LoginView.swift in Sources */,
 				78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */,
 				786F6E9A2564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
 				78FDCE1F25BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
 				78CB7609255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,
+				789D166725DE6C9B006FC33F /* LoginView.swift in Sources */,
 				78CB75BC255EAE0000319108 /* VisualEffectBlur.swift in Sources */,
 				7848A0CE256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
 				789C2DC7258A118E00D3A3B9 /* MDUserFieldFormView.swift in Sources */,
+				789D167225DE73C5006FC33F /* ButtonStyles.swift in Sources */,
 				78F0DAC92599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */,
 				789ADDA525C419C500D7EB35 /* Constants.swift in Sources */,
 				78CB7603255EB9A000319108 /* VolatileStockModel.swift in Sources */,
@@ -1391,6 +1408,7 @@
 				7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */,
 				7853A4D025DBE74300AF9986 /* LogView.swift in Sources */,
 				78CB757B255EA39900319108 /* GrocyAPI.swift in Sources */,
+				78D75D6425DE9B71009F2C15 /* CardView.swift in Sources */,
 				78CB761F255EB9C600319108 /* MDShoppingLocationsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
