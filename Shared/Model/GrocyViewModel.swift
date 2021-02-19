@@ -86,6 +86,11 @@ class GrocyViewModel: ObservableObject {
         grocyLog.info("Switched to login modus")
     }
     
+    func logout() {
+        isLoggedIn = false
+        self.deleteAllCachedData()
+    }
+    
     func checkServer(baseURL: String, apiKey: String?, completion: @escaping ((Result<String, Error>) -> ())) {
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
         grocyApi.getSystemInfo()

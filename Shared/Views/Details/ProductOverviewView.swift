@@ -27,7 +27,7 @@ struct ProductOverviewView: View {
     }
     
     var content: some View {
-        VStack{
+        Form{
             Text(productDetails.name)
                 .font(.title)
             
@@ -76,19 +76,19 @@ struct ProductOverviewView: View {
             }
         }
         .toolbar(content: {
-            ToolbarItem(placement: .automatic){
-                HStack{
-                    Button(action: {
-                        print("")
-                    }, label: {Text(LocalizedStringKey("str.details.stockEntries"))})
-                    Button(action: {
-                        print("")
-                    }, label: {Text(LocalizedStringKey("str.details.stockJournal"))})
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})
-                }
-            }
+//            ToolbarItem(placement: .automatic){
+//                HStack{
+//                    Button(action: {
+//                        print("")
+//                    }, label: {Text(LocalizedStringKey("str.details.stockEntries"))})
+//                    Button(action: {
+//                        print("")
+//                    }, label: {Text(LocalizedStringKey("str.details.stockJournal"))})
+//                    Button(action: {
+//                        self.presentationMode.wrappedValue.dismiss()
+//                    }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})
+//                }
+//            }
             ToolbarItem(placement: .cancellationAction) {
                 Button(LocalizedStringKey("str.ok")) {
                     self.presentationMode.wrappedValue.dismiss()

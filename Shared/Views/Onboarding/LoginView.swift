@@ -21,40 +21,62 @@ struct LoginInfoView: View {
                 Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!, label: {
                     Image(systemName: "chevron.left.slash.chevron.right")
                 })
-                Button(action: {
-                    showAbout.toggle()
-                }, label: {
-                    Image(systemName: "info.circle")
-                })
-                .sheet(isPresented: $showAbout, content: {
-                    NavigationView {
+                
+                Image(systemName: "info.circle")
+                    .onTapGesture {
+                        showAbout.toggle()
+                    }
+                    .sheet(isPresented: $showAbout, content: {
+                        #if os(iOS)
+                        NavigationView {
+                            AboutView()
+                                .toolbar(content: {
+                                    ToolbarItem(placement: .cancellationAction, content: {
+                                                    Button(LocalizedStringKey("str.close"))
+                                                        { showAbout = false }})
+                                })
+                        }
+                        #else
                         AboutView()
+                            .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
                                                 Button(LocalizedStringKey("str.close"))
                                                     { showAbout = false }})
                             })
-                    }
-                })
+                        #endif
+                    })
+                
                 Link(destination: URL(string: "https://www.grocy.info")!, label: {
                     Image(systemName: "network")
                 })
-                Button(action: {
-                    showSettings.toggle()
-                }, label: {
-                    Image(systemName: "gear")
-                })
-                .sheet(isPresented: $showSettings, content: {
-                    NavigationView {
+                
+                Image(systemName: "gear")
+                    .onTapGesture {
+                        showSettings.toggle()
+                    }
+                    .sheet(isPresented: $showSettings, content: {
+                        #if os(iOS)
+                        NavigationView {
+                            SettingsView()
+                                .toolbar(content: {
+                                    ToolbarItem(placement: .cancellationAction, content: {
+                                                    Button(LocalizedStringKey("str.close"))
+                                                        { showSettings = false }})
+                                })
+                        }
+                        #else
                         SettingsView()
+                            .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
                                                 Button(LocalizedStringKey("str.close"))
                                                     { showSettings = false }})
                             })
-                    }
-                })
+                        #endif
+                    })
             }
+            .foregroundColor(.primary)
         }
     }
 }
@@ -65,25 +87,26 @@ struct LoginStartView: View {
     var animation: Namespace.ID
     
     var body: some View {
-            CardView{
-                VStack{
-                    Text(LocalizedStringKey("str.login.info"))
-                    Text(LocalizedStringKey("str.login.select"))
-                    HStack{
-                        Button(LocalizedStringKey("str.login.demoServer"), action: {
-                            loginViewState = .demoServer
-                        })
-                        .buttonStyle(BorderButtonStyle())
-                        .matchedGeometryEffect(id: "demoServer", in: animation)
-                        
-                        Button(LocalizedStringKey("str.login.ownServer"), action: {
-                            loginViewState = .ownServer
-                        })
-                        .buttonStyle(FilledButtonStyle())
-                        .matchedGeometryEffect(id: "ownServer", in: animation)
-                    }
+        CardView{
+            VStack{
+                Text(LocalizedStringKey("str.login.info"))
+                Spacer()
+                Text(LocalizedStringKey("str.login.select"))
+                HStack{
+                    Button(LocalizedStringKey("str.login.demoServer"), action: {
+                        loginViewState = .demoServer
+                    })
+                    .buttonStyle(BorderButtonStyle())
+                    .matchedGeometryEffect(id: "demoServer", in: animation)
+                    
+                    Button(LocalizedStringKey("str.login.ownServer"), action: {
+                        loginViewState = .ownServer
+                    })
+                    .buttonStyle(FilledButtonStyle())
+                    .matchedGeometryEffect(id: "ownServer", in: animation)
                 }
             }
+        }
         .padding()
     }
 }
@@ -100,6 +123,8 @@ struct LoginDemoServerView: View {
             CardView{
                 VStack{
                     Text(LocalizedStringKey("str.login.demoServer.info"))
+                    
+                    #if os(iOS)
                     Picker(selection: $demoServerURL, label: CardView{
                         HStack(alignment: .center){
                             Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
@@ -112,6 +137,16 @@ struct LoginDemoServerView: View {
                     })
                     .foregroundColor(.primary)
                     .pickerStyle(MenuPickerStyle())
+                    #elseif os(macOS)
+                    Picker(selection: $demoServerURL, label: Text(LocalizedStringKey("str.login.demoServer \("")")), content: {
+                        ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
+                            Text(demoServer.description).tag(demoServer.rawValue)
+                        })
+                    })
+                    #endif
+                    
+                    Spacer()
+                    
                     HStack{
                         Button(LocalizedStringKey("str.back"), action: {
                             loginViewState = .start
@@ -243,7 +278,7 @@ struct LoginOwnServerView: View {
 
 struct LoginStatusView: View {
     @Binding var loginViewState: LoginViewState
-    var isDemoMode: Bool
+    @Binding var isDemoMode: Bool?
     
     enum LoginState {
         case loading, success, fail, unsupportedVersion
@@ -261,71 +296,73 @@ struct LoginStatusView: View {
     @State private var unsupportedVersion: String?
     
     private func tryLogin() {
-        grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, completion: {result in
-            switch result {
-            case let .success(message):
-                if GrocyAPP.supportedVersions.contains(message) {
-                    loginState = .success
-                    grocyVM.setLoginModus()
-                } else {
-                    unsupportedVersion = message
-                    loginState = .unsupportedVersion
+        if let isDemoMode = isDemoMode {
+            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, completion: {result in
+                switch result {
+                case let .success(message):
+                    if GrocyAPP.supportedVersions.contains(message) {
+                        loginState = .success
+                        isDemoMode ? grocyVM.setDemoModus() : grocyVM.setLoginModus()
+                    } else {
+                        unsupportedVersion = message
+                        loginState = .unsupportedVersion
+                    }
+                case let .failure(error):
+                    errorMessage = "\(error)"
+                    loginState = .fail
                 }
-            case let .failure(error):
-                errorMessage = "\(error)"
-                loginState = .fail
-            }
-        })
+            })
+        }
     }
     
     var body: some View {
         Group{
-        switch loginState{
-        case .loading:
-            ProgressView()
-                .scaleEffect(1.5, anchor: .center)
-                .progressViewStyle(CircularProgressViewStyle(tint: .primary))
-                .onAppear(perform: {tryLogin()})
-        case .success:
-            Text("success")
-        case .fail:
-            VStack{
-                CardView{
-                    VStack(alignment: .leading){
-                        Text(LocalizedStringKey("str.login.connect.fail"))
-                        Text(LocalizedStringKey("str.login.connect.fail.info \(isDemoMode ? demoServerURL : grocyServerURL) \(errorMessage ?? "")"))
+            switch loginState{
+            case .loading:
+                ProgressView()
+                    .scaleEffect(1.5, anchor: .center)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                    .onAppear(perform: {tryLogin()})
+            case .success:
+                Text("success")
+            case .fail:
+                VStack{
+                    CardView{
+                        VStack(alignment: .leading){
+                            Text(LocalizedStringKey("str.login.connect.fail"))
+                            Text(LocalizedStringKey("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? "")"))
+                        }
+                    }
+                    CardView{
+                        HStack{
+                            Button(LocalizedStringKey("str.back"), action: {
+                                loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
+                            })
+                            .buttonStyle(BorderButtonStyle())
+                            Button(LocalizedStringKey("str.retry"), action: {
+                                tryLogin()
+                            })
+                            .buttonStyle(FilledButtonStyle())
+                        }
                     }
                 }
-                CardView{
+            case .unsupportedVersion:
+                VStack{
+                    CardView{
+                        Text(LocalizedStringKey("str.login.connect.unsupportedVersion \(unsupportedVersion ?? "?")"))
+                    }
                     HStack{
                         Button(LocalizedStringKey("str.back"), action: {
-                            loginViewState = isDemoMode ? .demoServer : .ownServer
+                            loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                         })
                         .buttonStyle(BorderButtonStyle())
-                        Button(LocalizedStringKey("str.retry"), action: {
-                            tryLogin()
+                        Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
+                            grocyVM.setLoginModus()
                         })
                         .buttonStyle(FilledButtonStyle())
                     }
                 }
             }
-        case .unsupportedVersion:
-            VStack{
-                CardView{
-                    Text(LocalizedStringKey("str.login.connect.unsupportedVersion \(unsupportedVersion ?? "?")"))
-                }
-                HStack{
-                    Button(LocalizedStringKey("str.back"), action: {
-                        loginViewState = isDemoMode ? .demoServer : .ownServer
-                    })
-                    .buttonStyle(BorderButtonStyle())
-                    Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
-                        grocyVM.setLoginModus()
-                    })
-                    .buttonStyle(FilledButtonStyle())
-                }
-            }
-        }
         }
         .matchedGeometryEffect(id: "login", in: animation)
     }
@@ -348,7 +385,7 @@ struct LoginView: View {
             case .ownServer:
                 LoginOwnServerView(loginViewState: $loginViewState, passDemoMode: $passDemoMode, animation: animation)
             case .logginIn:
-                LoginStatusView(loginViewState: $loginViewState, isDemoMode: passDemoMode ?? true, loginState: .loading, animation: animation)
+                LoginStatusView(loginViewState: $loginViewState, isDemoMode: $passDemoMode, loginState: .loading, animation: animation)
             }
             Spacer()
             LoginInfoView()

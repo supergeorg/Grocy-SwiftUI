@@ -16,6 +16,7 @@ struct FilledButtonStyle: ButtonStyle {
             .label
             .padding(paddingAmount)
             .background(Color.accentColor)
+            .foregroundColor(Color.white)
             .cornerRadius(cornerRadiusValue)
             .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
     }
