@@ -25,7 +25,7 @@ struct QuickScanModeSelectProductView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProductBarcodes()
+        grocyVM.requestData(objects: [.product_barcodes])
     }
     
     private func finishForm() {

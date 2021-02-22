@@ -72,9 +72,7 @@ struct MDProductsView: View {
     @State private var toastType: MDToastType?
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDLocations()
-        grocyVM.getMDProductGroups()
+        grocyVM.requestData(objects: [.products, .locations, .product_groups])
     }
     
     private func delete(at offsets: IndexSet) {
@@ -188,7 +186,7 @@ struct MDProductsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .product_groups])
+            grocyVM.requestData(objects: [.products, .locations, .product_groups], ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in

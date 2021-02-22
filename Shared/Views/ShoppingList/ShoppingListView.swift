@@ -122,7 +122,7 @@ struct ShoppingListView: View {
             switch result {
             case let .success(message):
                 print(message)
-                grocyVM.getShoppingList()
+                grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail
@@ -135,7 +135,7 @@ struct ShoppingListView: View {
             switch result {
             case let .success(message):
                 print(message)
-                grocyVM.getShoppingListDescriptions()
+                grocyVM.requestData(objects: [.shopping_lists])
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail
@@ -144,11 +144,7 @@ struct ShoppingListView: View {
     }
     
     func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDProductGroups()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getShoppingListDescriptions()
-        grocyVM.getShoppingList()
+        grocyVM.requestData(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
     }
     
     var body: some View {
@@ -295,7 +291,7 @@ struct ShoppingListView: View {
             }
         })
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
+            grocyVM.requestData(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list], ignoreCached: false)
         })
         .alert(isPresented: $showEntryDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.shL.entry.delete.confirm")), message: Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "product name error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {

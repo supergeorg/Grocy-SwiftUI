@@ -37,7 +37,7 @@ struct MDQuantityUnitFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDQuantityUnits()
+        grocyVM.requestData(objects: [.quantity_units])
     }
     
     private func finishForm() {
@@ -146,7 +146,7 @@ struct MDQuantityUnitFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.quantity_units])
+                grocyVM.requestData(objects: [.shopping_list], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

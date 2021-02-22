@@ -49,7 +49,7 @@ struct MDUserFieldFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDUserFields()
+        grocyVM.requestData(objects: [.userfields])
     }
     
     private func finishForm() {
@@ -183,7 +183,7 @@ struct MDUserFieldFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.userfields])
+                grocyVM.requestData(objects: [.userfields], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

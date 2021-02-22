@@ -46,7 +46,7 @@ struct MDBarcodeFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProductBarcodes()
+        grocyVM.requestData(objects: [.product_barcodes])
     }
     
     private func finishForm() {
@@ -208,7 +208,7 @@ struct MDBarcodeFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.product_barcodes])
+                grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

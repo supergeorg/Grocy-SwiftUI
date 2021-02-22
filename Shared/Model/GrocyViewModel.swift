@@ -21,7 +21,7 @@ class GrocyViewModel: ObservableObject {
     
     static let shared = GrocyViewModel()
     
-    let grocyLog = Logger()
+    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
     
     @Published var lastLoadingFailed: Bool = false
     
@@ -50,7 +50,7 @@ class GrocyViewModel: ObservableObject {
     @Published var stockProductLocations: [String: StockLocations] = [:]
     @Published var stockProductEntries: [String: StockEntries] = [:]
     @Published var stockProductPriceHistories: [String: ProductPriceHistories] = [:]
-
+    
     @Published var lastStockActions: StockJournal = []
     
     var cancellables = Set<AnyCancellable>()
@@ -103,17 +103,17 @@ class GrocyViewModel: ObservableObject {
                     break
                 }
             }, receiveValue: { (systemInfo: SystemInfo) in
-                    DispatchQueue.main.async {
-                        if !systemInfo.grocyVersion.version.isEmpty {
-                            self.grocyLog.info("Login info check successful. Logging in.")
-                            self.systemInfo = systemInfo
-                            completion(.success(systemInfo.grocyVersion.version))
-                        } else {
-                            self.grocyLog.error("Selected server doesn't respond.")
-                            self.isLoggedIn = false
-                            completion(.failure(APIError.invalidResponse))
-                        }
+                DispatchQueue.main.async {
+                    if !systemInfo.grocyVersion.version.isEmpty {
+                        self.grocyLog.info("Login info check successful. Logging in.")
+                        self.systemInfo = systemInfo
+                        completion(.success(systemInfo.grocyVersion.version))
+                    } else {
+                        self.grocyLog.error("Selected server doesn't respond.")
+                        self.isLoggedIn = false
+                        completion(.failure(APIError.invalidResponse))
                     }
+                }
             })
             .store(in: &cancellables)
     }
@@ -149,58 +149,162 @@ class GrocyViewModel: ObservableObject {
         return startvar
     }
     
-    func requestDataIfUnavailable(objects: [ObjectEntities]?, additionalObjects: [AdditionalEntities]? = nil) {
+    // Gets the data of a selected entity
+    func getEntity<T: Codable>(entity: ObjectEntities, completion: @escaping ((Result<T, Error>) -> ())) {
+        grocyApi.getObject(object: entity)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.grocyLog.error("Get entity \(entity.rawValue) failed. \("\(error)")")
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+                
+            }) { (getEntityReturn: T) in
+                DispatchQueue.main.async {
+                    completion(.success(getEntityReturn))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, ignoreCached: Bool = true) {
         if let objects = objects {
             for object in objects {
                 switch object {
-//                case .batteries:
-//                    if mdBatteries.isEmpty { getMDBatteries() }
-//                case .locations:
-//                    if mdLocations.isEmpty { getMDLocations() }
-//                case .product_barcodes:
-//                    if mdProductBarcodes.isEmpty { getMDProductBarcodes() }
-//                case .product_groups:
-//                    if mdProductGroups.isEmpty { getMDProductGroups() }
-//                case .products:
-//                    if mdProducts.isEmpty { getMDProducts() }
-//                case .quantity_units:
-//                    if mdQuantityUnits.isEmpty { getMDQuantityUnits() }
-//                case .shopping_list:
-//                    if shoppingList.isEmpty { getShoppingList() }
-//                case .shopping_lists:
-//                    if shoppingListDescriptions.isEmpty { getShoppingListDescriptions() }
-//                case .shopping_locations:
-//                    if mdShoppingLocations.isEmpty { getMDShoppingLocations() }
-//                case .stock_log:
-//                    if stockJournal.isEmpty { getStockJournal() }
-//                case .userentities:
-//                    if mdUserEntities.isEmpty { getMDUserEntities() }
-//                case .userfields:
-//                    if mdUserFields.isEmpty { getMDUserFields() }
                 case .batteries:
-                    if mdBatteries.isEmpty { getEntity(entity: .batteries, type: MDBatteries()) }
+                    if mdBatteries.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDBatteries, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdBatteries = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .locations:
-                    if mdLocations.isEmpty { getEntity(entity: .locations, type: MDLocations()) }
+                    if mdLocations.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDLocations, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdLocations = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .product_barcodes:
-                    if mdProductBarcodes.isEmpty { getEntity(entity: .product_barcodes, type: MDProductBarcodes()) }
+                    if mdProductBarcodes.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDProductBarcodes, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdProductBarcodes = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .product_groups:
-                    if mdProductGroups.isEmpty { getEntity(entity: .product_groups, type: MDProductGroups()) }
+                    if mdProductGroups.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDProductGroups, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdProductGroups = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .products:
-                    if mdProducts.isEmpty { getEntity(entity: .products, type: MDProducts()) }
+                    if mdProducts.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDProducts, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdProducts = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .quantity_units:
-                    if mdQuantityUnits.isEmpty { getEntity(entity: .quantity_units, type: MDQuantityUnits()) }
+                    if mdQuantityUnits.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdQuantityUnits = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .shopping_list:
-                    if shoppingList.isEmpty { getEntity(entity: .shopping_list, type: ShoppingList()) }
+                    if shoppingList.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<ShoppingList, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.shoppingList = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .shopping_lists:
-                    if shoppingListDescriptions.isEmpty { getEntity(entity: .shopping_lists, type: ShoppingListDescriptions()) }
+                    if shoppingListDescriptions.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<ShoppingListDescriptions, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.shoppingListDescriptions = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .shopping_locations:
-                    if mdShoppingLocations.isEmpty { getEntity(entity: .shopping_locations, type: MDShoppingLocations()) }
+                    if mdShoppingLocations.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdShoppingLocations = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .stock_log:
-                    if stockJournal.isEmpty { getEntity(entity: .stock_log, type: StockJournal()) }
+                    if stockJournal.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<StockJournal, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.stockJournal = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .userentities:
-                    if mdUserEntities.isEmpty { getEntity(entity: .userentities, type: MDUserEntities()) }
+                    if mdUserEntities.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDUserEntities, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdUserEntities = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .userfields:
-                    if mdUserFields.isEmpty { getEntity(entity: .userfields, type: MDUserFields()) }
+                    if mdUserFields.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDUserFields, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdUserFields = entityResult
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                            }
+                        })
+                    }
                 default:
                     self.grocyLog.error("Request data not implemented for \(object.rawValue).")
                 }
@@ -210,15 +314,71 @@ class GrocyViewModel: ObservableObject {
             for additionalObject in additionalObjects {
                 switch additionalObject {
                 case .system_config:
-                    if systemConfig == nil { getSystemConfig() }
+                    if systemConfig == nil || ignoreCached {
+                        getSystemConfig(completion: { result in
+                            switch result {
+                            case let .success(syscfg):
+                                self.systemConfig = syscfg
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for SystemConfig. Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .system_info:
-                    if systemInfo == nil { getSystemInfo() }
+                    if systemInfo == nil || ignoreCached  {
+                        getSystemInfo(completion: { result in
+                            switch result {
+                            case let .success(sysinfo):
+                                self.systemInfo = sysinfo
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for SystemInfo. Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .system_db_changed_time:
-                    if systemDBChangedTime == nil { getSystemDBChangedTime() }
+                    if systemDBChangedTime == nil || ignoreCached  {
+                        getSystemDBChangedTime(completion: { result in
+                            switch result {
+                            case let .success(sysdbchangedtime):
+                                self.systemDBChangedTime = sysdbchangedtime
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for SystemDBChangedTime. Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .stock:
-                    if stock.isEmpty { getStock() }
+                    if stock.isEmpty || ignoreCached  {
+                        getStock(completion: { result in
+                            switch result {
+                            case let .success(stockRet):
+                                self.stock = stockRet
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for Stock. Message: \("\(error)")")
+                            }
+                        })
+                    }
                 case .users:
-                    if users.isEmpty { getUsers() }
+                    if users.isEmpty || ignoreCached  {
+                        getUsers(completion: { result in
+                            switch result {
+                            case let .success(grocyusers):
+                                self.users = grocyusers
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for Users. Message: \("\(error)")")
+                            }
+                        })
+                    }
+                case .current_user:
+                    if currentUser.isEmpty || ignoreCached  {
+                        getUser(completion: { result in
+                            switch result {
+                            case let .success(currUsRet):
+                                self.currentUser = currUsRet
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for current user. Message: \("\(error)")")
+                            }
+                        })
+                    }
                 }
             }
         }
@@ -250,7 +410,7 @@ class GrocyViewModel: ObservableObject {
         stockProductLocations = [:]
         stockProductEntries = [:]
         stockProductPriceHistories = [:]
-
+        
         lastStockActions = []
         self.grocyLog.info("Deleted all cached data from the viewmodel.")
     }
@@ -276,86 +436,83 @@ class GrocyViewModel: ObservableObject {
     
     //MARK: - SYSTEM
     
-    func getSystemInfo() {
+    func getSystemInfo(completion: @escaping ((Result<SystemInfo, Error>) -> ())) {
         grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get system info failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (sysinfo) in
-                DispatchQueue.main.async { self.systemInfo = sysinfo }
+                DispatchQueue.main.async {
+                    completion(.success(sysinfo))
+                }
             })
             .store(in: &cancellables)
     }
     
-    func getSystemDBChangedTime() {
+    func getSystemDBChangedTime(completion: @escaping ((Result<SystemDBChangedTime, Error>) -> ())) {
         grocyApi.getSystemDBChangedTime()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get systemdbchangedtime failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (dbchangedtime) in
-                DispatchQueue.main.async { self.systemDBChangedTime = dbchangedtime }
+                DispatchQueue.main.async {
+                    completion(.success(dbchangedtime))
+                }
             })
             .store(in: &cancellables)
     }
     
-    func getSystemConfig() {
+    func getSystemConfig(completion: @escaping ((Result<SystemConfig, Error>) -> ())) {
         grocyApi.getSystemConfig()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get systemconfig failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (syscfg) in
-                DispatchQueue.main.async { self.systemConfig = syscfg }
+                DispatchQueue.main.async {
+                    completion(.success(syscfg))
+                }
             })
             .store(in: &cancellables)
     }
     
     func getCurrencySymbol() -> String {
-        switch self.systemConfig?.currency {
-        case "EUR":
-            return "€"
-        case "USD":
-            return "$"
-        default:
-            self.grocyLog.info("Currency symbol for code \(self.systemConfig?.currency ?? "?") not implemented.")
-            return "CURRENCY"
-        }
+        return CurrencySymbols.symbols.first(where: {$0.code == self.systemConfig?.currency})?.symbol ?? "CURRENCY"
     }
     
     // MARK: - USER MANAGEMENT
     
-    func getUsers() {
+    func getUsers(completion: @escaping ((Result<GrocyUsers, Error>) -> ())) {
         grocyApi.getUsers()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get users failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (usersOut) in
-                DispatchQueue.main.async { self.users = usersOut }
+                DispatchQueue.main.async {
+                    completion(.success(usersOut))
+                }
             })
             .store(in: &cancellables)
     }
-//    
-//    func deleteUser(id: String) {
-//        grocyApi.deleteUserWithID(id: id)
-//            .replaceError(with: ErrorMessage(errorMessage: "delete user error"))
-//            .assign(to: \.lastError, on: self)
-//            .store(in: &cancellables)
-//    }
     
     func postUser(user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonUser = try! JSONEncoder().encode(user)
@@ -377,7 +534,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func putUser(id: String, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, Error>) -> ())) {
-                let jsonUser = try! JSONEncoder().encode(user)
+        let jsonUser = try! JSONEncoder().encode(user)
         grocyApi.putUserWithID(id: id, user: jsonUser)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -421,53 +578,44 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Current user
-    func getUser() {
+    func getUser(completion: @escaping ((Result<GrocyUsers, Error>) -> ())) {
         grocyApi.getUser()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get current user failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (currentUserOut) in
-                DispatchQueue.main.async { self.currentUser = currentUserOut }
+                DispatchQueue.main.async {
+                    completion(.success(currentUserOut))
+                }
             })
             .store(in: &cancellables)
     }
     
     // MARK: - Stock management
     
-    func getStock() {
+    func getStock(completion: @escaping ((Result<Stock, Error>) -> ())) {
         grocyApi.getStock()
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get stock failed. \("\(error)")")
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             }, receiveValue: { (stockOut) in
-                DispatchQueue.main.async { self.stock = stockOut }
+                DispatchQueue.main.async {
+                    completion(.success(stockOut))
+                }
             })
             .store(in: &cancellables)
     }
     
-    func getStockJournal() {
-        grocyApi.getStockJournal()
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get stock journal failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (stockJOut) in
-                DispatchQueue.main.async { self.stockJournal = stockJOut }
-            })
-            .store(in: &cancellables)
-    }
-
     func getStockProductLocations(productID: String) {}
     func getStockProductEntries(productID: String) {
         grocyApi.getStockProductDetails(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
@@ -520,35 +668,6 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: -Shopping Lists
-    func getShoppingListDescriptions() {
-        grocyApi.getObject(object: .shopping_lists)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get shopping lists failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (shLDesc) in
-                DispatchQueue.main.async { self.shoppingListDescriptions = shLDesc }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getShoppingList() {
-        grocyApi.getObject(object: .shopping_list)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get shopping list failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (shoppingListOut) in
-                DispatchQueue.main.async { self.shoppingList = shoppingListOut }
-            })
-            .store(in: &cancellables)
-    }
     
     func addShoppingListProduct(content: ShoppingListAddProduct, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
@@ -587,185 +706,6 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: -Master Data
-
-    // TEST: I try to build a function which can get all types of data and assign it. The problem for now is the generic type, which has to be defined seperately.
-    func getEntity<T: Codable>(entity: ObjectEntities, type: T) {
-        grocyApi.getObject(object: entity)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get entity \(entity.rawValue) failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-                
-            }) { (getEntityReturn: T) in
-                DispatchQueue.main.async {
-                    switch entity {
-                    case .batteries:
-                        self.mdBatteries = getEntityReturn as! MDBatteries
-                    case .locations:
-                        self.mdLocations = getEntityReturn as! MDLocations
-                    case .product_barcodes:
-                        self.mdProductBarcodes = getEntityReturn as! MDProductBarcodes
-                    case .product_groups:
-                        self.mdProductGroups = getEntityReturn as! MDProductGroups
-                    case .products:
-                        self.mdProducts = getEntityReturn as! MDProducts
-                    case .quantity_units:
-                        self.mdQuantityUnits = getEntityReturn as! MDQuantityUnits
-                    case .shopping_list:
-                        self.shoppingList = getEntityReturn as! ShoppingList
-                    case .shopping_lists:
-                        self.shoppingListDescriptions = getEntityReturn as! ShoppingListDescriptions
-                    case .shopping_locations:
-                        self.mdShoppingLocations = getEntityReturn as! MDShoppingLocations
-                    case .stock_log:
-                        self.stockJournal = getEntityReturn as! StockJournal
-                    case .userentities:
-                        self.mdUserEntities = getEntityReturn as! MDUserEntities
-                    default:
-                        print(getEntityReturn as! MDProducts)
-                    }
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    func getMDProducts() {
-        grocyApi.getObject(object: .products)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDProducts failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (products) in
-                DispatchQueue.main.async { self.mdProducts = products }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDLocations() {
-        grocyApi.getObject(object: .locations)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDLocations failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (locations) in
-                DispatchQueue.main.async { self.mdLocations = locations }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDShoppingLocations() {
-        grocyApi.getObject(object: .shopping_locations)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDShoppingLocations failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (shoppingLocations) in
-                DispatchQueue.main.async { self.mdShoppingLocations = shoppingLocations }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDQuantityUnits() {
-        grocyApi.getObject(object: .quantity_units)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDQuantityUnits failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (quantityUnits) in
-                DispatchQueue.main.async { self.mdQuantityUnits = quantityUnits }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDProductGroups() {
-        grocyApi.getObject(object: .product_groups)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDProductGroups failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (productGroups) in
-                DispatchQueue.main.async { self.mdProductGroups = productGroups }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDProductBarcodes() {
-        grocyApi.getObject(object: .product_barcodes)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDProductBarcodes failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (productBarcodes) in
-                DispatchQueue.main.async { self.mdProductBarcodes = productBarcodes }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDBatteries() {
-        grocyApi.getObject(object: .batteries)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDBatteries failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (batteries) in
-                DispatchQueue.main.async { self.mdBatteries = batteries }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDUserFields() {
-        grocyApi.getObject(object: .userfields)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDUserFields failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (userfields) in
-                DispatchQueue.main.async { self.mdUserFields = userfields }
-            })
-            .store(in: &cancellables)
-    }
-    
-    func getMDUserEntities() {
-        grocyApi.getObject(object: .userentities)
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.grocyLog.error("Get MDUserEntities failed. \("\(error)")")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (userentities) in
-                DispatchQueue.main.async { self.mdUserEntities = userentities }
-            })
-            .store(in: &cancellables)
-    }
     
     // Generic POST and DELETE
     

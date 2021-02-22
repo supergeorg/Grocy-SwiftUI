@@ -45,7 +45,7 @@ struct MDUserEntityFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDUserEntities()
+        grocyVM.requestData(objects: [.userentities])
     }
     
     private func finishForm() {
@@ -158,7 +158,7 @@ struct MDUserEntityFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.userentities])
+                grocyVM.requestData(objects: [.userentities], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

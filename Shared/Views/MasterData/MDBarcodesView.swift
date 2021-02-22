@@ -45,7 +45,7 @@ struct MDBarcodesView: View {
     @Binding var toastType: MDToastType?
     
     private func updateData() {
-        grocyVM.getMDProductBarcodes()
+        grocyVM.requestData(objects: [.product_barcodes])
     }
     
     var filteredBarcodes: MDProductBarcodes {
@@ -125,7 +125,7 @@ struct MDBarcodesView: View {
             }
             #endif
         }
-        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.product_barcodes]) })
+        .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
     }
 }
 

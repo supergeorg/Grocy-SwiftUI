@@ -34,7 +34,7 @@ struct ShoppingListFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getShoppingListDescriptions()
+        grocyVM.requestData(objects: [.shopping_lists])
     }
     
     func saveShoppingList() {

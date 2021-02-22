@@ -26,8 +26,7 @@ struct UserManagementView: View {
     }
     
     private func updateData() {
-        grocyVM.getUsers()
-        grocyVM.getSystemConfig()
+        grocyVM.requestData(additionalObjects: [.users, .system_config])
     }
     
     var body: some View {

@@ -71,7 +71,7 @@ struct MDUserFieldsView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDUserFields()
+        grocyVM.requestData(objects: [.userfields])
     }
     
     var body: some View {
@@ -151,7 +151,7 @@ struct MDUserFieldsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.userfields])
+            grocyVM.requestData(objects: [.userfields], ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in

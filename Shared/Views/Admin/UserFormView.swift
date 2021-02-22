@@ -39,7 +39,7 @@ struct UserFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getUsers()
+        grocyVM.requestData(additionalObjects: [.users])
     }
     
     private func finishForm() {

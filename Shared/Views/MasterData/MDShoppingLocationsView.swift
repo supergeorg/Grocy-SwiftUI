@@ -92,7 +92,7 @@ struct MDShoppingLocationsView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDShoppingLocations()
+        grocyVM.requestData(objects: [.shopping_locations])
     }
     
     var body: some View {
@@ -173,7 +173,7 @@ struct MDShoppingLocationsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.shopping_locations])
+            grocyVM.requestData(objects: [.shopping_locations], ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in

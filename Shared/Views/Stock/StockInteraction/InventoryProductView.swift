@@ -77,10 +77,7 @@ struct InventoryProductView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDLocations()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getSystemConfig()
+        grocyVM.requestData(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config])
     }
     
     private func inventoryProduct() {
@@ -185,7 +182,7 @@ struct InventoryProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config])
+                grocyVM.requestData(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

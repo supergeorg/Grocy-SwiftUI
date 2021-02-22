@@ -39,6 +39,7 @@ struct MDProductFormView: View {
     @State private var hideOnStockOverview: Bool = false
     
     @State private var showDeleteAlert: Bool = false
+    @State private var showOFFResult: Bool = false
     
     var isNewProduct: Bool
     var product: MDProduct?
@@ -86,10 +87,7 @@ struct MDProductFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getMDLocations()
-        grocyVM.getMDShoppingLocations()
+        grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations])
     }
     
     private func finishForm() {
@@ -178,6 +176,16 @@ struct MDProductFormView: View {
     
     var content: some View {
         Form {
+            #if os(iOS)
+            Button(action: {
+                showOFFResult.toggle()
+            }, label: {Label("FILL WITH OFF", systemImage: "plus")})
+            .popover(isPresented: $showOFFResult, content: {
+                OpenFoodFactsScannerView()
+                    .frame(width: 500, height: 500)
+            })
+            #endif
+            
             Group{
                 Section(header: Text(LocalizedStringKey("str.md.product")).font(.headline)) {
                     // Name - REQUIRED
@@ -345,7 +353,7 @@ struct MDProductFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .quantity_units, .locations, .shopping_locations])
+                grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

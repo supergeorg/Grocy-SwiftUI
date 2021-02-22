@@ -37,7 +37,7 @@ struct ShoppingListRowActionsView: View {
             switch result {
             case let .success(message):
                 print(message)
-                grocyVM.getShoppingList()
+                grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail
@@ -51,7 +51,7 @@ struct ShoppingListRowActionsView: View {
             switch result {
             case let .success(message):
                 print(message)
-                grocyVM.getShoppingList()
+                grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
                 print("\(error)")
                 toastType = .shLActionFail

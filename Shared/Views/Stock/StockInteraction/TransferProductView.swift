@@ -63,9 +63,7 @@ struct TransferProductView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDLocations()
-        grocyVM.getMDQuantityUnits()
+        grocyVM.requestData(objects: [.products, .locations, .quantity_units])
     }
     
     private func transferProduct() {
@@ -166,7 +164,7 @@ struct TransferProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .locations, .quantity_units])
+                grocyVM.requestData(objects: [.products, .locations, .quantity_units], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

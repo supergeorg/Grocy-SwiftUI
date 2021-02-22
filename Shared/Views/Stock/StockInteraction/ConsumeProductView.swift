@@ -136,9 +136,7 @@ struct ConsumeProductView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getMDLocations()
+        grocyVM.requestData(objects: [.products, .quantity_units, .locations])
     }
     
     var body: some View {
@@ -227,7 +225,7 @@ struct ConsumeProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .quantity_units, .locations])
+                grocyVM.requestData(objects: [.products, .quantity_units, .locations], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

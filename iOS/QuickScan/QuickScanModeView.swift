@@ -77,10 +77,7 @@ struct QuickScanModeView: View {
     }
     
     func updateData() {
-        grocyVM.getMDProductBarcodes()
-        grocyVM.getMDProducts()
-        grocyVM.getMDLocations()
-        grocyVM.getMDShoppingLocations()
+        grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations])
     }
     
     func searchForBarcode(barcodeString: String) -> MDProductBarcode? {
@@ -157,7 +154,7 @@ struct QuickScanModeView: View {
             }
         })
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.product_barcodes, .products, .locations, .shopping_locations], additionalObjects: [.stock, .system_config])
+            grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations], additionalObjects: [.stock, .system_config], ignoreCached: false)
         })
         .onChange(of: activeSheet, perform: {newItem in
             checkScanPause()

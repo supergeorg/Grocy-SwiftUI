@@ -70,7 +70,7 @@ struct MDUserEntitiesView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDUserEntities()
+        grocyVM.requestData(objects: [.userentities])
     }
     
     var body: some View {
@@ -150,7 +150,7 @@ struct MDUserEntitiesView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.userentities])
+            grocyVM.requestData(objects: [.userentities], ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in

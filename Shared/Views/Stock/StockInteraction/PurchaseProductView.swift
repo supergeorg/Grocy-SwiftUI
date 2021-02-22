@@ -95,12 +95,7 @@ struct PurchaseProductView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProducts()
-        grocyVM.getMDQuantityUnits()
-        grocyVM.getMDLocations()
-        grocyVM.getMDShoppingLocations()
-        grocyVM.getMDProductBarcodes()
-        grocyVM.getSystemConfig()
+        grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes], additionalObjects: [.system_config])
     }
     
     var body: some View {
@@ -182,7 +177,7 @@ struct PurchaseProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes], additionalObjects: [.system_config])
+                grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes], additionalObjects: [.system_config], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

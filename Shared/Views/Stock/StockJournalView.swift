@@ -72,7 +72,7 @@ struct StockJournalRowView: View {
             switch result {
             case let .success(message):
                 print(message)
-                grocyVM.getStockJournal()
+                grocyVM.requestData(objects: [.stock_log])
             case let .failure(error):
                 print("\(error)")
                 showToastUndoFailed = true
@@ -167,8 +167,7 @@ struct StockJournalView: View {
     }
     
     private func updateData() {
-        grocyVM.getStockJournal()
-        grocyVM.getUsers()
+        grocyVM.requestData(objects: [.stock_log], additionalObjects: [.users])
     }
     
     var body: some View {
@@ -201,7 +200,7 @@ struct StockJournalView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestDataIfUnavailable(objects: [.stock_log], additionalObjects: [.users])
+            grocyVM.requestData(objects: [.stock_log], additionalObjects: [.users], ignoreCached: false)
             filteredProductID = selectedProductID
         })
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, content: {

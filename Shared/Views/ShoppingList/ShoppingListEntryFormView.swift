@@ -41,7 +41,7 @@ struct ShoppingListEntryFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getShoppingList()
+        grocyVM.requestData(objects: [.shopping_list])
     }
     
     private func finishForm() {
@@ -174,7 +174,7 @@ struct ShoppingListEntryFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.shopping_list])
+                grocyVM.requestData(objects: [.shopping_list], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

@@ -35,7 +35,7 @@ struct MDProductGroupFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDProductGroups()
+        grocyVM.requestData(objects: [.product_groups])
     }
     
     private func finishForm() {
@@ -143,7 +143,7 @@ struct MDProductGroupFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.product_groups])
+                grocyVM.requestData(objects: [.product_groups], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

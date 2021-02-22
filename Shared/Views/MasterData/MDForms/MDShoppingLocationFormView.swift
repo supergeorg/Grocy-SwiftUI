@@ -35,7 +35,7 @@ struct MDShoppingLocationFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDShoppingLocations()
+        grocyVM.requestData(objects: [.shopping_locations])
     }
     
     private func finishForm() {
@@ -87,6 +87,22 @@ struct MDShoppingLocationFormView: View {
             content
                 .padding()
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .cancellationAction) {
+                if !isNewShoppingLocation {
+                    Button(LocalizedStringKey("str.cancel")) {
+                        finishForm()
+                    }
+                }
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                if !isNewShoppingLocation {
+                    Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
+                        saveShoppingLocation()
+                    }.disabled(!isNameCorrect)
+                }
+            }
+        })
         #elseif os(iOS)
         content
             .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
@@ -143,7 +159,7 @@ struct MDShoppingLocationFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.shopping_locations])
+                grocyVM.requestData(objects: [.shopping_locations], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

@@ -69,7 +69,7 @@ struct MDLocationsView: View {
     @State private var toastType: MDToastType?
     
     private func updateData() {
-        grocyVM.getMDLocations()
+        grocyVM.requestData(objects: [.locations])
     }
     
     private var filteredLocations: MDLocations {
@@ -116,7 +116,7 @@ struct MDLocationsView: View {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
                                 }
-                                grocyVM.getMDLocations()
+                                updateData()
                             }, label: {
                                 Image(systemName: MySymbols.reload)
                                     .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -145,7 +145,7 @@ struct MDLocationsView: View {
                             withAnimation {
                                 self.reloadRotationDeg += 360
                             }
-                            grocyVM.getMDLocations()
+                            updateData()
                         }, label: {
                             Image(systemName: MySymbols.reload)
                                 .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -181,7 +181,7 @@ struct MDLocationsView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.locations]) })
+        .onAppear(perform: { grocyVM.requestData(objects: [.locations], ignoreCached: false) })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {

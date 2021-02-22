@@ -45,7 +45,7 @@ struct MDProductGroupsView: View {
     @State private var toastType: MDToastType?
     
     private func updateData() {
-        grocyVM.getMDProductGroups()
+        grocyVM.requestData(objects: [.product_groups])
     }
     
     private var filteredProductGroups: MDProductGroups {
@@ -92,7 +92,7 @@ struct MDProductGroupsView: View {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
                                 }
-                                grocyVM.getMDProductGroups()
+                                updateData()
                             }, label: {
                                 Image(systemName: MySymbols.reload)
                                     .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -121,7 +121,7 @@ struct MDProductGroupsView: View {
                             withAnimation {
                                 self.reloadRotationDeg += 360
                             }
-                            grocyVM.getMDProductGroups()
+                            updateData()
                         }, label: {
                             Image(systemName: MySymbols.reload)
                                 .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -157,7 +157,7 @@ struct MDProductGroupsView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: { grocyVM.requestDataIfUnavailable(objects: [.product_groups]) })
+        .onAppear(perform: { grocyVM.requestData(objects: [.product_groups], ignoreCached: false) })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {

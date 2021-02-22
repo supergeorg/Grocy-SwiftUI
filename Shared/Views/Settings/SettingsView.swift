@@ -24,8 +24,7 @@ struct SettingsView: View {
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     func updateData() {
-        grocyVM.getSystemInfo()
-        grocyVM.getUser()
+        grocyVM.requestData(additionalObjects: [.system_info, .current_user])
     }
     
     var body: some View {

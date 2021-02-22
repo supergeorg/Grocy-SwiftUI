@@ -39,7 +39,7 @@ struct MDLocationFormView: View {
     }
     
     private func updateData() {
-        grocyVM.getMDLocations()
+        grocyVM.requestData(objects: [.locations])
     }
     
     private func finishForm() {
@@ -149,7 +149,7 @@ struct MDLocationFormView: View {
         .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestDataIfUnavailable(objects: [.locations])
+                grocyVM.requestData(objects: [.locations], ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

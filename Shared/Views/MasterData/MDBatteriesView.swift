@@ -15,7 +15,7 @@ struct MDBatteriesView: View {
             Text("Batteries not implemented")
             Button("load") {
 //                grocyVM.getMDBatteries()
-                grocyVM.getEntity(entity: .batteries, type: MDBatteries())
+//                grocyVM.getEntity(entity: .batteries, type: MDBatteries())
 //                let x: MDBatteries = grocyVM.getEntity(entity: .batteries) as! MDBatteries
             }
             Button("post") {
