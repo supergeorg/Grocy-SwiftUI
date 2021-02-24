@@ -107,6 +107,8 @@
 "str.stock.info.overdue %lld" = "%lld Produkte sind überfällig";
 "str.stock.info.expired %lld" = "%lld Produkte sind bereits abgelaufen";
 "str.stock.info.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
+"str.stock.info.opened %@" = "%@ geöffnet";
+"str.stock.info.onShoppingList" = "Dieses Produkt ist derzeit auf einem Einkaufszettel.";
 
 "str.stock.entry.description.notOpened %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; Nicht geöffnet";
 "str.stock.entry.description.opened %@ %@ %@" = "Menge: %@; Fällig am %@; Gekauft am %@; Geöffnet";

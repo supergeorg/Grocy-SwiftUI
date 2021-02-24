@@ -58,6 +58,8 @@ struct StockJournalFilterBar: View {
 struct StockJournalRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @AppStorage("localizationKey") var localizationKey: String = "en"
+    
     var journalEntry: StockJournalEntry
     
     @Binding var showToastUndoFailed: Bool
@@ -102,7 +104,7 @@ struct StockJournalRowView: View {
                         HStack(alignment: .bottom){
                             Text(LocalizedStringKey("str.stock.journal.undo.date \(formatDateAsString(date))"))
                                 .font(.caption)
-                            Text(getTimeDistanceAsText(date: date))
+                            Text(getRelativeDateAsText(date, localizationKey: localizationKey))
                                 .font(.caption)
                                 .italic()
                         }

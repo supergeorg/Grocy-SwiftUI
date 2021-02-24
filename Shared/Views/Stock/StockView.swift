@@ -121,7 +121,7 @@ struct StockView: View {
     }
     
     private func updateData() {
-        grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists], additionalObjects: [.stock, .system_config])
+        grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list], additionalObjects: [.stock, .system_config])
     }
     
     var body: some View {
@@ -294,7 +294,7 @@ struct StockView: View {
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists], additionalObjects: [.stock, .system_config], ignoreCached: false)
+                grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list], additionalObjects: [.stock, .system_config], ignoreCached: false)
                 firstAppear = false
             }
         })

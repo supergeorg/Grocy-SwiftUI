@@ -107,6 +107,8 @@
 "str.stock.info.overdue %lld" = "%lld products are overdue";
 "str.stock.info.expired %lld" = "%lld products are expired";
 "str.stock.info.belowMinStock %lld" = "%lld products are below min. defined stock amount";
+"str.stock.info.opened %@" = "%@ opened";
+"str.stock.info.onShoppingList" = "This product is currently on a shopping list.";
 
 "str.stock.entry.description.notOpened %@ %@ %@" = "Amount: %@; Due on %@; Bought on %@; Not opened";
 "str.stock.entry.description.opened %@ %@ %@" = "Amount: %@; Due on %@; Bought on %@; Opened";

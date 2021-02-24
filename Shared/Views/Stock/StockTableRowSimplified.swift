@@ -11,6 +11,7 @@ struct StockTableRowSimplified: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("expiringDays") var expiringDays: Int = 5
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -76,18 +77,42 @@ struct StockTableRowSimplified: View {
                     Text(productGroup.name)
                         .font(.caption)
                 } else {Text("")}
-                    
+                
                 HStack{
-                    Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                        .font(.caption)
-                    if stockElement.amount != formattedAmountAggregated {
-                        Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                            .font(.caption)
+                    if let formattedAmount = formatStringAmount(stockElement.amount) {
+                        Text("\(formattedAmount) \(formattedAmount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                        if Double(stockElement.amountOpened) ?? 0 > 0 {
+                            Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpened))"))
+                                .font(.caption)
+                                .italic()
+                        }
+                        if let formattedAmountAggregated = formatStringAmount(stockElement.amountAggregated) {
+                            if formattedAmount != formattedAmountAggregated {
+                                Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                                    .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                                if Double(stockElement.amountOpenedAggregated) ?? 0 > 0 {
+                                    Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpenedAggregated))"))
+                                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                                        .font(.caption)
+                                        .italic()
+                                }
+                            }
+                        }
+                    }
+                    if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                        Image(systemName: MySymbols.shoppingList)
                             .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                            .help(LocalizedStringKey("str.stock.info.onShoppingList"))
                     }
                 }
-                Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
-                    .font(.caption)
+                if let dueDate = getDateFromString(stockElement.bestBeforeDate) {
+                    HStack{
+                        Text(formatDateAsString(dueDate, showTime: false))
+                        Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey))
+                            .font(.caption)
+                            .italic()
+                    }
+                }
             }
             Spacer()
         }

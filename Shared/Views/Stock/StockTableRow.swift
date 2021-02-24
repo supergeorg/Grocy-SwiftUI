@@ -11,6 +11,7 @@ struct StockTableRow: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("expiringDays") var expiringDays: Int = 5
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -60,14 +61,6 @@ struct StockTableRow: View {
         return Color.clear
     }
     
-    var formattedAmountAggregated: String {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        formatter.numberStyle = .decimal
-        return formatter.string(from: Double(stockElement.amountAggregated)! as NSNumber) ?? "?"
-    }
-    
     var body: some View {
         StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
         
@@ -106,14 +99,39 @@ struct StockTableRow: View {
         }
         
         if showAmount {
-            HStack{
-                Divider()
+            VStack(alignment: .center){
                 Spacer()
-                Text("\(stockElement.amount) \(stockElement.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                if stockElement.amount != formattedAmountAggregated {
-                    Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                HStack(alignment: .bottom){
+                    Divider()
+                    Spacer()
+                    if let formattedAmount = formatStringAmount(stockElement.amount) {
+                        Text("\(formattedAmount) \(formattedAmount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                        if Double(stockElement.amountOpened) ?? 0 > 0 {
+                            Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpened))"))
+                                .font(.caption)
+                                .italic()
+                        }
+                        if let formattedAmountAggregated = formatStringAmount(stockElement.amountAggregated) {
+                            if formattedAmount != formattedAmountAggregated {
+                                Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
+                                    .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                                if Double(stockElement.amountOpenedAggregated) ?? 0 > 0 {
+                                    Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpenedAggregated))"))
+                                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                                        .font(.caption)
+                                        .italic()
+                                }
+                            }
+                        }
+                    }
+                    if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                        Image(systemName: MySymbols.shoppingList)
+                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                            .help(LocalizedStringKey("str.stock.info.onShoppingList"))
+                    }
+                    Spacer()
                 }
+                
                 Spacer()
             }
             .background(backgroundColor)
@@ -128,15 +146,24 @@ struct StockTableRow: View {
             }
             .background(backgroundColor)
         }
+        
         if showNextBestBeforeDate {
-            HStack{
-                Divider()
-                Spacer()
-                Text(formatDateOutput(stockElement.bestBeforeDate) ?? "")
-                Spacer()
+            VStack{
+                HStack(alignment: .bottom){
+                    Divider()
+                    Spacer()
+                    if let dueDate = getDateFromString(stockElement.bestBeforeDate) {
+                        Text(formatDateAsString(dueDate, showTime: false))
+                        Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey))
+                            .font(.caption)
+                            .italic()
+                    }
+                    Spacer()
+                }
             }
             .background(backgroundColor)
         }
+        
         if showCaloriesPerStockQU {
             HStack{
                 Divider()
@@ -146,6 +173,7 @@ struct StockTableRow: View {
             }
             .background(backgroundColor)
         }
+        
         if showCalories {
             HStack {
                 Divider()

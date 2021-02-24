@@ -44,17 +44,19 @@ func formatDateOutput(_ dateStrIN: String) -> String? {
     }
 }
 
-func formatDateAsString(_ date: Date) -> String {
+func formatDateAsString(_ date: Date, showTime: Bool = true) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
-    dateFormatter.timeStyle = .medium
+    if showTime {
+        dateFormatter.timeStyle = .medium
+    }
     let dateStr = dateFormatter.string(from: date)
     return dateStr
 }
 
 func formatTimestampOutput(_ timeStampIN: String) -> String {
     let dateFormatterIN = DateFormatter()
-//    EX: 2020-11-20 13:04:38
+    //    EX: 2020-11-20 13:04:38
     dateFormatterIN.dateFormat = "yyyy-MM-dd HH:mm:ss"
     let dateToFormat = dateFormatterIN.date(from: timeStampIN)
     let dateFormatterOUT = DateFormatter()
@@ -103,9 +105,13 @@ func formatDays(daysToFormat: Int?) -> String? {
     return dcf.string(from: datecomponents)
 }
 
-func getTimeDistanceAsText(date: Date) -> String {
+func getRelativeDateAsText(_ date: Date, localizationKey: String? = nil) -> String {
     let formatter = RelativeDateTimeFormatter()
-    formatter.locale = .current
+    if let localizationKey = localizationKey {
+        formatter.locale = Locale(identifier: localizationKey)
+    } else {
+        formatter.locale = .current
+    }
     formatter.dateTimeStyle = .named
     if let formattedString = formatter.string(for: date) { return formattedString } else { return "" }
 }
