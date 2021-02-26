@@ -176,6 +176,9 @@ struct LoginOwnServerView: View {
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     
     #if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    
     @State private var isShowingScanner = true
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
@@ -216,12 +219,25 @@ struct LoginOwnServerView: View {
                     #endif
                     
                     if isShowingScanner {
-                        Text(LocalizedStringKey("str.login.ownServer.qr.info"))
                         #if os(iOS)
-                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
-                            .border(Color.gray, width: 5)
-                            .cornerRadius(3)
-                            .matchedGeometryEffect(id: "login", in: animation)
+                        if horizontalSizeClass == .regular || verticalSizeClass == .regular {
+                            VStack{
+                                Text(LocalizedStringKey("str.login.ownServer.qr.info"))
+                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
+                                    .border(Color.gray, width: 5)
+                                    .cornerRadius(3)
+                                    .matchedGeometryEffect(id: "login", in: animation)
+                            }
+                        } else {
+                            HStack{
+                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
+                                    .border(Color.gray, width: 5)
+                                    .cornerRadius(3)
+                                    .matchedGeometryEffect(id: "login", in: animation)
+                                Text(LocalizedStringKey("str.login.ownServer.qr.info"))
+                            }
+                        }
+                        
                         #endif
                         Button(action: {
                             loginViewState = .start
@@ -373,10 +389,30 @@ struct LoginView: View {
     @State private var loginViewState: LoginViewState = .start
     @State private var passDemoMode: Bool?
     
+    #if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #endif
+    
     var body: some View {
+        #if os(iOS)
+        content
+        #elseif os(macOS)
+        content
+            .frame(minWidth: 500, minHeight: 500)
+        #endif
+    }
+    
+    var content: some View {
         VStack{
             Spacer()
+            #if os(iOS)
+            if horizontalSizeClass == .regular || verticalSizeClass == .regular {
+                Image("grocy-logo")
+            }
+            #else
             Image("grocy-logo")
+            #endif
             switch loginViewState {
             case .start:
                 LoginStartView(loginViewState: $loginViewState, animation: animation)

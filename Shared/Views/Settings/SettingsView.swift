@@ -10,6 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @State var showGrocyVersion: Bool = false
     @State var showUserInfo: Bool = false
     @State var showAbout: Bool = false
@@ -33,7 +35,8 @@ struct SettingsView: View {
             container
             #else
             container
-                .frame(minWidth: 500, idealWidth: 700, maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
+                .padding()
+//                .frame(minWidth: 500, idealWidth: 700, maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
             #endif
         }
         .background(Rectangle().fill(BackgroundStyle()).ignoresSafeArea())
@@ -136,6 +139,7 @@ struct SettingsView: View {
                     }
                     
                     Button(action: {
+                        self.presentationMode.wrappedValue.dismiss()
                         grocyVM.logout()
                     }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
                     Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})

@@ -19,6 +19,7 @@ struct FilledButtonStyle: ButtonStyle {
             .foregroundColor(Color.white)
             .cornerRadius(cornerRadiusValue)
             .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
+            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
     }
 }
 
@@ -32,5 +33,6 @@ struct BorderButtonStyle: ButtonStyle {
             .padding(paddingAmount)
             .cornerRadius(cornerRadiusValue)
             .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
+            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
     }
 }

@@ -19,8 +19,9 @@ struct ContentView: View {
         } else {
             AppSidebarNavigation()
         }
-        #else
+        #elseif os(macOS)
         AppSidebarNavigation()
+            .frame(minWidth: 500)
         #endif
     }
 }
