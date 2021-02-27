@@ -14,12 +14,14 @@ extension AppTabNavigation {
         case shoppingList = "cart"
         case more = "ellipsis.circle"
         case masterData = "text.book.closed"
+        case activities = "play.rectangle"
         case settings = "gear"
     }
 }
 
 struct AppTabNavigation: View {
     @AppStorage("tabSelection") private var tabSelection: Tab = .shoppingList
+    @AppStorage("devMode") private var devMode: Bool = false
     
     var body: some View {
         TabView(selection: $tabSelection) {
@@ -50,6 +52,18 @@ struct AppTabNavigation: View {
             }
             .tag(Tab.shoppingList)
             
+            
+            if devMode {
+                NavigationView {
+                    ActivitiesView()
+                }
+                .tabItem {
+                    Label("str.nav.activities", systemImage: Tab.activities.rawValue)
+                        .accessibility(label: Text("str.nav.activities"))
+                }
+                .tag(Tab.activities)
+            }
+            
             NavigationView {
                 MasterDataView()
             }
@@ -68,8 +82,19 @@ struct AppTabNavigation: View {
             }
             .tag(Tab.settings)
             
+            if devMode {
+                NavigationView {
+                    OpenFoodFactsScannerView()
+                }
+                .tabItem {
+                    Label("OPEN FOOD FACTS", systemImage: Tab.quickScanMode.rawValue)
+                        .accessibility(label: Text("OPEN FOOD FACTS"))
+                }
+                .tag(Tab.settings)
+            }
+            
         }
-//        Text("Hi")
+        //        Text("Hi")
     }
 }
 

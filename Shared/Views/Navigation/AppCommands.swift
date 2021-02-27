@@ -8,24 +8,19 @@
 import SwiftUI
 
 struct AppCommands: Commands {
-    
-    func openQR() {
-        
-    }
-    func anotherAction() {}
-    
     @CommandsBuilder var body: some Commands {
-        CommandMenu("DEBUG") {
-            Button(action: {
-                openQR()
-            }) {
-                Text("Open QR")
-            }
-            Button(action: {
-                anotherAction()
-            }) {
-                Text("Another action")
-            }
+        CommandMenu(LocalizedStringKey("str.nav.stockOverview")) {
+            Button(action: {}, label: {
+                Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: MySymbols.stockOverview)
+                    .labelStyle(TextIconLabelStyle())
+            })
+            .keyboardShortcut("o")
+            
+            Button(action: {}, label: {
+                Label(LocalizedStringKey("str.stock.journal"), systemImage: MySymbols.stockJournal)
+                    .labelStyle(TextIconLabelStyle())
+            })
+            .keyboardShortcut("j")
         }
     }
 }

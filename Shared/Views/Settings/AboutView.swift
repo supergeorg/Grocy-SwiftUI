@@ -27,21 +27,23 @@ struct AboutView: View {
     var body: some View {
         Form(){
             Section{
-            Text(LocalizedStringKey("str.settings.about.thanks"))
-            
-            AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
-            
-            AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
-            
-            Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
-                AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
-            })
-            .foregroundColor(.primary)
-            
-            Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
-                AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
-            })
-            .foregroundColor(.primary)
+                Text(LocalizedStringKey("str.settings.about.thanks"))
+                    .lineLimit(.none)
+//                    .fixedSize(horizontal: false, vertical: true)
+                
+                AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
+                
+                AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
+                
+                Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
+                    AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
+                })
+                .foregroundColor(.primary)
+                
+                Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
+                    AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
+                })
+                .foregroundColor(.primary)
             }
             Button(action: {
                 self.onboardingNeeded = true

@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 import OSLog
+import SwiftyBeaver
 
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPI
@@ -21,7 +22,8 @@ class GrocyViewModel: ObservableObject {
     
     static let shared = GrocyViewModel()
     
-    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
+//    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
+    let grocyLog = SwiftyBeaver.self
     
     @Published var lastLoadingFailed: Bool = false
     
@@ -70,6 +72,11 @@ class GrocyViewModel: ObservableObject {
             grocyLog.info("Not logged in")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
+        
+        let console = ConsoleDestination()  // log to Xcode Console
+        let file = FileDestination()  // log to default swiftybeaver.log file
+        grocyLog.addDestination(console)
+        grocyLog.addDestination(file)
     }
     
     func setDemoModus() {
@@ -424,9 +431,11 @@ class GrocyViewModel: ObservableObject {
         case .debug:
             self.grocyLog.debug("\(message)")
         case .fault:
-            self.grocyLog.fault("\(message)")
+            self.grocyLog.error("\(message)")
+//            self.grocyLog.fault("\(message)")
         default:
-            self.grocyLog.log("\(message)")
+//            self.grocyLog.log("\(message)")
+            self.grocyLog.verbose("\(message)")
         }
     }
     
@@ -707,7 +716,7 @@ class GrocyViewModel: ObservableObject {
     
     // MARK: -Master Data
     
-    // Generic POST and DELETE
+    // Generic POST and DELETE and PUT
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! JSONEncoder().encode(content)

@@ -1,6 +1,6 @@
 //
 //  SideBarView.swift
-//  grocy-ios
+//  Grocy-SwiftUI
 //
 //  Created by Georg Meissner on 12.11.20.
 //
@@ -168,17 +168,17 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-                if grocyVM.mdUserEntities.count > 0 {
-                Group {
-                    ForEach(grocyVM.mdUserEntities, id:\.id) {userEntity in
-                        NavigationLink(destination: UserEntityView(userEntity: userEntity), tag: NavigationItem.userEntity, selection: $selection) {
-                            Label(userEntity.name, systemImage: getSFSymbolForFA(faName: userEntity.iconCSSClass ?? ""))
-                        }
-                        .tag(NavigationItem.userEntity)
-                    }
-                    Divider()
-                }
-                }
+//                if grocyVM.mdUserEntities.count > 0 {
+//                Group {
+//                    ForEach(grocyVM.mdUserEntities, id:\.id) {userEntity in
+//                        NavigationLink(destination: UserEntityView(userEntity: userEntity), tag: NavigationItem.userEntity(userEntity.name), selection: $selection) {
+//                            Label(userEntity.name, systemImage: getSFSymbolForFA(faName: userEntity.iconCSSClass ?? ""))
+//                        }
+//                        .tag(NavigationItem.userEntity(userEntity.name))
+//                    }
+//                    Divider()
+//                }
+//                }
                 
                 Group {
                     Section(header: Label(LocalizedStringKey("str.nav.md"), systemImage: NavigationItem.masterData.rawValue)) {
@@ -257,12 +257,12 @@ struct AppSidebarNavigation: View {
             }
             .listStyle(SidebarListStyle())
             .navigationTitle("Grocy")
-            .onAppear(perform: {
-                if firstAppear {
-                    grocyVM.getMDUserEntities()
-                    firstAppear = false
-                }
-            })
+//            .onAppear(perform: {
+//                if firstAppear {
+//                    grocyVM.getMDUserEntities()
+//                    firstAppear = false
+//                }
+//            })
         }
     }
 }

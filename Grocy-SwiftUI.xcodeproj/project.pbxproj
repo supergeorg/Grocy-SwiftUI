@@ -29,6 +29,8 @@
 		781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */; };
 		781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
 		781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
+		781FE2E325E9215F002273F7 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 781FE2E225E9215F002273F7 /* SwiftyBeaver */; };
+		781FE2E925E92171002273F7 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 781FE2E825E92171002273F7 /* SwiftyBeaver */; };
 		78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */; };
 		782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
@@ -537,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78113B7E25B5A19F0000B237 /* URLImage in Frameworks */,
+				781FE2E325E9215F002273F7 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,6 +548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78113B8425B5A3A50000B237 /* URLImage in Frameworks */,
+				781FE2E925E92171002273F7 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,6 +1000,7 @@
 			name = "Grocy-SwiftUI (iOS)";
 			packageProductDependencies = (
 				78113B7D25B5A19F0000B237 /* URLImage */,
+				781FE2E225E9215F002273F7 /* SwiftyBeaver */,
 			);
 			productName = "Grocy-SwiftUI (iOS)";
 			productReference = 78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */;
@@ -1016,6 +1021,7 @@
 			name = "Grocy-SwiftUI (macOS)";
 			packageProductDependencies = (
 				78113B8325B5A3A50000B237 /* URLImage */,
+				781FE2E825E92171002273F7 /* SwiftyBeaver */,
 			);
 			productName = "Grocy-SwiftUI (macOS)";
 			productReference = 78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */;
@@ -1094,6 +1100,7 @@
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
 				78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */,
+				781FE2E125E9215F002273F7 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 			);
 			productRefGroup = 78CB749B255E9EF800319108 /* Products */;
 			projectDirPath = "";
@@ -1903,6 +1910,14 @@
 				kind = branch;
 			};
 		};
+		781FE2E125E9215F002273F7 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1915,6 +1930,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */;
 			productName = URLImage;
+		};
+		781FE2E225E9215F002273F7 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 781FE2E125E9215F002273F7 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		781FE2E825E92171002273F7 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 781FE2E125E9215F002273F7 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

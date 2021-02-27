@@ -24,6 +24,7 @@ struct SettingsView: View {
     @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
+    @AppStorage("devMode") private var devMode: Bool = false
     
     func updateData() {
         grocyVM.requestData(additionalObjects: [.system_info, .current_user])
@@ -36,7 +37,7 @@ struct SettingsView: View {
             #else
             container
                 .padding()
-//                .frame(minWidth: 500, idealWidth: 700, maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
+            //                .frame(minWidth: 500, idealWidth: 700, maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
             #endif
         }
         .background(Rectangle().fill(BackgroundStyle()).ignoresSafeArea())
@@ -90,12 +91,15 @@ struct SettingsView: View {
                         Label(LocalizedStringKey("str.settings.about"), systemImage: "info.circle")
                             .foregroundColor(.primary)
                     })
-                //                NavigationLink(
-                //                    destination: LogView(),
-                //                    label: {
-                //                        Label(LocalizedStringKey("LOG"), systemImage: "tag")
-                //                            .foregroundColor(.primary)
-                //                    })
+                Toggle("DEV MODE", isOn: $devMode)
+                if devMode {
+                    NavigationLink(
+                        destination: LogView(),
+                        label: {
+                            Label(LocalizedStringKey("LOG"), systemImage: "tag")
+                                .foregroundColor(.primary)
+                        })
+                }
             }
         }
         .onAppear(perform: {
@@ -164,17 +168,21 @@ struct SettingsView: View {
                 .popover(isPresented: $showAbout, content: {
                     AboutView().padding()
                 })
+                
+                Toggle("DEV MODE", isOn: $devMode)
             }
             
-            //            Button(action: {
-            //                showLog.toggle()
-            //            }, label: {
-            //                Label(LocalizedStringKey("SHOW LOG"), systemImage: "tag")
-            //            })
-            //            .popover(isPresented: $showLog, content: {
-            //                LogView()
-            //                    .frame(width: 500, height: 500)
-            //            })
+            if devMode {
+                Button(action: {
+                    showLog.toggle()
+                }, label: {
+                    Label(LocalizedStringKey("SHOW LOG"), systemImage: "tag")
+                })
+                .popover(isPresented: $showLog, content: {
+                    LogView()
+                        .frame(width: 500, height: 500)
+                })
+            }
         }
         .padding(.bottom, 90)
         .onAppear(perform: {

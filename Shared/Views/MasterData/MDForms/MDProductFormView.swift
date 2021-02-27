@@ -12,6 +12,8 @@ struct MDProductFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @State private var firstAppear: Bool = true
     
     @State private var name: String = "" // REQUIRED
@@ -177,13 +179,15 @@ struct MDProductFormView: View {
     var content: some View {
         Form {
             #if os(iOS)
-            Button(action: {
-                showOFFResult.toggle()
-            }, label: {Label("FILL WITH OFF", systemImage: "plus")})
-            .popover(isPresented: $showOFFResult, content: {
-                OpenFoodFactsScannerView()
-                    .frame(width: 500, height: 500)
-            })
+            if devMode {
+                Button(action: {
+                    showOFFResult.toggle()
+                }, label: {Label("FILL WITH OFF", systemImage: "plus")})
+                .popover(isPresented: $showOFFResult, content: {
+                    OpenFoodFactsScannerView()
+                        .frame(width: 500, height: 500)
+                })
+            }
             #endif
             
             Group{
