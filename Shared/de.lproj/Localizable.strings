@@ -524,6 +524,9 @@
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
 "str.settings.resetCache" = "Cache löschen";
+"str.settings.log" = "App-Log";
+"str.settings.log.update" = "Log aktualisieren";
+"str.settings.log.share" = "Log-Datei teilen";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";

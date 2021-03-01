@@ -88,18 +88,16 @@ struct SettingsView: View {
                 NavigationLink(
                     destination: AboutView(),
                     label: {
-                        Label(LocalizedStringKey("str.settings.about"), systemImage: "info.circle")
+                        Label(LocalizedStringKey("str.settings.about"), systemImage: MySymbols.info)
                             .foregroundColor(.primary)
                     })
                 Toggle("DEV MODE", isOn: $devMode)
-                if devMode {
-                    NavigationLink(
-                        destination: LogView(),
-                        label: {
-                            Label(LocalizedStringKey("LOG"), systemImage: "tag")
-                                .foregroundColor(.primary)
-                        })
-                }
+                NavigationLink(
+                    destination: LogView(),
+                    label: {
+                        Label(LocalizedStringKey("str.settings.log"), systemImage: MySymbols.logFile)
+                            .foregroundColor(.primary)
+                    })
             }
         }
         .onAppear(perform: {
@@ -172,17 +170,14 @@ struct SettingsView: View {
                 Toggle("DEV MODE", isOn: $devMode)
             }
             
-            if devMode {
-                Button(action: {
-                    showLog.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("SHOW LOG"), systemImage: "tag")
-                })
-                .popover(isPresented: $showLog, content: {
-                    LogView()
-                        .frame(width: 500, height: 500)
-                })
-            }
+            Button(action: {
+                showLog.toggle()
+            }, label: {
+                Label(LocalizedStringKey("str.settings.log"), systemImage: MySymbols.logFile)
+            })
+            .popover(isPresented: $showLog, content: {
+                LogView()
+            })
         }
         .padding(.bottom, 90)
         .onAppear(perform: {

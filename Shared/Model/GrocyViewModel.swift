@@ -439,8 +439,36 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    func getLog() {
+    func getLog() -> [String] {
         print("Log reading is not possible, at least not on iOS.")
+        do {
+            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            print(cachesDirectory.absoluteString)
+            #if os(macOS)
+            let logFolder = cachesDirectory.appendingPathComponent("Grocy-SwiftUI/")
+            #elseif os(iOS)
+            let logFolder = cachesDirectory
+            #endif
+            let filePath = logFolder.appendingPathComponent("swiftybeaver.log")
+            let logText = try String(contentsOf: filePath, encoding: .utf8)
+            let logLines : [String] = logText.components(separatedBy: NSCharacterSet.newlines)
+            return logLines
+        } catch {
+            return ["Error reading log"]
+        }
+//        let fileManager = FileManager.default
+//        let documentsURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+//        do {
+//            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+//            for file in fileURLs {
+//                print(file.absoluteString)
+//            }
+//            return ""
+//            // process files
+//        } catch {
+//            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+//            return "Error"
+//        }
     }
     
     //MARK: - SYSTEM

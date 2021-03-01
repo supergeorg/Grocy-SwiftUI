@@ -525,6 +525,9 @@
 "str.settings.simplifiedStockView" = "Simplified stock view";
 "str.settings.appLanguage" = "App language";
 "str.settings.resetCache" = "Reset cache";
+"str.settings.log" = "App log";
+"str.settings.log.update" = "Update log";
+"str.settings.log.share" = "Share log";
 
 // MARK: - Admin
 "str.admin.user" = "User management";
