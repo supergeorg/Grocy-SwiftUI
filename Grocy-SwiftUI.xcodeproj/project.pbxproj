@@ -243,6 +243,10 @@
 		78D75D6425DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
 		78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7975A25B6FB4800550C58 /* OnboardingView.swift */; };
 		78D7975C25B6FB4800550C58 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7975A25B6FB4800550C58 /* OnboardingView.swift */; };
+		78D7A04925ED063D00132ACC /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
+		78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
+		78D7A04F25ED064100132ACC /* CurrencySymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B18DEB25E3E53900C26A67 /* CurrencySymbols.swift */; };
+		78D7A05425ED064100132ACC /* CurrencySymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B18DEB25E3E53900C26A67 /* CurrencySymbols.swift */; };
 		78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
 		78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
 		78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
@@ -1431,8 +1435,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				78FDCDFB25BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */,
+				78D7A04925ED063D00132ACC /* GrocySupportedServers.swift in Sources */,
 				78FDCE0E25BAD2F40089CB5E /* ShoppingListStatus.swift in Sources */,
 				78FDCDCB25BAD2DE0089CB5E /* MDUserFieldModel.swift in Sources */,
+				78D7A04F25ED064100132ACC /* CurrencySymbols.swift in Sources */,
 				78FDCDE925BAD2E90089CB5E /* StockProductPriceHistory.swift in Sources */,
 				78FDCDC725BAD2DE0089CB5E /* MDProductGroupsModel.swift in Sources */,
 				78846069257F9FB700671C97 /* TransactionType.swift in Sources */,
@@ -1501,6 +1507,7 @@
 				78FDCE1825BAD2F50089CB5E /* ShoppingListModel.swift in Sources */,
 				78FDCDE325BAD2E50089CB5E /* VolatileStockModel.swift in Sources */,
 				78FDCDE225BAD2E50089CB5E /* StockModel.swift in Sources */,
+				78D7A05425ED064100132ACC /* CurrencySymbols.swift in Sources */,
 				78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
 				78FDCE0225BAD2F00089CB5E /* ProductTransferModel.swift in Sources */,
@@ -1513,6 +1520,7 @@
 				78FDCDB225BAD2D50089CB5E /* SystemDBChangedTimeModel.swift in Sources */,
 				78FDCDF225BAD2E90089CB5E /* StockProductDetailsModel.swift in Sources */,
 				78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */,
+				78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */,
 				78FDCDD025BAD2DE0089CB5E /* MDQuantityUnitsModel.swift in Sources */,
 				78FDCDC025BAD2DA0089CB5E /* SharedModel.swift in Sources */,
 				78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */,
@@ -1748,6 +1756,7 @@
 				DEVELOPMENT_TEAM = 4CZEVM6X98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1851,6 +1860,164 @@
 			};
 			name = Release;
 		};
+		78D7A05925ED07E400132ACC /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Test;
+		};
+		78D7A05A25ED07E400132ACC /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
+		78D7A05B25ED07E400132ACC /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"TESTING=1",
+				);
+				INFOPLIST_FILE = macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MARKETING_VERSION = 0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy-SwiftUI";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Test;
+		};
+		78D7A05C25ED07E400132ACC /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Grocy-SwiftUI (iOS)";
+			};
+			name = Test;
+		};
+		78D7A05D25ED07E400132ACC /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4CZEVM6X98;
+				INFOPLIST_FILE = "Tests macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgmeissner.Tests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TESTING";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Grocy-SwiftUI (macOS)";
+			};
+			name = Test;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1858,6 +2025,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C2255E9EF800319108 /* Debug */,
+				78D7A05925ED07E400132ACC /* Test */,
 				78CB74C3255E9EF800319108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1867,6 +2035,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C5255E9EF800319108 /* Debug */,
+				78D7A05A25ED07E400132ACC /* Test */,
 				78CB74C6255E9EF800319108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1876,6 +2045,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C8255E9EF800319108 /* Debug */,
+				78D7A05B25ED07E400132ACC /* Test */,
 				78CB74C9255E9EF800319108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1885,6 +2055,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74CB255E9EF800319108 /* Debug */,
+				78D7A05C25ED07E400132ACC /* Test */,
 				78CB74CC255E9EF800319108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1894,6 +2065,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74CE255E9EF800319108 /* Debug */,
+				78D7A05D25ED07E400132ACC /* Test */,
 				78CB74CF255E9EF800319108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -9,7 +9,9 @@ import Foundation
 import Combine
 import SwiftUI
 import OSLog
+#if !TESTING
 import SwiftyBeaver
+#endif
 
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPI
@@ -22,8 +24,11 @@ class GrocyViewModel: ObservableObject {
     
     static let shared = GrocyViewModel()
     
-//    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
+    #if TESTING
+    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
+    #else
     let grocyLog = SwiftyBeaver.self
+    #endif
     
     @Published var lastLoadingFailed: Bool = false
     
@@ -73,10 +78,12 @@ class GrocyViewModel: ObservableObject {
         }
         jsonEncoder.outputFormatting = .prettyPrinted
         
+        #if !TESTING
         let console = ConsoleDestination()  // log to Xcode Console
         let file = FileDestination()  // log to default swiftybeaver.log file
         grocyLog.addDestination(console)
         grocyLog.addDestination(file)
+        #endif
     }
     
     func setDemoModus() {
@@ -432,10 +439,13 @@ class GrocyViewModel: ObservableObject {
             self.grocyLog.debug("\(message)")
         case .fault:
             self.grocyLog.error("\(message)")
-//            self.grocyLog.fault("\(message)")
+        //            self.grocyLog.fault("\(message)")
         default:
-//            self.grocyLog.log("\(message)")
+            #if TESTING
+            self.grocyLog.log("\(message)")
+            #else
             self.grocyLog.verbose("\(message)")
+            #endif
         }
     }
     
@@ -456,19 +466,19 @@ class GrocyViewModel: ObservableObject {
         } catch {
             return ["Error reading log"]
         }
-//        let fileManager = FileManager.default
-//        let documentsURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-//        do {
-//            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-//            for file in fileURLs {
-//                print(file.absoluteString)
-//            }
-//            return ""
-//            // process files
-//        } catch {
-//            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
-//            return "Error"
-//        }
+        //        let fileManager = FileManager.default
+        //        let documentsURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        //        do {
+        //            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+        //            for file in fileURLs {
+        //                print(file.absoluteString)
+        //            }
+        //            return ""
+        //            // process files
+        //        } catch {
+        //            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+        //            return "Error"
+        //        }
     }
     
     //MARK: - SYSTEM
