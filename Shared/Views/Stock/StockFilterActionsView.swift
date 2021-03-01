@@ -17,6 +17,11 @@ private struct StockFilterItemView: View {
     var lightColor: Color
     var darkColor: Color
     
+    #if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #endif
+    
     var body: some View {
         VStack(spacing: 0) {
             Divider()
@@ -28,7 +33,7 @@ private struct StockFilterItemView: View {
                     Image(systemName: MySymbols.filter)
                 }
                 #if os(iOS)
-                if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+                if horizontalSizeClass == .compact || verticalSizeClass == .compact {
                     Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
                         .bold()
                         .foregroundColor(colorScheme == .light ? darkColor : lightColor)
