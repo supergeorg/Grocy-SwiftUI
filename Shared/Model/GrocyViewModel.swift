@@ -60,6 +60,9 @@ class GrocyViewModel: ObservableObject {
     
     @Published var lastStockActions: StockJournal = []
     
+    @Published var failedToLoadObjects = Set<ObjectEntities>()
+    @Published var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
+    
     var cancellables = Set<AnyCancellable>()
     
     let jsonEncoder = JSONEncoder()
@@ -193,8 +196,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdBatteries = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -204,8 +209,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdLocations = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -215,8 +222,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductBarcodes = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -226,8 +235,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductGroups = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -237,8 +248,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdProducts = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -248,8 +261,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnits = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -259,8 +274,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingList = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -270,8 +287,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingListDescriptions = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -281,8 +300,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdShoppingLocations = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -292,8 +313,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.stockJournal = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -303,8 +326,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserEntities = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -314,8 +339,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserFields = entityResult
+                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -333,8 +360,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(syscfg):
                                 self.systemConfig = syscfg
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemConfig. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
@@ -344,8 +373,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(sysinfo):
                                 self.systemInfo = sysinfo
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemInfo. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
@@ -355,8 +386,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(sysdbchangedtime):
                                 self.systemDBChangedTime = sysdbchangedtime
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemDBChangedTime. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
@@ -366,8 +399,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(stockRet):
                                 self.stock = stockRet
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for Stock. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
@@ -377,8 +412,10 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(grocyusers):
                                 self.users = grocyusers
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for Users. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
@@ -388,14 +425,20 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(currUsRet):
                                 self.currentUser = currUsRet
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for current user. Message: \("\(error)")")
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
                             }
                         })
                     }
                 }
             }
         }
+    }
+    
+    func retryFailedRequests() {
+        self.requestData(objects: Array(failedToLoadObjects), additionalObjects: Array(failedToLoadAdditionalObjects))
     }
     
     func deleteAllCachedData() {

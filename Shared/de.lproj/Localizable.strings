@@ -23,6 +23,7 @@
 "str.clear" = "Leeren";
 "str.back" = "Zurück";
 "str.retry" = "Erneut versuchen";
+"str.connection.failed" = "Keine Verbindung zum Server";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";

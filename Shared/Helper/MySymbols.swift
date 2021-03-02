@@ -32,6 +32,7 @@ struct MySymbols {
     
     static let logFile = "doc.plaintext"
     static let info = "info.circle"
+    static let offline = "wifi.slash"
     
     static let new = "plus"
     static let edit = "square.and.pencil"

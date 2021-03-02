@@ -124,8 +124,17 @@ struct StockView: View {
         grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list], additionalObjects: [.stock, .system_config])
     }
     
-    var body: some View {
-        #if os(macOS)
+    var body: some View{
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
@@ -181,7 +190,9 @@ struct StockView: View {
                 })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {
@@ -269,8 +280,8 @@ struct StockView: View {
                     }
                 }
             })
-        #endif
     }
+    #endif
     
     var summedValueStr: String {
         return "\(String(format: "%.2f", summedValue)) \(grocyVM.getCurrencySymbol())"

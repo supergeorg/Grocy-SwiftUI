@@ -142,6 +142,8 @@
 		789D167225DE73C5006FC33F /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167025DE73C5006FC33F /* ButtonStyles.swift */; };
 		789D167825DE7996006FC33F /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
 		789D167925DE7996006FC33F /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
+		78A201C525EE64210031BFDE /* ServerOfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201C425EE64210031BFDE /* ServerOfflineView.swift */; };
+		78A201C625EE64210031BFDE /* ServerOfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201C425EE64210031BFDE /* ServerOfflineView.swift */; };
 		78A33CBA257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
@@ -449,6 +451,7 @@
 		789D166525DE6C9B006FC33F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		789D167025DE73C5006FC33F /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		789D167725DE7996006FC33F /* GrocySupportedServers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocySupportedServers.swift; sourceTree = "<group>"; };
+		78A201C425EE64210031BFDE /* ServerOfflineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerOfflineView.swift; sourceTree = "<group>"; };
 		78A33CB9257528B900C450D4 /* ProductOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductOverviewView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
 		78B18DEB25E3E53900C26A67 /* CurrencySymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySymbols.swift; sourceTree = "<group>"; };
@@ -982,6 +985,7 @@
 				78FDCE3D25BAF0C70089CB5E /* UserEntityView.swift */,
 				78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */,
 				78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */,
+				78A201C425EE64210031BFDE /* ServerOfflineView.swift */,
 			);
 			path = Additional;
 			sourceTree = "<group>";
@@ -1222,6 +1226,7 @@
 				7885B8BB2567F723003439F5 /* PurchaseProductView.swift in Sources */,
 				78CB756F255EA39200319108 /* GrocyViewModel.swift in Sources */,
 				78CB7618255EB9C600319108 /* MDProductsModel.swift in Sources */,
+				78A201C525EE64210031BFDE /* ServerOfflineView.swift in Sources */,
 				78F1FAC7255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7880F10B256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78E02CC625DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
@@ -1405,6 +1410,7 @@
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
 				7891C64F257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
 				78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */,
+				78A201C625EE64210031BFDE /* ServerOfflineView.swift in Sources */,
 				78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
