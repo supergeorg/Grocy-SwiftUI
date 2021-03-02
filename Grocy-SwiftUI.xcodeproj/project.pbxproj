@@ -144,6 +144,8 @@
 		789D167925DE7996006FC33F /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
 		78A201C525EE64210031BFDE /* ServerOfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201C425EE64210031BFDE /* ServerOfflineView.swift */; };
 		78A201C625EE64210031BFDE /* ServerOfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201C425EE64210031BFDE /* ServerOfflineView.swift */; };
+		78A201CC25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */; };
+		78A201CD25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */; };
 		78A33CBA257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
@@ -452,6 +454,7 @@
 		789D167025DE73C5006FC33F /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		789D167725DE7996006FC33F /* GrocySupportedServers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocySupportedServers.swift; sourceTree = "<group>"; };
 		78A201C425EE64210031BFDE /* ServerOfflineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerOfflineView.swift; sourceTree = "<group>"; };
+		78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLabelWithSubtitle.swift; sourceTree = "<group>"; };
 		78A33CB9257528B900C450D4 /* ProductOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductOverviewView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
 		78B18DEB25E3E53900C26A67 /* CurrencySymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySymbols.swift; sourceTree = "<group>"; };
@@ -938,6 +941,7 @@
 				78467E8925C2C6D9000592EE /* ToastMessage.swift */,
 				789ADDAA25C427DD00D7EB35 /* View+ToastMessage.swift */,
 				78D75D6225DE9B71009F2C15 /* CardView.swift */,
+				78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1273,6 +1277,7 @@
 				78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */,
 				78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */,
 				789ADDAB25C427DD00D7EB35 /* View+ToastMessage.swift in Sources */,
+				78A201CC25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
 				78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */,
 				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */,
@@ -1329,6 +1334,7 @@
 				7880F113256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				786F6E8C2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
 				78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
+				78A201CD25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
 				7880F0F2256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
 				78D0F4D6257122DA00E1B732 /* ShoppingListFilterView.swift in Sources */,
 				786F6EA52564035C004D8DE0 /* MDChoresView.swift in Sources */,

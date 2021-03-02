@@ -145,7 +145,8 @@ struct MDProductFormView: View {
     
     var body: some View {
         #if os(macOS)
-        ScrollView{
+        NavigationView{
+//        ScrollView{
             content
                 .padding()
         }
@@ -190,149 +191,50 @@ struct MDProductFormView: View {
             }
             #endif
             
-            Group{
-                Section(header: Text(LocalizedStringKey("str.md.product")).font(.headline)) {
-                    // Name - REQUIRED
-                    MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
-                        .onChange(of: name, perform: { value in
-                            isNameCorrect = checkNameCorrect()
-                        })
-                    
-                    // Active
-                    MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
-                    
-                    // Parent Product
-                    ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
-                    
-                    // Product Description
-                    MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
-                }
-                
-                Section(header: Text(LocalizedStringKey("str.md.product.location")).font(.headline)) {
-                    // Default Location - REQUIRED
-                    VStack(alignment: .trailing) {
-                        Picker(LocalizedStringKey("str.md.product.location"), selection: $locationID, content: {
-                            ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
-                                Text(grocyLocation.name).tag(grocyLocation.id as String?)
-                            }
-                        })
-                        if locationID == nil { Text(LocalizedStringKey("str.md.product.location.required")).foregroundColor(.red) }
-                    }
-                    
-                    // Default Shopping Location
-                    Picker(LocalizedStringKey("str.md.product.shoppingLocation"), selection: $shoppingLocationID, content: {
-                        Text("").tag(nil as String?)
-                        ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
-                            Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
-                        }
-                    })
-                }
-                
-                Section(header: Text(LocalizedStringKey("str.md.product.minStockAmount")).font(.headline)) {
-                    
-                    // Min Stock amount
-                    MyDoubleStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.minStockAmount.invalid", systemImage: "tag")
-                    
-                    // Accumulate sub products min stock amount
-                    MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info")
-                    
-                }
-            }
             
-            Group{
-                Section(header: Text(LocalizedStringKey("str.md.product.dueType")).font(.headline)) {
-                    
-                    HStack{
-                        // Due Type, default best before
-                        Picker(LocalizedStringKey("str.md.product.dueType"), selection: $dueType, content: {
-                            Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
-                            Text("str.md.product.dueType.expires").tag(DueType.expires)
-                        }).pickerStyle(SegmentedPickerStyle())
-                    }
-                    
-                    // Default due days
-                    MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: 0, amountName: defaultDueDays == 1 ? "str.day" : "str.days")
-                    
-                    // Default due days afer opening
-                    MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days")
-                    
-                }
-                
-                // Product group
-                Picker(LocalizedStringKey("str.md.product.productGroup"), selection: $productGroupID, content: {
-                    Text("").tag(nil as String?)
-                    ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
-                        Text(grocyProductGroup.name).tag(grocyProductGroup.id as String?)
-                    }
+            MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+                .onChange(of: name, perform: { value in
+                    isNameCorrect = checkNameCorrect()
                 })
-                
-                Section(header: Text(LocalizedStringKey("str.md.quantityUnits")).font(.headline)) {
-                    // QU Stock - REQUIRED
-                    VStack(alignment: .trailing){
-                        HStack{
-                            Picker(LocalizedStringKey("str.md.product.quStock"), selection: $quIDStock, content: {
-                                ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
-                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
-                                }
-                            })
-                            .onChange(of: quIDStock, perform: { newValue in
-                                if quIDPurchase == nil { quIDPurchase = quIDStock }
-                            })
-                            FieldDescription(description: "str.md.product.quStock.info")
-                        }
-                        if quIDStock == nil { Text(LocalizedStringKey("str.md.product.quStock.required")).foregroundColor(.red) }
-                    }
-                    
-                    // QU Purchase - REQUIRED
-                    VStack(alignment: .trailing){
-                        HStack{
-                            Picker(LocalizedStringKey("str.md.product.quPurchase"), selection: $quIDPurchase, content: {
-                                ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
-                                    Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
-                                }
-                            })
-                            FieldDescription(description: "str.md.product.quPurchase.info")
-                        }
-                        if quIDPurchase == nil { Text(LocalizedStringKey("str.md.product.quPurchase.required")).foregroundColor(.red) }
-                    }
-                    
-                    VStack(alignment: .trailing) {
-                        MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", errorMessage: "str.md.product.quFactorPurchaseToStock.invalid", systemImage: "tag")
-                        if quFactorPurchaseToStock != 1 { Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")")) }
-                    }
-                }
-            }
             
             Group{
-                Section(header: Text(LocalizedStringKey("str.md.product.tareWeight")).font(.headline)) {
-                    MyToggle(isOn: $enableTareWeightHandling, description: "str.md.product.enableTareWeightHandling", descriptionInfo: "str.md.product.enableTareWeightHandling.info", icon: "tag")
-                    
-                    if enableTareWeightHandling {
-                        MyDoubleStepper(amount: $tareWeight, description: "str.md.product.tareWeight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.tareWeight.invalid", systemImage: "tag")
-                    }
-                }
                 
-                Section(header: Text(LocalizedStringKey("str.misc")).font(.headline)) {
-                    MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: "tag")
-                    
-                    MyDoubleStepper(amount: $calories, description: "str.md.product.calories", descriptionInfo: "str.md.product.calories.info", minAmount: 0, amountStep: 1, amountName: "kcal", errorMessage: "str.md.product.calories.invalid", systemImage: "tag")
-                    
-                    MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "str.md.product.defaultDueDaysAfterFreezing", helpText: "str.md.product.defaultDueDaysAfterFreezing.info", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterFreezing.invalid", systemImage: "thermometer.snowflake")
-                    
-                    MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: "thermometer.snowflake")
-                }
+                NavigationLink(
+                    destination: optionalPropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
+                    })
                 
-                Section(header: Text(LocalizedStringKey("str.stock.stockOverview")).font(.headline)) {
-                    MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: MySymbols.consume)
-                    
-                    MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: "tablecells")
-                }
+                NavigationLink(
+                    destination: locationPropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.defaultLocations", subTitle: "str.md.product.category.defaultLocations.description", systemImage: MySymbols.location, isProblem: locationID == nil)
+                    })
                 
-                if !isNewProduct {
-                    if let product = product {
-                        MDBarcodesView(productID: product.id, toastType: $toastType)
-                    }
-                }
+                NavigationLink(
+                    destination: dueDatePropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.dueDate", subTitle: "str.md.product.category.dueDate.description", systemImage: MySymbols.date)
+                    })
+                
+                NavigationLink(
+                    destination: quantityUnitPropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil))
+                    })
+                
+                NavigationLink(
+                    destination: amountPropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.amount", subTitle: "str.md.product.category.amount.description", systemImage: MySymbols.amount)
+                    })
+                
+                NavigationLink(
+                    destination: barcodePropertiesView,
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "BARCODE", systemImage: MySymbols.barcode)
+                    })
+                    .disabled(isNewProduct)
             }
             
             #if os(macOS)
@@ -363,6 +265,145 @@ struct MDProductFormView: View {
             }
         })
     }
+    
+    var optionalPropertiesView: some View {
+        Form{
+            // Active
+            MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
+            
+            // Parent Product
+            ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
+            
+            // Product Description
+            MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+            
+            // Product group
+            Picker(LocalizedStringKey("str.md.product.productGroup"), selection: $productGroupID, content: {
+                Text("").tag(nil as String?)
+                ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
+                    Text(grocyProductGroup.name).tag(grocyProductGroup.id as String?)
+                }
+            })
+            
+            // Energy
+            MyDoubleStepper(amount: $calories, description: "str.md.product.calories", descriptionInfo: "str.md.product.calories.info", minAmount: 0, amountStep: 1, amountName: "kcal", errorMessage: "str.md.product.calories.invalid", systemImage: "tag")
+            
+            // Don't show on stock overview
+            MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: "tablecells")
+            
+            // Picture TBD
+        }
+        .navigationTitle(LocalizedStringKey("str.md.product.category.optionalProperties"))
+    }
+    var locationPropertiesView: some View {
+        Form {
+            // Default Location - REQUIRED
+            Picker(selection: $locationID, label: MyLabelWithSubtitle(title: "str.md.product.location", subTitle: "str.md.product.location.required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: locationID != nil), content: {
+                ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                    Text(grocyLocation.name).tag(grocyLocation.id as String?)
+                }
+            })
+            
+            // Default Shopping Location
+            Picker(selection: $shoppingLocationID, label: MyLabelWithSubtitle(title: "str.md.product.shoppingLocation", systemImage: MySymbols.shoppingLocation, hideSubtitle: true), content: {
+                Text("").tag(nil as String?)
+                ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
+                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
+                }
+            })
+        }
+        .navigationTitle(LocalizedStringKey("str.md.product.category.defaultLocations"))
+    }
+    var dueDatePropertiesView: some View {
+        Form {
+            HStack{
+                // Due Type, default best before
+                Picker(LocalizedStringKey("str.md.product.dueType"), selection: $dueType, content: {
+                    Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
+                    Text("str.md.product.dueType.expires").tag(DueType.expires)
+                }).pickerStyle(SegmentedPickerStyle())
+            }
+            
+            // Default due days
+            MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: 0, amountName: defaultDueDays == 1 ? "str.day" : "str.days")
+            
+            // Default due days afer opening
+            MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days")
+            
+            // Default due days after freezing
+            MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "str.md.product.defaultDueDaysAfterFreezing", helpText: "str.md.product.defaultDueDaysAfterFreezing.info", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterFreezing.invalid", systemImage: "thermometer.snowflake")
+            
+            // Default due days after thawing
+            MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: "thermometer.snowflake")
+        }
+        .navigationTitle(LocalizedStringKey("str.md.product.category.dueDate"))
+    }
+    var quantityUnitPropertiesView: some View {
+        Form {
+            // QU Stock - REQUIRED
+            HStack{
+                Picker(selection: $quIDStock, label: MyLabelWithSubtitle(title: "str.md.product.quStock", subTitle: "str.md.product.quStock.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDStock != nil), content: {
+                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                        Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
+                    }
+                })
+                .onChange(of: quIDStock, perform: { newValue in
+                    if quIDPurchase == nil { quIDPurchase = quIDStock }
+                })
+                
+                FieldDescription(description: "str.md.product.quStock.info")
+            }
+            
+            // QU Purchase - REQUIRED
+            HStack{
+                Picker(selection: $quIDPurchase, label: MyLabelWithSubtitle(title: "str.md.product.quPurchase", subTitle: "str.md.product.quPurchase.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPurchase != nil), content: {
+                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                        Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as String?)
+                    }
+                })
+                FieldDescription(description: "str.md.product.quPurchase.info")
+            }
+        }
+        .navigationTitle(LocalizedStringKey("str.md.product.category.quantityUnits"))
+    }
+    var amountPropertiesView: some View {
+        Form {
+            // Min Stock amount
+            MyDoubleStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.minStockAmount.invalid", systemImage: "tag")
+            
+            // Accumulate sub products min stock amount
+            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info")
+            
+            // Quick consume amount
+            MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: MySymbols.consume)
+            
+            // QU Factor to stock
+            VStack(alignment: .trailing) {
+                MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", errorMessage: "str.md.product.quFactorPurchaseToStock.invalid", systemImage: MySymbols.amount)
+                if quFactorPurchaseToStock != 1 { Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")")) }
+            }
+            
+            // Tare weight
+            Group {
+                MyToggle(isOn: $enableTareWeightHandling, description: "str.md.product.enableTareWeightHandling", descriptionInfo: "str.md.product.enableTareWeightHandling.info", icon: "tag")
+                
+                if enableTareWeightHandling {
+                    MyDoubleStepper(amount: $tareWeight, description: "str.md.product.tareWeight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.tareWeight.invalid", systemImage: "tag")
+                }
+            }
+            
+            // Check stock fulfillment for recipes
+            MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: "tag")
+        }
+        .navigationTitle(LocalizedStringKey("str.md.product.category.amount"))
+    }
+    var barcodePropertiesView: some View {
+        Form {
+            if let product = product {
+                MDBarcodesView(productID: product.id, toastType: $toastType)
+            }
+        }
+    }
 }
 
 struct MDProductFormView_Previews: PreviewProvider {
@@ -377,6 +418,7 @@ struct MDProductFormView_Previews: PreviewProvider {
             NavigationView {
                 MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
             }
+            .environment(\.locale, .init(identifier: "de"))
             //            NavigationView {
             //                MDProductFormView(isNewProduct: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil))
             //            }

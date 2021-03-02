@@ -48,4 +48,5 @@ struct MySymbols {
     
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"
+    static let barcode = "barcode"
 }

@@ -315,6 +315,7 @@
 "str.md.product.edit" = "Edit product";
 "str.md.product.save" = "Save product";
 "str.md.product.info" = "Product info";
+"str.md.product.notOnServer" = "Product is not on server";
 "str.md.product.name" = "Product name";
 "str.md.product.name.required" = "A name is required";
 "str.md.product.name.exists" = "Name already exists";

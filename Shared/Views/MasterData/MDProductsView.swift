@@ -129,6 +129,7 @@ struct MDProductsView: View {
                             }, label: {Image(systemName: MySymbols.new)})
                             .popover(isPresented: self.$showAddProduct, content: {
                                 MDProductFormView(isNewProduct: true, toastType: $toastType)
+                                    .frame(width: 700, height: 700)
                             })
                         }
                     }
