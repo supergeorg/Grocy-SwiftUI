@@ -70,22 +70,10 @@ struct MDBarcodesView: View {
         }
     }
     
+    #if os(macOS)
     var body: some View {
-        #if os(iOS)
-        content
-            .sheet(isPresented: $showAddBarcode, content: {
-                NavigationView{
-                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
-                }
-            })
-        #elseif os(macOS)
-        content
-        #endif
-    }
-    
-    var content: some View {
         Section(header: Text(LocalizedStringKey("str.md.barcodes")).font(.headline)) {
-            #if os(macOS)
+            
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
                 .popover(isPresented: $showAddBarcode, content: {
                     MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
@@ -107,14 +95,16 @@ struct MDBarcodesView: View {
                 }
             }
             .frame(width: 400, height: 200)
-            #elseif os(iOS)
-            Button(action: {showAddBarcode.toggle()}, label: {
-                Label("str.md.barcode.new", systemImage: "plus")
-            })
-            List{
-                if filteredBarcodes.isEmpty {
-                    Text(LocalizedStringKey("str.md.barcodes.empty"))
-                }
+        }
+        .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
+    }
+    
+    #elseif os(iOS)
+    var body: some View {
+        Form {
+            if filteredBarcodes.isEmpty {
+                Text(LocalizedStringKey("str.md.barcodes.empty"))
+            } else {
                 ForEach(filteredBarcodes, id:\.id) {productBarcode in
                     NavigationLink(
                         destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode, toastType: $toastType),
@@ -123,24 +113,35 @@ struct MDBarcodesView: View {
                         })
                 }.onDelete(perform: delete)
             }
-            #endif
         }
+        .navigationTitle(LocalizedStringKey("str.md.barcodes"))
         .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
+        .toolbar(content: {
+            ToolbarItem(placement: .automatic, content: {
+                Button(action: {showAddBarcode.toggle()}, label: {
+                    Label("str.md.barcode.new", systemImage: "plus")
+                        .labelStyle(TextIconLabelStyle())
+                })
+            })
+            ToolbarItem(placement: .navigationBarLeading) {
+                // Back not shown without it
+                Text("")
+            }
+        })
+        .sheet(isPresented: $showAddBarcode, content: {
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+            }
+        })
     }
+    #endif
 }
 
 struct MDBarcodesView_Previews: PreviewProvider {
     @StateObject var grocyVM: GrocyViewModel = .shared
     static var previews: some View {
-        Group {
-            Form{
-                MDBarcodesView(productID: "1", toastType: Binding.constant(nil))
-            }
-        }
-        Group {
-            Form{
-                MDBarcodesView(productID: "27", toastType: Binding.constant(nil))
-            }
+        NavigationView{
+            MDBarcodesView(productID: "27", toastType: Binding.constant(nil))
         }
     }
 }

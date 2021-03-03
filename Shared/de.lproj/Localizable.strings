@@ -392,7 +392,7 @@
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";
 "str.md.barcodes.empty" = "Keine Barcodes eingetragen.";
-"str.md.barcode.new" = "Barcode erstellen";
+"str.md.barcode.new" = "Barcode hinzufügen";
 "str.md.barcode.edit" = "Barcode bearbeiten";
 "str.md.barcode.save" = "Speichere Barcode";
 "str.md.barcode.for %@" = "Barcode für Produkt %@";

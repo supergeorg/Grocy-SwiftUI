@@ -22,6 +22,8 @@ struct MySymbols {
     static let quantityUnit = "scalemass"
     static let location = "location"
     static let shoppingLocation = "house"
+    static let productGroup = "square.on.circle"
+    static let recipe = "list.bullet.rectangle"
     
     static let amount = "number.circle"
     static let price = "banknote"
@@ -29,6 +31,11 @@ struct MySymbols {
     static let doesntSpoil = "trash.slash"
     static let description = "text.justifyleft"
     static let date = "calendar"
+    static let energy = "flame"
+    static let freezing = "thermometer.snowflake"
+    static let thawing = "thermometer.sun"
+    static let accumulate = "arrow.triangle.merge"
+    static let tareWeight = "scalemass"
     
     static let logFile = "doc.plaintext"
     static let info = "info.circle"

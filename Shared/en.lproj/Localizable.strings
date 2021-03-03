@@ -306,6 +306,7 @@
 "str.md.delete.success" = "Delete successful";
 "str.md.delete.fail" = "Delete failed";
 
+// MD Product
 "str.md.products" = "Products";
 "str.md.product" = "Product";
 "str.md.products.empty" = "No products found.";
@@ -316,19 +317,32 @@
 "str.md.product.save" = "Save product";
 "str.md.product.info" = "Product info";
 "str.md.product.notOnServer" = "Product is not on server";
+"str.md.product.delete.confirm" = "Delete this product";
+"str.md.product.delete.confirm" = "Do you really want to delete this product?";
 "str.md.product.name" = "Product name";
 "str.md.product.name.required" = "A name is required";
 "str.md.product.name.exists" = "Name already exists";
+// optional properties
+"str.md.product.category.optionalProperties" = "Optional properties";
+"str.md.product.category.optionalProperties.description" = "State, Parent produkt, Description, Product group, Energy, Picture";
 "str.md.product.active" = "Active";
 "str.md.product.parentProduct" = "Parent product ";
 "str.md.product.description" = "Description";
+"str.md.product.productGroup" = "Product group";
+"str.md.product.calories" = "Energy (kcal)";
+"str.md.product.calories.info" = "Per stock quantity unit";
+"str.md.product.calories.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
+"str.md.product.dontShowOnStockOverview" = "Never show on stock overview ";
+"str.md.product.dontShowOnStockOverview.info" = "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always";
+// default locations
+"str.md.product.category.defaultLocations" = "Default locations";
+"str.md.product.category.defaultLocations.description" = "Location, Store";
 "str.md.product.location" = "Default location";
 "str.md.product.location.required" = "A location is required";
 "str.md.product.shoppingLocation" = "Default store";
-"str.md.product.minStockAmount" = "Minimum stock amount ";
-"str.md.product.minStockAmount.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
-"str.md.product.cumulateMinStockAmountOfSubProducts" = "Accumulate sub products min. stock amount ";
-"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product";
+// due date
+"str.md.product.category.dueDate" = "Due date";
+"str.md.product.category.dueDate.description" = "Type, Default days; after opening, freezing, thawing";
 "str.md.product.dueType" = "Due date type";
 "str.md.product.dueType.info" = "Based on the selected type, the highlighting on the stock overview page will be different";
 "str.md.product.dueType.bestBefore" = "Best before date";
@@ -339,13 +353,31 @@
 "str.md.product.defaultDueDays.info" = "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)";
 "str.md.product.defaultDueDaysAfterOpen" = "Default due days after opened";
 "str.md.product.defaultDueDaysAfterOpen.info" = "When this product was marked as opened, the due date will be replaced by today + this amount of days (a value of 0 disables this)";
-"str.md.product.productGroup" = "Product group";
+"str.md.product.defaultDueDaysAfterFreezing" = "Default due days after freezing";
+"str.md.product.defaultDueDaysAfterFreezing.info" = "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days";
+"str.md.product.defaultDueDaysAfterFreezing.invalid" = "This cannot be lower than -1 and needs to be a valid number with max. 0 decimal places";
+"str.md.product.defaultDueDaysAfterThawing" = "Default due days after thawing";
+"str.md.product.defaultDueDaysAfterThawing.info" = "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days";
+"str.md.product.defaultDueDaysAfterThawing.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 0 decimal places";
+// quantity units
+"str.md.product.category.quantityUnits" = "Quantity units";
+"str.md.product.category.quantityUnits.description" = "Stock, Purchase";
 "str.md.product.quStock" = "Quantity unit stock";
 "str.md.product.quStock.info" = "Quantity unit stock cannot be changed after first purchase";
 "str.md.product.quStock.required" = "A quantity unit is required";
 "str.md.product.quPurchase" = "Default quantity unit purchase ";
 "str.md.product.quPurchase.info" = "This is the default quantity unit used when adding this product to the shopping list";
 "str.md.product.quPurchase.required" = "A quantity unit is required";
+// amount
+"str.md.product.category.amount" = "Amounts";
+"str.md.product.category.amount.description" = "Min. stock, Quick consume, Factor, Tare weight";
+"str.md.product.minStockAmount" = "Minimum stock amount ";
+"str.md.product.minStockAmount.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
+"str.md.product.cumulateMinStockAmountOfSubProducts" = "Accumulate sub products min. stock amount ";
+"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product";
+"str.md.product.quickConsumeAmount" = "Quick consume amount";
+"str.md.product.quickConsumeAmount.info" = "This amount is used for the \"quick consume/open buttons\" on the stock overview page (related to quantity unit stock)";
+"str.md.product.quickConsumeAmount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.quFactorPurchaseToStock" = "Factor purchase to stock quantity unit ";
 "str.md.product.quFactorPurchaseToStock.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "This means 1 %@ purchased will be converted into %@ %@ in stock";
@@ -355,27 +387,11 @@
 "str.md.product.tareWeight.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Disable stock fulfillment checking for this ingredient";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "This will be used as the default setting when adding this product as a recipe ingredient";
-"str.md.product.calories" = "Energy (kcal)";
-"str.md.product.calories.info" = "Per stock quantity unit";
-"str.md.product.calories.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
-"str.md.product.defaultDueDaysAfterFreezing" = "Default due days after freezing";
-"str.md.product.defaultDueDaysAfterFreezing.info" = "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days";
-"str.md.product.defaultDueDaysAfterFreezing.invalid" = "This cannot be lower than -1 and needs to be a valid number with max. 0 decimal places";
-"str.md.product.defaultDueDaysAfterThawing" = "Default due days after thawing";
-"str.md.product.defaultDueDaysAfterThawing.info" = "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days";
-"str.md.product.defaultDueDaysAfterThawing.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 0 decimal places";
-"str.md.product.quickConsumeAmount" = "Quick consume amount";
-"str.md.product.quickConsumeAmount.info" = "This amount is used for the \"quick consume/open buttons\" on the stock overview page (related to quantity unit stock)";
-"str.md.product.quickConsumeAmount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-"str.md.product.dontShowOnStockOverview" = "Never show on stock overview ";
-"str.md.product.dontShowOnStockOverview.info" = "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always";
-"str.md.product.delete.confirm" = "Delete this product";
-"str.md.product.delete.confirm" = "Do you really want to delete this product?";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";
 "str.md.barcodes.empty" = "No Barcodes added.";
-"str.md.barcode.new" = "Create barcode";
+"str.md.barcode.new" = "Add barcode";
 "str.md.barcode.edit" = "Edit barcode";
 "str.md.barcode.save" = "Save barcode";
 "str.md.barcode.for %@" = "Barcode for product %@";

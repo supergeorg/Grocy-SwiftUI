@@ -43,7 +43,7 @@ struct ProductField: View {
     
     #if os(iOS)
     var body: some View {
-        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
+        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary), content: {
             HStack {
                 SearchBar(text: $searchTerm, placeholder: "str.search")
                 Button(action: {

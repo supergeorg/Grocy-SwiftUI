@@ -17,10 +17,14 @@ struct MyToggle: View {
     
     var body: some View {
         HStack{
-            if icon != nil {
-                Image(systemName: icon!)
+            if let icon = icon {
+                Toggle(isOn: $isOn, label: {
+                    Label(LocalizedStringKey(description), systemImage: icon)
+                        .foregroundColor(.primary)
+                })
+            } else {
+                Toggle(LocalizedStringKey(description), isOn: $isOn)
             }
-            Toggle(LocalizedStringKey(description), isOn: $isOn)
             if let descriptionInfoU = descriptionInfo {
                 FieldDescription(description: descriptionInfoU)
             }

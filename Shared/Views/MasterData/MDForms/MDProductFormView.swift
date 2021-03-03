@@ -146,7 +146,7 @@ struct MDProductFormView: View {
     var body: some View {
         #if os(macOS)
         NavigationView{
-//        ScrollView{
+            //        ScrollView{
             content
                 .padding()
         }
@@ -197,7 +197,7 @@ struct MDProductFormView: View {
                     isNameCorrect = checkNameCorrect()
                 })
             
-            Group{
+            Section {
                 
                 NavigationLink(
                     destination: optionalPropertiesView,
@@ -232,7 +232,7 @@ struct MDProductFormView: View {
                 NavigationLink(
                     destination: barcodePropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "BARCODE", systemImage: MySymbols.barcode)
+                        MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
                     })
                     .disabled(isNewProduct)
             }
@@ -278,7 +278,7 @@ struct MDProductFormView: View {
             MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
             
             // Product group
-            Picker(LocalizedStringKey("str.md.product.productGroup"), selection: $productGroupID, content: {
+            Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {
                 Text("").tag(nil as String?)
                 ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
                     Text(grocyProductGroup.name).tag(grocyProductGroup.id as String?)
@@ -286,10 +286,10 @@ struct MDProductFormView: View {
             })
             
             // Energy
-            MyDoubleStepper(amount: $calories, description: "str.md.product.calories", descriptionInfo: "str.md.product.calories.info", minAmount: 0, amountStep: 1, amountName: "kcal", errorMessage: "str.md.product.calories.invalid", systemImage: "tag")
+            MyDoubleStepper(amount: $calories, description: "str.md.product.calories", descriptionInfo: "str.md.product.calories.info", minAmount: 0, amountStep: 1, amountName: "kcal", errorMessage: "str.md.product.calories.invalid", systemImage: MySymbols.energy)
             
             // Don't show on stock overview
-            MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: "tablecells")
+            MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
             
             // Picture TBD
         }
@@ -316,25 +316,27 @@ struct MDProductFormView: View {
     }
     var dueDatePropertiesView: some View {
         Form {
-            HStack{
+            VStack(alignment: .leading){
+                Text(LocalizedStringKey("str.md.product.dueType"))
+                    .font(.headline)
                 // Due Type, default best before
-                Picker(LocalizedStringKey("str.md.product.dueType"), selection: $dueType, content: {
+                Picker("", selection: $dueType, content: {
                     Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
                     Text("str.md.product.dueType.expires").tag(DueType.expires)
                 }).pickerStyle(SegmentedPickerStyle())
             }
             
             // Default due days
-            MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: 0, amountName: defaultDueDays == 1 ? "str.day" : "str.days")
+            MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: 0, amountName: defaultDueDays == 1 ? "str.day" : "str.days", systemImage: MySymbols.date)
             
             // Default due days afer opening
-            MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days")
+            MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days", systemImage: MySymbols.date)
             
             // Default due days after freezing
-            MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "str.md.product.defaultDueDaysAfterFreezing", helpText: "str.md.product.defaultDueDaysAfterFreezing.info", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterFreezing.invalid", systemImage: "thermometer.snowflake")
+            MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "str.md.product.defaultDueDaysAfterFreezing", helpText: "str.md.product.defaultDueDaysAfterFreezing.info", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterFreezing.invalid", systemImage: MySymbols.freezing)
             
             // Default due days after thawing
-            MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: "thermometer.snowflake")
+            MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: MySymbols.thawing)
         }
         .navigationTitle(LocalizedStringKey("str.md.product.category.dueDate"))
     }
@@ -369,10 +371,10 @@ struct MDProductFormView: View {
     var amountPropertiesView: some View {
         Form {
             // Min Stock amount
-            MyDoubleStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.minStockAmount.invalid", systemImage: "tag")
+            MyDoubleStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.minStockAmount.invalid", systemImage: MySymbols.amount)
             
             // Accumulate sub products min stock amount
-            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info")
+            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info", icon: MySymbols.accumulate)
             
             // Quick consume amount
             MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: MySymbols.consume)
@@ -385,20 +387,20 @@ struct MDProductFormView: View {
             
             // Tare weight
             Group {
-                MyToggle(isOn: $enableTareWeightHandling, description: "str.md.product.enableTareWeightHandling", descriptionInfo: "str.md.product.enableTareWeightHandling.info", icon: "tag")
+                MyToggle(isOn: $enableTareWeightHandling, description: "str.md.product.enableTareWeightHandling", descriptionInfo: "str.md.product.enableTareWeightHandling.info", icon: MySymbols.tareWeight)
                 
                 if enableTareWeightHandling {
-                    MyDoubleStepper(amount: $tareWeight, description: "str.md.product.tareWeight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.tareWeight.invalid", systemImage: "tag")
+                    MyDoubleStepper(amount: $tareWeight, description: "str.md.product.tareWeight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", errorMessage: "str.md.product.tareWeight.invalid", systemImage: MySymbols.tareWeight)
                 }
             }
             
             // Check stock fulfillment for recipes
-            MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: "tag")
+            MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: MySymbols.recipe)
         }
         .navigationTitle(LocalizedStringKey("str.md.product.category.amount"))
     }
     var barcodePropertiesView: some View {
-        Form {
+        Group{
             if let product = product {
                 MDBarcodesView(productID: product.id, toastType: $toastType)
             }
@@ -418,7 +420,7 @@ struct MDProductFormView_Previews: PreviewProvider {
             NavigationView {
                 MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
             }
-            .environment(\.locale, .init(identifier: "de"))
+            //            .environment(\.locale, .init(identifier: "de"))
             //            NavigationView {
             //                MDProductFormView(isNewProduct: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil))
             //            }

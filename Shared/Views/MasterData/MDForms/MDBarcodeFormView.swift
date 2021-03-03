@@ -28,7 +28,8 @@ struct MDBarcodeFormView: View {
     
     @State var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
-        return (barcode.count == 8 || barcode.count == 13)
+        // check if EAN8 or EAN13
+        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13)
     }
     
     private var product: MDProduct? {
@@ -43,6 +44,7 @@ struct MDBarcodeFormView: View {
         quantityUnitID = editBarcode?.quID ?? product?.quIDPurchase
         shoppingLocationID = editBarcode?.shoppingLocationID
         note = editBarcode?.note ?? ""
+        isBarcodeCorrect = checkBarcodeCorrect()
     }
     
     private func updateData() {
@@ -156,7 +158,7 @@ struct MDBarcodeFormView: View {
             }
             #endif
             HStack{
-                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: "barcode", isEditing: true, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
+                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, isEditing: true, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
                     .onChange(of: barcode, perform: {newBC in
                         isBarcodeCorrect = checkBarcodeCorrect()
                     })
@@ -180,7 +182,8 @@ struct MDBarcodeFormView: View {
                     }
                 }).disabled(true)
             }
-            Picker(LocalizedStringKey("str.md.barcode.shoppingLocation"), selection: $shoppingLocationID, content: {
+
+            Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.md.barcode.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary), content: {
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
                     Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
                 }
