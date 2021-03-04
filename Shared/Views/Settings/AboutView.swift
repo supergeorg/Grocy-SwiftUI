@@ -29,7 +29,6 @@ struct AboutView: View {
             Section{
                 Text(LocalizedStringKey("str.settings.about.thanks"))
                     .lineLimit(.none)
-//                    .fixedSize(horizontal: false, vertical: true)
                 
                 AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
                 
@@ -42,6 +41,11 @@ struct AboutView: View {
                 
                 Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
                     AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
+                })
+                .foregroundColor(.primary)
+                
+                Link(destination: URL(string: "https://github.com/SwiftyBeaver/SwiftyBeaver")!, label: {
+                    AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (c) 2015 Sebastian Kreutzberger")
                 })
                 .foregroundColor(.primary)
             }
