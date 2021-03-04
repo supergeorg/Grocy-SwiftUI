@@ -21,6 +21,7 @@ struct MyIntStepper: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
+            #if os(iOS)
             HStack{
                 Text(LocalizedStringKey(description))
                 if let helpTextU = helpText {
@@ -31,14 +32,9 @@ struct MyIntStepper: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
-                #if os(iOS)
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
                     .keyboardType(.numberPad)
-                #else
-                TextField("", value: $amount, formatter: NumberFormatter())
-                    .frame(width: 70)
-                #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += 1
@@ -53,6 +49,35 @@ struct MyIntStepper: View {
                     } else { amount = minAmount }
                 })
             }
+            #elseif os(macOS)
+            HStack{
+                if systemImage != nil {
+                    Image(systemName: systemImage!)
+                }
+                Text(LocalizedStringKey(description))
+                if let helpTextU = helpText {
+                    FieldDescription(description: helpTextU)
+                }
+            }
+            HStack{
+                Stepper("", onIncrement: {
+                    if amount != nil {
+                        amount! += 1
+                    } else { amount = 1 }
+                }, onDecrement: {
+                    if amount != nil {
+                        if minAmount != nil {
+                            if amount! > minAmount! {
+                                amount! -= 1
+                            }
+                        } else {amount! -= 1}
+                    } else { amount = minAmount }
+                })
+                TextField("", value: $amount, formatter: NumberFormatter())
+                    .frame(width: 70)
+                Text(LocalizedStringKey(amountName ?? ""))
+            }
+            #endif
             if minAmount != nil {
                 if let amount = amount {
                     if amount < minAmount! {

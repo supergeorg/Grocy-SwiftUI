@@ -146,11 +146,9 @@ struct MDProductFormView: View {
     var body: some View {
         #if os(macOS)
         NavigationView{
-            //        ScrollView{
             content
                 .padding()
         }
-        .padding()
         #elseif os(iOS)
         content
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
@@ -382,7 +380,14 @@ struct MDProductFormView: View {
             // QU Factor to stock
             VStack(alignment: .trailing) {
                 MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", errorMessage: "str.md.product.quFactorPurchaseToStock.invalid", systemImage: MySymbols.amount)
-                if quFactorPurchaseToStock != 1 { Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")")) }
+                if quFactorPurchaseToStock != 1 {
+                    #if os(macOS)
+                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
+                        .frame(maxWidth: 200)
+                    #else
+                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
+                    #endif
+                }
             }
             
             // Tare weight
@@ -402,7 +407,13 @@ struct MDProductFormView: View {
     var barcodePropertiesView: some View {
         Group{
             if let product = product {
+                #if os(macOS)
+                ScrollView{
+                    MDBarcodesView(productID: product.id, toastType: $toastType)
+                }
+                #else
                 MDBarcodesView(productID: product.id, toastType: $toastType)
+                #endif
             }
         }
     }

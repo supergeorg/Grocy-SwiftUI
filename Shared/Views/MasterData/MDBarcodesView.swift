@@ -93,8 +93,8 @@ struct MDBarcodesView: View {
                             })
                     }.onDelete(perform: delete)
                 }
+                .frame(minWidth: 200, minHeight: 400)
             }
-            .frame(width: 400, height: 200)
         }
         .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
     }
