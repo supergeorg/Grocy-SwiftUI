@@ -21,7 +21,7 @@ struct SettingsView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
-    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
+    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = true
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("devMode") private var devMode: Bool = false

@@ -20,7 +20,7 @@ extension AppTabNavigation {
 }
 
 struct AppTabNavigation: View {
-    @AppStorage("tabSelection") private var tabSelection: Tab = .shoppingList
+    @AppStorage("tabSelection") private var tabSelection: Tab = .stockOverview
     @AppStorage("devMode") private var devMode: Bool = false
     
     var body: some View {

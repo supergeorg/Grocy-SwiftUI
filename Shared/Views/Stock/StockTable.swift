@@ -49,7 +49,7 @@ struct StockTable: View {
     @AppStorage("stockShowCaloriesPerStockQU") var stockShowCaloriesPerStockQU: Bool = false
     @AppStorage("stockShowCalories") var stockShowCalories: Bool = false
     
-    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = false
+    @AppStorage("simplifiedStockView") var simplifiedStockView: Bool = true
     
     @State private var sortedStockColumn: StockColumn = .product
     @State private var sortAscending: Bool = true
