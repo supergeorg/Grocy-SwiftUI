@@ -33,17 +33,18 @@ private struct StockFilterItemView: View {
                     Image(systemName: MySymbols.filter)
                 }
                 #if os(iOS)
-                if horizontalSizeClass == .compact || verticalSizeClass == .compact {
-                    Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
-                        .bold()
-                        .foregroundColor(colorScheme == .light ? darkColor : lightColor)
-                } else {
+                // check if small display (not widescreen or iPad)
+                if horizontalSizeClass == .compact && verticalSizeClass == .regular {
                     HStack{
                         Text(String(num))
                             .bold()
                         Image(systemName: ownFilteredStatus.getIconName())
                     }
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+                } else {
+                    Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
+                        .bold()
+                        .foregroundColor(colorScheme == .light ? darkColor : lightColor)
                 }
                 #elseif os(macOS)
                 Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
