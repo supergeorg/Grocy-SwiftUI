@@ -78,11 +78,11 @@ struct TransferProductView: View {
                         grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
                             switch result {
                             case let .success(prod):
-                                print(prod)
+                                grocyVM.postLog(message: "Transfer successful. \(prod)", type: .info)
                                 toastType = .successTransfer
                                 resetForm()
                             case let .failure(error):
-                                print("\(error)")
+                                grocyVM.postLog(message: "Transfer failed: \(error)", type: .error)
                                 toastType = .failTransfer
                             }
                             isProcessingAction = false

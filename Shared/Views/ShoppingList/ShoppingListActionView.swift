@@ -47,10 +47,10 @@ struct ShoppingListActionView: View {
         grocyVM.shoppingListAction(content: ShoppingListAction(listID: Int(selectedShoppingListID)!), actionType: actionType, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog(message: "SHLAction successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog(message: "SHLAction failed: \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })

@@ -108,11 +108,11 @@ struct ConsumeProductView: View {
                 grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
                     switch result {
                     case let .success(prod):
-                        print(prod)
+                        grocyVM.postLog(message: "Opening successful. \(prod)", type: .info)
                         toastType = .successOpen
                         resetForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Opening failed: \(error)", type: .error)
                         toastType = .failOpen
                     }
                     isProcessingAction = false
@@ -132,11 +132,11 @@ struct ConsumeProductView: View {
                 grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
                     switch result {
                     case let .success(prod):
-                        print(prod)
+                        grocyVM.postLog(message: "Consume successful. \(prod)", type: .info)
                         toastType = .successConsume
                         resetForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Consume failed: \(error)", type: .error)
                         toastType = .failConsume
                     }
                     isProcessingAction = false

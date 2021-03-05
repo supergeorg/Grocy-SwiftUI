@@ -89,7 +89,7 @@ struct PurchaseProductView: View {
                         toastType = .successPurchase
                         resetForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Purchase failed: \(error)", type: .error)
                         toastType = .failPurchase
                     }
                     isProcessingAction = false

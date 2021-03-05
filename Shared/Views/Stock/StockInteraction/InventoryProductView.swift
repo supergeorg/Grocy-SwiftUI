@@ -95,11 +95,11 @@ struct InventoryProductView: View {
                 grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
                     switch result {
                     case let .success(prod):
-                        print(prod)
+                        grocyVM.postLog(message: "Inventory successful. \(prod)", type: .info)
                         toastType = .successInventory
                         resetForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Inventory failed: \(error)", type: .error)
                         toastType = .failInventory
                     }
                     isProcessingAction = false
