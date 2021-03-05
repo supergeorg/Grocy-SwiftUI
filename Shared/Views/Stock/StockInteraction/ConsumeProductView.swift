@@ -13,6 +13,12 @@ struct ConsumeProductView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessingAction: Bool = false
+    
+    #if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #endif
     
     var productToConsumeID: String?
     
@@ -97,7 +103,8 @@ struct ConsumeProductView: View {
         if let amount = amount {
             if let productID = productID {
                 let openInfo = ProductOpen(amount: amount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
-                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
+                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+                isProcessingAction = true
                 grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
                     switch result {
                     case let .success(prod):
@@ -108,6 +115,7 @@ struct ConsumeProductView: View {
                         print("\(error)")
                         toastType = .failOpen
                     }
+                    isProcessingAction = false
                 }
             }
         }
@@ -119,7 +127,8 @@ struct ConsumeProductView: View {
                 let intRecipeID = Int(recipeID ?? "")
                 let intLocationID = Int(locationID ?? "")
                 let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
-                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
+                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+                isProcessingAction = true
                 grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
                     switch result {
                     case let .success(prod):
@@ -130,6 +139,7 @@ struct ConsumeProductView: View {
                         print("\(error)")
                         toastType = .failConsume
                     }
+                    isProcessingAction = false
                 }
             }
         }
@@ -244,25 +254,55 @@ struct ConsumeProductView: View {
             }
         })
         .toolbar(content: {
-            ToolbarItemGroup(placement: .confirmationAction) {
-                HStack{
-                    Button(action: {
-                        openProduct()
-                    }, label: {
+            ToolbarItem(placement: .confirmationAction, content: {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            })
+            ToolbarItem(placement: .confirmationAction, content: {
+                Button(action: {
+                    openProduct()
+                }, label: {
+                    #if os(iOS)
+                    if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                    } else {
                         Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
                             .labelStyle(TextIconLabelStyle())
-                    })
-                    .disabled(!isFormValid)
-                    Button(action: {
-                        consumeProduct()
-                    }, label: {
+                    }
+                    #else
+                    Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                        .labelStyle(TextIconLabelStyle())
+                    #endif
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("o", modifiers: [.command])
+            })
+            ToolbarItem(placement: .confirmationAction, content: {
+                Button(action: {
+                    consumeProduct()
+                }, label: {
+                    #if os(iOS)
+                    if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                    } else {
                         Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
                             .labelStyle(TextIconLabelStyle())
-                    })
-                    .disabled(!isFormValid)
-                    .keyboardShortcut("s", modifiers: [.command])
-                }
-            }
+                    }
+                    #else
+                    Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                        .labelStyle(TextIconLabelStyle())
+                    #endif
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            })
         })
         .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }

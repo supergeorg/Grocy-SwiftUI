@@ -11,8 +11,10 @@ struct PurchaseProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessingAction: Bool = false
     
     var productToPurchaseID: String?
     var productToPurchaseAmount: Double?
@@ -20,7 +22,7 @@ struct PurchaseProductView: View {
     @State private var productID: String?
     @State private var amount: Double?
     @State private var quantityUnitID: String?
-    @State private var dueDate: Date = Date()
+    @State private var dueDate: Date = Calendar.current.startOfDay(for: Date())
     @State private var productDoesntSpoil: Bool = false
     @State private var price: Double?
     @State private var isTotalPrice: Bool = false
@@ -58,7 +60,7 @@ struct PurchaseProductView: View {
         self.productID = firstAppear ? productToPurchaseID : nil
         self.amount = firstAppear ? productToPurchaseAmount : nil
         self.quantityUnitID = nil
-        self.dueDate = Date()
+        self.dueDate = Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
         self.price = nil
         self.isTotalPrice = false
@@ -78,7 +80,8 @@ struct PurchaseProductView: View {
         if let amount = amount {
             let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
             if let productID = productID {
-                infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
+                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+                isProcessingAction = true
                 grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
                     switch result {
                     case let .success(prod):
@@ -89,6 +92,7 @@ struct PurchaseProductView: View {
                         print("\(error)")
                         toastType = .failPurchase
                     }
+                    isProcessingAction = false
                 }
             }
         }
@@ -139,10 +143,15 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.dueDate")).font(.headline)) {
-                HStack {
-                    Image(systemName: MySymbols.date)
-                    DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $dueDate, displayedComponents: .date)
-                        .disabled(productDoesntSpoil)
+                VStack(alignment: .trailing){
+                    HStack {
+                        Image(systemName: MySymbols.date)
+                        DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $dueDate, displayedComponents: .date)
+                            .disabled(productDoesntSpoil)
+                    }
+                    Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey))
+                        .foregroundColor(.gray)
+                        .italic()
                 }
                 
                 MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
@@ -160,19 +169,23 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
-                    Text("").tag(nil as String?)
-                    ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                        Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
-                    }
-                })
+                Picker(selection: $shoppingLocationID,
+                       label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
+                       content: {
+                        Text("").tag(nil as String?)
+                        ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
+                            Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
+                        }
+                       })
                 
-                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location), content: {
-                    Text("").tag(nil as String?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id as String?)
-                    }
-                })
+                Picker(selection: $locationID,
+                       label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundColor(.primary),
+                       content: {
+                        Text("").tag(nil as String?)
+                        ForEach(grocyVM.mdLocations, id:\.id) { location in
+                            Text(location.name).tag(location.id as String?)
+                        }
+                       })
             }
         }
         .onAppear(perform: {
@@ -191,13 +204,25 @@ struct PurchaseProductView: View {
             }
         })
         .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction) {
-                Button(action: purchaseProduct, label: {
-                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
-                        .labelStyle(TextIconLabelStyle())
-                })
-                .disabled(!isFormValid)
-            }
+            ToolbarItem(placement: .confirmationAction, content: {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            })
+            ToolbarItem(placement: .confirmationAction, content: {
+                    Button(action: purchaseProduct, label: {
+                        Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
+                            .labelStyle(TextIconLabelStyle())
+                    })
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
+            })
         })
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.buy"))

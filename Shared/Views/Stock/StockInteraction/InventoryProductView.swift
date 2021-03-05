@@ -13,6 +13,7 @@ struct InventoryProductView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessingAction: Bool = false
     
     var productToInventoryID: String?
     
@@ -36,7 +37,7 @@ struct InventoryProductView: View {
         }
     }
     @State private var infoString: String?
-
+    
     private var currentQuantityUnit: MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
@@ -89,7 +90,8 @@ struct InventoryProductView: View {
         if let amount = amount {
             if let productID = productID {
                 let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: intShoppingLocation, locationID: intLocationID, price: price)
-                infoString = "\(amount) \(getQUString(amount: amount)) \(productName)"
+                infoString = "\(formatAmount(Double(amount))) \(getQUString(amount: amount)) \(productName)"
+                isProcessingAction = true
                 grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
                     switch result {
                     case let .success(prod):
@@ -100,6 +102,7 @@ struct InventoryProductView: View {
                         print("\(error)")
                         toastType = .failInventory
                     }
+                    isProcessingAction = false
                 }
             }
         }
@@ -196,7 +199,18 @@ struct InventoryProductView: View {
             }
         })
         .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(placement: .confirmationAction, content: {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            })
+            ToolbarItem(placement: .confirmationAction, content: {
                 Button(action: {
                     inventoryProduct()
                     resetForm()
@@ -204,8 +218,9 @@ struct InventoryProductView: View {
                     Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
                         .labelStyle(TextIconLabelStyle())
                 })
-                .disabled(!isFormValid)
-            }
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            })
         })
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.inventory"))

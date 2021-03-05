@@ -13,6 +13,7 @@ struct TransferProductView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessingAction: Bool = false
     
     var productToTransferID: String?
     
@@ -72,7 +73,8 @@ struct TransferProductView: View {
                 if let productID = productID {
                     if let amount = amount {
                         let transferInfo = ProductTransfer(amount: amount, locationIDFrom: intLocationIDFrom, locationIDTo: intLocationIDTo, stockEntryID: stockEntryID)
-                        infoString = "\(amount) \(currentQuantityUnitName ?? "") \(productName)"
+                        infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+                        isProcessingAction = true
                         grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
                             switch result {
                             case let .success(prod):
@@ -83,6 +85,7 @@ struct TransferProductView: View {
                                 print("\(error)")
                                 toastType = .failTransfer
                             }
+                            isProcessingAction = false
                         }
                     }
                 }
@@ -178,7 +181,18 @@ struct TransferProductView: View {
             }
         })
         .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(placement: .confirmationAction, content: {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            })
+            ToolbarItem(placement: .confirmationAction, content: {
                 Button(action: {
                     transferProduct()
                     resetForm()
@@ -186,8 +200,9 @@ struct TransferProductView: View {
                     Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
                         .labelStyle(TextIconLabelStyle())
                 })
-                .disabled(!isFormValid)
-            }
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            })
         })
         .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))

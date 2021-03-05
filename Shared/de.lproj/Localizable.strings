@@ -152,7 +152,7 @@
 "str.stock.buy.product.doesntSpoil" = "Nie überfällig";
 "str.stock.buy.product.price" = "Preis";
 "str.stock.buy.product.price.invalid" = "Dies darf nicht niedriger als 0.01 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
-"str.stock.buy.product.price.unitPrice" = "Preis";
+"str.stock.buy.product.price.unitPrice" = "Einzelpreis";
 "str.stock.buy.product.price.totalPrice" = "Gesamtpreis";
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
