@@ -106,12 +106,26 @@ func formatDays(daysToFormat: Int?) -> String? {
 }
 
 func getRelativeDateAsText(_ date: Date, localizationKey: String? = nil) -> String {
-    let formatter = RelativeDateTimeFormatter()
-    if let localizationKey = localizationKey {
-        formatter.locale = Locale(identifier: localizationKey)
+    if Calendar.current.isDateInToday(date) || Calendar.current.isDateInTomorrow(date) || Calendar.current.isDateInYesterday(date) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.doesRelativeDateFormatting = true
+        if let localizationKey = localizationKey {
+            dateFormatter.locale = Locale(identifier: localizationKey)
+        } else {
+            dateFormatter.locale = .current
+        }
+        return dateFormatter.string(from: date)
     } else {
-        formatter.locale = .current
+        let dateFormatter = RelativeDateTimeFormatter()
+        if let localizationKey = localizationKey {
+            dateFormatter.locale = Locale(identifier: localizationKey)
+        } else {
+            dateFormatter.locale = .current
+        }
+        dateFormatter.dateTimeStyle = .named
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        
+        return dateFormatter.localizedString(for: date, relativeTo: startOfToday)
     }
-    formatter.dateTimeStyle = .named
-    if let formattedString = formatter.string(for: date) { return formattedString } else { return "" }
 }

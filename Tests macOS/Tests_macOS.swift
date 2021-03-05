@@ -32,6 +32,20 @@ class Tests_macOS: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
+    func test_relativeDate() {
+//        let today = Calendar.startOfDay(Date())
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+        let oneWeek = Calendar.current.date(byAdding: .day, value: 7, to: today)!
+        let oneYear = Calendar.current.date(byAdding: .year, value: 1, to: today)!
+        XCTAssertEqual(getRelativeDateAsText(today, localizationKey: "en"), "Today")
+        XCTAssertEqual(getRelativeDateAsText(tomorrow, localizationKey: "en"), "Tomorrow")
+        XCTAssertEqual(getRelativeDateAsText(yesterday, localizationKey: "en"), "Yesterday")
+        XCTAssertEqual(getRelativeDateAsText(oneWeek, localizationKey: "en"), "next week")
+        XCTAssertEqual(getRelativeDateAsText(oneYear, localizationKey: "en"), "next year")
+    }
+    
     func test_MDLocations() {
         grocyVM.setDemoModus()
         grocyVM.getEntity(entity: .locations, completion: { (result: Result<MDLocations, Error>) in

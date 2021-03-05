@@ -31,6 +31,8 @@
 		781DD5C82579028800A30ECA /* MDBarcodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DD5C62579028800A30ECA /* MDBarcodesView.swift */; };
 		781FE2E325E9215F002273F7 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 781FE2E225E9215F002273F7 /* SwiftyBeaver */; };
 		781FE2E925E92171002273F7 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 781FE2E825E92171002273F7 /* SwiftyBeaver */; };
+		782219A425F2520900DCDB2E /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
+		782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
 		78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */; };
 		782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
@@ -1455,6 +1457,7 @@
 				78FDCDC725BAD2DE0089CB5E /* MDProductGroupsModel.swift in Sources */,
 				78846069257F9FB700671C97 /* TransactionType.swift in Sources */,
 				78FDCDC825BAD2DE0089CB5E /* MDShoppingLocationsModel.swift in Sources */,
+				782219A425F2520900DCDB2E /* DateFormatter.swift in Sources */,
 				78FDCDA125BAD2D00089CB5E /* GrocyUserModel.swift in Sources */,
 				78E02CBF25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
 				78FDCE2025BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
@@ -1534,6 +1537,7 @@
 				78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */,
 				78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */,
 				78FDCDD025BAD2DE0089CB5E /* MDQuantityUnitsModel.swift in Sources */,
+				782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */,
 				78FDCDC025BAD2DA0089CB5E /* SharedModel.swift in Sources */,
 				78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */,
 				78FDCDD425BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */,
