@@ -79,12 +79,8 @@ struct MDUserFieldsView: View {
         NavigationView{
             content
                 .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .primaryAction, content: {
                         HStack{
-                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
-                            Button(action: {
-                                isSearching.toggle()
-                            }, label: {Image(systemName: MySymbols.search)})
                             Button(action: {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
@@ -101,7 +97,10 @@ struct MDUserFieldsView: View {
                                 MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
                             })
                         }
-                    }
+                    })
+                    ToolbarItem(placement: .automatic, content: {
+                        ToolbarSearchField(searchTerm: $searchString)
+                    })
                 })
                 .frame(minWidth: Constants.macOSNavWidth)
         }

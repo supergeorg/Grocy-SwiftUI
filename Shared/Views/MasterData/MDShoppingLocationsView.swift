@@ -100,12 +100,8 @@ struct MDShoppingLocationsView: View {
         NavigationView{
             content
                 .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .primaryAction, content: {
                         HStack{
-                            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-                            Button(action: {
-                                isSearching.toggle()
-                            }, label: {Image(systemName: MySymbols.search)})
                             Button(action: {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
@@ -122,7 +118,10 @@ struct MDShoppingLocationsView: View {
                                 MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
                             })
                         }
-                    }
+                    })
+                    ToolbarItem(placement: .automatic, content: {
+                        ToolbarSearchField(searchTerm: $searchString)
+                    })
                 })
                 .frame(minWidth: Constants.macOSNavWidth)
         }

@@ -82,7 +82,7 @@ struct MDQuantityUnitsView: View {
         NavigationView {
             content
                 .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .primaryAction, content: {
                         HStack{
                             if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
                             Button(action: {
@@ -104,7 +104,10 @@ struct MDQuantityUnitsView: View {
                                 MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
                             })
                         }
-                    }
+                    })
+                    ToolbarItem(placement: .automatic, content: {
+                        ToolbarSearchField(searchTerm: $searchString)
+                    })
                 })
                 .frame(minWidth: Constants.macOSNavWidth)
         }

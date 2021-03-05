@@ -93,6 +93,51 @@ struct SearchBar: NSViewRepresentable {
 }
 #endif
 
+#if os(macOS)
+struct ToolbarSearchFieldNS: NSViewRepresentable {
+
+    class Coordinator: NSObject, NSSearchFieldDelegate {
+        var parent: ToolbarSearchFieldNS
+
+        init(_ parent: ToolbarSearchFieldNS) {
+            self.parent = parent
+        }
+
+        func controlTextDidChange(_ notification: Notification) {
+            guard let searchField = notification.object as? NSSearchField else {
+                print("Unexpected control in update notification")
+                return
+            }
+            self.parent.search = searchField.stringValue
+        }
+
+    }
+
+    @Binding var search: String
+
+    func makeNSView(context: Context) -> NSSearchField {
+        NSSearchField(frame: .zero)
+    }
+
+    func updateNSView(_ searchField: NSSearchField, context: Context) {
+        searchField.stringValue = search
+        searchField.delegate = context.coordinator
+    }
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+}
+
+struct ToolbarSearchField: View {
+    @Binding var searchTerm: String
+    var body: some View {
+        ToolbarSearchFieldNS(search: $searchTerm)
+            .frame(minWidth: 50, idealWidth: 200, maxWidth: .infinity)
+    }
+}
+#endif
+
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
         Group {

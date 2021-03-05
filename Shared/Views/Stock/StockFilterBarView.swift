@@ -27,10 +27,8 @@ struct StockFilterBar: View {
             if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                 SearchBar(text: $searchString, placeholder: "str.search")
             }
-            #else
-            SearchBar(text: $searchString, placeholder: "str.search")
-            #endif
             Spacer()
+            #endif
             HStack{
                 Image(systemName: MySymbols.filter)
                 Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {

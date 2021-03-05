@@ -33,8 +33,7 @@ struct UserManagementView: View {
         #if os(macOS)
         content
             .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-                    SearchBarSwiftUI(text: $searchString, placeholder: "str.search")
+                ToolbarItem(placement: .automatic, content: {
                     Button(action: {
                         withAnimation {
                             self.reloadRotationDeg += 360
@@ -44,6 +43,9 @@ struct UserManagementView: View {
                         Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
+                })
+                
+                ToolbarItem(placement: .automatic, content: {
                     Button(action: {
                         showAddUser.toggle()
                     }, label: {
@@ -55,7 +57,12 @@ struct UserManagementView: View {
                     .popover(isPresented: $showAddUser, content: {
                         UserFormView(isNewUser: true, toastType: $toastType)
                             .padding()
+                            .frame(width: 500, height: 500)
                     })
+                })
+                
+                ToolbarItem(placement: .automatic, content: {
+                    ToolbarSearchField(searchTerm: $searchString)
                 })
             })
         #elseif os(iOS)

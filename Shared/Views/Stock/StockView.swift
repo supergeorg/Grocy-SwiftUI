@@ -188,6 +188,9 @@ struct StockView: View {
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
                     })
                 })
+                ToolbarItem(placement: .automatic, content: {
+                    ToolbarSearchField(searchTerm: $searchString)
+                })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
     }

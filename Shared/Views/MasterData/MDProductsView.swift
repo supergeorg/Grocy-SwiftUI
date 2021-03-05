@@ -109,12 +109,8 @@ struct MDProductsView: View {
         NavigationView{
             content
                 .toolbar (content: {
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .primaryAction, content: {
                         HStack{
-                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
-                            Button(action: {
-                                isSearching.toggle()
-                            }, label: {Image(systemName: MySymbols.search)})
                             Button(action: {
                                 withAnimation {
                                     self.reloadRotationDeg += 360
@@ -132,7 +128,10 @@ struct MDProductsView: View {
                                     .frame(width: 700, height: 700)
                             })
                         }
-                    }
+                    })
+                    ToolbarItem(placement: .automatic, content: {
+                        ToolbarSearchField(searchTerm: $searchString)
+                    })
                 })
                 .frame(minWidth: Constants.macOSNavWidth)
         }
