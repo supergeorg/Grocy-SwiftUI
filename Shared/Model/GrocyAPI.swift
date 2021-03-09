@@ -90,6 +90,9 @@ protocol GrocyAPI {
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: String) -> AnyPublisher<T, APIError>
     func putObjectWithID(object: ObjectEntities, id: String, content: Data) -> AnyPublisher<Int, APIError>
     func deleteObjectWithID(object: ObjectEntities, id: String) -> AnyPublisher<Int, APIError>
+    // MARK: - Files
+    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
+    func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError>
 }
 
 public class GrocyApi: GrocyAPI {
@@ -109,8 +112,25 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
-        let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
+    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, groupName: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+        let urlRequest = request(for: endPoint, method: .PUT, id: id, groupName: groupName, isOctet: true)
+        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let response = response as? HTTPURLResponse,
+                response.statusCode == 204 else {
+                completion(.failure(APIError.unsuccessful))
+                return
+            }
+            completion(.success(204))
+        }
+        uploadTask.resume()
+    }
+    
+    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
+        let urlRequest = request(for: endPoint, method: method, object: object, id: id, groupName: groupName, content: content, query: query)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ _ in APIError.serverError }
             .flatMap({ result -> Just<Int> in
@@ -151,7 +171,7 @@ public class GrocyApi: GrocyAPI {
             .eraseToAnyPublisher()
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, groupName: String? = nil, query: String? = nil) -> URLRequest {
+    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil) -> URLRequest {
         var path = "\(baseURL)/api\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: id!) }
@@ -171,13 +191,13 @@ public class GrocyApi: GrocyAPI {
         if path.contains("{taskId}") { path = path.replacingOccurrences(of: "{taskId}", with: id!) }
         if path.contains("{group}") { path = path.replacingOccurrences(of: "{group}", with: groupName!) }
         if path.contains("{fileName}") { path = path.replacingOccurrences(of: "{fileName}", with: id!) }
-        if query != nil { path += query! }
+        if let query = query { path += query }
         
         guard let url = URL(string: path)
         else { preconditionFailure("Bad URL") }
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields = ["Content-Type": "application/json",
+        request.allHTTPHeaderFields = ["Content-Type": isOctet ? "application/octet-stream" : "application/json",
                                        "Accept": "application/json",
                                        "GROCY-API-KEY": apiKey]
         if content != nil {
@@ -407,4 +427,13 @@ extension GrocyApi {
     func deleteObjectWithID(object: ObjectEntities, id: String) -> AnyPublisher<Int, APIError> {
             return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: id)
         }
+    
+    // MARK: - Files
+    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
+        return callUpload(.filesGroupFilename, fileURL: fileURL, id: fileName, groupName: groupName, completion: completion)
+    }
+    
+    func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.filesGroupFilename, method: .DELETE, id: fileName, groupName: groupName)
+    }
 }

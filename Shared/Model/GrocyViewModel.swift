@@ -757,6 +757,28 @@ class GrocyViewModel: ObservableObject {
         grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
     }
     
+    func uploadFile(fileURL: URL, groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
+        grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+    }
+    
+    func deleteFile(groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
+        grocyApi.deleteFile(fileName: fileName, groupName: groupName)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.grocyLog.error("Delete file failed. \("\(error)")")
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (responseCode: Int) in
+                DispatchQueue.main.async {
+                    completion(.success(responseCode))
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
     // MARK: -Shopping Lists
     
     func addShoppingListProduct(content: ShoppingListAddProduct, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
@@ -838,6 +860,9 @@ class GrocyViewModel: ObservableObject {
     
     func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! JSONEncoder().encode(content)
+        if let JSONString = String(data: jsonContent, encoding: String.Encoding.utf8) {
+           print(JSONString)
+        }
         grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {

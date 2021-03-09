@@ -48,6 +48,11 @@ struct AboutView: View {
                     AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (c) 2015 Sebastian Kreutzberger")
                 })
                 .foregroundColor(.primary)
+                
+                Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
+                    AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (c) 2020 Steven Grosmark")
+                })
+                .foregroundColor(.primary)
             }
             Button(action: {
                 self.onboardingNeeded = true

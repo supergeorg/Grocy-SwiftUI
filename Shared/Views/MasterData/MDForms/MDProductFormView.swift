@@ -20,6 +20,10 @@ struct MDProductFormView: View {
     @State private var active: Bool = true
     @State private var parentProductID: String?
     @State private var mdProductDescription: String = ""
+    
+    @State private var selectedPictureURL: URL? = nil
+    @State private var selectedPictureFileName: String? = nil
+    
     @State private var locationID: String? // REQUIRED
     @State private var shoppingLocationID: String?
     @State private var minStockAmount: Double?
@@ -63,28 +67,35 @@ struct MDProductFormView: View {
     
     private func resetForm() {
         name = product?.name ?? ""
+        
         active = (product?.active ?? "1") == "1"
         parentProductID = product?.parentProductID
         mdProductDescription = product?.mdProductDescription ?? ""
+        productGroupID = product?.productGroupID
+        calories = Double(product?.calories ?? "")
+        hideOnStockOverview = (product?.hideOnStockOverview ?? "0") == "1"
+        selectedPictureFileName = product?.pictureFileName
+        
         locationID = product?.locationID
         shoppingLocationID = product?.shoppingLocationID
-        minStockAmount = Double(product?.minStockAmount ?? "")
-        cumulateMinStockAmountOfSubProducts = Bool(product?.cumulateMinStockAmountOfSubProducts ?? "") ?? false
+        
         dueType = product?.dueType == DueType.bestBefore.rawValue ? DueType.bestBefore : DueType.expires
         defaultDueDays = Int(product?.defaultBestBeforeDays ?? "")
         defaultDueDaysAfterOpen = Int(product?.defaultBestBeforeDaysAfterOpen ?? "")
-        productGroupID = product?.productGroupID
+        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
+        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
+        
         quIDStock = product?.quIDStock
         quIDPurchase = product?.quIDPurchase
+        
+        minStockAmount = Double(product?.minStockAmount ?? "")
+        cumulateMinStockAmountOfSubProducts = Bool(product?.cumulateMinStockAmountOfSubProducts ?? "") ?? false
+        quickConsumeAmount = Double(product?.quickConsumeAmount ?? "") ?? 1.0
         quFactorPurchaseToStock = Double(product?.quFactorPurchaseToStock ?? "") ?? 1.0
         enableTareWeightHandling = (product?.enableTareWeightHandling ?? "0") == "1"
         tareWeight = Double(product?.tareWeight ?? "")
         notCheckStockFulfillmentForRecipes = (product?.notCheckStockFulfillmentForRecipes ?? "0") == "1"
-        calories = Double(product?.calories ?? "")
-        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
-        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
-        quickConsumeAmount = Double(product?.quickConsumeAmount ?? "") ?? 1.0
-        hideOnStockOverview = (product?.hideOnStockOverview ?? "0") == "1"
+        
         isNameCorrect = checkNameCorrect()
     }
     
@@ -110,7 +121,7 @@ struct MDProductFormView: View {
         if let locationID = locationID {
             if let quIDPurchase = quIDPurchase {
                 if let quIDStock = quIDStock {
-                    let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: nil, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
+                    let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
                     if isNewProduct {
                         grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
                             switch result {
@@ -197,11 +208,19 @@ struct MDProductFormView: View {
             
             Section {
                 
+                #if os(macOS)
+                NavigationLink(
+                    destination: NavigationView{optionalPropertiesView},
+                    label: {
+                        MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
+                    })
+                #else
                 NavigationLink(
                     destination: optionalPropertiesView,
                     label: {
                         MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
                     })
+                #endif
                 
                 NavigationLink(
                     destination: locationPropertiesView,
@@ -289,7 +308,11 @@ struct MDProductFormView: View {
             // Don't show on stock overview
             MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
             
-            // Picture TBD
+            // Product picture
+            NavigationLink(destination: MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName), label: {
+                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName == nil || (product?.pictureFileName ?? "").isEmpty) ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
+            })
+            .disabled(isNewProduct)
         }
         .navigationTitle(LocalizedStringKey("str.md.product.category.optionalProperties"))
     }

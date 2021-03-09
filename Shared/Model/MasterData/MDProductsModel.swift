@@ -8,14 +8,14 @@
 import Foundation
 
 // MARK: - MDProduct
-struct MDProduct: Codable, Hashable {
+struct MDProduct: Codable {
     let id, name: String
     let mdProductDescription, productGroupID: String?
     let active, locationID: String
     let shoppingLocationID: String?
     let quIDPurchase, quIDStock, quFactorPurchaseToStock, minStockAmount: String
     let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: String
-    let pictureFileName: String?
+    @NullCodable var pictureFileName: String?
     let enableTareWeightHandling, tareWeight, notCheckStockFulfillmentForRecipes: String
     let parentProductID, calories: String?
     let cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String

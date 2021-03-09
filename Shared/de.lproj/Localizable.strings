@@ -334,6 +334,14 @@
 "str.md.product.calories.invalid" = "Dies darf nicht niedriger als 0 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.md.product.dontShowOnStockOverview" = "Nie auf der Bestand-Seite anzeigen";
 "str.md.product.dontShowOnStockOverview.info" = "Die Bestand-Seite listet alle Produkte auf, die derzeit im Bestand oder unter ihrem Mindestbestand sind - aktiviere dies, um dieses Produkt dort nie anzuzeigen";
+"str.md.product.picture" = "Produktbild";
+"str.md.product.picture.saved" = "Produktbild hinterlegt";
+"str.md.product.picture.none" = "Kein Produktbild";
+"str.md.product.picture.add.file" = "Produktbild aus Datei auswählen";
+"str.md.product.picture.add.gallery" = "Produktbild aus Galerie auswählen";
+"str.md.product.picture.add.camera" = "Produktbild mit der Kamera aufnehmen";
+"str.md.product.picture.upload" = "Produktbild hochladen";
+"str.md.product.picture.delete" = "Produktbild entfernen";
 // default locations
 "str.md.product.category.defaultLocations" = "Standart-Orte";
 "str.md.product.category.defaultLocations.description" = "Standort, Geschäft";

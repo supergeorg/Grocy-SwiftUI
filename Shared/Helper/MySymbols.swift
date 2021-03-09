@@ -24,6 +24,8 @@ struct MySymbols {
     static let shoppingLocation = "house"
     static let productGroup = "square.on.circle"
     static let recipe = "list.bullet.rectangle"
+    static let picture = "photo"
+    static let gallery = "photo.on.rectangle.angled"
     
     static let amount = "number.circle"
     static let price = "banknote"
@@ -48,6 +50,7 @@ struct MySymbols {
     static let failure = "xmark"
     static let share = "square.and.arrow.up"
     static let cancel = "xmark.circle.fill"
+    static let upload = "square.and.arrow.up"
     
     static let filter = "line.horizontal.3.decrease.circle"
     static let reload = "arrow.triangle.2.circlepath"
@@ -57,4 +60,5 @@ struct MySymbols {
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"
     static let barcode = "barcode"
+    static let camera = "camera"
 }

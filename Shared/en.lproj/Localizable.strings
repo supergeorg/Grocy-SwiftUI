@@ -334,6 +334,14 @@
 "str.md.product.calories.invalid" = "This cannot be lower than 0 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.dontShowOnStockOverview" = "Never show on stock overview ";
 "str.md.product.dontShowOnStockOverview.info" = "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always";
+"str.md.product.picture" = "Product picture";
+"str.md.product.picture.saved" = "Product picture found";
+"str.md.product.picture.none" = "No product picture";
+"str.md.product.picture.add.file" = "Select product picture from file";
+"str.md.product.picture.add.gallery" = "Select product picture from gallery";
+"str.md.product.picture.add.camera" = "Add product picture from camera";
+"str.md.product.picture.upload" = "Upload product picture";
+"str.md.product.picture.delete" = "Delete product picture";
 // default locations
 "str.md.product.category.defaultLocations" = "Default locations";
 "str.md.product.category.defaultLocations.description" = "Location, Store";
