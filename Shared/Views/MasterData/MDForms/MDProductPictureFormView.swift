@@ -15,8 +15,11 @@ struct MDProductPictureFormView: View {
     
     @Binding var selectedPictureURL: URL?
     @Binding var selectedPictureFileName: String?
-    @State private var newPictureURL: URL?
+    @State private var newPictureURL: URL? = nil
     @State private var newPictureFileName: String?
+    @State private var showNewPicture: Bool = false
+    
+    @State private var isProcessing: Bool = false
     
     #if os(iOS)
     @State private var showImagePicker: Bool = false
@@ -26,6 +29,7 @@ struct MDProductPictureFormView: View {
     let groupName = "productpictures"
     
     private func deletePicture(savedPictureFileNameData: Data) {
+        isProcessing = true
         grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), completion: { result in
             switch result {
             case let .success(message):
@@ -33,6 +37,7 @@ struct MDProductPictureFormView: View {
                 changeProductPicture(pictureFileName: nil)
             case let .failure(error):
                 grocyVM.postLog(message: "Picture deletion failed. \(error)", type: .error)
+                isProcessing = false
             }
         })
     }
@@ -40,6 +45,7 @@ struct MDProductPictureFormView: View {
     private func uploadPicture(pictureFileName: String, selectedImageURL: URL) {
         if let pictureFileNameData = pictureFileName.data(using: .utf8) {
             let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+            isProcessing = true
             grocyVM.uploadFile(fileURL: selectedImageURL, groupName: "productpictures", fileName: base64Encoded, completion: {result in
                 switch result {
                 case let .success(response):
@@ -47,6 +53,7 @@ struct MDProductPictureFormView: View {
                     changeProductPicture(pictureFileName: pictureFileName)
                 case let .failure(error):
                     grocyVM.postLog(message: "Picture upload failed. \(error)", type: .error)
+                    isProcessing = false
                 }
             })
         }
@@ -59,31 +66,45 @@ struct MDProductPictureFormView: View {
             grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Picture successfully added to product. \(message)", type: .info)
+                    grocyVM.postLog(message: "Picture successfully changed in product. \(message)", type: .info)
                     grocyVM.requestData(objects: [.products])
+                    newPictureURL = selectedPictureURL
+                    newPictureFileName = selectedPictureFileName
+                    showNewPicture = true
                     selectedPictureURL = nil
                     selectedPictureFileName = nil
                 case let .failure(error):
                     grocyVM.postLog(message: "Adding picture to product failed. \(error)", type: .error)
                 }
+                isProcessing = false
             })
         }
     }
     
     var body: some View {
         VStack{
-            if let pictureFileName = product?.pictureFileName {
-                if !pictureFileName.isEmpty {
-                    if let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
-                        if let pictureURL = URL(string: grocyVM.getPictureURL(groupName: groupName, fileName: base64Encoded) ?? "") {
-                            URLImage(url: pictureURL) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .background(Color.white)
-                            }
-                            .frame(maxHeight: 100)
+            if showNewPicture {
+                if let newPictureURL = newPictureURL, let newPictureFileName = newPictureFileName {
+                    URLImage(url: newPictureURL) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                    }
+                    .frame(maxHeight: 100)
+                    Text(newPictureFileName)
+                        .font(.caption)
+                }
+            } else {
+                if let pictureFileName = product?.pictureFileName, !pictureFileName.isEmpty {
+                    if let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = URL(string: grocyVM.getPictureURL(groupName: groupName, fileName: base64Encoded) ?? "") {
+                        URLImage(url: pictureURL) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .background(Color.white)
                         }
+                        .frame(maxHeight: 100)
                     }
                     Text(pictureFileName)
                         .font(.caption)
@@ -91,16 +112,25 @@ struct MDProductPictureFormView: View {
             }
             Form{
                 Section{
-                    if let savedPictureFileName = product?.pictureFileName {
-                        if !savedPictureFileName.isEmpty{
-                            if let savedPictureFileNameData = savedPictureFileName.data(using: .utf8) {
-                                Button(action: {
-                                    deletePicture(savedPictureFileNameData: savedPictureFileNameData)
-                                }, label: {
-                                    Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
-                                        .foregroundColor(.red)
-                                })
-                            }
+                    if showNewPicture {
+                        if let newPictureFileName = newPictureFileName, newPictureURL != nil, let newPictureFileNameData = newPictureFileName.data(using: .utf8) {
+                            Button(action: {
+                                deletePicture(savedPictureFileNameData: newPictureFileNameData)
+                            }, label: {
+                                Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
+                                    .foregroundColor(.red)
+                            })
+                            .disabled(isProcessing)
+                        }
+                    } else {
+                        if let savedPictureFileName = product?.pictureFileName, !savedPictureFileName.isEmpty, let savedPictureFileNameData = savedPictureFileName.data(using: .utf8) {
+                            Button(action: {
+                                deletePicture(savedPictureFileNameData: savedPictureFileNameData)
+                            }, label: {
+                                Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
+                                    .foregroundColor(.red)
+                            })
+                            .disabled(isProcessing)
                         }
                     }
                 }
@@ -159,30 +189,27 @@ struct MDProductPictureFormView: View {
                         })
                     })
                     #endif
-                    if let selectedPictureURL = selectedPictureURL {
-                        if let selectedPictureFileName = selectedPictureFileName {
-                            VStack(alignment: .center){
-                                URLImage(url: selectedPictureURL, content: {image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .background(Color.white)
-                                })
-                                .frame(maxWidth: 100)
-                                Text(selectedPictureFileName)
-                                    .font(.caption)
-                            }
+                    if let selectedPictureURL = selectedPictureURL, let selectedPictureFileName = selectedPictureFileName {
+                        VStack(alignment: .center){
+                            URLImage(url: selectedPictureURL, content: {image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .background(Color.white)
+                            })
+                            .frame(maxWidth: 100)
+                            Text(selectedPictureFileName)
+                                .font(.caption)
                         }
                     }
-                    Button(action: {
-                        if let selectedPictureFileName = selectedPictureFileName{
-                            if let selectedPictureURL = selectedPictureURL {
-                                uploadPicture(pictureFileName: selectedPictureFileName, selectedImageURL: selectedPictureURL)
-                            }
-                        }
-                    }, label: {
-                        Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
-                    })
+                    if let selectedPictureFileName = selectedPictureFileName, let selectedPictureURL = selectedPictureURL{
+                        Button(action: {
+                            uploadPicture(pictureFileName: selectedPictureFileName, selectedImageURL: selectedPictureURL)
+                        }, label: {
+                            Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
+                        })
+                        .disabled(isProcessing)
+                    }
                 }
             }
         }

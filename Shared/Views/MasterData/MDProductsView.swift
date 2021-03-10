@@ -15,23 +15,14 @@ struct MDProductRowView: View {
     
     var body: some View {
         HStack{
-            if let pictureFileName = product.pictureFileName {
-                if !pictureFileName.isEmpty{
-                    let utf8str = pictureFileName.data(using: .utf8)
-                    if let base64Encoded = utf8str?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
-                        if let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded) {
-                            if let url = URL(string: pictureURL) {
-                                URLImage(url: url) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .background(Color.white)
-                                }
-                                .frame(width: 75, height: 75)
-                            }
-                        }
-                    }
+            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
+                URLImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .background(Color.white)
                 }
+                .frame(width: 75, height: 75)
             }
             VStack(alignment: .leading) {
                 Text(product.name).font(.largeTitle)

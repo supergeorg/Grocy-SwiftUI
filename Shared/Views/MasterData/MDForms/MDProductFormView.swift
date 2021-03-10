@@ -118,38 +118,34 @@ struct MDProductFormView: View {
     }
     
     private func saveProduct() {
-        if let locationID = locationID {
-            if let quIDPurchase = quIDPurchase {
-                if let quIDStock = quIDStock {
-                    let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
-                    if isNewProduct {
-                        grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
-                            switch result {
-                            case let .success(message):
-                                print(message)
-                                toastType = .successAdd
-                                updateData()
-                                finishForm()
-                            case let .failure(error):
-                                print("\(error)")
-                                toastType = .failAdd
-                            }
-                        })
-                    } else {
-                        grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST, completion: { result in
-                            switch result {
-                            case let .success(message):
-                                print(message)
-                                toastType = .successEdit
-                                updateData()
-                                finishForm()
-                            case let .failure(error):
-                                print("\(error)")
-                                toastType = .failEdit
-                            }
-                        })
+        if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
+            let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
+            if isNewProduct {
+                grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successAdd
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failAdd
                     }
-                }
+                })
+            } else {
+                grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST, completion: { result in
+                    switch result {
+                    case let .success(message):
+                        print(message)
+                        toastType = .successEdit
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        print("\(error)")
+                        toastType = .failEdit
+                    }
+                })
             }
         }
     }
@@ -310,7 +306,7 @@ struct MDProductFormView: View {
             
             // Product picture
             NavigationLink(destination: MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName), label: {
-                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName == nil || (product?.pictureFileName ?? "").isEmpty) ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
+                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })
             .disabled(isNewProduct)
         }
