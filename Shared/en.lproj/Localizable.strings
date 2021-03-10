@@ -65,7 +65,7 @@
 "str.nav.md.userEntities" = "User entities";
 "str.nav.settings" = "Settings";
 "str.nav.userManagement" = "User management";
-"str.nav.quickScan" = "Quick-Scan mode";
+"str.nav.quickScan" = "Quick-Scan";
 
 // MARK: - Details
 "str.details.title" = "Product overview";

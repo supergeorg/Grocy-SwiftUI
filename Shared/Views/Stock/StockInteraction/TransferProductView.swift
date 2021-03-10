@@ -141,7 +141,7 @@ struct TransferProductView: View {
             }
             
             VStack(alignment: .leading) {
-                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down"), content: {
+                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
                         Text(locationTo.name).tag(locationTo.id as String?)

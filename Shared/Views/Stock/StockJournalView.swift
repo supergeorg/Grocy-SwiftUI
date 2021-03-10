@@ -16,41 +16,45 @@ struct StockJournalFilterBar: View {
     @Binding var filteredLocationID: String?
     @Binding var filteredUserID: String?
     
+    #if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #endif
+    
     var body: some View {
         VStack{
             SearchBar(text: $searchString, placeholder: "str.search")
-            HStack{
-                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter), content: {
+            #if os(iOS)
+            let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: (horizontalSizeClass == .compact && verticalSizeClass == .regular) ? 2 : 4)
+            #else
+            let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: 4)
+            #endif
+            LazyVGrid(columns: filterColumns, alignment: .leading, content: {
+                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.mdProducts, id:\.id) { product in
                         Text(product.name).tag(product.id as String?)
                     }
                 }).pickerStyle(MenuPickerStyle())
-                Spacer()
-                
-                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter), content: {
+                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
                     Text("str.stock.all").tag(nil as TransactionType?)
                     ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
                         Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
                     }
                 }).pickerStyle(MenuPickerStyle())
-                Spacer()
-                
-                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter), content: {
+                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as String?)
                     }
                 }).pickerStyle(MenuPickerStyle())
-                Spacer()
-                
-                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter), content: {
+                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
                     Text("str.stock.all").tag(nil as String?)
                     ForEach(grocyVM.users, id:\.id) { user in
                         Text(user.displayName).tag(user.id as String?)
                     }
                 }).pickerStyle(MenuPickerStyle())
-            }
+            })
         }
     }
 }

@@ -71,8 +71,10 @@ struct StockTableRow: View {
                 Text(stockElement.product.name)
                     .onTapGesture {
                         showDetailView.toggle()
+                        #if os(iOS)
                         selectedStockElement = stockElement
                         activeSheet = .productOverview
+                        #endif
                     }
                 Spacer()
             }

@@ -62,7 +62,7 @@ struct StockTableRowSimplified: View {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.numberStyle = .decimal
-        return formatter.string(from: Double(stockElement.amountAggregated)! as NSNumber) ?? "?"
+        return formatter.string(from: (Double(stockElement.amountAggregated) ?? 0.0) as NSNumber) ?? "?"
     }
     
     var body: some View {
@@ -164,6 +164,7 @@ struct StockTableRowSimplified: View {
                         .italic()
                 }
             }
+            Divider()
         }
     }
 }

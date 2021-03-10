@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MasterDataView: View {
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     var body: some View {
         List(){
             NavigationLink(destination: MDProductsView()) {
@@ -30,16 +32,18 @@ struct MasterDataView: View {
                 Label(LocalizedStringKey("str.md.productGroups"), systemImage: "lessthan.circle")
             }
             
-            NavigationLink(destination: MDChoresView()) {
-                Label(LocalizedStringKey("str.md.chores"), systemImage: "house")
-            }
-            
-            NavigationLink(destination: MDBatteriesView()) {
-                Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
-            }
-            
-            NavigationLink(destination: MDTaskCategoriesView()) {
-                Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+            if devMode {
+                NavigationLink(destination: MDChoresView()) {
+                    Label(LocalizedStringKey("str.md.chores"), systemImage: "house")
+                }
+                
+                NavigationLink(destination: MDBatteriesView()) {
+                    Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
+                }
+                
+                NavigationLink(destination: MDTaskCategoriesView()) {
+                    Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+                }
             }
             
             NavigationLink(destination: MDUserFieldsView()) {

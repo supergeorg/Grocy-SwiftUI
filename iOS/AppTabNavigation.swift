@@ -53,16 +53,16 @@ struct AppTabNavigation: View {
             .tag(Tab.shoppingList)
             
             
-            if devMode {
-                NavigationView {
-                    ActivitiesView()
-                }
-                .tabItem {
-                    Label("str.nav.activities", systemImage: Tab.activities.rawValue)
-                        .accessibility(label: Text("str.nav.activities"))
-                }
-                .tag(Tab.activities)
-            }
+//            if devMode {
+//                NavigationView {
+//                    ActivitiesView()
+//                }
+//                .tabItem {
+//                    Label("str.nav.activities", systemImage: Tab.activities.rawValue)
+//                        .accessibility(label: Text("str.nav.activities"))
+//                }
+//                .tag(Tab.activities)
+//            }
             
             NavigationView {
                 MasterDataView()
@@ -82,16 +82,16 @@ struct AppTabNavigation: View {
             }
             .tag(Tab.settings)
             
-            if devMode {
-                NavigationView {
-                    OpenFoodFactsScannerView()
-                }
-                .tabItem {
-                    Label("OPEN FOOD FACTS", systemImage: Tab.quickScanMode.rawValue)
-                        .accessibility(label: Text("OPEN FOOD FACTS"))
-                }
-                .tag(Tab.settings)
-            }
+//            if devMode {
+//                NavigationView {
+//                    OpenFoodFactsScannerView()
+//                }
+//                .tabItem {
+//                    Label("OPEN FOOD FACTS", systemImage: Tab.quickScanMode.rawValue)
+//                        .accessibility(label: Text("OPEN FOOD FACTS"))
+//                }
+//                .tag(Tab.quickScanMode)
+//            }
             
         }
         //        Text("Hi")
