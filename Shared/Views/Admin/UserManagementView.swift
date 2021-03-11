@@ -30,7 +30,16 @@ struct UserManagementView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.admin.user"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {
@@ -65,7 +74,9 @@ struct UserManagementView: View {
                     ToolbarSearchField(searchTerm: $searchString)
                 })
             })
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
@@ -93,8 +104,8 @@ struct UserManagementView: View {
                     })
                 })
             })
-        #endif
     }
+    #endif
     
     var content: some View {
         List{

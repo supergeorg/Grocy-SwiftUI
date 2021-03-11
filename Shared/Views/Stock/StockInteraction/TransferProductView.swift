@@ -114,6 +114,12 @@ struct TransferProductView: View {
     
     var content: some View {
         Form {
+            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+                Section{
+                    ServerOfflineView(isCompact: true)
+                }
+            }
+            
             ProductField(productID: $productID, description: "str.stock.transfer.product")
                 .onChange(of: productID) { newProduct in
                     grocyVM.getStockProductEntries(productID: productID ?? "")

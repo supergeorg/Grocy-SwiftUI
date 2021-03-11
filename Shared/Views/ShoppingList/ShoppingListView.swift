@@ -109,7 +109,7 @@ struct ShoppingListView: View {
             }
             .count
     }
-
+    
     private func deleteItem(at offsets: IndexSet, shL: ShoppingList) {
         for offset in offsets {
             shlItemToDelete = shL[offset]
@@ -148,7 +148,16 @@ struct ShoppingListView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.shL"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
@@ -199,7 +208,9 @@ struct ShoppingListView: View {
                     })
                 })
             })
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic) {
@@ -251,8 +262,8 @@ struct ShoppingListView: View {
                     ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
                 }
             })
-        #endif
     }
+    #endif
     
     var content: some View {
         List{
@@ -267,7 +278,7 @@ struct ShoppingListView: View {
                         ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
                     .onDelete(perform: { indexSet in
-                                deleteItem(at: indexSet, shL: groupedShoppingList[productGroup.id] ?? [])
+                        deleteItem(at: indexSet, shL: groupedShoppingList[productGroup.id] ?? [])
                     })
                 }
             }
@@ -277,7 +288,7 @@ struct ShoppingListView: View {
                         ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
                     .onDelete(perform: { indexSet in
-                                deleteItem(at: indexSet, shL: groupedShoppingList["?"] ?? [])
+                        deleteItem(at: indexSet, shL: groupedShoppingList["?"] ?? [])
                     })
                 }
             }

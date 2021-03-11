@@ -8,8 +8,24 @@
 import SwiftUI
 
 struct ServerOfflineView: View {
+    var isCompact: Bool = false
+    
     @StateObject var grocyVM: GrocyViewModel = .shared
     var body: some View {
+        if !isCompact {
+            normalView
+        } else {
+            #if os(macOS)
+            CardView{
+                compactView
+            }
+            #else
+            compactView
+            #endif
+        }
+    }
+    
+    var normalView: some View {
         VStack{
             Spacer()
             HStack{
@@ -32,10 +48,27 @@ struct ServerOfflineView: View {
             Spacer()
         }
     }
+    
+    var compactView: some View {
+        HStack(alignment: .center){
+            Label(LocalizedStringKey("str.connection.failed"), systemImage: MySymbols.offline)
+                .foregroundColor(.red)
+            Spacer()
+            Button(action: {
+                grocyVM.retryFailedRequests()
+            }, label: {
+                Label(LocalizedStringKey("str.retry"), systemImage: MySymbols.reload)
+            })
+            .buttonStyle(FilledButtonStyle())
+        }
+    }
 }
 
 struct ServerOfflineView_Previews: PreviewProvider {
     static var previews: some View {
-        ServerOfflineView()
+        Group{
+            ServerOfflineView()
+            ServerOfflineView(isCompact: true)
+        }
     }
 }

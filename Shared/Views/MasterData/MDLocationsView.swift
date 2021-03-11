@@ -102,7 +102,16 @@ struct MDLocationsView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.md.locations"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         NavigationView{
             content
                 .toolbar(content: {
@@ -132,7 +141,9 @@ struct MDLocationsView: View {
                 .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.locations"))
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar(content: {
                 ToolbarItem(placement: .primaryAction) {
@@ -160,8 +171,8 @@ struct MDLocationsView: View {
                     NavigationView {
                         MDLocationFormView(isNewLocation: true, toastType: $toastType)
                     } })
-        #endif
     }
+    #endif
     
     var content: some View {
         List(){

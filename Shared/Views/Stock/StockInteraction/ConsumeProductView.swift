@@ -170,6 +170,12 @@ struct ConsumeProductView: View {
     
     var content: some View {
         Form {
+            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+                Section{
+                    ServerOfflineView(isCompact: true)
+                }
+            }
+            
             ProductField(productID: $productID, description: "str.stock.consume.product")
                 .onChange(of: productID) { newProduct in
                     grocyVM.getStockProductEntries(productID: productID ?? "")

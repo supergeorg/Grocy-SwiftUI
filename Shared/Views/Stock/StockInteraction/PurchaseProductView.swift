@@ -123,6 +123,12 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
+            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+                Section{
+                    ServerOfflineView(isCompact: true)
+                }
+            }
+            
             ProductField(productID: $productID, description: "str.stock.buy.product")
                 .onChange(of: productID) { newProduct in
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
@@ -216,12 +222,12 @@ struct PurchaseProductView: View {
                 }
             })
             ToolbarItem(placement: .confirmationAction, content: {
-                    Button(action: purchaseProduct, label: {
-                        Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
-                            .labelStyle(TextIconLabelStyle())
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("s", modifiers: [.command])
+                Button(action: purchaseProduct, label: {
+                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
+                        .labelStyle(TextIconLabelStyle())
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .animation(.default)

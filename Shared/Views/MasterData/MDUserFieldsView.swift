@@ -75,7 +75,16 @@ struct MDUserFieldsView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.md.userFields"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         NavigationView{
             content
                 .toolbar(content: {
@@ -105,7 +114,9 @@ struct MDUserFieldsView: View {
                 .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.userFields"))
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -129,8 +140,8 @@ struct MDUserFieldsView: View {
                     NavigationView {
                         MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
                     } })
-        #endif
     }
+    #endif
     
     var content: some View {
         List(){

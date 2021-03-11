@@ -70,8 +70,17 @@ struct MDBarcodesView: View {
         }
     }
     
-    #if os(macOS)
     var body: some View {
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.md.barcodes"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         Section(header: Text(LocalizedStringKey("str.md.barcodes")).font(.headline)) {
             
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
@@ -98,9 +107,8 @@ struct MDBarcodesView: View {
         }
         .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
     }
-    
     #elseif os(iOS)
-    var body: some View {
+    var bodyContent: some View {
         Form {
             if filteredBarcodes.isEmpty {
                 Text(LocalizedStringKey("str.md.barcodes.empty"))

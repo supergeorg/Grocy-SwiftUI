@@ -78,7 +78,16 @@ struct MDProductGroupsView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.md.productGroups"))
+        }
+    }
+    
+    #if os(macOS)
+    var bodyContent: some View {
         NavigationView {
             content
                 .toolbar(content: {
@@ -108,7 +117,9 @@ struct MDProductGroupsView: View {
                 .frame(minWidth: Constants.macOSNavWidth)
         }
         .navigationTitle(LocalizedStringKey("str.md.productGroups"))
-        #elseif os(iOS)
+    }
+    #elseif os(iOS)
+    var bodyContent: some View {
         content
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -136,8 +147,8 @@ struct MDProductGroupsView: View {
                     NavigationView {
                         MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
                     } })
-        #endif
     }
+    #endif
     
     var content: some View {
         List(){

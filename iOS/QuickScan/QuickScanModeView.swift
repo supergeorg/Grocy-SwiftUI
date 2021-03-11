@@ -104,6 +104,15 @@ struct QuickScanModeView: View {
     }
     
     var body: some View {
+        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.nav.quickScan"))
+        }
+    }
+    
+    var bodyContent: some View {
         ZStack(alignment: .topLeading){
             CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             HStack{
