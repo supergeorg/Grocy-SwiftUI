@@ -13,6 +13,7 @@ struct MDLocationFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
     @State private var mdLocationDescription: String = ""
@@ -23,6 +24,7 @@ struct MDLocationFormView: View {
     var isNewLocation: Bool
     var location: MDLocation?
     
+    @Binding var showAddLocation: Bool
     @Binding var toastType: MDToastType?
     
     @State var isNameCorrect: Bool = false
@@ -47,39 +49,43 @@ struct MDLocationFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewLocation {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddLocation = false
         }
         #endif
     }
     
     private func saveLocation() {
+        let id = isNewLocation ? String(grocyVM.findNextID(.locations)) : location!.id
+        let timeStamp = isNewLocation ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
+        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer ? "1" : "0", userfields: nil)
+        isProcessing = true
         if isNewLocation {
-            let locationPOST = MDLocationPOST(id: grocyVM.findNextID(.locations), name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, isFreezer: String(isFreezer), userfields: nil)
             grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Location add successful. \(message)", type: .info)
                     toastType = .successAdd
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Location add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
+                isProcessing = false
             })
         } else {
-            let locationPOST = MDLocationPOST(id: Int(location!.id)!, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: location!.rowCreatedTimestamp, isFreezer: String(isFreezer), userfields: nil)
-            grocyVM.putMDObjectWithID(object: .locations, id: location!.id, content: locationPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Location edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Location edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
+                isProcessing = false
             })
         }
     }
@@ -104,7 +110,8 @@ struct MDLocationFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.location.save")) {
                         saveLocation()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -142,6 +149,7 @@ struct MDLocationFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveLocation()
                 }
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -161,16 +169,16 @@ struct MDLocationFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDLocationFormView(isNewLocation: true, toastType: Binding.constant(.successAdd))
-            MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), toastType: Binding.constant(.successAdd))
+            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
+            MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
         }
         #else
         Group {
             NavigationView {
-                MDLocationFormView(isNewLocation: true, toastType: Binding.constant(.successAdd))
+                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
             }
             NavigationView {
-                MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), toastType: Binding.constant(.successAdd))
+                MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
             }
         }
         #endif

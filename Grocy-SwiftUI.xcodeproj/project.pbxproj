@@ -116,6 +116,18 @@
 		78846064257F9F4A00671C97 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
 		78846069257F9FB700671C97 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
 		7884606E257F9FB800671C97 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
+		78855F6F25FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */; };
+		78855F7025FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */; };
+		78855F7125FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */; };
+		78855F7225FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */; };
+		78855F7825FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */; };
+		78855F7925FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */; };
+		78855F7A25FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */; };
+		78855F7B25FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */; };
+		78855F8125FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */; };
+		78855F8225FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */; };
+		78855F8325FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */; };
+		78855F8425FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */; };
 		7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8972567E4C0003439F5 /* StockJournalView.swift */; };
 		7885B8992567E4C0003439F5 /* StockJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8972567E4C0003439F5 /* StockJournalView.swift */; };
 		7885B8A72567ED14003439F5 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885B8A62567ED14003439F5 /* SharedModel.swift */; };
@@ -447,6 +459,9 @@
 		7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListDescriptionModel.swift; sourceTree = "<group>"; };
 		7880F10A256FC4F100FB8431 /* ShoppingListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListRowView.swift; sourceTree = "<group>"; };
 		7880F111256FC92800FB8431 /* ShoppingListFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFormView.swift; sourceTree = "<group>"; };
+		78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDTaskCategoriesModel.swift; sourceTree = "<group>"; };
+		78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDTaskCategoryForm.swift; sourceTree = "<group>"; };
+		78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMDRowLabel.swift; sourceTree = "<group>"; };
 		7885B8972567E4C0003439F5 /* StockJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockJournalView.swift; sourceTree = "<group>"; };
 		7885B8A62567ED14003439F5 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		7885B8AE2567F08F003439F5 /* GrocyUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserModel.swift; sourceTree = "<group>"; };
@@ -650,6 +665,7 @@
 				786F6E8A2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift */,
 				786F6EBF25640562004D8DE0 /* MDQuantityUnitFormView.swift */,
 				781A25A2256690C200560026 /* MDProductGroupFormView.swift */,
+				78855F7725FB8EB4007F69AF /* MDTaskCategoryForm.swift */,
 				789C2DC5258A118E00D3A3B9 /* MDUserFieldFormView.swift */,
 				78FDCE2A25BAEA630089CB5E /* MDUserEntityFormView.swift */,
 			);
@@ -914,6 +930,7 @@
 				78CB7613255EB9C500319108 /* MDQuantityUnitsModel.swift */,
 				78CB7614255EB9C500319108 /* MDProductGroupsModel.swift */,
 				78F47E8425BF10CE00579B69 /* MDBatteriesModel.swift */,
+				78855F6E25FB89CD007F69AF /* MDTaskCategoriesModel.swift */,
 				782A7F1925838C630010472F /* MDUserFieldModel.swift */,
 				78FDCE1D25BAE7E30089CB5E /* MDUserEntitiesModel.swift */,
 			);
@@ -956,6 +973,7 @@
 				789ADDAA25C427DD00D7EB35 /* View+ToastMessage.swift */,
 				78D75D6225DE9B71009F2C15 /* CardView.swift */,
 				78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */,
+				78855F8025FB9B1C007F69AF /* NewMDRowLabel.swift */,
 				785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */,
 			);
 			path = Components;
@@ -1183,6 +1201,7 @@
 			files = (
 				78CB7631255EBA3F00319108 /* StockTableRow.swift in Sources */,
 				78CB761C255EB9C600319108 /* MDProductGroupsModel.swift in Sources */,
+				78855F7825FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
 				78262707256E83A900ECED03 /* StockLocationModel.swift in Sources */,
 				786F6EB225640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				781DD5B52578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
@@ -1210,12 +1229,14 @@
 				78408AD125A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
 				786F6EA42564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */,
+				78855F6F25FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78CB7635255EBA3F00319108 /* StockView.swift in Sources */,
 				78B18DEC25E3E53900C26A67 /* CurrencySymbols.swift in Sources */,
 				78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */,
 				786F6E9225640332004D8DE0 /* MDProductsView.swift in Sources */,
 				78CB74D6255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				7853A4CF25DBE74300AF9986 /* LogView.swift in Sources */,
+				78855F8125FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
 				78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */,
 				7812FFA725BB0B6900377773 /* ActivitiesView.swift in Sources */,
 				789ADDA425C419C500D7EB35 /* Constants.swift in Sources */,
@@ -1401,6 +1422,7 @@
 				789D167225DE73C5006FC33F /* ButtonStyles.swift in Sources */,
 				78F0DAC92599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */,
 				789ADDA525C419C500D7EB35 /* Constants.swift in Sources */,
+				78855F8225FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
 				78CB7603255EB9A000319108 /* VolatileStockModel.swift in Sources */,
 				7880F10C256FC4F100FB8431 /* ShoppingListRowView.swift in Sources */,
 				78CB75FF255EB9A000319108 /* StockEntryModel.swift in Sources */,
@@ -1440,7 +1462,9 @@
 				78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
+				78855F7025FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,
+				78855F7925FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
 				78D7975C25B6FB4800550C58 /* OnboardingView.swift in Sources */,
 				78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
 				781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
@@ -1469,11 +1493,13 @@
 				78FDCDFB25BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */,
 				78D7A04925ED063D00132ACC /* GrocySupportedServers.swift in Sources */,
 				78FDCE0E25BAD2F40089CB5E /* ShoppingListStatus.swift in Sources */,
+				78855F7125FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78FDCDCB25BAD2DE0089CB5E /* MDUserFieldModel.swift in Sources */,
 				78D7A04F25ED064100132ACC /* CurrencySymbols.swift in Sources */,
 				78FDCDE925BAD2E90089CB5E /* StockProductPriceHistory.swift in Sources */,
 				78FDCDC725BAD2DE0089CB5E /* MDProductGroupsModel.swift in Sources */,
 				78846069257F9FB700671C97 /* TransactionType.swift in Sources */,
+				78855F8325FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
 				78FDCDC825BAD2DE0089CB5E /* MDShoppingLocationsModel.swift in Sources */,
 				782219A425F2520900DCDB2E /* DateFormatter.swift in Sources */,
 				78FDCDA125BAD2D00089CB5E /* GrocyUserModel.swift in Sources */,
@@ -1506,6 +1532,7 @@
 				78FDCDEA25BAD2E90089CB5E /* StockProductDetailsModel.swift in Sources */,
 				78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */,
 				78FDCDC525BAD2DE0089CB5E /* MDQuantityUnitsModel.swift in Sources */,
+				78855F7A25FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
 				78FDCDBA25BAD2D90089CB5E /* SharedModel.swift in Sources */,
 				78E02CE625DAC3BF00668403 /* OpenFoodFactsScannerView.swift in Sources */,
 				78FDCD8D25BAD2720089CB5E /* GrocyAPI.swift in Sources */,
@@ -1534,6 +1561,7 @@
 				78FDCDB425BAD2D50089CB5E /* SystemConfigModel.swift in Sources */,
 				78FDCDD525BAD2DE0089CB5E /* MDProductsModel.swift in Sources */,
 				78FDCE1625BAD2F50089CB5E /* ShoppingListDescriptionModel.swift in Sources */,
+				78855F7B25FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
 				78FDCE0325BAD2F00089CB5E /* ProductBuyModel.swift in Sources */,
 				78FDCE1525BAD2F50089CB5E /* ShoppingListActionModel.swift in Sources */,
 				78FDCE3725BAEF190089CB5E /* FA2SFSymbols.swift in Sources */,
@@ -1545,6 +1573,7 @@
 				78D7A05425ED064100132ACC /* CurrencySymbols.swift in Sources */,
 				78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
+				78855F8425FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
 				78FDCE0225BAD2F00089CB5E /* ProductTransferModel.swift in Sources */,
 				78FDCDD125BAD2DE0089CB5E /* MDProductBarcodeModel.swift in Sources */,
 				78FDCDE425BAD2E50089CB5E /* ProductStatus.swift in Sources */,
@@ -1558,6 +1587,7 @@
 				78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */,
 				78FDCDD025BAD2DE0089CB5E /* MDQuantityUnitsModel.swift in Sources */,
 				782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */,
+				78855F7225FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78FDCDC025BAD2DA0089CB5E /* SharedModel.swift in Sources */,
 				78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */,
 				78FDCDD425BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */,

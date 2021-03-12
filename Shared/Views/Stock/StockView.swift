@@ -164,7 +164,7 @@ struct StockView: View {
                                 StockJournalView(selectedProductID: selectedStockElement?.product.id)
                                     .frame(minWidth: 400, minHeight: 300)
                             case .editProduct:
-                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, toastType: $mdToastType)
+                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType)
                                     .frame(minWidth: 400, minHeight: 300)
                             }
                         })
@@ -279,7 +279,7 @@ struct StockView: View {
                     StockJournalView(selectedProductID: selectedStockElement?.product.id)
                 case .editProduct:
                     NavigationView{
-                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, toastType: $mdToastType)
+                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType)
                     }
                 }
             })

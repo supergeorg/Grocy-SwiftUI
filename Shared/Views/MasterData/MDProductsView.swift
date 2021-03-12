@@ -38,10 +38,8 @@ struct MDProductRowView: View {
                             Text(GrocyViewModel.shared.mdProductGroups[pg].name).font(.caption)
                     }
                 }
-                if let description = product.mdProductDescription {
-                    if !description.isEmpty{
-                        Text(description).font(.caption).italic()
-                    }
+                if let description = product.mdProductDescription, !description.isEmpty {
+                    Text(description).font(.caption).italic()
                 }
             }
         }
@@ -125,10 +123,6 @@ struct MDProductsView: View {
                             Button(action: {
                                 showAddProduct.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddProduct, content: {
-                                MDProductFormView(isNewProduct: true, toastType: $toastType)
-                                    .frame(width: 700, height: 700)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -166,7 +160,7 @@ struct MDProductsView: View {
             .navigationTitle(LocalizedStringKey("str.md.products"))
             .sheet(isPresented: $showAddProduct, content: {
                 NavigationView {
-                    MDProductFormView(isNewProduct: true, toastType: $toastType)
+                    MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType)
                 }
             })
     }
@@ -182,8 +176,15 @@ struct MDProductsView: View {
             } else if filteredProducts.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddProduct {
+                NavigationLink(destination: MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType), isActive: $showAddProduct, label: {
+                    NewMDRowLabel(title: "str.md.product.new")
+                })
+            }
+            #endif
             ForEach(filteredProducts, id:\.id) { product in
-                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, toastType: $toastType)) {
+                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, showAddProduct: Binding.constant(false), toastType: $toastType)) {
                     MDProductRowView(product: product)
                 }
             }

@@ -13,6 +13,7 @@ struct MDShoppingLocationFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
     @State private var mdShoppingLocationDescription: String = ""
@@ -20,6 +21,7 @@ struct MDShoppingLocationFormView: View {
     var isNewShoppingLocation: Bool
     var shoppingLocation: MDShoppingLocation?
     
+    @Binding var showAddShoppingLocation: Bool
     @Binding var toastType: MDToastType?
     
     @State var isNameCorrect: Bool = true
@@ -43,39 +45,43 @@ struct MDShoppingLocationFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewShoppingLocation {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddShoppingLocation = false
         }
         #endif
     }
     
     private func saveShoppingLocation() {
+        let id = isNewShoppingLocation ? String(grocyVM.findNextID(.shopping_locations)) : shoppingLocation!.id
+        let timeStamp = isNewShoppingLocation ? Date().iso8601withFractionalSeconds : shoppingLocation!.rowCreatedTimestamp
+        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp, userfields: nil)
+        isProcessing = true
         if isNewShoppingLocation {
-            let shoppingLocationPOST = MDShoppingLocationPOST(id: grocyVM.findNextID(.shopping_locations), name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil)
             grocyVM.postMDObject(object: .shopping_locations, content: shoppingLocationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Shopping location add successful. \(message)", type: .info)
                     toastType = .successAdd
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Shopping location add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
+                isProcessing = false
             })
         } else {
-            let shoppingLocationPOST = MDShoppingLocationPOST(id: Int(shoppingLocation!.id)!, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: shoppingLocation!.rowCreatedTimestamp, userfields: nil)
-            grocyVM.putMDObjectWithID(object: .shopping_locations, id: shoppingLocation!.id, content: shoppingLocationPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: shoppingLocationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Shopping location edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Shopping location add failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
+                isProcessing = false
             })
         }
         
@@ -99,7 +105,8 @@ struct MDShoppingLocationFormView: View {
                 if !isNewShoppingLocation {
                     Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
                         saveShoppingLocation()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
             }
         })
@@ -117,7 +124,8 @@ struct MDShoppingLocationFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
                         saveShoppingLocation()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -152,6 +160,7 @@ struct MDShoppingLocationFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveShoppingLocation()
                 }
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -171,16 +180,16 @@ struct MDShoppingLocationFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: Binding.constant(nil))
-            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
+            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
         }
         #else
         Group {
             NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: Binding.constant(nil))
+                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
+                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
         #endif

@@ -20,7 +20,7 @@ struct PurchaseProductView: View {
     var productToPurchaseAmount: Double?
     
     @State private var productID: String?
-    @State private var amount: Double?
+    @State private var amount: Double = 0.0
     @State private var quantityUnitID: String?
     @State private var dueDate: Date = Calendar.current.startOfDay(for: Date())
     @State private var productDoesntSpoil: Bool = false
@@ -53,12 +53,12 @@ struct PurchaseProductView: View {
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        (productID != nil) && (amount != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil)
+        (productID != nil) && (amount > 0) && (quantityUnitID != nil)
     }
     
     private func resetForm() {
         self.productID = firstAppear ? productToPurchaseID : nil
-        self.amount = firstAppear ? productToPurchaseAmount : nil
+        self.amount = firstAppear ? (productToPurchaseAmount ?? 1.0) : 0.0
         self.quantityUnitID = nil
         self.dueDate = Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
@@ -73,27 +73,25 @@ struct PurchaseProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let calculatedPrice = isTotalPrice ? price : (amount ?? 0.0) * (price ?? 0.0)
+        let calculatedPrice = isTotalPrice ? price : (amount) * (price ?? 0.0)
         let strPrice = (calculatedPrice == nil || (calculatedPrice ?? 0).isZero) ? nil : String(format: "%.2f", calculatedPrice!)
         let numLocationID = Int(locationID ?? "")
         let numShoppingLocationID = Int(shoppingLocationID ?? "")
-        if let amount = amount {
-            let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
-            if let productID = productID {
-                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
-                isProcessingAction = true
-                grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
-                    switch result {
-                    case let .success(prod):
-                        grocyVM.postLog(message: "Purchase successful. \(prod)", type: .info)
-                        toastType = .successPurchase
-                        resetForm()
-                    case let .failure(error):
-                        grocyVM.postLog(message: "Purchase failed: \(error)", type: .error)
-                        toastType = .failPurchase
-                    }
-                    isProcessingAction = false
+        let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
+        if let productID = productID {
+            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+            isProcessingAction = true
+            grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
+                switch result {
+                case let .success(prod):
+                    grocyVM.postLog(message: "Purchase successful. \(prod)", type: .info)
+                    toastType = .successPurchase
+                    resetForm()
+                case let .failure(error):
+                    grocyVM.postLog(message: "Purchase failed: \(error)", type: .error)
+                    toastType = .failPurchase
                 }
+                isProcessingAction = false
             }
         }
     }
@@ -164,7 +162,7 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                MyDoubleStepper(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                 
                 if price != nil {
                     Picker("", selection: $isTotalPrice, content: {

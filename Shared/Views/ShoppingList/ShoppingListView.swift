@@ -76,7 +76,7 @@ struct ShoppingListView: View {
         var groupIDs = Set<String>()
         for shLItem in filteredShoppingList {
             if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
-                if let productGroupID = product.productGroupID {groupIDs.insert(productGroupID)}
+                groupIDs.insert(product.productGroupID)
             }
         }
         var groups: MDProductGroups = []

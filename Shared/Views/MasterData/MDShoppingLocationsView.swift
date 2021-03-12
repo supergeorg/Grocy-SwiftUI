@@ -31,11 +31,9 @@ struct MDShoppingLocationRowView: View {
             VStack(alignment: .leading) {
                 Text(shoppingLocation.name)
                     .font(.largeTitle)
-                if shoppingLocation.mdShoppingLocationDescription != nil {
-                    if !shoppingLocation.mdShoppingLocationDescription!.isEmpty {
-                        Text(shoppingLocation.mdShoppingLocationDescription!)
-                            .font(.caption)
-                    }
+                if let description = shoppingLocation.mdShoppingLocationDescription, !description.isEmpty {
+                    Text(shoppingLocation.mdShoppingLocationDescription!)
+                        .font(.caption)
                 }
             }
             .padding(10)
@@ -123,9 +121,6 @@ struct MDShoppingLocationsView: View {
                             Button(action: {
                                 showAddShoppingLocation.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddShoppingLocation, content: {
-                                MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -159,7 +154,7 @@ struct MDShoppingLocationsView: View {
             .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
             .sheet(isPresented: self.$showAddShoppingLocation, content: {
                 NavigationView {
-                    MDShoppingLocationFormView(isNewShoppingLocation: true, toastType: $toastType)
+                    MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: $showAddShoppingLocation, toastType: $toastType)
                 }
             })
     }
@@ -175,8 +170,15 @@ struct MDShoppingLocationsView: View {
             } else if filteredShoppingLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddShoppingLocation {
+                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: $showAddShoppingLocation, toastType: $toastType), isActive: $showAddShoppingLocation, label: {
+                    NewMDRowLabel(title: "str.md.shoppingLocation.new")
+                })
+            }
+            #endif
             ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation, toastType: $toastType)) {
+                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation, showAddShoppingLocation: Binding.constant(false), toastType: $toastType)) {
                     MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
                 }
             }

@@ -15,6 +15,7 @@ struct MDProductFormView: View {
     @AppStorage("devMode") private var devMode: Bool = false
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = "" // REQUIRED
     @State private var active: Bool = true
@@ -26,22 +27,22 @@ struct MDProductFormView: View {
     
     @State private var locationID: String? // REQUIRED
     @State private var shoppingLocationID: String?
-    @State private var minStockAmount: Double?
+    @State private var minStockAmount: Double = 0.0
     @State private var cumulateMinStockAmountOfSubProducts: Bool = false
     @State private var dueType: DueType = DueType.bestBefore
-    @State private var defaultDueDays: Int?
-    @State private var defaultDueDaysAfterOpen: Int?
-    @State private var productGroupID: String?
+    @State private var defaultDueDays: Int = 0
+    @State private var defaultDueDaysAfterOpen: Int = 0
+    @State private var productGroupID: String = ""
     @State private var quIDStock: String? // REQUIRED
     @State private var quIDPurchase: String? // REQUIRED
-    @State private var quFactorPurchaseToStock: Double? = 1.0
+    @State private var quFactorPurchaseToStock: Double = 1.0
     @State private var enableTareWeightHandling: Bool = false
-    @State private var tareWeight: Double?
+    @State private var tareWeight: Double = 0.0
     @State private var notCheckStockFulfillmentForRecipes: Bool = false
-    @State private var calories: Double?
-    @State private var defaultDueDaysAfterFreezing: Int?
-    @State private var defaultDueDaysAfterThawing: Int?
-    @State private var quickConsumeAmount: Double? = 1.0
+    @State private var calories: Double = 0.0
+    @State private var defaultDueDaysAfterFreezing: Int = 0
+    @State private var defaultDueDaysAfterThawing: Int = 0
+    @State private var quickConsumeAmount: Double = 1.0
     @State private var hideOnStockOverview: Bool = false
     
     @State private var showDeleteAlert: Bool = false
@@ -50,6 +51,7 @@ struct MDProductFormView: View {
     var isNewProduct: Bool
     var product: MDProduct?
     
+    @Binding var showAddProduct: Bool
     @Binding var toastType: MDToastType?
     
     @State var isNameCorrect: Bool = true
@@ -71,8 +73,8 @@ struct MDProductFormView: View {
         active = (product?.active ?? "1") == "1"
         parentProductID = product?.parentProductID
         mdProductDescription = product?.mdProductDescription ?? ""
-        productGroupID = product?.productGroupID
-        calories = Double(product?.calories ?? "")
+        productGroupID = product?.productGroupID ?? ""
+        calories = Double(product?.calories ?? "") ?? 0.0
         hideOnStockOverview = (product?.hideOnStockOverview ?? "0") == "1"
         selectedPictureFileName = product?.pictureFileName
         
@@ -80,20 +82,20 @@ struct MDProductFormView: View {
         shoppingLocationID = product?.shoppingLocationID
         
         dueType = product?.dueType == DueType.bestBefore.rawValue ? DueType.bestBefore : DueType.expires
-        defaultDueDays = Int(product?.defaultBestBeforeDays ?? "")
-        defaultDueDaysAfterOpen = Int(product?.defaultBestBeforeDaysAfterOpen ?? "")
-        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
-        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "")
+        defaultDueDays = Int(product?.defaultBestBeforeDays ?? "") ?? 0
+        defaultDueDaysAfterOpen = Int(product?.defaultBestBeforeDaysAfterOpen ?? "") ?? 0
+        defaultDueDaysAfterFreezing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "") ?? 0
+        defaultDueDaysAfterThawing = Int(product?.defaultBestBeforeDaysAfterThawing ?? "") ?? 0
         
         quIDStock = product?.quIDStock
         quIDPurchase = product?.quIDPurchase
         
-        minStockAmount = Double(product?.minStockAmount ?? "")
+        minStockAmount = Double(product?.minStockAmount ?? "") ?? 0.0
         cumulateMinStockAmountOfSubProducts = Bool(product?.cumulateMinStockAmountOfSubProducts ?? "") ?? false
         quickConsumeAmount = Double(product?.quickConsumeAmount ?? "") ?? 1.0
         quFactorPurchaseToStock = Double(product?.quFactorPurchaseToStock ?? "") ?? 1.0
         enableTareWeightHandling = (product?.enableTareWeightHandling ?? "0") == "1"
-        tareWeight = Double(product?.tareWeight ?? "")
+        tareWeight = Double(product?.tareWeight ?? "") ?? 0.0
         notCheckStockFulfillmentForRecipes = (product?.notCheckStockFulfillmentForRecipes ?? "0") == "1"
         
         isNameCorrect = checkNameCorrect()
@@ -108,7 +110,7 @@ struct MDProductFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewProduct {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddProduct = false
         }
         #endif
     }
@@ -119,32 +121,37 @@ struct MDProductFormView: View {
     
     private func saveProduct() {
         if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
-            let productPOST = MDProductPOST(id: isNewProduct ? grocyVM.findNextID(.products) : Int(product!.id)!, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, rowCreatedTimestamp: isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
+            let id = isNewProduct ? String(grocyVM.findNextID(.products)) : product!.id
+            let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
+            let productPOST = MDProduct(id: id, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? "1" : "0", locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: String(quFactorPurchaseToStock), minStockAmount: String(minStockAmount), defaultBestBeforeDays: String(defaultDueDays), defaultBestBeforeDaysAfterOpen: String(defaultDueDaysAfterOpen), defaultBestBeforeDaysAfterFreezing: String(defaultDueDaysAfterFreezing), defaultBestBeforeDaysAfterThawing: String(defaultDueDaysAfterThawing), pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? "1" : "0", tareWeight: String(tareWeight), notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? "1" : "0", parentProductID: parentProductID, calories: String(calories), cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? "1" : "0", dueType: dueType.rawValue, quickConsumeAmount: String(quickConsumeAmount), rowCreatedTimestamp: timeStamp, hideOnStockOverview: hideOnStockOverview ? "1" : "0", userfields: nil)
+            isProcessing = true
             if isNewProduct {
                 grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Product add successful. \(message)", type: .info)
                         toastType = .successAdd
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Product add failed. \(error)", type: .error)
                         toastType = .failAdd
                     }
+                    isProcessing = false
                 })
             } else {
-                grocyVM.putMDObjectWithID(object: .products, id: product!.id, content: productPOST, completion: { result in
+                grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Product edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Product edit failed. \(error)", type: .error)
                         toastType = .failEdit
                     }
+                    isProcessing = false
                 })
             }
         }
@@ -170,7 +177,8 @@ struct MDProductFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.product.save")) {
                         saveProduct()
-                    }.disabled(!isFormValid)
+                    }
+                    .disabled(!isFormValid || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -264,7 +272,7 @@ struct MDProductFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveProduct()
                 }
-                .disabled(!isFormValid)
+                .disabled(!isFormValid || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -292,9 +300,9 @@ struct MDProductFormView: View {
             
             // Product group
             Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {
-                Text("").tag(nil as String?)
+                Text("").tag("")
                 ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
-                    Text(grocyProductGroup.name).tag(grocyProductGroup.id as String?)
+                    Text(grocyProductGroup.name).tag(grocyProductGroup.id)
                 }
             })
             
@@ -401,10 +409,10 @@ struct MDProductFormView: View {
                 MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", errorMessage: "str.md.product.quFactorPurchaseToStock.invalid", systemImage: MySymbols.amount)
                 if quFactorPurchaseToStock != 1 {
                     #if os(macOS)
-                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
+                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
                         .frame(maxWidth: 200)
                     #else
-                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock ?? 1.0)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
+                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
                     #endif
                 }
             }
@@ -442,18 +450,11 @@ struct MDProductFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
-            //            MDProductFormView(isNewProduct: false, product: MDProduct(id: "1", name: "Name", mdProductDescription: "Description", locationID: "locid", quIDPurchase: "quPurchase", quIDStock: <#T##String#>, quFactorPurchaseToStock: <#T##String#>, barcode: <#T##String?#>, minStockAmount: <#T##String#>, defaultDueDays: <#T##String#>, rowCreatedTimestamp: <#T##String#>, productGroupID: <#T##String?#>, pictureFileName: <#T##String?#>, defaultDueDaysAfterOpen: <#T##String#>, allowPartialUnitsInStock: <#T##String#>, enableTareWeightHandling: <#T##String#>, tareWeight: <#T##String#>, notCheckStockFulfillmentForRecipes: <#T##String#>, parentProductID: <#T##String?#>, calories: <#T##String?#>, cumulateMinStockAmountOfSubProducts: <#T##String#>, defaultDueDaysAfterFreezing: <#T##String#>, defaultDueDaysAfterThawing: <#T##String#>, shoppingLocationID: <#T##String?#>, userfields: <#T##Userfields?#>))
+            MDProductFormView(isNewProduct: true, showAddProduct: Binding.constant(true), toastType: Binding.constant(nil))
         }
         #else
         Group {
-            NavigationView {
-                MDProductFormView(isNewProduct: true, toastType: Binding.constant(nil))
-            }
-            //            .environment(\.locale, .init(identifier: "de"))
-            //            NavigationView {
-            //                MDProductFormView(isNewProduct: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil))
-            //            }
+            MDProductFormView(isNewProduct: true, showAddProduct: Binding.constant(true), toastType: Binding.constant(nil))
         }
         #endif
     }

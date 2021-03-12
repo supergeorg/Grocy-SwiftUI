@@ -101,9 +101,6 @@ struct MDUserEntitiesView: View {
                             Button(action: {
                                 showAddUserEntity.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddUserEntity, content: {
-                                MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -137,7 +134,7 @@ struct MDUserEntitiesView: View {
             .navigationTitle(LocalizedStringKey("str.md.userEntities"))
             .sheet(isPresented: self.$showAddUserEntity, content: {
                     NavigationView {
-                        MDUserEntityFormView(isNewUserEntity: true, toastType: $toastType)
+                        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType)
                     } })
     }
     #endif
@@ -152,8 +149,15 @@ struct MDUserEntitiesView: View {
             } else if filteredUserEntities.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddUserEntity {
+                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType), isActive: $showAddUserEntity, label: {
+                    NewMDRowLabel(title: "str.md.userEntity.new")
+                })
+            }
+            #endif
             ForEach(filteredUserEntities, id:\.id) { userEntity in
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, toastType: $toastType)) {
+                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false), toastType: $toastType)) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
             }

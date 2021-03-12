@@ -23,15 +23,3 @@ struct MDShoppingLocation: Codable {
 }
 
 typealias MDShoppingLocations = [MDShoppingLocation]
-struct MDShoppingLocationPOST: Codable {
-    let id:Int
-    let name, mdShoppingLocationDescription, rowCreatedTimestamp: String
-    let userfields: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case id, name
-        case mdShoppingLocationDescription = "description"
-        case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
-    }
-}

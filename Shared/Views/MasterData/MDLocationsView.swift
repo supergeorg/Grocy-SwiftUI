@@ -37,11 +37,9 @@ struct MDLocationRowView: View {
                             .font(.title)
                     }
                 }
-                if location.mdLocationDescription != nil {
-                    if !location.mdLocationDescription!.isEmpty {
-                        Text(location.mdLocationDescription!)
-                            .font(.caption)
-                    }
+                if let description = location.mdLocationDescription, !description.isEmpty {
+                    Text(location.mdLocationDescription!)
+                        .font(.caption)
                 }
             }
             .padding(10)
@@ -129,9 +127,6 @@ struct MDLocationsView: View {
                             Button(action: {
                                 showAddLocation.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddLocation, content: {
-                                MDLocationFormView(isNewLocation: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -169,7 +164,7 @@ struct MDLocationsView: View {
             .navigationTitle(LocalizedStringKey("str.md.locations"))
             .sheet(isPresented: self.$showAddLocation, content: {
                     NavigationView {
-                        MDLocationFormView(isNewLocation: true, toastType: $toastType)
+                        MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType)
                     } })
     }
     #endif
@@ -184,8 +179,15 @@ struct MDLocationsView: View {
             } else if filteredLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddLocation {
+                NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType), isActive: $showAddLocation, label: {
+                    NewMDRowLabel(title: "str.md.location.new")
+                })
+            }
+            #endif
             ForEach(filteredLocations, id:\.id) {location in
-                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, toastType: $toastType)) {
+                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, showAddLocation: Binding.constant(false), toastType: $toastType)) {
                     MDLocationRowView(location: location)
                 }
             }

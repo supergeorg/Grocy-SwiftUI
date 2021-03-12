@@ -13,6 +13,7 @@ struct MDProductGroupFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
     @State private var mdProductGroupDescription: String = ""
@@ -20,6 +21,7 @@ struct MDProductGroupFormView: View {
     var isNewProductGroup: Bool
     var productGroup: MDProductGroup?
     
+    @Binding var showAddProductGroup: Bool
     @Binding var toastType: MDToastType?
     
     @State var isNameCorrect: Bool = false
@@ -43,40 +45,44 @@ struct MDProductGroupFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewProductGroup {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddProductGroup = false
         }
         #endif
     }
     
     private func saveProductGroup() {
+        let id = isNewProductGroup ? String(grocyVM.findNextID(.product_groups)) : productGroup!.id
+        let timeStamp = isNewProductGroup ? Date().iso8601withFractionalSeconds : productGroup!.rowCreatedTimestamp
+        let productGroupPOST = MDProductGroup(id: id, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: timeStamp, userfields: nil)
+        isProcessing = true
         if isNewProductGroup {
-            let productGroupPOST = MDProductGroupPOST(id: grocyVM.findNextID(.product_groups), name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil)
             grocyVM.postMDObject(object: .product_groups, content: productGroupPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Product group add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Product group add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
+                isProcessing = false
             })
         } else {
-            let productGroupPOST = MDProductGroupPOST(id: Int(productGroup!.id)!, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: productGroup!.rowCreatedTimestamp, userfields: nil)
-            grocyVM.putMDObjectWithID(object: .product_groups, id: productGroup!.id, content: productGroupPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .product_groups, id: id, content: productGroupPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Product group edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Product group edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
+                isProcessing = false
             })
         }
     }
@@ -101,7 +107,8 @@ struct MDProductGroupFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.productGroup.save")) {
                         saveProductGroup()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -116,7 +123,7 @@ struct MDProductGroupFormView: View {
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.productGroup.name.required")
+                MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.productGroup.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
@@ -136,6 +143,7 @@ struct MDProductGroupFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveProductGroup()
                 }
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -155,16 +163,16 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDProductGroupFormView(isNewProductGroup: true, toastType: Binding.constant(nil))
-            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
+            MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
+            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
         }
         #else
         Group {
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: true, toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
         #endif

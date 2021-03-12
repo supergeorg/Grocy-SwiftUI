@@ -472,7 +472,19 @@
 
 "str.md.chores" = "Hausarbeiten";
 "str.md.batteries" = "Batterien";
+
 "str.md.taskCategories" = "Aufgabenkategorien";
+"str.md.taskCategory" = "Aufgabenkategorie";
+"str.md.taskCategories.empty" = "Keine Aufgabenkategorien gefunden.";
+"str.md.taskCategory.new" = "Neue Aufgabenkategorie";
+"str.md.taskCategory.edit" = "Bearbeite Aufgabenkategorie";
+"str.md.taskCategory.save" = "Speichere Aufgabenkategorie";
+"str.md.taskCategory.info" = "Aufgabenkategorie-info";
+"str.md.taskCategory.name" = "Name der Aufgabenkategorie";
+"str.md.taskCategory.name.required" = "Ein Name ist erforderlich";
+"str.md.taskCategory.name.exists" = "Ein nicht verwendeter Name ist erforderlich";
+"str.md.taskCategory.delete" = "Aufgabenkategorie löschen";
+"str.md.taskCategory.delete.confirm" = "Möchtest du wirklich diese Aufgabenkategorie löschen?";
 
 "str.md.userFields" = "Benutzerfelder";
 "str.md.userField" = "Benutzerfeld";

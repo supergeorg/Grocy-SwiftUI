@@ -102,9 +102,6 @@ struct MDUserFieldsView: View {
                             Button(action: {
                                 showAddUserField.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddUserField, content: {
-                                MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -138,7 +135,7 @@ struct MDUserFieldsView: View {
             .navigationTitle(LocalizedStringKey("str.md.userFields"))
             .sheet(isPresented: self.$showAddUserField, content: {
                     NavigationView {
-                        MDUserFieldFormView(isNewUserField: true, toastType: $toastType)
+                        MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField, toastType: $toastType)
                     } })
     }
     #endif
@@ -153,8 +150,15 @@ struct MDUserFieldsView: View {
             } else if filteredUserFields.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddUserField {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField, toastType: $toastType), isActive: $showAddUserField, label: {
+                    NewMDRowLabel(title: "str.md.userField.new")
+                })
+            }
+            #endif
             ForEach(filteredUserFields, id:\.id) { userField in
-                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, toastType: $toastType)) {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: Binding.constant(false), toastType: $toastType)) {
                     MDUserFieldRowView(userField: userField)
                 }
             }
@@ -189,7 +193,7 @@ struct MDUserFieldsView: View {
 struct MDUserFieldsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            //            MDUserFieldRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+            MDUserFieldRowView(userField: MDUserField(id: "1", entity: "locations", name: "Test", caption: "caption", type: "1", showAsColumnInTables: "0", rowCreatedTimestamp: "ts", config: nil, sortNumber: nil, userfields: nil))
             #if os(macOS)
             MDUserFieldsView()
             #else

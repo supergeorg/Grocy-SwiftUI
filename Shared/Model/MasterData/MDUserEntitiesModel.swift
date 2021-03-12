@@ -27,23 +27,3 @@ struct MDUserEntity: Codable {
 }
 
 typealias MDUserEntities = [MDUserEntity]
-
-// MARK: - MDUserEntityPOST
-struct MDUserEntityPOST: Codable {
-    let id: Int
-    let name, caption: String
-    let mdUserEntityDescription: String?
-    let showInSidebarMenu: String
-    let iconCSSClass: String?
-    let rowCreatedTimestamp: String
-    let userfields: [String: String]?
-    
-    enum CodingKeys: String, CodingKey {
-        case id, name, caption
-        case mdUserEntityDescription = "description"
-        case showInSidebarMenu = "show_in_sidebar_menu"
-        case iconCSSClass = "icon_css_class"
-        case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
-    }
-}

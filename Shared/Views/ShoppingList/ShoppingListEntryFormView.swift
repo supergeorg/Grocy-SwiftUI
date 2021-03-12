@@ -16,7 +16,7 @@ struct ShoppingListEntryFormView: View {
     
     @State private var shoppingListID: String = "1"
     @State private var productID: String?
-    @State private var amount: Int?
+    @State private var amount: Int = 1
     @State private var quantityUnitID: String?
     @State private var note: String = ""
     
@@ -28,7 +28,7 @@ struct ShoppingListEntryFormView: View {
     var product: MDProduct?
     
     var isFormValid: Bool {
-        return (!shoppingListID.isEmpty && productID != nil && amount ?? 0 > 0 && quantityUnitID != nil)
+        return (!shoppingListID.isEmpty && productID != nil && amount > 0 && quantityUnitID != nil)
     }
     
     private func getQuantityUnit() -> MDQuantityUnit? {
@@ -55,9 +55,21 @@ struct ShoppingListEntryFormView: View {
     func saveShoppingListEntry() {
         let intProductID = Int(productID ?? "")!
         let intShoppingListID = Int(shoppingListID)!
-        if let amount = amount {
-            if isNewShoppingListEntry{
-                grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note), completion: { result in
+        if isNewShoppingListEntry{
+            grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note), completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    print("\(error)")
+                    showFailToast = true
+                }
+            })
+        } else {
+            if let entry = shoppingListEntry {
+                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
                     switch result {
                     case let .success(message):
                         print(message)
@@ -68,20 +80,6 @@ struct ShoppingListEntryFormView: View {
                         showFailToast = true
                     }
                 })
-            } else {
-                if let entry = shoppingListEntry {
-                    grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
-                        switch result {
-                        case let .success(message):
-                            print(message)
-                            updateData()
-                            finishForm()
-                        case let .failure(error):
-                            print("\(error)")
-                            showFailToast = true
-                        }
-                    })
-                }
             }
         }
     }

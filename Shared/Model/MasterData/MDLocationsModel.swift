@@ -24,18 +24,3 @@ struct MDLocation: Codable {
 }
 
 typealias MDLocations = [MDLocation]
-
-struct MDLocationPOST: Codable {
-    let id: Int
-    let name, mdLocationDescription, rowCreatedTimestamp: String
-    let isFreezer: String
-    let userfields: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id, name
-        case mdLocationDescription = "description"
-        case rowCreatedTimestamp = "row_created_timestamp"
-        case isFreezer = "is_freezer"
-        case userfields
-    }
-}

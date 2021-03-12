@@ -471,7 +471,19 @@
 
 "str.md.chores" = "Chores";
 "str.md.batteries" = "Batteries";
-"str.md.taskCategories" = "Task Categories";
+
+"str.md.taskCategories" = "Task categories";
+"str.md.taskCategory" = "Task category";
+"str.md.taskCategories.empty" = "No task categories found.";
+"str.md.taskCategory.new" = "Create task category";
+"str.md.taskCategory.edit" = "Edit task category";
+"str.md.taskCategory.save" = "Save task category";
+"str.md.taskCategory.info" = "Task category info";
+"str.md.taskCategory.name" = "Task category name";
+"str.md.taskCategory.name.required" = "A name is required";
+"str.md.taskCategory.name.exists" = "Name already exists";
+"str.md.taskCategory.delete" = "Delete this task category";
+"str.md.taskCategory.delete.confirm" = "Do you really want to delete this task category?";
 
 "str.md.userFields" = "Userfields";
 "str.md.userField" = "Userfield";

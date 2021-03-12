@@ -14,11 +14,9 @@ struct MDProductGroupRowView: View {
         VStack(alignment: .leading) {
             Text(productGroup.name)
                 .font(.largeTitle)
-            if productGroup.mdProductGroupDescription != nil {
-                if !productGroup.mdProductGroupDescription!.isEmpty {
-                    Text(productGroup.mdProductGroupDescription!)
-                        .font(.caption)
-                }
+            if let description = productGroup.mdProductGroupDescription, !description.isEmpty {
+                Text(productGroup.mdProductGroupDescription!)
+                    .font(.caption)
             }
         }
         .padding(10)
@@ -105,9 +103,6 @@ struct MDProductGroupsView: View {
                             Button(action: {
                                 showAddProductGroup.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddProductGroup, content: {
-                                MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -145,7 +140,7 @@ struct MDProductGroupsView: View {
             .navigationTitle(LocalizedStringKey("str.md.productGroups"))
             .sheet(isPresented: self.$showAddProductGroup, content: {
                     NavigationView {
-                        MDProductGroupFormView(isNewProductGroup: true, toastType: $toastType)
+                        MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType)
                     } })
     }
     #endif
@@ -160,8 +155,15 @@ struct MDProductGroupsView: View {
             } else if filteredProductGroups.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddProductGroup {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType), isActive: $showAddProductGroup, label: {
+                    NewMDRowLabel(title: "str.md.productGroup.new")
+                })
+            }
+            #endif
             ForEach(filteredProductGroups, id:\.id) { productGroup in
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, toastType: $toastType)) {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: Binding.constant(false), toastType: $toastType)) {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
             }

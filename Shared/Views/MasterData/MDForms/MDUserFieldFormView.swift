@@ -13,6 +13,7 @@ struct MDUserFieldFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var entity: ObjectEntities?
     @State private var name: String = ""
@@ -24,6 +25,7 @@ struct MDUserFieldFormView: View {
     var isNewUserField: Bool
     var userField: MDUserField?
     
+    @Binding var showAddUserField: Bool
     @Binding var toastType: MDToastType?
     
     @State private var isNameCorrect: Bool = true
@@ -57,7 +59,7 @@ struct MDUserFieldFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewUserField {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddUserField = false
         }
         #endif
     }
@@ -65,34 +67,38 @@ struct MDUserFieldFormView: View {
     private func saveUserField() {
         let sortNumberStr = sortNumber ?? 0 < 0 ? nil : String(sortNumber ?? 0)
         if let entity = entity {
+            let id = isNewUserField ? String(grocyVM.findNextID(.userfields)) : userField!.id
+            let timeStamp = isNewUserField ? Date().iso8601withFractionalSeconds : userField!.rowCreatedTimestamp
+            let userFieldPOST = MDUserField(id: id, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: timeStamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
+            isProcessing = true
             if isNewUserField {
-                let userFieldPOST = MDUserFieldPOST(id: grocyVM.findNextID(.userfields), entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: Date().iso8601withFractionalSeconds, config: nil, sortNumber: sortNumberStr, userfields: nil)
                 grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Userfield add successful. \(message)", type: .info)
                         toastType = .successAdd
                         resetForm()
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Userfield add failed. \(error)", type: .error)
                         toastType = .failAdd
                     }
+                    isProcessing = true
                 })
             } else {
-                let userFieldPOST = MDUserFieldPOST(id: Int(userField!.id)!, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: userField!.rowCreatedTimestamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
-                grocyVM.putMDObjectWithID(object: .userfields, id: userField!.id, content: userFieldPOST, completion: { result in
+                grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Userfield edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Userfield edit failed. \(error)", type: .error)
                         toastType = .failEdit
                     }
+                    isProcessing = true
                 })
             }
         }
@@ -118,7 +124,8 @@ struct MDUserFieldFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.userField.save")) {
                         saveUserField()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -153,7 +160,7 @@ struct MDUserFieldFormView: View {
                     .onChange(of: caption, perform: {newValue in
                                 isCaptionCorrect = checkCaptionCorrect() })
             }
-            MyIntStepper(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
+            MyIntStepperOptional(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
             
             Picker(selection: $type, label: Text(LocalizedStringKey("str.md.userField.type")), content: {
                 ForEach(UserFieldType.allCases, id:\.self) { userFieldType in
@@ -176,6 +183,7 @@ struct MDUserFieldFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveUserField()
                 }
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -193,6 +201,6 @@ struct MDUserFieldFormView: View {
 
 struct MDUserFieldFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDUserFieldFormView(isNewUserField: true, toastType: Binding.constant(.successAdd))
+        MDUserFieldFormView(isNewUserField: true, showAddUserField: Binding.constant(true), toastType: Binding.constant(.successAdd))
     }
 }

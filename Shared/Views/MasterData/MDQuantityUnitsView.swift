@@ -14,11 +14,9 @@ struct MDQuantityUnitRowView: View {
         VStack(alignment: .leading) {
             Text("\(quantityUnit.name) (\(quantityUnit.namePlural))")
                 .font(.largeTitle)
-            if quantityUnit.mdQuantityUnitDescription != nil {
-                if !quantityUnit.mdQuantityUnitDescription!.isEmpty {
-                    Text(quantityUnit.mdQuantityUnitDescription!)
-                        .font(.caption)
-                }
+            if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
+                Text(quantityUnit.mdQuantityUnitDescription!)
+                    .font(.caption)
             }
         }
         .padding(10)
@@ -109,9 +107,6 @@ struct MDQuantityUnitsView: View {
                             Button(action: {
                                 showAddQuantityUnit.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-                            .popover(isPresented: self.$showAddQuantityUnit, content: {
-                                MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
-                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -149,7 +144,7 @@ struct MDQuantityUnitsView: View {
             .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
             .sheet(isPresented: self.$showAddQuantityUnit, content: {
                     NavigationView {
-                        MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: $toastType)
+                        MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType)
                     } })
     }
     #endif
@@ -164,8 +159,15 @@ struct MDQuantityUnitsView: View {
             } else if filteredQuantityUnits.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
+            #if os(macOS)
+            if showAddQuantityUnit {
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType), isActive: $showAddQuantityUnit, label: {
+                    NewMDRowLabel(title: "str.md.quantityUnit.new")
+                })
+            }
+            #endif
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, toastType: $toastType)) {
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, showAddQuantityUnit: Binding.constant(false), toastType: $toastType)) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
             }

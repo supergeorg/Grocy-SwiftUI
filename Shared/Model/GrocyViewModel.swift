@@ -50,6 +50,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdProductGroups: MDProductGroups = []
     @Published var mdBatteries: MDBatteries = []
+    @Published var mdTaskCategories: MDTaskCategories = []
     @Published var mdUserFields: MDUserFields = []
     @Published var mdUserEntities: MDUserEntities = []
     
@@ -154,6 +155,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.shoppingList.map{ Int($0.id) ?? 0 }
         case .product_barcodes:
             ints = self.mdProductBarcodes.map{ Int($0.id) ?? 0 }
+        case .task_categories:
+            ints = self.mdTaskCategories.map{ Int($0.id) ?? 0 }
         case .userfields:
             ints = self.mdUserFields.map{ Int($0.id) ?? 0 }
         case .userentities:
@@ -313,6 +316,19 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.stockJournal = entityResult
+                                self.failedToLoadObjects.remove(object)
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
+                            }
+                        })
+                    }
+                case .task_categories:
+                    if mdTaskCategories.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDTaskCategories, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdTaskCategories = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")

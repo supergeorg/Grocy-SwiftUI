@@ -13,6 +13,7 @@ struct MDBarcodeFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var barcode: String = ""
     @State private var amount: Int?
@@ -174,7 +175,7 @@ struct MDBarcodeFormView: View {
                 #endif
             }
             Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
+                MyIntStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in

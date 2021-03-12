@@ -23,7 +23,7 @@ struct ConsumeProductView: View {
     var productToConsumeID: String?
     
     @State private var productID: String?
-    @State private var amount: Double?
+    @State private var amount: Double = 1.0
     @State private var quantityUnitID: String?
     @State private var locationID: String?
     @State private var spoiled: Bool = false
@@ -84,12 +84,12 @@ struct ConsumeProductView: View {
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        (productID != nil) && (amount != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount ?? 0 > maxAmount ?? 0)
+        (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
     }
     
     private func resetForm() {
         productID = productToConsumeID
-        amount = nil
+        amount = 1.0
         quantityUnitID = nil
         locationID = nil
         spoiled = false
@@ -100,47 +100,43 @@ struct ConsumeProductView: View {
     }
     
     private func openProduct() {
-        if let amount = amount {
-            if let productID = productID {
-                let openInfo = ProductOpen(amount: amount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
-                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
-                isProcessingAction = true
-                grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
-                    switch result {
-                    case let .success(prod):
-                        grocyVM.postLog(message: "Opening successful. \(prod)", type: .info)
-                        toastType = .successOpen
-                        resetForm()
-                    case let .failure(error):
-                        grocyVM.postLog(message: "Opening failed: \(error)", type: .error)
-                        toastType = .failOpen
-                    }
-                    isProcessingAction = false
+        if let productID = productID {
+            let openInfo = ProductOpen(amount: amount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
+            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+            isProcessingAction = true
+            grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
+                switch result {
+                case let .success(prod):
+                    grocyVM.postLog(message: "Opening successful. \(prod)", type: .info)
+                    toastType = .successOpen
+                    resetForm()
+                case let .failure(error):
+                    grocyVM.postLog(message: "Opening failed: \(error)", type: .error)
+                    toastType = .failOpen
                 }
+                isProcessingAction = false
             }
         }
     }
     
     private func consumeProduct() {
         if let productID = productID {
-            if let amount = amount {
-                let intRecipeID = Int(recipeID ?? "")
-                let intLocationID = Int(locationID ?? "")
-                let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
-                infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
-                isProcessingAction = true
-                grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
-                    switch result {
-                    case let .success(prod):
-                        grocyVM.postLog(message: "Consume successful. \(prod)", type: .info)
-                        toastType = .successConsume
-                        resetForm()
-                    case let .failure(error):
-                        grocyVM.postLog(message: "Consume failed: \(error)", type: .error)
-                        toastType = .failConsume
-                    }
-                    isProcessingAction = false
+            let intRecipeID = Int(recipeID ?? "")
+            let intLocationID = Int(locationID ?? "")
+            let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
+            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+            isProcessingAction = true
+            grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
+                switch result {
+                case let .success(prod):
+                    grocyVM.postLog(message: "Consume successful. \(prod)", type: .info)
+                    toastType = .successConsume
+                    resetForm()
+                case let .failure(error):
+                    grocyVM.postLog(message: "Consume failed: \(error)", type: .error)
+                    toastType = .failConsume
                 }
+                isProcessingAction = false
             }
         }
     }

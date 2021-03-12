@@ -40,10 +40,9 @@ struct MasterDataView: View {
                 NavigationLink(destination: MDBatteriesView()) {
                     Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
                 }
-                
-                NavigationLink(destination: MDTaskCategoriesView()) {
-                    Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
-                }
+            }
+            NavigationLink(destination: MDTaskCategoriesView()) {
+                Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
             }
             
             NavigationLink(destination: MDUserFieldsView()) {

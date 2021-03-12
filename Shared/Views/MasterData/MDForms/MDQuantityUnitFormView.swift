@@ -13,6 +13,7 @@ struct MDQuantityUnitFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
     @State private var namePlural: String = ""
@@ -21,6 +22,7 @@ struct MDQuantityUnitFormView: View {
     var isNewQuantityUnit: Bool
     var quantityUnit: MDQuantityUnit?
     
+    @Binding var showAddQuantityUnit: Bool
     @Binding var toastType: MDToastType?
     
     @State var isNameCorrect: Bool = false
@@ -45,40 +47,44 @@ struct MDQuantityUnitFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewQuantityUnit {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddQuantityUnit = false
         }
         #endif
     }
     
     private func saveQuantityUnit() {
+        let id = isNewQuantityUnit ? String(grocyVM.findNextID(.quantity_units)) : quantityUnit!.id
+        let timeStamp = isNewQuantityUnit ? Date().iso8601withFractionalSeconds : quantityUnit!.rowCreatedTimestamp
+        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp, namePlural: namePlural, pluralForms: nil, userfields: nil)
+        isProcessing = true
         if isNewQuantityUnit {
-            let quPOST = MDQuantityUnitPOST(id: grocyVM.findNextID(.quantity_units), name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, namePlural: namePlural, pluralForms: nil, userfields: nil)
-            grocyVM.postMDObject(object: .quantity_units, content: quPOST, completion: { result in
+            grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Quantity unit add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Quantity unit add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
+                isProcessing = false
             })
         } else {
-            let quPOST = MDQuantityUnitPOST(id: Int(quantityUnit!.id)!, name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: quantityUnit!.rowCreatedTimestamp, namePlural: namePlural, pluralForms: nil, userfields: nil)
-            grocyVM.putMDObjectWithID(object: .quantity_units, id: quantityUnit!.id, content: quPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Quantity unit edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Quantity unit edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
+                isProcessing = false
             })
         }
     }
@@ -103,7 +109,8 @@ struct MDQuantityUnitFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.quantityUnit.save")) {
                         saveQuantityUnit()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -118,7 +125,7 @@ struct MDQuantityUnitFormView: View {
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, errorMessage: "str.md.quantityUnit.name.required")
+                MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
@@ -139,6 +146,7 @@ struct MDQuantityUnitFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveQuantityUnit()
                 }
+                disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -158,16 +166,16 @@ struct MDQuantityUnitFormView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
         Group {
-            MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: Binding.constant(.successAdd))
-            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), toastType: Binding.constant(.successAdd))
+            MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
+            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
         }
         #else
         Group {
             NavigationView {
-                MDQuantityUnitFormView(isNewQuantityUnit: true, toastType: Binding.constant(.successAdd))
+                MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
             }
             NavigationView {
-                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), toastType: Binding.constant(.successAdd))
+                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
             }
         }
         #endif

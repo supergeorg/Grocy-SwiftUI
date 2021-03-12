@@ -13,6 +13,7 @@ struct MDUserEntityFormView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var firstAppear: Bool = true
+    @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
     @State private var caption: String = ""
@@ -22,6 +23,7 @@ struct MDUserEntityFormView: View {
     var isNewUserEntity: Bool
     var userEntity: MDUserEntity?
     
+    @Binding var showAddUserEntity: Bool
     @Binding var toastType: MDToastType?
     
     @State private var isNameCorrect: Bool = true
@@ -53,40 +55,44 @@ struct MDUserEntityFormView: View {
         presentationMode.wrappedValue.dismiss()
         #elseif os(macOS)
         if isNewUserEntity {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+            showAddUserEntity = false
         }
         #endif
     }
     
     private func saveUserEntity() {
+        let id = isNewUserEntity ? String(grocyVM.findNextID(.userentities)) : userEntity!.id
+        let timeStamp = isNewUserEntity ? Date().iso8601withFractionalSeconds : userEntity!.rowCreatedTimestamp
+        let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? "1" : "0", iconCSSClass: nil, rowCreatedTimestamp: timeStamp, userfields: nil)
+        isProcessing = true
         if isNewUserEntity {
-            let userEntityPOST = MDUserEntityPOST(id: grocyVM.findNextID(.userentities), name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? "1" : "0", iconCSSClass: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil)
             grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "User entity add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "User entity add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
+                isProcessing = false
             })
         } else {
-            let userEntityPOST = MDUserEntityPOST(id: isNewUserEntity ? grocyVM.findNextID(.userentities) : Int(userEntity!.id)!, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? "1" : "0", iconCSSClass: nil, rowCreatedTimestamp: isNewUserEntity ? Date().iso8601withFractionalSeconds : userEntity!.rowCreatedTimestamp, userfields: nil)
-            grocyVM.putMDObjectWithID(object: .userentities, id: userEntity!.id, content: userEntityPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "User entity edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "User entity edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
+                isProcessing = false
             })
         }
     }
@@ -111,7 +117,8 @@ struct MDUserEntityFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.userEntity.save")) {
                         saveUserEntity()
-                    }.disabled(!isNameCorrect)
+                    }
+                    .disabled(!isNameCorrect || isProcessing)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     // Back not shown without it
@@ -130,8 +137,8 @@ struct MDUserEntityFormView: View {
                     .onChange(of: name, perform: {newValue in
                                 isNameCorrect = checkNameCorrect() })
                 MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userEntity.caption.required")
-                        .onChange(of: caption, perform: {newValue in
-                                    isCaptionCorrect = checkCaptionCorrect() })
+                    .onChange(of: caption, perform: {newValue in
+                                isCaptionCorrect = checkCaptionCorrect() })
             }
             
             MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
@@ -151,6 +158,7 @@ struct MDUserEntityFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveUserEntity()
                 }
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
@@ -168,6 +176,6 @@ struct MDUserEntityFormView: View {
 
 struct MDUserEntityFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDUserEntityFormView(isNewUserEntity: true, toastType: Binding.constant(nil))
+        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: Binding.constant(false), toastType: Binding.constant(nil))
     }
 }
