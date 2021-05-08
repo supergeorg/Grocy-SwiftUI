@@ -129,6 +129,7 @@ struct StockJournalRowView: View {
                 .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
                 .font(.caption)
             }
+            Spacer()
         }
     }
 }
@@ -180,6 +181,7 @@ struct StockJournalView: View {
         #if os(iOS)
         NavigationView {
             content
+                .padding()
                 .toolbar(content: {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(LocalizedStringKey("str.close")) {
@@ -194,15 +196,17 @@ struct StockJournalView: View {
     }
     
     var content: some View {
-        List() {
+        VStack(alignment: .leading) {
             StockJournalFilterBar(searchString: $searchString, filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
             if grocyVM.stockJournal.isEmpty {
                 Text(LocalizedStringKey("str.stock.journal.empty")).padding()
             } else if filteredJournal.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult")).padding()
             }
-            ForEach(filteredJournal, id: \.id) { journalEntry in
-                StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
+            ScrollView(.vertical) {
+                ForEach(filteredJournal, id: \.id) { journalEntry in
+                    StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
+                }
             }
         }
         .onAppear(perform: {

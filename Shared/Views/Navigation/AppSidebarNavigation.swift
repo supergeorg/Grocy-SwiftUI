@@ -49,11 +49,11 @@ struct AppSidebarNavigation: View {
     
     @State private var firstAppear: Bool = true
     
-    #if os(iOS)
-    @State private var selection: NavigationItem? = NavigationItem.quickScan
-    #else
+//    #if os(iOS)
+//    @State private var selection: NavigationItem? = NavigationItem.quickScan
+//    #else
     @State private var selection: NavigationItem? = NavigationItem.stockOverview
-    #endif
+//    #endif
     
     private func toggleSidebar() {
         #if os(macOS)

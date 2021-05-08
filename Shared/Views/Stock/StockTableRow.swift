@@ -151,7 +151,7 @@ struct StockTableRow: View {
         
         if showNextBestBeforeDate {
             VStack{
-                HStack(alignment: .bottom){
+                HStack(alignment: .center){
                     Divider()
                     Spacer()
                     if let dueDate = getDateFromString(stockElement.bestBeforeDate) {
