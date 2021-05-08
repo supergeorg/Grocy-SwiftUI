@@ -21,6 +21,7 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("isDemoModus") var isDemoModus: Bool = false
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     static let shared = GrocyViewModel()
     
@@ -590,6 +591,7 @@ class GrocyViewModel: ObservableObject {
                 }
             }, receiveValue: { (syscfg) in
                 DispatchQueue.main.async {
+                    
                     completion(.success(syscfg))
                 }
             })
@@ -597,7 +599,8 @@ class GrocyViewModel: ObservableObject {
     }
     
     func getCurrencySymbol() -> String {
-        return CurrencySymbols.symbols.first(where: {$0.code == self.systemConfig?.currency})?.symbol ?? "CURRENCY"
+        let locale = NSLocale(localeIdentifier: localizationKey)
+        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
     }
     
     // MARK: - USER MANAGEMENT
