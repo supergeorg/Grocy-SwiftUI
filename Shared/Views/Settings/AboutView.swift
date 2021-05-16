@@ -34,23 +34,28 @@ struct AboutView: View {
                 
                 AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
                 
+                Link(destination: URL(string: "https://github.com/grocy/grocy")!, label: {
+                    AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
+                })
+                .foregroundColor(.primary)
+                
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
-                    AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (c) 2019 Paul Hudson")
+                    AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
                 })
                 .foregroundColor(.primary)
                 
                 Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
-                    AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (c) 2020 Dmytro Anokhin")
+                    AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (MIT License) 2020 Dmytro Anokhin")
                 })
                 .foregroundColor(.primary)
                 
                 Link(destination: URL(string: "https://github.com/SwiftyBeaver/SwiftyBeaver")!, label: {
-                    AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (c) 2015 Sebastian Kreutzberger")
+                    AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (MIT License) 2015 Sebastian Kreutzberger")
                 })
                 .foregroundColor(.primary)
                 
                 Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
-                    AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (c) 2020 Steven Grosmark")
+                    AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (Apache License 2.0) 2020 Steven Grosmark")
                 })
                 .foregroundColor(.primary)
             }
