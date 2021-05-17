@@ -20,6 +20,9 @@ struct StockFilterBar: View {
             #if os(iOS)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                 SearchBar(text: $searchString, placeholder: "str.search")
+                Button("Exit Search") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
             }
             #endif
         HStack{
