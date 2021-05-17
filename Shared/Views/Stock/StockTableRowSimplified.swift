@@ -30,8 +30,8 @@ struct StockTableRowSimplified: View {
     
     @State private var showDetailView: Bool = false
     
-    var caloriesSum: String {
-        if let calories = Double(stockElement.product.calories) {
+    var caloriesSum: String? {
+        if let calories = Double(stockElement.product.calories ?? "") {
             let sum = calories * Double(stockElement.amount)!
             return String(format: "%.0f", sum)
         } else { return stockElement.product.calories }

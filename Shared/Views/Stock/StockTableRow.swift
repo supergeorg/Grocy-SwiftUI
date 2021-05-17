@@ -34,8 +34,8 @@ struct StockTableRow: View {
     
     @State private var showDetailView: Bool = false
     
-    var caloriesSum: String {
-        if let calories = Double(stockElement.product.calories) {
+    var caloriesSum: String? {
+        if let calories = Double(stockElement.product.calories ?? "") {
             let sum = calories * Double(stockElement.amount)!
             return String(format: "%.0f", sum)
         } else { return stockElement.product.calories }
@@ -170,7 +170,7 @@ struct StockTableRow: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(stockElement.product.calories != "0" ? stockElement.product.calories : "")
+                Text(stockElement.product.calories != "0" ? stockElement.product.calories ?? "" : "")
                 Spacer()
             }
             .background(backgroundColor)
@@ -180,7 +180,7 @@ struct StockTableRow: View {
             HStack {
                 Divider()
                 Spacer()
-                Text(caloriesSum == "0" ? "" : caloriesSum)
+                Text(((caloriesSum == "0") ? "" : caloriesSum) ?? "")
                 Spacer()
             }
             .background(backgroundColor)

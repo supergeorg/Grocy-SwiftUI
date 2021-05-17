@@ -11,14 +11,16 @@ import Foundation
 struct MDProduct: Codable {
     let id, name: String
     let mdProductDescription: String?
-    let productGroupID, active, locationID: String
+    let productGroupID: String?
+    let active, locationID: String
     @NullCodable var shoppingLocationID: String?
     let quIDPurchase, quIDStock, quFactorPurchaseToStock, minStockAmount: String
     let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: String
     @NullCodable var pictureFileName: String?
     let enableTareWeightHandling, tareWeight, notCheckStockFulfillmentForRecipes: String
     @NullCodable var parentProductID: String?
-    let calories, cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String
+    let calories: String?
+    let cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String
     let rowCreatedTimestamp: String
     let hideOnStockOverview: String?
     let userfields: [String: String]?
