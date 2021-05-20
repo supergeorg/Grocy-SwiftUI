@@ -49,11 +49,11 @@ struct AppSidebarNavigation: View {
     
     @State private var firstAppear: Bool = true
     
-//    #if os(iOS)
-//    @State private var selection: NavigationItem? = NavigationItem.quickScan
-//    #else
+    //    #if os(iOS)
+    //    @State private var selection: NavigationItem? = NavigationItem.quickScan
+    //    #else
     @State private var selection: NavigationItem? = NavigationItem.stockOverview
-//    #endif
+    //    #endif
     
     private func toggleSidebar() {
         #if os(macOS)
@@ -168,17 +168,17 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-//                if grocyVM.mdUserEntities.count > 0 {
-//                Group {
-//                    ForEach(grocyVM.mdUserEntities, id:\.id) {userEntity in
-//                        NavigationLink(destination: UserEntityView(userEntity: userEntity), tag: NavigationItem.userEntity(userEntity.name), selection: $selection) {
-//                            Label(userEntity.name, systemImage: getSFSymbolForFA(faName: userEntity.iconCSSClass ?? ""))
-//                        }
-//                        .tag(NavigationItem.userEntity(userEntity.name))
-//                    }
-//                    Divider()
-//                }
-//                }
+                //                if grocyVM.mdUserEntities.count > 0 {
+                //                Group {
+                //                    ForEach(grocyVM.mdUserEntities, id:\.id) {userEntity in
+                //                        NavigationLink(destination: UserEntityView(userEntity: userEntity), tag: NavigationItem.userEntity(userEntity.name), selection: $selection) {
+                //                            Label(userEntity.name, systemImage: getSFSymbolForFA(faName: userEntity.iconCSSClass ?? ""))
+                //                        }
+                //                        .tag(NavigationItem.userEntity(userEntity.name))
+                //                    }
+                //                    Divider()
+                //                }
+                //                }
                 
                 Group {
                     Section(header: Label(LocalizedStringKey("str.nav.md"), systemImage: NavigationItem.masterData.rawValue)) {
@@ -257,12 +257,24 @@ struct AppSidebarNavigation: View {
             }
             .listStyle(SidebarListStyle())
             .navigationTitle("Grocy")
-//            .onAppear(perform: {
-//                if firstAppear {
-//                    grocyVM.getMDUserEntities()
-//                    firstAppear = false
-//                }
-//            })
+            //            .onAppear(perform: {
+            //                if firstAppear {
+            //                    grocyVM.getMDUserEntities()
+            //                    firstAppear = false
+            //                }
+            //            })
+            #if os(iOS)
+            // A quick and dirty hack for non-showing view.
+            if firstAppear {
+                if UIDevice.current.orientation.isPortrait && UIDevice.current.userInterfaceIdiom == .pad {
+                    VStack{
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 100))
+                        Text("Please select a sidebar entry from the left or rotate the device to landscape.")
+                    }
+                }
+            }
+            #endif
         }
     }
 }
