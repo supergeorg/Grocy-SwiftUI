@@ -1,4 +1,11 @@
 # Grocy-SwiftUI
+
+[<img src="Assets/AppStore_Badge.svg">](https://apps.apple.com/us/app/grocy-mobile/id1567803209)
+
+Now available on App Store®!
+
+Jetzt im App Store® erhältlich!
+
 #English
 The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.4) as well as iOS(14.4) or macOS (Big Sur 11.1) to compile and run.
 To connect to your own server, Grocy version 3.0.1 is required, for developing purposes a demo server is available.
