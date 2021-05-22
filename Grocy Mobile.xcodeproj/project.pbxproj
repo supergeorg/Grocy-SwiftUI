@@ -484,9 +484,9 @@
 		78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocy_SwiftUIApp.swift; sourceTree = "<group>"; };
 		78CB7494255E9EF700319108 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		78CB7495255E9EF800319108 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB749A255E9EF800319108 /* Grocy Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78CB749D255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78CB74A2255E9EF800319108 /* Grocy Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78CB74A4255E9EF800319108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78CB74A5255E9EF800319108 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		78CB74AA255E9EF800319108 /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -754,8 +754,8 @@
 		78CB749B255E9EF800319108 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */,
-				78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */,
+				78CB749A255E9EF800319108 /* Grocy Mobile.app */,
+				78CB74A2255E9EF800319108 /* Grocy Mobile.app */,
 				78CB74AA255E9EF800319108 /* Tests iOS.xctest */,
 				78CB74B5255E9EF800319108 /* Tests macOS.xctest */,
 			);
@@ -1024,9 +1024,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */ = {
+		78CB7499255E9EF800319108 /* Grocy Mobile (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (iOS)" */;
+			buildConfigurationList = 78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy Mobile (iOS)" */;
 			buildPhases = (
 				78CB7496255E9EF800319108 /* Sources */,
 				78CB7497255E9EF800319108 /* Frameworks */,
@@ -1036,18 +1036,18 @@
 			);
 			dependencies = (
 			);
-			name = "Grocy-SwiftUI (iOS)";
+			name = "Grocy Mobile (iOS)";
 			packageProductDependencies = (
 				78113B7D25B5A19F0000B237 /* URLImage */,
 				781FE2E225E9215F002273F7 /* SwiftyBeaver */,
 			);
 			productName = "Grocy-SwiftUI (iOS)";
-			productReference = 78CB749A255E9EF800319108 /* Grocy-SwiftUI.app */;
+			productReference = 78CB749A255E9EF800319108 /* Grocy Mobile.app */;
 			productType = "com.apple.product-type.application";
 		};
-		78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */ = {
+		78CB74A1255E9EF800319108 /* Grocy Mobile (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (macOS)" */;
+			buildConfigurationList = 78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy Mobile (macOS)" */;
 			buildPhases = (
 				78CB749E255E9EF800319108 /* Sources */,
 				78CB749F255E9EF800319108 /* Frameworks */,
@@ -1057,13 +1057,13 @@
 			);
 			dependencies = (
 			);
-			name = "Grocy-SwiftUI (macOS)";
+			name = "Grocy Mobile (macOS)";
 			packageProductDependencies = (
 				78113B8325B5A3A50000B237 /* URLImage */,
 				781FE2E825E92171002273F7 /* SwiftyBeaver */,
 			);
 			productName = "Grocy-SwiftUI (macOS)";
-			productReference = 78CB74A2255E9EF800319108 /* Grocy-SwiftUI.app */;
+			productReference = 78CB74A2255E9EF800319108 /* Grocy Mobile.app */;
 			productType = "com.apple.product-type.application";
 		};
 		78CB74A9255E9EF800319108 /* Tests iOS */ = {
@@ -1127,7 +1127,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy-SwiftUI" */;
+			buildConfigurationList = 78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy Mobile" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1145,8 +1145,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */,
-				78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */,
+				78CB7499255E9EF800319108 /* Grocy Mobile (iOS) */,
+				78CB74A1255E9EF800319108 /* Grocy Mobile (macOS) */,
 				78CB74A9255E9EF800319108 /* Tests iOS */,
 				78CB74B4255E9EF800319108 /* Tests macOS */,
 			);
@@ -1591,12 +1591,12 @@
 /* Begin PBXTargetDependency section */
 		78CB74AC255E9EF800319108 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78CB7499255E9EF800319108 /* Grocy-SwiftUI (iOS) */;
+			target = 78CB7499255E9EF800319108 /* Grocy Mobile (iOS) */;
 			targetProxy = 78CB74AB255E9EF800319108 /* PBXContainerItemProxy */;
 		};
 		78CB74B7255E9EF800319108 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78CB74A1255E9EF800319108 /* Grocy-SwiftUI (macOS) */;
+			target = 78CB74A1255E9EF800319108 /* Grocy Mobile (macOS) */;
 			targetProxy = 78CB74B6255E9EF800319108 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1743,7 +1743,7 @@
 				);
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1766,7 +1766,7 @@
 				);
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1794,7 +1794,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1821,7 +1821,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1992,7 +1992,7 @@
 				);
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2023,7 +2023,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
-				PRODUCT_NAME = "Grocy-SwiftUI";
+				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2077,7 +2077,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy-SwiftUI" */ = {
+		78CB7491255E9EF600319108 /* Build configuration list for PBXProject "Grocy Mobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C2255E9EF800319108 /* Debug */,
@@ -2087,7 +2087,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (iOS)" */ = {
+		78CB74C4255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy Mobile (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C5255E9EF800319108 /* Debug */,
@@ -2097,7 +2097,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy-SwiftUI (macOS)" */ = {
+		78CB74C7255E9EF800319108 /* Build configuration list for PBXNativeTarget "Grocy Mobile (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78CB74C8255E9EF800319108 /* Debug */,
