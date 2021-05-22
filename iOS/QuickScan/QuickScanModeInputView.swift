@@ -177,8 +177,8 @@ struct QuickScanModeInputView: View {
             ()
         case .purchase:
             purchaseDueDate = lastPurchaseDueDate
-            purchaseShoppingLocationID = lastPurchaseShoppingLocationID
-            purchaseLocationID = lastPurchaseLocationID
+            purchaseShoppingLocationID = product?.shoppingLocationID ?? lastPurchaseShoppingLocationID
+            purchaseLocationID = product?.locationID ?? lastPurchaseLocationID
         }
     }
     
@@ -279,7 +279,7 @@ struct QuickScanModeInputView: View {
                         Picker(selection: $purchaseLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.mdLocations, id:\.id) { location in
-                                Text(location.name).tag(location.id as String?)
+                                Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
                             }
                         })
                     }

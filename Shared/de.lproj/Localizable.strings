@@ -156,6 +156,7 @@
 "str.stock.buy.product.price.totalPrice" = "Gesamtpreis";
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
+"str.stock.buy.product.location.default %@" = "%@ (Standard-Standort)";
 
 "str.stock.consume" = "Verbrauch";
 "str.stock.consume.product" = "Produkt";
