@@ -41,13 +41,16 @@ struct PurchaseProductView: View {
     }
     @State private var infoString: String?
     
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
     private var currentQuantityUnitName: String? {
-        let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
+        let quIDP = product?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
         return amount == 1 ? qu?.name : qu?.namePlural
     }
     private var productName: String {
-        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
+        product?.name ?? ""
     }
     
     private let priceFormatter = NumberFormatter()
@@ -187,7 +190,8 @@ struct PurchaseProductView: View {
                        content: {
                         Text("").tag(nil as String?)
                         ForEach(grocyVM.mdLocations, id:\.id) { location in
-                            Text(location.name).tag(location.id as String?)
+                            Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
+//                            Text(location.name).tag(location.id as String?)
                         }
                        })
             }
