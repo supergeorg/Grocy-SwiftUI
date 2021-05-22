@@ -146,7 +146,7 @@ struct MDQuantityUnitFormView: View {
                 Button(LocalizedStringKey("str.save")) {
                     saveQuantityUnit()
                 }
-                disabled(!isNameCorrect || isProcessing)
+                .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
             #endif
