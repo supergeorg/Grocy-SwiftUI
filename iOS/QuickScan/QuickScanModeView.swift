@@ -163,7 +163,7 @@ struct QuickScanModeView: View {
             }
         })
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations], additionalObjects: [.stock, .system_config], ignoreCached: false)
+            grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units], additionalObjects: [.stock, .system_config], ignoreCached: false)
         })
         .onChange(of: activeSheet, perform: {newItem in
             checkScanPause()

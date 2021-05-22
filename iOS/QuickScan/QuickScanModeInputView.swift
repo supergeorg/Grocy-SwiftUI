@@ -66,6 +66,7 @@ struct QuickScanModeInputView: View {
     // Purchase
     @State private var purchaseDueDate: Date = Date()
     @Binding var lastPurchaseDueDate: Date
+    @State private var purchaseAmount: Double = 1.0
     @State private var purchasePrice: Double?
     @State private var purchaseShoppingLocationID: String?
     @Binding var lastPurchaseShoppingLocationID: String?
@@ -263,6 +264,8 @@ struct QuickScanModeInputView: View {
                             Image(systemName: MySymbols.date)
                             DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
                         }
+                        
+                        MyDoubleStepper(amount: $purchaseAmount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: getQUString(amount: purchaseAmount == 1.0 ? 1 : 2), errorMessage: "str.stock.buy.product.amount.invalid", systemImage: MySymbols.amount)
                         
                         MyDoubleStepperOptional(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                         
