@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/georgmeissner/Documents/Programmieren/Grocy-SwiftUI/Grocy Mobile.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

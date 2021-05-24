@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "78CB74A1255E9EF800319108"
-               BuildableName = "Grocy-SwiftUI.app"
+               BuildableName = "Grocy Mobile.app"
                BlueprintName = "Grocy Mobile (macOS)"
                ReferencedContainer = "container:Grocy Mobile.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78CB74A1255E9EF800319108"
-            BuildableName = "Grocy-SwiftUI.app"
+            BuildableName = "Grocy Mobile.app"
             BlueprintName = "Grocy Mobile (macOS)"
             ReferencedContainer = "container:Grocy Mobile.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78CB74A1255E9EF800319108"
-            BuildableName = "Grocy-SwiftUI.app"
+            BuildableName = "Grocy Mobile.app"
             BlueprintName = "Grocy Mobile (macOS)"
             ReferencedContainer = "container:Grocy Mobile.xcodeproj">
          </BuildableReference>
