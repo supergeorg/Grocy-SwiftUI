@@ -204,8 +204,10 @@ struct StockJournalView: View {
                 Text(LocalizedStringKey("str.noSearchResult")).padding()
             }
             ScrollView(.vertical) {
-                ForEach(filteredJournal, id: \.id) { journalEntry in
-                    StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
+                LazyVStack {
+                    ForEach(filteredJournal, id: \.id) { journalEntry in
+                        StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
+                    }
                 }
             }
         }

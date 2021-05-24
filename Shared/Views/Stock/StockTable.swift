@@ -146,7 +146,7 @@ struct StockTable: View {
     }
     
     var contentSimplified: some View {
-        VStack() {
+        LazyVStack() {
             ForEach(sortedStock, id:\.productID) { stockElement in
                 StockTableRowSimplified(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             }
