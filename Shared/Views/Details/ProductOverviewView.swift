@@ -53,15 +53,15 @@ struct ProductOverviewView: View {
             
             Text(LocalizedStringKey("str.details.lastPrice")).bold()
                 +
-                Text("\(productDetails.lastPrice > 0 ? String(productDetails.lastPrice) : "str.details.unknown") \(productDetails.currency) per \(productDetails.quantityUnit.name)")
+                Text(productDetails.lastPrice > 0 ? LocalizedStringKey("\(String(productDetails.lastPrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averagePrice")).bold()
                 +
-                Text("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)")
+                Text(productDetails.averagePrice > 0 ? LocalizedStringKey("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averageShelfLife")).bold()
                 +
-                Text(LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown"))
+                Text(productDetails.averageShelfLife ?? 0 > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown") : LocalizedStringKey("str.details.unknown"))
             
             if let pictureURL = productDetails.pictureURL {
                 if let url = URL(string: pictureURL) {
