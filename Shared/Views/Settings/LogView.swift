@@ -100,10 +100,8 @@ struct LogView: View {
                 })
             }
             #endif
-            ScrollView {
-                ForEach(logText, id: \.self) {text in
-                    Text(text)
-                }
+            ForEach(logText, id: \.self) {text in
+                Text(text)
             }
         }
         .onAppear(perform: updateLog)
