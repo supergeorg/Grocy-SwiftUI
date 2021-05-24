@@ -20,58 +20,60 @@ struct StockFilterBar: View {
             #if os(iOS)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
                 SearchBar(text: $searchString, placeholder: "str.search")
-                Button("Exit Search") {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                if !searchString.isEmpty {
+                    Button("Exit Search") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
             }
             #endif
-        HStack{
-            #if os(iOS)
-            if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                SearchBar(text: $searchString, placeholder: "str.search")
-            }
-            Spacer()
-            #endif
             HStack{
-                Image(systemName: MySymbols.filter)
-                Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {
-                    Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id as String?)
-                    }
-                }).pickerStyle(MenuPickerStyle())
+                #if os(iOS)
+                if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+                    SearchBar(text: $searchString, placeholder: "str.search")
+                }
+                Spacer()
+                #endif
+                HStack{
+                    Image(systemName: MySymbols.filter)
+                    Picker(selection: $filteredLocation, label: Text(LocalizedStringKey("str.stock.location")), content: {
+                        Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
+                        ForEach(grocyVM.mdLocations, id:\.id) { location in
+                            Text(location.name).tag(location.id as String?)
+                        }
+                    }).pickerStyle(MenuPickerStyle())
+                }
+                Spacer()
+                HStack{
+                    Image(systemName: MySymbols.filter)
+                    Picker(selection: $filteredProductGroup, label: Text(LocalizedStringKey("str.stock.productGroup")), content: {
+                        Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
+                        ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
+                            Text(productGroup.name).tag(productGroup.id as String?)
+                        }
+                    }).pickerStyle(MenuPickerStyle())
+                }
+                Spacer()
+                HStack{
+                    Image(systemName: MySymbols.filter)
+                    Picker(selection: $filteredStatus, label: Text(LocalizedStringKey("str.stock.status")), content: {
+                        Text(LocalizedStringKey(ProductStatus.all.rawValue))
+                            .tag(ProductStatus.all)
+                        Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
+                            .tag(ProductStatus.expiringSoon)
+                            .background(Color.grocyYellowLight)
+                        Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
+                            .tag(ProductStatus.overdue)
+                            .background(Color.grocyGrayLight)
+                        Text(LocalizedStringKey(ProductStatus.expired.rawValue))
+                            .tag(ProductStatus.expired)
+                            .background(Color.grocyRedLight)
+                        Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
+                            .tag(ProductStatus.belowMinStock)
+                            .background(Color.grocyBlueLight)
+                    }).pickerStyle(MenuPickerStyle())
+                }
             }
-            Spacer()
-            HStack{
-                Image(systemName: MySymbols.filter)
-                Picker(selection: $filteredProductGroup, label: Text(LocalizedStringKey("str.stock.productGroup")), content: {
-                    Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
-                    ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
-                        Text(productGroup.name).tag(productGroup.id as String?)
-                    }
-                }).pickerStyle(MenuPickerStyle())
-            }
-            Spacer()
-            HStack{
-                Image(systemName: MySymbols.filter)
-                Picker(selection: $filteredStatus, label: Text(LocalizedStringKey("str.stock.status")), content: {
-                    Text(LocalizedStringKey(ProductStatus.all.rawValue))
-                        .tag(ProductStatus.all)
-                    Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
-                        .tag(ProductStatus.expiringSoon)
-                        .background(Color.grocyYellowLight)
-                    Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
-                        .tag(ProductStatus.overdue)
-                        .background(Color.grocyGrayLight)
-                    Text(LocalizedStringKey(ProductStatus.expired.rawValue))
-                        .tag(ProductStatus.expired)
-                        .background(Color.grocyRedLight)
-                    Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
-                        .tag(ProductStatus.belowMinStock)
-                        .background(Color.grocyBlueLight)
-                }).pickerStyle(MenuPickerStyle())
-            }
-        }
         }
     }
 }
