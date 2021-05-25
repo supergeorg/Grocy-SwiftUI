@@ -1,13 +1,12 @@
 # Grocy-SwiftUI
 
 [<img src="Assets/AppStore_Badge.svg">](https://apps.apple.com/us/app/grocy-mobile/id1567803209)
+[<img src="Assets/Mac_AppStore_Badge.svg">](https://apps.apple.com/us/app/grocy-mobile/id1567803209)
 
-Now available on App Store®!
-
-Jetzt im App Store® erhältlich!
+Now available on App Store and Mac App Store! - Jetzt im App Store und Mac App Store erhältlich!
 
 #English
-The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.4) as well as iOS(14.4) or macOS (Big Sur 11.1) to compile and run.
+The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.5) as well as iOS(14.5) or macOS (Big Sur 11.3) to compile and run.
 To connect to your own server, Grocy version 3.0.1 is required, for developing purposes a demo server is available.
 
 What works or doesn't?
@@ -29,7 +28,7 @@ What features are planned?
 - [ ] additional comfort features
 
 #German
-Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 2, Zombie, Multiplatform APP) und benötigt daher das aktuelle XCode (12.4) sowie iOS (14.4) oder macOS (Big Sur 11.1).
+Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 2, Zombie, Multiplatform App) und benötigt daher das aktuelle XCode (12.5) sowie iOS (14.5) oder macOS (Big Sur 11.3).
 Weiterhin wird ein Server mit Grocy 3.0.1 benötigt, es ist jedoch auch Zugriff auf einen Demo-Server möglich.
 
 Was Funktioniert bzw. was funktioniert nicht?
