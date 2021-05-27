@@ -9,6 +9,7 @@
 // MARK: - Generic
 "str.cancel" = "Cancel";
 "str.ok" = "OK";
+"str.confirm" = "Confirm";
 "str.delete" = "Delete";
 "str.edit" = "Edit";
 "str.save" = "Save";
@@ -126,6 +127,7 @@
 "str.stock.tbl.action.all" = "All";
 "str.stock.tbl.action.consume %@" = "Consume %@";
 "str.stock.tbl.action.consume.all %@" = "Consume all %@ which are currently in stock";
+"str.stock.tbl.action.consume.all.confirm %@ %@" = "Do you really want to consume all (%@) %@ in stock?";
 "str.stock.tbl.action.consume.open %@" = "Mark %@ as open";
 "str.stock.tbl.action.successConsumeOne %@" = "1 %@ consumed";
 "str.stock.tbl.action.successConsumeAll %@" = "All %@ consumed";

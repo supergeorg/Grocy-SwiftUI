@@ -9,6 +9,7 @@
 // MARK: - Generic
 "str.cancel" = "Abbrechen";
 "str.ok" = "OK";
+"str.confirm" = "Bestätigen";
 "str.delete" = "Löschen";
 "str.edit" = "Bearbeiten";
 "str.save" = "Speichern";
@@ -126,6 +127,7 @@
 "str.stock.tbl.action.all" = "Alle";
 "str.stock.tbl.action.consume %@" = "Verbrauche %@";
 "str.stock.tbl.action.consume.all %@" = "Verbrauche den kompletten Bestand von %@";
+"str.stock.tbl.action.consume.all.confirm %@ %@" = "Möchtest du wirklich den kompletten Bestand (%@) von %@ verbrauchen?";
 "str.stock.tbl.action.consume.open %@" = "%@ als geöffnet markieren";
 "str.stock.tbl.action.successConsumeOne %@" = "1 %@ verbraucht";
 "str.stock.tbl.action.successConsumeAll %@" = "Alle %@ verbraucht";

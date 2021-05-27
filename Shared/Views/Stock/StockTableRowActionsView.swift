@@ -19,6 +19,7 @@ struct StockTableRowActionsView: View {
     #endif
     @Binding var toastType: RowActionToastType?
     @State private var mdToastType: MDToastType?
+    @State private var showConsumeAll: Bool = false
     
     var quantityUnit: MDQuantityUnit {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
@@ -45,17 +46,26 @@ struct StockTableRowActionsView: View {
                 }
             RowInteractionButton(title: "str.stock.tbl.action.all", image: MySymbols.consume, backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
                 .onTapGesture {
-                    selectedStockElement = stockElement
-                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-                        switch result {
-                        case let .success(prod):
-                            print(prod)
-                            toastType = .successConsumeAll
-                        case let .failure(error):
-                            print("\(error)")
-                            toastType = .fail
-                        }
-                    }
+                    showConsumeAll = true
+                }
+                .alert(isPresented:$showConsumeAll) {
+                    Alert(
+                        title: Text(LocalizedStringKey("str.stock.tbl.action.consume.all.confirm \("\(stockElement.amount) \(Double(stockElement.amount) == 1 ? quantityUnit.name : quantityUnit.namePlural)") \(stockElement.product.name)")),
+                        primaryButton: .default(Text(LocalizedStringKey("str.confirm"))) {
+                            selectedStockElement = stockElement
+                            grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+                                switch result {
+                                case let .success(prod):
+                                    print(prod)
+                                    toastType = .successConsumeAll
+                                case let .failure(error):
+                                    print("\(error)")
+                                    toastType = .fail
+                                }
+                            }
+                        },
+                        secondaryButton: .cancel()
+                    )
                 }
             RowInteractionButton(title: formatStringAmount(stockElement.product.quickConsumeAmount), image: "shippingbox", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount) \(quString) \(stockElement.product.name)")"))
                 .onTapGesture {
