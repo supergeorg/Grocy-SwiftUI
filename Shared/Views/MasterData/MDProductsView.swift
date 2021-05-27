@@ -27,15 +27,13 @@ struct MDProductRowView: View {
             VStack(alignment: .leading) {
                 Text(product.name).font(.largeTitle)
                 HStack{
-                    if let loc = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
-                        Text("Standort: ").font(.caption)
-                            +
-                            Text(GrocyViewModel.shared.mdLocations[loc].name).font(.caption)
+                    if let locationID = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
+                        Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
+                            .font(.caption)
                     }
-                    if let pg = GrocyViewModel.shared.mdProductGroups.firstIndex { $0.id == product.productGroupID } {
-                        Text("Kategorie: ").font(.caption)
-                            +
-                            Text(GrocyViewModel.shared.mdProductGroups[pg].name).font(.caption)
+                    if let productGroup = GrocyViewModel.shared.mdProductGroups.firstIndex { $0.id == product.productGroupID } {
+                        Text(LocalizedStringKey("str.md.product.rowProductGroup \(grocyVM.mdProductGroups[productGroup].name)"))
+                            .font(.caption)
                     }
                 }
                 if let description = product.mdProductDescription, !description.isEmpty {

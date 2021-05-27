@@ -325,7 +325,7 @@
 "str.md.product.name.exists" = "Name already exists";
 // optional properties
 "str.md.product.category.optionalProperties" = "Optional properties";
-"str.md.product.category.optionalProperties.description" = "State, Parent produkt, Description, Product group, Energy, Picture";
+"str.md.product.category.optionalProperties.description" = "State, Parent product, Description, Product group, Energy, Picture";
 "str.md.product.active" = "Active";
 "str.md.product.parentProduct" = "Parent product ";
 "str.md.product.description" = "Description";
