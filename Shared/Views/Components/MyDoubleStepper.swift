@@ -54,7 +54,7 @@ struct MyDoubleStepper: View {
                 #if os(iOS)
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.numbersAndPunctuation)
                 #else
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
@@ -148,10 +148,11 @@ struct MyDoubleStepperOptional: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
+            f.maximumFractionDigits = 2
         } else {
             f.numberStyle = .decimal
+            f.maximumFractionDigits = 4
         }
-        f.maximumFractionDigits = 4
         return f
     }
     
@@ -169,9 +170,10 @@ struct MyDoubleStepperOptional: View {
                     Image(systemName: systemImage!)
                 }
                 #if os(iOS)
+                // Decimal keypad doesn't have a confirm button to confirm the entry yet
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.numbersAndPunctuation)
                 #else
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)

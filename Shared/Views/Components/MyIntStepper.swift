@@ -34,7 +34,7 @@ struct MyIntStepper: View {
                 }
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.numbersAndPunctuation)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     amount += 1
                 }, onDecrement: {
@@ -111,9 +111,10 @@ struct MyIntStepperOptional: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
+                // Numberpad doesn't have a confirm button to confirm the entry yet
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.numbersAndPunctuation)
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += 1
