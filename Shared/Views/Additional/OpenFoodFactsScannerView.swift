@@ -26,6 +26,7 @@ struct OpenFoodFactsScannerView: View {
     let simulatedData = "20047559"
     
     var body: some View {
+        // DOESNT WORK, https://stackoverflow.com/questions/67276205/swiftui-navigationlink-for-ios-14-5-not-working
         NavigationLink(destination: OpenFoodFactsView(barcode: scanBarcode), isActive: $isShowingResult) {
             CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .once, simulatedData: simulatedData, completion: self.handleScan)
         }
