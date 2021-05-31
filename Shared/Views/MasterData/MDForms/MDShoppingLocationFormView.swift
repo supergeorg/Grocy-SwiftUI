@@ -93,23 +93,6 @@ struct MDShoppingLocationFormView: View {
             content
                 .padding()
         }
-        .toolbar(content: {
-            ToolbarItem(placement: .cancellationAction) {
-                if !isNewShoppingLocation {
-                    Button(LocalizedStringKey("str.cancel")) {
-                        finishForm()
-                    }
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                if !isNewShoppingLocation {
-                    Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
-                        saveShoppingLocation()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
-                }
-            }
-        })
         #elseif os(iOS)
         content
             .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))

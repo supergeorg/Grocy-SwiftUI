@@ -26,7 +26,7 @@ struct MDProductRowView: View {
             }
             VStack(alignment: .leading) {
                 Text(product.name).font(.largeTitle)
-                HStack{
+                HStack(alignment: .top){
                     if let locationID = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
                         Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
                             .font(.caption)

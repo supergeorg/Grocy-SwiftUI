@@ -168,10 +168,8 @@ struct MDProductFormView: View {
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
-                    if isNewProduct {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            finishForm()
-                        }
+                    Button(LocalizedStringKey("str.cancel")) {
+                        finishForm()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -193,7 +191,7 @@ struct MDProductFormView: View {
     var content: some View {
         Form {
             #if os(iOS)
-            if devMode {
+            if devMode && isNewProduct {
                 Button(action: {
                     showOFFResult.toggle()
                 }, label: {Label("FILL WITH OFF", systemImage: "plus")})
@@ -213,6 +211,10 @@ struct MDProductFormView: View {
             Section {
                 
                 #if os(macOS)
+                if #available(OSX 11.3, *) {
+                    Text("Navigation currently not working on macOS Big Sur 11.3 and up. It worked in previous versions.")
+                        .foregroundColor(Color.red)
+                }
                 NavigationLink(
                     destination: NavigationView{optionalPropertiesView},
                     label: {
