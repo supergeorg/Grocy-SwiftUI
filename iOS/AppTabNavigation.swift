@@ -25,9 +25,7 @@ struct AppTabNavigation: View {
     
     var body: some View {
         TabView(selection: $tabSelection) {
-            NavigationView {
-                QuickScanModeView()
-            }
+            QuickScanModeView()
             .tabItem {
                 Label(LocalizedStringKey("str.nav.quickScan"), systemImage: Tab.quickScanMode.rawValue)
                     .accessibility(label: Text(LocalizedStringKey("str.nav.quickScan")))

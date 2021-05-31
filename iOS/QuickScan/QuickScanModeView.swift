@@ -112,62 +112,63 @@ struct QuickScanModeView: View {
         }
     }
     
+    var modePicker: some View {
+        HStack{
+            Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
+                Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
+                    .labelStyle(IconAboveTextLabelStyle())
+                    .tag(QuickScanMode.consume)
+                Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
+                    .labelStyle(IconAboveTextLabelStyle())
+                    .tag(QuickScanMode.markAsOpened)
+                Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
+                    .labelStyle(IconAboveTextLabelStyle())
+                    .tag(QuickScanMode.purchase)
+            })
+            .pickerStyle(SegmentedPickerStyle())
+            Spacer()
+            Button(action: {
+                flashOn.toggle()
+                toggleTorch(on: flashOn)
+            }, label: {
+                Image(systemName: flashOn ? "bolt.circle" : "bolt.slash.circle")
+                    .font(.title)
+            })
+            .disabled(!checkForTorch())
+        }
+    }
+    
     var bodyContent: some View {
-        ZStack(alignment: .topLeading){
-            CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
-            HStack{
-                Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
-                    Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
-                        .labelStyle(IconAboveTextLabelStyle())
-                        .tag(QuickScanMode.consume)
-                    Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
-                        .labelStyle(IconAboveTextLabelStyle())
-                        .tag(QuickScanMode.markAsOpened)
-                    Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
-                        .labelStyle(IconAboveTextLabelStyle())
-                        .tag(QuickScanMode.purchase)
-                })
-                .pickerStyle(SegmentedPickerStyle())
-                Spacer()
-                Button(action: {
-                    flashOn.toggle()
-                    toggleTorch(on: flashOn)
-                }, label: {
-                    Image(systemName: flashOn ? "bolt.circle" : "bolt.slash.circle")
-                        .font(.title)
-                })
-                .disabled(!checkForTorch())
+        CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
+            .overlay(modePicker, alignment: .top)
+            .sheet(item: $activeSheet) { item in
+                switch item {
+                case .input:
+                    QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
+                case .selectProduct:
+                    QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
+                }
             }
-            .padding(.horizontal)
-        }
-        .sheet(item: $activeSheet) { item in
-            switch item {
-            case .input:
-                QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: $recognizedBarcode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
-            case .selectProduct:
-                QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
-            }
-        }
-        .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
-            switch item {
-            case .successQSAddProduct:
-                Label("str.quickScan.add.product.add.success", systemImage: MySymbols.success)
-            case .successQSConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
-            case .successQSOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
-            case .successQSPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
-            case .invalidBarcode:
-                Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
-            }
-        })
-        .onAppear(perform: {
-            grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units], additionalObjects: [.stock, .system_config], ignoreCached: false)
-        })
-        .onChange(of: activeSheet, perform: {newItem in
-            checkScanPause()
-        })
+            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
+                switch item {
+                case .successQSAddProduct:
+                    Label("str.quickScan.add.product.add.success", systemImage: MySymbols.success)
+                case .successQSConsume:
+                    Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                case .successQSOpen:
+                    Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                case .successQSPurchase:
+                    Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                case .invalidBarcode:
+                    Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
+                }
+            })
+            .onAppear(perform: {
+                grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units], additionalObjects: [.stock, .system_config], ignoreCached: false)
+            })
+            .onChange(of: activeSheet, perform: {newItem in
+                checkScanPause()
+            })
     }
 }
 
