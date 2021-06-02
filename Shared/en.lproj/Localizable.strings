@@ -595,8 +595,9 @@
 "str.quickScan.purchase" = "Purchase";
 "str.quickScan.input.consume.amount" = "Consume amount";
 "str.quickScan.input.consume.default" = "Default (1)";
-"str.quickScan.input.consume.barcodeAmount %@" = "Quick consume (%@)";
-"str.quickScan.input.consume.all" = "Consume all";
+"str.quickScan.input.consume.barcodeAmount %@" = "Quick (%@)";
+"str.quickScan.input.consume.custom" = "Custom";
+"str.quickScan.input.consume.all %@" = "All (%@)";
 "str.quickScan.input.info.stockAmount %@" = "Stock amount: %@";
 "str.quickScan.add.product" = "Product for this barcode";
 "str.quickScan.add.product.add" = "Add barcode";

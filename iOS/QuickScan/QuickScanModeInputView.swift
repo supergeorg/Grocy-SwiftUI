@@ -8,8 +8,8 @@
 import SwiftUI
 import URLImage
 
-enum ConsumeAmount {
-    case one, barcode, all
+enum ConsumeAmountMode {
+    case one, barcode, custom, all
 }
 
 struct QuickScanModeInputView: View {
@@ -25,7 +25,9 @@ struct QuickScanModeInputView: View {
     @State private var toastTypeFail: QSToastTypeFail?
     @Binding var infoString: String?
     
-    @State private var consumeAmount: ConsumeAmount = .one
+    @State private var consumeAmountMode: ConsumeAmountMode = .one
+    
+    @State private var isProcessingAction: Bool = false
     
     var barcode: MDProductBarcode {
         productBarcode ?? MDProductBarcode(id: "", productID: "", barcode: "", quID: nil, amount: nil, shoppingLocationID: nil, lastPrice: nil, rowCreatedTimestamp: "", note: nil, userfields: nil)
@@ -57,6 +59,7 @@ struct QuickScanModeInputView: View {
     
     // Consume
     @State private var consumeLocationID: String?
+    @State private var consumeAmount: Double = 1.0
     @Binding var lastConsumeLocationID: String?
     @State private var consumeItemID: String?
     
@@ -85,13 +88,15 @@ struct QuickScanModeInputView: View {
             return true
         }
     }
-
+    
     private func getConsumeAmount() -> Double {
-        switch consumeAmount {
+        switch consumeAmountMode {
         case .one:
             return 1.0
         case .barcode:
             return Double(productBarcode?.amount ?? "") ?? 1.0
+        case .custom:
+            return consumeAmount
         case .all:
             return Double(stockElement?.amount ?? "") ?? 1.0
         }
@@ -102,6 +107,7 @@ struct QuickScanModeInputView: View {
             let amount = getConsumeAmount()
             let productConsume = ProductConsume(amount: amount, transactionType: .consume, spoiled: false, stockEntryID: consumeItemID, recipeID: nil, locationID: Int(consumeLocationID ?? ""), exactAmount: nil, allowSubproductSubstitution: nil)
             infoString = "\(formatAmount(amount)) \(getQUString(amount: Int(amount))) \(product?.name ?? "")"
+            isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume) { result in
                 switch result {
                 case let .success(prod):
@@ -112,6 +118,7 @@ struct QuickScanModeInputView: View {
                     print("\(error)")
                     toastTypeFail = .failQSConsume
                 }
+                isProcessingAction = false
             }
         }
     }
@@ -120,6 +127,7 @@ struct QuickScanModeInputView: View {
         if let id = productBarcode?.productID {
             let productOpen = ProductOpen(amount: 1.0, stockEntryID: markAsOpenItemID, allowSubproductSubstitution: nil)
             infoString = "1 \(getQUString(amount: 1)) \(product?.name ?? "")"
+            isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .open, content: productOpen) { result in
                 switch result {
                 case let .success(prod):
@@ -130,6 +138,7 @@ struct QuickScanModeInputView: View {
                     print("\(error)")
                     toastTypeFail = .failQSOpen
                 }
+                isProcessingAction = false
             }
         }
     }
@@ -139,8 +148,9 @@ struct QuickScanModeInputView: View {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let priceStr = purchasePrice != nil ? String(purchasePrice ?? 0) : nil
-            let productBuy = ProductBuy(amount: 1.0, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: priceStr, locationID: Int(purchaseLocationID ?? ""), shoppingLocationID: Int(purchaseShoppingLocationID ?? ""))
-            infoString = "1 \(getQUString(amount: 1)) \(product?.name ?? "")"
+            let productBuy = ProductBuy(amount: purchaseAmount, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: priceStr, locationID: Int(purchaseLocationID ?? ""), shoppingLocationID: Int(purchaseShoppingLocationID ?? ""))
+            infoString = "\(formatAmount(purchaseAmount)) \(getQUString(amount: Int(purchaseAmount))) \(product?.name ?? "")"
+            isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
                 switch result {
                 case let .success(prod):
@@ -151,6 +161,7 @@ struct QuickScanModeInputView: View {
                     print("\(error)")
                     toastTypeFail = .failQSPurchase
                 }
+                isProcessingAction = false
             }
         }
     }
@@ -172,7 +183,7 @@ struct QuickScanModeInputView: View {
     private func restoreLastInput() {
         switch quickScanMode {
         case .consume:
-             consumeLocationID = lastConsumeLocationID
+            consumeLocationID = product?.locationID ?? lastConsumeLocationID
         case .markAsOpened:
             ()
         case .purchase:
@@ -218,15 +229,19 @@ struct QuickScanModeInputView: View {
                     Group {
                         VStack(alignment: .leading){
                             Text(LocalizedStringKey("str.quickScan.input.consume.amount"))
-                            Picker(selection: $consumeAmount, label: Text(""), content: {
-                                Text(LocalizedStringKey("str.quickScan.input.consume.default")).tag(ConsumeAmount.one)
+                            Picker(selection: $consumeAmountMode, label: Text(""), content: {
+                                Text(LocalizedStringKey("str.quickScan.input.consume.default")).tag(ConsumeAmountMode.one)
                                 if let amount = barcode.amount {
                                     if amount != "1.0" {
-                                        Text(LocalizedStringKey("str.quickScan.input.consume.barcodeAmount \(formatStringAmount(amount))")).tag(ConsumeAmount.barcode)
+                                        Text(LocalizedStringKey("str.quickScan.input.consume.barcodeAmount \(formatStringAmount(amount))")).tag(ConsumeAmountMode.barcode)
                                     }
                                 }
-                                Text(LocalizedStringKey("str.quickScan.input.consume.all")).tag(ConsumeAmount.all)
+                                Text(LocalizedStringKey("str.quickScan.input.consume.custom")).tag(ConsumeAmountMode.custom)
+                                Text(LocalizedStringKey("str.quickScan.input.consume.all \(formatAmount(Double(stockElement?.amount ?? "") ?? 1.0))")).tag(ConsumeAmountMode.all)
                             }).pickerStyle(SegmentedPickerStyle())
+                            if consumeAmountMode == .custom {
+                                MyDoubleStepper(amount: $consumeAmount, description: "str.stock.consume.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: getQUString(amount: consumeAmount == 1.0 ? 1 : 2), errorMessage: "str.stock.consume.product.amount.invalid", systemImage: MySymbols.amount)
+                            }
                         }
                         
                         Picker(selection: $consumeLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
@@ -292,28 +307,28 @@ struct QuickScanModeInputView: View {
                     }
                     .keyboardShortcut(.cancelAction)
                 })
-                ToolbarItem(placement: .automatic, content: {
+                ToolbarItemGroup(placement: .automatic, content: {
                     switch quickScanMode {
                     case .consume:
                         Button(action: consumeItem, label: {
                             Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
                                 .labelStyle(TextIconLabelStyle())
                         })
-                        .disabled(!isValidForm)
+                        .disabled(!isValidForm || isProcessingAction)
                         .keyboardShortcut(.defaultAction)
                     case .markAsOpened:
                         Button(action: markAsOpenedItem, label: {
                             Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
                                 .labelStyle(TextIconLabelStyle())
                         })
-                        .disabled(!isValidForm)
+                        .disabled(!isValidForm || isProcessingAction)
                         .keyboardShortcut(.defaultAction)
                     case .purchase:
                         Button(action: purchaseItem, label: {
                             Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
                                 .labelStyle(TextIconLabelStyle())
                         })
-                        .disabled(!isValidForm)
+                        .disabled(!isValidForm || isProcessingAction)
                         .keyboardShortcut(.defaultAction)
                     }
                 })
@@ -344,13 +359,11 @@ struct QuickScanModeInputView: View {
 struct QuickScanModeInputView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-//            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.consume), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastType: .constant(.successQSConsume), infoString: Binding.constant(""))
-//            
-//            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.consume), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "3.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastType: .constant(.successQSConsume), infoString: Binding.constant(""))
-//            
-//            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.markAsOpened), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastType: .constant(.successQSOpen), infoString: Binding.constant(""))
-//            
-//            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.purchase), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastType: .constant(.successQSPurchase), infoString: Binding.constant(""))
+            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.consume), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSConsume), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
+            
+            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.markAsOpened), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSOpen), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
+            
+            QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.purchase), productBarcode: Binding.constant(MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "1", amount: "1.0", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil)), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSPurchase), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
         }
     }
 }

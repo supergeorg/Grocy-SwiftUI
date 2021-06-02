@@ -595,8 +595,9 @@
 "str.quickScan.purchase" = "Einkaufen";
 "str.quickScan.input.consume.amount" = "Verbrauchs-Menge";
 "str.quickScan.input.consume.default" = "Standard (1)";
-"str.quickScan.input.consume.barcodeAmount %@" = "Schnellverbrauch (%@)";
-"str.quickScan.input.consume.all" = "Alle verbrauchen";
+"str.quickScan.input.consume.barcodeAmount %@" = "Schnell (%@)";
+"str.quickScan.input.consume.custom" = "Andere";
+"str.quickScan.input.consume.all %@" = "Alles (%@)";
 "str.quickScan.input.info.stockAmount %@" = "Bestandsmenge: %@";
 "str.quickScan.add.product" = "Produkt für Barcode";
 "str.quickScan.add.product.add" = "Barcode hinzufügen";
