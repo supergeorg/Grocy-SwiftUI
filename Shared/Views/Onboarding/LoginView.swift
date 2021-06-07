@@ -346,7 +346,9 @@ struct LoginStatusView: View {
                     CardView{
                         VStack(alignment: .leading){
                             Text(LocalizedStringKey("str.login.connect.fail"))
-                            Text(LocalizedStringKey("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? "")"))
+                            ScrollView {
+                                Text(LocalizedStringKey("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? "")"))
+                            }
                         }
                     }
                     CardView{

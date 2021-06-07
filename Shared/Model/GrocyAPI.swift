@@ -10,7 +10,7 @@ import Combine
 
 public enum APIError: Error {
     case internalError
-    case serverError
+    case serverError(error: String)
     case encodingError
     case invalidResponse
     case unsuccessful
@@ -132,7 +132,8 @@ public class GrocyApi: GrocyAPI {
     private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, groupName: groupName, content: content, query: query)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .mapError{ _ in APIError.serverError }
+            .mapError{ error in
+                APIError.serverError(error: "\(error)") }
             .flatMap({ result -> Just<Int> in
                 guard let urlResponse = result.response as? HTTPURLResponse else {
                     return Just(0)
@@ -148,7 +149,8 @@ public class GrocyApi: GrocyAPI {
     private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .mapError{ _ in APIError.serverError }
+            .mapError{ error in
+                APIError.serverError(error: "\(error)") }
             .flatMap({ result -> AnyPublisher<T, APIError> in
                 guard let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) else {
                     return Just(result.data)
