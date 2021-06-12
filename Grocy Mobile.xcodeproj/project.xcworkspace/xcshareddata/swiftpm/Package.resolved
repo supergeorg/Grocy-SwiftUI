@@ -14,9 +14,9 @@
         "package": "URLImage",
         "repositoryURL": "https://github.com/dmytro-anokhin/url-image.git",
         "state": {
-          "branch": "main",
-          "revision": "eee3abfaf9e5c184b1c56992c34657e830539093",
-          "version": null
+          "branch": null,
+          "revision": "ccab89ad1cedb04f25dd4df1776dd8c8583b914a",
+          "version": "2.2.5"
         }
       }
     ]

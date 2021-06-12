@@ -2140,8 +2140,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dmytro-anokhin/url-image.git";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = 2.2.5;
 			};
 		};
 		781FE2E125E9215F002273F7 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
