@@ -90,7 +90,7 @@ struct StockJournalRowView: View {
         HStack(alignment: .center) {
             Image(systemName: "arrow.counterclockwise")
                 .padding()
-                .help(LocalizedStringKey("str.stock.journal.undo.failed"))
+                .help(LocalizedStringKey("str.stock.journal.undo"))
                 .foregroundColor(Color.white)
                 .background(journalEntry.undone == "1" ? Color.grocyGrayLight : Color.grocyGray)
                 .cornerRadius(5)
