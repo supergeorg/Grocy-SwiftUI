@@ -17,47 +17,41 @@ private struct StockFilterItemView: View {
     var lightColor: Color
     var darkColor: Color
     
-    #if os(iOS)
+#if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    #endif
+#endif
     
     var body: some View {
-        VStack(spacing: 0) {
-            Divider()
-                .hidden()
-                .frame(height: 10)
-                .background(normalColor)
-            HStack {
-                if filteredStatus == ownFilteredStatus {
-                    Image(systemName: MySymbols.filter)
-                }
-                #if os(iOS)
-                // check if small display (not widescreen or iPad)
-                if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                    HStack{
-                        Text(String(num))
-                            .bold()
-                        Image(systemName: ownFilteredStatus.getIconName())
-                    }
-                    .foregroundColor(colorScheme == .light ? darkColor : lightColor)
-                } else {
-                    Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
+        HStack{
+            if filteredStatus == ownFilteredStatus {
+                Image(systemName: MySymbols.filter)
+            }
+#if os(iOS)
+            // check if small display (not widescreen or iPad)
+            if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                HStack{
+                    Text(String(num))
                         .bold()
-                        .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+                    Image(systemName: ownFilteredStatus.getIconName())
                 }
-                #elseif os(macOS)
+                .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+            } else {
                 Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
                     .bold()
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
-                #endif
             }
-            .padding(.horizontal, 10)
-            .padding(.top, 10)
-            .padding(.bottom, 10)
-            .background(colorScheme == .light ? lightColor : darkColor)
+#elseif os(macOS)
+            Text(ownFilteredStatus.getDescription(amount: num, expiringDays: expiringDays))
+                .bold()
+                .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+#endif
         }
-        .fixedSize()
+        .padding(.horizontal, 10)
+        .padding(.top, 15)
+        .padding(.bottom, 10)
+        .background(colorScheme == .light ? lightColor : darkColor)
+        .overlay(Rectangle().frame(width: nil, height: 10, alignment: .top).foregroundColor(normalColor), alignment: .top)
         .onTapGesture {
             if filteredStatus != ownFilteredStatus {
                 filteredStatus = ownFilteredStatus
@@ -65,6 +59,7 @@ private struct StockFilterItemView: View {
                 filteredStatus = ProductStatus.all
             }
         }
+        .animation(.default, value: filteredStatus)
     }
 }
 
