@@ -79,9 +79,11 @@ struct QuickScanModeInputView: View {
     var isValidForm: Bool {
         switch quickScanMode {
         case .consume:
-            if consumeLocationID != nil {
-                return (getAmountForLocation(lID: consumeLocationID!) > 0)
-            } else { return (Double(stockElement?.amount ?? "") ?? 1.0 >= 1.0) }
+            if let consumeLocationID = consumeLocationID {
+                return (getAmountForLocation(lID: consumeLocationID) >= getConsumeAmount())
+            } else {
+                return (Double(stockElement?.amount ?? "") ?? 1.0 >= getConsumeAmount())
+            }
         case .markAsOpened:
             return (Double(stockElement?.amount ?? "") ?? 1.0 >= 1.0)
         default:
@@ -167,6 +169,7 @@ struct QuickScanModeInputView: View {
     }
     
     private func finalizeQuickInput() {
+        grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
         switch quickScanMode {
         case .consume:
             lastConsumeLocationID = consumeLocationID
