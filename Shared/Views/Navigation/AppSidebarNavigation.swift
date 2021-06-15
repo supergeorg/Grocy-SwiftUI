@@ -49,6 +49,8 @@ struct AppSidebarNavigation: View {
     
     @State private var firstAppear: Bool = true
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     //    #if os(iOS)
     //    @State private var selection: NavigationItem? = NavigationItem.quickScan
     //    #else
@@ -207,15 +209,17 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdProductGroups)
                         
-                        NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
-                            Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
+                        if devMode {
+                            NavigationLink(destination: MDChoresView(), tag: NavigationItem.mdChores, selection: $selection) {
+                                Label("str.nav.md.chores", systemImage: NavigationItem.mdChores.rawValue)
+                            }
+                            .tag(NavigationItem.mdChores)
+                            
+                            NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
+                                Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
+                            }
+                            .tag(NavigationItem.mdBatteries)
                         }
-                        .tag(NavigationItem.mdChores)
-                        
-                        NavigationLink(destination: MDBatteriesView(), tag: NavigationItem.mdBatteries, selection: $selection) {
-                            Label("str.nav.md.batteries", systemImage: NavigationItem.mdBatteries.rawValue)
-                        }
-                        .tag(NavigationItem.mdBatteries)
                         
                         NavigationLink(destination: MDTaskCategoriesView(), tag: NavigationItem.mdTaskCategories, selection: $selection) {
                             Label("str.nav.md.taskCategories", systemImage: NavigationItem.mdTaskCategories.rawValue)
