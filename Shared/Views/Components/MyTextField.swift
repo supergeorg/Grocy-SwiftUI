@@ -46,12 +46,23 @@ struct MyTextField: View {
                 }
             }
             VStack {
+                #if os(macOS)
+                if isEnteringText {
+                    Text(LocalizedStringKey(description))
+                        .font(.caption)
+                        .foregroundColor(isCorrect ? Color.gray : Color.red)
+                        .padding(.top, 0)
+                        .padding(.leading, 0)
+                        .zIndex(0)
+                }
+                #else
                 Text(LocalizedStringKey(description))
                     .font(isEnteringText ? .caption : .body)
                     .foregroundColor(isCorrect ? Color.gray : Color.red)
                     .padding(.top, isEnteringText ? 0 : 16)
                     .padding(.leading, (leadingIcon == nil || isEnteringText) ? 0 : 30)
                     .zIndex(0)
+                #endif
             }
             HStack {
                 if leadingIcon != nil {
