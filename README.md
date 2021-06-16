@@ -6,7 +6,8 @@
 Now available on App Store and Mac App Store! - Jetzt im App Store und Mac App Store erhältlich!
 
 #English
-The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.5) as well as iOS(14.5) or macOS (Big Sur 11.3) to compile and run.
+The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.5) as well as at least iOS(14.1) or macOS (Big Sur 11.0) to compile and run. This means the oldest supported devices are iPhone SE (2016), iPad Air 2, MacBook Air/Pro after 2013, please refer to this pages: [iOS](https://support.apple.com/en-en/guide/iphone/iphe3fa5df43/ios) [macOS](https://support.apple.com/kb/sp833).
+
 To connect to your own server, Grocy version 3.0.1 is required, for developing purposes a demo server is available.
 
 What works or doesn't?
@@ -28,7 +29,8 @@ What features are planned?
 - [ ] additional comfort features
 
 #German
-Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 2, Zombie, Multiplatform App) und benötigt daher das aktuelle XCode (12.5) sowie iOS (14.5) oder macOS (Big Sur 11.3).
+Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 2, Zombie, Multiplatform App) und benötigt daher das aktuelle XCode (12.5) sowie mindestens iOS (14.1) oder macOS (Big Sur 11.0). Dies heißt, dass das älteste unterstützte Gerät dasiPhone SE (2016), iPad Air 2, und MacBook Air/Pro nach 2013 sind, für weiteres bitte hier nachschauen: [iOS](https://support.apple.com/de-de/guide/iphone/iphe3fa5df43/ios) [macOS](https://support.apple.com/kb/sp833?locale=de_DE).
+
 Weiterhin wird ein Server mit Grocy 3.0.1 benötigt, es ist jedoch auch Zugriff auf einen Demo-Server möglich.
 
 Was Funktioniert bzw. was funktioniert nicht?
