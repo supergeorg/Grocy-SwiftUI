@@ -52,7 +52,7 @@ struct ProductField: View {
                     Image(systemName: MySymbols.barcodeScan)
                 })
                 .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
+                    CodeScannerView(codeTypes: [.ean8, .ean13, .code39], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
                 }
             }
             Text("").tag(nil as String?)

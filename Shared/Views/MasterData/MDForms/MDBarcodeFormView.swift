@@ -29,8 +29,8 @@ struct MDBarcodeFormView: View {
     
     @State var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
-        // check if EAN8 or EAN13
-        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13)
+        // check if EAN8 or EAN13, or PZN 8/9
+        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13 || barcode.count == 9)
     }
     
     private var product: MDProduct? {
@@ -170,7 +170,7 @@ struct MDBarcodeFormView: View {
                     Image(systemName: MySymbols.barcodeScan)
                 })
                 .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
+                    CodeScannerView(codeTypes: [.ean8, .ean13, .code39], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
                 }
                 #endif
             }
