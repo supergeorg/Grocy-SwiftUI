@@ -87,7 +87,8 @@ struct QuickScanModeView: View {
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         switch result {
         case .success(let barcodeString):
-            guard ((barcodeString.count == 13) || (barcodeString.count == 8)) else {
+            guard ((barcodeString.count == 13) || (barcodeString.count == 8) ||
+                    (barcodeString.count == 9)) else {
                 toastTypeSuccess = .invalidBarcode
                 return
             }
@@ -139,7 +140,7 @@ struct QuickScanModeView: View {
     }
     
     var bodyContent: some View {
-        CodeScannerView(codeTypes: [.ean8, .ean13], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
+        CodeScannerView(codeTypes: [.ean8, .ean13, .code39], scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
             .overlay(modePicker, alignment: .top)
             .sheet(item: $activeSheet) { item in
                 switch item {
