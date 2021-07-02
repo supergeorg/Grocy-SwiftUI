@@ -196,19 +196,15 @@ struct StockJournalView: View {
     }
     
     var content: some View {
-        VStack(alignment: .leading) {
+        List {
             StockJournalFilterBar(searchString: $searchString, filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
             if grocyVM.stockJournal.isEmpty {
                 Text(LocalizedStringKey("str.stock.journal.empty")).padding()
             } else if filteredJournal.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult")).padding()
             }
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(filteredJournal, id: \.id) { journalEntry in
-                        StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
-                    }
-                }
+            ForEach(filteredJournal, id: \.id) { journalEntry in
+                StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
             }
         }
         .onAppear(perform: {
