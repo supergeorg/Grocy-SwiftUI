@@ -557,6 +557,7 @@
 "str.settings.info.grocyRLSDate %@" = "Release Date: %@";
 "str.settings.info.grocyPHPVersion %@" = "PHP Version: %@";
 "str.settings.info.grocySQLiteVersion %@" = "SQLite Version: %@";
+"str.settings.codeTypes" = "Barcode Settings";
 "str.settings.about" = "About this app";
 "str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
 "str.settings.about.version" = "Version";

@@ -170,7 +170,7 @@ struct MDBarcodeFormView: View {
                     Image(systemName: MySymbols.barcodeScan)
                 })
                 .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: [.ean8, .ean13, .code39], scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
+                    CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
                 }
                 #endif
             }

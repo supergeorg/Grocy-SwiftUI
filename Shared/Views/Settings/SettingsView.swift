@@ -86,6 +86,12 @@ struct SettingsView: View {
                     Text("🇩🇪 Deutsch").tag("de")
                 })
                 NavigationLink(
+                    destination: CodeTypeSelectionView(),
+                    label: {
+                        Label(LocalizedStringKey("str.settings.codeTypes"), systemImage: MySymbols.barcodeScan)
+                            .foregroundColor(.primary)
+                    })
+                NavigationLink(
                     destination: AboutView(),
                     label: {
                         Label(LocalizedStringKey("str.settings.about"), systemImage: MySymbols.info)

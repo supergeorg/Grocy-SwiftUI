@@ -273,6 +273,8 @@
 		78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78D98F772577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */; };
+		78DB1BCE268CEE85005448F3 /* CodeTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */; };
+		78DB1BD1268CEE9F005448F3 /* Barcodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BD0268CEE9F005448F3 /* Barcodes.swift */; };
 		78E02CBD25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CBC25DAB81500668403 /* OpenFoodFactsModel.swift */; };
 		78E02CBE25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CBC25DAB81500668403 /* OpenFoodFactsModel.swift */; };
 		78E02CBF25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CBC25DAB81500668403 /* OpenFoodFactsModel.swift */; };
@@ -543,6 +545,8 @@
 		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
 		78D98F752577B93000199688 /* ShoppingListAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListAddProduct.swift; sourceTree = "<group>"; };
 		78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
+		78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTypeSelectionView.swift; sourceTree = "<group>"; };
+		78DB1BD0268CEE9F005448F3 /* Barcodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Barcodes.swift; sourceTree = "<group>"; };
 		78E02CBC25DAB81500668403 /* OpenFoodFactsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsModel.swift; sourceTree = "<group>"; };
 		78E02CC525DAB83C00668403 /* OpenFoodFactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsViewModel.swift; sourceTree = "<group>"; };
 		78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsView.swift; sourceTree = "<group>"; };
@@ -770,6 +774,7 @@
 				7812FFA625BB0B6900377773 /* ActivitiesView.swift */,
 				783454EB25A74E100024F556 /* QuickScan */,
 				78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */,
+				78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */,
 				78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */,
 			);
 			path = iOS;
@@ -888,6 +893,7 @@
 				789ADDB125C45B3000D7EB35 /* ToastTypes.swift */,
 				7845120B25C84A5B006B7686 /* SheetTypes.swift */,
 				7850AE1825D55EE4000A5302 /* ConditionalModifier.swift */,
+				78DB1BD0268CEE9F005448F3 /* Barcodes.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1193,6 +1199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78DB1BCE268CEE85005448F3 /* CodeTypeSelectionView.swift in Sources */,
 				78CB7631255EBA3F00319108 /* StockTableRow.swift in Sources */,
 				78CB761C255EB9C600319108 /* MDProductGroupsModel.swift in Sources */,
 				78855F7825FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
@@ -1230,6 +1237,7 @@
 				78CB74D6255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				7853A4CF25DBE74300AF9986 /* LogView.swift in Sources */,
 				78855F8125FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
+				78DB1BD1268CEE9F005448F3 /* Barcodes.swift in Sources */,
 				78CB7657255EC0B500319108 /* StockFilterBarView.swift in Sources */,
 				7812FFA725BB0B6900377773 /* ActivitiesView.swift in Sources */,
 				789ADDA425C419C500D7EB35 /* Constants.swift in Sources */,
