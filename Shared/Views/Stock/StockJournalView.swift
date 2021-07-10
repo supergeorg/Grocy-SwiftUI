@@ -32,7 +32,7 @@ struct StockJournalFilterBar: View {
             LazyVGrid(columns: filterColumns, alignment: .leading, content: {
                 Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
                     Text("str.stock.all").tag(nil as String?)
-                    ForEach(grocyVM.mdProducts, id:\.id) { product in
+                    ForEach(grocyVM.mdProducts.sorted(by: {$0.name < $1.name}), id:\.id) { product in
                         Text(product.name).tag(product.id as String?)
                     }
                 }).pickerStyle(MenuPickerStyle())

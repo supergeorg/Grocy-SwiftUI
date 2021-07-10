@@ -34,6 +34,7 @@ struct CodeTypeSelectionView: View {
             selection = getSavedCodeTypes()
             firstAppear = false
         }
+        .animation(.default, value: selection)
     }
 }
 

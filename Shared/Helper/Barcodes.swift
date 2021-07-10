@@ -33,7 +33,7 @@ struct CodeTypes {
     static let qr = CodeType(name: "QR-Code", type: .qr)
     static let upce = CodeType(name: "UPC-E", type: .upce)
     
-    static let types: Set<CodeType> = [codeAztec, code128, code39, code39Mod43, code93, dataMatrix, ean13, ean8, interleaved2of5, itf14, pdf417, qr,upce]
+    static let types: Set<CodeType> = [codeAztec, code128, code39, code39Mod43, code93, dataMatrix, ean13, ean8, interleaved2of5, itf14, pdf417, qr, upce]
 }
 
 func getSavedCodeTypes() -> Set<CodeType> {
