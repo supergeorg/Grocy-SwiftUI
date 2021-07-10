@@ -7,8 +7,6 @@
 
 import Foundation
 import AVFoundation
-import CoreImage
-import UIKit
 import SwiftUI
 
 struct CodeType: Identifiable, Hashable {
@@ -67,32 +65,3 @@ func getSavedCodeTypes() -> Set<CodeType> {
     
     return enabledCodes
 }
-
-func saveCodeTypes(enabledCodes: Set<CodeType>) {
-    @AppStorage("enabledCodeAztec") var enabledCodeAztec: Bool = false
-    @AppStorage("enabledCode128") var enabledCode128: Bool = false
-    @AppStorage("enabledCode39") var enabledCode39: Bool = false
-    @AppStorage("enabledCode39Mod43") var enabledCode39Mod43: Bool = false
-    @AppStorage("enabledCode93") var enabledCode93: Bool = false
-    @AppStorage("enabledCodeDataMatrix") var enabledCodeDataMatrix: Bool = false
-    @AppStorage("enabledCodeEAN13") var enabledCodeEAN13: Bool = true
-    @AppStorage("enabledCodeEAN8") var enabledCodeEAN8: Bool = true
-    @AppStorage("enabledCodeInterleaved2of5") var enabledCodeInterleaved2of5: Bool = false
-    @AppStorage("enabledCodeITF14") var enabledCodeITF14: Bool = false
-    @AppStorage("enabledCodeQR") var enabledCodeQR: Bool = false
-    @AppStorage("enabledCodeUPCE") var enabledCodeUPCE: Bool = false
-    
-    enabledCodeAztec = enabledCodes.contains(CodeTypes.codeAztec)
-    enabledCode128 = enabledCodes.contains(CodeTypes.code128)
-    enabledCode39 = enabledCodes.contains(CodeTypes.code39)
-    enabledCode39Mod43 = enabledCodes.contains(CodeTypes.code39Mod43)
-    enabledCode93 = enabledCodes.contains(CodeTypes.code93)
-    enabledCodeDataMatrix = enabledCodes.contains(CodeTypes.dataMatrix)
-    enabledCodeEAN13 = enabledCodes.contains(CodeTypes.ean13)
-    enabledCodeEAN8 = enabledCodes.contains(CodeTypes.ean8)
-    enabledCodeInterleaved2of5 = enabledCodes.contains(CodeTypes.interleaved2of5)
-    enabledCodeITF14 = enabledCodes.contains(CodeTypes.itf14)
-    enabledCodeQR = enabledCodes.contains(CodeTypes.qr)
-    enabledCodeUPCE = enabledCodes.contains(CodeTypes.upce)
-}
-
