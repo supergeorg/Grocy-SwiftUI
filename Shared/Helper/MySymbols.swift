@@ -61,4 +61,5 @@ struct MySymbols {
     static let barcodeScan = "barcode.viewfinder"
     static let barcode = "barcode"
     static let camera = "camera"
+    static let changeCamera = "arrow.triangle.2.circlepath.camera"
 }

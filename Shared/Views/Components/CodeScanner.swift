@@ -3,16 +3,6 @@
 //
 //  Created by Paul Hudson on 10/12/2019.
 //  Copyright © 2019 Paul Hudson. All rights reserved.
-
-//MIT License.
-//
-//Copyright (c) 2019 Paul Hudson
-//
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//
-//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import AVFoundation
 import SwiftUI
@@ -74,7 +64,6 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         
         func found(code: String) {
             lastTime = Date()
-            AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             parent.completion(.success(code))
         }
 
@@ -86,24 +75,32 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     #if targetEnvironment(simulator)
     public class ScannerViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
         var delegate: ScannerCoordinator?
+        private let showViewfinder: Bool
+
+        public init(showViewfinder: Bool = false) {
+            self.showViewfinder = showViewfinder
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
         override public func loadView() {
             view = UIView()
             view.isUserInteractionEnabled = true
             let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
             label.numberOfLines = 0
 
             label.text = "You're running in the simulator, which means the camera isn't available. Tap anywhere to send back some simulated data."
             label.textAlignment = .center
             let button = UIButton()
-            button.translatesAutoresizingMaskIntoConstraints = false
             button.setTitle("Or tap here to select a custom image", for: .normal)
             button.setTitleColor(UIColor.systemBlue, for: .normal)
             button.setTitleColor(UIColor.gray, for: .highlighted)
             button.addTarget(self, action: #selector(self.openGallery), for: .touchUpInside)
 
             let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
             stackView.spacing = 50
             stackView.addArrangedSubview(label)
@@ -162,6 +159,20 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         var captureSession: AVCaptureSession!
         var previewLayer: AVCaptureVideoPreviewLayer!
         var delegate: ScannerCoordinator?
+        let videoCaptureDevice = AVCaptureDevice.default(for: .video)
+        let viewFinder = UIImageView(image: UIImage(systemName: "camera.viewfinder"))
+
+        private let showViewfinder: Bool
+
+        public init(showViewfinder: Bool) {
+            self.showViewfinder = showViewfinder
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        public required init?(coder: NSCoder) {
+            self.showViewfinder = false
+            super.init(coder: coder)
+        }
 
         override public func viewDidLoad() {
             super.viewDidLoad()
@@ -175,14 +186,11 @@ public struct CodeScannerView: UIViewControllerRepresentable {
             view.backgroundColor = UIColor.black
             captureSession = AVCaptureSession()
 
-            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
-            let videoInput: AVCaptureDeviceInput
-
-            do {
-                videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-            } catch {
+            guard let videoCaptureDevice = videoCaptureDevice else {
                 return
             }
+
+            guard let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice) else { return }
 
             if (captureSession.canAddInput(videoInput)) {
                 captureSession.addInput(videoInput)
@@ -228,10 +236,23 @@ public struct CodeScannerView: UIViewControllerRepresentable {
             previewLayer.frame = view.layer.bounds
             previewLayer.videoGravity = .resizeAspectFill
             view.layer.addSublayer(previewLayer)
+            addviewfinder()
 
             if (captureSession?.isRunning == false) {
                 captureSession.startRunning()
             }
+        }
+
+        private func addviewfinder() {
+            guard showViewfinder else { return }
+            
+            view.addSubview(viewFinder)
+            NSLayoutConstraint.activate([
+                viewFinder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                viewFinder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                viewFinder.widthAnchor.constraint(equalToConstant: 200),
+                viewFinder.heightAnchor.constraint(equalToConstant: 200),
+            ])
         }
 
         override public func viewDidDisappear(_ animated: Bool) {
@@ -251,19 +272,48 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
             return .all
         }
+        
+        /** Touch the screen for autofocus */
+        public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            guard touches.first?.view == view,
+                  let touchPoint = touches.first,
+                  let device = videoCaptureDevice
+            else { return }
+            
+            let videoView = view
+            let screenSize = videoView!.bounds.size
+            let xPoint = touchPoint.location(in: videoView).y / screenSize.height
+            let yPoint = 1.0 - touchPoint.location(in: videoView).x / screenSize.width
+            let focusPoint = CGPoint(x: xPoint, y: yPoint)
+            
+            do {
+                try device.lockForConfiguration()
+            } catch {
+                return
+            }
+            
+            // Focus to the correct point, make continiuous focus and exposure so the point stays sharp when moving the device closer
+            device.focusPointOfInterest = focusPoint
+            device.focusMode = .continuousAutoFocus
+            device.exposurePointOfInterest = focusPoint
+            device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+            device.unlockForConfiguration()
+        }
     }
     #endif
 
     public let codeTypes: [AVMetadataObject.ObjectType]
     public let scanMode: ScanMode
     public let scanInterval: Double
+    public let showViewfinder: Bool
     public var simulatedData = ""
     public var completion: (Result<String, ScanError>) -> Void
     @Binding var isPaused: Bool
 
-    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode, scanInterval: Double = 2.0, simulatedData: String = "", isPaused: Binding<Bool> = Binding.constant(false), completion: @escaping (Result<String, ScanError>) -> Void) {
+    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode = .once, showViewfinder: Bool = false, scanInterval: Double = 2.0, simulatedData: String = "", isPaused: Binding<Bool> = Binding.constant(false), completion: @escaping (Result<String, ScanError>) -> Void) {
         self.codeTypes = codeTypes
         self.scanMode = scanMode
+        self.showViewfinder = showViewfinder
         self.scanInterval = scanInterval
         self.simulatedData = simulatedData
         self.completion = completion
@@ -275,7 +325,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     }
 
     public func makeUIViewController(context: Context) -> ScannerViewController {
-        let viewController = ScannerViewController()
+        let viewController = ScannerViewController(showViewfinder: showViewfinder)
         viewController.delegate = context.coordinator
         return viewController
     }
@@ -287,7 +337,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
 
 struct CodeScannerView_Previews: PreviewProvider {
     static var previews: some View {
-        CodeScannerView(codeTypes: [.qr], scanMode: .once) { result in
+        CodeScannerView(codeTypes: [.qr]) { result in
             // do nothing
         }
     }
