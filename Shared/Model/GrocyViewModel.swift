@@ -726,15 +726,28 @@ class GrocyViewModel: ObservableObject {
     }
     
     func getStockProductLocations(productID: Int) {}
+    
     func getStockProductEntries(productID: Int) {
         grocyApi.getStockProductDetails(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
-            .replaceError(with: [])
-            .assign(to: \.stockProductEntries[productID], on: self)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.grocyLog.error("Get stock product details failed. \("\(error)")")
+                    break
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (productEntriesOut: StockEntries) in
+                DispatchQueue.main.async {
+                    self.stockProductEntries[productID] = productEntriesOut
+                }
+            })
             .store(in: &cancellables)
     }
     
     func postStockObject<T: Codable>(id: Int, stockModePost: StockProductPost, content: T, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
+//        print(String(data: jsonContent, encoding: String.Encoding.utf8))
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {
