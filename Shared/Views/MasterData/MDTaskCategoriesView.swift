@@ -42,8 +42,10 @@ struct MDTaskCategoriesView: View {
     
     @State private var toastType: MDToastType?
     
+    private let dataToUpdate: [ObjectEntities] = [.task_categories]
+    
     private func updateData() {
-        grocyVM.requestData(objects: [.task_categories])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredTaskCategories: MDTaskCategories {
@@ -76,7 +78,7 @@ struct MDTaskCategoriesView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -172,7 +174,7 @@ struct MDTaskCategoriesView: View {
             }
             .onDelete(perform: delete)
         }
-        .onAppear(perform: { grocyVM.requestData(objects: [.task_categories], ignoreCached: false) })
+        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {

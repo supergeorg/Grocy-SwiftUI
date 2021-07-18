@@ -39,6 +39,12 @@ struct MDUserEntitiesView: View {
     
     @State private var toastType: MDToastType?
     
+    private let dataToUpdate: [ObjectEntities] = [.userentities]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate)
+    }
+    
     private var filteredUserEntities: MDUserEntities {
         grocyVM.mdUserEntities
             .filter {
@@ -69,12 +75,8 @@ struct MDUserEntitiesView: View {
         })
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.userentities])
-    }
-    
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -164,7 +166,7 @@ struct MDUserEntitiesView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.userentities], ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in

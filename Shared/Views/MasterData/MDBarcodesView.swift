@@ -44,8 +44,10 @@ struct MDBarcodesView: View {
     
     @Binding var toastType: MDToastType?
     
+    private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
+    
     private func updateData() {
-        grocyVM.requestData(objects: [.product_barcodes])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     var filteredBarcodes: MDProductBarcodes {
@@ -71,7 +73,7 @@ struct MDBarcodesView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -105,7 +107,7 @@ struct MDBarcodesView: View {
                 .frame(minWidth: 200, minHeight: 400)
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false) })
+        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
     }
     #elseif os(iOS)
     var bodyContent: some View {

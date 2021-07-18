@@ -61,10 +61,9 @@ struct MDProductsView: View {
     @State private var toastType: MDToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
-    private let additionalDataToUpdate: [AdditionalEntities] = []
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func delete(at offsets: IndexSet) {
@@ -97,7 +96,7 @@ struct MDProductsView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()

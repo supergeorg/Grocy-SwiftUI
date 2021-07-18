@@ -58,6 +58,13 @@ struct StockView: View {
     @State private var showStockJournal: Bool = false
     #endif
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    }
+    
     var numExpiringSoon: Int {
         grocyVM.stock
             .filter {
@@ -120,12 +127,8 @@ struct StockView: View {
         return values.reduce(0, +)
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list], additionalObjects: [.stock, .system_config])
-    }
-    
     var body: some View{
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -308,7 +311,7 @@ struct StockView: View {
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list], additionalObjects: [.stock, .system_config], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
                 firstAppear = false
             }
         })

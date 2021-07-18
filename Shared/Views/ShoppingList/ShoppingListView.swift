@@ -36,6 +36,12 @@ struct ShoppingListView: View {
     @State private var activeSheet: InteractionSheet?
     #endif
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
+    
+    func updateData() {
+        grocyVM.requestData(objects: dataToUpdate)
+    }
+    
     func checkBelowStock(item: ShoppingListItem) -> Bool {
         if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
             if product.minStockAmount > item.amount {
@@ -145,12 +151,8 @@ struct ShoppingListView: View {
         })
     }
     
-    func updateData() {
-        grocyVM.requestData(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list])
-    }
-    
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -304,7 +306,7 @@ struct ShoppingListView: View {
             }
         })
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list], ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
         .alert(isPresented: $showEntryDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.shL.entry.delete.confirm")), message: Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "product name error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
