@@ -35,6 +35,7 @@
 "tr.stockEditNew" = "Bestands-Bearbeitung (neu)";
 "tr.transferFrom" = "Transfer von";
 "tr.transferTo" = "Transfer nach";
+"tr.selfProduction" = "Eigenproduktion";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Bestand";

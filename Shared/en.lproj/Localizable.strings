@@ -35,6 +35,7 @@
 "tr.stockEditNew" = "Stock edit (new)";
 "tr.transferFrom" = "Transfer from";
 "tr.transferTo" = "Transfer to";
+"tr.selfProduction" = "Self-production";
 
 // MARK: - Navigation
 "str.nav.stockOverview" = "Stock overview";
