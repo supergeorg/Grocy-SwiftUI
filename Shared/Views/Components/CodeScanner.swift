@@ -78,10 +78,8 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     public class ScannerViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
         var delegate: ScannerCoordinator?
         @Binding var isFrontCamera: Bool
-        private let showViewfinder: Bool
 
-        public init(showViewfinder: Bool = false, isFrontCamera: Binding<Bool>) {
-            self.showViewfinder = showViewfinder
+        public init(isFrontCamera: Binding<Bool>) {
             self._isFrontCamera = isFrontCamera
             super.init(nibName: nil, bundle: nil)
         }
@@ -165,20 +163,15 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         var delegate: ScannerCoordinator?
         @Binding var isFrontCamera: Bool
         var videoCaptureDevice: AVCaptureDevice? {
-            AVCaptureDevice.default(for: .video)
+            isFrontCamera ? AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .front) : AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         }
-        let viewFinder = UIImageView(image: UIImage(systemName: "camera.viewfinder"))
 
-        private let showViewfinder: Bool
-
-        public init(showViewfinder: Bool, isFrontCamera: Binding<Bool>) {
-            self.showViewfinder = showViewfinder
+        public init(isFrontCamera: Binding<Bool>) {
             self._isFrontCamera = isFrontCamera
             super.init(nibName: nil, bundle: nil)
         }
 
         public required init?(coder: NSCoder) {
-            self.showViewfinder = false
             self._isFrontCamera = Binding.constant(false)
             super.init(coder: coder)
         }
@@ -245,23 +238,10 @@ public struct CodeScannerView: UIViewControllerRepresentable {
             previewLayer.frame = view.layer.bounds
             previewLayer.videoGravity = .resizeAspectFill
             view.layer.addSublayer(previewLayer)
-            addviewfinder()
 
             if (captureSession?.isRunning == false) {
                 captureSession.startRunning()
             }
-        }
-
-        private func addviewfinder() {
-            guard showViewfinder else { return }
-            
-            view.addSubview(viewFinder)
-            NSLayoutConstraint.activate([
-                viewFinder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                viewFinder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                viewFinder.widthAnchor.constraint(equalToConstant: 200),
-                viewFinder.heightAnchor.constraint(equalToConstant: 200),
-            ])
         }
 
         override public func viewDidDisappear(_ animated: Bool) {
@@ -280,33 +260,6 @@ public struct CodeScannerView: UIViewControllerRepresentable {
 
         override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
             return .all
-        }
-        
-        /** Touch the screen for autofocus */
-        public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-            guard touches.first?.view == view,
-                  let touchPoint = touches.first,
-                  let device = videoCaptureDevice
-            else { return }
-            
-            let videoView = view
-            let screenSize = videoView!.bounds.size
-            let xPoint = touchPoint.location(in: videoView).y / screenSize.height
-            let yPoint = 1.0 - touchPoint.location(in: videoView).x / screenSize.width
-            let focusPoint = CGPoint(x: xPoint, y: yPoint)
-            
-            do {
-                try device.lockForConfiguration()
-            } catch {
-                return
-            }
-            
-            // Focus to the correct point, make continiuous focus and exposure so the point stays sharp when moving the device closer
-            device.focusPointOfInterest = focusPoint
-            device.focusMode = .continuousAutoFocus
-            device.exposurePointOfInterest = focusPoint
-            device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
-            device.unlockForConfiguration()
         }
     }
     #endif
@@ -336,7 +289,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     }
 
     public func makeUIViewController(context: Context) -> ScannerViewController {
-        let viewController = ScannerViewController(showViewfinder: showViewfinder, isFrontCamera: $isFrontCamera)
+        let viewController = ScannerViewController(isFrontCamera: $isFrontCamera)
         viewController.delegate = context.coordinator
         return viewController
     }

@@ -53,6 +53,8 @@ func toggleTorch(on: Bool) {
 struct QuickScanModeView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @State private var flashOn: Bool = false
     @State private var frontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
@@ -132,18 +134,20 @@ struct QuickScanModeView: View {
                     .font(.title)
             })
             .disabled(!checkForTorch())
-            Button(action: {
-                frontCamera.toggle()
-                print("CHANGE CAMERA \(frontCamera)")
-            }, label: {
-                Image(systemName: MySymbols.changeCamera)
-                    .font(.title)
-            })
+            if devMode {
+                Button(action: {
+                    frontCamera.toggle()
+                    print("CHANGE CAMERA \(frontCamera)")
+                }, label: {
+                    Image(systemName: MySymbols.changeCamera)
+                        .font(.title)
+                })
+            }
         }
     }
     
     var bodyContent: some View {
-        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, completion: self.handleScan)
+        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, isFrontCamera: $frontCamera, completion: self.handleScan)
             .overlay(modePicker, alignment: .top)
             .sheet(item: $activeSheet) { item in
                 switch item {
