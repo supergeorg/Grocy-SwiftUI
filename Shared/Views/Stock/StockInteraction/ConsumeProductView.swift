@@ -209,16 +209,18 @@ struct ConsumeProductView: View {
                 
                 MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: MySymbols.spoiled)
                 
-                MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
-                
-                if useSpecificStockEntry && productID != nil {
-                    Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
-                        Text("").tag(nil as String?)
-                        ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                            Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
-                                .tag(stockProduct.stockID as String?)
-                        }
-                    })
+                if let productID = productID {
+                    MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
+                    
+                    if useSpecificStockEntry {
+                        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
+                            Text("").tag(nil as String?)
+                            ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
+                                Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
+                                    .tag(stockProduct.stockID as String?)
+                            }
+                        })
+                    }
                 }
                 
                 if devMode {
@@ -248,6 +250,13 @@ struct ConsumeProductView: View {
             if firstAppear {
                 grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
+                if let productID = productID {
+                    grocyVM.getStockProductEntries(productID: productID)
+                    if let product = product {
+                        locationID = product.locationID
+                        quantityUnitID = product.quIDStock
+                    }
+                }
                 firstAppear = false
             }
         })
