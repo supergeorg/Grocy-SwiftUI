@@ -8,14 +8,13 @@
 import Foundation
 
 struct GrocyAPP {
-    static let supportedVersions: [String] = ["3.0.1"]
+    static let supportedVersions: [String] = ["3.1.0"]
     
     enum DemoServers: String, CaseIterable, Identifiable {
         case noLanguage = "https://demo.grocy.info"
         case english = "https://en.demo.grocy.info"
         case german = "https://de.demo.grocy.info"
         case develop = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
-        case bigInstance = "https://test-biginstance20210716.demo.grocy.info/"
         
         var id: Int {
             self.hashValue
@@ -31,8 +30,6 @@ struct GrocyAPP {
                 return "German Grocy server"
             case .develop:
                 return "Private demo instance used for development"
-            case .bigInstance:
-                return "Big instance to test for performance"
             }
         }
     }
