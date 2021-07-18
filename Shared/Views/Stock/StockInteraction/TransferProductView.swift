@@ -37,13 +37,22 @@ struct TransferProductView: View {
     }
     @State private var infoString: String?
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate)
+    }
+    
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
     private var currentQuantityUnitName: String? {
-        let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
+        let quIDP = product?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
         return amount == 1 ? qu?.name : qu?.namePlural
     }
     private var productName: String {
-        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
+        product?.name ?? ""
     }
     
     private let priceFormatter = NumberFormatter()
@@ -53,18 +62,14 @@ struct TransferProductView: View {
     }
     
     private func resetForm() {
-        productID = productToTransferID
+        productID = firstAppear ? productToTransferID : nil
         locationIDFrom = nil
-        amount = nil
-        quantityUnitID = nil
+        amount = 1.0
+        quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationIDTo = nil
         useSpecificStockEntry = false
         stockEntryID = nil
         searchProductTerm = ""
-    }
-    
-    private func updateData() {
-        grocyVM.requestData(objects: [.products, .locations, .quantity_units])
     }
     
     private func transferProduct() {
@@ -108,27 +113,27 @@ struct TransferProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerOfflineView(isCompact: true)
                 }
             }
             
-//            ProductField(productID: $productID, description: "str.stock.transfer.product")
-//                .onChange(of: productID) { newProduct in
-//                    grocyVM.getStockProductEntries(productID: productID ?? 0)
-//                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-//                        locationIDFrom = selectedProduct.locationID
-//                        quantityUnitID = selectedProduct.quIDStock
-//                    }
-//                }
-//
-//            Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
-//                Text("").tag(nil as Int?)
-//                ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
-//                    Text(locationFrom.name).tag(locationFrom.id as Int?)
-//                }
-//            })
+            ProductField(productID: $productID, description: "str.stock.transfer.product")
+                .onChange(of: productID) { newProduct in
+                    grocyVM.getStockProductEntries(productID: productID ?? 0)
+                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        locationIDFrom = selectedProduct.locationID
+                        quantityUnitID = selectedProduct.quIDStock
+                    }
+                }
+
+            Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
+                Text("").tag(nil as Int?)
+                ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
+                    Text(locationFrom.name).tag(locationFrom.id as Int?)
+                }
+            })
 
             Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
                 MyDoubleStepperOptional(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: MySymbols.amount)
@@ -140,35 +145,35 @@ struct TransferProductView: View {
                 }).disabled(true)
             }
 
-//            VStack(alignment: .leading) {
-//                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
-//                    Text("").tag(nil as Int?)
-//                    ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
-//                        Text(locationTo.name).tag(locationTo.id as Int?)
-//                    }
-//                })
-//                if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
-//                    Text(LocalizedStringKey("str.stock.transfer.product.locationTO.same"))
-//                        .font(.caption)
-//                        .foregroundColor(.red)
-//                }
-//            }
-//
-//            MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
-//
-//            if (useSpecificStockEntry) && (productID != nil) {
-//                Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
-//                    Text("").tag(nil as String?)
-//                    ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-//                        Text(stockProduct.stockEntryOpen == "0" ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
-//                            .tag(stockProduct.stockID as String?)
-//                    }
-//                })
-//            }
+            VStack(alignment: .leading) {
+                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
+                        Text(locationTo.name).tag(locationTo.id as Int?)
+                    }
+                })
+                if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
+                    Text(LocalizedStringKey("str.stock.transfer.product.locationTO.same"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+
+            MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
+
+            if (useSpecificStockEntry) && (productID != nil) {
+                Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
+                    Text("").tag(nil as String?)
+                    ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
+                        Text(stockProduct.stockEntryOpen == 1 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
+                            .tag(stockProduct.stockID as String?)
+                    }
+                })
+            }
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .locations, .quantity_units], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

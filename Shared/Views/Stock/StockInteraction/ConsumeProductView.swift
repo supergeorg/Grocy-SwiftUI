@@ -12,6 +12,8 @@ struct ConsumeProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
@@ -45,30 +47,37 @@ struct ConsumeProductView: View {
     
     @State private var showRecipeInfo: Bool = false
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate)
+    }
+    
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
     private var currentQuantityUnitName: String? {
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
         return amount == 1 ? qu?.name : qu?.namePlural
     }
     private var productName: String {
-        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
-    }
-    
-    private var selectedProduct: MDProduct? {
-        grocyVM.mdProducts.first(where: {$0.id == productID})
+        product?.name ?? ""
     }
     
     private var filteredLocations: MDLocations {
         var locIDs: Set<Int> = Set<Int>()
-        if let entries = grocyVM.stockProductEntries[productID ?? 0] {
+        if let productID = productID, let entries = grocyVM.stockProductEntries[productID] {
             for entry in entries {
                 if let locID = entry.locationID {
                     locIDs.insert(locID)
                 }
             }
+            return grocyVM.mdLocations
+                .filter{ locIDs.contains($0.id) }
+        } else {
+            return grocyVM.mdLocations
         }
-        return grocyVM.mdLocations
-            .filter{ locIDs.contains($0.id) }
     }
     
     private var maxAmount: Double? {
@@ -90,9 +99,9 @@ struct ConsumeProductView: View {
     }
     
     private func resetForm() {
-        productID = productToConsumeID
+        productID = firstAppear ? productToConsumeID : nil
         amount = 1.0
-        quantityUnitID = nil
+        quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationID = nil
         spoiled = false
         useSpecificStockEntry = false
@@ -141,10 +150,6 @@ struct ConsumeProductView: View {
         }
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.products, .quantity_units, .locations])
-    }
-    
     var body: some View {
         #if os(macOS)
         ScrollView{
@@ -166,7 +171,7 @@ struct ConsumeProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerOfflineView(isCompact: true)
                 }
@@ -174,10 +179,12 @@ struct ConsumeProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.consume.product")
                 .onChange(of: productID) { newProduct in
-                    grocyVM.getStockProductEntries(productID: productID ?? 0)
-                    if let selectedProduct = selectedProduct {
-                        locationID = selectedProduct.locationID
-                        quantityUnitID = selectedProduct.quIDStock
+                    if let productID = productID {
+                        grocyVM.getStockProductEntries(productID: productID)
+                        if let product = product {
+                            locationID = product.locationID
+                            quantityUnitID = product.quIDStock
+                        }
                     }
                 }
             
@@ -194,7 +201,7 @@ struct ConsumeProductView: View {
             Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                 Text("").tag(nil as Int?)
                 ForEach(filteredLocations, id:\.id) { location in
-                    Text(selectedProduct?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
+                    Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
                 }
             })
             
@@ -208,36 +215,38 @@ struct ConsumeProductView: View {
                     Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                         Text("").tag(nil as String?)
                         ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                            Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
+                            Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
                                 .tag(stockProduct.stockID as String?)
                         }
                     })
                 }
                 
-                HStack{
-                    Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
-                        Text("Not implemented").tag(nil as Int?)
-                    })
-                    #if os(macOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
-                    #elseif os(iOS)
-                    Image(systemName: "questionmark.circle.fill")
-                        .onTapGesture {
-                            showRecipeInfo.toggle()
-                        }
-                        .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
-                        .popover(isPresented: $showRecipeInfo, content: {
-                            Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
-                                .padding()
+                if devMode {
+                    HStack{
+                        Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
+                            Text("Not implemented").tag(nil as Int?)
                         })
-                    #endif
+                        #if os(macOS)
+                        Image(systemName: "questionmark.circle.fill")
+                            .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                        #elseif os(iOS)
+                        Image(systemName: "questionmark.circle.fill")
+                            .onTapGesture {
+                                showRecipeInfo.toggle()
+                            }
+                            .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                            .popover(isPresented: $showRecipeInfo, content: {
+                                Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                                    .padding()
+                            })
+                        #endif
+                    }
                 }
             }
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .quantity_units, .locations], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

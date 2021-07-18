@@ -38,15 +38,25 @@ struct InventoryProductView: View {
     }
     @State private var infoString: String?
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    }
+    
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
     private var currentQuantityUnit: MDQuantityUnit? {
-        let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
+        let quIDP = product?.quIDPurchase
         return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
     }
     private func getQUString(amount: Double) -> String {
         return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? ""
     }
     private var productName: String {
-        grocyVM.mdProducts.first(where: {$0.id == productID})?.name ?? ""
+        product?.name ?? ""
     }
     
     private let priceFormatter = NumberFormatter()
@@ -66,19 +76,15 @@ struct InventoryProductView: View {
     }
     
     private func resetForm() {
-        productID = productToInventoryID
+        productID = firstAppear ? productToInventoryID : nil
         amount = selectedProductStock?.amount
-        quantityUnitID = nil
+        quantityUnitID = firstAppear ? product?.quIDStock : nil
         dueDate = Date()
         productNeverOverdue = false
         price = nil
         shoppingLocationID = nil
         locationID = nil
         searchProductTerm = ""
-    }
-    
-    private func updateData() {
-        grocyVM.requestData(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config])
     }
     
     private func inventoryProduct() {
@@ -127,7 +133,7 @@ struct InventoryProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerOfflineView(isCompact: true)
                 }
@@ -192,7 +198,7 @@ struct InventoryProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .locations, .quantity_units], additionalObjects: [.system_config], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

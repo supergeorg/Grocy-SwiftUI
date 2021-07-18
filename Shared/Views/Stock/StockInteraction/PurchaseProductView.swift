@@ -41,6 +41,13 @@ struct PurchaseProductView: View {
     }
     @State private var infoString: String?
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    }
+    
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == productID})
     }
@@ -61,8 +68,8 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         self.productID = firstAppear ? productToPurchaseID : nil
-        self.amount = firstAppear ? (productToPurchaseAmount ?? 1.0) : 0.0
-        self.quantityUnitID = nil
+        self.amount = firstAppear ? productToPurchaseAmount ?? 1.0 : 1.0
+        self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
         self.dueDate = Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
         self.price = nil
@@ -97,10 +104,6 @@ struct PurchaseProductView: View {
         }
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes], additionalObjects: [.system_config])
-    }
-    
     var body: some View {
         #if os(macOS)
         ScrollView{
@@ -122,7 +125,7 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.count > 0 && grocyVM.failedToLoadAdditionalObjects.count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerOfflineView(isCompact: true)
                 }
@@ -189,14 +192,14 @@ struct PurchaseProductView: View {
                         Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdLocations, id:\.id) { location in
                             Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
-//                            Text(location.name).tag(location.id as String?)
+                            //                            Text(location.name).tag(location.id as String?)
                         }
                        })
             }
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes], additionalObjects: [.system_config], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
