@@ -24,7 +24,7 @@ struct ShoppingListRowActionsView: View {
     #endif
     
     var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id==shoppingListItem.quID}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+        grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
     }
     
     var productName: String {
@@ -32,8 +32,7 @@ struct ShoppingListRowActionsView: View {
     }
     
     private func changeDoneStatus() {
-        let doneStatus = shoppingListItem.done == "0" ? "1" : "0"
-        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp, shoppingListID: shoppingListItem.shoppingListID, done: doneStatus, quID: shoppingListItem.quID, userfields: shoppingListItem.userfields), completion: { result in
+        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done, quID: shoppingListItem.quID, userfields: shoppingListItem.userfields), completion: { result in
             switch result {
             case let .success(message):
                 print(message)
@@ -82,22 +81,22 @@ struct ShoppingListRowActionsView: View {
                     deleteSHItem()
                 }
             #if os(macOS)
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == 1 ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }
                 .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: Double(shoppingListItem.amount)!)
+                    PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                         .padding()
                 })
             #elseif os(iOS)
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == "1" ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == 1 ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }
                 .sheet(isPresented: $showPurchase, content: {
                         NavigationView{
-                            PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: Double(shoppingListItem.amount)!)
+                            PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                         }
                 })
             #endif
@@ -105,8 +104,8 @@ struct ShoppingListRowActionsView: View {
     }
 }
 
-struct ShoppingListRowActionsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil), toastType: Binding.constant(nil))
-    }
-}
+//struct ShoppingListRowActionsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil), toastType: Binding.constant(nil))
+//    }
+//}

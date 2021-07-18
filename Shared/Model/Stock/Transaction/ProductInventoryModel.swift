@@ -24,7 +24,7 @@ import Foundation
 
 // MARK: - ProductInventory
 struct ProductInventory: Codable {
-    let newAmount: Int
+    let newAmount: Double
     let bestBeforeDate: String
     let shoppingLocationID, locationID: Int?
     let price: Double?

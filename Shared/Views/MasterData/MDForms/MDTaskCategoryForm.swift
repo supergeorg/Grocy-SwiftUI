@@ -57,9 +57,9 @@ struct MDTaskCategoryFormView: View {
     }
     
     private func saveTaskCategory() {
-        let id = isNewTaskCategory ? String(grocyVM.findNextID(.task_categories)) : taskCategory!.id
+        let id = isNewTaskCategory ? grocyVM.findNextID(.task_categories) : taskCategory!.id
         let timeStamp = isNewTaskCategory ? Date().iso8601withFractionalSeconds : taskCategory!.rowCreatedTimestamp
-        let taskCategoryPOST = MDTaskCategory(id: id, name: name, mdTaskCategoryDescription: mdTaskCategoryDescription, rowCreatedTimestamp: timeStamp, userfields: nil)
+        let taskCategoryPOST = MDTaskCategory(id: id, name: name, mdTaskCategoryDescription: mdTaskCategoryDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewTaskCategory {
             grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST, completion: { result in

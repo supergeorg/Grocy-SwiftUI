@@ -21,7 +21,8 @@ import Foundation
 
 // MARK: - ShoppingListAddProduct
 struct ShoppingListAddProduct: Codable {
-    let productID, listID, productAmount: Int
+    let productID, listID: Int
+    let productAmount: Double
     let note: String
 
     enum CodingKeys: String, CodingKey {

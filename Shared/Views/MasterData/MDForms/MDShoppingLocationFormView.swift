@@ -51,9 +51,9 @@ struct MDShoppingLocationFormView: View {
     }
     
     private func saveShoppingLocation() {
-        let id = isNewShoppingLocation ? String(grocyVM.findNextID(.shopping_locations)) : shoppingLocation!.id
+        let id = isNewShoppingLocation ? grocyVM.findNextID(.shopping_locations) : shoppingLocation!.id
         let timeStamp = isNewShoppingLocation ? Date().iso8601withFractionalSeconds : shoppingLocation!.rowCreatedTimestamp
-        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp, userfields: nil)
+        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp)//, userfields: nil)
         isProcessing = true
         if isNewShoppingLocation {
             grocyVM.postMDObject(object: .shopping_locations, content: shoppingLocationPOST, completion: { result in
@@ -159,22 +159,22 @@ struct MDShoppingLocationFormView: View {
     }
 }
 
-struct MDShoppingLocationFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        #if os(macOS)
-        Group {
-            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
-        }
-        #else
-        Group {
-            NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-            }
-            NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
-            }
-        }
-        #endif
-    }
-}
+//struct MDShoppingLocationFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        #if os(macOS)
+//        Group {
+//            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+//            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+//        }
+//        #else
+//        Group {
+//            NavigationView {
+//                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+//            }
+//            NavigationView {
+//                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+//            }
+//        }
+//        #endif
+//    }
+//}

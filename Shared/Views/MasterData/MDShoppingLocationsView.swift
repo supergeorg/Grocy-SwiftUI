@@ -15,19 +15,19 @@ struct MDShoppingLocationRowView: View {
     
     var body: some View {
         HStack{
-            if let uf = shoppingLocation.userfields?.first(where: {$0.key == AppSpecificUserFields.storeLogo.rawValue }) {
-                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
-                    if let url = URL(string: pictureURL) {
-                        URLImage(url: url) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .background(Color.white)
-                        }
-                        .frame(width: 100, height: 100)
-                    }
-                }
-            }
+//            if let uf = shoppingLocation.userfields?.first(where: {$0.key == AppSpecificUserFields.storeLogo.rawValue }) {
+//                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
+//                    if let url = URL(string: pictureURL) {
+//                        URLImage(url: url) { image in
+//                            image
+//                                .resizable()
+//                                .aspectRatio(contentMode: .fit)
+//                                .background(Color.white)
+//                        }
+//                        .frame(width: 100, height: 100)
+//                    }
+//                }
+//            }
             VStack(alignment: .leading) {
                 Text(shoppingLocation.name)
                     .font(.largeTitle)
@@ -76,7 +76,7 @@ struct MDShoppingLocationsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteShoppingLocation(toDelID: String) {
+    private func deleteShoppingLocation(toDelID: Int) {
         grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -206,9 +206,11 @@ struct MDShoppingLocationsView: View {
             Alert(title: Text(LocalizedStringKey("str.md.shoppingLocation.delete.confirm")),
                   message: Text(shoppingLocationToDelete?.name ?? "error"),
                   primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                    {
-                        deleteShoppingLocation(toDelID: shoppingLocationToDelete?.id ?? "")
-                    },
+                  {
+                    if let toDelID = shoppingLocationToDelete?.id {
+                        deleteShoppingLocation(toDelID: toDelID)
+                    }
+                  },
                   secondaryButton: .cancel())
         }
     }
@@ -217,7 +219,7 @@ struct MDShoppingLocationsView: View {
 struct MDShoppingLocationsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDShoppingLocationRowView(shoppingLocation: MDShoppingLocation(id: "0", name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+            MDShoppingLocationRowView(shoppingLocation: MDShoppingLocation(id: 0, name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: ""))
             #if os(macOS)
             MDShoppingLocationsView()
             #else

@@ -68,7 +68,7 @@ struct UserFormView: View {
                 }
             })
         } else {
-            if let intID = Int(user?.id ?? "") {
+            if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
                 grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
                     switch result {

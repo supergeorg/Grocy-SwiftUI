@@ -12,7 +12,7 @@ struct ShoppingListView: View {
     
     @State private var reloadRotationDeg: Double = 0.0
     
-    @State private var selectedShoppingListID: String = "1"
+    @State private var selectedShoppingListID: Int = 1
     
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
@@ -38,7 +38,7 @@ struct ShoppingListView: View {
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
         if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
-            if Double(product.minStockAmount) ?? 0 > Double(item.amount) ?? 1 {
+            if product.minStockAmount > item.amount {
                 return true
             }
         }
@@ -47,12 +47,12 @@ struct ShoppingListView: View {
     
     var selectedShoppingList: ShoppingList {
         grocyVM.shoppingList
-            .filter{
-                selectedShoppingListID.isEmpty ? true : $0.shoppingListID == selectedShoppingListID
-            }
+//            .filter{
+//                selectedShoppingListID.isEmpty ? true : $0.shoppingListID == selectedShoppingListID
+//            }
             .filter{shLItem in
                 if !searchString.isEmpty {
-                    if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
+                    if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID}) {
                         return product.name.localizedCaseInsensitiveContains(searchString)
                     } else { return false }} else { return true }
             }
@@ -67,15 +67,15 @@ struct ShoppingListView: View {
                 case .belowMinStock:
                     return checkBelowStock(item: shLItem)
                 case .undone:
-                    return shLItem.done == "0"
+                    return shLItem.done == 0
                 }
             }
     }
     
     var shoppingListProductGroups: MDProductGroups {
-        var groupIDs = Set<String>()
+        var groupIDs = Set<Int>()
         for shLItem in filteredShoppingList {
-            if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID ?? ""}) {
+            if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID}) {
                 if let productGroupID = product.productGroupID {
                     groupIDs.insert(productGroupID)
                 }
@@ -91,15 +91,15 @@ struct ShoppingListView: View {
         return sortedGroups
     }
     
-    var groupedShoppingList: [String : ShoppingList] {
-        var dict: [String : ShoppingList] = [:]
+    var groupedShoppingList: [Int : ShoppingList] {
+        var dict: [Int : ShoppingList] = [:]
         for listItem in filteredShoppingList {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID})
             let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID})
-            if (dict[productGroup?.id ?? "?"] == nil) {
-                dict[productGroup?.id ?? "?"] = []
+            if (dict[productGroup?.id ?? 0] == nil) {
+                dict[productGroup?.id ?? 0] = []
             }
-            dict[productGroup?.id ?? "?"]?.append(listItem)
+            dict[productGroup?.id ?? 0]?.append(listItem)
         }
         return dict
     }
@@ -119,7 +119,7 @@ struct ShoppingListView: View {
         }
     }
     
-    private func deleteSHLItem(toDelID: String) {
+    private func deleteSHLItem(toDelID: Int) {
         grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -284,13 +284,13 @@ struct ShoppingListView: View {
                     })
                 }
             }
-            if !(groupedShoppingList["?"]?.isEmpty ?? true) {
+            if !(groupedShoppingList[0]?.isEmpty ?? true) {
                 Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
-                    ForEach(groupedShoppingList["?"] ?? [], id:\.id) {shItem in
+                    ForEach(groupedShoppingList[0] ?? [], id:\.id) {shItem in
                         ShoppingListRowView(shoppingListItem: shItem, isBelowStock: checkBelowStock(item: shItem), toastType: $toastType)
                     }
                     .onDelete(perform: { indexSet in
-                        deleteItem(at: indexSet, shL: groupedShoppingList["?"] ?? [])
+                        deleteItem(at: indexSet, shL: groupedShoppingList[0] ?? [])
                     })
                 }
             }

@@ -9,11 +9,12 @@ import Foundation
 
 // MARK: - MDQuantityUnit
 struct MDQuantityUnit: Codable {
-    let id, name: String
+    let id: Int
+    let name: String
     let mdQuantityUnitDescription: String?
     let rowCreatedTimestamp, namePlural: String
     let pluralForms: String?
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -21,7 +22,7 @@ struct MDQuantityUnit: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case namePlural = "name_plural"
         case pluralForms = "plural_forms"
-        case userfields
+//        case userfields
     }
 }
 

@@ -53,9 +53,9 @@ struct MDQuantityUnitFormView: View {
     }
     
     private func saveQuantityUnit() {
-        let id = isNewQuantityUnit ? String(grocyVM.findNextID(.quantity_units)) : quantityUnit!.id
+        let id = isNewQuantityUnit ? grocyVM.findNextID(.quantity_units) : quantityUnit!.id
         let timeStamp = isNewQuantityUnit ? Date().iso8601withFractionalSeconds : quantityUnit!.rowCreatedTimestamp
-        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp, namePlural: namePlural, pluralForms: nil, userfields: nil)
+        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp, namePlural: namePlural, pluralForms: nil)
         isProcessing = true
         if isNewQuantityUnit {
             grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in
@@ -162,22 +162,22 @@ struct MDQuantityUnitFormView: View {
     }
 }
 
-struct MDQuantityUnitFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        #if os(macOS)
-        Group {
-            MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
-        }
-        #else
-        Group {
-            NavigationView {
-                MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            }
-            NavigationView {
-                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
-            }
-        }
-        #endif
-    }
-}
+//struct MDQuantityUnitFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        #if os(macOS)
+//        Group {
+//            MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
+//            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+//        }
+//        #else
+//        Group {
+//            NavigationView {
+//                MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
+//            }
+//            NavigationView {
+//                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+//            }
+//        }
+//        #endif
+//    }
+//}

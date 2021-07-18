@@ -9,12 +9,13 @@ import Foundation
 
 // MARK: - MDUserEntity
 struct MDUserEntity: Codable {
-    let id, name, caption: String
+    let id: Int
+    let name, caption: String
     let mdUserEntityDescription: String?
-    let showInSidebarMenu: String
+    let showInSidebarMenu: Int
     let iconCSSClass: String?
     let rowCreatedTimestamp: String
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name, caption
@@ -22,7 +23,7 @@ struct MDUserEntity: Codable {
         case showInSidebarMenu = "show_in_sidebar_menu"
         case iconCSSClass = "icon_css_class"
         case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
+//        case userfields
     }
 }
 

@@ -11,8 +11,8 @@ struct StockFilterBar: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var searchString: String
-    @Binding var filteredLocation: String?
-    @Binding var filteredProductGroup: String?
+    @Binding var filteredLocation: Int?
+    @Binding var filteredProductGroup: Int?
     @Binding var filteredStatus: ProductStatus
     
     var body: some View {
@@ -38,9 +38,9 @@ struct StockFilterBar: View {
                     Image(systemName: MySymbols.filter)
                     Text(LocalizedStringKey("str.stock.location"))
                 }, content: {
-                    Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
+                    Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id as String?)
+                        Text(location.name).tag(location.id as Int?)
                     }
                 })
                 .pickerStyle(MenuPickerStyle())
@@ -49,9 +49,9 @@ struct StockFilterBar: View {
                     Image(systemName: MySymbols.filter)
                     Text(LocalizedStringKey("str.stock.productGroup"))
                 }, content: {
-                    Text(LocalizedStringKey("str.stock.all")).tag(nil as String?)
+                    Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
                     ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
-                        Text(productGroup.name).tag(productGroup.id as String?)
+                        Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 })
                 .pickerStyle(MenuPickerStyle())

@@ -11,10 +11,10 @@ struct StockJournalFilterBar: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var searchString: String
-    @Binding var filteredProductID: String?
+    @Binding var filteredProductID: Int?
     @Binding var filteredTransactionType: TransactionType?
-    @Binding var filteredLocationID: String?
-    @Binding var filteredUserID: String?
+    @Binding var filteredLocationID: Int?
+    @Binding var filteredUserID: Int?
     
     #if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
@@ -31,9 +31,9 @@ struct StockJournalFilterBar: View {
             #endif
             LazyVGrid(columns: filterColumns, alignment: .leading, content: {
                 Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as String?)
+                    Text("str.stock.all").tag(nil as Int?)
                     ForEach(grocyVM.mdProducts.sorted(by: {$0.name < $1.name}), id:\.id) { product in
-                        Text(product.name).tag(product.id as String?)
+                        Text(product.name).tag(product.id as Int?)
                     }
                 }).pickerStyle(MenuPickerStyle())
                 Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
@@ -43,15 +43,15 @@ struct StockJournalFilterBar: View {
                     }
                 }).pickerStyle(MenuPickerStyle())
                 Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as String?)
+                    Text("str.stock.all").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id as String?)
+                        Text(location.name).tag(location.id as Int?)
                     }
                 }).pickerStyle(MenuPickerStyle())
                 Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as String?)
+                    Text("str.stock.all").tag(nil as Int?)
                     ForEach(grocyVM.users, id:\.id) { user in
-                        Text(user.displayName).tag(user.id as String?)
+                        Text(user.displayName).tag(user.id as Int?)
                     }
                 }).pickerStyle(MenuPickerStyle())
             })
@@ -70,7 +70,7 @@ struct StockJournalRowView: View {
     
     var quantityUnit: MDQuantityUnit {
         let product = grocyVM.mdProducts.first(where: {$0.id == journalEntry.productID})
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock}) ?? MDQuantityUnit(id: "0", name: "QU Error", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "QU Error", pluralForms: nil, userfields: nil)
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock}) ?? MDQuantityUnit(id: 0, name: "QU Error", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "QU Error", pluralForms: nil)
     }
     
     private func undoTransaction() {
@@ -92,18 +92,18 @@ struct StockJournalRowView: View {
                 .padding()
                 .help(LocalizedStringKey("str.stock.journal.undo"))
                 .foregroundColor(Color.white)
-                .background(journalEntry.undone == "1" ? Color.grocyGrayLight : Color.grocyGray)
+                .background(journalEntry.undone == 1 ? Color.grocyGrayLight : Color.grocyGray)
                 .cornerRadius(5)
                 .onTapGesture {
-                    if journalEntry.undone == "0" {
+                    if journalEntry.undone == 0 {
                         undoTransaction()
                     }
                 }
             VStack(alignment: .leading){
                 Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
                     .font(.title)
-                    .strikethrough(journalEntry.undone == "1", color: .primary)
-                if journalEntry.undone == "1" {
+                    .strikethrough(journalEntry.undone == 1, color: .primary)
+                if journalEntry.undone == 1 {
                     if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
                         HStack(alignment: .bottom){
                             Text(LocalizedStringKey("str.stock.journal.undo.date \(formatDateAsString(date))"))
@@ -112,11 +112,11 @@ struct StockJournalRowView: View {
                                 .font(.caption)
                                 .italic()
                         }
-                        .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
+                        .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
                     }
                 }
                 Group {
-                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(journalEntry.amount == "1" ? quantityUnit.name : quantityUnit.namePlural)")"))
+                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(journalEntry.amount == 1 ? quantityUnit.name : quantityUnit.namePlural)")"))
                     Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
                     Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
                         .font(.caption)
@@ -126,7 +126,7 @@ struct StockJournalRowView: View {
                     Text(LocalizedStringKey("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")"))
                     Text(LocalizedStringKey("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")"))
                 }
-                .foregroundColor(journalEntry.undone == "1" ? Color.gray : Color.primary)
+                .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
                 .font(.caption)
             }
             Spacer()
@@ -140,14 +140,14 @@ struct StockJournalView: View {
     
     @State private var searchString: String = ""
     
-    @State private var filteredProductID: String?
-    @State private var filteredLocationID: String?
+    @State private var filteredProductID: Int?
+    @State private var filteredLocationID: Int?
     @State private var filteredTransactionType: TransactionType?
-    @State private var filteredUserID: String?
+    @State private var filteredUserID: Int?
     
     @State private var showToastUndoFailed: Bool = false
     
-    var selectedProductID: String?
+    var selectedProductID: Int?
     
     var filteredJournal: StockJournal {
         grocyVM.stockJournal

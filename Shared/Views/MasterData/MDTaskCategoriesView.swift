@@ -62,7 +62,7 @@ struct MDTaskCategoriesView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteTaskCategory(toDelID: String) {
+    private func deleteTaskCategory(toDelID: Int) {
         grocyVM.deleteMDObject(object: .task_categories, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -103,9 +103,9 @@ struct MDTaskCategoriesView: View {
                             Button(action: {
                                 showAddTaskCategory.toggle()
                             }, label: {Image(systemName: MySymbols.new)})
-//                            .popover(isPresented: self.$showAddTaskCategory, content: {
-//                                MDTaskCategoryFormView(isNewTaskCategory: true, toastType: $toastType)
-//                            })
+                            //                            .popover(isPresented: self.$showAddTaskCategory, content: {
+                            //                                MDTaskCategoryFormView(isNewTaskCategory: true, toastType: $toastType)
+                            //                            })
                         }
                     })
                     ToolbarItem(placement: .automatic, content: {
@@ -192,9 +192,11 @@ struct MDTaskCategoriesView: View {
             Alert(title: Text(LocalizedStringKey("str.md.taskCategory.delete.confirm")),
                   message: Text(taskCategoryToDelete?.name ?? "error"),
                   primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                    {
-                        deleteTaskCategory(toDelID: taskCategoryToDelete?.id ?? "")
-                    },
+                  {
+                    if let toDelID = taskCategoryToDelete?.id {
+                        deleteTaskCategory(toDelID: toDelID)
+                    }
+                  },
                   secondaryButton: .cancel())
         }
     }
@@ -203,7 +205,7 @@ struct MDTaskCategoriesView: View {
 struct MDTaskCategoriesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDTaskCategoryRowView(taskCategory: MDTaskCategory(id: "0", name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+            //            MDTaskCategoryRowView(taskCategory: MDTaskCategory(id: "0", name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
             #if os(macOS)
             MDTaskCategoriesView()
             #else

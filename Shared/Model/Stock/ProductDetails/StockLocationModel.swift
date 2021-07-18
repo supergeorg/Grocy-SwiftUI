@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - StockLocation
 struct StockLocation: Codable {
-    let id, productID, amount, locationID: String
+    let id: Int
+    let productID, amount, locationID: String
     let name: String
 
     enum CodingKeys: String, CodingKey {

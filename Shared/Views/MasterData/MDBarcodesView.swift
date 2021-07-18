@@ -25,7 +25,7 @@ struct MDBarcodeRowView: View {
                 .font(.title)
             HStack{
                 if let amount = barcode.amount {
-                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(formatStringAmount(amount)) \(quIDName ?? barcode.quID ?? "noQU")")"))
+                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(formatAmount(amount)) \(quIDName ?? String(barcode.quID ?? 0))")"))
                 }
                 if let storeName = shoppingLocationName {
                     Text(LocalizedStringKey("str.md.barcode.info.store \(storeName)"))
@@ -38,7 +38,7 @@ struct MDBarcodeRowView: View {
 struct MDBarcodesView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    var productID: String
+    var productID: Int
     
     @State private var showAddBarcode: Bool = false
     
@@ -149,7 +149,7 @@ struct MDBarcodesView_Previews: PreviewProvider {
     @StateObject var grocyVM: GrocyViewModel = .shared
     static var previews: some View {
         NavigationView{
-            MDBarcodesView(productID: "27", toastType: Binding.constant(nil))
+            MDBarcodesView(productID: 27, toastType: Binding.constant(nil))
         }
     }
 }

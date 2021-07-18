@@ -51,7 +51,7 @@ struct ShoppingListFormView: View {
                 }
             })
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: Int(shoppingListDescription!.id)!, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp, userfields: nil), completion: { result in
+            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: shoppingListDescription!.id, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp, userfields: nil), completion: { result in
                 switch result {
                 case let .success(message):
                     print(message)

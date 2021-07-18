@@ -41,7 +41,7 @@ struct MDUserEntityFormView: View {
         name = userEntity?.name ?? ""
         caption = userEntity?.caption ?? ""
         mdUserEntityDescription = userEntity?.mdUserEntityDescription ?? ""
-        showInSidebarMenu = userEntity?.showInSidebarMenu == "1"
+        showInSidebarMenu = userEntity?.showInSidebarMenu == 1
         isNameCorrect = checkNameCorrect()
         isCaptionCorrect = checkCaptionCorrect()
     }
@@ -61,9 +61,9 @@ struct MDUserEntityFormView: View {
     }
     
     private func saveUserEntity() {
-        let id = isNewUserEntity ? String(grocyVM.findNextID(.userentities)) : userEntity!.id
+        let id: Int = isNewUserEntity ? grocyVM.findNextID(.userentities) : userEntity!.id
         let timeStamp = isNewUserEntity ? Date().iso8601withFractionalSeconds : userEntity!.rowCreatedTimestamp
-        let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? "1" : "0", iconCSSClass: nil, rowCreatedTimestamp: timeStamp, userfields: nil)
+        let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? 1 : 0, iconCSSClass: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewUserEntity {
             grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in

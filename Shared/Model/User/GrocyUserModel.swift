@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - GrocyUser
 struct GrocyUser: Codable {
-    let id, username: String
+    let id: Int
+    let username: String
     let firstName, lastName: String?
     let rowCreatedTimestamp, displayName: String
     let pictureFileName: String?

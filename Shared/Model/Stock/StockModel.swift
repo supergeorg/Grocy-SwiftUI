@@ -13,10 +13,13 @@ import Foundation
 
 // MARK: - StockEntry
 struct StockElement: Codable {
-    let amount, amountAggregated, value, bestBeforeDate: String
-    let amountOpened, amountOpenedAggregated, isAggregatedAmount: String
-    let dueType: String
-    let productID: String
+    let amount, amountAggregated: Double
+    let value: Double
+    let bestBeforeDate: String
+    let amountOpened, amountOpenedAggregated: Double
+    let isAggregatedAmount: Int
+    let dueType: Int
+    let productID: Int
     let product: MDProduct
 
     enum CodingKeys: String, CodingKey {

@@ -16,18 +16,18 @@ struct PurchaseProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var productToPurchaseID: String?
+    var productToPurchaseID: Int?
     var productToPurchaseAmount: Double?
     
-    @State private var productID: String?
+    @State private var productID: Int?
     @State private var amount: Double = 0.0
-    @State private var quantityUnitID: String?
+    @State private var quantityUnitID: Int?
     @State private var dueDate: Date = Calendar.current.startOfDay(for: Date())
     @State private var productDoesntSpoil: Bool = false
     @State private var price: Double?
     @State private var isTotalPrice: Bool = false
-    @State private var shoppingLocationID: String?
-    @State private var locationID: String?
+    @State private var shoppingLocationID: Int?
+    @State private var locationID: Int?
     
     @State private var searchProductTerm: String = ""
     
@@ -78,9 +78,7 @@ struct PurchaseProductView: View {
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let calculatedPrice = isTotalPrice ? price : (amount) * (price ?? 0.0)
         let strPrice = (calculatedPrice == nil || (calculatedPrice ?? 0).isZero) ? nil : String(format: "%.2f", calculatedPrice!)
-        let numLocationID = Int(locationID ?? "")
-        let numShoppingLocationID = Int(shoppingLocationID ?? "")
-        let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
+        let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: .purchase, price: strPrice, locationID: locationID, shoppingLocationID: shoppingLocationID)
         if let productID = productID {
             infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
             isProcessingAction = true
@@ -134,7 +132,7 @@ struct PurchaseProductView: View {
                 .onChange(of: productID) { newProduct in
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                         if locationID == nil { locationID = selectedProduct.locationID }
-                        if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID ?? "" }
+                        if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID }
                         quantityUnitID = selectedProduct.quIDPurchase
                     }
                 }
@@ -142,9 +140,9 @@ struct PurchaseProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.buy.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.buy.product.amount.invalid", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.buy.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
-                    Text("").tag(nil as String?)
+                    Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
                     }
                 }).disabled(true)
             }
@@ -179,18 +177,18 @@ struct PurchaseProductView: View {
                 Picker(selection: $shoppingLocationID,
                        label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
                        content: {
-                        Text("").tag(nil as String?)
+                        Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                            Text(shoppingLocation.name).tag(shoppingLocation.id as String?)
+                            Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
                         }
                        })
                 
                 Picker(selection: $locationID,
                        label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundColor(.primary),
                        content: {
-                        Text("").tag(nil as String?)
+                        Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdLocations, id:\.id) { location in
-                            Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
+                            Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
 //                            Text(location.name).tag(location.id as String?)
                         }
                        })

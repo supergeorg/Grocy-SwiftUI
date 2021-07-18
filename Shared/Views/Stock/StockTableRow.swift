@@ -35,27 +35,27 @@ struct StockTableRow: View {
     @State private var showDetailView: Bool = false
     
     var caloriesSum: String? {
-        if let calories = Double(stockElement.product.calories ?? "") {
-            let sum = calories * Double(stockElement.amount)!
+        if let calories = stockElement.product.calories {
+            let sum = calories * stockElement.amount
             return String(format: "%.0f", sum)
-        } else { return stockElement.product.calories }
+        } else { return String(stockElement.product.calories ?? 0.0) }
     }
     
     var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
     }
     
     var backgroundColor: Color {
         if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
-        if (stockElement.dueType == "1" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 1 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
         }
-        if (stockElement.dueType == "2" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 2 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
         }
-        if (Int(stockElement.amount) ?? 1 < Int(stockElement.product.minStockAmount) ?? 0) {
+        if (stockElement.amount < stockElement.product.minStockAmount) {
             return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
         }
         return Color.clear
@@ -106,19 +106,19 @@ struct StockTableRow: View {
                 HStack(alignment: .bottom){
                     Divider()
                     Spacer()
-                    if let formattedAmount = formatStringAmount(stockElement.amount) {
+                    if let formattedAmount = formatAmount(stockElement.amount) {
                         Text("\(formattedAmount) \(formattedAmount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                        if Double(stockElement.amountOpened) ?? 0 > 0 {
-                            Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpened))"))
+                        if stockElement.amountOpened > 0 {
+                            Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
                                 .font(.caption)
                                 .italic()
                         }
-                        if let formattedAmountAggregated = formatStringAmount(stockElement.amountAggregated) {
+                        if let formattedAmountAggregated = formatAmount(stockElement.amountAggregated) {
                             if formattedAmount != formattedAmountAggregated {
                                 Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
                                     .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                                if Double(stockElement.amountOpenedAggregated) ?? 0 > 0 {
-                                    Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpenedAggregated))"))
+                                if stockElement.amountOpenedAggregated > 0 {
+                                    Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
                                         .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                                         .font(.caption)
                                         .italic()
@@ -170,7 +170,7 @@ struct StockTableRow: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(stockElement.product.calories != "0" ? stockElement.product.calories ?? "" : "")
+                Text(stockElement.product.calories != 0.0 ? String(stockElement.product.calories ?? 0) : "")
                 Spacer()
             }
             .background(backgroundColor)

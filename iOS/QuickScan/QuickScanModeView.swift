@@ -54,6 +54,7 @@ struct QuickScanModeView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @State private var flashOn: Bool = false
+    @State private var frontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
     
     @State private var activeSheet: QSActiveSheet?
@@ -66,10 +67,10 @@ struct QuickScanModeView: View {
     @State private var toastTypeSuccess: QSToastTypeSuccess?
     @State private var infoString: String?
     
-    @State private var lastConsumeLocationID: String?
+    @State private var lastConsumeLocationID: Int?
     @State private var lastPurchaseDueDate: Date = Date()
-    @State private var lastPurchaseShoppingLocationID: String?
-    @State private var lastPurchaseLocationID: String?
+    @State private var lastPurchaseShoppingLocationID: Int?
+    @State private var lastPurchaseLocationID: Int?
     
     @State private var isScanPaused: Bool = false
     func checkScanPause() {
@@ -131,6 +132,13 @@ struct QuickScanModeView: View {
                     .font(.title)
             })
             .disabled(!checkForTorch())
+            Button(action: {
+                frontCamera.toggle()
+                print("CHANGE CAMERA \(frontCamera)")
+            }, label: {
+                Image(systemName: MySymbols.changeCamera)
+                    .font(.title)
+            })
         }
     }
     

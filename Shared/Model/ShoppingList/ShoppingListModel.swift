@@ -9,10 +9,13 @@ import Foundation
 
 // MARK: - ShoppingListElement
 struct ShoppingListItem: Codable {
-    let id: String
-    let productID, note: String?
-    let amount, rowCreatedTimestamp, shoppingListID, done: String
-    let quID: String?
+    let id: Int
+    let productID: Int
+    let note: String?
+    let amount: Double
+    let rowCreatedTimestamp: String
+    let shoppingListID, done: Int
+    let quID: Int?
     let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {

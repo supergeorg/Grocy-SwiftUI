@@ -12,10 +12,11 @@ struct StockProductDetails: Codable {
     let product: MDProduct
     let productBarcodes: [MDProductBarcode]
     let lastPurchased, lastUsed: String?
-    let stockAmount: String
-    let stockAmountOpened: String?
+    let stockAmount: Double
+    let stockAmountOpened: Double?
     let defaultQuantityUnitPurchase, quantityUnitStock: MDQuantityUnit
-    let lastPrice, avgPrice, oldestPrice, lastShoppingLocationID: String?
+    let lastPrice, avgPrice, oldestPrice: Double?
+    let lastShoppingLocationID: Int?
     let nextDueDate: String
     let location: MDLocation
     let averageShelfLifeDays, spoilRatePercent: Int

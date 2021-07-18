@@ -43,9 +43,10 @@ struct MDUserFieldFormView: View {
         entity = ObjectEntities(rawValue: userField?.entity ?? "")
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
-        sortNumber = Int(userField?.sortNumber ?? "") ?? -1
+        // TODO FIX
+//        sortNumber = userField?.sortNumber ?? -1
         type = UserFieldType(rawValue: userField?.type ?? "") ?? UserFieldType.none
-        showAsColumnInTables = Bool(userField?.showAsColumnInTables ?? "0") ?? false
+        showAsColumnInTables = userField?.showAsColumnInTables == 1
         isNameCorrect = checkNameCorrect()
         isCaptionCorrect = checkCaptionCorrect()
     }
@@ -65,11 +66,10 @@ struct MDUserFieldFormView: View {
     }
     
     private func saveUserField() {
-        let sortNumberStr = sortNumber ?? 0 < 0 ? nil : String(sortNumber ?? 0)
         if let entity = entity {
-            let id = isNewUserField ? String(grocyVM.findNextID(.userfields)) : userField!.id
+            let id = isNewUserField ? grocyVM.findNextID(.userfields) : userField!.id
             let timeStamp = isNewUserField ? Date().iso8601withFractionalSeconds : userField!.rowCreatedTimestamp
-            let userFieldPOST = MDUserField(id: id, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? "1" : "0", rowCreatedTimestamp: timeStamp, config: nil, sortNumber: sortNumberStr, userfields: nil)
+            let userFieldPOST = MDUserField(id: id, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? 1 : 0, rowCreatedTimestamp: timeStamp, config: nil, sortNumber: sortNumber == nil ? SortNumber.null : SortNumber.integer(sortNumber!))
             isProcessing = true
             if isNewUserField {
                 grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in

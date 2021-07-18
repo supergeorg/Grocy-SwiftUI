@@ -9,16 +9,17 @@ import Foundation
 
 // MARK: - MDShoppingLocation
 struct MDShoppingLocation: Codable {
-    let id, name: String
+    let id: Int
+    let name: String
     let mdShoppingLocationDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdShoppingLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
+//        case userfields
     }
 }
 

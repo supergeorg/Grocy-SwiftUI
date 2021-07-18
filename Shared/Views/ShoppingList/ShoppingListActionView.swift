@@ -32,7 +32,7 @@ struct ShoppingListActionView: View {
     
     @State private var showAddItem: Bool = false
     
-    @Binding var selectedShoppingListID: String
+    @Binding var selectedShoppingListID: Int
     @Binding var toastType: ShoppingListToastType?
     
     @State private var showClearListAlert: Bool = false
@@ -44,7 +44,7 @@ struct ShoppingListActionView: View {
     #endif
     
     private func slAction(_ actionType: ShoppingListActionType) {
-        grocyVM.shoppingListAction(content: ShoppingListAction(listID: Int(selectedShoppingListID)!), actionType: actionType, completion: { result in
+        grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
             switch result {
             case let .success(message):
                 grocyVM.postLog(message: "SHLAction successful. \(message)", type: .info)
@@ -105,6 +105,6 @@ struct ShoppingListActionView: View {
 
 struct ShoppingListActionView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListActionView(selectedShoppingListID: Binding.constant("1"), toastType: Binding.constant(nil))
+        ShoppingListActionView(selectedShoppingListID: Binding.constant(1), toastType: Binding.constant(nil))
     }
 }

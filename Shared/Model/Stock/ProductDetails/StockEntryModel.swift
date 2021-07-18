@@ -34,12 +34,16 @@ import Foundation
 
 // MARK: - StockEntry
 struct StockEntry: Codable {
-    let id, productID, amount, bestBeforeDate: String
-    let purchasedDate, stockID: String
-    let price: String?
-    let stockEntryOpen: String
+    let id, productID: Int
+    let amount: Double
+    let bestBeforeDate: String
+    let purchasedDate: String
+    let stockID: String
+    let price: Double?
+    let stockEntryOpen: Int
     let openedDate: String?
-    let rowCreatedTimestamp, locationID: String
+    let rowCreatedTimestamp: String
+    let locationID: Int?
     let shoppingLocationID: String?
 
     enum CodingKeys: String, CodingKey {

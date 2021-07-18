@@ -9,10 +9,11 @@ import Foundation
 
 // MARK: - MDBattery
 struct MDBattery: Codable {
-    let id, name: String
+    let id: Int
+    let name: String
     let mdBatteryDescription, used: String?
     let chargeIntervalDays, rowCreatedTimestamp, active: String
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -20,7 +21,8 @@ struct MDBattery: Codable {
         case used
         case chargeIntervalDays = "charge_interval_days"
         case rowCreatedTimestamp = "row_created_timestamp"
-        case active, userfields
+        case active
+//        case userfields
     }
 }
 

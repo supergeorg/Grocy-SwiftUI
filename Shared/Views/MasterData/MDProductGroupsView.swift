@@ -62,17 +62,19 @@ struct MDProductGroupsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteProductGroup(toDelID: String) {
-        grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                print(message)
-                updateData()
-            case let .failure(error):
-                print("\(error)")
-                toastType = .failDelete
-            }
-        })
+    private func deleteProductGroup(toDelID: Int?) {
+        if let toDelID = toDelID {
+            grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
+                switch result {
+                case let .success(message):
+                    print(message)
+                    updateData()
+                case let .failure(error):
+                    print("\(error)")
+                    toastType = .failDelete
+                }
+            })
+        }
     }
     
     var body: some View {
@@ -189,9 +191,9 @@ struct MDProductGroupsView: View {
             Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),
                   message: Text(productGroupToDelete?.name ?? "error"),
                   primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                    {
-                        deleteProductGroup(toDelID: productGroupToDelete?.id ?? "")
-                    },
+                  {
+                    deleteProductGroup(toDelID: productGroupToDelete?.id)
+                  },
                   secondaryButton: .cancel())
         }
     }
@@ -200,7 +202,7 @@ struct MDProductGroupsView: View {
 struct MDProductGroupsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDProductGroupRowView(productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
+            MDProductGroupRowView(productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""))
             #if os(macOS)
             MDProductGroupsView()
             #else

@@ -56,7 +56,7 @@ struct MDUserEntitiesView: View {
         }
     }
     
-    private func deleteUserEntity(toDelID: String) {
+    private func deleteUserEntity(toDelID: Int) {
         grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -183,7 +183,9 @@ struct MDUserEntitiesView: View {
         })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.userEntity.delete.confirm")), message: Text(userEntityToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                deleteUserEntity(toDelID: userEntityToDelete?.id ?? "")
+                if let toDelID = userEntityToDelete?.id {
+                    deleteUserEntity(toDelID: toDelID)
+                }
             }, secondaryButton: .cancel())
         }
     }

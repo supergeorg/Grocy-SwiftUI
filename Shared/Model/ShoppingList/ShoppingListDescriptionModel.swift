@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - ShoppingListDescription
 struct ShoppingListDescription: Codable {
-    let id, name: String
+    let id: Int
+    let name: String
     let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
     let userfields: [String: String]?

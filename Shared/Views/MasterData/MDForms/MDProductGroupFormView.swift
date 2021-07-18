@@ -51,9 +51,9 @@ struct MDProductGroupFormView: View {
     }
     
     private func saveProductGroup() {
-        let id = isNewProductGroup ? String(grocyVM.findNextID(.product_groups)) : productGroup!.id
+        let id = isNewProductGroup ? grocyVM.findNextID(.product_groups) : productGroup!.id
         let timeStamp = isNewProductGroup ? Date().iso8601withFractionalSeconds : productGroup!.rowCreatedTimestamp
-        let productGroupPOST = MDProductGroup(id: id, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: timeStamp, userfields: nil)
+        let productGroupPOST = MDProductGroup(id: id, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewProductGroup {
             grocyVM.postMDObject(object: .product_groups, content: productGroupPOST, completion: { result in
@@ -164,7 +164,7 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
         #if os(macOS)
         Group {
             MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
-            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
+            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
         }
         #else
         Group {
@@ -172,7 +172,7 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
                 MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
         #endif

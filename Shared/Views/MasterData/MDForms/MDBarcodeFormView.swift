@@ -16,13 +16,13 @@ struct MDBarcodeFormView: View {
     @State private var isProcessing: Bool = false
     
     @State private var barcode: String = ""
-    @State private var amount: Int?
-    @State private var quantityUnitID: String?
-    @State private var shoppingLocationID: String?
+    @State private var amount: Double?
+    @State private var quantityUnitID: Int?
+    @State private var shoppingLocationID: Int?
     @State private var note: String = ""
     
     var isNewBarcode: Bool
-    var productID: String
+    var productID: Int
     var editBarcode: MDProductBarcode?
     
     @Binding var toastType: MDToastType?
@@ -39,8 +39,8 @@ struct MDBarcodeFormView: View {
     
     private func resetForm() {
         barcode = editBarcode?.barcode ?? ""
-        if let doubleAmount = Double(editBarcode?.amount ?? "") {
-            amount = Int(doubleAmount)
+        if let doubleAmount = editBarcode?.amount {
+            amount = doubleAmount
         } else {amount = nil}
         quantityUnitID = editBarcode?.quID ?? product?.quIDPurchase
         shoppingLocationID = editBarcode?.shoppingLocationID
@@ -63,8 +63,7 @@ struct MDBarcodeFormView: View {
     }
     
     private func saveBarcode() {
-        let amountStr = amount != nil ? String(amount!) : nil
-        let saveBarcode = MDProductBarcode(id: isNewBarcode ? String(grocyVM.findNextID(.product_barcodes)) : editBarcode?.id ?? "", productID: productID, barcode: barcode, quID: quantityUnitID, amount: amountStr, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note, userfields: nil)
+        let saveBarcode = MDProductBarcode(id: isNewBarcode ? grocyVM.findNextID(.product_barcodes) : editBarcode!.id, productID: productID, barcode: barcode, quID: quantityUnitID, amount: amount, shoppingLocationID: shoppingLocationID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note)
         if isNewBarcode{
             grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
                 switch result {
@@ -175,18 +174,19 @@ struct MDBarcodeFormView: View {
                 #endif
             }
             Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
-                MyIntStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
+                MyDoubleStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag(nil as String?)
+                    Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
                     }
                 }).disabled(true)
             }
 
             Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.md.barcode.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary), content: {
+                Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
-                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as String?)
+                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as Int?)
                 }
             })
             
@@ -220,15 +220,15 @@ struct MDBarcodeFormView: View {
     }
 }
 
-struct MDBarcodeFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group{
-            NavigationView{
-                MDBarcodeFormView(isNewBarcode: true, productID: "1", toastType: Binding.constant(.successAdd))
-            }
-            NavigationView{
-                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil), toastType: Binding.constant(.successAdd))
-            }
-        }
-    }
-}
+//struct MDBarcodeFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group{
+//            NavigationView{
+//                MDBarcodeFormView(isNewBarcode: true, productID: "1", toastType: Binding.constant(.successAdd))
+//            }
+//            NavigationView{
+//                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil), toastType: Binding.constant(.successAdd))
+//            }
+//        }
+//    }
+//}

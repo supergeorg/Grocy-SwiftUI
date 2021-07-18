@@ -43,8 +43,8 @@ struct StockView: View {
     
     @State private var searchString: String = ""
     
-    @State private var filteredLocationID: String?
-    @State private var filteredProductGroupID: String?
+    @State private var filteredLocationID: Int?
+    @State private var filteredProductGroupID: Int?
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
@@ -69,7 +69,7 @@ struct StockView: View {
     var numOverdue: Int {
         grocyVM.stock
             .filter {
-                ($0.dueType == "1") && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
+                ($0.dueType == 1) && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
             }
             .count
     }
@@ -77,7 +77,7 @@ struct StockView: View {
     var numExpired: Int {
         grocyVM.stock
             .filter {
-                ($0.dueType == "2") && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
+                ($0.dueType == 2) && ((getTimeDistanceFromString($0.bestBeforeDate) ?? 100) < 0)
             }
             .count
     }
@@ -85,7 +85,7 @@ struct StockView: View {
     var numBelowStock: Int {
         grocyVM.stock
             .filter {
-                Int($0.amount) ?? 1 < Int($0.product.minStockAmount) ?? 0
+                $0.amount < $0.product.minStockAmount
             }
             .count
     }
@@ -96,13 +96,13 @@ struct StockView: View {
                 filteredStatus == .expiringSoon ? ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString($0.bestBeforeDate) ?? 100) : true
             }
             .filter {
-                filteredStatus == .overdue ? ($0.dueType == "1" ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
+                filteredStatus == .overdue ? ($0.dueType == 1 ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
             }
             .filter {
-                filteredStatus == .expired ? ($0.dueType == "2" ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
+                filteredStatus == .expired ? ($0.dueType == 2 ? (getTimeDistanceFromString($0.bestBeforeDate) ?? 100 < 0) : false) : true
             }
             .filter {
-                filteredStatus == .belowMinStock ? Int($0.amount) ?? 1 < Int($0.product.minStockAmount) ?? 0 : true
+                filteredStatus == .belowMinStock ? $0.amount < $0.product.minStockAmount : true
             }
             .filter {
                 filteredLocationID != nil ? $0.product.locationID == filteredLocationID : true
@@ -116,7 +116,7 @@ struct StockView: View {
     }
     
     var summedValue: Double {
-        let values = grocyVM.stock.map{ Double($0.value) ?? 0 }
+        let values = grocyVM.stock.map{ $0.value }
         return values.reduce(0, +)
     }
     

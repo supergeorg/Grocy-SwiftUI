@@ -36,7 +36,7 @@ struct MDLocationFormView: View {
     private func resetForm() {
         self.name = location?.name ?? ""
         self.mdLocationDescription = location?.mdLocationDescription ?? ""
-        self.isFreezer = Bool(location?.isFreezer ?? "0") ?? false
+        self.isFreezer = location?.isFreezer == IsFreezer.bool(true)
         isNameCorrect = checkNameCorrect()
     }
     
@@ -55,9 +55,9 @@ struct MDLocationFormView: View {
     }
     
     private func saveLocation() {
-        let id = isNewLocation ? String(grocyVM.findNextID(.locations)) : location!.id
+        let id = isNewLocation ? grocyVM.findNextID(.locations) : location!.id
         let timeStamp = isNewLocation ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
-        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer ? "1" : "0", userfields: nil)
+        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: IsFreezer.bool(isFreezer))
         isProcessing = true
         if isNewLocation {
             grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
@@ -165,22 +165,22 @@ struct MDLocationFormView: View {
     }
 }
 
-struct MDLocationFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        #if os(macOS)
-        Group {
-            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
-        }
-        #else
-        Group {
-            NavigationView {
-                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            }
-            NavigationView {
-                MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
-            }
-        }
-        #endif
-    }
-}
+//struct MDLocationFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        #if os(macOS)
+//        Group {
+//            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
+//            MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+//        }
+//        #else
+//        Group {
+//            NavigationView {
+//                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
+//            }
+//            NavigationView {
+//                MDLocationFormView(isNewLocation: false, location: MDLocation(id: "1", name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: "1", userfields: nil), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+//            }
+//        }
+//        #endif
+//    }
+//}

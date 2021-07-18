@@ -20,16 +20,16 @@ struct ConsumeProductView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     #endif
     
-    var productToConsumeID: String?
+    var productToConsumeID: Int?
     
-    @State private var productID: String?
+    @State private var productID: Int?
     @State private var amount: Double = 1.0
-    @State private var quantityUnitID: String?
-    @State private var locationID: String?
+    @State private var quantityUnitID: Int?
+    @State private var locationID: Int?
     @State private var spoiled: Bool = false
     @State private var useSpecificStockEntry: Bool = false
     @State private var stockEntryID: String?
-    @State private var recipeID: String?
+    @State private var recipeID: Int?
     
     @State private var searchProductTerm: String = ""
     
@@ -59,10 +59,12 @@ struct ConsumeProductView: View {
     }
     
     private var filteredLocations: MDLocations {
-        var locIDs: Set<String> = Set<String>()
-        if let entries = grocyVM.stockProductEntries[productID ?? ""] {
+        var locIDs: Set<Int> = Set<Int>()
+        if let entries = grocyVM.stockProductEntries[productID ?? 0] {
             for entry in entries {
-                locIDs.insert(entry.locationID)
+                if let locID = entry.locationID {
+                    locIDs.insert(locID)
+                }
             }
         }
         return grocyVM.mdLocations
@@ -70,11 +72,11 @@ struct ConsumeProductView: View {
     }
     
     private var maxAmount: Double? {
-        if let entries = grocyVM.stockProductEntries[productID ?? ""] {
+        if let entries = grocyVM.stockProductEntries[productID ?? 0] {
             var maxAmount: Double = 0
             let filtEntries = entries.filter{ $0.locationID == locationID }
             for filtEntry in filtEntries {
-                maxAmount += Double(filtEntry.amount) ?? 0
+                maxAmount += filtEntry.amount
             }
             return maxAmount
         }
@@ -121,9 +123,7 @@ struct ConsumeProductView: View {
     
     private func consumeProduct() {
         if let productID = productID {
-            let intRecipeID = Int(recipeID ?? "")
-            let intLocationID = Int(locationID ?? "")
-            let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: intRecipeID, locationID: intLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
+            let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
             infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
@@ -174,7 +174,7 @@ struct ConsumeProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.consume.product")
                 .onChange(of: productID) { newProduct in
-                    grocyVM.getStockProductEntries(productID: productID ?? "")
+                    grocyVM.getStockProductEntries(productID: productID ?? 0)
                     if let selectedProduct = selectedProduct {
                         locationID = selectedProduct.locationID
                         quantityUnitID = selectedProduct.quIDStock
@@ -184,17 +184,17 @@ struct ConsumeProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, maxAmount: maxAmount, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", errorMessageMax: "str.stock.consume.product.amount.locMax", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
-                    Text("").tag(nil as String?)
+                    Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
                     }
                 }).disabled(true)
             }
             
             Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
-                Text("").tag(nil as String?)
+                Text("").tag(nil as Int?)
                 ForEach(filteredLocations, id:\.id) { location in
-                    Text(selectedProduct?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as String?)
+                    Text(selectedProduct?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
                 }
             })
             
@@ -207,8 +207,8 @@ struct ConsumeProductView: View {
                 if useSpecificStockEntry && productID != nil {
                     Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                         Text("").tag(nil as String?)
-                        ForEach(grocyVM.stockProductEntries[productID ?? ""] ?? [], id: \.stockID) { stockProduct in
-                            Text(stockProduct.stockEntryOpen == "0" ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
+                        ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
+                            Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate) ?? "purchasedate error")"))
                                 .tag(stockProduct.stockID as String?)
                         }
                     })
@@ -216,7 +216,7 @@ struct ConsumeProductView: View {
                 
                 HStack{
                     Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
-                        Text("Not implemented").tag(nil as String?)
+                        Text("Not implemented").tag(nil as Int?)
                     })
                     #if os(macOS)
                     Image(systemName: "questionmark.circle.fill")

@@ -46,7 +46,7 @@ class ProductDetailsModel: ObservableObject {
             
             self.lastUseDate = stockEntries?.sorted(by: {$0.openedDate ?? "" < $1.openedDate ?? ""}).last?.openedDate ?? ""
             
-            self.quantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+            self.quantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
             
             if let pictureFileName = product.pictureFileName {
                 let utf8str = pictureFileName.data(using: .utf8)
@@ -64,10 +64,10 @@ class ProductDetailsModel: ObservableObject {
             let calendar = Calendar.current
             if let entries = stockEntries {
                 for entry in entries {
-                    amount += Double(entry.amount)!
-                    if let entryPrice = Double(entry.price ?? "") {
+                    amount += entry.amount
+                    if let entryPrice = entry.price {
                         if entryPrice > 0 {
-                            numPrice += Double(entry.amount)!
+                            numPrice += entry.amount
                             price += entryPrice
                             lastPrice = entryPrice
                         }
@@ -100,7 +100,7 @@ class ProductDetailsModel: ObservableObject {
             self.lastPrice = 0.0
             self.averagePrice = 0.0
             self.averageShelfLife = nil
-            self.quantityUnit = MDQuantityUnit(id: "", name: "", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "", pluralForms: nil, userfields: nil)
+            self.quantityUnit = MDQuantityUnit(id: 0, name: "", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "", pluralForms: nil)
             self.pictureURL = nil
         }
     }

@@ -9,22 +9,59 @@ import Foundation
 
 // MARK: - MDUserField
 struct MDUserField: Codable {
-    let id, entity, name, caption: String
-    let type, showAsColumnInTables, rowCreatedTimestamp: String
-    let config, sortNumber: String?
-    let userfields: [String: String]?
-    
+    let id: Int
+    let entity, name, caption, type: String
+    let showAsColumnInTables: Int
+    let rowCreatedTimestamp: String
+    let config: String?
+    let sortNumber: SortNumber
+
     enum CodingKeys: String, CodingKey {
         case id, entity, name, caption, type
         case showAsColumnInTables = "show_as_column_in_tables"
         case rowCreatedTimestamp = "row_created_timestamp"
         case config
         case sortNumber = "sort_number"
-        case userfields
     }
 }
 
 typealias MDUserFields = [MDUserField]
+
+enum SortNumber: Codable {
+    case integer(Int)
+    case string(String)
+    case null
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let x = try? container.decode(Int.self) {
+            self = .integer(x)
+            return
+        }
+        if let x = try? container.decode(String.self) {
+            self = .string(x)
+            return
+        }
+        if container.decodeNil() {
+            self = .null
+            return
+        }
+        throw DecodingError.typeMismatch(SortNumber.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for SortNumber"))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .integer(let x):
+            try container.encode(x)
+        case .string(let x):
+            try container.encode(x)
+        case .null:
+            try container.encodeNil()
+        }
+    }
+}
+
 
 enum UserFieldType: String, CaseIterable {
     case none = ""

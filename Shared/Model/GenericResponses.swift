@@ -18,7 +18,7 @@ struct ErrorMessage: Codable {
 
 // MARK: - SuccessfulCreationMessage
 struct SuccessfulCreationMessage: Codable {
-    let createdObjectID: String
+    let createdObjectID: Int
     
     enum CodingKeys: String, CodingKey {
         case createdObjectID = "created_object_id"
@@ -27,7 +27,7 @@ struct SuccessfulCreationMessage: Codable {
 
 // MARK: - SuccessfulPutMessage
 struct SuccessfulPutMessage: Codable {
-    let changedObjectID: String
+    let changedObjectID: Int
 }
 
 // MARK: - SuccessfulActionMessage
@@ -37,7 +37,7 @@ struct SuccessfulActionMessage: Codable {
 
 // MARK: - DeleteMessage
 struct DeleteMessage: Codable {
-    let deletedObjectID: String
+    let deletedObjectID: Int
 
     enum CodingKeys: String, CodingKey {
         case deletedObjectID = "deleted_object_id"

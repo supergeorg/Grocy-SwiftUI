@@ -10,7 +10,7 @@ import SwiftUI
 struct ProductField: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Binding var productID: String?
+    @Binding var productID: Int?
     var description: String
     
     @State private var searchTerm: String = ""
@@ -27,7 +27,7 @@ struct ProductField: View {
     }
     #endif
     
-    private func getBarcodes(pID: String) -> [String] {
+    private func getBarcodes(pID: Int) -> [String] {
         grocyVM.mdProductBarcodes.filter{$0.productID == pID}.map{$0.barcode}
     }
     
@@ -55,18 +55,18 @@ struct ProductField: View {
                     CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
                 }
             }
-            Text("").tag(nil as String?)
+            Text("").tag(nil as Int?)
             ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name).tag(productElement.id as String?)
+                Text(productElement.name).tag(productElement.id as Int?)
             }
         }).pickerStyle(DefaultPickerStyle())
     }
     #elseif os(macOS)
     var body: some View {
         Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
-            Text("").tag(nil as String?)
+            Text("").tag(nil as Int?)
             ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name).tag(productElement.id as String?)
+                Text(productElement.name).tag(productElement.id as Int?)
             }
         })
     }
@@ -77,7 +77,7 @@ struct ProductField_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView{
             Form{
-                ProductField(productID: Binding.constant("1"), description: "str.stock.buy.product")
+                ProductField(productID: Binding.constant(1), description: "str.stock.buy.product")
             }
         }
     }

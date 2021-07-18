@@ -14,21 +14,21 @@ struct ShoppingListEntryFormView: View {
     
     @State private var firstAppear: Bool = true
     
-    @State private var shoppingListID: String = "1"
-    @State private var productID: String?
-    @State private var amount: Int = 1
-    @State private var quantityUnitID: String?
+    @State private var shoppingListID: Int = 1
+    @State private var productID: Int?
+    @State private var amount: Double = 1.0
+    @State private var quantityUnitID: Int?
     @State private var note: String = ""
     
     @State private var showFailToast: Bool = false
     
     var isNewShoppingListEntry: Bool
     var shoppingListEntry: ShoppingListItem?
-    var selectedShoppingListID: String?
+    var selectedShoppingListID: Int?
     var product: MDProduct?
     
     var isFormValid: Bool {
-        return (!shoppingListID.isEmpty && productID != nil && amount > 0 && quantityUnitID != nil)
+        return (productID != nil && amount > 0 && quantityUnitID != nil)
     }
     
     private func getQuantityUnit() -> MDQuantityUnit? {
@@ -36,8 +36,12 @@ struct ShoppingListEntryFormView: View {
         let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
         return qu
     }
-    private var currentQuantityUnit: MDQuantityUnit {
-        getQuantityUnit() ?? MDQuantityUnit(id: "0", name: "Stück", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Stücke", pluralForms: nil, userfields: nil)
+    private var currentQuantityUnit: MDQuantityUnit? {
+        // TODO REMOVE
+//        getQuantityUnit()
+            //?? MDQuantityUnit(id: 0, name: "Piece", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Pieces", pluralForms: nil, userfields: nil)
+        let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
     }
     
     private func updateData() {
@@ -53,10 +57,9 @@ struct ShoppingListEntryFormView: View {
     }
     
     func saveShoppingListEntry() {
-        let intProductID = Int(productID ?? "")!
-        let intShoppingListID = Int(shoppingListID)!
+        if let productID = productID {
         if isNewShoppingListEntry{
-            grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: intProductID, listID: intShoppingListID, productAmount: amount, note: note), completion: { result in
+            grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: productID, listID: shoppingListID, productAmount: amount, note: note), completion: { result in
                 switch result {
                 case let .success(message):
                     print(message)
@@ -69,7 +72,7 @@ struct ShoppingListEntryFormView: View {
             })
         } else {
             if let entry = shoppingListEntry {
-                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: String(amount), rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
+                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID, userfields: entry.userfields), completion: { result in
                     switch result {
                     case let .success(message):
                         print(message)
@@ -82,12 +85,13 @@ struct ShoppingListEntryFormView: View {
                 })
             }
         }
+        }
     }
     
     private func resetForm() {
-        self.shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? "1"
+        self.shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? 1
         self.productID = shoppingListEntry?.productID ?? product?.id
-        self.amount = Int(shoppingListEntry?.amount ?? "") ?? (product != nil ? 1 : 0)
+        self.amount = shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)
         self.quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase
         self.note = shoppingListEntry?.note ?? ""
     }
@@ -142,11 +146,11 @@ struct ShoppingListEntryFormView: View {
                 }
             
             Section(header: Text(LocalizedStringKey("str.shL.entryForm.amount")).font(.headline)) {
-                MyIntStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit.name : currentQuantityUnit.namePlural), errorMessage: "str.shL.entryForm.amount.required", systemImage: MySymbols.amount)
+                MyDoubleStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? ""), errorMessage: "str.shL.entryForm.amount.required", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.shL.entryForm.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag(nil as String?)
+                    Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as String?)
+                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
                     }
                 }).disabled(true)
             }

@@ -55,10 +55,10 @@ class GrocyViewModel: ObservableObject {
     @Published var mdUserFields: MDUserFields = []
     @Published var mdUserEntities: MDUserEntities = []
     
-    @Published var stockProductDetails: [String: StockProductDetails] = [:]
-    @Published var stockProductLocations: [String: StockLocations] = [:]
-    @Published var stockProductEntries: [String: StockEntries] = [:]
-    @Published var stockProductPriceHistories: [String: ProductPriceHistories] = [:]
+    @Published var stockProductDetails: [Int: StockProductDetails] = [:]
+    @Published var stockProductLocations: [Int: StockLocations] = [:]
+    @Published var stockProductEntries: [Int: StockEntries] = [:]
+    @Published var stockProductPriceHistories: [Int: ProductPriceHistories] = [:]
     
     @Published var lastStockActions: StockJournal = []
     
@@ -141,27 +141,27 @@ class GrocyViewModel: ObservableObject {
         var ints: [Int] = []
         switch object {
         case .products:
-            ints = self.mdProducts.map{ Int($0.id) ?? 0 }
+            ints = self.mdProducts.map{ $0.id }
         case .locations:
-            ints = self.mdLocations.map{ Int($0.id) ?? 0 }
+            ints = self.mdLocations.map{ $0.id }
         case .shopping_locations:
-            ints = self.mdShoppingLocations.map{ Int($0.id) ?? 0 }
+            ints = self.mdShoppingLocations.map{ $0.id }
         case .quantity_units:
-            ints = self.mdQuantityUnits.map{ Int($0.id) ?? 0 }
+            ints = self.mdQuantityUnits.map{ $0.id }
         case .product_groups:
-            ints = self.mdProductGroups.map{ Int($0.id) ?? 0 }
+            ints = self.mdProductGroups.map{ $0.id }
         case .shopping_lists:
-            ints = self.shoppingListDescriptions.map{ Int($0.id) ?? 0 }
+            ints = self.shoppingListDescriptions.map{ $0.id }
         case .shopping_list:
-            ints = self.shoppingList.map{ Int($0.id) ?? 0 }
+            ints = self.shoppingList.map{ $0.id }
         case .product_barcodes:
-            ints = self.mdProductBarcodes.map{ Int($0.id) ?? 0 }
+            ints = self.mdProductBarcodes.map{ $0.id }
         case .task_categories:
-            ints = self.mdTaskCategories.map{ Int($0.id) ?? 0 }
-        case .userfields:
-            ints = self.mdUserFields.map{ Int($0.id) ?? 0 }
+            ints = self.mdTaskCategories.map{ $0.id }
+//        case .userfields:
+//            ints = self.mdUserFields.map{ $0.id }
         case .userentities:
-            ints = self.mdUserEntities.map{ Int($0.id) ?? 0 }
+            ints = self.mdUserEntities.map{ $0.id }
         default:
             self.grocyLog.error("Find next ID not implemented for \(object.rawValue).")
         }
@@ -636,13 +636,13 @@ class GrocyViewModel: ObservableObject {
                 }
             }, receiveValue: { (response: Int) in
                 DispatchQueue.main.async {
-                    completion(.success(SuccessfulCreationMessage(createdObjectID: "\(user.id)")))
+                    completion(.success(SuccessfulCreationMessage(createdObjectID: user.id)))
                 }
             })
             .store(in: &cancellables)
     }
     
-    func putUser(id: String, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, Error>) -> ())) {
+    func putUser(id: Int, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, Error>) -> ())) {
         let jsonUser = try! JSONEncoder().encode(user)
         grocyApi.putUserWithID(id: id, user: jsonUser)
             .sink(receiveCompletion: { result in
@@ -661,7 +661,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func deleteUser(id: String, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
+    func deleteUser(id: Int, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
         grocyApi.deleteUserWithID(id: id)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -680,7 +680,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func getNewUserID() -> Int {
-        let ints = self.users.map{ Int($0.id) ?? 0 }
+        let ints = self.users.map{ $0.id }
         var startvar = 0
         while ints.contains(startvar) { startvar += 1 }
         return startvar
@@ -725,15 +725,15 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func getStockProductLocations(productID: String) {}
-    func getStockProductEntries(productID: String) {
+    func getStockProductLocations(productID: Int) {}
+    func getStockProductEntries(productID: Int) {
         grocyApi.getStockProductDetails(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
             .replaceError(with: [])
             .assign(to: \.stockProductEntries[productID], on: self)
             .store(in: &cancellables)
     }
     
-    func postStockObject<T: Codable>(id: String, stockModePost: StockProductPost, content: T, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
+    func postStockObject<T: Codable>(id: Int, stockModePost: StockProductPost, content: T, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
@@ -754,7 +754,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func undoBookingWithID(id: String, completion: @escaping ((Result<SuccessfulActionMessage, Error>) -> ())) {
+    func undoBookingWithID(id: Int, completion: @escaping ((Result<SuccessfulActionMessage, Error>) -> ())) {
         grocyApi.undoBookingWithID(id: id)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -812,7 +812,7 @@ class GrocyViewModel: ObservableObject {
                     break
                 }
             }, receiveValue: { (responseCode: Int) in
-                completion(.success(SuccessfulCreationMessage(createdObjectID: "\(content.productID)")))
+                completion(.success(SuccessfulCreationMessage(createdObjectID: content.productID)))
             })
             .store(in: &cancellables)
     }
@@ -859,7 +859,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func deleteMDObject(object: ObjectEntities, id: String, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
+    func deleteMDObject(object: ObjectEntities, id: Int, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
         grocyApi.deleteObjectWithID(object: object, id: id)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -877,7 +877,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: String, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
+    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: Int, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! JSONEncoder().encode(content)
         grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
             .sink(receiveCompletion: { result in

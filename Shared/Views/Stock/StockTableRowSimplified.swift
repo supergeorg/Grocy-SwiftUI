@@ -30,28 +30,29 @@ struct StockTableRowSimplified: View {
     
     @State private var showDetailView: Bool = false
     
-    var caloriesSum: String? {
-        if let calories = Double(stockElement.product.calories ?? "") {
-            let sum = calories * Double(stockElement.amount)!
+    var caloriesSumStr: String? {
+        if let calories = stockElement.product.calories {
+            let sum = calories * stockElement.amount
             return String(format: "%.0f", sum)
-        } else { return stockElement.product.calories }
+        } else {return ""}
+        //else { return String(stockElement.product.calories) }
     }
     
     var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
     }
     
     var backgroundColor: Color {
         if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
-        if (stockElement.dueType == "1" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 1 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
         }
-        if (stockElement.dueType == "2" ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 2 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
         }
-        if (Int(stockElement.amount) ?? 1 < Int(stockElement.product.minStockAmount) ?? 0) {
+        if (stockElement.amount < stockElement.product.minStockAmount) {
             return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
         }
         return Color.clear
@@ -62,7 +63,7 @@ struct StockTableRowSimplified: View {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.numberStyle = .decimal
-        return formatter.string(from: (Double(stockElement.amountAggregated) ?? 0.0) as NSNumber) ?? "?"
+        return formatter.string(from: (stockElement.amountAggregated) as NSNumber) ?? ""
     }
     
     var body: some View {
@@ -130,19 +131,19 @@ struct StockTableRowSimplified: View {
             } else {Text("")}
             
             HStack{
-                if let formattedAmount = formatStringAmount(stockElement.amount) {
+                if let formattedAmount = formatAmount(stockElement.amount) {
                     Text("\(formattedAmount) \(formattedAmount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                    if Double(stockElement.amountOpened) ?? 0 > 0 {
-                        Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpened))"))
+                    if stockElement.amountOpened > 0 {
+                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
                             .font(.caption)
                             .italic()
                     }
-                    if let formattedAmountAggregated = formatStringAmount(stockElement.amountAggregated) {
+                    if let formattedAmountAggregated = formatAmount(stockElement.amountAggregated) {
                         if formattedAmount != formattedAmountAggregated {
                             Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
                                 .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                            if Double(stockElement.amountOpenedAggregated) ?? 0 > 0 {
-                                Text(LocalizedStringKey("str.stock.info.opened \(formatStringAmount(stockElement.amountOpenedAggregated))"))
+                            if stockElement.amountOpenedAggregated > 0 {
+                                Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
                                     .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                                     .font(.caption)
                                     .italic()
@@ -169,8 +170,8 @@ struct StockTableRowSimplified: View {
     }
 }
 
-struct StockTableRowSimplified_Previews: PreviewProvider {
-    static var previews: some View {
-        StockTableRowSimplified(stockElement: StockElement(amount: "2", amountAggregated: "5", value: "1.0", bestBeforeDate: "12.12.2021", amountOpened: "1", amountOpenedAggregated: "2", isAggregatedAmount: "0", dueType: "1", productID: "1", product: MDProduct(id: "1", name: "Product", mdProductDescription: "", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "0", defaultBestBeforeDays: "0", defaultBestBeforeDaysAfterOpen: "0", defaultBestBeforeDaysAfterFreezing: "0", defaultBestBeforeDaysAfterThawing: "0", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "0", parentProductID: nil, calories: "13", cumulateMinStockAmountOfSubProducts: "1", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", hideOnStockOverview: nil, userfields: nil)), selectedStockElement: Binding.constant(nil), activeSheet: Binding.constant(nil), toastType: Binding.constant(nil))
-    }
-}
+//struct StockTableRowSimplified_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StockTableRowSimplified(stockElement: StockElement(amount: "2", amountAggregated: "5", value: "1.0", bestBeforeDate: "12.12.2021", amountOpened: "1", amountOpenedAggregated: "2", isAggregatedAmount: "0", dueType: "1", productID: "1", product: MDProduct(id: "1", name: "Product", mdProductDescription: "", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "0", defaultBestBeforeDays: "0", defaultBestBeforeDaysAfterOpen: "0", defaultBestBeforeDaysAfterFreezing: "0", defaultBestBeforeDaysAfterThawing: "0", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "0", parentProductID: nil, calories: "13", cumulateMinStockAmountOfSubProducts: "1", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", hideOnStockOverview: nil, userfields: nil)), selectedStockElement: Binding.constant(nil), activeSheet: Binding.constant(nil), toastType: Binding.constant(nil))
+//    }
+//}

@@ -20,10 +20,10 @@ struct StockTableMenuView: View {
     @Binding var toastType: RowActionToastType?
     
     var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: "", name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil, userfields: nil)
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
     }
     var quString: String {
-        return stockElement.product.quickConsumeAmount == "1" ? quantityUnit.name : quantityUnit.namePlural
+        return stockElement.product.quickConsumeAmount == 1.0 ? quantityUnit.name : quantityUnit.namePlural
     }
     
     var body: some View {
@@ -70,7 +70,7 @@ struct StockTableMenuView: View {
             Group{
                 Button(action: {
                     selectedStockElement = stockElement
-                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: Double(stockElement.amount) ?? 1.0, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+                    grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
                         switch result {
                         case let .success(prod):
                             print(prod)

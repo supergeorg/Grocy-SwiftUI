@@ -62,7 +62,7 @@ struct MDQuantityUnitsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteQuantityUnit(toDelID: String) {
+    private func deleteQuantityUnit(toDelID: Int) {
         grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -193,9 +193,11 @@ struct MDQuantityUnitsView: View {
             Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),
                   message: Text(quantityUnitToDelete?.name ?? "error"),
                   primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                    {
-                        deleteQuantityUnit(toDelID: quantityUnitToDelete?.id ?? "")
-                    },
+                  {
+                    if let toDelID = quantityUnitToDelete?.id {
+                        deleteQuantityUnit(toDelID: toDelID)
+                    }
+                  },
                   secondaryButton: .cancel())
         }
     }
@@ -204,7 +206,7 @@ struct MDQuantityUnitsView: View {
 struct MDQuantityUnitsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: "", name: "QU NAME", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU NAME PLURAL", pluralForms: nil, userfields: nil))
+            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU NAME PLURAL", pluralForms: nil))
             #if os(macOS)
             MDQuantityUnitsView()
             #else

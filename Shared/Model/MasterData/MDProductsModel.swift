@@ -9,21 +9,27 @@ import Foundation
 
 // MARK: - MDProduct
 struct MDProduct: Codable {
-    let id, name: String
+    let id: Int
+    let name: String
     let mdProductDescription: String?
-    let productGroupID: String?
-    let active, locationID: String
-    @NullCodable var shoppingLocationID: String?
-    let quIDPurchase, quIDStock, quFactorPurchaseToStock, minStockAmount: String
-    let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: String
+    let productGroupID: Int?
+    let active, locationID: Int
+    @NullCodable var shoppingLocationID: Int?
+    let quIDPurchase, quIDStock: Int
+    let quFactorPurchaseToStock: Double?
+    let minStockAmount: Double
+    let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
     @NullCodable var pictureFileName: String?
-    let enableTareWeightHandling, tareWeight, notCheckStockFulfillmentForRecipes: String
-    @NullCodable var parentProductID: String?
-    let calories: String?
-    let cumulateMinStockAmountOfSubProducts, dueType, quickConsumeAmount: String
+    let enableTareWeightHandling: Int
+    let tareWeight: Double?
+    let notCheckStockFulfillmentForRecipes: Int
+    @NullCodable var parentProductID: Int?
+    let calories: Double?
+    let cumulateMinStockAmountOfSubProducts, dueType: Int
+    let quickConsumeAmount: Double?
+    let hideOnStockOverview: Int?
     let rowCreatedTimestamp: String
-    let hideOnStockOverview: String?
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -51,7 +57,7 @@ struct MDProduct: Codable {
         case quickConsumeAmount = "quick_consume_amount"
         case rowCreatedTimestamp = "row_created_timestamp"
         case hideOnStockOverview = "hide_on_stock_overview"
-        case userfields
+//        case userfields
     }
 }
 

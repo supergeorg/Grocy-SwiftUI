@@ -81,8 +81,8 @@ struct UserRowView: View {
     }
 }
 
-struct UserRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false, toastType: Binding.constant(nil))
-    }
-}
+//struct UserRowView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false, toastType: Binding.constant(nil))
+//    }
+//}

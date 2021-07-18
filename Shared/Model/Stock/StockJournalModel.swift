@@ -24,27 +24,27 @@
 import Foundation
 
 struct StockJournalEntry: Codable {
-    let id: String
-    let productID: String
-    let amount: String
+    let id: Int
+    let productID: Int
+    let amount: Double
     let bestBeforeDate: String
     let purchasedDate: String?
     let usedDate: String?
-    let spoiled: String
-    let stockID: String
+    let spoiled: Int
+    let stockID: Int
     let transactionType: TransactionType
-    let price: String?
-    let undone: String
+    let price: Double?
+    let undone: Int
     let undoneTimestamp: String?
     let openedDate: String?
     let rowCreatedTimestamp: String
-    let locationID: String
-    let recipeID: String?
-    let correlationID: String?
+    let locationID: Int
+    let recipeID: Int?
+    let correlationID: Int?
     let transactionID: String
-    let stockRowID: String?
-    let shoppingLocationID: String?
-    let userID: String
+    let stockRowID: Int?
+    let shoppingLocationID: Int?
+    let userID: Int
     let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {

@@ -23,13 +23,15 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     public class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: CodeScannerView
         @Binding var isPaused: Bool
+        @Binding var isFrontCamera: Bool
         var codesFound: Set<String>
         var isFinishScanning = false
         var lastTime = Date(timeIntervalSince1970: 0)
 
-        init(parent: CodeScannerView, isPaused: Binding<Bool>) {
+        init(parent: CodeScannerView, isPaused: Binding<Bool>, isFrontCamera: Binding<Bool>) {
             self.parent = parent
             self._isPaused = isPaused
+            self._isFrontCamera = isFrontCamera
             self.codesFound = Set<String>()
         }
 
@@ -75,10 +77,12 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     #if targetEnvironment(simulator)
     public class ScannerViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
         var delegate: ScannerCoordinator?
+        @Binding var isFrontCamera: Bool
         private let showViewfinder: Bool
 
-        public init(showViewfinder: Bool = false) {
+        public init(showViewfinder: Bool = false, isFrontCamera: Binding<Bool>) {
             self.showViewfinder = showViewfinder
+            self._isFrontCamera = isFrontCamera
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -159,18 +163,23 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         var captureSession: AVCaptureSession!
         var previewLayer: AVCaptureVideoPreviewLayer!
         var delegate: ScannerCoordinator?
-        let videoCaptureDevice = AVCaptureDevice.default(for: .video)
+        @Binding var isFrontCamera: Bool
+        var videoCaptureDevice: AVCaptureDevice? {
+            AVCaptureDevice.default(for: .video)
+        }
         let viewFinder = UIImageView(image: UIImage(systemName: "camera.viewfinder"))
 
         private let showViewfinder: Bool
 
-        public init(showViewfinder: Bool) {
+        public init(showViewfinder: Bool, isFrontCamera: Binding<Bool>) {
             self.showViewfinder = showViewfinder
+            self._isFrontCamera = isFrontCamera
             super.init(nibName: nil, bundle: nil)
         }
 
         public required init?(coder: NSCoder) {
             self.showViewfinder = false
+            self._isFrontCamera = Binding.constant(false)
             super.init(coder: coder)
         }
 
@@ -309,8 +318,9 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     public var simulatedData = ""
     public var completion: (Result<String, ScanError>) -> Void
     @Binding var isPaused: Bool
+    @Binding var isFrontCamera: Bool
 
-    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode = .once, showViewfinder: Bool = false, scanInterval: Double = 2.0, simulatedData: String = "", isPaused: Binding<Bool> = Binding.constant(false), completion: @escaping (Result<String, ScanError>) -> Void) {
+    public init(codeTypes: [AVMetadataObject.ObjectType], scanMode: ScanMode = .once, showViewfinder: Bool = false, scanInterval: Double = 2.0, simulatedData: String = "", isPaused: Binding<Bool> = Binding.constant(false), isFrontCamera: Binding<Bool> = Binding.constant(false), completion: @escaping (Result<String, ScanError>) -> Void) {
         self.codeTypes = codeTypes
         self.scanMode = scanMode
         self.showViewfinder = showViewfinder
@@ -318,14 +328,15 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         self.simulatedData = simulatedData
         self.completion = completion
         self._isPaused = isPaused
+        self._isFrontCamera = isFrontCamera
     }
 
     public func makeCoordinator() -> ScannerCoordinator {
-        return ScannerCoordinator(parent: self, isPaused: $isPaused)
+        return ScannerCoordinator(parent: self, isPaused: $isPaused, isFrontCamera: $isFrontCamera)
     }
 
     public func makeUIViewController(context: Context) -> ScannerViewController {
-        let viewController = ScannerViewController(showViewfinder: showViewfinder)
+        let viewController = ScannerViewController(showViewfinder: showViewfinder, isFrontCamera: $isFrontCamera)
         viewController.delegate = context.coordinator
         return viewController
     }

@@ -54,7 +54,8 @@ struct AppSidebarNavigation: View {
     //    #if os(iOS)
     //    @State private var selection: NavigationItem? = NavigationItem.quickScan
     //    #else
-    @State private var selection: NavigationItem? = NavigationItem.stockOverview
+//    @State private var selection: NavigationItem? = NavigationItem.stockOverview
+    @State private var selection: NavigationItem? = NavigationItem.mdShoppingLocations
     //    #endif
     
     private func toggleSidebar() {

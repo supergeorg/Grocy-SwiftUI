@@ -15,24 +15,24 @@ struct MDLocationRowView: View {
     
     var body: some View {
         HStack{
-            if let uf = location.userfields?.first(where: {$0.key == AppSpecificUserFields.locationPicture.rawValue }) {
-                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
-                    if let url = URL(string: pictureURL) {
-                        URLImage(url: url) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .background(Color.white)
-                        }
-                        .frame(width: 100, height: 100)
-                    }
-                }
-            }
+            //            if let uf = location.userfields?.first(where: {$0.key == AppSpecificUserFields.locationPicture.rawValue }) {
+            //                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
+            //                    if let url = URL(string: pictureURL) {
+            //                        URLImage(url: url) { image in
+            //                            image
+            //                                .resizable()
+            //                                .aspectRatio(contentMode: .fit)
+            //                                .background(Color.white)
+            //                        }
+            //                        .frame(width: 100, height: 100)
+            //                    }
+            //                }
+            //            }
             VStack(alignment: .leading) {
                 HStack{
                     Text(location.name)
                         .font(.largeTitle)
-                    if Bool(location.isFreezer) ?? false {
+                    if location.isFreezer == IsFreezer.bool(true) {// == 1 {
                         Image(systemName: "thermometer.snowflake")
                             .font(.title)
                     }
@@ -86,14 +86,14 @@ struct MDLocationsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteLocation(toDelID: String) {
+    private func deleteLocation(toDelID: Int) {
         grocyVM.deleteMDObject(object: .locations, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                print("Deleting location successful. \(message)")
                 updateData()
             case let .failure(error):
-                print("\(error)")
+                print("Deleting location failed. \(error)")
                 toastType = .failDelete
             }
         })
@@ -211,7 +211,9 @@ struct MDLocationsView: View {
         })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.location.delete.confirm"), message: Text(locationToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
-                deleteLocation(toDelID: locationToDelete?.id ?? "")
+                if let toDelID = locationToDelete?.id {
+                    deleteLocation(toDelID: toDelID)
+                }
             }, secondaryButton: .cancel())
         }
     }
@@ -220,7 +222,7 @@ struct MDLocationsView: View {
 struct MDLocationsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDLocationRowView(location: MDLocation(id: "0", name: "Location", mdLocationDescription: "Location description", rowCreatedTimestamp: "", isFreezer: "0", userfields: nil))
+            MDLocationRowView(location: MDLocation(id: 0, name: "Location", mdLocationDescription: "Location description", rowCreatedTimestamp: "", isFreezer: IsFreezer.bool(true)))
             #if os(macOS)
             MDLocationsView()
             #else

@@ -57,7 +57,7 @@ struct MDUserFieldsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteUserField(toDelID: String) {
+    private func deleteUserField(toDelID: Int) {
         grocyVM.deleteMDObject(object: .userfields, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -184,7 +184,9 @@ struct MDUserFieldsView: View {
         })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text(LocalizedStringKey("str.md.userField.delete.confirm")), message: Text(userFieldToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                deleteUserField(toDelID: userFieldToDelete?.id ?? "")
+                if let toDelID = userFieldToDelete?.id {
+                    deleteUserField(toDelID: toDelID)
+                }
             }, secondaryButton: .cancel())
         }
     }
@@ -193,7 +195,7 @@ struct MDUserFieldsView: View {
 struct MDUserFieldsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDUserFieldRowView(userField: MDUserField(id: "1", entity: "locations", name: "Test", caption: "caption", type: "1", showAsColumnInTables: "0", rowCreatedTimestamp: "ts", config: nil, sortNumber: nil, userfields: nil))
+            MDUserFieldRowView(userField: MDUserField(id: 1, entity: "locations", name: "Test", caption: "caption", type: "1", showAsColumnInTables: 0, rowCreatedTimestamp: "ts", config: nil, sortNumber: SortNumber.null))
             #if os(macOS)
             MDUserFieldsView()
             #else

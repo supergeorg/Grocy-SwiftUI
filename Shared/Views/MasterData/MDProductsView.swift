@@ -60,8 +60,11 @@ struct MDProductsView: View {
     
     @State private var toastType: MDToastType?
     
+    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
+    private let additionalDataToUpdate: [AdditionalEntities] = []
+    
     private func updateData() {
-        grocyVM.requestData(objects: [.products, .locations, .product_groups])
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private func delete(at offsets: IndexSet) {
@@ -70,7 +73,7 @@ struct MDProductsView: View {
             showDeleteAlert.toggle()
         }
     }
-    private func deleteProduct(toDelID: String) {
+    private func deleteProduct(toDelID: Int) {
         grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
@@ -94,7 +97,7 @@ struct MDProductsView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()
@@ -189,7 +192,7 @@ struct MDProductsView: View {
             .onDelete(perform: delete)
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.products, .locations, .product_groups], ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
         .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
@@ -208,7 +211,9 @@ struct MDProductsView: View {
         })
         .alert(isPresented: $showDeleteAlert) {
             Alert(title: Text("str.md.product.delete.confirm"), message: Text(productToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
-                deleteProduct(toDelID: productToDelete?.id ?? "")
+                if let toDelID = productToDelete?.id {
+                    deleteProduct(toDelID: toDelID)
+                }
             }, secondaryButton: .cancel())
         }
     }
