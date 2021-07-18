@@ -5,22 +5,6 @@
 //  Created by Georg Meissner on 20.11.20.
 //
 
-//correlation_id    string
-//undone    integer
-//undone_timestamp    string($date-time)
-//amount    number($float)
-//location_id    integer
-//location_name    string
-//product_name    string
-//qu_name    string
-//qu_name_plural    string
-//user_display_name    string
-//spoiled    boolean
-//default: false
-//transaction_type    stringEnum:
-//[ purchase, consume, inventory-correction, product-opened ]
-//row_created_timestamp    string($date-time)
-
 import Foundation
 
 struct StockJournalEntry: Codable {
@@ -45,7 +29,7 @@ struct StockJournalEntry: Codable {
     let stockRowID: Int?
     let shoppingLocationID: Int?
     let userID: Int
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -69,7 +53,7 @@ struct StockJournalEntry: Codable {
         case stockRowID = "stock_row_id"
         case shoppingLocationID = "shopping_location_id"
         case userID = "user_id"
-        case userfields
+//        case userfields
     }
 }
 

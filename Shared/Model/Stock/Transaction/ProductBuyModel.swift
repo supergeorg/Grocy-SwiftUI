@@ -30,7 +30,8 @@ struct ProductBuy: Codable {
     let bestBeforeDate: String?
     let transactionType: TransactionType
     let price: String?
-    let locationID, shoppingLocationID: Int?
+    let locationID: Int?
+    let shoppingLocationID: Int?
     
     enum CodingKeys: String, CodingKey {
         case amount

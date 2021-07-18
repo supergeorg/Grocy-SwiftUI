@@ -10,13 +10,13 @@ import Foundation
 // MARK: - ShoppingListElement
 struct ShoppingListItem: Codable {
     let id: Int
-    let productID: Int
+    let productID: Int?
     let note: String?
     let amount: Double
     let rowCreatedTimestamp: String
     let shoppingListID, done: Int
     let quID: Int?
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -26,7 +26,7 @@ struct ShoppingListItem: Codable {
         case shoppingListID = "shopping_list_id"
         case done
         case quID = "qu_id"
-        case userfields
+//        case userfields
     }
 }
 

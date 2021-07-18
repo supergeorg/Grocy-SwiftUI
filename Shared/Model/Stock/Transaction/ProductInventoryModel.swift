@@ -26,7 +26,8 @@ import Foundation
 struct ProductInventory: Codable {
     let newAmount: Double
     let bestBeforeDate: String
-    let shoppingLocationID, locationID: Int?
+    let shoppingLocationID: Int?
+    let locationID: Int?
     let price: Double?
 
     enum CodingKeys: String, CodingKey {

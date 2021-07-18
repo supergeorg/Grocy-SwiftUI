@@ -13,13 +13,13 @@ struct ShoppingListDescription: Codable {
     let name: String
     let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
         case shoppingListDescriptionDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
+//        case userfields
     }
 }
 
@@ -30,12 +30,12 @@ struct ShoppingListDescriptionPOST: Codable {
     let name: String
     let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
-    let userfields: [String: String]?
+//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
         case shoppingListDescriptionDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
-        case userfields
+//        case userfields
     }
 }
