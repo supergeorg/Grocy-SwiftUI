@@ -39,7 +39,7 @@ struct ShoppingListFormView: View {
     
     func saveShoppingList() {
         if isNewShoppingListDescription{
-            grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescriptionPOST(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, userfields: nil), completion: { result in
+            grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescriptionPOST(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds), completion: { result in
                 switch result {
                 case let .success(message):
                     print(message)
@@ -51,7 +51,7 @@ struct ShoppingListFormView: View {
                 }
             })
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: shoppingListDescription!.id, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp, userfields: nil), completion: { result in
+            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescriptionPOST(id: shoppingListDescription!.id, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp), completion: { result in
                 switch result {
                 case let .success(message):
                     print(message)

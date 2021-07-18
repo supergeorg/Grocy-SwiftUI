@@ -54,8 +54,7 @@ struct AppSidebarNavigation: View {
     //    #if os(iOS)
     //    @State private var selection: NavigationItem? = NavigationItem.quickScan
     //    #else
-//    @State private var selection: NavigationItem? = NavigationItem.stockOverview
-    @State private var selection: NavigationItem? = NavigationItem.mdShoppingLocations
+    @State private var selection: NavigationItem? = NavigationItem.stockOverview
     //    #endif
     
     private func toggleSidebar() {
@@ -227,15 +226,18 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdTaskCategories)
                         
-                        NavigationLink(destination: MDUserFieldsView(), tag: NavigationItem.mdUserFields, selection: $selection) {
-                            Label(LocalizedStringKey("str.nav.md.userFields"), systemImage: NavigationItem.mdUserFields.rawValue)
+                        if devMode {
+                            
+                            NavigationLink(destination: MDUserFieldsView(), tag: NavigationItem.mdUserFields, selection: $selection) {
+                                Label(LocalizedStringKey("str.nav.md.userFields"), systemImage: NavigationItem.mdUserFields.rawValue)
+                            }
+                            .tag(NavigationItem.mdUserFields)
+                            
+                            NavigationLink(destination: MDUserEntitiesView(), tag: NavigationItem.mdUserEntities, selection: $selection) {
+                                Label(LocalizedStringKey("str.nav.md.userEntities"), systemImage: NavigationItem.mdUserEntities.rawValue)
+                            }
+                            .tag(NavigationItem.mdUserEntities)
                         }
-                        .tag(NavigationItem.mdUserFields)
-                        
-                        NavigationLink(destination: MDUserEntitiesView(), tag: NavigationItem.mdUserEntities, selection: $selection) {
-                            Label(LocalizedStringKey("str.nav.md.userEntities"), systemImage: NavigationItem.mdUserEntities.rawValue)
-                        }
-                        .tag(NavigationItem.mdUserEntities)
                     }
                     Divider()
                 }

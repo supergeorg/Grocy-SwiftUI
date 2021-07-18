@@ -172,7 +172,7 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
                 MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
         #endif

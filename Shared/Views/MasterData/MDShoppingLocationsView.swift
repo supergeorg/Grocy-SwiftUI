@@ -32,7 +32,7 @@ struct MDShoppingLocationRowView: View {
                 Text(shoppingLocation.name)
                     .font(.largeTitle)
                 if let description = shoppingLocation.mdShoppingLocationDescription, !description.isEmpty {
-                    Text(shoppingLocation.mdShoppingLocationDescription!)
+                    Text(description)
                         .font(.caption)
                 }
             }

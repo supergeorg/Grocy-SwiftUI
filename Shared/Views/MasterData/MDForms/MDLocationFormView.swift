@@ -36,7 +36,7 @@ struct MDLocationFormView: View {
     private func resetForm() {
         self.name = location?.name ?? ""
         self.mdLocationDescription = location?.mdLocationDescription ?? ""
-        self.isFreezer = location?.isFreezer == IsFreezer.bool(true)
+        self.isFreezer = location?.isFreezer ?? false
         isNameCorrect = checkNameCorrect()
     }
     
@@ -57,7 +57,7 @@ struct MDLocationFormView: View {
     private func saveLocation() {
         let id = isNewLocation ? grocyVM.findNextID(.locations) : location!.id
         let timeStamp = isNewLocation ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
-        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: IsFreezer.bool(isFreezer))
+        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer)
         isProcessing = true
         if isNewLocation {
             grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in

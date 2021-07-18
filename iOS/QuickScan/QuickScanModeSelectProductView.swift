@@ -35,7 +35,7 @@ struct QuickScanModeSelectProductView: View {
     private func addBarcodeForProduct() {
         if let barcode = barcode {
             if let productID = productID {
-                let newBarcode = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: productID, barcode: barcode, quID: nil, amount: nil, shoppingLocationID: nil, lastPrice: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, note: nil, userfields: nil)
+                let newBarcode = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: productID, barcode: barcode, quID: nil, amount: nil, shoppingLocationID: nil, lastPrice: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds, note: nil)
                 grocyVM.postMDObject(object: .product_barcodes, content: newBarcode, completion: { result in
                     switch result {
                     case let .success(message):

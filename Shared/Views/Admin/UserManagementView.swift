@@ -18,6 +18,12 @@ struct UserManagementView: View {
     
     @State private var toastType: MDToastType?
     
+    private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
+    
+    private func updateData() {
+        grocyVM.requestData(additionalObjects: additionalDataToUpdate)
+    }
+    
     var filteredUsers: GrocyUsers {
         grocyVM.users
             .filter {
@@ -25,12 +31,8 @@ struct UserManagementView: View {
             }
     }
     
-    private func updateData() {
-        grocyVM.requestData(additionalObjects: [.users, .system_config])
-    }
-    
     var body: some View {
-        if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
+        if grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
             ServerOfflineView()

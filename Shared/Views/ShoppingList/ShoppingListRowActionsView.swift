@@ -32,7 +32,7 @@ struct ShoppingListRowActionsView: View {
     }
     
     private func changeDoneStatus() {
-        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done, quID: shoppingListItem.quID, userfields: shoppingListItem.userfields), completion: { result in
+        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done, quID: shoppingListItem.quID), completion: { result in
             switch result {
             case let .success(message):
                 print(message)

@@ -220,15 +220,15 @@ struct MDBarcodeFormView: View {
     }
 }
 
-//struct MDBarcodeFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Group{
-//            NavigationView{
-//                MDBarcodeFormView(isNewBarcode: true, productID: "1", toastType: Binding.constant(.successAdd))
-//            }
-//            NavigationView{
-//                MDBarcodeFormView(isNewBarcode: false, productID: "1", editBarcode: MDProductBarcode(id: "1", productID: "1", barcode: "1234567891011", quID: "3", amount: "1", shoppingLocationID: "1", lastPrice: "1", rowCreatedTimestamp: "ts", note: "note", userfields: nil), toastType: Binding.constant(.successAdd))
-//            }
-//        }
-//    }
-//}
+struct MDBarcodeFormView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group{
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: true, productID: 1, toastType: Binding.constant(.successAdd))
+            }
+            NavigationView{
+                MDBarcodeFormView(isNewBarcode: false, productID: 1, editBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 3, amount: 1, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"), toastType: Binding.constant(.successAdd))
+            }
+        }
+    }
+}
