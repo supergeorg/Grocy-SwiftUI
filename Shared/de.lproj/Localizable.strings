@@ -276,9 +276,12 @@
 "str.shL.filter.reset" = "Filter zurücksetzen";
 "str.shL.filter.all" = "Alle";
 "str.shL.filter.belowMinStock" = "Unter Mindestbestand";
+"str.shL.filter.done" = "Nur erledigte Einträge";
 "str.shL.filter.undone" = "Nur unerledigte Einträge";
 "str.shL.filter.info.1belowMinStock" = "1 Produkt ist unter Mindestbestand";
 "str.shL.filter.info.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
+"str.shL.filter.info.1done" = "1 Eintrag ist erledigt";
+"str.shL.filter.info.done %lld" = "%lld Einträge sind erledigt";
 "str.shL.filter.info.1undone" = "1 Eintrag ist noch nicht erledigt";
 "str.shL.filter.info.undone %lld" = "%lld Einträge sind noch nicht erledigt";
 

@@ -276,10 +276,13 @@
 "str.shL.filter.reset" = "Reset filter";
 "str.shL.filter.all" = "All";
 "str.shL.filter.belowMinStock" = "Below min. stock amount";
+"str.shL.filter.done" = "Only done items";
 "str.shL.filter.undone" = "Only undone items";
 "str.shL.filter.info.1belowMinStock" = "1 product is below min. defined stock amount";
 "str.shL.filter.info.belowMinStock %lld" = "%lld products are below min. defined stock amount";
-"str.shL.filter.info.1undone" = "1 Entry is undone";
+"str.shL.filter.info.1undone" = "1 entry is done";
+"str.shL.filter.info.undone %lld" = "%lld entries are done";
+"str.shL.filter.info.1undone" = "1 entry is undone";
 "str.shL.filter.info.undone %lld" = "%lld entries are undone";
 
 "str.shL.entryForm.new.title" = "Create shopping list item";

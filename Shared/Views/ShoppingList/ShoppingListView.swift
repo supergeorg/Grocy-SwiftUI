@@ -53,9 +53,9 @@ struct ShoppingListView: View {
     
     var selectedShoppingList: ShoppingList {
         grocyVM.shoppingList
-//            .filter{
-//                selectedShoppingListID.isEmpty ? true : $0.shoppingListID == selectedShoppingListID
-//            }
+            .filter{
+                $0.shoppingListID == selectedShoppingListID
+            }
             .filter{shLItem in
                 if !searchString.isEmpty {
                     if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID}) {
@@ -72,6 +72,8 @@ struct ShoppingListView: View {
                     return true
                 case .belowMinStock:
                     return checkBelowStock(item: shLItem)
+                case .done:
+                    return shLItem.done == 1
                 case .undone:
                     return shLItem.done == 0
                 }
