@@ -147,6 +147,13 @@ struct StockJournalView: View {
     
     @State private var showToastUndoFailed: Bool = false
     
+    private let dataToUpdate: [ObjectEntities] = [.stock_log]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.users]
+    
+    private func updateData() {
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    }
+    
     var selectedProductID: Int?
     
     var filteredJournal: StockJournal {
@@ -173,11 +180,16 @@ struct StockJournalView: View {
             }
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.stock_log], additionalObjects: [.users])
+    var body: some View {
+        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
+            bodyContent
+        } else {
+            ServerOfflineView()
+                .navigationTitle(LocalizedStringKey("str.stock.journal"))
+        }
     }
     
-    var body: some View {
+    var bodyContent: some View {
         #if os(iOS)
         NavigationView {
             content
@@ -208,7 +220,7 @@ struct StockJournalView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.stock_log], additionalObjects: [.users], ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
             filteredProductID = selectedProductID
         })
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, content: {

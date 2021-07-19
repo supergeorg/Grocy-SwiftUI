@@ -15,7 +15,7 @@ struct StockJournalEntry: Codable {
     let purchasedDate: String?
     let usedDate: String?
     let spoiled: Int
-    let stockID: Int
+    let stockID: String
     let transactionType: TransactionType
     let price: Double?
     let undone: Int
