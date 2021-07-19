@@ -38,7 +38,7 @@ class ProductDetailsModel: ObservableObject {
             let stockEntries: StockEntries? =
                 grocyVM
                 .stockProductEntries[product.id]?
-                .sorted(by: { $0.purchasedDate < $1.purchasedDate })
+                .sorted(by: { $0.purchasedDate ?? "" < $1.purchasedDate ?? "" })
             
             self.defaultLocationName = grocyVM.mdLocations.first(where: {$0.id == product.locationID})?.name ?? "No location"
             
