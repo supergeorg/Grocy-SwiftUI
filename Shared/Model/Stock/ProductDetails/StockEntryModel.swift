@@ -37,7 +37,7 @@ struct StockEntry: Codable {
     let id, productID: Int
     let amount: Double
     let bestBeforeDate: String
-    let purchasedDate: String
+    let purchasedDate: String?
     let stockID: String
     let price: Double?
     let stockEntryOpen: Int
@@ -67,7 +67,7 @@ struct StockEntry: Codable {
         self.productID = try container.decode(Int.self, forKey: .productID)
         self.amount = try container.decode(Double.self, forKey: .amount)
         self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
-        self.purchasedDate = try container.decode(String.self, forKey: .purchasedDate)
+        self.purchasedDate = try? container.decodeIfPresent(String.self, forKey: .purchasedDate) ?? nil
         self.stockID = try container.decode(String.self, forKey: .stockID)
         self.price = try? container.decodeIfPresent(Double.self, forKey: .price) ?? nil
         self.stockEntryOpen = try container.decode(Int.self, forKey: .stockEntryOpen)
