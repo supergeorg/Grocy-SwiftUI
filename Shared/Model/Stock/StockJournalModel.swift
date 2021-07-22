@@ -55,6 +55,31 @@ struct StockJournalEntry: Codable {
         case userID = "user_id"
 //        case userfields
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.productID = try container.decode(Int.self, forKey: .productID)
+        self.amount = try container.decode(Double.self, forKey: .amount)
+        self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
+        self.purchasedDate = try? container.decodeIfPresent(String.self, forKey: .purchasedDate) ?? nil
+        self.usedDate = try? container.decodeIfPresent(String.self, forKey: .usedDate) ?? nil
+        self.spoiled = try container.decode(Int.self, forKey: .spoiled)
+        self.stockID = try container.decode(String.self, forKey: .stockID)
+        self.transactionType = try container.decode(TransactionType.self, forKey: .transactionType)
+        self.price = try? container.decodeIfPresent(Double.self, forKey: .price) ?? nil
+        self.undone = try container.decode(Int.self, forKey: .undone)
+        self.undoneTimestamp = try? container.decodeIfPresent(String.self, forKey: .undoneTimestamp) ?? nil
+        self.openedDate = try? container.decodeIfPresent(String.self, forKey: .openedDate) ?? nil
+        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        self.locationID = try container.decode(Int.self, forKey: .locationID)
+        self.recipeID = try? container.decodeIfPresent(Int.self, forKey: .recipeID) ?? nil
+        self.correlationID = try? container.decodeIfPresent(Int.self, forKey: .correlationID) ?? nil
+        self.transactionID = try container.decode(String.self, forKey: .transactionID)
+        self.stockRowID = try? container.decodeIfPresent(Int.self, forKey: .stockRowID) ?? nil
+        self.shoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) ?? nil
+        self.userID = try container.decode(Int.self, forKey: .userID)
+    }
 }
 
 typealias StockJournal = [StockJournalEntry]
