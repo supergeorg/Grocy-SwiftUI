@@ -25,7 +25,8 @@ struct MDProduct: Codable {
     let notCheckStockFulfillmentForRecipes: Int?
     @NullCodable var parentProductID: Int?
     @NullCodable var calories: Double?
-    let cumulateMinStockAmountOfSubProducts, dueType: Int
+    let cumulateMinStockAmountOfSubProducts: Int?
+    let dueType: Int
     @NullCodable var quickConsumeAmount: Double?
     @NullCodable var hideOnStockOverview: Int?
     let rowCreatedTimestamp: String
@@ -83,7 +84,7 @@ struct MDProduct: Codable {
         self.notCheckStockFulfillmentForRecipes = try? container.decodeIfPresent(Int.self, forKey: .notCheckStockFulfillmentForRecipes) ?? nil
         self.parentProductID = try? container.decodeIfPresent(Int.self, forKey: .parentProductID) ?? nil
         self.calories = try? container.decodeIfPresent(Double.self, forKey: .calories) ?? nil
-        self.cumulateMinStockAmountOfSubProducts = try container.decode(Int.self, forKey: .cumulateMinStockAmountOfSubProducts)
+        self.cumulateMinStockAmountOfSubProducts = try? container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? nil
         self.dueType = try container.decode(Int.self, forKey: .dueType)
         self.quickConsumeAmount = try? container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) ?? nil
         self.hideOnStockOverview = try? container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) ?? nil
