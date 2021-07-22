@@ -60,12 +60,12 @@ struct LogView: View {
     var body: some View {
         #if os(macOS)
         ScrollView{
-            content
+            contentmacOS
                 .padding()
                 .frame(width: 500, height: 500)
         }
         #elseif os(iOS)
-        content
+        contentiOS
             .navigationTitle(LocalizedStringKey("str.settings.log"))
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
@@ -84,9 +84,29 @@ struct LogView: View {
         #endif
     }
     
-    var content: some View {
+    var contentiOS: some View {
         Form{
-            #if os(macOS)
+            ForEach(logText.reversed(), id: \.self) {text in
+                Text(text)
+            }
+        }
+        .onAppear(perform: updateLog)
+        .fileExporter(
+            isPresented: $isExporting,
+            document: exportLog,
+            contentType: .plainText,
+            defaultFilename: "Grocy-SwiftUI_LOG.log"
+        ) { result in
+            if case .success = result {
+                print("Export successful.")
+            } else {
+                print("Export failed.")
+            }
+        }
+    }
+    
+    var contentmacOS: some View {
+        List {
             Button(action: {
                 updateLog()
             }, label: {
@@ -99,7 +119,6 @@ struct LogView: View {
                     Label(LocalizedStringKey("str.settings.log.share"), systemImage: MySymbols.share)
                 })
             }
-            #endif
             ForEach(logText, id: \.self) {text in
                 Text(text)
             }
