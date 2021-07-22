@@ -200,6 +200,11 @@ struct StockJournalView: View {
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     }
+                    ToolbarItem(placement: .automatic, content: {
+                        Button(action: updateData, label: {
+                            Image(systemName: MySymbols.reload)
+                        })
+                    })
                 })
         }
         #else
