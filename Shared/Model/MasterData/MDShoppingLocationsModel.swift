@@ -13,13 +13,29 @@ struct MDShoppingLocation: Codable {
     let name: String
     let mdShoppingLocationDescription: String?
     let rowCreatedTimestamp: String
-//    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdShoppingLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
-//        case userfields
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.mdShoppingLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdShoppingLocationDescription) ?? nil
+        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    }
+    
+    init(id: Int,
+         name: String,
+         mdShoppingLocationDescription: String? = nil,
+         rowCreatedTimestamp: String) {
+        self.id = id
+        self.name = name
+        self.mdShoppingLocationDescription = mdShoppingLocationDescription
+        self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
 
