@@ -50,13 +50,18 @@ func toggleTorch(on: Bool) {
     }
 }
 
+func getFrontCameraAvailable() -> Bool {
+    let devices = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .front).devices
+    return devices.count > 0
+}
+
 struct QuickScanModeView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("devMode") private var devMode: Bool = false
     
     @State private var flashOn: Bool = false
-    @State private var frontCamera: Bool = false
+    @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
     
     @State private var activeSheet: QSActiveSheet?
@@ -136,8 +141,7 @@ struct QuickScanModeView: View {
             .disabled(!checkForTorch())
             if devMode {
                 Button(action: {
-                    frontCamera.toggle()
-                    print("CHANGE CAMERA \(frontCamera)")
+                    isFrontCamera.toggle()
                 }, label: {
                     Image(systemName: MySymbols.changeCamera)
                         .font(.title)
@@ -147,7 +151,7 @@ struct QuickScanModeView: View {
     }
     
     var bodyContent: some View {
-        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, isFrontCamera: $frontCamera, completion: self.handleScan)
+        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: "5901234123457", isPaused: $isScanPaused, isFrontCamera: $isFrontCamera, completion: self.handleScan)
             .overlay(modePicker, alignment: .top)
             .sheet(item: $activeSheet) { item in
                 switch item {

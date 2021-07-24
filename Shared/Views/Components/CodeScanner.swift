@@ -23,15 +23,13 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     public class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: CodeScannerView
         @Binding var isPaused: Bool
-        @Binding var isFrontCamera: Bool
         var codesFound: Set<String>
         var isFinishScanning = false
         var lastTime = Date(timeIntervalSince1970: 0)
 
-        init(parent: CodeScannerView, isPaused: Binding<Bool>, isFrontCamera: Binding<Bool>) {
+        init(parent: CodeScannerView, isPaused: Binding<Bool>) {
             self.parent = parent
             self._isPaused = isPaused
-            self._isFrontCamera = isFrontCamera
             self.codesFound = Set<String>()
         }
 
@@ -77,10 +75,8 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     #if targetEnvironment(simulator)
     public class ScannerViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
         var delegate: ScannerCoordinator?
-        @Binding var isFrontCamera: Bool
 
-        public init(isFrontCamera: Binding<Bool>) {
-            self._isFrontCamera = isFrontCamera
+        public init() {
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -161,18 +157,16 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         var captureSession: AVCaptureSession!
         var previewLayer: AVCaptureVideoPreviewLayer!
         var delegate: ScannerCoordinator?
-        @Binding var isFrontCamera: Bool
-        var videoCaptureDevice: AVCaptureDevice? {
-            isFrontCamera ? AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .front) : AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-        }
+        var currentCamera: AVCaptureDevice?
+        let backCamera: AVCaptureDevice? = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .back).devices.first
+        let frontCamera: AVCaptureDevice? = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .front).devices.first
+        var videoCaptureDevice: AVCaptureDevice? = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .back).devices.first
 
-        public init(isFrontCamera: Binding<Bool>) {
-            self._isFrontCamera = isFrontCamera
+        public init() {
             super.init(nibName: nil, bundle: nil)
         }
 
         public required init?(coder: NSCoder) {
-            self._isFrontCamera = Binding.constant(false)
             super.init(coder: coder)
         }
 
@@ -201,6 +195,8 @@ public struct CodeScannerView: UIViewControllerRepresentable {
                 return
             }
 
+            self.currentCamera = videoCaptureDevice
+            
             let metadataOutput = AVCaptureMetadataOutput()
 
             if (captureSession.canAddOutput(metadataOutput)) {
@@ -213,13 +209,30 @@ public struct CodeScannerView: UIViewControllerRepresentable {
                 return
             }
         }
+        
+        func updateCamera(camera: AVCaptureDevice?) {
+            if camera != self.currentCamera {
+                guard let camera = camera else { return }
+                guard let videoInput = try? AVCaptureDeviceInput(device: camera) else { return }
+                if let input = captureSession.inputs.first {
+                    self.captureSession.removeInput(input)
+                }
+                if (captureSession.canAddInput(videoInput)) {
+                    captureSession.addInput(videoInput)
+                } else {
+                    delegate?.didFail(reason: .badInput)
+                    return
+                }
+                self.currentCamera = camera
+            }
+        }
 
         override public func viewWillLayoutSubviews() {
             previewLayer?.frame = view.layer.bounds
         }
 
         @objc func updateOrientation() {
-            guard let orientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation else { return }
+            guard let orientation = view.window?.windowScene?.interfaceOrientation else { return }
             guard let connection = captureSession.connections.last, connection.isVideoOrientationSupported else { return }
             connection.videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) ?? .portrait
         }
@@ -285,17 +298,19 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     }
 
     public func makeCoordinator() -> ScannerCoordinator {
-        return ScannerCoordinator(parent: self, isPaused: $isPaused, isFrontCamera: $isFrontCamera)
+        return ScannerCoordinator(parent: self, isPaused: $isPaused)
     }
 
     public func makeUIViewController(context: Context) -> ScannerViewController {
-        let viewController = ScannerViewController(isFrontCamera: $isFrontCamera)
+        let viewController = ScannerViewController()
         viewController.delegate = context.coordinator
         return viewController
     }
 
     public func updateUIViewController(_ uiViewController: ScannerViewController, context: Context) {
-
+        #if !targetEnvironment(simulator)
+        uiViewController.updateCamera(camera: isFrontCamera ? uiViewController.frontCamera : uiViewController.backCamera)
+        #endif
     }
 }
 
