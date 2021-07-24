@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AVFoundation
 
 enum QuickScanMode {
     case consume, markAsOpened, purchase
@@ -21,38 +20,6 @@ enum QuickScanMode {
             return LocalizedStringKey("str.quickScan.purchase")
         }
     }
-}
-
-func checkForTorch() -> Bool {
-    guard let device = AVCaptureDevice.default(for: .video) else { return false }
-    return device.hasTorch
-}
-
-func toggleTorch(on: Bool) {
-    guard let device = AVCaptureDevice.default(for: .video) else { return }
-    
-    if device.hasTorch {
-        do {
-            try device.lockForConfiguration()
-            
-            if on == true {
-                device.torchMode = .on
-            } else {
-                device.torchMode = .off
-            }
-            
-            device.unlockForConfiguration()
-        } catch {
-            print("Torch could not be used")
-        }
-    } else {
-        print("Torch is not available")
-    }
-}
-
-func getFrontCameraAvailable() -> Bool {
-    let devices = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .front).devices
-    return devices.count > 0
 }
 
 struct QuickScanModeView: View {
@@ -139,7 +106,7 @@ struct QuickScanModeView: View {
                     .font(.title)
             })
             .disabled(!checkForTorch())
-            if devMode {
+            if getFrontCameraAvailable() {
                 Button(action: {
                     isFrontCamera.toggle()
                 }, label: {

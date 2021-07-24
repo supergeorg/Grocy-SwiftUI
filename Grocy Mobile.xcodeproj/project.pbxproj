@@ -291,6 +291,7 @@
 		78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802F25A5D14300661FDB /* QuickScanModeView.swift */; };
 		78EB13AE255F09E40055A0A8 /* SearchToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */; };
+		78EC760426AC6C2C006D82AB /* CameraTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC760326AC6C2C006D82AB /* CameraTools.swift */; };
 		78F0DAC82599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */; };
 		78F0DAC92599FF2C0001AF68 /* StockTableRowSimplified.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */; };
 		78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
@@ -554,6 +555,7 @@
 		78E4802825A5CC2600661FDB /* FieldDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDescription.swift; sourceTree = "<group>"; };
 		78E4802F25A5D14300661FDB /* QuickScanModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeView.swift; sourceTree = "<group>"; };
 		78EB13AD255F09E40055A0A8 /* SearchToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToolbarItem.swift; sourceTree = "<group>"; };
+		78EC760326AC6C2C006D82AB /* CameraTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTools.swift; sourceTree = "<group>"; };
 		78F0DAC72599FF2C0001AF68 /* StockTableRowSimplified.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableRowSimplified.swift; sourceTree = "<group>"; };
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
 		78F1FAC6255EEDD1007D2E8B /* StockTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTable.swift; sourceTree = "<group>"; };
@@ -774,6 +776,7 @@
 				783454EB25A74E100024F556 /* QuickScan */,
 				78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */,
 				78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */,
+				78EC760326AC6C2C006D82AB /* CameraTools.swift */,
 				78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */,
 			);
 			path = iOS;
@@ -1205,6 +1208,7 @@
 				78855F7825FB8EB4007F69AF /* MDTaskCategoryForm.swift in Sources */,
 				78262707256E83A900ECED03 /* StockLocationModel.swift in Sources */,
 				786F6EB225640383004D8DE0 /* MDBatteriesView.swift in Sources */,
+				78EC760426AC6C2C006D82AB /* CameraTools.swift in Sources */,
 				781DD5B52578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
 				78CB7604255EB9A000319108 /* ProductConsumeModel.swift in Sources */,
 				78CB7608255EB9A000319108 /* ProductOpenModel.swift in Sources */,

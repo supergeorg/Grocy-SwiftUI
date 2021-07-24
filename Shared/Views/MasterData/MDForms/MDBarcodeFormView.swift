@@ -97,6 +97,8 @@ struct MDBarcodeFormView: View {
     }
     
     #if os(iOS)
+    @State private var isScannerFlash = false
+    @State private var isScannerFrontCamera = false
     @State private var isShowingScanner = false
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
@@ -170,6 +172,28 @@ struct MDBarcodeFormView: View {
                 })
                 .sheet(isPresented: $isShowingScanner) {
                     CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", completion: self.handleScan)
+                        .overlay(
+                            HStack{
+                                Button(action: {
+                                    isScannerFlash.toggle()
+                                    toggleTorch(on: isScannerFlash)
+                                }, label: {
+                                    Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                        .font(.title)
+                                })
+                                .disabled(!checkForTorch())
+                                .padding()
+                                if getFrontCameraAvailable() {
+                                    Button(action: {
+                                        isScannerFrontCamera.toggle()
+                                    }, label: {
+                                        Image(systemName: MySymbols.changeCamera)
+                                            .font(.title)
+                                    })
+                                    .padding()
+                                }
+                            }
+                            , alignment: .topTrailing)
                 }
                 #endif
             }
@@ -182,7 +206,7 @@ struct MDBarcodeFormView: View {
                     }
                 }).disabled(true)
             }
-
+            
             Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.md.barcode.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
