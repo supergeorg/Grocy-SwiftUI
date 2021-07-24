@@ -34,13 +34,6 @@ struct StockTableRow: View {
     
     @State private var showDetailView: Bool = false
     
-    var caloriesSum: String? {
-        if let calories = stockElement.product.calories {
-            let sum = calories * stockElement.amount
-            return String(format: "%.0f", sum)
-        } else { return String(stockElement.product.calories ?? 0.0) }
-    }
-    
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
     }
@@ -110,14 +103,14 @@ struct StockTableRow: View {
                 HStack(alignment: .bottom){
                     Divider()
                     Spacer()
-                    Text("\(stockElement.amount) \(getQUString(amount: stockElement.amount))")
+                    Text("\(formatAmount(stockElement.amount)) \(getQUString(amount: stockElement.amount))")
                     if stockElement.amountOpened > 0 {
                         Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
                             .font(.caption)
                             .italic()
                     }
                     if stockElement.amount != stockElement.amountAggregated {
-                        Text("Σ \(stockElement.amountAggregated) \(getQUString(amount: stockElement.amountAggregated))")
+                        Text("Σ \(formatAmount(stockElement.amountAggregated)) \(getQUString(amount: stockElement.amountAggregated))")
                             .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                         if stockElement.amountOpenedAggregated > 0 {
                             Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
@@ -143,7 +136,7 @@ struct StockTableRow: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(Double(stockElement.value) == 0 ? "" : "\(stockElement.value) \(grocyVM.getCurrencySymbol())")
+                Text(stockElement.value == 0 ? "" : "\(formatAmount(stockElement.value)) \(grocyVM.getCurrencySymbol())")
                 Spacer()
             }
             .background(backgroundColor)
@@ -170,7 +163,7 @@ struct StockTableRow: View {
             HStack{
                 Divider()
                 Spacer()
-                Text(stockElement.product.calories != 0.0 ? String(stockElement.product.calories ?? 0) : "")
+                Text(stockElement.product.calories != 0.0 ? String(formatAmount(stockElement.product.calories ?? 0)) : "")
                 Spacer()
             }
             .background(backgroundColor)
@@ -180,7 +173,7 @@ struct StockTableRow: View {
             HStack {
                 Divider()
                 Spacer()
-                Text(((caloriesSum == "0") ? "" : caloriesSum) ?? "")
+                Text(formatAmount(stockElement.product.calories ?? 0 * stockElement.amount))
                 Spacer()
             }
             .background(backgroundColor)

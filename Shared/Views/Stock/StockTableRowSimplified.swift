@@ -134,14 +134,14 @@ struct StockTableRowSimplified: View {
             } else {Text("")}
             
             HStack{
-                Text("\(stockElement.amount) \(getQUString(amount: stockElement.amount))")
+                Text("\(formatAmount(stockElement.amount)) \(getQUString(amount: stockElement.amount))")
                 if stockElement.amountOpened > 0 {
                     Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
                         .font(.caption)
                         .italic()
                 }
                 if stockElement.amount != stockElement.amountAggregated {
-                    Text("Σ \(stockElement.amountAggregated) \(getQUString(amount: stockElement.amountAggregated))")
+                    Text("Σ \(formatAmount(stockElement.amountAggregated)) \(getQUString(amount: stockElement.amountAggregated))")
                         .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                     if stockElement.amountOpenedAggregated > 0 {
                         Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
