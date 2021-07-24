@@ -55,7 +55,7 @@ struct MDQuantityUnitFormView: View {
     private func saveQuantityUnit() {
         let id = isNewQuantityUnit ? grocyVM.findNextID(.quantity_units) : quantityUnit!.id
         let timeStamp = isNewQuantityUnit ? Date().iso8601withFractionalSeconds : quantityUnit!.rowCreatedTimestamp
-        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp, namePlural: namePlural, pluralForms: nil)
+        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, namePlural: namePlural, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewQuantityUnit {
             grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in

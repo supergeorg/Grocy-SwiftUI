@@ -33,7 +33,7 @@ struct ProductOverviewView: View {
             
             Text(LocalizedStringKey("str.details.amount")).bold()
                 +
-                Text("\(formatAmount(productDetails.stockEntriesAmount)) \(productDetails.stockEntriesAmount == 1 ? productDetails.quantityUnit.name : productDetails.quantityUnit.namePlural)")
+                Text("\(formatAmount(productDetails.stockEntriesAmount)) \(productDetails.stockEntriesAmount == 1 ? productDetails.quantityUnit?.name ?? "" : productDetails.quantityUnit?.namePlural ?? "")")
             
             Text(LocalizedStringKey("str.details.stockValue")).bold()
                 +
@@ -53,11 +53,11 @@ struct ProductOverviewView: View {
             
             Text(LocalizedStringKey("str.details.lastPrice")).bold()
                 +
-                Text(productDetails.lastPrice > 0 ? LocalizedStringKey("\(String(productDetails.lastPrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)") : LocalizedStringKey("str.details.unknown"))
+                Text(productDetails.lastPrice > 0 ? LocalizedStringKey("\(String(productDetails.lastPrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averagePrice")).bold()
                 +
-                Text(productDetails.averagePrice > 0 ? LocalizedStringKey("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit.name)") : LocalizedStringKey("str.details.unknown"))
+                Text(productDetails.averagePrice > 0 ? LocalizedStringKey("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averageShelfLife")).bold()
                 +

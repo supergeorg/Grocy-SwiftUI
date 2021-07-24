@@ -38,8 +38,11 @@ struct StockTableRowSimplified: View {
         //else { return String(stockElement.product.calories) }
     }
     
-    var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
+    var quantityUnit: MDQuantityUnit? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
+    }
+    private func getQUString(amount: Double) -> String {
+        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var backgroundColor: Color {
@@ -118,7 +121,7 @@ struct StockTableRowSimplified: View {
                         activeSheet = .productOverview
                     }
             }
-
+            
             StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
         }
     }
@@ -131,24 +134,20 @@ struct StockTableRowSimplified: View {
             } else {Text("")}
             
             HStack{
-                if let formattedAmount = formatAmount(stockElement.amount) {
-                    Text("\(formattedAmount) \(formattedAmount == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                    if stockElement.amountOpened > 0 {
-                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
+                Text("\(stockElement.amount) \(getQUString(amount: stockElement.amount))")
+                if stockElement.amountOpened > 0 {
+                    Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
+                        .font(.caption)
+                        .italic()
+                }
+                if stockElement.amount != stockElement.amountAggregated {
+                    Text("Σ \(stockElement.amountAggregated) \(getQUString(amount: stockElement.amountAggregated))")
+                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                    if stockElement.amountOpenedAggregated > 0 {
+                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
+                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                             .font(.caption)
                             .italic()
-                    }
-                    if let formattedAmountAggregated = formatAmount(stockElement.amountAggregated) {
-                        if formattedAmount != formattedAmountAggregated {
-                            Text("Σ \(formattedAmountAggregated) \(formattedAmountAggregated == "1" ? quantityUnit.name : quantityUnit.namePlural)")
-                                .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                            if stockElement.amountOpenedAggregated > 0 {
-                                Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
-                                    .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                                    .font(.caption)
-                                    .italic()
-                            }
-                        }
                     }
                 }
                 if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {

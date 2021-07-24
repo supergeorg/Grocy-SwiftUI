@@ -68,9 +68,13 @@ struct StockJournalRowView: View {
     
     @Binding var showToastUndoFailed: Bool
     
-    var quantityUnit: MDQuantityUnit {
+    var quantityUnit: MDQuantityUnit? {
         let product = grocyVM.mdProducts.first(where: {$0.id == journalEntry.productID})
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock}) ?? MDQuantityUnit(id: 0, name: "QU Error", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "QU Error", pluralForms: nil)
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+    }
+    
+    private func getQUString(amount: Double) -> String {
+        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     private func undoTransaction() {
@@ -116,7 +120,7 @@ struct StockJournalRowView: View {
                     }
                 }
                 Group {
-                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(journalEntry.amount == 1 ? quantityUnit.name : quantityUnit.namePlural)")"))
+                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(getQUString(amount: journalEntry.amount))")"))
                     Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
                     Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
                         .font(.caption)

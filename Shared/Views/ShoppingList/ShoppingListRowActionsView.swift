@@ -23,8 +23,12 @@ struct ShoppingListRowActionsView: View {
     let ismacOS = false
     #endif
     
-    var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
+    var quantityUnit: MDQuantityUnit? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID})
+    }
+    
+    private func getQUString(amount: Double) -> String {
+        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var productName: String {
@@ -81,7 +85,7 @@ struct ShoppingListRowActionsView: View {
                     deleteSHItem()
                 }
             #if os(macOS)
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == 1 ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }

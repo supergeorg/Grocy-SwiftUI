@@ -19,11 +19,11 @@ struct StockTableMenuView: View {
     #endif
     @Binding var toastType: RowActionToastType?
     
-    var quantityUnit: MDQuantityUnit {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
+    var quantityUnit: MDQuantityUnit? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
     }
     var quString: String {
-        return stockElement.product.quickConsumeAmount == 1.0 ? quantityUnit.name : quantityUnit.namePlural
+        return stockElement.product.quickConsumeAmount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var body: some View {

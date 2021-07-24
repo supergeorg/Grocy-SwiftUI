@@ -208,7 +208,7 @@ struct MDQuantityUnitsView: View {
 struct MDQuantityUnitsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU NAME PLURAL", pluralForms: nil))
+            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", namePlural: "QU NAME PLURAL", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""))
             #if os(macOS)
             MDQuantityUnitsView()
             #else

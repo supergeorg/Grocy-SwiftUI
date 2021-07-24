@@ -24,7 +24,7 @@ class ProductDetailsModel: ObservableObject {
     @Published var averagePrice: Double
     @Published var averageShelfLife: Int?
     //    //    @Published var spoilRate: Double
-    @Published var quantityUnit: MDQuantityUnit
+    @Published var quantityUnit: MDQuantityUnit?
     @Published var pictureURL: String?
     
     init(product: MDProduct?) {
@@ -46,7 +46,7 @@ class ProductDetailsModel: ObservableObject {
             
             self.lastUseDate = stockEntries?.sorted(by: {$0.openedDate ?? "" < $1.openedDate ?? ""}).last?.openedDate ?? ""
             
-            self.quantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock}) ?? MDQuantityUnit(id: 0, name: "Error QU", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "Error QU", pluralForms: nil)
+            self.quantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock})
             
             if let pictureFileName = product.pictureFileName {
                 let utf8str = pictureFileName.data(using: .utf8)
@@ -100,7 +100,7 @@ class ProductDetailsModel: ObservableObject {
             self.lastPrice = 0.0
             self.averagePrice = 0.0
             self.averageShelfLife = nil
-            self.quantityUnit = MDQuantityUnit(id: 0, name: "", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "", namePlural: "", pluralForms: nil)
+            self.quantityUnit = MDQuantityUnit(id: 0, name: "", namePlural: "", mdQuantityUnitDescription: nil, rowCreatedTimestamp: "")
             self.pictureURL = nil
         }
     }
