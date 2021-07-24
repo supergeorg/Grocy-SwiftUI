@@ -29,7 +29,6 @@ struct StockJournalEntry: Codable {
     let stockRowID: Int?
     let shoppingLocationID: Int?
     let userID: Int
-//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -53,7 +52,6 @@ struct StockJournalEntry: Codable {
         case stockRowID = "stock_row_id"
         case shoppingLocationID = "shopping_location_id"
         case userID = "user_id"
-//        case userfields
     }
     
     init(from decoder: Decoder) throws {

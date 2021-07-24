@@ -69,7 +69,7 @@ struct MDUserFieldFormView: View {
         if let entity = entity {
             let id = isNewUserField ? grocyVM.findNextID(.userfields) : userField!.id
             let timeStamp = isNewUserField ? Date().iso8601withFractionalSeconds : userField!.rowCreatedTimestamp
-            let userFieldPOST = MDUserField(id: id, entity: entity.rawValue, name: name, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? 1 : 0, rowCreatedTimestamp: timeStamp, config: nil, sortNumber: sortNumber == nil ? SortNumber.null : SortNumber.integer(sortNumber!))
+            let userFieldPOST = MDUserField(id: id, name: name, entity: entity.rawValue, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? 1 : 0, config: nil, sortNumber: sortNumber, rowCreatedTimestamp: timeStamp)
             isProcessing = true
             if isNewUserField {
                 grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in

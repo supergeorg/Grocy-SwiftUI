@@ -30,7 +30,6 @@ struct MDProduct: Codable {
     @NullCodable var quickConsumeAmount: Double?
     @NullCodable var hideOnStockOverview: Int?
     let rowCreatedTimestamp: String
-//    let userfields: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -58,7 +57,6 @@ struct MDProduct: Codable {
         case quickConsumeAmount = "quick_consume_amount"
         case rowCreatedTimestamp = "row_created_timestamp"
         case hideOnStockOverview = "hide_on_stock_overview"
-//        case userfields
     }
     
     init(from decoder: Decoder) throws {

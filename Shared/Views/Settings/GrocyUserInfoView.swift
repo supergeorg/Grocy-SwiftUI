@@ -42,6 +42,6 @@ struct GrocyUserInfoView: View {
 
 struct GrocyUserInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        GrocyUserInfoView(grocyUser: GrocyUser(id: 1, username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display name", pictureFileName: "6sv0wvt6h2p5z48s266j6iaffe.jpg"))
+        GrocyUserInfoView(grocyUser: GrocyUser(id: 1, username: "username", firstName: "First name", lastName: "Last name", displayName: "Display name", pictureFileName: "6sv0wvt6h2p5z48s266j6iaffe.jpg", rowCreatedTimestamp: "ts"))
     }
 }

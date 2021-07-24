@@ -214,8 +214,8 @@
 		78CB75C2255EAE2000319108 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */; };
 		78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F7255EB9A000319108 /* StockEntryModel.swift */; };
 		78CB75FF255EB9A000319108 /* StockEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F7255EB9A000319108 /* StockEntryModel.swift */; };
-		78CB7600255EB9A000319108 /* StockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* StockModel.swift */; };
-		78CB7601255EB9A000319108 /* StockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* StockModel.swift */; };
+		78CB7600255EB9A000319108 /* CurrentStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* CurrentStockModel.swift */; };
+		78CB7601255EB9A000319108 /* CurrentStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* CurrentStockModel.swift */; };
 		78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F9255EB9A000319108 /* VolatileStockModel.swift */; };
 		78CB7603255EB9A000319108 /* VolatileStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F9255EB9A000319108 /* VolatileStockModel.swift */; };
 		78CB7604255EB9A000319108 /* ProductConsumeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75FA255EB9A000319108 /* ProductConsumeModel.swift */; };
@@ -340,10 +340,10 @@
 		78FDCDD425BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7611255EB9C500319108 /* MDLocationsModel.swift */; };
 		78FDCDD525BAD2DE0089CB5E /* MDProductsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7612255EB9C500319108 /* MDProductsModel.swift */; };
 		78FDCDD625BAD2DE0089CB5E /* MDUserFieldModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782A7F1925838C630010472F /* MDUserFieldModel.swift */; };
-		78FDCDDB25BAD2E40089CB5E /* StockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* StockModel.swift */; };
+		78FDCDDB25BAD2E40089CB5E /* CurrentStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* CurrentStockModel.swift */; };
 		78FDCDDC25BAD2E40089CB5E /* VolatileStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F9255EB9A000319108 /* VolatileStockModel.swift */; };
 		78FDCDDD25BAD2E40089CB5E /* ProductStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB762D255EBA3F00319108 /* ProductStatus.swift */; };
-		78FDCDE225BAD2E50089CB5E /* StockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* StockModel.swift */; };
+		78FDCDE225BAD2E50089CB5E /* CurrentStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F8255EB9A000319108 /* CurrentStockModel.swift */; };
 		78FDCDE325BAD2E50089CB5E /* VolatileStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F9255EB9A000319108 /* VolatileStockModel.swift */; };
 		78FDCDE425BAD2E50089CB5E /* ProductStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB762D255EBA3F00319108 /* ProductStatus.swift */; };
 		78FDCDE925BAD2E90089CB5E /* StockProductPriceHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7826270D256E847F00ECED03 /* StockProductPriceHistory.swift */; };
@@ -516,7 +516,7 @@
 		78CB75BA255EAE0000319108 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
 		78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
 		78CB75F7255EB9A000319108 /* StockEntryModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StockEntryModel.swift; sourceTree = "<group>"; };
-		78CB75F8255EB9A000319108 /* StockModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StockModel.swift; sourceTree = "<group>"; };
+		78CB75F8255EB9A000319108 /* CurrentStockModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentStockModel.swift; sourceTree = "<group>"; };
 		78CB75F9255EB9A000319108 /* VolatileStockModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolatileStockModel.swift; sourceTree = "<group>"; };
 		78CB75FA255EB9A000319108 /* ProductConsumeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductConsumeModel.swift; sourceTree = "<group>"; };
 		78CB75FC255EB9A000319108 /* ProductOpenModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductOpenModel.swift; sourceTree = "<group>"; };
@@ -610,7 +610,6 @@
 			children = (
 				782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */,
 				78262706256E83A900ECED03 /* StockLocationModel.swift */,
-				78CB75F7255EB9A000319108 /* StockEntryModel.swift */,
 				7826270D256E847F00ECED03 /* StockProductPriceHistory.swift */,
 			);
 			path = ProductDetails;
@@ -911,10 +910,11 @@
 			isa = PBXGroup;
 			children = (
 				78262714256E883300ECED03 /* Transaction */,
-				78CB75F8255EB9A000319108 /* StockModel.swift */,
+				78CB75F7255EB9A000319108 /* StockEntryModel.swift */,
 				78FA6A932567D40500941460 /* StockJournalModel.swift */,
 				78CB75F9255EB9A000319108 /* VolatileStockModel.swift */,
 				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
+				78CB75F8255EB9A000319108 /* CurrentStockModel.swift */,
 				78262701256E839100ECED03 /* ProductDetails */,
 			);
 			path = Stock;
@@ -1281,7 +1281,7 @@
 				78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */,
 				789D166625DE6C9B006FC33F /* LoginView.swift in Sources */,
-				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
+				78CB7600255EB9A000319108 /* CurrentStockModel.swift in Sources */,
 				7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */,
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
 				781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */,
@@ -1356,7 +1356,7 @@
 				78FD0678257649D8006E4946 /* ProductDetailsObject.swift in Sources */,
 				78512061256FE94600171390 /* UserRowView.swift in Sources */,
 				786F6EB325640383004D8DE0 /* MDBatteriesView.swift in Sources */,
-				78CB7601255EB9A000319108 /* StockModel.swift in Sources */,
+				78CB7601255EB9A000319108 /* CurrentStockModel.swift in Sources */,
 				78CB7645255EBA6C00319108 /* Colors.swift in Sources */,
 				789D167925DE7996006FC33F /* GrocySupportedServers.swift in Sources */,
 				78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */,
@@ -1515,7 +1515,7 @@
 				78FDCDA825BAD2D50089CB5E /* SystemInfoModel.swift in Sources */,
 				78FDCE0F25BAD2F40089CB5E /* ShoppingListModel.swift in Sources */,
 				78FDCDDC25BAD2E40089CB5E /* VolatileStockModel.swift in Sources */,
-				78FDCDDB25BAD2E40089CB5E /* StockModel.swift in Sources */,
+				78FDCDDB25BAD2E40089CB5E /* CurrentStockModel.swift in Sources */,
 				78FDCE0B25BAD2F40089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				78846064257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
 				78FDCDF925BAD2F00089CB5E /* ProductTransferModel.swift in Sources */,
@@ -1568,7 +1568,7 @@
 				78FDCDB325BAD2D50089CB5E /* SystemInfoModel.swift in Sources */,
 				78FDCE1825BAD2F50089CB5E /* ShoppingListModel.swift in Sources */,
 				78FDCDE325BAD2E50089CB5E /* VolatileStockModel.swift in Sources */,
-				78FDCDE225BAD2E50089CB5E /* StockModel.swift in Sources */,
+				78FDCDE225BAD2E50089CB5E /* CurrentStockModel.swift in Sources */,
 				78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
 				78855F8425FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,

@@ -36,7 +36,7 @@ struct ShoppingListRowActionsView: View {
     }
     
     private func changeDoneStatus() {
-        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done == 1 ? 0 : 1, quID: shoppingListItem.quID), completion: { result in
+        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done == 1 ? 0 : 1, quID: shoppingListItem.quID, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp), completion: { result in
             switch result {
             case let .success(message):
                 print(message)
@@ -94,7 +94,7 @@ struct ShoppingListRowActionsView: View {
                         .padding()
                 })
             #elseif os(iOS)
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(shoppingListItem.amount == 1 ? quantityUnit.name : quantityUnit.namePlural) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }

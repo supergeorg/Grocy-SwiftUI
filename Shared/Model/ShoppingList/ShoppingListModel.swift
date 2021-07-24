@@ -13,20 +13,49 @@ struct ShoppingListItem: Codable {
     let productID: Int?
     let note: String?
     let amount: Double
-    let rowCreatedTimestamp: String
-    let shoppingListID, done: Int
+    let shoppingListID: Int
+    let done: Int
     let quID: Int?
-//    let userfields: [String: String]?
+    let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
         case note, amount
-        case rowCreatedTimestamp = "row_created_timestamp"
         case shoppingListID = "shopping_list_id"
         case done
         case quID = "qu_id"
-//        case userfields
+        case rowCreatedTimestamp = "row_created_timestamp"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.productID = try? container.decodeIfPresent(Int.self, forKey: .productID) ?? nil
+        self.note = try? container.decodeIfPresent(String.self, forKey: .note) ?? nil
+        self.amount = try container.decode(Double.self, forKey: .amount)
+        self.shoppingListID = try container.decode(Int.self, forKey: .shoppingListID)
+        self.done = try container.decode(Int.self, forKey: .done)
+        self.quID = try? container.decodeIfPresent(Int.self, forKey: .quID) ?? nil
+        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    }
+    
+    init(id: Int,
+    productID: Int? = nil,
+    note: String? = nil,
+    amount: Double,
+    shoppingListID: Int,
+    done: Int,
+    quID: Int? = nil,
+    rowCreatedTimestamp: String) {
+        self.id = id
+        self.productID = productID
+        self.note = note
+        self.amount = amount
+        self.shoppingListID = shoppingListID
+        self.done = done
+        self.quID = quID
+        self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
 

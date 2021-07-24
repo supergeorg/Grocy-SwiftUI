@@ -10,58 +10,62 @@ import Foundation
 // MARK: - MDUserField
 struct MDUserField: Codable {
     let id: Int
-    let entity, name, caption, type: String
+    let name: String
+    let entity: String
+    let caption: String
+    let type: String
     let showAsColumnInTables: Int
-    let rowCreatedTimestamp: String
     let config: String?
-    let sortNumber: SortNumber
+    let sortNumber: Int?
+    let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
-        case id, entity, name, caption, type
+        case id
+        case name
+        case entity
+        case caption
+        case type
         case showAsColumnInTables = "show_as_column_in_tables"
-        case rowCreatedTimestamp = "row_created_timestamp"
         case config
         case sortNumber = "sort_number"
+        case rowCreatedTimestamp = "row_created_timestamp"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.entity = try container.decode(String.self, forKey: .entity)
+        self.caption = try container.decode(String.self, forKey: .caption)
+        self.type = try container.decode(String.self, forKey: .type)
+        self.showAsColumnInTables = try container.decode(Int.self, forKey: .showAsColumnInTables)
+        self.config = try? container.decodeIfPresent(String.self, forKey: .config) ?? nil
+        self.sortNumber = try? container.decodeIfPresent(Int.self, forKey: .sortNumber) ?? nil
+        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    }
+    
+    init(id: Int,
+         name: String,
+         entity: String,
+         caption: String,
+         type: String,
+         showAsColumnInTables: Int,
+         config: String? = nil,
+         sortNumber: Int? = nil,
+         rowCreatedTimestamp: String) {
+        self.id = id
+        self.name = name
+        self.entity = entity
+        self.caption = caption
+        self.type = type
+        self.showAsColumnInTables = showAsColumnInTables
+        self.config = config
+        self.sortNumber = sortNumber
+        self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
 
 typealias MDUserFields = [MDUserField]
-
-enum SortNumber: Codable {
-    case integer(Int)
-    case string(String)
-    case null
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let x = try? container.decode(Int.self) {
-            self = .integer(x)
-            return
-        }
-        if let x = try? container.decode(String.self) {
-            self = .string(x)
-            return
-        }
-        if container.decodeNil() {
-            self = .null
-            return
-        }
-        throw DecodingError.typeMismatch(SortNumber.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for SortNumber"))
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self {
-        case .integer(let x):
-            try container.encode(x)
-        case .string(let x):
-            try container.encode(x)
-        case .null:
-            try container.encodeNil()
-        }
-    }
-}
-
 
 enum UserFieldType: String, CaseIterable {
     case none = ""

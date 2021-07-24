@@ -5,6 +5,8 @@
 //  Created by Georg Meissner on 09.11.20.
 //
 
+// Not used for now
+
 import Foundation
 // MARK: - VolatileStockElement
 struct VolatileStock: Codable {

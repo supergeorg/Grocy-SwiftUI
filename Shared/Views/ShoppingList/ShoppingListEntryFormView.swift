@@ -72,7 +72,7 @@ struct ShoppingListEntryFormView: View {
             })
         } else {
             if let entry = shoppingListEntry {
-                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, rowCreatedTimestamp: entry.rowCreatedTimestamp, shoppingListID: shoppingListID, done: entry.done, quID: quantityUnitID), completion: { result in
+                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
                     switch result {
                     case let .success(message):
                         print(message)

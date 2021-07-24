@@ -197,7 +197,7 @@ struct MDUserFieldsView: View {
 struct MDUserFieldsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDUserFieldRowView(userField: MDUserField(id: 1, entity: "locations", name: "Test", caption: "caption", type: "1", showAsColumnInTables: 0, rowCreatedTimestamp: "ts", config: nil, sortNumber: SortNumber.null))
+            MDUserFieldRowView(userField: MDUserField(id: 1, name: "Test", entity: "locations", caption: "caption", type: "1", showAsColumnInTables: 0, config: nil, sortNumber: nil, rowCreatedTimestamp: "ts"))
             #if os(macOS)
             MDUserFieldsView()
             #else

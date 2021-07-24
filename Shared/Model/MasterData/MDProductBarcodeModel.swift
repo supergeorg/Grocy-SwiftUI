@@ -17,7 +17,6 @@ struct MDProductBarcode: Codable {
     let lastPrice: Double?
     let rowCreatedTimestamp: String
     let note: String?
-//    let userfields: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -29,7 +28,6 @@ struct MDProductBarcode: Codable {
         case lastPrice = "last_price"
         case rowCreatedTimestamp = "row_created_timestamp"
         case note
-//        case userfields
     }
     
     init(from decoder: Decoder) throws {

@@ -11,9 +11,11 @@ import Foundation
 struct GrocyUser: Codable {
     let id: Int
     let username: String
-    let firstName, lastName: String?
-    let rowCreatedTimestamp, displayName: String
+    let firstName: String?
+    let lastName: String?
+    let displayName: String
     let pictureFileName: String?
+    let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id, username
