@@ -324,7 +324,7 @@
 "str.md.product.save" = "Save product";
 "str.md.product.info" = "Product info";
 "str.md.product.notOnServer" = "Product is not on server";
-"str.md.product.delete.confirm" = "Delete this product";
+"str.md.product.delete" = "Delete this product";
 "str.md.product.delete.confirm" = "Do you really want to delete this product?";
 "str.md.product.name" = "Product name";
 "str.md.product.name.required" = "A name is required";
@@ -433,7 +433,7 @@
 "str.md.location.freezer" = "Freezer";
 "str.md.location.isFreezing" = "Is freezer";
 "str.md.location.isFreezing.description" = "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings";
-"str.md.location.delete.confirm" = "Delete this location";
+"str.md.location.delete" = "Delete this location";
 "str.md.location.delete.confirm" = "Do you really want to delete this location?";
 
 "str.md.shoppingLocations" = "Shopping locations";
