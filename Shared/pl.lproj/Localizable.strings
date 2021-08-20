@@ -561,7 +561,7 @@
 "str.settings.info.grocyRLSDate %@" = "Data wydania: %@";
 "str.settings.info.grocyPHPVersion %@" = "Wersja PHP: %@";
 "str.settings.info.grocySQLiteVersion %@" = "Wersja SQLite: %@";
-"str.settings.codeTypes" = "Ustawienia kodu kreskoweo";
+"str.settings.codeTypes" = "Ustawienia kodu kreskowego";
 "str.settings.about" = "O tej aplikacji";
 "str.settings.about.thanks" = "Chciałbym podziękować Berndowi Bestelowi za stworzenie Grocy. Bez niego ta apka by nie powstała.";
 "str.settings.about.version" = "Wersja";
