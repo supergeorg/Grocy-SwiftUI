@@ -1,0 +1,637 @@
+/* 
+  Localizable.strings
+  Grocy-SwiftUI
+
+  Created by Pawel Klebba on 20.08.21.
+  
+*/
+
+// MARK: - Generic
+"str.cancel" = "Anuluj";
+"str.ok" = "OK";
+"str.confirm" = "Potwierdź";
+"str.delete" = "Usuń";
+"str.edit" = "Edytuj";
+"str.save" = "Zapisz";
+"str.search" = "Szukaj";
+"str.noSearchResult" = "Nie znaleziono wyników wyszukiwania.";
+"str.day" = "Dzień";
+"str.days" = "Dni";
+"str.refresh" = "Odśwież";
+"str.close" = "Zamknij";
+"str.add" = "Dodaj";
+"str.misc" = "Różne";
+"str.clear" = "Wyczyść";
+"str.back" = "Powrót";
+"str.retry" = "Spróbuj ponownie";
+"str.connection.failed" = "Brak połączenia z serwerem";
+
+// MARK: - Transactions
+"tr.purchase" = "Zakup";
+"tr.consume" = "Spożycie";
+"tr.opened" = "Otwarte";
+"tr.inventoryCorrection" = "Spis produktów";
+"tr.stockEditOld" = "Stock edit (old)";
+"tr.stockEditNew" = "Stock edit (new)";
+"tr.transferFrom" = "Przenieś z";
+"tr.transferTo" = "Przenieś do";
+"tr.selfProduction" = "Samoprodukcja";
+
+// MARK: - Navigation
+"str.nav.stockOverview" = "Przegląd zapasów";
+"str.nav.shoppingList" = "Lista zakupów";
+"str.nav.recipes" = "Przepisy";
+"str.nav.mealPlan" = "Plan żywieniowy";
+"str.nav.choresOverview" = "Przegląd zadań domowych";
+"str.nav.tasks" = "Zadania";
+"str.nav.batteriesOverview" = "Przegląd baterii";
+"str.nav.equipment" = "Wyposażenie";
+"str.nav.calendar" = "Kalendarz";
+"str.nav.activities" = "Aktywności";
+"str.nav.purchase" = "Zakup";
+"str.nav.consume" = "Spożycie";
+"str.nav.transfer" = "Przenieś";
+"str.nav.inventory" = "Spis produktów";
+"str.nav.choreTracking" = "Śledzenie zadań domowych";
+"str.nav.batteryTracking" = "Śledzenie baterii";
+"str.nav.md" = "Dane";
+"str.nav.md.products" = "Produkty";
+"str.nav.md.locations" = "Miejsca";
+"str.nav.md.shoppingLocations" = "Miejsca zakupów";
+"str.nav.md.quantityUnits" = "Jednostki miary";
+"str.nav.md.productGroups" = "Grupy produktów";
+"str.nav.md.chores" = "Obowiązki domowe";
+"str.nav.md.batteries" = "Baterie";
+"str.nav.md.taskCategories" = "Kategorie zadań";
+"str.nav.md.userFields" = "Pola użytkownika";
+"str.nav.md.userEntities" = "Podmioty użytkownika";
+"str.nav.settings" = "Ustawienia";
+"str.nav.userManagement" = "Zarządzanie użytkownikami";
+"str.nav.quickScan" = "Szybki Skan";
+
+// MARK: - Details
+"str.details.title" = "Przegląd produktu";
+"str.details.amount" = "Ilość zapasów: ";
+"str.details.stockValue" = "Wartość zapasów: ";
+"str.details.defaultLocation" = "Domyślne miejsce: ";
+"str.details.lastPurchaseDate" = "Ostatni zakup: ";
+"str.details.lastUseDate" = "Ostatnie użycie: ";
+"str.details.lastPrice" = "Ostatnia cena: ";
+"str.details.averagePrice" = "Średnia cena: ";
+"str.details.averageShelfLife" = "Średni okres trwałości: ";
+"str.details.spoilRate" = "Wskaźnik zepsucia: ";
+
+"str.details.never" = "Nigdy";
+"str.details.unknown" = "Nieznane";
+
+"str.details.stockEntries" = "Pozycje zapasu";
+"str.details.stockJournal" = "Dziennik zapasów";
+"str.details.edit" = "Edytuj produkt";
+
+// MARK: - Stock
+"str.stock.stockOverview" = "Przegląd zapasów";
+// Products, Summed Value
+"str.stock.stockOverviewInfo %lld %@" = "%lld produktów o łącznej wartości %@";
+"str.stock.search" = "Szukaj w zapasach";
+"str.stock.empty" = "Zapasy są puste.";
+"str.stock.location" = "Miejsce";
+"str.stock.productGroup" = "Grupa produktu";
+"str.stock.all" = "Wszystko";
+"str.stock.status" = "Status";
+"str.stock.status.expiringSoon" = "Blisko terminu";
+"str.stock.status.overdue" = "Po terminie";
+"str.stock.status.expired" = "Przeterminowany";
+"str.stock.status.belowMinStock" = "Poniżej min. ilości zapasów";
+"str.stock.info.1expiringSoon %lld" = "Jeden produkt będzie po terminie za %lld dni";
+"str.stock.info.1overdue" = "Jeden produkt jest po terminie";
+"str.stock.info.1expired" = "Jeden produkt jest przeterminowany";
+"str.stock.info.1belowMinStock" = "Jeden produkt jest poniżej min. ilości zapasów";
+"str.stock.info.expiringSoon %lld %lld" = "%lld produktów będzie po terminie za %lld dni";
+"str.stock.info.overdue %lld" = "%lld produktów jest po terminie";
+"str.stock.info.expired %lld" = "%lld produktów jest przeterminowanych";
+"str.stock.info.belowMinStock %lld" = "%lld produktów jest poniżej min. ilości zapasów";
+"str.stock.info.opened %@" = "%@ otwarte";
+"str.stock.info.onShoppingList" = "Ten produkt jest już na liście zakupów.";
+
+"str.stock.entry.description.notOpened %@ %@ %@" = "Ilość: %@; Termin ważności %@; Kupiono %@; Zamknięte";
+"str.stock.entry.description.opened %@ %@ %@" = "Ilość: %@; Termin ważności %@; Kupiono %@; Otwarte";
+"str.stock.entry.status.notOpened" = "Zamknięte";
+"str.stock.entry.status.opened" = "Otwarte";
+
+"str.stock.tbl.product" = "Produkt";
+"str.stock.tbl.productGroup" = "Grupa produktu";
+"str.stock.tbl.amount" = "Ilość";
+"str.stock.tbl.value" = "Wartość";
+"str.stock.tbl.nextBestBefore" = "Następna data najlepszego spożycia przed";
+"str.stock.tbl.caloriesPerStockQU" = "Kalorie (na jednostkę miary)";
+"str.stock.tbl.calories" = "Kalorie";
+"str.stock.tbl.action.all" = "Wszystko";
+"str.stock.tbl.action.consume %@" = "Spożyj %@";
+"str.stock.tbl.action.consume.all %@" = "Spożyj wszystkie %@ które są w zapasach";
+"str.stock.tbl.action.consume.all.confirm %@ %@" = "Na pewno chcesz spożyć wszystkie (tj. %@) %@ znajdujące się w zapasach?";
+"str.stock.tbl.action.consume.open %@" = "Oznacz %@ jako otwarte";
+"str.stock.tbl.action.successConsumeOne %@" = "Jeden %@ spożyty";
+"str.stock.tbl.action.successConsumeAll %@" = "Wszystkie %@ spożyte";
+"str.stock.tbl.action.successOpenOne %@" = "Jeden %@ otwarty";
+"str.stock.tbl.action.successConsumeAllSpoiled %@" = "Wszystkie %@ zepsute";
+"str.stock.tbl.action.fail" = "Akcja nie powiodła się";
+
+"str.stock.tbl.menu.addToShL" = "Dodaj do listy zakupów";
+"str.stock.tbl.menu.consumeAsSpoiled %@" = "Spożyj %@ jako zepsute";
+"str.stock.tbl.menu.searchRecipes" = "Szukaj przepisów zawierających ten produkt";
+
+"str.stock.buy" = "Zakup";
+"str.stock.buy.product" = "Produkt";
+"str.stock.buy.product.buy" = "Kup produkt";
+"str.stock.buy.product.buy.success %@" = "%@ kupiony";
+"str.stock.buy.product.buy.fail" = "Zakup nie powiódł się";
+"str.stock.buy.product.required" = "Musisz zaznaczyć produkt";
+"str.stock.buy.product.amount" = "Ilość";
+"str.stock.buy.product.amount.invalid" = "Ilość nie może być mniejsza niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.stock.buy.product.quantityUnit" = "Jednostka miary";
+"str.stock.buy.product.quantityUnit.required" = "Jednostka miary jest wymagana";
+"str.stock.buy.product.dueDate" = "Data ważności";
+"str.stock.buy.product.dueDate.required" = "Data ważności jest wymagana";
+"str.stock.buy.product.doesntSpoil" = "Nigdy nie traci ważności";
+"str.stock.buy.product.price" = "Cena";
+"str.stock.buy.product.price.invalid" = "Ilość nie może być mniejsza niż 0.01 oraz może mieć maksymalnie 2 cyfry po przecinku";
+"str.stock.buy.product.price.unitPrice" = "Cena jednostkowa";
+"str.stock.buy.product.price.totalPrice" = "Cena całkowita";
+"str.stock.buy.product.shoppingLocation" = "Sklep";
+"str.stock.buy.product.location" = "Miejsce";
+"str.stock.buy.product.location.default %@" = "%@ (Domyślne miejsce)";
+
+"str.stock.consume" = "Spożyj";
+"str.stock.consume.product" = "Produkt";
+"str.stock.consume.product.consume" = "Spożyj produkt";
+"str.stock.consume.product.consume.success %@" = "Spożyto %@";
+"str.stock.consume.product.consume.fail" = "Spożycie nie powiodło się";
+"str.stock.consume.product.open" = "Oznacz jako otwarty";
+"str.stock.consume.product.open.success %@" = "%@ otwarty";
+"str.stock.consume.product.open.fail" = "Otwarcie nie powiodło się";
+"str.stock.consume.product.required" = "Musisz zaznaczyć produkt";
+"str.stock.consume.product.amount" = "Ilość";
+"str.stock.consume.product.amount.invalid" = "Nie może być mniejsze niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.stock.consume.product.amount.locMax" = "Ta liczba nie jest dostępna dla zaznaczonego miejsca";
+"str.stock.consume.product.quantityUnit" = "Jednostka miary";
+"str.stock.consume.product.quantityUnit.required" = "Jednostka miary jest wymagana";
+"str.stock.consume.product.location" = "Miejsce";
+"str.stock.consume.product.location.required" = "Miejsce jest wymagane";
+"str.stock.consume.product.location.default %@" = "%@ (Domyślne miejsce)";
+"str.stock.consume.product.details" = "Szczegóły";
+"str.stock.consume.product.spoiled" = "Zepsuty";
+"str.stock.consume.product.useStockEntry" = "Użyj konkretnej pozycji z zapasów";
+"str.stock.consume.product.useStockEntry.description" = "Pierwsza pozycja z tej listy będzie wybrana przez domyślną zasadę jaką jest \"Najpierw otwarte, potem z kończącą się wartością, potem First In - First Out\"";
+"str.stock.consume.product.stockEntry" = "Pozycja zapasu";
+"str.stock.consume.product.recipe" = "Przepis";
+"str.stock.consume.product.recipe.info" = "Zostanie użyte w celach statystycznych";
+
+"str.stock.transfer" = "Przenieś";
+"str.stock.transfer.product" = "Produkt";
+"str.stock.transfer.product.transfer" = "Przenieś produkt";
+"str.stock.transfer.product.transfer.success %@" = "Produkt %@ został przeniesiony";
+"str.stock.transfer.product.transfer.fail" = "Przenoszenie nie powiodło się";
+"str.stock.transfer.product.required" = "Musisz zaznaczyć produkt";
+"str.stock.transfer.product.locationFrom" = "Z miejsca";
+"str.stock.transfer.product.locationFrom.required" = "Miejsce jest wymagane";
+"str.stock.transfer.product.amount" = "Ilość";
+"str.stock.transfer.product.amount.invalid" = "Ilość nie może być mniejsza niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.stock.transfer.product.quantityUnit" = "Jednostka miary";
+"str.stock.transfer.product.quantityUnit.required" = "Jednostka miary jest wymagana";
+"str.stock.transfer.product.locationTo" = "Na miejsce";
+"str.stock.transfer.product.locationTO.required" = "Miejsce jest wymagane";
+"str.stock.transfer.product.locationTO.same" = "Nie może być takie same jak miejsce poprzednie";
+"str.stock.transfer.product.useStockEntry" = "Użyj konkretnej pozycji z zapasów";
+"str.stock.transfer.product.useStockEntry.description" = "Pierwsza pozycja z tej listy będzie wybrana przez domyślną zasadę jaką jest \"Najpierw otwarte, potem z kończącą się wartością, potem First In - First Out\"";
+"str.stock.transfer.product.stockEntry" = "Pozycja zapasu";
+
+"str.stock.inventory" = "Spis produktów";
+"str.stock.inventory.product" = "Produkt";
+"str.stock.inventory.product.inventory" = "Wykonaj inwentaryzację";
+"str.stock.inventory.product.inventory.success %@" = "%@ spisane";
+"str.stock.inventory.product.inventory.fail" = "Spisanie nie powiodło się";
+"str.stock.inventory.product.amount" = "Nowa ilość zapasu";
+"str.stock.inventory.product.amount.invalid" = "Ilość nie może być mniejsza niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.stock.inventory.product.amount.lower %@" = "Oznacza, że %@ zostanie usunięty do zapasów";
+"str.stock.inventory.product.amount.higher %@" = "Oznacza, że %@ zostanie dodany do zapasów";
+"str.stock.inventory.product.quantityUnit" = "Jednostka miary";
+"str.stock.inventory.product.quantityUnit.required" = "Jednostka miary jest wymagana";
+"str.stock.inventory.product.dueDate" = "Data ważności";
+"str.stock.inventory.product.dueDate.info" = "Zostanie określone dla dodawanych produktów";
+"str.stock.inventory.product.dueDate.required" = "Data ważności jest wymagana";
+"str.stock.inventory.product.neverOverdue" = "Nigdy nie traci ważności";
+"str.stock.inventory.product.price" = "Cena";
+"str.stock.inventory.product.price.info" = "Za jednostkę miary";
+"str.stock.inventory.product.price.invalid" = "Ilość nie może być mniejsza niż 0.01 oraz może mieć maksymalnie 2 cyfry po przecinku";
+"str.stock.inventory.product.shoppingLocation" = "Sklep";
+"str.stock.inventory.product.location" = "Miejsce";
+"str.stock.inventory.product.location.info" = "Będie użyte do dodanych produktów";
+"str.stock.inventory.product.location.required" = "Miejsce jest wymagane";
+
+"str.stock.journal" = "Dziennik zapasów";
+"str.stock.journal.summary" = "Podsumowanie dziennika zapasów";
+"str.stock.journal.empty" = "Nie znaleziono transakcji.";
+"str.stock.journal.undo" = "Cofnij transakcję";
+"str.stock.journal.undo.failed" = "Cofnięcie transakcji nie powiodło się";
+"str.stock.journal.undo.date %@" = "Cofnięto dnia %@";
+"str.stock.journal.product" = "Produkt";
+"str.stock.journal.product.info %@" = "Produkt: %@";
+"str.stock.journal.amount.info %@" = "Ilość: %@";
+"str.stock.journal.transactionTime.info %@" = "Godzina transakcji: %@";
+"str.stock.journal.transactionType" = "Typ transakcji";
+"str.stock.journal.transactionType.info %@" = "Typ transakcji: %@";
+"str.stock.journal.location" = "Miejsce";
+"str.stock.journal.location.info %@" = "Miejsce: %@";
+"str.stock.journal.user" = "Użytkownik";
+"str.stock.journal.user.info %@" = "Wykonane przez: %@";
+
+// MARK: - Shopping List
+"str.shL" = "Lista zakupów";
+"str.shL.manage" = "Zarządzaj listami zakupów";
+"str.shL.new" = "Nowa lista zakupów";
+"str.shL.edit" = "Edytuj listę zakupów";
+"str.shL.delete" = "Usuń listę zakupów";
+"str.shL.delete.confirm" = "Na pewno chcesz usunąć tę listę zakupów?";
+"str.shL.print" = "Drukuj";
+"str.shL.amount" = "Ilość";
+"str.shL.ungrouped" = "Niepogrupowane";
+
+"str.shL.form.new" = "Stwórz listę zakupów";
+"str.shL.form.edit" = "Edytuj listę zakupów";
+"str.shL.form.name" = "Nazwa";
+"str.shL.form.name.required" = "Nazwa jest wymagana";
+"str.shL.form.name.exists" = "Nazwa jest już zajęta";
+"str.shL.form.save" = "Zapisz";
+"str.shL.form.save.failed" = "Zapis nie powiódł się";
+
+"str.shL.action.addItem" = "Dodaj wpis";
+"str.shL.action.clearList" = "Wyczyść listę";
+"str.shL.action.clearList.confirm" = "Na pewno chcesz wyczyścić tę listę zakupów?";
+"str.shL.action.addListItemsToStock" = "Dodaj wszystkie elementy do zapasów";
+"str.shL.action.addBelowMinStock" = "Dodaj produkty które są poniżej min. ilości zapasów";
+"str.shL.action.addOverdue" = "Dodaj produkty przeterminowane/po terminie";
+"str.shL.action.failed" = "Akcja nie powiodła się";
+
+"str.shL.filter.status" = "Status";
+"str.shL.filter.reset" = "Wyczyść filtr";
+"str.shL.filter.all" = "Wszystko";
+"str.shL.filter.belowMinStock" = "Poniżej min. ilości zapasów";
+"str.shL.filter.done" = "Jedynie wykonane wpisy";
+"str.shL.filter.undone" = "Jedynie niewykonane wpisy";
+"str.shL.filter.info.1belowMinStock" = "Jeden produkt jest poniżej min. ilości zapasów";
+"str.shL.filter.info.belowMinStock %lld" = "%lld produktów jest poniżej min. ilości zapasów";
+"str.shL.filter.info.1done" = "Jeden wpis wykonany";
+"str.shL.filter.info.done %lld" = "%lld wpisów zostało wykonanych";
+"str.shL.filter.info.1undone" = "Jeden wpis został cofnięty";
+"str.shL.filter.info.undone %lld" = "%lld wpisów zostało cofniętych";
+
+"str.shL.entryForm.new.title" = "Stwórz listę zakupów";
+"str.shL.entryForm.edit.title" = "Edytuj listę zakupów";
+"str.shL.entryForm.save.failed" = "Zapis nie powiódł się.";
+"str.shL.entryForm.shoppingList" = "Lista zakupów";
+"str.shL.entryForm.product" = "Produkt";
+"str.shL.entryForm.amount" = "Ilość";
+"str.shL.entryForm.amount.required" = "Nie może być mniejsze niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.shL.entryForm.quantityUnit" = "Jednostka miary";
+"str.shL.entryForm.note" = "Notka";
+
+"str.shL.entry.done" = "Oznacz wpis jako ukończony";
+"str.shL.entry.edit" = "Edytuj ten wpis";
+"str.shL.entry.delete" = "Usuń ten wpis";
+"str.shL.entry.delete.confirm" = "Na pewno chcesz usunąć ten wpis?";
+"str.shL.entry.add %@" = "Dodaj %@ do zapasów";
+"str.shL.entry.info.amount %@" = "Ilość: %@";
+
+// MARK: - Master Data
+"str.md.masterData" = "Dane";
+"str.md.description" = "Opis";
+"str.md.search" = "Szukaj";
+"str.md.new.success" = "Dodano nowy wpis";
+"str.md.new.fail" = "Dodawanie nie powiodło się";
+"str.md.edit.success" = "Zedytowano pomyślnie";
+"str.md.edit.fail" = "Nie udało się zedytować";
+"str.md.delete.success" = "Usunięto pomyślnie";
+"str.md.delete.fail" = "Nie udało się usunąć";
+
+// MD Product
+"str.md.product" = "Produkt";
+"str.md.products" = "Produkty";
+"str.md.products.empty" = "Nie znaleziono produktów.";
+"str.md.product.rowLocation %@" = "Miejsce: %@";
+"str.md.product.rowProductGroup %@" = "Grupa produktu: %@";
+"str.md.product.new" = "Stwórz produkt";
+"str.md.product.edit" = "Edytuj produkt";
+"str.md.product.save" = "Zapisz produkt";
+"str.md.product.info" = "Informacje o produkcie";
+"str.md.product.notOnServer" = "Produktu nie ma na serwerze";
+"str.md.product.delete" = "Usuń produkt";
+"str.md.product.delete.confirm" = "Na pewno chcesz usunąć ten produkt?";
+"str.md.product.name" = "Nazwa produktu";
+"str.md.product.name.required" = "Nazwa jest wymagana";
+"str.md.product.name.exists" = "Nazwa jest już zajęta";
+// optional properties
+"str.md.product.category.optionalProperties" = "Opcjonalne parametry";
+"str.md.product.category.optionalProperties.description" = "Status, Produkt nadrzędny, Opis, Grupa produktu, Energia, Zdjęcie";
+"str.md.product.active" = "Aktywny";
+"str.md.product.parentProduct" = "Produkt nadrzędny";
+"str.md.product.description" = "Opis";
+"str.md.product.productGroup" = "Grupa produktu";
+"str.md.product.calories" = "Energia (kcal)";
+"str.md.product.calories.info" = "Na jednostkę miary";
+"str.md.product.calories.invalid" = "Nie może być mniejsze od 0 i musi być poprawną liczbą z maks. 4 liczbami po przecinku";
+"str.md.product.dontShowOnStockOverview" = "Nigdy nie pokazuj na przeglądzie zapasów";
+"str.md.product.dontShowOnStockOverview.info" = "Przegląd zapasów wyświetla listę wszystkich produktów które są aktualnie w zapasie lub poniżej min. ilości - włącz to aby ukryć ten produkt za każdym razem";
+"str.md.product.picture" = "Zdjęcie produktu";
+"str.md.product.picture.saved" = "Zapisano zdjecie produktu";
+"str.md.product.picture.none" = "Brak zdjęcia produktu";
+"str.md.product.picture.add.file" = "Dodaj zdjęcie produktu z pliku";
+"str.md.product.picture.add.gallery" = "Dodaj zdjęcie produktu z Galerii";
+"str.md.product.picture.add.camera" = "Dodaj zdjęcie produktu z aparatu";
+"str.md.product.picture.upload" = "Wyślij zdjęcie produktu";
+"str.md.product.picture.delete" = "Usuń zdjęcie produktu";
+// default locations
+"str.md.product.category.defaultLocations" = "Domyślne miejsca";
+"str.md.product.category.defaultLocations.description" = "Miejsce, Sklep";
+"str.md.product.location" = "Domyślne miejsce";
+"str.md.product.location.required" = "Miejsce jest wymagane";
+"str.md.product.shoppingLocation" = "Domyślny sklep";
+// due date
+"str.md.product.category.dueDate" = "Data ważności";
+"str.md.product.category.dueDate.description" = "Typ, Domyślna ilość dni po; otwarciu; zamrożeniu; rozmrożeniu";
+"str.md.product.dueType" = "Typ terminu ważności";
+"str.md.product.dueType.info" = "Wyliczono na podstawie ostatnich cen zakupu produktów";
+"str.md.product.dueType.bestBefore" = "Najlepiej spożyć przed";
+"str.md.product.dueType.bestBefore.info" = "Oznacza, że ten produkt możliwe, że jest wciąż bezpieczny do spożycia po tym dniu";
+"str.md.product.dueType.expires" = "Należy spożyć przed";
+"str.md.product.dueType.expires.info" = "Oznacza, że ten produkt nie jest bezpieczny do spożycia po tym dniu";
+"str.md.product.defaultDueDays" = "Domyślna ilość dni ważności";
+"str.md.product.defaultDueDays.info" = "Dla zakupów jako termin ważności będzie ustawione dzisiaj + podana tutaj liczba dni";
+"str.md.product.defaultDueDaysAfterOpen" = "Domyślna ilość dni ważności po otwarciu";
+"str.md.product.defaultDueDaysAfterOpen.info" = "Gdy oznaczasz produkt jako otwarty, termin ważności zostanie zmieniony na dziś + podana tutaj liczba dni. Wpisanie 0 wyłącza tę opcję.";
+"str.md.product.defaultDueDaysAfterFreezing" = "Domyślna ilość dni ważności po zamrożeniu";
+"str.md.product.defaultDueDaysAfterFreezing.info" = "Gdy przenosisz produkt do zamrażarki, termin ważności zostanie zmieniony na dziś + podana tutaj liczba dni";
+"str.md.product.defaultDueDaysAfterFreezing.invalid" = "Nie może być mniejsze od -1 i musi być liczbą całkowitą";
+"str.md.product.defaultDueDaysAfterThawing" = "Domyślna liczba dni wazności po odmrożeniu";
+"str.md.product.defaultDueDaysAfterThawing.info" = "Gdy przenosisz produkt z zamrażarki, termin ważności zostanie zmieniony na dziś + podana tutaj liczba dni";
+"str.md.product.defaultDueDaysAfterThawing.invalid" = "Nie może być mniejsze od 0 i musi być liczbą całkowitą";
+// quantity units
+"str.md.product.category.quantityUnits" = "Jednostki miary";
+"str.md.product.category.quantityUnits.description" = "Zapas, Zakup";
+"str.md.product.quStock" = "Jednostka zapasów";
+"str.md.product.quStock.info" = "Jednostka zapasów nie może być zmieniona po pierwszym zakupie";
+"str.md.product.quStock.required" = "Jednostka zapasów jest wymagana";
+"str.md.product.quPurchase" = "Domyślna jednostka zakupu";
+"str.md.product.quPurchase.info" = "Jednostka zakupu nie może być zmieniona po pierwszym zakupie";
+"str.md.product.quPurchase.required" = "Jednostka zakupu jest wymagana";
+// amount
+"str.md.product.category.amount" = "Ilość";
+"str.md.product.category.amount.description" = "Min. zapasów, Szybkie spożycie, Przelicznik, Waga tara";
+"str.md.product.minStockAmount" = "Minimalna ilość zapasów";
+"str.md.product.minStockAmount.invalid" = "Ilość nie może być mniejsza niż 0 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.md.product.cumulateMinStockAmountOfSubProducts" = "Zgromadź półprodukty w minimalną ilość zapasu";
+"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Jeżeli włączone, minimalna ilość zapasu półproduktów będzie akumulowana do tego produktu. Oznacza to, że półproduktu nigdy nie będzie brakować, a jedynie tego produktu.";
+"str.md.product.quickConsumeAmount" = "Ilość dla szybkiego spożycia";
+"str.md.product.quickConsumeAmount.info" = "Ta ilość będzie użyta podczas korzystania z przycisków \"Szybkie spożycie/otwarcie\" na przeglądzie zapasów";
+"str.md.product.quickConsumeAmount.invalid" = "Ilość nie może być mniejsza niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.md.product.quFactorPurchaseToStock" = "Konwersja ilości zakupu do zapasów";
+"str.md.product.quFactorPurchaseToStock.invalid" = "Nie może być mniejsze niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Oznacza, że jeden %@ z zakupu będzie przeliczony na %@ %@ do zapasów";
+"str.md.product.enableTareWeightHandling" = "Włącz obsługę masy tara";
+"str.md.product.enableTareWeightHandling.info" = "Jest to przydatne np. w przypadku mąki w słoikach - przy zakupie/spożyciu/zapasie zawsze waży się cały słoik, kwota jest następnie automatycznie obliczana na podstawie tego, co znajduje się w magazynie i masy tary zdefiniowanej poniżej";
+"str.md.product.tareWeight" = "Waga tara";
+"str.md.product.tareWeight.invalid" = "Waga nie może być mniejsza niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.md.product.notCheckStockFulfillmentForRecipes" = "Wyłącz sprawdzanie stanu zapasów dla tego składnika";
+"str.md.product.notCheckStockFulfillmentForRecipes.info" = "Będzie to użyte jako domyślne ustawienie podczas dodawania tego produktu jako składnik przepisu";
+
+"str.md.barcodes" = "Kody kreskowe";
+"str.md.barcode" = "Kod kreskowy";
+"str.md.barcodes.empty" = "Nie dodano kodów kreskowych.";
+"str.md.barcode.new" = "Dodaj kod kreskowy";
+"str.md.barcode.edit" = "Edytuj kod kreskowy";
+"str.md.barcode.save" = "Zapisz kod kreskowy";
+"str.md.barcode.for %@" = "Kod kreskowy produktu %@";
+"str.md.barcode.barcode" = "Kod kreskowy";
+"str.md.barcode.barcode.required" = "Kod kreskowy jest wymagany";
+"str.md.barcode.barcode.invalid" = "Kod kreskowy musi być w formacie EAN-8 lub EAN-13";
+"str.md.barcode.amount" = "Ilość";
+"str.md.barcode.quantityUnit" = "Jednostka miary";
+"str.md.barcode.shoppingLocation" = "Sklep";
+"str.md.barcode.note" = "Notka";
+"str.md.barcode.info.amount %@" = "Ilość: %@";
+"str.md.barcode.info.store %@" = "Sklep: %@";
+
+"str.md.locations" = "Miejsca";
+"str.md.location" = "Miejsce";
+"str.md.locations.empty" = "Nie znaleziono miejsc";
+"str.md.location.new" = "Nowe miejsce";
+"str.md.location.edit" = "Edytuj miejsce";
+"str.md.location.save" = "Zapisz miejsce";
+"str.md.location.info" = "Informacje o miejscu";
+"str.md.location.name" = "Miejsce";
+"str.md.location.name.required" = "Nazwa jest wymagana";
+"str.md.location.name.exists" = "Nazwa jest już istnieje";
+"str.md.location.freezer" = "Zamrażarka";
+"str.md.location.isFreezing" = "Jest to zamrażarka";
+"str.md.location.isFreezing.description" = "Gdy przenosisz produkt z/do zamrażarki, termin ważności zmienia się automatycznie według ustawień produktu";
+"str.md.location.delete" = "Usuń miejsce";
+"str.md.location.delete.confirm" = "Na pewno chcesz usunąć to miejsce?";
+
+"str.md.shoppingLocations" = "Miejsca zakupów";
+"str.md.shoppingLocation" = "Miejsce zakupów";
+"str.md.shoppingLocations.empty" = "Nie znaleziono miejsc zakupów";
+"str.md.shoppingLocation.new" = "Nowe miejsce zakupów";
+"str.md.shoppingLocation.edit" = "Edytuj miejsce zakupów";
+"str.md.shoppingLocation.save" = "Zapisz miejsce zakupów";
+"str.md.shoppingLocation.info" = "Informacje o miejscu zakupów";
+"str.md.shoppingLocation.name" = "Miejsce zakupów";
+"str.md.shoppingLocation.name.required" = "Nazwa jest wymagana";
+"str.md.shoppingLocation.name.exists" = "Nazwa jest już zajęta";
+"str.md.shoppingLocation.delete" = "Usuń to miejsce zakupów";
+"str.md.shoppingLocation.delete.confirm" = "Na pewno chcesz usunąć to miejsce zakupów?";
+
+"str.md.quantityUnits" = "Jednostki miary";
+"str.md.quantityUnit" = "Jednostka miary";
+"str.md.quantityUnits.empty" = "Nie znaleziono jednostek miary.";
+"str.md.quantityUnit.new" = "Nowa jednostka miary";
+"str.md.quantityUnit.edit" = "Edytuj jednostkę miary";
+"str.md.quantityUnit.save" = "Zapisz jednostkę miary";
+"str.md.quantityUnit.info" = "Informacje o jednostce miary";
+"str.md.quantityUnit.name" = "Nazwa (l. pojedyncza)";
+"str.md.quantityUnit.name.required" = "Nazwa jest wymagana";
+"str.md.quantityUnit.name.exists" = "Nazwa jest już zajęta";
+"str.md.quantityUnit.namePlural" = "Nazwa (l. mnoga)";
+"str.md.quantityUnit.delete" = "Usuń tę jednostkę miary";
+"str.md.quantityUnit.delete.confirm" = "Na pewno chcesz usunąć tę jednostkę miary?";
+
+"str.md.productGroups" = "Grupy produktu";
+"str.md.productGroup" = "Grupa produktu";
+"str.md.productGroups.empty" = "Nie znaleziono grup produktu.";
+"str.md.productGroup.new" = "Stwórz grupę produktu";
+"str.md.productGroup.edit" = "Edytuj grupę produktu";
+"str.md.productGroup.save" = "Zapisz grupę produktu";
+"str.md.productGroup.info" = "Informacje o grupie produktu";
+"str.md.productGroup.name" = "Nazwa grupy produktu";
+"str.md.productGroup.name.required" = "Nazwa jest wymagana";
+"str.md.productGroup.name.exists" = "Nazwa jest już zajęta";
+"str.md.productGroup.delete" = "Usuń grupę produktu";
+"str.md.productGroup.delete.confirm" = "Na pewno chcesz usunąć tę grupę produktu?";
+
+"str.md.chores" = "Zadania domowe";
+"str.md.batteries" = "Baterie";
+
+"str.md.taskCategories" = "Kategorie zadań";
+"str.md.taskCategory" = "Kategoria zadań";
+"str.md.taskCategories.empty" = "Nie znaleziono kategorii zadań";
+"str.md.taskCategory.new" = "Stwórz kategorię zadań";
+"str.md.taskCategory.edit" = "Edytuj kategorię zadań";
+"str.md.taskCategory.save" = "Zapisz kategorię zadań";
+"str.md.taskCategory.info" = "Informacje o kategorii zadań";
+"str.md.taskCategory.name" = "Nazwa kategorii zadań";
+"str.md.taskCategory.name.required" = "Nazwa jest wymagana";
+"str.md.taskCategory.name.exists" = "Nazwa jest już zajęta";
+"str.md.taskCategory.delete" = "Usuń tę kategorię zadań?";
+"str.md.taskCategory.delete.confirm" = "Na pewno chcesz usunąć tę kategorię zadań?";
+
+"str.md.userFields" = "Pola użytkowników";
+"str.md.userField" = "Pole użytkownika";
+"str.md.userFields.empty" = "Nie znaleziono pół użytkowników.";
+"str.md.userFields.rowName %@" = "Nazwa: %@";
+"str.md.userFields.rowEntity %@" = "Obiekt: %@";
+"str.md.userFields.rowType %@" = "Typ: %@";
+"str.md.userField.new" = "Stwórz pole użytkownika";
+"str.md.userField.edit" = "Edytuj pole użytkownika";
+"str.md.userField.save" = "Zapisz pole użytkownika";
+"str.md.userField.entity" = "Obiekt";
+"str.md.userField.entity.required" = "Obiekt jest wymagany";
+"str.md.userField.name" = "Nazwa";
+"str.md.userField.name.info" = "Jest to wewnętrzna nazwa, np. dla API";
+"str.md.userField.name.required" = "Nazwa jest wymagana i może mieć tylko cyfry i litery";
+"str.md.userField.name.invalid" = "Nazwa jest wymagana i może mieć tylko cyfry i litery";
+"str.md.userField.caption" = "Opis";
+"str.md.userField.caption.info" = "Będzie użyty do wyświetlenia pola w interfejsie";
+"str.md.userField.caption.required" = "Opis jest wymagany";
+"str.md.userField.sortNumber" = "Sortuj liczbę";
+"str.md.userField.sortNumber.info" = "Pola użytkownika będą sortowane w formularzu po tej liczbie";
+"str.md.userField.sortNumber.invalid" = "Nie może być mniejsze od 0 i musi być liczbą całkowitą";
+"str.md.userField.type" = "Typ";
+"str.md.userField.type.required" = "Typ jest wymagany";
+"str.md.userField.showAsColumnInTables" = "Pokaż jako kolumnę w tabelach";
+"str.md.userField.delete" = "Usuń to pole użytkownika";
+"str.md.userField.delete.confirm" = "Na pewno chcesz usunąć to pole użytkownika?";
+
+"str.md.userField.type.textSingleLine" = "Tekst (jedna linia)";
+"str.md.userField.type.textMultiLine" = "Tekst (wiele linii)";
+"str.md.userField.type.numberIntegral" = "Liczba (całkowita)";
+"str.md.userField.type.numberDezimal" = "Liczba (dziesiętna)";
+"str.md.userField.type.date" = "Data (bez godziny)";
+"str.md.userField.type.dateTime" = "Data i godzina";
+"str.md.userField.type.checkbox" = "Pole wyboru";
+"str.md.userField.type.presetList" = "Lista (z jedną opcją wyboru)";
+"str.md.userField.type.presetChecklist" = "Lista (z wieloma opcjami wyboru)";
+"str.md.userField.type.link" = "Link";
+"str.md.userField.type.file" = "Plik";
+"str.md.userField.type.image" = "Zdjęcie";
+
+"str.md.userEntities" = "Podmioty użytkownika";
+"str.md.userEntity" = "Podmiot użytkownika";
+"str.md.userEntities.empty" = "Nie znaleziono podmiotów użytkownika";
+"str.md.userEntity.new" = "Nowy podmiot użytkownika";
+"str.md.userEntity.edit" = "Edytuj podmiot użytkownika";
+"str.md.userEntity.info" = "Informacje o podmiocie użytkownika";
+"str.md.userEntity.save" = "Zapisz podmiot użytkownika";
+"str.md.userEntity.name" = "Nazwa podmiotu użytkownika";
+"str.md.userEntity.name.required" = "Nazwa jest wymagana i może nawierać tylko cyfry i litery";
+"str.md.userEntity.name.exists" = "Nazwa jest już zajęta";
+"str.md.userEntity.caption" = "Opis";
+"str.md.userEntity.caption.required" = "Opis jest wymagany";
+"str.md.userEntity.description" = "Opis";
+"str.md.userEntity.showInSideBarMenu" = "Pokaż na pasku bocznym";
+"str.md.userEntity.iconCSSClass.example" = "Na przykład \"fas fa-smile\"";
+"str.md.userEntity.iconCSSClass" = "Klasa CSS ikonki";
+"str.md.userEntity.delete" = "Usuń podmiot użytkownika";
+"str.md.userEntity.delete.confirm" = "Na pewno chcesz usunąć ten podmiot użytkownika?";
+
+// MARK: - Settings
+"str.settings" = "Ustawienia";
+"str.settings.logout" = "Wyloguj z serwera";
+"str.settings.loggedInAs %@" = "Zalogowano jako: %@";
+"str.settings.info" = "Informacje o serwerze Grocy";
+"str.settings.info.version %@" = "Wersja Grocy: %@";
+"str.settings.info.grocyVersion %@" = "Wersja: %@";
+"str.settings.info.grocyRLSDate %@" = "Data wydania: %@";
+"str.settings.info.grocyPHPVersion %@" = "Wersja PHP: %@";
+"str.settings.info.grocySQLiteVersion %@" = "Wersja SQLite: %@";
+"str.settings.codeTypes" = "Ustawienia kodu kreskowego";
+"str.settings.about" = "O tej aplikacji";
+"str.settings.about.thanks" = "Chciałbym podziękować Berndowi Bestelowi za stworzenie Grocy. Bez niego ta apka by nie powstała.";
+"str.settings.about.version" = "Wersja";
+"str.settings.about.developer" = "Deweloper";
+"str.settings.about.showOnboarding" = "Uruchom ponownie wprowadzenie do aplikacji";
+"str.settings.loginQRcode.scan" = "Zeskanuj kod QR dla szybkiego zalogowania";
+"str.settings.simplifiedStockView" = "Uproszczony podgląd zapasów";
+"str.settings.appLanguage" = "Język aplikacji";
+"str.settings.resetCache" = "Wyczyść pamięć cache";
+"str.settings.log" = "Logi aplikacji";
+"str.settings.log.update" = "Uaktualnij logi";
+"str.settings.log.share" = "Udostępnij logi";
+
+// MARK: - Admin
+"str.admin.user" = "";
+"str.admin.user.empty" = "NIe znaleziono użytkownika";
+"str.admin.user.tooltip.edit" = "Edytuj tego użytkownika";
+"str.admin.user.tooltip.permissions" = "Zmień uprawnienia tego użytkownika";
+"str.admin.user.tooltip.delete" = "Usuń tego użytkownika";
+"str.admin.user.delete.question" = "Na pewno chcesz usunąć tego użytkownika?";
+"str.admin.user.new" = "Nowy użytkownik";
+"str.admin.user.new.create" = "Stwórz użytkownika";
+"str.admin.user.new.edit" = "Edytuj użytkownika";
+"str.admin.user.new.userName" = "Nazwa użytkownika";
+"str.admin.user.new.userName.required" = "Nazwa użytkownika jest wymagana";
+"str.admin.user.new.userName.exists" = "Nazwa użytkownika jest zajęta";
+"str.admin.user.new.firstName" = "Imię";
+"str.admin.user.new.lastName" = "Nazwisko";
+"str.admin.user.new.password" = "Hasło";
+"str.admin.user.new.password.confirm" = "Potwierdź Hasło";
+"str.admin.user.new.password.mismatch" = "Hasła się nie zgadzają";
+
+// MARK: - Quick Scan
+"str.quickScan.consume" = "Spożyj";
+"str.quickScan.markAsOpened" = "Otwórz";
+"str.quickScan.purchase" = "Kup";
+"str.quickScan.input.consume.amount" = "Liczba spożytych";
+"str.quickScan.input.consume.default" = "Domyślnie (1)";
+"str.quickScan.input.consume.barcodeAmount %@" = "Szybko (%@)";
+"str.quickScan.input.consume.custom" = "NIestandardowe";
+"str.quickScan.input.consume.all %@" = "Wszystkie (%@)";
+"str.quickScan.input.info.stockAmount %@" = "Ilość zapasów: %@";
+"str.quickScan.add.product" = "Produkt dla tego kodu kreskowego";
+"str.quickScan.add.product.add" = "Dodaj kod kreskowy";
+"str.quickScan.add.product.add.success" = "Kod kreskowy dodany pomyślnie";
+"str.quickScan.add.product.add.fail" = "Dodawanie kodu kreskowego nie powiodło się";
+"str.quickScan.barcode.invalid" = "Niepoprawny kod kreskowy";
+
+// MARK: - Onboarding
+"str.onboard.start" = "Zacznijmy!";
+"str.onboard.grocy.title" = "grocy - ERP w twojej lodówce";
+"str.onboard.grocy.subtitle" = "grocy to internetowe rozwiązanie do zarządzania artykułami spożywczymi i gospodarstwem domowym dla Twojego domu.";
+"str.onboard.app.title" = "Grocy dla iOS/macOS";
+"str.onboard.app.subtitle" = "Natywna apka pozwalająca na komfortowe używanie Grocy w domu i w podróży";
+
+"str.login.info" = "Witaj w Grocy-SwiftUI!";
+"str.login.select" = "Wybierz typ serwera:";
+"str.login.demoServer" = "Serwer demo";
+"str.login.demoServer %@" = "Serwer demo: %@";
+"str.login.demoServer.info" = "Zaznacz serwer demo:";
+"str.login.demoServer.use" = "Użyj serwera demo";
+"str.login.ownServer" = "Własny serwer";
+"str.login.ownServer.qr" = "Skan QR";
+"str.login.ownServer.qr.info" = "Otwiera stronę webinterfejsu Grocy z kluczami API. Jeżeli nie ma żadnego klucza, stwórz go. Kliknij symbol QR, aby wyświetlić kod i aby móc go zeskanować w aplikacji.";
+"str.login.ownServer.manual" = "Wpis manualny";
+"str.login.ownServer.manual.serverURL" = "URL serwera";
+"str.login.ownServer.manual.APIKey" = "Poprawny klucz API";
+"str.login.ownServer.manual.APIKey.create" = "Stwórz klucz API";
+"str.login.ownServer.manual.login" = "Zaloguj się";
+"str.login.connect.fail" = "Nie udało połączyć się z serwerem.";
+"str.login.connect.fail.info %@ %@" = "Serwer: %@\n\nBłąd: %@";
+"str.login.connect.unsupportedVersion %@" = "Serwer używa wersji %@, która nie jest wpierana przez apkę. Możesz i tak jej używać, jednak mogą pojawić się problemy.";
+"str.login.connect.unsupportedVersion.confirm" = "Kontynuuj mimo wszystko";

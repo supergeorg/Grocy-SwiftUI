@@ -14,6 +14,7 @@ struct GrocyAPP {
         case noLanguage = "https://demo.grocy.info"
         case english = "https://en.demo.grocy.info"
         case german = "https://de.demo.grocy.info"
+        case polish = "https://pl.demo.grocy.info"
         case develop = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
         var id: Int {
@@ -28,6 +29,8 @@ struct GrocyAPP {
                 return "English Grocy server"
             case .german:
                 return "German Grocy server"
+            case .polish:
+                return "Polish Grocy server"
             case .develop:
                 return "Private demo instance used for development"
             }
