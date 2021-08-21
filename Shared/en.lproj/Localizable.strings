@@ -566,6 +566,7 @@
 "str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Developer";
+"str.settings.about.translators" = "Translators";
 "str.settings.about.showOnboarding" = "Replay app onboarding";
 "str.settings.loginQRcode.scan" = "Scan QR-Code for fast login";
 "str.settings.simplifiedStockView" = "Simplified stock view";

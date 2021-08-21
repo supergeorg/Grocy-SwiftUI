@@ -566,6 +566,7 @@
 "str.settings.about.thanks" = "Chciałbym podziękować Berndowi Bestelowi za stworzenie Grocy. Bez niego ta apka by nie powstała.";
 "str.settings.about.version" = "Wersja";
 "str.settings.about.developer" = "Deweloper";
+"str.settings.about.translators" = "Tłumacze";
 "str.settings.about.showOnboarding" = "Uruchom ponownie wprowadzenie do aplikacji";
 "str.settings.loginQRcode.scan" = "Zeskanuj kod QR dla szybkiego zalogowania";
 "str.settings.simplifiedStockView" = "Uproszczony podgląd zapasów";

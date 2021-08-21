@@ -10,13 +10,15 @@ import SwiftUI
 struct AboutLineView: View {
     var iconName: String
     var caption: String
-    var content: String
+    var content: String?
     var body: some View {
         HStack{
             Image(systemName: iconName).font(.title)
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey(caption)).font(.title3)
-                Text(content).font(.body)
+                if let content = content {
+                    Text(content).font(.body)
+                }
             }
         }
     }
@@ -38,6 +40,8 @@ struct AboutView: View {
                     AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
                 })
                 .foregroundColor(.primary)
+                
+                NavigationLink(destination: TranslatorsView(), label: {AboutLineView(iconName: "flag", caption: "str.settings.about.translators")})
                 
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")

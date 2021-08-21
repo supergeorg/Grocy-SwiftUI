@@ -567,6 +567,7 @@
 "str.settings.about.thanks" = "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.";
 "str.settings.about.version" = "Version";
 "str.settings.about.developer" = "Entwickler";
+"str.settings.about.translators" = "Übersetzer";
 "str.settings.about.showOnboarding" = "App-Einführung wiederholen";
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
