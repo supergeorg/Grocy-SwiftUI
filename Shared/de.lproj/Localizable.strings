@@ -149,7 +149,7 @@
 "str.stock.buy.product.amount" = "Menge";
 "str.stock.buy.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.buy.product.quantityUnit" = "Mengeneinheit";
-"str.stock.buy.product.quantityUnit.invalid" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.stock.buy.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.buy.product.dueDate" = "Fälligkeitsdatum";
 "str.stock.buy.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
 "str.stock.buy.product.doesntSpoil" = "Nie überfällig";
@@ -569,6 +569,7 @@
 "str.settings.about.developer" = "Entwickler";
 "str.settings.about.translators" = "Übersetzer";
 "str.settings.about.showOnboarding" = "App-Einführung wiederholen";
+"str.settings.loginQRcode.scan" = "Scanne QR-Code für schnelles Login";
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
 "str.settings.resetCache" = "Cache löschen";
