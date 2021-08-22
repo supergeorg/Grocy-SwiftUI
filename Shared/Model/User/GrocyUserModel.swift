@@ -29,8 +29,7 @@ struct GrocyUser: Codable {
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            //            self.id = try container.decode(Int.self, forKey: .id)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.username = try container.decode(String.self, forKey: .username)
             self.firstName = try? container.decodeIfPresent(String.self, forKey: .firstName)
             self.lastName = try? container.decodeIfPresent(String.self, forKey: .lastName)

@@ -33,33 +33,26 @@ struct StockElement: Codable {
         case product
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.amount = try container.decode(Double.self, forKey: .amount)
-    //        self.amountAggregated = try container.decode(Double.self, forKey: .amountAggregated)
-    //        self.value = try container.decode(Double.self, forKey: .value)
-    //        self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
-    //        self.amountOpened = try container.decode(Double.self, forKey: .amountOpened)
-    //        self.amountOpenedAggregated = try container.decode(Double.self, forKey: .amountOpenedAggregated)
-    //        self.isAggregatedAmount = (try? container.decodeIfPresent(Bool.self, forKey: .isAggregatedAmount) ?? (try? container.decodeIfPresent(Int.self, forKey: .isAggregatedAmount) == 1) ?? false) ?? false
-    //        self.dueType = try container.decode(Int.self, forKey: .dueType)
-    //        self.productID = try container.decode(Int.self, forKey: .productID)
-    //        self.product = try container.decode(MDProduct.self, forKey: .product)
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.amount = try Double(container.decode(String.self, forKey: .amount))!
-            self.amountAggregated = try Double(container.decode(String.self, forKey: .amountAggregated))!
-            self.value = try Double(container.decode(String.self, forKey: .value))!
+            do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
+            do { self.amountAggregated = try container.decode(Double.self, forKey: .amountAggregated) } catch { self.amountAggregated = try Double(container.decode(String.self, forKey: .amountAggregated))! }
+            do { self.value = try container.decode(Double.self, forKey: .value) } catch { self.value = try Double(container.decode(String.self, forKey: .value))! }
             self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
-            self.amountOpened = try Double(container.decode(String.self, forKey: .amountOpened))!
-            self.amountOpenedAggregated = try Double(container.decode(String.self, forKey: .amountOpenedAggregated))!
-            self.isAggregatedAmount = (try? container.decodeIfPresent(Bool.self, forKey: .isAggregatedAmount) ?? (try? container.decodeIfPresent(String.self, forKey: .isAggregatedAmount) == "1") ?? false) ?? false
-            self.dueType = try Int(container.decode(String.self, forKey: .dueType))!
-            self.productID = try Int(container.decode(String.self, forKey: .productID))!
+            do { self.amountOpened = try container.decode(Double.self, forKey: .amountOpened) } catch { self.amountOpened = try Double(container.decode(String.self, forKey: .amountOpened))! }
+            do { self.amountOpenedAggregated = try container.decode(Double.self, forKey: .amountOpenedAggregated) } catch { self.amountOpenedAggregated = try Double(container.decode(String.self, forKey: .amountOpenedAggregated))! }
+            do {
+                self.isAggregatedAmount = try container.decode(Bool.self, forKey: .isAggregatedAmount)
+            } catch {
+                do {
+                    self.isAggregatedAmount = try container.decode(Int.self, forKey: .isAggregatedAmount) == 1
+                } catch {
+                    self.isAggregatedAmount = ["1", "true"].contains(try? container.decode(String.self, forKey: .isAggregatedAmount))
+                }
+            }
+            do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
+            do { self.productID = try container.decode(Int.self, forKey: .productID) } catch { self.productID = try Int(container.decode(String.self, forKey: .productID))! }
             self.product = try container.decode(MDProduct.self, forKey: .product)
         } catch {
             throw APIError.decodingError(error: error)

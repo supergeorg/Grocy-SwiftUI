@@ -54,33 +54,6 @@ struct StockProductDetails: Codable {
         case hasChilds = "has_childs"
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.product = try container.decode(MDProduct.self, forKey: .product)
-    //        self.productBarcodes = try container.decode([MDProductBarcode].self, forKey: .productBarcodes)
-    //        self.lastPurchased = try? container.decodeIfPresent(String.self, forKey: .lastPurchased) ?? nil
-    //        self.lastUsed = try? container.decodeIfPresent(String.self, forKey: .lastUsed) ?? nil
-    //        self.stockAmount = try container.decode(Double.self, forKey: .stockAmount)
-    //        self.stockValue = try? container.decodeIfPresent(Double.self, forKey: .stockValue) ?? nil
-    //        self.stockAmountOpened = try? container.decodeIfPresent(Double.self, forKey: .stockAmountOpened) ?? nil
-    //        self.stockAmountAggregated = try? container.decodeIfPresent(Double.self, forKey: .stockAmountAggregated) ?? nil
-    //        self.stockAmountOpenedAggregated = try? container.decodeIfPresent(Double.self, forKey: .stockAmountOpenedAggregated) ?? nil
-    //        self.defaultQuantityUnitPurchase = try container.decode(MDQuantityUnit.self, forKey: .defaultQuantityUnitPurchase)
-    //        self.quantityUnitStock = try container.decode(MDQuantityUnit.self, forKey: .quantityUnitStock)
-    //        self.lastPrice = try? container.decodeIfPresent(Double.self, forKey: .lastPrice) ?? nil
-    //        self.avgPrice = try? container.decodeIfPresent(Double.self, forKey: .avgPrice) ?? nil
-    //        self.oldestPrice = try? container.decodeIfPresent(Double.self, forKey: .oldestPrice) ?? nil
-    //        self.lastShoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .lastShoppingLocationID) ?? nil
-    //        self.defaultShoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .defaultShoppingLocationID) ?? nil
-    //        self.nextDueDate = try container.decode(String.self, forKey: .nextDueDate)
-    //        self.location = try container.decode(MDLocation.self, forKey: .location)
-    //        self.averageShelfLifeDays = try container.decode(Int.self, forKey: .averageShelfLifeDays)
-    //        self.spoilRatePercent = try container.decode(Double.self, forKey: .spoilRatePercent)
-    //        self.isAggregatedAmount = (try? container.decodeIfPresent(Bool.self, forKey: .isAggregatedAmount) ?? (try? container.decodeIfPresent(Int.self, forKey: .isAggregatedAmount) == 1) ?? false) ?? false
-    //        self.hasChilds = (try? container.decodeIfPresent(Bool.self, forKey: .hasChilds) ?? (try? container.decodeIfPresent(Int.self, forKey: .hasChilds) == 1) ?? false) ?? false
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -88,24 +61,40 @@ struct StockProductDetails: Codable {
             self.productBarcodes = try container.decode([MDProductBarcode].self, forKey: .productBarcodes)
             self.lastPurchased = try? container.decodeIfPresent(String.self, forKey: .lastPurchased) ?? nil
             self.lastUsed = try? container.decodeIfPresent(String.self, forKey: .lastUsed) ?? nil
-            self.stockAmount = try Double(container.decode(String.self, forKey: .stockAmount))!
-            self.stockValue = try? Double(container.decodeIfPresent(String.self, forKey: .stockValue) ?? "")
-            self.stockAmountOpened = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountOpened) ?? "")
-            self.stockAmountAggregated = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountAggregated) ?? "")
-            self.stockAmountOpenedAggregated = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountOpenedAggregated) ?? "")
+            do { self.stockAmount = try container.decode(Double.self, forKey: .stockAmount) } catch { self.stockAmount = try Double(container.decode(String.self, forKey: .stockAmount))! }
+            do { self.stockValue = try container.decodeIfPresent(Double.self, forKey: .stockValue) } catch { self.stockValue = try? Double(container.decodeIfPresent(String.self, forKey: .stockValue) ?? "") }
+            do { self.stockAmountOpened = try container.decodeIfPresent(Double.self, forKey: .stockAmountOpened) } catch { self.stockAmountOpened = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountOpened) ?? "") }
+            do { self.stockAmountAggregated = try container.decodeIfPresent(Double.self, forKey: .stockAmountAggregated) } catch { self.stockAmountAggregated = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountAggregated) ?? "") }
+            do { self.stockAmountOpenedAggregated = try container.decodeIfPresent(Double.self, forKey: .stockAmountOpenedAggregated) } catch { self.stockAmountOpenedAggregated = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountOpenedAggregated) ?? "") }
             self.defaultQuantityUnitPurchase = try container.decode(MDQuantityUnit.self, forKey: .defaultQuantityUnitPurchase)
             self.quantityUnitStock = try container.decode(MDQuantityUnit.self, forKey: .quantityUnitStock)
-            self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "")
-            self.avgPrice = try? Double(container.decodeIfPresent(String.self, forKey: .avgPrice) ?? "")
-            self.oldestPrice = try? Double(container.decodeIfPresent(String.self, forKey: .oldestPrice) ?? "")
-            self.lastShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .lastShoppingLocationID) ?? "")
-            self.defaultShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultShoppingLocationID) ?? "")
+            do { self.lastPrice = try container.decodeIfPresent(Double.self, forKey: .lastPrice) } catch { self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "") }
+            do { self.avgPrice = try container.decodeIfPresent(Double.self, forKey: .avgPrice) } catch { self.avgPrice = try? Double(container.decodeIfPresent(String.self, forKey: .avgPrice) ?? "") }
+            do { self.oldestPrice = try container.decodeIfPresent(Double.self, forKey: .oldestPrice) } catch { self.oldestPrice = try? Double(container.decodeIfPresent(String.self, forKey: .oldestPrice) ?? "") }
+            do { self.lastShoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .lastShoppingLocationID) } catch { self.lastShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .lastShoppingLocationID) ?? "") }
+            do { self.defaultShoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultShoppingLocationID) } catch { self.defaultShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultShoppingLocationID) ?? "") }
             self.nextDueDate = try container.decode(String.self, forKey: .nextDueDate)
             self.location = try container.decode(MDLocation.self, forKey: .location)
-            self.averageShelfLifeDays = try Int(container.decode(String.self, forKey: .averageShelfLifeDays))!
-            self.spoilRatePercent = try Double(container.decode(String.self, forKey: .spoilRatePercent))!
-            self.isAggregatedAmount = (try? container.decodeIfPresent(Bool.self, forKey: .isAggregatedAmount) ?? (try? container.decodeIfPresent(String.self, forKey: .isAggregatedAmount) == "1") ?? false) ?? false
-            self.hasChilds = (try? container.decodeIfPresent(Bool.self, forKey: .hasChilds) ?? (try? container.decodeIfPresent(String.self, forKey: .hasChilds) == "1") ?? false) ?? false
+            do { self.averageShelfLifeDays = try container.decode(Int.self, forKey: .averageShelfLifeDays) } catch { self.averageShelfLifeDays = try Int(container.decode(String.self, forKey: .averageShelfLifeDays))! }
+            do { self.spoilRatePercent = try container.decode(Double.self, forKey: .spoilRatePercent) } catch { self.spoilRatePercent = try Double(container.decode(String.self, forKey: .spoilRatePercent))! }
+            do {
+                self.isAggregatedAmount = try container.decode(Bool.self, forKey: .isAggregatedAmount)
+            } catch {
+                do {
+                    self.isAggregatedAmount = try container.decodeIfPresent(Int.self, forKey: .isAggregatedAmount) == 1
+                } catch {
+                    self.isAggregatedAmount = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .isAggregatedAmount))
+                }
+            }
+            do {
+                self.hasChilds = try container.decode(Bool.self, forKey: .hasChilds)
+            } catch {
+                do {
+                    self.hasChilds = try container.decode(Int.self, forKey: .hasChilds) == 1
+                } catch {
+                    self.hasChilds = ["1", "true"].contains(try container.decode(String.self, forKey: .hasChilds))
+                }
+            }
         } catch {
             throw APIError.decodingError(error: error)
         }

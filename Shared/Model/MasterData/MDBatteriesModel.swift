@@ -27,27 +27,15 @@ struct MDBattery: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.id = try container.decode(Int.self, forKey: .id)
-    //        self.name = try container.decode(String.self, forKey: .name)
-    //        self.mdBatteryDescription = try? container.decodeIfPresent(String.self, forKey: .mdBatteryDescription) ?? nil
-    //        self.usedIn = try? container.decodeIfPresent(String.self, forKey: .usedIn) ?? nil
-    //        self.chargeIntervalDays = try container.decode(Int.self, forKey: .chargeIntervalDays)
-    //        self.active = try container.decode(Int.self, forKey: .active)
-    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
             self.mdBatteryDescription = try? container.decodeIfPresent(String.self, forKey: .mdBatteryDescription) ?? nil
             self.usedIn = try? container.decodeIfPresent(String.self, forKey: .usedIn) ?? nil
-            self.chargeIntervalDays = try Int(container.decode(String.self, forKey: .chargeIntervalDays)) ?? 1
-            self.active = try Int(container.decode(String.self, forKey: .active)) ?? 0
+            do { self.chargeIntervalDays = try container.decode(Int.self, forKey: .chargeIntervalDays) } catch { self.chargeIntervalDays = try Int(container.decode(String.self, forKey: .chargeIntervalDays)) ?? 1 }
+            do { self.active = try container.decode(Int.self, forKey: .active) } catch { self.active = try Int(container.decode(String.self, forKey: .active)) ?? 0 }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)

@@ -8,7 +8,7 @@
 import Foundation
 
 struct GrocyAPP {
-    static let supportedVersions: [String] = ["3.1.1"]
+    static let supportedVersions: [String] = ["3.1.0", "3.1.1"]
     
     enum DemoServers: String, CaseIterable, Identifiable {
         case noLanguage = "https://demo.grocy.info"

@@ -30,34 +30,16 @@ struct MDProductBarcode: Codable {
         case note
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.id = try container.decode(Int.self, forKey: .id)
-    //        self.productID = try container.decode(Int.self, forKey: .productID)
-    //        do {
-    //            self.barcode = try String(container.decode(Int.self, forKey: .barcode))
-    //        } catch DecodingError.typeMismatch {
-    //            self.barcode = try container.decode(String.self, forKey: .barcode)
-    //        }
-    //        self.quID = try? container.decodeIfPresent(Int.self, forKey: .quID)
-    //        self.amount = try? container.decodeIfPresent(Double.self, forKey: .amount)
-    //        self.shoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .shoppingLocationID)
-    //        self.lastPrice = try? container.decodeIfPresent(Double.self, forKey: .lastPrice)
-    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-    //        self.note = try? container.decodeIfPresent(String.self, forKey: .note)
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
-            self.productID = try Int(container.decode(String.self, forKey: .productID))!
-            self.barcode = try container.decode(String.self, forKey: .barcode)
-            self.quID = try? Int(container.decodeIfPresent(String.self, forKey: .quID) ?? "")
-            self.amount = try? Double(container.decodeIfPresent(String.self, forKey: .amount) ?? "")
-            self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "")
-            self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "")
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
+            do { self.productID = try container.decode(Int.self, forKey: .productID) } catch { self.productID = try Int(container.decode(String.self, forKey: .productID))! }
+            do { self.barcode = try container.decode(String.self, forKey: .barcode) } catch { self.barcode = try String(container.decodeIfPresent(Int.self, forKey: .barcode)!) }
+            do { self.quID = try container.decodeIfPresent(Int.self, forKey: .quID) ?? nil } catch { self.quID = try? Int(container.decodeIfPresent(String.self, forKey: .quID) ?? "") }
+            do { self.amount = try container.decodeIfPresent(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decodeIfPresent(String.self, forKey: .amount) ?? "") }
+            do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
+            do { self.lastPrice = try container.decodeIfPresent(Double.self, forKey: .lastPrice) } catch { self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "") }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             self.note = try? container.decodeIfPresent(String.self, forKey: .note)
         } catch {

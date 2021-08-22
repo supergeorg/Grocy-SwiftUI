@@ -28,29 +28,16 @@ struct ShoppingListItem: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.id = try container.decode(Int.self, forKey: .id)
-    //        self.productID = try? container.decodeIfPresent(Int.self, forKey: .productID) ?? nil
-    //        self.note = try? container.decodeIfPresent(String.self, forKey: .note) ?? nil
-    //        self.amount = try container.decode(Double.self, forKey: .amount)
-    //        self.shoppingListID = try container.decode(Int.self, forKey: .shoppingListID)
-    //        self.done = try container.decode(Int.self, forKey: .done)
-    //        self.quID = try? container.decodeIfPresent(Int.self, forKey: .quID) ?? nil
-    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
-            self.productID = try? Int(container.decodeIfPresent(String.self, forKey: .productID) ?? "")
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
+            do { self.productID = try container.decodeIfPresent(Int.self, forKey: .productID) } catch { self.productID = try? Int(container.decodeIfPresent(String.self, forKey: .productID) ?? "") }
             self.note = try? container.decodeIfPresent(String.self, forKey: .note) ?? nil
-            self.amount = try Double(container.decode(String.self, forKey: .amount))!
-            self.shoppingListID = try Int(container.decode(String.self, forKey: .shoppingListID))!
-            self.done = try Int(container.decode(String.self, forKey: .done))!
-            self.quID = try? Int(container.decodeIfPresent(String.self, forKey: .quID) ?? "")
+            do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
+            do { self.shoppingListID = try container.decode(Int.self, forKey: .shoppingListID) } catch { self.shoppingListID = try Int(container.decode(String.self, forKey: .shoppingListID))! }
+            do { self.done = try container.decode(Int.self, forKey: .done) } catch { self.done = try Int(container.decode(String.self, forKey: .done))! }
+            do { self.quID = try container.decodeIfPresent(Int.self, forKey: .quID) } catch { self.quID = try? Int(container.decodeIfPresent(String.self, forKey: .quID) ?? "") }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)

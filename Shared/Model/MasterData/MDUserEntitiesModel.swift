@@ -27,26 +27,14 @@ struct MDUserEntity: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.id = try container.decode(Int.self, forKey: .id)
-    //        self.name = try container.decode(String.self, forKey: .name)
-    //        self.caption = try container.decode(String.self, forKey: .caption)
-    //        self.mdUserEntityDescription = try? container.decodeIfPresent(String.self, forKey: .mdUserEntityDescription) ?? nil
-    //        self.showInSidebarMenu = try? container.decodeIfPresent(Int.self, forKey: .showInSidebarMenu) ?? nil
-    //        self.iconCSSClass = try? container.decodeIfPresent(String.self, forKey: .iconCSSClass) ?? nil
-    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
             self.caption = try container.decode(String.self, forKey: .caption)
             self.mdUserEntityDescription = try? container.decodeIfPresent(String.self, forKey: .mdUserEntityDescription) ?? nil
-            self.showInSidebarMenu = try? Int(container.decodeIfPresent(String.self, forKey: .showInSidebarMenu) ?? "")
+            do { self.showInSidebarMenu = try container.decode(Int.self, forKey: .showInSidebarMenu) } catch { self.showInSidebarMenu = try Int(container.decode(String.self, forKey: .showInSidebarMenu)) }
             self.iconCSSClass = try? container.decodeIfPresent(String.self, forKey: .iconCSSClass) ?? nil
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {

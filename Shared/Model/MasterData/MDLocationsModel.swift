@@ -22,35 +22,19 @@ struct MDLocation: Codable {
         case isFreezer = "is_freezer"
     }
     
-    //    Decoder with Numbers instead of strings
-    //    init(from decoder: Decoder) throws {
-    //        let container = try decoder.container(keyedBy: CodingKeys.self)
-    //        self.id = try container.decode(Int.self, forKey: .id)
-    //        self.name = try container.decode(String.self, forKey: .name)
-    //        self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
-    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-    //        do {
-    //            let freezerInt = try container.decode(Int.self, forKey: .isFreezer)
-    //            self.isFreezer = freezerInt == 1
-    //        } catch DecodingError.typeMismatch {
-    //            let freezerStr = try container.decode(String.self, forKey: .isFreezer)
-    //            self.isFreezer = freezerStr == "true"
-    //        }
-    //    }
-    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.id = try Int(container.decode(String.self, forKey: .id))!
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
             self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do {
-                let freezerInt = try Int(container.decode(String.self, forKey: .isFreezer)) ?? 0
+                let freezerInt = try container.decodeIfPresent(Int.self, forKey: .isFreezer)
                 self.isFreezer = freezerInt == 1
             } catch DecodingError.typeMismatch {
                 let freezerStr = try container.decode(String.self, forKey: .isFreezer)
-                self.isFreezer = freezerStr == "true"
+                self.isFreezer = freezerStr == "true" || freezerStr == "1"
             }
         } catch {
             throw APIError.decodingError(error: error)
