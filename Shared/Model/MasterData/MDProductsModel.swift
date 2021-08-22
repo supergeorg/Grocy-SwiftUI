@@ -59,36 +59,71 @@ struct MDProduct: Codable {
         case hideOnStockOverview = "hide_on_stock_overview"
     }
     
+    //    Decoder with Numbers instead of strings
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        self.id = try container.decode(Int.self, forKey: .id)
+    //        self.name = try container.decode(String.self, forKey: .name)
+    //        self.mdProductDescription = try? container.decodeIfPresent(String.self, forKey: .mdProductDescription) ?? nil
+    //        self.productGroupID = try? container.decodeIfPresent(Int.self, forKey: .productGroupID) ?? nil
+    //        self.active = try container.decode(Int.self, forKey: .active)
+    //        self.locationID = try container.decode(Int.self, forKey: .locationID)
+    //        self.shoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) ?? nil
+    //        self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase)
+    //        self.quIDStock = try container.decode(Int.self, forKey: .quIDStock)
+    //        self.quFactorPurchaseToStock = try? container.decodeIfPresent(Double.self, forKey: .quFactorPurchaseToStock) ?? nil
+    //        self.minStockAmount = try container.decode(Double.self, forKey: .minStockAmount)
+    //        self.defaultBestBeforeDays = try container.decode(Int.self, forKey: .defaultBestBeforeDays)
+    //        self.defaultBestBeforeDaysAfterOpen = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterOpen)
+    //        self.defaultBestBeforeDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterFreezing)
+    //        self.defaultBestBeforeDaysAfterThawing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterThawing)
+    //        self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
+    //        self.enableTareWeightHandling = try? container.decodeIfPresent(Int.self, forKey: .enableTareWeightHandling) ?? nil
+    //        self.tareWeight = try? container.decodeIfPresent(Double.self, forKey: .tareWeight) ?? nil
+    //        self.notCheckStockFulfillmentForRecipes = try? container.decodeIfPresent(Int.self, forKey: .notCheckStockFulfillmentForRecipes) ?? nil
+    //        self.parentProductID = try? container.decodeIfPresent(Int.self, forKey: .parentProductID) ?? nil
+    //        self.calories = try? container.decodeIfPresent(Double.self, forKey: .calories) ?? nil
+    //        self.cumulateMinStockAmountOfSubProducts = try? container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? nil
+    //        self.dueType = try container.decode(Int.self, forKey: .dueType)
+    //        self.quickConsumeAmount = try? container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) ?? nil
+    //        self.hideOnStockOverview = try? container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) ?? nil
+    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    //    }
+    
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.mdProductDescription = try? container.decodeIfPresent(String.self, forKey: .mdProductDescription) ?? nil
-        self.productGroupID = try? container.decodeIfPresent(Int.self, forKey: .productGroupID) ?? nil
-        self.active = try container.decode(Int.self, forKey: .active)
-        self.locationID = try container.decode(Int.self, forKey: .locationID)
-        self.shoppingLocationID = try? container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) ?? nil
-        self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase)
-        self.quIDStock = try container.decode(Int.self, forKey: .quIDStock)
-        self.quFactorPurchaseToStock = try? container.decodeIfPresent(Double.self, forKey: .quFactorPurchaseToStock) ?? nil
-        self.minStockAmount = try container.decode(Double.self, forKey: .minStockAmount)
-        self.defaultBestBeforeDays = try container.decode(Int.self, forKey: .defaultBestBeforeDays)
-        self.defaultBestBeforeDaysAfterOpen = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterOpen)
-        self.defaultBestBeforeDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterFreezing)
-        self.defaultBestBeforeDaysAfterThawing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterThawing)
-        self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
-        self.enableTareWeightHandling = try? container.decodeIfPresent(Int.self, forKey: .enableTareWeightHandling) ?? nil
-        self.tareWeight = try? container.decodeIfPresent(Double.self, forKey: .tareWeight) ?? nil
-        self.notCheckStockFulfillmentForRecipes = try? container.decodeIfPresent(Int.self, forKey: .notCheckStockFulfillmentForRecipes) ?? nil
-        self.parentProductID = try? container.decodeIfPresent(Int.self, forKey: .parentProductID) ?? nil
-        self.calories = try? container.decodeIfPresent(Double.self, forKey: .calories) ?? nil
-        self.cumulateMinStockAmountOfSubProducts = try? container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? nil
-        self.dueType = try container.decode(Int.self, forKey: .dueType)
-        self.quickConsumeAmount = try? container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) ?? nil
-        self.hideOnStockOverview = try? container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) ?? nil
-        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.name = try container.decode(String.self, forKey: .name)
+            self.mdProductDescription = try? container.decodeIfPresent(String.self, forKey: .mdProductDescription) ?? nil
+            self.productGroupID = try? Int(container.decodeIfPresent(String.self, forKey: .productGroupID) ?? "")
+            self.active = try Int(container.decode(String.self, forKey: .active)) ?? 0
+            self.locationID = try Int(container.decode(String.self, forKey: .locationID))!
+            self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "")
+            self.quIDPurchase = try Int(container.decode(String.self, forKey: .quIDPurchase))!
+            self.quIDStock = try Int(container.decode(String.self, forKey: .quIDStock))!
+            self.quFactorPurchaseToStock = try? Double(container.decodeIfPresent(String.self, forKey: .quFactorPurchaseToStock) ?? "")
+            self.minStockAmount = try Double(container.decode(String.self, forKey: .minStockAmount))!
+            self.defaultBestBeforeDays = try Int(container.decode(String.self, forKey: .defaultBestBeforeDays))!
+            self.defaultBestBeforeDaysAfterOpen = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterOpen))!
+            self.defaultBestBeforeDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterFreezing))!
+            self.defaultBestBeforeDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterThawing))!
+            self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
+            self.enableTareWeightHandling = try? Int(container.decodeIfPresent(String.self, forKey: .enableTareWeightHandling) ?? "")
+            self.tareWeight = try? Double(container.decodeIfPresent(String.self, forKey: .tareWeight) ?? "")
+            self.notCheckStockFulfillmentForRecipes = try? Int(container.decodeIfPresent(String.self, forKey: .notCheckStockFulfillmentForRecipes) ?? "")
+            self.parentProductID = try? Int(container.decodeIfPresent(String.self, forKey: .parentProductID) ?? "")
+            self.calories = try? Double(container.decodeIfPresent(String.self, forKey: .calories) ?? "")
+            self.cumulateMinStockAmountOfSubProducts = try? Int(container.decodeIfPresent(String.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? "")
+            self.dueType = try Int(container.decode(String.self, forKey: .dueType))!
+            self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "")
+            self.hideOnStockOverview = try? Int(container.decodeIfPresent(String.self, forKey: .hideOnStockOverview) ?? "")
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
     }
-
+    
     init(id: Int,
          name: String,
          mdProductDescription: String? = nil,

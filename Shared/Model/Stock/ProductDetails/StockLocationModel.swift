@@ -15,7 +15,7 @@ struct StockLocation: Codable {
     let locationID: Int
     let locationName: String
     let locationIsFreezer: Bool
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -25,14 +25,29 @@ struct StockLocation: Codable {
         case locationIsFreezer = "location_is_freezer"
     }
     
+    //    Decoder with Numbers instead of strings
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        self.id = try container.decode(Int.self, forKey: .id)
+    //        self.productID = try container.decode(Int.self, forKey: .productID)
+    //        self.amount = try container.decode(Double.self, forKey: .amount)
+    //        self.locationID = try container.decode(Int.self, forKey: .locationID)
+    //        self.locationName = try container.decode(String.self, forKey: .locationName)
+    //        self.locationIsFreezer = (try? container.decodeIfPresent(Bool.self, forKey: .locationIsFreezer) ?? (try? container.decodeIfPresent(Int.self, forKey: .locationIsFreezer) == 1) ?? false) ?? false
+    //    }
+    
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.productID = try container.decode(Int.self, forKey: .productID)
-        self.amount = try container.decode(Double.self, forKey: .amount)
-        self.locationID = try container.decode(Int.self, forKey: .locationID)
-        self.locationName = try container.decode(String.self, forKey: .locationName)
-        self.locationIsFreezer = (try? container.decodeIfPresent(Bool.self, forKey: .locationIsFreezer) ?? (try? container.decodeIfPresent(Int.self, forKey: .locationIsFreezer) == 1) ?? false) ?? false
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.productID = try Int(container.decode(String.self, forKey: .productID))!
+            self.amount = try Double(container.decode(String.self, forKey: .amount))!
+            self.locationID = try Int(container.decode(String.self, forKey: .locationID))!
+            self.locationName = try container.decode(String.self, forKey: .locationName)
+            self.locationIsFreezer = (try? container.decodeIfPresent(Bool.self, forKey: .locationIsFreezer) ?? (try? container.decodeIfPresent(String.self, forKey: .locationIsFreezer) == "1") ?? false) ?? false
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
     }
 }
 

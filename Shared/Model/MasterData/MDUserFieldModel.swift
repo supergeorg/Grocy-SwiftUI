@@ -18,7 +18,7 @@ struct MDUserField: Codable {
     let config: String?
     let sortNumber: Int?
     let rowCreatedTimestamp: String
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -31,17 +31,35 @@ struct MDUserField: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
     
+    //    Decoder with Numbers instead of strings
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        self.id = try container.decode(Int.self, forKey: .id)
+    //        self.name = try container.decode(String.self, forKey: .name)
+    //        self.entity = try container.decode(String.self, forKey: .entity)
+    //        self.caption = try container.decode(String.self, forKey: .caption)
+    //        self.type = try container.decode(String.self, forKey: .type)
+    //        self.showAsColumnInTables = try container.decode(Int.self, forKey: .showAsColumnInTables)
+    //        self.config = try? container.decodeIfPresent(String.self, forKey: .config) ?? nil
+    //        self.sortNumber = try? container.decodeIfPresent(Int.self, forKey: .sortNumber) ?? nil
+    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    //    }
+    
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.entity = try container.decode(String.self, forKey: .entity)
-        self.caption = try container.decode(String.self, forKey: .caption)
-        self.type = try container.decode(String.self, forKey: .type)
-        self.showAsColumnInTables = try container.decode(Int.self, forKey: .showAsColumnInTables)
-        self.config = try? container.decodeIfPresent(String.self, forKey: .config) ?? nil
-        self.sortNumber = try? container.decodeIfPresent(Int.self, forKey: .sortNumber) ?? nil
-        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.name = try container.decode(String.self, forKey: .name)
+            self.entity = try container.decode(String.self, forKey: .entity)
+            self.caption = try container.decode(String.self, forKey: .caption)
+            self.type = try container.decode(String.self, forKey: .type)
+            self.showAsColumnInTables = try Int(container.decode(String.self, forKey: .showAsColumnInTables)) ?? 0
+            self.config = try? container.decodeIfPresent(String.self, forKey: .config) ?? nil
+            self.sortNumber = try? Int(container.decodeIfPresent(String.self, forKey: .sortNumber) ?? "")
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
     }
     
     init(id: Int,

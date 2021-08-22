@@ -13,19 +13,32 @@ struct MDShoppingLocation: Codable {
     let name: String
     let mdShoppingLocationDescription: String?
     let rowCreatedTimestamp: String
-
+    
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdShoppingLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
     
+    //    Decoder with Numbers instead of strings
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        self.id = try container.decode(Int.self, forKey: .id)
+    //        self.name = try container.decode(String.self, forKey: .name)
+    //        self.mdShoppingLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdShoppingLocationDescription) ?? nil
+    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    //    }
+    
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.mdShoppingLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdShoppingLocationDescription) ?? nil
-        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.name = try container.decode(String.self, forKey: .name)
+            self.mdShoppingLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdShoppingLocationDescription) ?? nil
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
     }
     
     init(id: Int,

@@ -19,6 +19,28 @@ struct ShoppingListDescription: Codable {
         case shoppingListDescriptionDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.name = try container.decode(String.self, forKey: .id)
+            self.shoppingListDescriptionDescription = try? container.decodeIfPresent(String.self, forKey: .shoppingListDescriptionDescription) ?? nil
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    init(id: Int,
+         name: String,
+         shoppingListDescriptionDescription: String? = nil,
+         rowCreatedTimestamp: String) {
+        self.id = id
+        self.name = name
+        self.shoppingListDescriptionDescription = shoppingListDescriptionDescription
+        self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
 }
 
 typealias ShoppingListDescriptions = [ShoppingListDescription]

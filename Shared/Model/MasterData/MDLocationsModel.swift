@@ -14,7 +14,7 @@ struct MDLocation: Codable {
     let mdLocationDescription: String?
     let rowCreatedTimestamp: String
     var isFreezer: Bool
-
+    
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdLocationDescription = "description"
@@ -22,18 +22,38 @@ struct MDLocation: Codable {
         case isFreezer = "is_freezer"
     }
     
+    //    Decoder with Numbers instead of strings
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        self.id = try container.decode(Int.self, forKey: .id)
+    //        self.name = try container.decode(String.self, forKey: .name)
+    //        self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
+    //        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+    //        do {
+    //            let freezerInt = try container.decode(Int.self, forKey: .isFreezer)
+    //            self.isFreezer = freezerInt == 1
+    //        } catch DecodingError.typeMismatch {
+    //            let freezerStr = try container.decode(String.self, forKey: .isFreezer)
+    //            self.isFreezer = freezerStr == "true"
+    //        }
+    //    }
+    
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
-        self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         do {
-            let freezerInt = try container.decode(Int.self, forKey: .isFreezer)
-            self.isFreezer = freezerInt == 1
-        } catch DecodingError.typeMismatch {
-            let freezerStr = try container.decode(String.self, forKey: .isFreezer)
-            self.isFreezer = freezerStr == "true"
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try Int(container.decode(String.self, forKey: .id))!
+            self.name = try container.decode(String.self, forKey: .name)
+            self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
+            do {
+                let freezerInt = try Int(container.decode(String.self, forKey: .isFreezer)) ?? 0
+                self.isFreezer = freezerInt == 1
+            } catch DecodingError.typeMismatch {
+                let freezerStr = try container.decode(String.self, forKey: .isFreezer)
+                self.isFreezer = freezerStr == "true"
+            }
+        } catch {
+            throw APIError.decodingError(error: error)
         }
     }
     
