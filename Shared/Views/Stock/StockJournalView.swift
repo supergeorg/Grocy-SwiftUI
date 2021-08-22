@@ -120,7 +120,7 @@ struct StockJournalRowView: View {
                     }
                 }
                 Group {
-                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount) \(getQUString(amount: journalEntry.amount))")"))
+                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(formatAmount(journalEntry.amount)) \(getQUString(amount: journalEntry.amount))")"))
                     Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
                     Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
                         .font(.caption)

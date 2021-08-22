@@ -142,7 +142,7 @@ struct StockTable: View {
             }
         }
         .padding(.horizontal)
-        .animation(.default)
+//        .animation(.default)
     }
     
     var contentSimplified: some View {

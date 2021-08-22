@@ -171,6 +171,18 @@
 		78A33CBB257528B900C450D4 /* ProductOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* ProductOverviewView.swift */; };
 		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
 		78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
+		78ADA1DC26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
+		78ADA1DD26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
+		78ADA1DE26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
+		78ADA1DF26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
+		78ADA1E126D1506800946E1B /* TranslatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E026D1506800946E1B /* TranslatorsView.swift */; };
+		78ADA1E226D1506800946E1B /* TranslatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E026D1506800946E1B /* TranslatorsView.swift */; };
+		78ADA1E326D1506800946E1B /* TranslatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E026D1506800946E1B /* TranslatorsView.swift */; };
+		78ADA1E426D1506800946E1B /* TranslatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E026D1506800946E1B /* TranslatorsView.swift */; };
+		78ADA1E626D1509100946E1B /* Translators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E526D1509100946E1B /* Translators.swift */; };
+		78ADA1E726D1509100946E1B /* Translators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E526D1509100946E1B /* Translators.swift */; };
+		78ADA1E826D1509100946E1B /* Translators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E526D1509100946E1B /* Translators.swift */; };
+		78ADA1E926D1509100946E1B /* Translators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1E526D1509100946E1B /* Translators.swift */; };
 		78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78B67B7D2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB74AE255E9EF800319108 /* Tests_iOS.swift */; };
@@ -484,6 +496,9 @@
 		78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLabelWithSubtitle.swift; sourceTree = "<group>"; };
 		78A33CB9257528B900C450D4 /* ProductOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductOverviewView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
+		78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssistantAPI.swift; sourceTree = "<group>"; };
+		78ADA1E026D1506800946E1B /* TranslatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorsView.swift; sourceTree = "<group>"; };
+		78ADA1E526D1509100946E1B /* Translators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translators.swift; sourceTree = "<group>"; };
 		78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionModel.swift; sourceTree = "<group>"; };
 		78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocy_SwiftUIApp.swift; sourceTree = "<group>"; };
 		78CB7494255E9EF700319108 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -723,6 +738,14 @@
 			path = Details;
 			sourceTree = "<group>";
 		};
+		78B6A76326C1AEF300CAECA6 /* HomeAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */,
+			);
+			path = HomeAssistant;
+			sourceTree = "<group>";
+		};
 		78B868D22590B19B005A0CAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -846,11 +869,12 @@
 				78CB7579255EA39900319108 /* GrocyAPI.swift */,
 				78CB756E255EA39200319108 /* GrocyViewModel.swift */,
 				789D167725DE7996006FC33F /* GrocySupportedServers.swift */,
-				7880F0F7256FB62D00FB8431 /* ShoppingList */,
 				78CB75F6255EB99400319108 /* Stock */,
+				7880F0F7256FB62D00FB8431 /* ShoppingList */,
 				78CB7610255EB9B800319108 /* MasterData */,
 				78CB758E255EA53F00319108 /* GenericResponses.swift */,
 				7885B8A62567ED14003439F5 /* SharedModel.swift */,
+				78B6A76326C1AEF300CAECA6 /* HomeAssistant */,
 				78E02CB725DAA3E700668403 /* OpenFoodFacts */,
 				78CB7580255EA3C100319108 /* System */,
 				7885B8AD2567F065003439F5 /* User */,
@@ -874,6 +898,7 @@
 				78CB7598255EA56D00319108 /* SettingsView.swift */,
 				7853A4CE25DBE74300AF9986 /* LogView.swift */,
 				78CB7597255EA56D00319108 /* AboutView.swift */,
+				78ADA1E026D1506800946E1B /* TranslatorsView.swift */,
 				78CB7596255EA56D00319108 /* GrocyInfoView.swift */,
 				78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */,
 			);
@@ -897,6 +922,7 @@
 				7845120B25C84A5B006B7686 /* SheetTypes.swift */,
 				7850AE1825D55EE4000A5302 /* ConditionalModifier.swift */,
 				78DB1BD0268CEE9F005448F3 /* Barcodes.swift */,
+				78ADA1E526D1509100946E1B /* Translators.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1227,6 +1253,7 @@
 				7880F104256FB6E400FB8431 /* ShoppingListDescriptionModel.swift in Sources */,
 				7885B8A72567ED14003439F5 /* SharedModel.swift in Sources */,
 				78CB761A255EB9C600319108 /* MDQuantityUnitsModel.swift in Sources */,
+				78ADA1E126D1506800946E1B /* TranslatorsView.swift in Sources */,
 				78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */,
 				78F47E8525BF10CE00579B69 /* MDBatteriesModel.swift in Sources */,
 				7891C647257E3BDD0014C59E /* RowInteractionButton.swift in Sources */,
@@ -1292,6 +1319,7 @@
 				783F4FAE25629E0400CD52B7 /* MDLocationFormView.swift in Sources */,
 				781DD5C72579028800A30ECA /* MDBarcodesView.swift in Sources */,
 				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
+				78ADA1E626D1509100946E1B /* Translators.swift in Sources */,
 				785427B525D29C3000AFE726 /* MySymbols.swift in Sources */,
 				78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */,
 				789ADDB225C45B3000D7EB35 /* ToastTypes.swift in Sources */,
@@ -1323,6 +1351,7 @@
 				78A201CC25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
 				78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */,
 				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
+				78ADA1DC26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
 				7885B8982567E4C0003439F5 /* StockJournalView.swift in Sources */,
 				78E02CBD25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
 				785D7C5B25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */,
@@ -1409,6 +1438,7 @@
 				78396E8D25629FE600B9878F /* MyTextField.swift in Sources */,
 				78CB74D7255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				7845120D25C84A5B006B7686 /* SheetTypes.swift in Sources */,
+				78ADA1E226D1506800946E1B /* TranslatorsView.swift in Sources */,
 				78CB75A7255EA5A900319108 /* Localization.swift in Sources */,
 				786F6EAC25640372004D8DE0 /* MDQuantityUnitsView.swift in Sources */,
 				781A25572566838C00560026 /* AppCommands.swift in Sources */,
@@ -1416,6 +1446,7 @@
 				7891C65D257E539A0014C59E /* ProductInventoryModel.swift in Sources */,
 				78E02CC725DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
 				78CB7658255EC0B500319108 /* StockFilterBarView.swift in Sources */,
+				78ADA1DD26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
 				78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */,
 				786F6E9A2564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
 				78FDCE1F25BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
@@ -1459,6 +1490,7 @@
 				78CB75A9255EA5A900319108 /* DateFormatter.swift in Sources */,
 				782626F8256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
 				78113B7725B59C8E0000B237 /* LabelStyles.swift in Sources */,
+				78ADA1E726D1509100946E1B /* Translators.swift in Sources */,
 				78CB75B1255EAB1400319108 /* Animations.swift in Sources */,
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
@@ -1505,8 +1537,10 @@
 				78FDCDC725BAD2DE0089CB5E /* MDProductGroupsModel.swift in Sources */,
 				78846069257F9FB700671C97 /* TransactionType.swift in Sources */,
 				78855F8325FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
+				78ADA1E826D1509100946E1B /* Translators.swift in Sources */,
 				78FDCDC825BAD2DE0089CB5E /* MDShoppingLocationsModel.swift in Sources */,
 				782219A425F2520900DCDB2E /* DateFormatter.swift in Sources */,
+				78ADA1E326D1506800946E1B /* TranslatorsView.swift in Sources */,
 				78FDCDA125BAD2D00089CB5E /* GrocyUserModel.swift in Sources */,
 				78E02CBF25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
 				78FDCE2025BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
@@ -1533,6 +1567,7 @@
 				7817659525F7B41200978483 /* NullCodable.swift in Sources */,
 				78FDCDFC25BAD2F00089CB5E /* ProductInventoryModel.swift in Sources */,
 				78FDCDB925BAD2D90089CB5E /* GenericResponses.swift in Sources */,
+				78ADA1DE26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
 				78FDCDA725BAD2D50089CB5E /* SystemDBChangedTimeModel.swift in Sources */,
 				78FDCDEA25BAD2E90089CB5E /* StockProductDetailsModel.swift in Sources */,
 				78CB74AF255E9EF800319108 /* Tests_iOS.swift in Sources */,
@@ -1574,6 +1609,7 @@
 				78FDCDB325BAD2D50089CB5E /* SystemInfoModel.swift in Sources */,
 				78FDCE1825BAD2F50089CB5E /* ShoppingListModel.swift in Sources */,
 				78FDCDE325BAD2E50089CB5E /* VolatileStockModel.swift in Sources */,
+				78ADA1E426D1506800946E1B /* TranslatorsView.swift in Sources */,
 				78FDCDE225BAD2E50089CB5E /* CurrentStockModel.swift in Sources */,
 				78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
@@ -1581,6 +1617,7 @@
 				78FDCE0225BAD2F00089CB5E /* ProductTransferModel.swift in Sources */,
 				78FDCDD125BAD2DE0089CB5E /* MDProductBarcodeModel.swift in Sources */,
 				78FDCDE425BAD2E50089CB5E /* ProductStatus.swift in Sources */,
+				78ADA1DF26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
 				78FDCD9C25BAD27B0089CB5E /* GrocyViewModel.swift in Sources */,
 				78FDCDF325BAD2E90089CB5E /* StockEntryModel.swift in Sources */,
 				78FDCE0525BAD2F00089CB5E /* ProductInventoryModel.swift in Sources */,
@@ -1593,6 +1630,7 @@
 				782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */,
 				78855F7225FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78FDCDC025BAD2DA0089CB5E /* SharedModel.swift in Sources */,
+				78ADA1E926D1509100946E1B /* Translators.swift in Sources */,
 				78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */,
 				78FDCDD425BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */,
 				78E02CC925DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
@@ -1748,7 +1786,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1757,7 +1795,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -1772,7 +1810,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1781,7 +1819,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -1800,7 +1838,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1810,7 +1848,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -1827,7 +1865,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1838,7 +1876,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -2001,7 +2039,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -2010,7 +2048,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -2028,7 +2066,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -2042,7 +2080,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;

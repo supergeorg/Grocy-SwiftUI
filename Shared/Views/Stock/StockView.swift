@@ -307,7 +307,7 @@ struct StockView: View {
                 .hidden()
         }
         .listStyle(InsetListStyle())
-        .animation(.default)
+//        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .onAppear(perform: {
             if firstAppear {

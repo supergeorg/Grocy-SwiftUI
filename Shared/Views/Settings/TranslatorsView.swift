@@ -24,7 +24,7 @@ struct TranslatorLineView: View {
 
 struct TranslatorsView: View {
     var body: some View {
-        List() {
+        Form() {
             ForEach(Array(Translators.languages).sorted { $0.name < $1.name },id: \.self, content: { language in
                 TranslatorLineView(languageName: language.name, languageFlag: language.flag, languageTranslators: language.translators)
             })
