@@ -175,6 +175,13 @@ struct LoginOwnServerView: View {
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     
+    // Home Assistant
+    @AppStorage("useHassIngress") var useHassIngress: Bool = false
+    @AppStorage("hassToken") var hassToken: String = ""
+    @AppStorage("hassAPIPath") var hassAPIPath: String = ""
+    
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     #if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
@@ -254,6 +261,13 @@ struct LoginOwnServerView: View {
                         VStack{
                             MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
                             MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key")
+                            if devMode {
+                                MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
+                                if useHassIngress {
+                                    MyTextField(textToEdit: $hassAPIPath, description: "str.login.hassIngress.apiPath", isCorrect: Binding.constant(true), leadingIcon: "network")
+                                    MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key")
+                                }
+                            }
                             Spacer()
                             CardView{
                                 VStack{

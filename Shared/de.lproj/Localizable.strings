@@ -637,3 +637,6 @@
 "str.login.connect.fail.info %@ %@" = "Server: %@\n\n Fehler: %@";
 "str.login.connect.unsupportedVersion %@" = "Die Serverversion %@ wird aktuell nicht von der App unterstützt. Du kannst die App trotzdem verwenden, es können aber Probleme auftreten.";
 "str.login.connect.unsupportedVersion.confirm" = "Trotzdem fortfahren";
+"str.login.hassIngress.use" = "Benutze Home Assistant Ingress";
+"str.login.hassIngress.apiPath" = "API-Pfad für Home Assistant";
+"str.login.hassIngress.token" = "Langzeit-Token für Home Assistant";

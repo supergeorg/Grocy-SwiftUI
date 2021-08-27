@@ -18,6 +18,8 @@ public enum APIError: Error {
     case timeout
     case invalidEndpoint(endpoint: String)
     case decodingError(error: Error)
+    case hassError(error: Error)
+    case notLoggedIn(error: Error)
 }
 
 public enum ObjectEntities: String, CaseIterable {
@@ -51,13 +53,9 @@ struct EmptyResponse: Codable {
     
 }
 
-//enum Result<T> {
-//  case success(T)
-//  case error(Error)
-//}
-
 protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
+    func setHassData(hassURL: String, hassToken: String)
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
@@ -96,6 +94,7 @@ protocol GrocyAPI {
 }
 
 public class GrocyApi: GrocyAPI {
+    var hassAuthenticator: HomeAssistantAuthenticator?
     
     private var baseURL: String = ""
     private var apiKey: String = ""
@@ -105,6 +104,10 @@ public class GrocyApi: GrocyAPI {
         self.apiKey = apiKey
     }
     
+    func setHassData(hassURL: String, hassToken: String) {
+        self.hassAuthenticator = HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
+    }
+    
     private enum Method: String {
         case GET
         case POST
@@ -112,15 +115,15 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
-        let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true)
+    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+        let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
         let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
             guard let response = response as? HTTPURLResponse,
-                response.statusCode == 204 else {
+                  response.statusCode == 204 else {
                 completion(.failure(APIError.unsuccessful))
                 return
             }
@@ -130,7 +133,29 @@ public class GrocyApi: GrocyAPI {
     }
     
     private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
-        let urlRequest = request(for: endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+        if let hassAuthenticator = hassAuthenticator {
+            return hassAuthenticator.validToken()
+                .flatMap({ token in
+                    // we can now use this token to authenticate the request
+                    self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
+                })
+                .tryCatch({ error -> AnyPublisher<Int, APIError> in
+                    return hassAuthenticator.validToken(forceRefresh: true)
+                        .flatMap({ token in
+                            // we can now use this new token to authenticate the second attempt at making this request
+                            self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
+                        })
+                        .eraseToAnyPublisher()
+                })
+                .mapError { error in return APIError.hassError(error: error) }
+                .eraseToAnyPublisher()
+        } else {
+            return self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+        }
+    }
+    
+    private func callAPIEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<Int, APIError> {
+        let urlRequest = request(for: endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
                 APIError.serverError(error: "\(error)") }
@@ -147,33 +172,55 @@ public class GrocyApi: GrocyAPI {
     }
     
     private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
-        let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query)
+        if let hassAuthenticator = hassAuthenticator {
+            return hassAuthenticator.validToken()
+                .flatMap({ token in
+                    // we can now use this token to authenticate the request
+                    self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session)
+                })
+                .tryCatch({ error -> AnyPublisher<T, APIError> in
+                    return hassAuthenticator.validToken(forceRefresh: true)
+                        .flatMap({ token in
+                            // we can now use this new token to authenticate the second attempt at making this request
+                            token.data != nil ? self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session) : self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassAuthenticator.getToken())
+                        })
+                        .eraseToAnyPublisher()
+                })
+                .mapError { error in return APIError.hassError(error: error) }
+                .eraseToAnyPublisher()
+        } else {
+            return self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
+        }
+    }
+    
+    private func callAPI<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<T, APIError> {
+        let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
                 APIError.serverError(error: "\(error)") }
             .flatMap({ result -> AnyPublisher<T, APIError> in
-                guard let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) else {
+                if let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) {
+                    return Just(result.data)
+                        .decode(type: T.self, decoder: JSONDecoder())
+                        .mapError{ error in APIError.decodingError(error: error) }
+                        .eraseToAnyPublisher()
+                } else {
                     return Just(result.data)
                         // decode if it is an error message
                         .decode(type: ErrorMessage.self, decoder: JSONDecoder())
                         // neither valid response nor error message
-                        .mapError { error in APIError.decodingError(error: error) }
+                        .mapError { error in (result.response as? HTTPURLResponse)?.statusCode == 401 ? APIError.notLoggedIn(error: error) : APIError.decodingError(error: error) }
                         // display error message
                         .tryMap { throw APIError.errorString(description: $0.errorMessage) }
                         .mapError { $0 as! APIError }
                         .eraseToAnyPublisher()
                 }
-                
-                return Just(result.data)
-                    .decode(type: T.self, decoder: JSONDecoder())
-                    .mapError{ error in APIError.decodingError(error: error) }
-                    .eraseToAnyPublisher()
             })
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil) -> URLRequest {
+    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
         var path = "\(baseURL)/api\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: String(id!)) }
@@ -202,6 +249,10 @@ public class GrocyApi: GrocyAPI {
         request.allHTTPHeaderFields = ["Content-Type": isOctet ? "application/octet-stream" : "application/json",
                                        "Accept": "application/json",
                                        "GROCY-API-KEY": apiKey]
+        
+        if let hassIngressToken = hassIngressToken {
+            request.addValue("ingress_session=\(hassIngressToken)", forHTTPHeaderField: "Cookie")
+        }
         if content != nil {
             request.httpBody = content
         }
@@ -425,10 +476,10 @@ extension GrocyApi {
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) -> AnyPublisher<Int, APIError> {
         return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
     }
-
+    
     func deleteObjectWithID(object: ObjectEntities, id: Int) -> AnyPublisher<Int, APIError> {
-            return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: id)
-        }
+        return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: id)
+    }
     
     // MARK: - Files
     func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {

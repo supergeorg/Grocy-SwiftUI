@@ -31,8 +31,6 @@ class GrocyViewModel: ObservableObject {
     let grocyLog = SwiftyBeaver.self
     #endif
     
-    @Published var lastLoadingFailed: Bool = false
-    
     @Published var systemInfo: SystemInfo?
     @Published var systemDBChangedTime: SystemDBChangedTime?
     @Published var systemConfig: SystemConfig?
@@ -67,12 +65,19 @@ class GrocyViewModel: ObservableObject {
     
     var cancellables = Set<AnyCancellable>()
     
+    @AppStorage("useHassIngress") var useHassIngress: Bool = false
+    @AppStorage("hassToken") var hassToken: String = ""
+    @AppStorage("hassAPIPath") var hassAPIPath: String = ""
+    
     let jsonEncoder = JSONEncoder()
     
     init() {
         self.grocyApi = GrocyApi()
         if isLoggedIn {
             if !isDemoModus {
+                if useHassIngress {
+                    grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+                }
                 grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
             } else {
                 grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
@@ -99,6 +104,9 @@ class GrocyViewModel: ObservableObject {
     }
     
     func setLoginModus() {
+        if useHassIngress {
+            grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+        }
         grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         isDemoModus = false
         isLoggedIn = true
@@ -111,6 +119,9 @@ class GrocyViewModel: ObservableObject {
     }
     
     func checkServer(baseURL: String, apiKey: String?, completion: @escaping ((Result<String, Error>) -> ())) {
+        if useHassIngress {
+            grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+        }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
         grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
@@ -158,8 +169,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.mdProductBarcodes.map{ $0.id }
         case .task_categories:
             ints = self.mdTaskCategories.map{ $0.id }
-//        case .userfields:
-//            ints = self.mdUserFields.map{ $0.id }
+        case .userfields:
+            ints = self.mdUserFields.map{ $0.id }
         case .userentities:
             ints = self.mdUserEntities.map{ $0.id }
         default:
@@ -176,7 +187,6 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get entity \(entity.rawValue) failed. \("\(error)")")
                     completion(.failure(error))
                 case .finished:
                     break
@@ -486,6 +496,8 @@ class GrocyViewModel: ObservableObject {
         stockProductPriceHistories = [:]
         
         lastStockActions = []
+        failedToLoadObjects.removeAll()
+        failedToLoadAdditionalObjects.removeAll()
         self.grocyLog.info("Deleted all cached data from the viewmodel.")
     }
     
