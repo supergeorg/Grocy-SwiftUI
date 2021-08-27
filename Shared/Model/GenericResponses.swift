@@ -23,6 +23,19 @@ struct SuccessfulCreationMessage: Codable {
     enum CodingKeys: String, CodingKey {
         case createdObjectID = "created_object_id"
     }
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            do { self.createdObjectID = try container.decode(Int.self, forKey: .createdObjectID) } catch { self.createdObjectID = Int(try container.decode(String.self, forKey: .createdObjectID))! }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+
+    init(createdObjectID: Int) {
+        self.createdObjectID = createdObjectID
+    }
 }
 
 // MARK: - SuccessfulPutMessage
@@ -41,6 +54,19 @@ struct DeleteMessage: Codable {
 
     enum CodingKeys: String, CodingKey {
         case deletedObjectID = "deleted_object_id"
+    }
+
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            do { self.deletedObjectID = try container.decode(Int.self, forKey: .deletedObjectID) } catch { self.deletedObjectID = Int(try container.decode(String.self, forKey: .deletedObjectID))! }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+
+    init(deletedObjectID: Int) {
+        self.deletedObjectID = deletedObjectID
     }
 }
 
