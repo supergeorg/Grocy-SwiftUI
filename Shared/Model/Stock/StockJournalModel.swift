@@ -64,7 +64,7 @@ struct StockJournalEntry: Codable {
             self.purchasedDate = try? container.decodeIfPresent(String.self, forKey: .purchasedDate) ?? nil
             self.usedDate = try? container.decodeIfPresent(String.self, forKey: .usedDate) ?? nil
             do { self.spoiled = try container.decode(Int.self, forKey: .spoiled) } catch { self.spoiled = try Int(container.decode(String.self, forKey: .spoiled))! }
-            self.stockID = try container.decode(String.self, forKey: .stockID)
+            do { self.stockID = try container.decode(String.self, forKey: .stockID) } catch { self.stockID = try String(container.decode(Int.self, forKey: .stockID)) }
             self.transactionType = try container.decode(TransactionType.self, forKey: .transactionType)
             do { self.price = try container.decodeIfPresent(Double.self, forKey: .price) } catch { self.price = try? Double(container.decodeIfPresent(String.self, forKey: .price) ?? "") }
             do { self.undone = try container.decode(Int.self, forKey: .undone) } catch { self.undone = try Int(container.decode(String.self, forKey: .undone))! }
@@ -74,7 +74,7 @@ struct StockJournalEntry: Codable {
             do { self.locationID = try container.decode(Int.self, forKey: .locationID) } catch { self.locationID = try Int(container.decode(String.self, forKey: .locationID))! }
             do { self.recipeID = try container.decodeIfPresent(Int.self, forKey: .recipeID) } catch { self.recipeID = try? Int(container.decodeIfPresent(String.self, forKey: .recipeID) ?? "") }
             do { self.correlationID = try container.decodeIfPresent(Int.self, forKey: .correlationID) } catch { self.correlationID = try? Int(container.decodeIfPresent(String.self, forKey: .correlationID) ?? "") }
-            self.transactionID = try container.decode(String.self, forKey: .transactionID)
+            do { self.transactionID = try container.decode(String.self, forKey: .transactionID) } catch { self.transactionID = try String(container.decode(Int.self, forKey: .transactionID)) }
             do { self.stockRowID = try container.decodeIfPresent(Int.self, forKey: .stockRowID) } catch { self.stockRowID = try? Int(container.decodeIfPresent(String.self, forKey: .stockRowID) ?? "") }
             do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
             do { self.userID = try container.decode(Int.self, forKey: .userID) } catch { self.userID = try Int(container.decode(String.self, forKey: .userID))! }

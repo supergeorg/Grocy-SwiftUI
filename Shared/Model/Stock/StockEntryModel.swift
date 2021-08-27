@@ -44,7 +44,7 @@ struct StockEntry: Codable {
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
             self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
             self.purchasedDate = try? container.decodeIfPresent(String.self, forKey: .purchasedDate) ?? nil
-            self.stockID = try container.decode(String.self, forKey: .stockID)
+            do { self.stockID = try container.decode(String.self, forKey: .stockID) } catch { self.stockID = try String(container.decode(Int.self, forKey: .stockID)) }
             do { self.price = try container.decodeIfPresent(Double.self, forKey: .price) } catch { self.price = try? Double(container.decodeIfPresent(String.self, forKey: .price) ?? "") }
             do { self.stockEntryOpen = try container.decode(Int.self, forKey: .stockEntryOpen) } catch { self.stockEntryOpen = try Int(container.decode(String.self, forKey: .stockEntryOpen))! }
             self.openedDate = try? container.decodeIfPresent(String.self, forKey: .openedDate) ?? nil
