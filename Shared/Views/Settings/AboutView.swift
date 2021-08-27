@@ -26,6 +26,10 @@ struct AboutLineView: View {
 
 struct AboutView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
+    #if os(macOS)
+    @State private var showTranslators: Bool = false
+    #endif
+    
     var body: some View {
         Form(){
             Section{
@@ -41,8 +45,17 @@ struct AboutView: View {
                 })
                 .foregroundColor(.primary)
                 
+                #if os(iOS)
                 NavigationLink(destination: TranslatorsView(), label: {AboutLineView(iconName: "flag", caption: "str.settings.about.translators")})
-                
+                #else
+                AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
+                    .onTapGesture {
+                        showTranslators.toggle()
+                    }
+                if showTranslators {
+                    TranslatorsView()
+                }
+                #endif
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
                 })
