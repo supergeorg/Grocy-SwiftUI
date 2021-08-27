@@ -30,7 +30,8 @@ struct MDBarcodeFormView: View {
     @State var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
         // check if EAN8 or EAN13, or PZN 8/9
-        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13 || barcode.count == 9)
+        //        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13 || barcode.count == 9)
+        return true
     }
     
     private var product: MDProduct? {
