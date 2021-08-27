@@ -82,6 +82,7 @@ struct TransferProductView: View {
                 case let .success(prod):
                     grocyVM.postLog(message: "Transfer successful. \(prod)", type: .info)
                     toastType = .successTransfer
+                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                     resetForm()
                 case let .failure(error):
                     grocyVM.postLog(message: "Transfer failed: \(error)", type: .error)

@@ -101,6 +101,7 @@ struct InventoryProductView: View {
                     case let .success(prod):
                         grocyVM.postLog(message: "Inventory successful. \(prod)", type: .info)
                         toastType = .successInventory
+                        grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                         resetForm()
                     case let .failure(error):
                         grocyVM.postLog(message: "Inventory failed: \(error)", type: .error)
@@ -164,7 +165,7 @@ struct InventoryProductView: View {
                     }
                 }).disabled(true)
                 if stockAmountDifference != 0 {
-                    Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference) \(getQUString(amount: stockAmountDifference))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\(-stockAmountDifference) \(getQUString(amount: -stockAmountDifference))")"))
+                    Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(formatAmount(stockAmountDifference)) \(getQUString(amount: stockAmountDifference))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\(-stockAmountDifference) \(getQUString(amount: -stockAmountDifference))")"))
                 }
             }
             

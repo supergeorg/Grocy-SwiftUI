@@ -72,11 +72,11 @@ struct StockTableMenuView: View {
                     selectedStockElement = stockElement
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
                         switch result {
-                        case let .success(prod):
-                            print(prod)
+                        case .success(_):
                             toastType = .successConsumeAllSpoiled
+                            grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                         case let .failure(error):
-                            print("\(error)")
+                            grocyVM.postLog(message: "Consume all as spoiled failed. \(error)", type: .error)
                             toastType = .fail
                         }
                     }

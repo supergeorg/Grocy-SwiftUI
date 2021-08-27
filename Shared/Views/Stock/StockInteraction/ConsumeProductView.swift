@@ -120,6 +120,7 @@ struct ConsumeProductView: View {
                 case let .success(prod):
                     grocyVM.postLog(message: "Opening successful. \(prod)", type: .info)
                     toastType = .successOpen
+                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                     resetForm()
                 case let .failure(error):
                     grocyVM.postLog(message: "Opening failed: \(error)", type: .error)

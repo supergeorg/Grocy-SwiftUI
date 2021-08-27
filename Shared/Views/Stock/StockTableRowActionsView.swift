@@ -35,11 +35,11 @@ struct StockTableRowActionsView: View {
                     selectedStockElement = stockElement
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
                         switch result {
-                        case let .success(prod):
-                            print(prod)
+                        case .success(_):
                             toastType = .successConsumeOne
+                            grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                         case let .failure(error):
-                            print("\(error)")
+                            grocyVM.postLog(message: "Consume 1 item failed. \(error)", type: .error)
                             toastType = .fail
                         }
                     }
@@ -55,11 +55,11 @@ struct StockTableRowActionsView: View {
                             selectedStockElement = stockElement
                             grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
                                 switch result {
-                                case let .success(prod):
-                                    print(prod)
+                                case .success(_):
                                     toastType = .successConsumeAll
+                                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                                 case let .failure(error):
-                                    print("\(error)")
+                                    grocyVM.postLog(message: "Consume all items failed. \(error)", type: .error)
                                     toastType = .fail
                                 }
                             }
@@ -72,11 +72,11 @@ struct StockTableRowActionsView: View {
                     selectedStockElement = stockElement
                     grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
                         switch result {
-                        case let .success(prod):
-                            print(prod)
+                        case .success(_):
                             toastType = .successOpenOne
+                            grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                         case let .failure(error):
-                            print("\(error)")
+                            grocyVM.postLog(message: "Open 1 item failed. \(error)", type: .error)
                             toastType = .fail
                         }
                     }
@@ -90,9 +90,3 @@ struct StockTableRowActionsView: View {
         }
     }
 }
-
-//struct StockTableRowActionsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StockTableRowActionsView(stockElement: StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil)))
-//    }
-//}
