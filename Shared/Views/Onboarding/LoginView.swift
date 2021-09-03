@@ -178,7 +178,6 @@ struct LoginOwnServerView: View {
     // Home Assistant
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
     @AppStorage("hassToken") var hassToken: String = ""
-    @AppStorage("hassAPIPath") var hassAPIPath: String = ""
     
     @AppStorage("devMode") private var devMode: Bool = false
     
@@ -264,7 +263,6 @@ struct LoginOwnServerView: View {
                             if devMode {
                                 MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
                                 if useHassIngress {
-                                    MyTextField(textToEdit: $hassAPIPath, description: "str.login.hassIngress.apiPath", isCorrect: Binding.constant(true), leadingIcon: "network")
                                     MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key")
                                 }
                             }

@@ -67,7 +67,6 @@ class GrocyViewModel: ObservableObject {
     
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
     @AppStorage("hassToken") var hassToken: String = ""
-    @AppStorage("hassAPIPath") var hassAPIPath: String = ""
     
     let jsonEncoder = JSONEncoder()
     
@@ -75,7 +74,7 @@ class GrocyViewModel: ObservableObject {
         self.grocyApi = GrocyApi()
         if isLoggedIn {
             if !isDemoModus {
-                if useHassIngress {
+                if useHassIngress, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
                     grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
                 }
                 grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
@@ -104,7 +103,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func setLoginModus() {
-        if useHassIngress {
+        if useHassIngress, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
@@ -120,7 +119,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func checkServer(baseURL: String, apiKey: String?, isDemoModus: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
-        if useHassIngress && !isDemoModus {
+        if useHassIngress && !isDemoModus, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")

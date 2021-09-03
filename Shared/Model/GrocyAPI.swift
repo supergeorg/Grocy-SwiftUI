@@ -13,7 +13,7 @@ public enum APIError: Error {
     case serverError(error: String)
     case encodingError
     case invalidResponse
-    case unsuccessful
+    case unsuccessful(error: Error)
     case errorString(description: String)
     case timeout
     case invalidEndpoint(endpoint: String)
@@ -129,7 +129,7 @@ public class GrocyApi: GrocyAPI {
             }
             guard let response = response as? HTTPURLResponse,
                   response.statusCode == 204 else {
-                completion(.failure(APIError.unsuccessful))
+                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
                 return
             }
             completion(.success(204))

@@ -33,6 +33,22 @@ struct HomeAssistantSessionCookieReturn: Codable {
     }
 }
 
+func getHomeAssistantPathFromIngress(ingressPath: String) -> String? {
+    do {
+        let regex = try NSRegularExpression(pattern: ".+(?=/api/hassio_ingress/.)", options: [])
+        let matches = regex.matches(in: ingressPath, options: [], range: NSRange(location: 0, length: ingressPath.utf16.count))
+        if let match = matches.first {
+            let matchBounds = match.range(at: 0)
+            if let matchRange = Range(matchBounds, in: ingressPath) {
+                return String(ingressPath[matchRange])
+            }
+        }
+        return nil
+    } catch {
+        return nil
+    }
+}
+
 // MARK: - DataClass
 struct HomeAssistantSessionCookie: Codable {
     let session: String
@@ -47,15 +63,21 @@ protocol NetworkSession: AnyObject {
 extension URLSession: NetworkSession {
     func publisher(for request: URLRequest) -> AnyPublisher<HomeAssistantSessionCookieReturn, APIError> {
         return dataTaskPublisher(for: request)
-            .tryMap({ result in
-                guard let httpResponse = result.response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else {
-                    throw APIError.unsuccessful
+            .mapError{ error in APIError.serverError(error: "\(error)") }
+            .flatMap({ result -> AnyPublisher<HomeAssistantSessionCookieReturn, APIError> in
+                if let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) {
+                    return Just(result.data)
+                        .decode(type: HomeAssistantSessionCookieReturn.self, decoder: JSONDecoder())
+                        .mapError { error in (result.response as? HTTPURLResponse)?.statusCode == 401 ? APIError.notLoggedIn(error: error) : APIError.decodingError(error: error) }
+                        .eraseToAnyPublisher()
+                } else {
+                    return Just(result.data)
+                        .tryMap { _ in throw APIError.hassError(error: APIError.errorString(description: "Invalid response to Home Assistant Request. Are you authenticated?")) }
+                        .mapError { $0 as! APIError }
+                        .eraseToAnyPublisher()
                 }
-                let cookieReturn = try JSONDecoder().decode(HomeAssistantSessionCookieReturn.self, from: result.data)
-                return cookieReturn
             })
-            .mapError({ error in APIError.hassError(error: error) })
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }
