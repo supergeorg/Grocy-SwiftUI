@@ -185,6 +185,40 @@ struct LoginOwnServerView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     
+    @State private var isShowingGrocyScanner: Bool = false
+    func handleGrocyScan(result: Result<String, CodeScannerView.ScanError>) {
+        self.isShowingGrocyScanner = false
+        switch result {
+        case .success(let code):
+            let grocyServerData = code.components(separatedBy: "|")
+            guard grocyServerData.count == 2 else { return }
+            
+            let serverURL = grocyServerData[0]
+            let apiKey = grocyServerData[1]
+            
+            if apiKey.count == 50 {
+                grocyServerURL = serverURL
+                grocyAPIKey = apiKey
+                passDemoMode = false
+            }
+        case .failure(let error):
+            print("Scanning failed")
+            print(error)
+        }
+    }
+    
+    @State private var isShowingTokenScanner: Bool = false
+    func handleTokenScan(result: Result<String, CodeScannerView.ScanError>) {
+        self.isShowingTokenScanner = false
+        switch result {
+        case .success(let scannedHassToken):
+            hassToken = scannedHassToken
+        case .failure(let error):
+            print("Scanning failed")
+            print(error)
+        }
+    }
+    
     @State private var isShowingScanner = true
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
@@ -193,8 +227,7 @@ struct LoginOwnServerView: View {
             let grocyServerData = code.components(separatedBy: "|")
             guard grocyServerData.count == 2 else { return }
             
-            var serverURL = grocyServerData[0]
-            serverURL = serverURL.replacingOccurrences(of: "/api", with: "")
+            let serverURL = grocyServerData[0]
             let apiKey = grocyServerData[1]
             
             if apiKey.count == 50 {
@@ -260,10 +293,30 @@ struct LoginOwnServerView: View {
                         VStack{
                             MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
                             MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key")
-                            if devMode {
-                                MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
-                                if useHassIngress {
+                            #if os(iOS)
+                            Button(action: {
+                                isShowingGrocyScanner.toggle()
+                            }, label: {
+                                Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
+                            })
+                            .sheet(isPresented: $isShowingGrocyScanner, content: {
+                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
+                            })
+                            #endif
+                            MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
+                            if useHassIngress {
+                                HStack {
                                     MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key")
+                                    #if os(iOS)
+                                    Button(action: {
+                                        isShowingTokenScanner.toggle()
+                                    }, label: {
+                                        Image(systemName: MySymbols.qrScan)
+                                    })
+                                    .sheet(isPresented: $isShowingTokenScanner, content: {
+                                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
+                                    })
+                                    #endif
                                 }
                             }
                             Spacer()
