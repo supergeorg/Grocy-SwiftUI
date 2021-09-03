@@ -218,141 +218,75 @@ struct LoginOwnServerView: View {
             print(error)
         }
     }
-    
-    @State private var isShowingScanner = true
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
-        self.isShowingScanner = false
-        switch result {
-        case .success(let code):
-            let grocyServerData = code.components(separatedBy: "|")
-            guard grocyServerData.count == 2 else { return }
-            
-            let serverURL = grocyServerData[0]
-            let apiKey = grocyServerData[1]
-            
-            if apiKey.count == 50 {
-                grocyServerURL = serverURL
-                grocyAPIKey = apiKey
-                passDemoMode = false
-                loginViewState = .logginIn
-            }
-        case .failure(let error):
-            print("Scanning failed")
-            print(error)
-        }
-    }
-    #else
-    @State private var isShowingScanner = false
     #endif
     
     var body: some View {
-        VStack{
-            CardView{
-                VStack{
-                    #if os(iOS)
-                    Picker("", selection: $isShowingScanner, content: {
-                        Text(LocalizedStringKey("str.login.ownServer.qr")).tag(true)
-                        Text(LocalizedStringKey("str.login.ownServer.manual")).tag(false)
-                    })
-                    .pickerStyle(SegmentedPickerStyle())
-                    #endif
-                    
-                    if isShowingScanner {
-                        #if os(iOS)
-                        if horizontalSizeClass == .regular || verticalSizeClass == .regular {
-                            VStack{
-                                Text(LocalizedStringKey("str.login.ownServer.qr.info"))
-                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
-                                    .border(Color.gray, width: 5)
-                                    .cornerRadius(3)
-                                    .matchedGeometryEffect(id: "login", in: animation)
-                            }
-                        } else {
-                            HStack{
-                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "https://demo.grocy.info/api|vJQdTALB52YmBg4rhuMAdeYOcTqO4brIKHX7rGRwvWEdsActcl", completion: self.handleScan)
-                                    .border(Color.gray, width: 5)
-                                    .cornerRadius(3)
-                                    .matchedGeometryEffect(id: "login", in: animation)
-                                Text(LocalizedStringKey("str.login.ownServer.qr.info"))
-                            }
-                        }
-                        
-                        #endif
-                        Button(action: {
-                            loginViewState = .start
-                        }, label: {
-                            HStack{
-                                Spacer()
-                                Text(LocalizedStringKey("str.back"))
-                                Spacer()
-                            }
-                        })
-                        .buttonStyle(BorderButtonStyle())
-                        .frame(maxWidth: .infinity)
-                    } else {
-                        VStack{
-                            MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network")
-                            MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key")
-                            #if os(iOS)
-                            Button(action: {
-                                isShowingGrocyScanner.toggle()
-                            }, label: {
-                                Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
-                            })
-                            .sheet(isPresented: $isShowingGrocyScanner, content: {
-                                CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
-                            })
-                            #endif
-                            MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
-                            if useHassIngress {
-                                HStack {
-                                    MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key")
-                                    #if os(iOS)
-                                    Button(action: {
-                                        isShowingTokenScanner.toggle()
-                                    }, label: {
-                                        Image(systemName: MySymbols.qrScan)
-                                    })
-                                    .sheet(isPresented: $isShowingTokenScanner, content: {
-                                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
-                                    })
-                                    #endif
-                                }
-                            }
-                            Spacer()
-                            CardView{
-                                VStack{
-                                    HStack{
-                                        Button(LocalizedStringKey("str.back"), action: {
-                                            loginViewState = .start
-                                        })
-                                        .buttonStyle(BorderButtonStyle())
-                                        Link(destination: URL(string: "\(grocyServerURL)/manageapikeys")!, label: {
-                                            Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
-                                        })
-                                        .buttonStyle(BorderButtonStyle())
-                                    }
-                                    Button(action: {
-                                        passDemoMode = false
-                                        loginViewState = .logginIn
-                                    }, label: {
-                                        HStack{
-                                            Spacer()
-                                            Text(LocalizedStringKey("str.login.ownServer.manual.login"))
-                                            Spacer()
-                                        }
-                                    })
-                                    .buttonStyle(FilledButtonStyle())
-                                    .frame(maxWidth: .infinity)
-                                    .matchedGeometryEffect(id: "login", in: animation)
-                                }
+        CardView{
+            VStack{
+                MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network", helpText: "str.login.ownServer.manual.serverURL.help")
+                MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.ownServer.manual.APIKey.help")
+                #if os(iOS)
+                Button(action: {
+                    isShowingGrocyScanner.toggle()
+                }, label: {
+                    Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
+                })
+                .buttonStyle(FilledButtonStyle())
+                .sheet(isPresented: $isShowingGrocyScanner, content: {
+                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
+                })
+                #endif
+                CardView {
+                    VStack(spacing: 20) {
+                        MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
+                        if useHassIngress {
+                            HStack {
+                                MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.hassIngress.token.help")
+                                #if os(iOS)
+                                Button(action: {
+                                    isShowingTokenScanner.toggle()
+                                }, label: {
+                                    Image(systemName: MySymbols.qrScan)
+                                })
+                                .sheet(isPresented: $isShowingTokenScanner, content: {
+                                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
+                                })
+                                #endif
                             }
                         }
                     }
                 }
+                Spacer()
+                CardView{
+                    VStack{
+                        HStack{
+                            Button(LocalizedStringKey("str.back"), action: {
+                                loginViewState = .start
+                            })
+                            .buttonStyle(BorderButtonStyle())
+                            Link(destination: URL(string: "\(grocyServerURL)/manageapikeys")!, label: {
+                                Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
+                            })
+                            .buttonStyle(BorderButtonStyle())
+                        }
+                        Button(action: {
+                            passDemoMode = false
+                            loginViewState = .logginIn
+                        }, label: {
+                            HStack{
+                                Spacer()
+                                Text(LocalizedStringKey("str.login.ownServer.manual.login"))
+                                Spacer()
+                            }
+                        })
+                        .buttonStyle(FilledButtonStyle())
+                        .frame(maxWidth: .infinity)
+                        .matchedGeometryEffect(id: "login", in: animation)
+                    }
+                }
             }
-            .matchedGeometryEffect(id: "ownServer", in: animation)
         }
+        .matchedGeometryEffect(id: "ownServer", in: animation)
         .padding()
     }
 }

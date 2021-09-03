@@ -630,7 +630,9 @@
 "str.login.ownServer.qr.info" = "Öffne auf einem anderen Gerät im Webinterface des Grocy-Servers die Seite 'API-Schlüssel'. Fall noch keiner vorhanden ist, füge einen hinzu. Öffne anschließend den Code durch einen Klick auf das kleine Symbol und scanne den Code mit der App.";
 "str.login.ownServer.manual" = "Daten manuell eingeben";
 "str.login.ownServer.manual.serverURL" = "Server-URL";
+"str.login.ownServer.manual.serverURL.help" = "Server-URL deiner Grocy-Instanz (bei Home Assistant Ingress über Rechtsklick auf REST API Browser in der Weboberfläche abrufbar)";
 "str.login.ownServer.manual.APIKey" = "Gültiger API-Schlüssel";
+"str.login.ownServer.manual.APIKey.help" = "API-Schlüssel für den gewünschten Nutzer aus dem API-Menü in der Weboberfläche. Falls noch keine existiert, erstelle einen neuen Schlüssel";
 "str.login.ownServer.manual.APIKey.create" = "API-Schlüssel erstellen";
 "str.login.ownServer.manual.login" = "Anmelden";
 "str.login.connect.fail" = "Verbidung mit Server fehlgeschlagen.";
@@ -639,3 +641,4 @@
 "str.login.connect.unsupportedVersion.confirm" = "Trotzdem fortfahren";
 "str.login.hassIngress.use" = "Benutze Home Assistant Ingress";
 "str.login.hassIngress.token" = "Langzeit-Token für Home Assistant";
+"str.login.hassIngress.token.help" = "Dieser Token muss im Home Assistant Web-Interface erzeugt werden. Öffne dafür deine Home Assistant Profil-Seite, scrolle bis Langzeit-Zugriffs-Token und erstelle einen neuen Token. Benenne ihn und kopiere den resultierenden Token in die App oder erzeuge einen QR-Code und scanne diesen.";

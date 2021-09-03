@@ -629,7 +629,9 @@
 "str.login.ownServer.qr.info" = "Open the page API keys on the webinterface of Grocy. If no key is available, create one. Click the QR symbol afterwards to show the code and scan it with the app.";
 "str.login.ownServer.manual" = "Manual entry";
 "str.login.ownServer.manual.serverURL" = "Server URL";
+"str.login.ownServer.manual.serverURL.help" = "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)";
 "str.login.ownServer.manual.APIKey" = "Valid API key";
+"str.login.ownServer.manual.APIKey.help" = "API key for the user which is shown in the Manage API keys webview. If none exist, you need to create a new one.";
 "str.login.ownServer.manual.APIKey.create" = "Create API key";
 "str.login.ownServer.manual.login" = "Login";
 "str.login.connect.fail" = "Connection to server failed.";
@@ -638,3 +640,4 @@
 "str.login.connect.unsupportedVersion.confirm" = "Continue anyway";
 "str.login.hassIngress.use" = "Use Home Assistant Ingress";
 "str.login.hassIngress.token" = "Long-Term-Token for Home Assistant";
+"str.login.hassIngress.token.help" = "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS).";
