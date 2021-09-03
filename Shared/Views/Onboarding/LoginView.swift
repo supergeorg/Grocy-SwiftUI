@@ -254,6 +254,9 @@ struct LoginOwnServerView: View {
                                 #endif
                             }
                         }
+                        Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md")!, label: {
+                            Label("Guide (English)", systemImage: "questionmark.circle")
+                        })
                     }
                 }
                 Spacer()
