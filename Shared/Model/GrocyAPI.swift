@@ -56,6 +56,7 @@ struct EmptyResponse: Codable {
 protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
     func setHassData(hassURL: String, hassToken: String)
+    func clearHassData()
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
@@ -106,6 +107,10 @@ public class GrocyApi: GrocyAPI {
     
     func setHassData(hassURL: String, hassToken: String) {
         self.hassAuthenticator = HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
+    }
+    
+    func clearHassData() {
+        self.hassAuthenticator = nil
     }
     
     private enum Method: String {

@@ -327,7 +327,7 @@ struct LoginStatusView: View {
     
     private func tryLogin() {
         if let isDemoMode = isDemoMode {
-            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, completion: {result in
+            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoModus: isDemoMode, completion: {result in
                 switch result {
                 case let .success(message):
                     if GrocyAPP.supportedVersions.contains(message) {

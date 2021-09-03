@@ -97,8 +97,8 @@ class GrocyViewModel: ObservableObject {
     }
     
     func setDemoModus() {
-        grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         isDemoModus = true
+        grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         isLoggedIn = true
         grocyLog.info("Switched to demo modus")
     }
@@ -115,11 +115,12 @@ class GrocyViewModel: ObservableObject {
     
     func logout() {
         isLoggedIn = false
+        grocyApi.clearHassData()
         self.deleteAllCachedData()
     }
     
-    func checkServer(baseURL: String, apiKey: String?, completion: @escaping ((Result<String, Error>) -> ())) {
-        if useHassIngress {
+    func checkServer(baseURL: String, apiKey: String?, isDemoModus: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
+        if useHassIngress && !isDemoModus {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
