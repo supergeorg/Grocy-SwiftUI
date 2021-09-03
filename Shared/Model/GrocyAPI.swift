@@ -226,7 +226,8 @@ public class GrocyApi: GrocyAPI {
     }
     
     private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
-        var path = "\(baseURL)/api\(endpoint.rawValue)"
+        if baseURL.hasSuffix("/") { baseURL = String(baseURL.dropLast()) }
+        var path = "\(baseURL)\(baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: String(id!)) }
         if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: String(id!)) }
