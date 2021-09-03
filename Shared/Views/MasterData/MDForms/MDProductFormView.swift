@@ -302,9 +302,9 @@ struct MDProductFormView: View {
             
             // Product group
             Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {
-                Text("").tag("")
+                Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
-                    Text(grocyProductGroup.name).tag(grocyProductGroup.id)
+                    Text(grocyProductGroup.name).tag(grocyProductGroup.id as Int?)
                 }
             })
             
