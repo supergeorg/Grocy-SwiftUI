@@ -53,9 +53,6 @@ struct MDTaskCategoriesView: View {
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
-            .sorted {
-                $0.name < $1.name
-            }
     }
     
     private func delete(at offsets: IndexSet) {

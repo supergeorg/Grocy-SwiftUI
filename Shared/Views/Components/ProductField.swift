@@ -33,12 +33,8 @@ struct ProductField: View {
         grocyVM.mdProductBarcodes.filter{$0.productID == pID}.map{$0.barcode}
     }
     
-    private var sortedProducts: MDProducts {
-        grocyVM.mdProducts.sorted(by: {$0.name < $1.name})
-    }
-    
     private var filteredProducts: MDProducts {
-        sortedProducts.filter {
+        grocyVM.mdProducts.filter {
             searchTerm.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchTerm) || getBarcodes(pID: $0.id).contains(searchTerm))
         }
     }

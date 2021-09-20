@@ -209,7 +209,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDBatteries, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdBatteries = entityResult
+                                self.mdBatteries = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -222,7 +222,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDLocations, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdLocations = entityResult
+                                self.mdLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -248,7 +248,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDProductGroups, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdProductGroups = entityResult
+                                self.mdProductGroups = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -261,7 +261,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDProducts, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdProducts = entityResult
+                                self.mdProducts = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -274,7 +274,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdQuantityUnits = entityResult
+                                self.mdQuantityUnits = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -313,7 +313,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdShoppingLocations = entityResult
+                                self.mdShoppingLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -339,7 +339,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDTaskCategories, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdTaskCategories = entityResult
+                                self.mdTaskCategories = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -352,7 +352,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDUserEntities, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdUserEntities = entityResult
+                                self.mdUserEntities = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -365,7 +365,7 @@ class GrocyViewModel: ObservableObject {
                         getEntity(entity: object, completion: { (result: Result<MDUserFields, Error>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdUserFields = entityResult
+                                self.mdUserFields = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
