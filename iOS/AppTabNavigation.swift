@@ -40,6 +40,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.stockOverview"))
             }
             .tag(Tab.stockOverview)
+            .navigationViewStyle(StackNavigationViewStyle())
             
             NavigationView {
                 ShoppingListView()
@@ -49,6 +50,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.shoppingList"))
             }
             .tag(Tab.shoppingList)
+            .navigationViewStyle(StackNavigationViewStyle())
             
             
 //            if devMode {
@@ -70,6 +72,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.md"))
             }
             .tag(Tab.masterData)
+            .navigationViewStyle(StackNavigationViewStyle())
             
             NavigationView {
                 SettingsView()
@@ -79,6 +82,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.settings"))
             }
             .tag(Tab.settings)
+            .navigationViewStyle(StackNavigationViewStyle())
             
 //            if devMode {
 //                NavigationView {

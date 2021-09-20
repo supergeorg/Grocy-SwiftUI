@@ -117,9 +117,13 @@ struct StockView: View {
             .filter {
                 filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
             }
-            .filter {
-                !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
-            }
+    }
+    
+    var searchedProducts: Stock {
+        filteredProducts
+        .filter {
+            !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
+        }
     }
     
     var summedValue: Double {
@@ -300,7 +304,7 @@ struct StockView: View {
             if grocyVM.stock.isEmpty {
                 Text("str.stock.empty").padding()
             }
-            StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+            StockTable(filteredStock: searchedProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             // the sheets don't work without this
             Text(selectedStockElement?.product.name ?? "no stockElement")
                 .font(.caption)
