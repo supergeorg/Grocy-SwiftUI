@@ -221,7 +221,7 @@ struct QuickScanModeInputView: View {
                             VStack(alignment: .leading) {
                                 Text(productU.name).font(.title)
                                 if let amount = stockElement?.amount {
-                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount) \(getQUString(amount: amount))")"))
+                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(formatAmount(amount)) \(getQUString(amount: amount))")"))
                                 }
                             }
                         }
