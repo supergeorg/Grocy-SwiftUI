@@ -118,7 +118,6 @@ struct MyTextField: View {
                 }
             }
         }
-        .animation(.default)
     }
 }
 

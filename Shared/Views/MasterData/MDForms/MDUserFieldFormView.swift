@@ -188,7 +188,6 @@ struct MDUserFieldFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.userfields], ignoreCached: false)

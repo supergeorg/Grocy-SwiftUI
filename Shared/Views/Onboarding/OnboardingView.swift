@@ -90,7 +90,6 @@ struct OnboardingView: View {
                         }
                     )
                     .foregroundColor(.primary)
-                    .animation(.spring())
                 #else
                 Text(LocalizedStringKey("str.onboard.start"))
                 #endif
