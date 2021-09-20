@@ -100,7 +100,7 @@ struct ShoppingListFormView: View {
             #if os(macOS)
             Text(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit")).font(.headline)
             #endif
-            MyTextField(textToEdit: $name, description: "str.shL.form.name", isCorrect: $isNameCorrect, leadingIcon: "rectangle.and.pencil.and.ellipsis", isEditing: true, emptyMessage: "str.shL.form.name.required", errorMessage: "str.shL.form.name.exists")
+            MyTextField(textToEdit: $name, description: "str.shL.form.name", isCorrect: $isNameCorrect, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.shL.form.name.required", errorMessage: "str.shL.form.name.exists")
                 .onChange(of: name, perform: {newValue in isNameCorrect = checkNameCorrect()})
             #if os(macOS)
             HStack{

@@ -161,7 +161,7 @@ struct MDBarcodeFormView: View {
             }
             #endif
             HStack{
-                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, isEditing: true, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
+                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
                     .onChange(of: barcode, perform: {newBC in
                         isBarcodeCorrect = checkBarcodeCorrect()
                     })
@@ -215,7 +215,7 @@ struct MDBarcodeFormView: View {
                 }
             })
             
-            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             #if os(macOS)
             HStack{

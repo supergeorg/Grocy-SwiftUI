@@ -118,16 +118,16 @@ struct UserFormView: View {
                 .font(.headline)
             #endif
             Section(header: Text(LocalizedStringKey("str.admin.user.new.userName")).font(.title)){
-                MyTextField(textToEdit: $username, description: "str.admin.user.new.userName", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", isEditing: true, emptyMessage: "str.admin.user.new.userName.required", errorMessage: "str.admin.user.new.userName.exists")
+                MyTextField(textToEdit: $username, description: "str.admin.user.new.userName", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.admin.user.new.userName.required", errorMessage: "str.admin.user.new.userName.exists")
                     .onChange(of: username) { newValue in
                         isValidUsername = checkUsernameCorrect()
                     }
-                MyTextField(textToEdit: $firstName, description: "str.admin.user.new.firstName", isCorrect: Binding.constant(true), leadingIcon: "person", isEditing: true, errorMessage: nil)
-                MyTextField(textToEdit: $lastName, description: "str.admin.user.new.lastName", isCorrect: Binding.constant(true), leadingIcon: "person.2", isEditing: true, errorMessage: nil)
+                MyTextField(textToEdit: $firstName, description: "str.admin.user.new.firstName", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
+                MyTextField(textToEdit: $lastName, description: "str.admin.user.new.lastName", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
             }
             Section(header: Text(LocalizedStringKey("str.admin.user.new.password")).font(.title)){
-                MyTextField(textToEdit: $password, description: "str.admin.user.new.password", isCorrect: Binding.constant(true), leadingIcon: "key", isEditing: true, errorMessage: nil)
-                MyTextField(textToEdit: $passwordConfirm, description: "str.admin.user.new.password.confirm", isCorrect: $isMatchingPassword, leadingIcon: "key", isEditing: true, errorMessage: "str.admin.user.new.password.mismatch")
+                MyTextField(textToEdit: $password, description: "str.admin.user.new.password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
+                MyTextField(textToEdit: $passwordConfirm, description: "str.admin.user.new.password.confirm", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "str.admin.user.new.password.mismatch")
             }
             #if os(macOS)
             Divider()

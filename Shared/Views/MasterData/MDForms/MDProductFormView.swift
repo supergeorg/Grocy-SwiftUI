@@ -203,7 +203,7 @@ struct MDProductFormView: View {
             #endif
             
             
-            MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+            MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
                 .onChange(of: name, perform: { value in
                     isNameCorrect = checkNameCorrect()
                 })
@@ -297,7 +297,7 @@ struct MDProductFormView: View {
             ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
             
             // Product Description
-            MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+            MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             // Product group
             Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {

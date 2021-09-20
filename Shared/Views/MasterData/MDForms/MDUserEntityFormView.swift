@@ -133,15 +133,15 @@ struct MDUserEntityFormView: View {
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.userEntity.name"))){
-                MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
+                MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
                     .onChange(of: name, perform: {newValue in
                                 isNameCorrect = checkNameCorrect() })
-                MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userEntity.caption.required")
+                MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.caption.required")
                     .onChange(of: caption, perform: {newValue in
                                 isCaptionCorrect = checkCaptionCorrect() })
             }
             
-            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             MyToggle(isOn: $showInSidebarMenu, description: "str.md.userEntity.showInSideBarMenu", icon: "tablecells")
             #if os(macOS)

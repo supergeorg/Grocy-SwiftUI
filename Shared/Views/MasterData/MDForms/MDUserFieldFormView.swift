@@ -153,10 +153,10 @@ struct MDUserFieldFormView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.md.userField.name"))){
-                MyTextField(textToEdit: $name, description: "str.md.userField.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userField.name.required", errorMessage: "str.md.userField.name.invalid", helpText: "str.md.userField.name.info")
+                MyTextField(textToEdit: $name, description: "str.md.userField.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.name.required", errorMessage: "str.md.userField.name.invalid", helpText: "str.md.userField.name.info")
                     .onChange(of: name, perform: {newValue in
                                 isNameCorrect = checkNameCorrect() })
-                MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
+                MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
                     .onChange(of: caption, perform: {newValue in
                                 isCaptionCorrect = checkCaptionCorrect() })
             }
