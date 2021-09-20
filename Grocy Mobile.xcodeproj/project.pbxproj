@@ -219,8 +219,6 @@
 		78CB75A7255EA5A900319108 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A4255EA5A900319108 /* Localization.swift */; };
 		78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
 		78CB75A9255EA5A900319108 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
-		78CB75B0255EAB1400319108 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75AF255EAB1400319108 /* Animations.swift */; };
-		78CB75B1255EAB1400319108 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75AF255EAB1400319108 /* Animations.swift */; };
 		78CB75BC255EAE0000319108 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75BA255EAE0000319108 /* VisualEffectBlur.swift */; };
 		78CB75C2255EAE2000319108 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */; };
 		78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75F7255EB9A000319108 /* StockEntryModel.swift */; };
@@ -528,7 +526,6 @@
 		78CB7598255EA56D00319108 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		78CB75A4255EA5A900319108 /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		78CB75A5255EA5A900319108 /* DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
-		78CB75AF255EAB1400319108 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		78CB75BA255EAE0000319108 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
 		78CB75C1255EAE2000319108 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
 		78CB75F7255EB9A000319108 /* StockEntryModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StockEntryModel.swift; sourceTree = "<group>"; };
@@ -928,7 +925,6 @@
 		78CB75AE255EAB0A00319108 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
-				78CB75AF255EAB1400319108 /* Animations.swift */,
 				78CB7643255EBA6C00319108 /* Colors.swift */,
 			);
 			path = Styles;
@@ -1356,7 +1352,6 @@
 				78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */,
 				78FDCE3425BAEF190089CB5E /* FA2SFSymbols.swift in Sources */,
 				7891C640257E33430014C59E /* StockTableRowActionsView.swift in Sources */,
-				78CB75B0255EAB1400319108 /* Animations.swift in Sources */,
 				7891C65C257E539A0014C59E /* ProductInventoryModel.swift in Sources */,
 				781A25D32566BB9100560026 /* MyToggle.swift in Sources */,
 				7880F0F9256FB63800FB8431 /* ShoppingListModel.swift in Sources */,
@@ -1488,7 +1483,6 @@
 				782626F8256E82EF00ECED03 /* MDProductBarcodeModel.swift in Sources */,
 				78113B7725B59C8E0000B237 /* LabelStyles.swift in Sources */,
 				78ADA1E726D1509100946E1B /* Translators.swift in Sources */,
-				78CB75B1255EAB1400319108 /* Animations.swift in Sources */,
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuView.swift in Sources */,
 				7891C64F257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
@@ -1783,7 +1777,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1792,7 +1786,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -1807,7 +1801,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1816,7 +1810,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -2036,7 +2030,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -2045,7 +2039,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
