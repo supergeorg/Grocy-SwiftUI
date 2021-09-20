@@ -211,7 +211,6 @@ struct TransferProductView: View {
                 }
             })
         })
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
 }

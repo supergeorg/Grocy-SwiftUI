@@ -91,7 +91,6 @@ struct ShoppingListFormView: View {
                         .keyboardShortcut(.defaultAction)
                     }
                 }
-                .animation(.default)
         }
         #endif
     }

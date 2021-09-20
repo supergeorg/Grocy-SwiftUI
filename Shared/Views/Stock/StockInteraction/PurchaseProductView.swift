@@ -234,7 +234,6 @@ struct PurchaseProductView: View {
                 }
             })
         })
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.buy"))
     }
 }

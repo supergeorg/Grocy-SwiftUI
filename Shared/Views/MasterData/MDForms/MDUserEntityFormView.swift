@@ -163,7 +163,6 @@ struct MDUserEntityFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.userentities], ignoreCached: false)

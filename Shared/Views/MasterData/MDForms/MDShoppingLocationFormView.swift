@@ -148,7 +148,6 @@ struct MDShoppingLocationFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.shopping_locations], ignoreCached: false)

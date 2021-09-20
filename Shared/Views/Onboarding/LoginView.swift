@@ -435,7 +435,6 @@ struct LoginView: View {
             LoginInfoView()
             Spacer()
         }
-        .animation(.default)
     }
 }
 

@@ -300,7 +300,7 @@ struct ShoppingListView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
-        .animation(.default)
+        .animation(.default, value: filteredShoppingList.count)
         .toast(item: $toastType, isSuccess: Binding.constant(false), content: {item in
             switch item {
             case .shLActionFail:

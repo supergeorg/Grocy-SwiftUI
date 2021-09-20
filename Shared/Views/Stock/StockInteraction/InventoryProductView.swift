@@ -236,7 +236,6 @@ struct InventoryProductView: View {
                 }
             })
         })
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.inventory"))
     }
 }

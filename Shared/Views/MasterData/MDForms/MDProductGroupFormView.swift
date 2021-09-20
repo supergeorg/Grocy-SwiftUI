@@ -148,7 +148,6 @@ struct MDProductGroupFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.product_groups], ignoreCached: false)

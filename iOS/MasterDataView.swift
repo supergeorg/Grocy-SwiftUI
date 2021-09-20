@@ -53,7 +53,6 @@ struct MasterDataView: View {
                 Label(LocalizedStringKey("str.md.userEntities"), systemImage: "bookmark")
             }
         }
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.masterData"))
     }
 }

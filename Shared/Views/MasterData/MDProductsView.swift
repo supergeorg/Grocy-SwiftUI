@@ -190,7 +190,7 @@ struct MDProductsView: View {
         .onAppear(perform: {
             grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
-        .animation(.default)
+        .animation(.default, value: filteredProducts.count)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
             case .successAdd:

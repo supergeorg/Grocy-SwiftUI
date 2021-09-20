@@ -261,7 +261,6 @@ struct ConsumeProductView: View {
                 firstAppear = false
             }
         })
-        .animation(.default)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), content: { item in
             switch item {
             case .successConsume:

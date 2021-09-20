@@ -154,7 +154,6 @@ struct MDTaskCategoryFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.task_categories], ignoreCached: false)

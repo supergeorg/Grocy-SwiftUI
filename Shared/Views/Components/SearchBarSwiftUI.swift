@@ -41,7 +41,7 @@ struct SearchBarSwiftUI: View {
                 Image(systemName: "delete.left")
                     .padding(.trailing, 10)
                     .transition(.move(edge: .trailing))
-                    .animation(.default)
+                    .animation(.default, value: text.count)
                     .onTapGesture {
                         self.isEditing = false
                         self.text = ""

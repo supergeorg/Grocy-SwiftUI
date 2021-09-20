@@ -151,7 +151,6 @@ struct MDQuantityUnitFormView: View {
             }
             #endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: [.shopping_list], ignoreCached: false)
