@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct GrocyUserInfoView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -20,13 +19,15 @@ struct GrocyUserInfoView: View {
                 if let base64Encoded = utf8str?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)) {
                     if let pictureURL = grocyVM.getPictureURL(groupName: "userpictures", fileName: "\(base64Encoded)_\(base64Encoded)") {
                         if let url = URL(string: pictureURL) {
-                            URLImage(url: url) { image in
+                            AsyncImage(url: url, content: { image in
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .background(Color.white)
-                            }
-                            .frame(width: 100, height: 100)
+                            }, placeholder: {
+                                ProgressView()
+                            })
+                                .frame(width: 100, height: 100)
                         }
                     }
                 }

@@ -6,24 +6,23 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct ProductOverviewView: View {
     var productDetails: ProductDetailsModel
     
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
-        #if os(macOS)
-//        NavigationView{
+#if os(macOS)
+        //        NavigationView{
         content
             .padding()
-//            .frame(width: 200, height: 300, alignment: .center)
-//        }
-        #elseif os(iOS)
+        //            .frame(width: 200, height: 300, alignment: .center)
+        //        }
+#elseif os(iOS)
         content
-                .navigationTitle(LocalizedStringKey("str.details.title"))
-        #endif
+            .navigationTitle(LocalizedStringKey("str.details.title"))
+#endif
     }
     
     var content: some View {
@@ -32,63 +31,65 @@ struct ProductOverviewView: View {
                 .font(.title)
             
             Text(LocalizedStringKey("str.details.amount")).bold()
-                +
-                Text("\(formatAmount(productDetails.stockEntriesAmount)) \(productDetails.stockEntriesAmount == 1 ? productDetails.quantityUnit?.name ?? "" : productDetails.quantityUnit?.namePlural ?? "")")
+            +
+            Text("\(formatAmount(productDetails.stockEntriesAmount)) \(productDetails.stockEntriesAmount == 1 ? productDetails.quantityUnit?.name ?? "" : productDetails.quantityUnit?.namePlural ?? "")")
             
             Text(LocalizedStringKey("str.details.stockValue")).bold()
-                +
-                Text("\(String(format: "%.2f", productDetails.stockValue)) \(productDetails.currency)")
+            +
+            Text("\(String(format: "%.2f", productDetails.stockValue)) \(productDetails.currency)")
             
             Text(LocalizedStringKey("str.details.defaultLocation")).bold()
-                +
-                Text(productDetails.defaultLocationName)
+            +
+            Text(productDetails.defaultLocationName)
             
             Text(LocalizedStringKey("str.details.lastPurchaseDate")).bold()
-                +
-                Text(formatDateOutput(productDetails.lastPurchaseDate) ?? "str.details.never")
+            +
+            Text(formatDateOutput(productDetails.lastPurchaseDate) ?? "str.details.never")
             
             Text(LocalizedStringKey("str.details.lastUseDate")).bold()
-                +
-                Text(LocalizedStringKey(formatDateOutput(productDetails.lastUseDate) ?? "str.details.never"))
+            +
+            Text(LocalizedStringKey(formatDateOutput(productDetails.lastUseDate) ?? "str.details.never"))
             
             Text(LocalizedStringKey("str.details.lastPrice")).bold()
-                +
-                Text(productDetails.lastPrice > 0 ? LocalizedStringKey("\(String(productDetails.lastPrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
+            +
+            Text(productDetails.lastPrice > 0 ? LocalizedStringKey("\(String(productDetails.lastPrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averagePrice")).bold()
-                +
-                Text(productDetails.averagePrice > 0 ? LocalizedStringKey("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
+            +
+            Text(productDetails.averagePrice > 0 ? LocalizedStringKey("\(String(format: "%.2f", productDetails.averagePrice)) \(productDetails.currency) per \(productDetails.quantityUnit?.name ?? "QU")") : LocalizedStringKey("str.details.unknown"))
             
             Text(LocalizedStringKey("str.details.averageShelfLife")).bold()
-                +
-                Text(productDetails.averageShelfLife ?? 0 > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown") : LocalizedStringKey("str.details.unknown"))
+            +
+            Text(productDetails.averageShelfLife ?? 0 > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLife) ?? "str.details.unknown") : LocalizedStringKey("str.details.unknown"))
             
             if let pictureURL = productDetails.pictureURL {
                 if let url = URL(string: pictureURL) {
-                    URLImage(url: url) { image in
+                    AsyncImage(url: url, content: { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .background(Color.white)
-                    }
-                    .frame(width: 50, height: 50)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                        .frame(width: 50, height: 50)
                 }
             }
         }
         .toolbar(content: {
-//            ToolbarItem(placement: .automatic){
-//                HStack{
-//                    Button(action: {
-//                        print("")
-//                    }, label: {Text(LocalizedStringKey("str.details.stockEntries"))})
-//                    Button(action: {
-//                        print("")
-//                    }, label: {Text(LocalizedStringKey("str.details.stockJournal"))})
-//                    Button(action: {
-//                        self.presentationMode.wrappedValue.dismiss()
-//                    }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})
-//                }
-//            }
+            //            ToolbarItem(placement: .automatic){
+            //                HStack{
+            //                    Button(action: {
+            //                        print("")
+            //                    }, label: {Text(LocalizedStringKey("str.details.stockEntries"))})
+            //                    Button(action: {
+            //                        print("")
+            //                    }, label: {Text(LocalizedStringKey("str.details.stockJournal"))})
+            //                    Button(action: {
+            //                        self.presentationMode.wrappedValue.dismiss()
+            //                    }, label: {Label(LocalizedStringKey("str.details.edit"), systemImage: "square.and.pencil")})
+            //                }
+            //            }
             ToolbarItem(placement: .cancellationAction) {
                 Button(LocalizedStringKey("str.ok")) {
                     self.presentationMode.wrappedValue.dismiss()

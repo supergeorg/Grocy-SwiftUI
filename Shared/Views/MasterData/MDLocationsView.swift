@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct MDLocationRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -18,12 +17,14 @@ struct MDLocationRowView: View {
             //            if let uf = location.userfields?.first(where: {$0.key == AppSpecificUserFields.locationPicture.rawValue }) {
             //                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
             //                    if let url = URL(string: pictureURL) {
-            //                        URLImage(url: url) { image in
+            //                                            AsyncImage(url: url, content: { image in
             //                            image
             //                                .resizable()
             //                                .aspectRatio(contentMode: .fit)
             //                                .background(Color.white)
-            //                        }
+            //                        }, placeholder: {
+            //     ProgressView().progressViewStyle(.circular)
+            //    })
             //                        .frame(width: 100, height: 100)
             //                    }
             //                }
@@ -107,7 +108,7 @@ struct MDLocationsView: View {
         }
     }
     
-    #if os(macOS)
+#if os(macOS)
     var bodyContent: some View {
         NavigationView{
             content
@@ -136,7 +137,7 @@ struct MDLocationsView: View {
         }
         .navigationTitle(LocalizedStringKey("str.md.locations"))
     }
-    #elseif os(iOS)
+#elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar(content: {
@@ -162,29 +163,29 @@ struct MDLocationsView: View {
             })
             .navigationTitle(LocalizedStringKey("str.md.locations"))
             .sheet(isPresented: self.$showAddLocation, content: {
-                    NavigationView {
-                        MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType)
-                    } })
+                NavigationView {
+                    MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType)
+                } })
     }
-    #endif
+#endif
     
     var content: some View {
         List(){
-            #if os(iOS)
+#if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-            #endif
+#endif
             if grocyVM.mdLocations.isEmpty {
                 Text(LocalizedStringKey("str.md.locations.empty"))
             } else if filteredLocations.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
+#if os(macOS)
             if showAddLocation {
                 NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType), isActive: $showAddLocation, label: {
                     NewMDRowLabel(title: "str.md.location.new")
                 })
             }
-            #endif
+#endif
             ForEach(filteredLocations, id:\.id) {location in
                 NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, showAddLocation: Binding.constant(false), toastType: $toastType)) {
                     MDLocationRowView(location: location)
@@ -222,13 +223,13 @@ struct MDLocationsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MDLocationRowView(location: MDLocation(id: 0, name: "Location", mdLocationDescription: "Location description", rowCreatedTimestamp: "", isFreezer: true))
-            #if os(macOS)
+#if os(macOS)
             MDLocationsView()
-            #else
+#else
             NavigationView() {
                 MDLocationsView()
             }
-            #endif
+#endif
         }
     }
 }

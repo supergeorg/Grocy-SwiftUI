@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct MDProductPictureFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -21,10 +20,10 @@ struct MDProductPictureFormView: View {
     
     @State private var isProcessing: Bool = false
     
-    #if os(iOS)
+#if os(iOS)
     @State private var showImagePicker: Bool = false
     @State private var showCamera: Bool = false
-    #endif
+#endif
     
     let groupName = "productpictures"
     
@@ -85,26 +84,30 @@ struct MDProductPictureFormView: View {
         VStack{
             if showNewPicture {
                 if let newPictureURL = newPictureURL, let newPictureFileName = newPictureFileName {
-                    URLImage(url: newPictureURL) { image in
+                    AsyncImage(url: newPictureURL, content: { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .background(Color.white)
-                    }
-                    .frame(maxHeight: 100)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                        .frame(maxHeight: 100)
                     Text(newPictureFileName)
                         .font(.caption)
                 }
             } else {
                 if let pictureFileName = product?.pictureFileName, !pictureFileName.isEmpty {
                     if let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = URL(string: grocyVM.getPictureURL(groupName: groupName, fileName: base64Encoded) ?? "") {
-                        URLImage(url: pictureURL) { image in
+                        AsyncImage(url: pictureURL, content: { image in
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .background(Color.white)
-                        }
-                        .frame(maxHeight: 100)
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                            .frame(maxHeight: 100)
                     }
                     Text(pictureFileName)
                         .font(.caption)
@@ -120,7 +123,7 @@ struct MDProductPictureFormView: View {
                                 Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
                                     .foregroundColor(.red)
                             })
-                            .disabled(isProcessing)
+                                .disabled(isProcessing)
                         }
                     } else {
                         if let savedPictureFileName = product?.pictureFileName, !savedPictureFileName.isEmpty, let savedPictureFileNameData = savedPictureFileName.data(using: .utf8) {
@@ -130,12 +133,12 @@ struct MDProductPictureFormView: View {
                                 Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
                                     .foregroundColor(.red)
                             })
-                            .disabled(isProcessing)
+                                .disabled(isProcessing)
                         }
                     }
                 }
                 Section{
-                    #if os(macOS)
+#if os(macOS)
                     Button(LocalizedStringKey("str.md.product.picture.add.file")) {
                         let openPanel = NSOpenPanel()
                         openPanel.prompt = "Select File"
@@ -151,53 +154,55 @@ struct MDProductPictureFormView: View {
                             }
                         }
                     }
-                    #elseif os(iOS)
+#elseif os(iOS)
                     Button(action: {
                         showImagePicker.toggle()
                     }, label: {
                         Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
                     })
-                    .sheet(isPresented: $showImagePicker, content: {
-                        ImagePicker(sourceType: .photoLibrary, completionHandler: { imageURL in
-                            if let imageURL = imageURL {
-                                selectedPictureURL = imageURL
-                                if let product = product {
-                                    selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
-                                } else {
-                                    selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
+                        .sheet(isPresented: $showImagePicker, content: {
+                            ImagePicker(sourceType: .photoLibrary, completionHandler: { imageURL in
+                                if let imageURL = imageURL {
+                                    selectedPictureURL = imageURL
+                                    if let product = product {
+                                        selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
+                                    } else {
+                                        selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
+                                    }
+                                    showImagePicker = false
                                 }
-                                showImagePicker = false
-                            }
+                            })
                         })
-                    })
                     Button(action: {
                         showCamera.toggle()
                     }, label: {
                         Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
                     })
-                    .sheet(isPresented: $showCamera, content: {
-                        ImagePicker(sourceType: .camera, completionHandler: { imageURL in
-                            if let imageURL = imageURL {
-                                selectedPictureURL = imageURL
-                                if let product = product {
-                                    selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
-                                } else {
-                                    selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
+                        .sheet(isPresented: $showCamera, content: {
+                            ImagePicker(sourceType: .camera, completionHandler: { imageURL in
+                                if let imageURL = imageURL {
+                                    selectedPictureURL = imageURL
+                                    if let product = product {
+                                        selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
+                                    } else {
+                                        selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
+                                    }
+                                    showImagePicker = false
                                 }
-                                showImagePicker = false
-                            }
+                            })
                         })
-                    })
-                    #endif
+#endif
                     if let selectedPictureURL = selectedPictureURL, let selectedPictureFileName = selectedPictureFileName {
                         VStack(alignment: .center){
-                            URLImage(url: selectedPictureURL, content: {image in
+                            AsyncImage(url: selectedPictureURL, content: { image in
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .background(Color.white)
+                            }, placeholder: {
+                                ProgressView()
                             })
-                            .frame(maxWidth: 100)
+                                .frame(maxWidth: 100)
                             Text(selectedPictureFileName)
                                 .font(.caption)
                         }
@@ -208,7 +213,7 @@ struct MDProductPictureFormView: View {
                         }, label: {
                             Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
                         })
-                        .disabled(isProcessing)
+                            .disabled(isProcessing)
                     }
                 }
             }
@@ -220,7 +225,7 @@ struct MDProductPictureFormView: View {
 struct MDProductPictureFormView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView{
-//            MDProductPictureFormView(product: MDProduct(id: "1", name: "Product name", mdProductDescription: "Product description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: "cookies.jpg", enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "TS", hideOnStockOverview: nil, userfields: nil), selectedPictureURL: Binding.constant(nil), selectedPictureFileName: Binding.constant(nil))
+            //            MDProductPictureFormView(product: MDProduct(id: "1", name: "Product name", mdProductDescription: "Product description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: "cookies.jpg", enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "TS", hideOnStockOverview: nil, userfields: nil), selectedPictureURL: Binding.constant(nil), selectedPictureFileName: Binding.constant(nil))
         }
     }
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		78113B7625B59C8E0000B237 /* LabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelStyles.swift */; };
 		78113B7725B59C8E0000B237 /* LabelStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78113B7525B59C8E0000B237 /* LabelStyles.swift */; };
-		78113B7E25B5A19F0000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B7D25B5A19F0000B237 /* URLImage */; };
 		78113B8425B5A3A50000B237 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 78113B8325B5A3A50000B237 /* URLImage */; };
 		7812FFA725BB0B6900377773 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7812FFA625BB0B6900377773 /* ActivitiesView.swift */; };
 		78138F4925AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
@@ -592,7 +591,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78113B7E25B5A19F0000B237 /* URLImage in Frameworks */,
 				781FE2E325E9215F002273F7 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1074,7 +1072,6 @@
 			);
 			name = "Grocy Mobile (iOS)";
 			packageProductDependencies = (
-				78113B7D25B5A19F0000B237 /* URLImage */,
 				781FE2E225E9215F002273F7 /* SwiftyBeaver */,
 			);
 			productName = "Grocy-SwiftUI (iOS)";
@@ -2208,11 +2205,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		78113B7D25B5A19F0000B237 /* URLImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */;
-			productName = URLImage;
-		};
 		78113B8325B5A3A50000B237 /* URLImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 78113B7C25B5A19F0000B237 /* XCRemoteSwiftPackageReference "url-image" */;

@@ -61,11 +61,6 @@ struct AboutView: View {
                 })
                 .foregroundColor(.primary)
                 
-                Link(destination: URL(string: "https://github.com/dmytro-anokhin/url-image")!, label: {
-                    AboutLineView(iconName: "photo", caption: "URLImage", content: "Copyright (MIT License) 2020 Dmytro Anokhin")
-                })
-                .foregroundColor(.primary)
-                
                 Link(destination: URL(string: "https://github.com/SwiftyBeaver/SwiftyBeaver")!, label: {
                     AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (MIT License) 2015 Sebastian Kreutzberger")
                 })

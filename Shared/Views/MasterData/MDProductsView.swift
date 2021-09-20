@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct MDProductRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -16,13 +15,15 @@ struct MDProductRowView: View {
     var body: some View {
         HStack{
             if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-                URLImage(url: url) { image in
+                AsyncImage(url: url, content: { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .background(Color.white)
-                }
-                .frame(width: 75, height: 75)
+                }, placeholder: {
+                    ProgressView()
+                })
+                    .frame(width: 75, height: 75)
             }
             VStack(alignment: .leading) {
                 Text(product.name).font(.largeTitle)
@@ -101,7 +102,7 @@ struct MDProductsView: View {
         }
     }
     
-    #if os(macOS)
+#if os(macOS)
     var bodyContent: some View {
         NavigationView{
             content
@@ -130,7 +131,7 @@ struct MDProductsView: View {
         }
         .navigationTitle(LocalizedStringKey("str.md.products"))
     }
-    #elseif os(iOS)
+#elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar {
@@ -161,25 +162,25 @@ struct MDProductsView: View {
                 }
             })
     }
-    #endif
+#endif
     
     var content: some View {
         List(){
-            #if os(iOS)
+#if os(iOS)
             if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-            #endif
+#endif
             if grocyVM.mdProducts.isEmpty {
                 Text(LocalizedStringKey("str.md.products.empty"))
             } else if filteredProducts.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
+#if os(macOS)
             if showAddProduct {
                 NavigationLink(destination: MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType), isActive: $showAddProduct, label: {
                     NewMDRowLabel(title: "str.md.product.new")
                 })
             }
-            #endif
+#endif
             ForEach(filteredProducts, id:\.id) { product in
                 NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, showAddProduct: Binding.constant(false), toastType: $toastType)) {
                     MDProductRowView(product: product)
@@ -217,12 +218,12 @@ struct MDProductsView: View {
 
 struct MDProductsView_Previews: PreviewProvider {
     static var previews: some View {
-        #if os(macOS)
+#if os(macOS)
         MDProductsView()
-        #else
+#else
         NavigationView() {
             MDProductsView()
         }
-        #endif
+#endif
     }
 }

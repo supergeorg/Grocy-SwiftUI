@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct MDShoppingLocationRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -18,12 +17,14 @@ struct MDShoppingLocationRowView: View {
 //            if let uf = shoppingLocation.userfields?.first(where: {$0.key == AppSpecificUserFields.storeLogo.rawValue }) {
 //                if let pictureURL = grocyVM.getPictureURL(groupName: "userfiles", fileName: uf.value) {
 //                    if let url = URL(string: pictureURL) {
-//                        URLImage(url: url) { image in
+//                        AsyncImage(url: url, content: { image in
 //                            image
 //                                .resizable()
 //                                .aspectRatio(contentMode: .fit)
 //                                .background(Color.white)
-//                        }
+//                        }, placeholder: {
+   //         ProgressView().progressViewStyle(.circular)
+  //     })
 //                        .frame(width: 100, height: 100)
 //                    }
 //                }
