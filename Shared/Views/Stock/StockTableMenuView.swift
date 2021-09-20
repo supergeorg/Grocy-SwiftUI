@@ -36,6 +36,7 @@ struct StockTableMenuView: View {
                     .labelStyle(TextIconLabelStyle())
             })
             Divider()
+            #if os(iOS)
             Group{
                 Button(action: {
                     selectedStockElement = stockElement
@@ -66,6 +67,7 @@ struct StockTableMenuView: View {
                         .labelStyle(TextIconLabelStyle())
                 })
             }
+            #endif
             Divider()
             Group{
                 Button(action: {
@@ -114,12 +116,14 @@ struct StockTableMenuView: View {
 //                }, label: {
 //                    Text(LocalizedStringKey("str.stock.journal.summary"))
 //                })
+                #if os(iOS)
                 Button(action: {
                     selectedStockElement = stockElement
                     activeSheet = .editProduct
                 }, label: {
                     Text(LocalizedStringKey("str.details.edit"))
                 })
+                #endif
             }
         }
     }

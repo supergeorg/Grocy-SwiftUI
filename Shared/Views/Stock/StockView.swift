@@ -147,25 +147,25 @@ struct StockView: View {
                             case .addToShL:
                                 ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
                                     .padding()
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
                                 PurchaseProductView(productToPurchaseID: selectedStockElement?.productID)
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 500)
                             case .productConsume:
                                 ConsumeProductView(productToConsumeID: selectedStockElement?.productID)
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 300)
                             case .productTransfer:
                                 TransferProductView(productToTransferID: selectedStockElement?.productID)
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 300)
                             case .productInventory:
                                 InventoryProductView(productToInventoryID: selectedStockElement?.productID)
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 500)
                             case .productOverview:
                                 ProductOverviewView(productDetails: ProductDetailsModel(product: selectedStockElement?.product))
                                     .frame(minWidth: 400, minHeight: 300)
                             case .productJournal:
                                 StockJournalView(selectedProductID: selectedStockElement?.product.id)
-                                    .frame(minWidth: 400, minHeight: 300)
+                                    .frame(minWidth: 500, minHeight: 300)
                             case .editProduct:
                                 MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType)
                                     .frame(minWidth: 400, minHeight: 300)
