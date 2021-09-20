@@ -94,13 +94,13 @@ struct TransferProductView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         ScrollView{
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         }
-        #else
+#else
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
@@ -109,7 +109,7 @@ struct TransferProductView: View {
                     }
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
@@ -128,14 +128,14 @@ struct TransferProductView: View {
                         quantityUnitID = selectedProduct.quIDStock
                     }
                 }
-
+            
             Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
                     Text(locationFrom.name).tag(locationFrom.id as Int?)
                 }
             })
-
+            
             Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
                 MyDoubleStepperOptional(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
@@ -145,7 +145,7 @@ struct TransferProductView: View {
                     }
                 }).disabled(true)
             }
-
+            
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
@@ -159,9 +159,9 @@ struct TransferProductView: View {
                         .foregroundColor(.red)
                 }
             }
-
+            
             MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
-
+            
             if (useSpecificStockEntry) && (productID != nil) {
                 Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
                     Text("").tag(nil as String?)
@@ -189,26 +189,26 @@ struct TransferProductView: View {
         })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
-                if isProcessingAction {
-                    ProgressView().progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    Button(action: resetForm, label: {
-                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                            .help(LocalizedStringKey("str.clear"))
+                HStack {
+                    if isProcessingAction {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        Button(action: resetForm, label: {
+                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                                .help(LocalizedStringKey("str.clear"))
+                        })
+                            .keyboardShortcut("r", modifiers: [.command])
+                    }
+                    Button(action: {
+                        transferProduct()
+                        resetForm()
+                    }, label: {
+                        Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
+                            .labelStyle(TextIconLabelStyle())
                     })
-                    .keyboardShortcut("r", modifiers: [.command])
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("s", modifiers: [.command])
                 }
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: {
-                    transferProduct()
-                    resetForm()
-                }, label: {
-                    Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
-                        .labelStyle(TextIconLabelStyle())
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .animation(.default)

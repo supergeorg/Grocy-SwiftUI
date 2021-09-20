@@ -17,10 +17,10 @@ struct ConsumeProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    #if os(iOS)
+#if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    #endif
+#endif
     
     var productToConsumeID: Int?
     
@@ -152,13 +152,13 @@ struct ConsumeProductView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         ScrollView{
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         }
-        #else
+#else
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
@@ -167,7 +167,7 @@ struct ConsumeProductView: View {
                     }
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
@@ -229,10 +229,10 @@ struct ConsumeProductView: View {
                         Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
                             Text("Not implemented").tag(nil as Int?)
                         })
-                        #if os(macOS)
+#if os(macOS)
                         Image(systemName: "questionmark.circle.fill")
                             .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
-                        #elseif os(iOS)
+#elseif os(iOS)
                         Image(systemName: "questionmark.circle.fill")
                             .onTapGesture {
                                 showRecipeInfo.toggle()
@@ -242,7 +242,7 @@ struct ConsumeProductView: View {
                                 Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
                                     .padding()
                             })
-                        #endif
+#endif
                     }
                 }
             }
@@ -276,53 +276,51 @@ struct ConsumeProductView: View {
         })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
-                if isProcessingAction {
-                    ProgressView().progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    Button(action: resetForm, label: {
-                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                            .help(LocalizedStringKey("str.clear"))
+                HStack {
+                    if isProcessingAction {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        Button(action: resetForm, label: {
+                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                                .help(LocalizedStringKey("str.clear"))
+                        })
+                            .keyboardShortcut("r", modifiers: [.command])
+                    }
+                    Button(action: {
+                        openProduct()
+                    }, label: {
+#if os(iOS)
+                        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                        } else {
+                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                                .labelStyle(TextIconLabelStyle())
+                        }
+#else
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                            .labelStyle(TextIconLabelStyle())
+#endif
                     })
-                    .keyboardShortcut("r", modifiers: [.command])
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("o", modifiers: [.command])
+                    Button(action: {
+                        consumeProduct()
+                    }, label: {
+#if os(iOS)
+                        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                        } else {
+                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                                .labelStyle(TextIconLabelStyle())
+                        }
+#else
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                            .labelStyle(TextIconLabelStyle())
+#endif
+                    })
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("s", modifiers: [.command])
                 }
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: {
-                    openProduct()
-                }, label: {
-                    #if os(iOS)
-                    if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                    } else {
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                            .labelStyle(TextIconLabelStyle())
-                    }
-                    #else
-                    Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                        .labelStyle(TextIconLabelStyle())
-                    #endif
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("o", modifiers: [.command])
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: {
-                    consumeProduct()
-                }, label: {
-                    #if os(iOS)
-                    if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                    } else {
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                            .labelStyle(TextIconLabelStyle())
-                    }
-                    #else
-                    Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                        .labelStyle(TextIconLabelStyle())
-                    #endif
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .navigationTitle(LocalizedStringKey("str.stock.consume"))

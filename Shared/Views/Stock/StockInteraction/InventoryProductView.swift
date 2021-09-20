@@ -114,13 +114,13 @@ struct InventoryProductView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         ScrollView{
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         }
-        #else
+#else
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
@@ -129,7 +129,7 @@ struct InventoryProductView: View {
                     }
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
@@ -214,26 +214,26 @@ struct InventoryProductView: View {
         })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
-                if isProcessingAction {
-                    ProgressView().progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    Button(action: resetForm, label: {
-                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                            .help(LocalizedStringKey("str.clear"))
+                HStack {
+                    if isProcessingAction {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        Button(action: resetForm, label: {
+                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                                .help(LocalizedStringKey("str.clear"))
+                        })
+                            .keyboardShortcut("r", modifiers: [.command])
+                    }
+                    Button(action: {
+                        inventoryProduct()
+                        resetForm()
+                    }, label: {
+                        Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
+                            .labelStyle(TextIconLabelStyle())
                     })
-                    .keyboardShortcut("r", modifiers: [.command])
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("s", modifiers: [.command])
                 }
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: {
-                    inventoryProduct()
-                    resetForm()
-                }, label: {
-                    Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
-                        .labelStyle(TextIconLabelStyle())
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .animation(.default)

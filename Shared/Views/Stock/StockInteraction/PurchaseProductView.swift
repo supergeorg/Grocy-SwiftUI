@@ -106,13 +106,13 @@ struct PurchaseProductView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         ScrollView{
             content
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         }
-        #else
+#else
         content
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
@@ -121,7 +121,7 @@ struct PurchaseProductView: View {
                     }
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
@@ -181,21 +181,21 @@ struct PurchaseProductView: View {
                 Picker(selection: $shoppingLocationID,
                        label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
                        content: {
-                        Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                            Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
-                        }
-                       })
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
+                        Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
+                    }
+                })
                 
                 Picker(selection: $locationID,
                        label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundColor(.primary),
                        content: {
-                        Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations, id:\.id) { location in
-                            Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
-                            //                            Text(location.name).tag(location.id as String?)
-                        }
-                       })
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                        Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
+                        //                            Text(location.name).tag(location.id as String?)
+                    }
+                })
             }
         }
         .onAppear(perform: {
@@ -215,23 +215,23 @@ struct PurchaseProductView: View {
         })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
-                if isProcessingAction {
-                    ProgressView().progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    Button(action: resetForm, label: {
-                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                            .help(LocalizedStringKey("str.clear"))
+                HStack {
+                    if isProcessingAction {
+                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        Button(action: resetForm, label: {
+                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                                .help(LocalizedStringKey("str.clear"))
+                        })
+                            .keyboardShortcut("r", modifiers: [.command])
+                    }
+                    Button(action: purchaseProduct, label: {
+                        Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
+                            .labelStyle(TextIconLabelStyle())
                     })
-                    .keyboardShortcut("r", modifiers: [.command])
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("s", modifiers: [.command])
                 }
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: purchaseProduct, label: {
-                    Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
-                        .labelStyle(TextIconLabelStyle())
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .animation(.default)
@@ -241,12 +241,12 @@ struct PurchaseProductView: View {
 
 struct PurchaseProductView_Previews: PreviewProvider {
     static var previews: some View {
-        #if os(iOS)
+#if os(iOS)
         NavigationView{
             PurchaseProductView()
         }
-        #else
+#else
         PurchaseProductView()
-        #endif
+#endif
     }
 }
