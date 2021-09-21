@@ -61,11 +61,6 @@ struct AboutView: View {
                 })
                 .foregroundColor(.primary)
                 
-                Link(destination: URL(string: "https://github.com/SwiftyBeaver/SwiftyBeaver")!, label: {
-                    AboutLineView(iconName: MySymbols.logFile, caption: "SwiftyBeaver", content: "Copyright (MIT License) 2015 Sebastian Kreutzberger")
-                })
-                .foregroundColor(.primary)
-                
                 Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
                     AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (Apache License 2.0) 2020 Steven Grosmark")
                 })

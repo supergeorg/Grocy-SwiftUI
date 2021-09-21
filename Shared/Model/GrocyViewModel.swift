@@ -9,9 +9,6 @@ import Foundation
 import Combine
 import SwiftUI
 import OSLog
-#if !TESTING
-import SwiftyBeaver
-#endif
 
 class GrocyViewModel: ObservableObject {
     var grocyApi: GrocyAPI
@@ -24,12 +21,8 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     static let shared = GrocyViewModel()
-    
-    #if TESTING
-    let grocyLog = Logger(subsystem: "Grocy-SwiftUI", category: "APIAccess")
-    #else
-    let grocyLog = SwiftyBeaver.self
-    #endif
+
+    let grocyLog = Logger(subsystem: "Grocy-Mobile", category: "APIAccess")
     
     @Published var systemInfo: SystemInfo?
     @Published var systemDBChangedTime: SystemDBChangedTime?
@@ -86,13 +79,6 @@ class GrocyViewModel: ObservableObject {
             grocyLog.info("Not logged in")
         }
         jsonEncoder.outputFormatting = .prettyPrinted
-        
-        #if !TESTING
-        let console = ConsoleDestination()  // log to Xcode Console
-        let file = FileDestination()  // log to default swiftybeaver.log file
-        grocyLog.addDestination(console)
-        grocyLog.addDestination(file)
-        #endif
     }
     
     func setDemoModus() {
@@ -510,14 +496,9 @@ class GrocyViewModel: ObservableObject {
         case .debug:
             self.grocyLog.debug("\(message)")
         case .fault:
-            self.grocyLog.error("\(message)")
-        //            self.grocyLog.fault("\(message)")
+            self.grocyLog.fault("\(message)")
         default:
-            #if TESTING
             self.grocyLog.log("\(message)")
-            #else
-            self.grocyLog.verbose("\(message)")
-            #endif
         }
     }
     
