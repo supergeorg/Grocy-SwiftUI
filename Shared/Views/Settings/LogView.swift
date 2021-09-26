@@ -7,11 +7,12 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
 
 struct LogView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @State private var logText: [String] = []
+    @State private var logEntries: [OSLogEntryLog] = []
     
     @State private var exportLog: ExportLog = ExportLog(content: Data())
     @State var isExporting: Bool = false
@@ -36,94 +37,56 @@ struct LogView: View {
     }
     
     func shareFile() {
-        do {
-            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            #if os(macOS)
-            let logFolder = cachesDirectory.appendingPathComponent("Grocy-SwiftUI/")
-            #elseif os(iOS)
-            let logFolder = cachesDirectory
-            #endif
-            let filePath = logFolder.appendingPathComponent("swiftybeaver.log")
-            print(filePath.absoluteString)
-            let fileData = try Data(contentsOf: filePath)
-            exportLog = ExportLog(content: fileData)
+        if let logData = logEntries.map({ "\(formatDateAsString($0.date)): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
+            exportLog = ExportLog(content: logData)
             isExporting = true
-        } catch {
-            print("Error")
+        } else {
+            print("Error exporting log")
         }
     }
     
     func updateLog() {
-        logText = grocyVM.getLog()
+        do {
+            logEntries = try grocyVM.getLogEntries()
+        } catch {
+            logEntries = []
+        }
     }
     
     var body: some View {
         #if os(macOS)
-        ScrollView{
+        List {
             contentmacOS
                 .padding()
                 .frame(width: 500, height: 500)
         }
         #elseif os(iOS)
-        contentiOS
+        content
             .navigationTitle(LocalizedStringKey("str.settings.log"))
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                    HStack{
                         Button(action: {
                             shareFile()
                         }, label: { Image(systemName: MySymbols.share) })
-                        Button(action: {
-                            updateLog()
-                        }, label: {
-                            Label("str.settings.log.update", systemImage: MySymbols.reload)
-                        })
-                    }
                 })
             })
         #endif
     }
     
-    var contentiOS: some View {
-        Form{
-            ForEach(logText.reversed(), id: \.self) {text in
-                Text(text)
-            }
-        }
-        .onAppear(perform: updateLog)
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportLog,
-            contentType: .plainText,
-            defaultFilename: "Grocy-SwiftUI_LOG.log"
-        ) { result in
-            if case .success = result {
-                print("Export successful.")
-            } else {
-                print("Export failed.")
-            }
-        }
-    }
-    
-    var contentmacOS: some View {
+    var content: some View {
         List {
-            Button(action: {
-                updateLog()
-            }, label: {
-                Label("str.settings.log.update", systemImage: MySymbols.reload)
-            })
-            if !logText.isEmpty {
-                Button(action: {
-                    shareFile()
-                }, label: {
-                    Label(LocalizedStringKey("str.settings.log.share"), systemImage: MySymbols.share)
-                })
-            }
-            ForEach(logText, id: \.self) {text in
-                Text(text)
+            ForEach(logEntries.reversed(), id: \.self) { logEntry in
+                VStack(alignment: .leading) {
+                    Text(formatDateAsString(logEntry.date))
+                        .font(.caption)
+                    Text(logEntry.composedMessage)
+                }
             }
         }
         .onAppear(perform: updateLog)
+        .refreshable {
+            updateLog()
+        }
         .fileExporter(
             isPresented: $isExporting,
             document: exportLog,

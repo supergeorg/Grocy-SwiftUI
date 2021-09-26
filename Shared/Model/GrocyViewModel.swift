@@ -502,36 +502,21 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    func getLog() -> [String] {
-        print("Log reading is not possible, at least not on iOS.")
-        do {
-            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            print(cachesDirectory.absoluteString)
-            #if os(macOS)
-            let logFolder = cachesDirectory.appendingPathComponent("Grocy-SwiftUI/")
-            #elseif os(iOS)
-            let logFolder = cachesDirectory
-            #endif
-            let filePath = logFolder.appendingPathComponent("swiftybeaver.log")
-            let logText = try String(contentsOf: filePath, encoding: .utf8)
-            let logLines : [String] = logText.components(separatedBy: NSCharacterSet.newlines)
-            return logLines
-        } catch {
-            return ["Error reading log"]
-        }
-        //        let fileManager = FileManager.default
-        //        let documentsURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        //        do {
-        //            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-        //            for file in fileURLs {
-        //                print(file.absoluteString)
-        //            }
-        //            return ""
-        //            // process files
-        //        } catch {
-        //            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
-        //            return "Error"
-        //        }
+    func getLogEntries() throws -> [OSLogEntryLog] {
+        // Open the log store.
+        let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+        
+        // Get all the logs from the last hour.
+        let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
+        
+        // Fetch log objects.
+        let allEntries = try logStore.getEntries(at: oneHourAgo)
+        
+        // Filter the log to be relevant for our specific subsystem
+        // and remove other elements (signposts, etc).
+        return allEntries
+            .compactMap { $0 as? OSLogEntryLog }
+            .filter { $0.subsystem == "Grocy-Mobile" }
     }
     
     //MARK: - SYSTEM
