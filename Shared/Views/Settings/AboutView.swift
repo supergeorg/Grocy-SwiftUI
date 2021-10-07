@@ -10,9 +10,10 @@ import SwiftUI
 struct AboutLineView: View {
     var iconName: String
     var caption: String
-    var content: String?
+    var content: String? = nil
+
     var body: some View {
-        HStack{
+        HStack(alignment: .center) {
             Image(systemName: iconName).font(.title)
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey(caption)).font(.title3)
@@ -26,9 +27,9 @@ struct AboutLineView: View {
 
 struct AboutView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
-    #if os(macOS)
+#if os(macOS)
     @State private var showTranslators: Bool = false
-    #endif
+#endif
     
     var body: some View {
         Form(){
@@ -40,14 +41,21 @@ struct AboutView: View {
                 
                 AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
                 
+                Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!, label: {
+                    AboutLineView(iconName: "chevron.left.forwardslash.chevron.right", caption: "Github", content: "supergeorg/Grocy-SwiftUI")
+                })
+                    .foregroundColor(.primary)
+                
                 Link(destination: URL(string: "https://github.com/grocy/grocy")!, label: {
                     AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
                 })
-                .foregroundColor(.primary)
+                    .foregroundColor(.primary)
                 
-                #if os(iOS)
-                NavigationLink(destination: TranslatorsView(), label: {AboutLineView(iconName: "flag", caption: "str.settings.about.translators")})
-                #else
+#if os(iOS)
+                NavigationLink(destination: TranslatorsView(), label: {
+                    AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
+                })
+#else
                 AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
                     .onTapGesture {
                         showTranslators.toggle()
@@ -55,16 +63,16 @@ struct AboutView: View {
                 if showTranslators {
                     TranslatorsView()
                 }
-                #endif
+#endif
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
                 })
-                .foregroundColor(.primary)
+                    .foregroundColor(.primary)
                 
                 Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
                     AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (Apache License 2.0) 2020 Steven Grosmark")
                 })
-                .foregroundColor(.primary)
+                    .foregroundColor(.primary)
             }
             Button(action: {
                 self.onboardingNeeded = true
