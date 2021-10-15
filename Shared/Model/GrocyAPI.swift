@@ -72,7 +72,7 @@ protocol GrocyAPI {
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
-    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
     //    func getStockProductLocations(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockLocations, APIError>
     //    func getStockProductEntries(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockEntries, APIError>
     //    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
@@ -291,6 +291,7 @@ extension GrocyApi {
         //        Stock
         case stock = "/stock"
         case stockEntryWithID = "/stock/entry/{entryId}"
+        case stockEntryWithIDPrintlabel = "/stock/entry/{entryId}/printlabel"
         case stockVolatile = "/stock/volatile"
         case stockProductWithId = "/stock/products/{productId}"
         case stockProductWithIdLocations = "/stock/products/{productId}/locations"
@@ -400,7 +401,7 @@ extension GrocyApi {
         return call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
     }
     
-    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
         switch stockModeGet {
         case .details:
             return call(.stockProductWithId, method: .GET, id: id)

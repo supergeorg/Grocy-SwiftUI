@@ -21,7 +21,7 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     static let shared = GrocyViewModel()
-
+    
     let grocyLog = Logger(subsystem: "Grocy-Mobile", category: "APIAccess")
     
     @Published var systemInfo: SystemInfo?
@@ -40,6 +40,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdLocations: MDLocations = []
     @Published var mdShoppingLocations: MDShoppingLocations = []
     @Published var mdQuantityUnits: MDQuantityUnits = []
+    @Published var mdQuantityUnitConversions: MDQuantityUnitConversions = []
     @Published var mdProductGroups: MDProductGroups = []
     @Published var mdBatteries: MDBatteries = []
     @Published var mdTaskCategories: MDTaskCategories = []
@@ -55,6 +56,8 @@ class GrocyViewModel: ObservableObject {
     
     @Published var failedToLoadObjects = Set<ObjectEntities>()
     @Published var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
+    
+    @Published var logEntries: [OSLogEntryLog] = []
     
     var cancellables = Set<AnyCancellable>()
     
@@ -145,6 +148,8 @@ class GrocyViewModel: ObservableObject {
             ints = self.mdShoppingLocations.map{ $0.id }
         case .quantity_units:
             ints = self.mdQuantityUnits.map{ $0.id }
+        case .quantity_unit_conversions:
+            ints = self.mdQuantityUnitConversions.map{ $0.id }
         case .product_groups:
             ints = self.mdProductGroups.map{ $0.id }
         case .shopping_lists:
@@ -261,6 +266,19 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnits = entityResult.sorted(by: { $0.name < $1.name })
+                                self.failedToLoadObjects.remove(object)
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.failedToLoadObjects.insert(object)
+                            }
+                        })
+                    }
+                case .quantity_unit_conversions:
+                    if mdQuantityUnitConversions.isEmpty || ignoreCached {
+                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnitConversions, Error>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.mdQuantityUnitConversions = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
@@ -502,21 +520,27 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    func getLogEntries() throws -> [OSLogEntryLog] {
-        // Open the log store.
-        let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-        
-        // Get all the logs from the last hour.
-        let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
-        
-        // Fetch log objects.
-        let allEntries = try logStore.getEntries(at: oneHourAgo)
-        
-        // Filter the log to be relevant for our specific subsystem
-        // and remove other elements (signposts, etc).
-        return allEntries
-            .compactMap { $0 as? OSLogEntryLog }
-            .filter { $0.subsystem == "Grocy-Mobile" }
+    func getLogEntries() {
+        do {
+            // Open the log store.
+            let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+            
+            // Get all the logs from the last hour.
+            let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
+            
+            // Fetch log objects.
+            let allEntries = try logStore.getEntries(at: oneHourAgo)
+            
+            // Filter the log to be relevant for our specific subsystem
+            // and remove other elements (signposts, etc).
+            let logEntriesFiltered =  allEntries
+                .compactMap { $0 as? OSLogEntryLog }
+                .filter { $0.subsystem == "Grocy-Mobile" }
+            
+            self.logEntries = logEntriesFiltered
+        } catch {
+            self.grocyLog.error("Error getting log entries")
+        }
     }
     
     //MARK: - SYSTEM
@@ -703,14 +727,89 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil, completion: @escaping ((Result<T, Error>) -> ())) {
+        grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+                
+            }) { (getStockProductInfoReturn: T) in
+                DispatchQueue.main.async {
+                    completion(.success(getStockProductInfoReturn))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) {
+        if let stockModeGet = stockModeGet {
+            for mode in stockModeGet {
+                switch mode {
+                case .details:
+                    if stockProductDetails.isEmpty || ignoreCached {
+                        getStockProductInfo(mode: mode, productID: productID, completion: { (result: Result<StockProductDetails, Error>) in
+                            switch result {
+                            case let .success(productDetailResult):
+                                self.stockProductDetails[productID] = productDetailResult
+//                                self.failedToLoadObjects.remove(object)
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
+//                                self.failedToLoadObjects.insert(object)
+                            }
+                        })
+                    }
+                case .locations:
+                    print("not implemented")
+                case .entries:
+                    if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
+                        getStockProductInfo(mode: mode, productID: productID, completion: { (result: Result<StockEntries, Error>) in
+                            switch result {
+                            case let .success(productEntriesResult):
+                                self.stockProductEntries[productID] = productEntriesResult
+//                                self.failedToLoadObjects.remove(object)
+                            case let .failure(error):
+                                self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
+//                                self.failedToLoadObjects.insert(object)
+                            }
+                        })
+                    }
+                case .priceHistory:
+                    print("not implemented")
+                }
+            }
+        }
+    }
+    
     func getStockProductLocations(productID: Int) {}
     
-    func getStockProductEntries(productID: Int) {
-        grocyApi.getStockProductDetails(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
+    func getStockProductDetails(productID: Int) {
+        grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, query: nil)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
                     self.grocyLog.error("Get stock product details failed. \("\(error)")")
+                    break
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (productDetailsOut: StockProductDetails) in
+                DispatchQueue.main.async {
+                    self.stockProductDetails[productID] = productDetailsOut
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func getStockProductEntries(productID: Int) {
+        grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.grocyLog.error("Get stock product entries failed. \("\(error)")")
                     break
                 case .finished:
                     break
@@ -725,7 +824,7 @@ class GrocyViewModel: ObservableObject {
     
     func postStockObject<T: Codable>(id: Int, stockModePost: StockProductPost, content: T, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
-//        print(String(data: jsonContent, encoding: String.Encoding.utf8))
+        //        print(String(data: jsonContent, encoding: String.Encoding.utf8))
         grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
             .sink(receiveCompletion: { result in
                 switch result {

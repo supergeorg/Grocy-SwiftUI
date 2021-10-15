@@ -25,6 +25,7 @@
 "str.back" = "Zurück";
 "str.retry" = "Erneut versuchen";
 "str.connection.failed" = "Keine Verbindung zum Server";
+"str.time.unlimited" = "unbegrenzt";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";
@@ -140,16 +141,19 @@
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Verbrauche %@ als verdorben";
 "str.stock.tbl.menu.searchRecipes" = "Suche nach Rezepten, die dieses Produkt enthalten";
 
+"str.stock.product.amount" = "Menge";
+"str.stock.product.amount.factored %@ %@" = "Dies entspricht %@ %@";
+"str.stock.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
+"str.stock.consume.product.amount.locMax" = "Diese Menge ist am gewählten Standort nicht vorhanden";
+"str.stock.product.quantityUnit" = "Mengeneinheit";
+"str.stock.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
+
 "str.stock.buy" = "Einkauf";
 "str.stock.buy.product" = "Produkt";
 "str.stock.buy.product.buy" = "Produkt einkaufen";
 "str.stock.buy.product.buy.success %@" = "%@ eingekauft";
 "str.stock.buy.product.buy.fail" = "Einkauf fehlgeschlagen";
 "str.stock.buy.product.required" = "Ein Produkt muss ausgewählt werden";
-"str.stock.buy.product.amount" = "Menge";
-"str.stock.buy.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
-"str.stock.buy.product.quantityUnit" = "Mengeneinheit";
-"str.stock.buy.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.buy.product.dueDate" = "Fälligkeitsdatum";
 "str.stock.buy.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
 "str.stock.buy.product.doesntSpoil" = "Nie überfällig";
@@ -170,11 +174,6 @@
 "str.stock.consume.product.open.success %@" = "%@ geöffnet";
 "str.stock.consume.product.open.fail" = "Öffnen fehlgeschlagen";
 "str.stock.consume.product.required" = "Ein Produkt muss ausgewählt werden";
-"str.stock.consume.product.amount" = "Menge";
-"str.stock.consume.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
-"str.stock.consume.product.amount.locMax" = "Diese Menge ist am gewählten Standort nicht vorhanden";
-"str.stock.consume.product.quantityUnit" = "Mengeneinheit";
-"str.stock.consume.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.consume.product.location" = "Standort";
 "str.stock.consume.product.location.required" = "Ein Standort ist erforderlich";
 "str.stock.consume.product.location.default %@" = "%@ (Standard-Standort)";
@@ -194,10 +193,6 @@
 "str.stock.transfer.product.required" = "Ein Produkt muss ausgewählt werden";
 "str.stock.transfer.product.locationFrom" = "Von Standort";
 "str.stock.transfer.product.locationFrom.required" = "Ein Standort ist erforderlich";
-"str.stock.transfer.product.amount" = "Menge";
-"str.stock.transfer.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
-"str.stock.transfer.product.quantityUnit" = "Mengeneinheit";
-"str.stock.transfer.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.transfer.product.locationTo" = "Nach Standort";
 "str.stock.transfer.product.locationTO.required" = "Ein Standort ist erforderlich";
 "str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie \"Von Standort\" sein";
@@ -210,12 +205,8 @@
 "str.stock.inventory.product.inventory" = "Inventur durchführen";
 "str.stock.inventory.product.inventory.success %@" = "%@ inventarisiert";
 "str.stock.inventory.product.inventory.fail" = "Inventarisierung fehlgeschlagen";
-"str.stock.inventory.product.amount" = "Neuer Bestand";
-"str.stock.inventory.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.stock.inventory.product.amount.lower %@" = "Das bedeutet %@ wird aus dem Bestand entfernt";
 "str.stock.inventory.product.amount.higher %@" = "Das bedeutet %@ wird dem Bestand hinzugefügt";
-"str.stock.inventory.product.quantityUnit" = "Mengeneinheit";
-"str.stock.inventory.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 "str.stock.inventory.product.dueDate" = "Fälligkeitsdatum";
 "str.stock.inventory.product.dueDate.info" = "Dies gilt für hinzugefügte Produkte";
 "str.stock.inventory.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";
@@ -244,6 +235,16 @@
 "str.stock.journal.location.info %@" = "Standort: %@";
 "str.stock.journal.user" = "Nutzer";
 "str.stock.journal.user.info %@" = "Nutzer: %@";
+
+"str.stock.entries" = "Bestandseinträge";
+"str.stock.entries.empty" = "Keine Einträge vorhanden";
+"str.stock.entries.product %@" = "Produkt: %@";
+"str.stock.entries.amount %@" = "Menge: %@";
+"str.stock.entries.dueDate %@" = "Fälligkeitsdatum: %@";
+"str.stock.entries.location %@" = "Standort: %@";
+"str.stock.entries.shoppingLocation %@" = "Geschäft: %@";
+"str.stock.entries.price %@" = "Preis: %@";
+"str.stock.entries.purchasedDate %@" = "Einkaufsdatum: %@";
 
 // MARK: - Shopping List
 "str.shL" = "Einkaufszettel";
@@ -574,6 +575,7 @@
 "str.settings.appLanguage" = "App-Sprache";
 "str.settings.resetCache" = "Cache löschen";
 "str.settings.log" = "App-Log";
+"str.settings.log.empty" = "Kein Logeintrag gefunden.";
 "str.settings.log.update" = "Log aktualisieren";
 "str.settings.log.share" = "Log-Datei teilen";
 
