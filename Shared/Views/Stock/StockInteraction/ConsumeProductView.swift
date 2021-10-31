@@ -227,7 +227,7 @@ struct ConsumeProductView: View {
                         Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
-                                Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                                Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                                     .tag(stockProduct.stockID as String?)
                             }
                         })
@@ -307,7 +307,7 @@ struct ConsumeProductView: View {
                         }
 #else
                         Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
 #endif
                     })
                         .disabled(!isFormValid || isProcessingAction)
@@ -324,7 +324,7 @@ struct ConsumeProductView: View {
                         }
 #else
                         Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
 #endif
                     })
                         .disabled(!isFormValid || isProcessingAction)

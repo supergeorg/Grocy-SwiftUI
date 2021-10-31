@@ -74,8 +74,6 @@ struct PurchaseProductView: View {
         return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
     }
     
-    private let priceFormatter = NumberFormatter()
-    
     var isFormValid: Bool {
         (productID != nil) && (amount > 0) && (quantityUnitID != nil)
     }
@@ -138,7 +136,7 @@ struct PurchaseProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 || grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerProblemView(isCompact: true)
                 }
@@ -171,7 +169,7 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, isCurrency: true)
                 
                 if price != nil {
                     Picker("", selection: $isTotalPrice, content: {
