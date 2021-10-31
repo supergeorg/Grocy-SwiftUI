@@ -56,6 +56,7 @@ class GrocyViewModel: ObservableObject {
     
     @Published var failedToLoadObjects = Set<ObjectEntities>()
     @Published var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
+    @Published var failedToLoadErrors: [APIError] = []
     
     @Published var logEntries: [OSLogEntryLog] = []
     
@@ -81,7 +82,9 @@ class GrocyViewModel: ObservableObject {
         } else {
             grocyLog.info("Not logged in")
         }
+        jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.outputFormatting = .prettyPrinted
+
     }
     
     func setDemoModus() {
@@ -173,7 +176,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     // Gets the data of a selected entity
-    func getEntity<T: Codable>(entity: ObjectEntities, completion: @escaping ((Result<T, Error>) -> ())) {
+    func getEntity<T: Codable>(entity: ObjectEntities, completion: @escaping ((Result<T, APIError>) -> ())) {
         grocyApi.getObject(object: entity)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -197,7 +200,7 @@ class GrocyViewModel: ObservableObject {
                 switch object {
                 case .batteries:
                     if mdBatteries.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDBatteries, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDBatteries, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdBatteries = entityResult.sorted(by: { $0.name < $1.name })
@@ -205,12 +208,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .locations:
                     if mdLocations.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDLocations, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdLocations = entityResult.sorted(by: { $0.name < $1.name })
@@ -218,12 +222,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .product_barcodes:
                     if mdProductBarcodes.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDProductBarcodes, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDProductBarcodes, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductBarcodes = entityResult
@@ -231,12 +236,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .product_groups:
                     if mdProductGroups.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDProductGroups, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDProductGroups, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductGroups = entityResult.sorted(by: { $0.name < $1.name })
@@ -244,12 +250,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .products:
                     if mdProducts.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDProducts, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDProducts, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProducts = entityResult.sorted(by: { $0.name < $1.name })
@@ -257,12 +264,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .quantity_units:
                     if mdQuantityUnits.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnits = entityResult.sorted(by: { $0.name < $1.name })
@@ -270,12 +278,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .quantity_unit_conversions:
                     if mdQuantityUnitConversions.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnitConversions, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDQuantityUnitConversions, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnitConversions = entityResult
@@ -283,12 +292,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .shopping_list:
                     if shoppingList.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<ShoppingList, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<ShoppingList, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingList = entityResult
@@ -296,12 +306,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .shopping_lists:
                     if shoppingListDescriptions.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<ShoppingListDescriptions, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<ShoppingListDescriptions, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingListDescriptions = entityResult
@@ -309,12 +320,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .shopping_locations:
                     if mdShoppingLocations.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdShoppingLocations = entityResult.sorted(by: { $0.name < $1.name })
@@ -322,12 +334,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .stock_log:
                     if stockJournal.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<StockJournal, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<StockJournal, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.stockJournal = entityResult
@@ -335,12 +348,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .task_categories:
                     if mdTaskCategories.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDTaskCategories, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDTaskCategories, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdTaskCategories = entityResult.sorted(by: { $0.name < $1.name })
@@ -348,12 +362,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .userentities:
                     if mdUserEntities.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDUserEntities, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDUserEntities, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserEntities = entityResult.sorted(by: { $0.name < $1.name })
@@ -361,12 +376,13 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 case .userfields:
                     if mdUserFields.isEmpty || ignoreCached {
-                        getEntity(entity: object, completion: { (result: Result<MDUserFields, Error>) in
+                        getEntity(entity: object, completion: { (result: Result<MDUserFields, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserFields = entityResult.sorted(by: { $0.name < $1.name })
@@ -374,6 +390,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
                                 self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -395,6 +412,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemConfig. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -408,6 +426,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemInfo. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -421,6 +440,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for SystemDBChangedTime. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -434,6 +454,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for Stock. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -447,6 +468,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for Users. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -460,6 +482,7 @@ class GrocyViewModel: ObservableObject {
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for current user. Message: \("\(error)")")
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
                             }
                         })
                     }
@@ -469,6 +492,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func retryFailedRequests() {
+        self.failedToLoadErrors = []
         self.requestData(objects: Array(failedToLoadObjects), additionalObjects: Array(failedToLoadAdditionalObjects))
     }
     
@@ -545,7 +569,7 @@ class GrocyViewModel: ObservableObject {
     
     //MARK: - SYSTEM
     
-    func getSystemInfo(completion: @escaping ((Result<SystemInfo, Error>) -> ())) {
+    func getSystemInfo(completion: @escaping ((Result<SystemInfo, APIError>) -> ())) {
         grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -563,7 +587,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func getSystemDBChangedTime(completion: @escaping ((Result<SystemDBChangedTime, Error>) -> ())) {
+    func getSystemDBChangedTime(completion: @escaping ((Result<SystemDBChangedTime, APIError>) -> ())) {
         grocyApi.getSystemDBChangedTime()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -581,7 +605,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func getSystemConfig(completion: @escaping ((Result<SystemConfig, Error>) -> ())) {
+    func getSystemConfig(completion: @escaping ((Result<SystemConfig, APIError>) -> ())) {
         grocyApi.getSystemConfig()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -605,9 +629,19 @@ class GrocyViewModel: ObservableObject {
         return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
     }
     
+    func getFormattedCurrency(amount: Double) -> String {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.currencyCode = self.systemConfig?.currency
+        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.locale = Locale(identifier: localizationKey)
+        let formattedString = currencyFormatter.string(from: NSNumber(value: amount))
+        return formattedString ?? amount.formattedAmount
+    }
+    
     // MARK: - USER MANAGEMENT
     
-    func getUsers(completion: @escaping ((Result<GrocyUsers, Error>) -> ())) {
+    func getUsers(completion: @escaping ((Result<GrocyUsers, APIError>) -> ())) {
         grocyApi.getUsers()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -625,8 +659,8 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func postUser(user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-        let jsonUser = try! JSONEncoder().encode(user)
+    func postUser(user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulCreationMessage, APIError>) -> ())) {
+        let jsonUser = try! jsonEncoder.encode(user)
         grocyApi.postUser(user: jsonUser)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -644,8 +678,8 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func putUser(id: Int, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, Error>) -> ())) {
-        let jsonUser = try! JSONEncoder().encode(user)
+    func putUser(id: Int, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, APIError>) -> ())) {
+        let jsonUser = try! jsonEncoder.encode(user)
         grocyApi.putUserWithID(id: id, user: jsonUser)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -663,7 +697,7 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func deleteUser(id: Int, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
+    func deleteUser(id: Int, completion: @escaping ((Result<DeleteMessage, APIError>) -> ())) {
         grocyApi.deleteUserWithID(id: id)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -689,7 +723,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Current user
-    func getUser(completion: @escaping ((Result<GrocyUsers, Error>) -> ())) {
+    func getUser(completion: @escaping ((Result<GrocyUsers, APIError>) -> ())) {
         grocyApi.getUser()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -709,7 +743,7 @@ class GrocyViewModel: ObservableObject {
     
     // MARK: - Stock management
     
-    func getStock(completion: @escaping ((Result<Stock, Error>) -> ())) {
+    func getStock(completion: @escaping ((Result<Stock, APIError>) -> ())) {
         grocyApi.getStock()
             .sink(receiveCompletion: { result in
                 switch result {
@@ -755,10 +789,8 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(productDetailResult):
                                 self.stockProductDetails[productID] = productDetailResult
-//                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
-//                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }
@@ -819,6 +851,26 @@ class GrocyViewModel: ObservableObject {
                     self.stockProductEntries[productID] = productEntriesOut
                 }
             })
+            .store(in: &cancellables)
+    }
+    
+    func putStockProductEntry(id: Int, content: StockEntry, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
+        let jsonContent = try! jsonEncoder.encode(content)
+        print(String(data: jsonContent, encoding: String.Encoding.utf8) ?? "")
+        grocyApi.putStockEntry(entryID: id, content: jsonContent)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.grocyLog.error("Put stock object failed. \("\(error)")")
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }) { (stockJournalReturn: StockJournal) in
+                DispatchQueue.main.async {
+                    completion(.success(stockJournalReturn))
+                }
+            }
             .store(in: &cancellables)
     }
     
@@ -931,7 +983,7 @@ class GrocyViewModel: ObservableObject {
     // Generic POST and DELETE and PUT
     
     func postMDObject<T: Codable>(object: ObjectEntities, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-        let jsonContent = try! JSONEncoder().encode(content)
+        let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.postObject(object: object, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {
@@ -968,7 +1020,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: Int, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-        let jsonContent = try! JSONEncoder().encode(content)
+        let jsonContent = try! jsonEncoder.encode(content)
         grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {
