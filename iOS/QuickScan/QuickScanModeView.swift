@@ -78,7 +78,7 @@ struct QuickScanModeView: View {
         if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
             bodyContent
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.nav.quickScan"))
         }
     }
@@ -87,13 +87,13 @@ struct QuickScanModeView: View {
         HStack{
             Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
                 Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.consume)
                 Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.markAsOpened)
                 Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.purchase)
             })
             .pickerStyle(SegmentedPickerStyle())
