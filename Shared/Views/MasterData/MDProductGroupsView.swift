@@ -13,13 +13,12 @@ struct MDProductGroupRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(productGroup.name)
-                .font(.largeTitle)
+                .font(.title)
             if let description = productGroup.mdProductGroupDescription, !description.isEmpty {
                 Text(productGroup.mdProductGroupDescription!)
                     .font(.caption)
             }
         }
-        .padding(10)
         .multilineTextAlignment(.leading)
     }
 }
@@ -27,15 +26,12 @@ struct MDProductGroupRowView: View {
 struct MDProductGroupsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
-    @State private var isSearching: Bool = false
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
     
     @State private var shownEditPopover: MDProductGroup? = nil
-    
-    @State private var reloadRotationDeg: Double = 0
     
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteAlert: Bool = false
@@ -55,21 +51,19 @@ struct MDProductGroupsView: View {
             }
     }
     
-    private func delete(at offsets: IndexSet) {
-        for offset in offsets {
-            productGroupToDelete = filteredProductGroups[offset]
-            showDeleteAlert.toggle()
-        }
+    private func deleteItem(itemToDelete: MDProductGroup) {
+        productGroupToDelete = itemToDelete
+        showDeleteAlert.toggle()
     }
     private func deleteProductGroup(toDelID: Int?) {
         if let toDelID = toDelID {
             grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Deleting product group was successful. \(message)", type: .info)
                     updateData()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Deleting product group failed. \(error)", type: .error)
                     toastType = .failDelete
                 }
             })
@@ -78,99 +72,71 @@ struct MDProductGroupsView: View {
     
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
+#if os(macOS)
+            NavigationView {
+                bodyContent
+                    .frame(minWidth: Constants.macOSNavWidth)
+            }
+#else
             bodyContent
+#endif
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.md.productGroups"))
         }
     }
     
-    #if os(macOS)
-    var bodyContent: some View {
-        NavigationView {
-            content
-                .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction, content: {
-                        HStack{
-                            Button(action: {
-                                withAnimation {
-                                    self.reloadRotationDeg += 360
-                                }
-                                updateData()
-                            }, label: {
-                                Image(systemName: MySymbols.reload)
-                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
-                            })
-                            Button(action: {
-                                showAddProductGroup.toggle()
-                            }, label: {Image(systemName: MySymbols.new)})
-                        }
-                    })
-                    ToolbarItem(placement: .automatic, content: {
-                        ToolbarSearchField(searchTerm: $searchString)
-                    })
-                })
-                .frame(minWidth: Constants.macOSNavWidth)
-        }
-        .navigationTitle(LocalizedStringKey("str.md.productGroups"))
-    }
-    #elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: MySymbols.search)})
-                        Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            updateData()
-                        }, label: {
-                            Image(systemName: MySymbols.reload)
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
-                        })
-                        Button(action: {
-                            showAddProductGroup.toggle()
-                        }, label: {Image(systemName: MySymbols.new)})
-                    }
+                ToolbarItemGroup(placement: .primaryAction) {
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+#endif
+                    Button(action: {
+                        showAddProductGroup.toggle()
+                    }, label: {Image(systemName: MySymbols.new)})
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.productGroups"))
+#if os(iOS)
             .sheet(isPresented: self.$showAddProductGroup, content: {
-                    NavigationView {
-                        MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType)
-                    } })
+                NavigationView {
+                    MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType)
+                }
+            })
+#endif
     }
-    #endif
     
     var content: some View {
-        List(){
-            #if os(iOS)
-            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-            #endif
+        List {
             if grocyVM.mdProductGroups.isEmpty {
                 Text(LocalizedStringKey("str.md.productGroups.empty"))
             } else if filteredProductGroups.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
+#if os(macOS)
             if showAddProductGroup {
                 NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType), isActive: $showAddProductGroup, label: {
                     NewMDRowLabel(title: "str.md.productGroup.new")
                 })
             }
-            #endif
+#endif
             ForEach(filteredProductGroups, id:\.id) { productGroup in
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: $showAddProductGroup, toastType: $toastType)) {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive,
+                           action: { deleteItem(itemToDelete: productGroup) },
+                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                    )
+                })
             }
-            .onDelete(perform: delete)
         }
         .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .refreshable { updateData() }
         .animation(.default, value: filteredProductGroups.count)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
@@ -186,15 +152,14 @@ struct MDProductGroupsView: View {
                 Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
             }
         })
-        .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text(LocalizedStringKey("str.md.productGroup.delete.confirm")),
-                  message: Text(productGroupToDelete?.name ?? "error"),
-                  primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                  {
-                    deleteProductGroup(toDelID: productGroupToDelete?.id)
-                  },
-                  secondaryButton: .cancel())
-        }
+        .alert(LocalizedStringKey("str.md.productGroup.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                if let toDelID = productGroupToDelete?.id {
+                    deleteProductGroup(toDelID: toDelID)
+                }
+            }
+        }, message: { Text(productGroupToDelete?.name ?? "Name not found") })
     }
 }
 
@@ -202,13 +167,13 @@ struct MDProductGroupsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MDProductGroupRowView(productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""))
-            #if os(macOS)
+#if os(macOS)
             MDProductGroupsView()
-            #else
+#else
             NavigationView() {
                 MDProductGroupsView()
             }
-            #endif
+#endif
         }
     }
 }

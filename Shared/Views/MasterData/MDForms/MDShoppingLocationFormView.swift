@@ -24,7 +24,7 @@ struct MDShoppingLocationFormView: View {
     @Binding var showAddShoppingLocation: Bool
     @Binding var toastType: MDToastType?
     
-    @State var isNameCorrect: Bool = true
+    @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundShoppingLocation = grocyVM.mdShoppingLocations.first(where: {$0.name == name})
         return isNewShoppingLocation ? !(name.isEmpty || foundShoppingLocation != nil) : !(name.isEmpty || (foundShoppingLocation != nil && foundShoppingLocation!.id != shoppingLocation!.id))
@@ -36,13 +36,14 @@ struct MDShoppingLocationFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() {
-        grocyVM.requestData(objects: [.shopping_locations])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
 #if os(iOS)
-        dismiss()
+        self.dismiss()
 #elseif os(macOS)
         if isNewShoppingLocation {
             showAddShoppingLocation = false
@@ -135,7 +136,7 @@ struct MDShoppingLocationFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.shopping_locations], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
@@ -147,8 +148,8 @@ struct MDShoppingLocationFormView_Previews: PreviewProvider {
     static var previews: some View {
 #if os(macOS)
         Group {
-            //            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-            //            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: 0, name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: ""), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
         }
 #else
         Group {

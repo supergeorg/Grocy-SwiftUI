@@ -26,7 +26,7 @@ struct MDProductRowView: View {
                     .frame(width: 75, height: 75)
             }
             VStack(alignment: .leading) {
-                Text(product.name).font(.largeTitle)
+                Text(product.name).font(.title)
                 HStack(alignment: .top){
                     if let locationID = GrocyViewModel.shared.mdLocations.firstIndex { $0.id == product.locationID } {
                         Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
@@ -38,7 +38,9 @@ struct MDProductRowView: View {
                     }
                 }
                 if let description = product.mdProductDescription, !description.isEmpty {
-                    Text(description).font(.caption).italic()
+                    Text(description)
+                        .font(.caption)
+                        .italic()
                 }
             }
         }
@@ -48,39 +50,30 @@ struct MDProductRowView: View {
 struct MDProductsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
-    
-    @State private var isSearching: Bool = false
     @State private var searchString: String = ""
+    
     @State private var showAddProduct: Bool = false
-    
-    @State private var reloadRotationDeg: Double = 0
-    
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteAlert: Bool = false
-    
     @State private var toastType: MDToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
-    
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
     }
     
-    private func delete(at offsets: IndexSet) {
-        for offset in offsets {
-            productToDelete = filteredProducts[offset]
-            showDeleteAlert.toggle()
-        }
+    private func deleteItem(itemToDelete: MDProduct) {
+        productToDelete = itemToDelete
+        showDeleteAlert.toggle()
     }
     private func deleteProduct(toDelID: Int) {
         grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog(message: "Deleting product was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog(message: "Deleting product failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })
@@ -94,81 +87,47 @@ struct MDProductsView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
+        if grocyVM.failedToLoadObjects.filter( {dataToUpdate.contains($0) }).count == 0 {
+#if os(macOS)
+            NavigationView{
+                bodyContent
+                    .frame(minWidth: Constants.macOSNavWidth)
+            }
+#else
             bodyContent
+#endif
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.md.products"))
         }
     }
     
-#if os(macOS)
-    var bodyContent: some View {
-        NavigationView{
-            content
-                .toolbar (content: {
-                    ToolbarItem(placement: .primaryAction, content: {
-                        HStack{
-                            Button(action: {
-                                withAnimation {
-                                    self.reloadRotationDeg += 360
-                                }
-                                updateData()
-                            }, label: {
-                                Image(systemName: MySymbols.reload)
-                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
-                            })
-                            Button(action: {
-                                showAddProduct.toggle()
-                            }, label: {Image(systemName: MySymbols.new)})
-                        }
-                    })
-                    ToolbarItem(placement: .automatic, content: {
-                        ToolbarSearchField(searchTerm: $searchString)
-                    })
-                })
-                .frame(minWidth: Constants.macOSNavWidth)
-        }
-        .navigationTitle(LocalizedStringKey("str.md.products"))
-    }
-#elseif os(iOS)
     var bodyContent: some View {
         content
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: MySymbols.search)})
-                        Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            updateData()
-                        }, label: {
-                            Image(systemName: MySymbols.reload)
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
-                        })
-                        Button(action: {
-                            showAddProduct.toggle()
-                        }, label: {Image(systemName: MySymbols.new)})
-                    }
-                }
-            }
+            .toolbar (content: {
+                ToolbarItemGroup(placement: .primaryAction, content: {
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+#endif
+                    Button(action: {
+                        showAddProduct.toggle()
+                    }, label: {
+                        Image(systemName: MySymbols.new)
+                    })
+                })
+            })
             .navigationTitle(LocalizedStringKey("str.md.products"))
+#if os(iOS)
             .sheet(isPresented: $showAddProduct, content: {
                 NavigationView {
                     MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType)
                 }
             })
-    }
 #endif
+    }
     
     var content: some View {
-        List(){
-#if os(iOS)
-            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-#endif
+        List{
             if grocyVM.mdProducts.isEmpty {
                 Text(LocalizedStringKey("str.md.products.empty"))
             } else if filteredProducts.isEmpty {
@@ -185,12 +144,19 @@ struct MDProductsView: View {
                 NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, showAddProduct: Binding.constant(false), toastType: $toastType)) {
                     MDProductRowView(product: product)
                 }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive,
+                           action: { deleteItem(itemToDelete: product) },
+                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                    )
+                })
             }
-            .onDelete(perform: delete)
         }
         .onAppear(perform: {
             grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .refreshable { updateData() }
         .animation(.default, value: filteredProducts.count)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
@@ -206,13 +172,14 @@ struct MDProductsView: View {
                 Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
             }
         })
-        .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text("str.md.product.delete.confirm"), message: Text(productToDelete?.name ?? "error"), primaryButton: .destructive(Text("str.delete")) {
+        .alert(LocalizedStringKey("str.md.product.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productToDelete?.id {
                     deleteProduct(toDelID: toDelID)
                 }
-            }, secondaryButton: .cancel())
-        }
+            }
+        }, message: { Text(productToDelete?.name ?? "Name not found") })
     }
 }
 

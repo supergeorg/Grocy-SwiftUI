@@ -10,7 +10,7 @@ import SwiftUI
 struct MDTaskCategoryFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -24,7 +24,7 @@ struct MDTaskCategoryFormView: View {
     @Binding var showAddTaskCategory: Bool
     @Binding var toastType: MDToastType?
     
-    @State var isNameCorrect: Bool = false
+    @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundTaskCategory = grocyVM.mdTaskCategories.first(where: {$0.name == name})
         if isNewTaskCategory {
@@ -42,18 +42,19 @@ struct MDTaskCategoryFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.task_categories]
     private func updateData() {
-        grocyVM.requestData(objects: [.task_categories])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewTaskCategory {
             showAddTaskCategory = false
         }
-        #endif
+#endif
     }
     
     private func saveTaskCategory() {
@@ -94,12 +95,6 @@ struct MDTaskCategoryFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView {
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
             .toolbar(content: {
@@ -116,14 +111,7 @@ struct MDTaskCategoryFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewTaskCategory{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
@@ -135,7 +123,7 @@ struct MDTaskCategoryFormView: View {
                     })
                 MyTextField(textToEdit: $mdTaskCategoryDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewTaskCategory{
@@ -152,11 +140,11 @@ struct MDTaskCategoryFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.task_categories], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
@@ -164,23 +152,22 @@ struct MDTaskCategoryFormView: View {
     }
 }
 
-//struct MDTaskCategoryFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        #if os(macOS)
-//        Group {
-//            MDProductGroupFormView(isNewProductGroup: true, toastType: Binding.constant(nil))
-//            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
-//        }
-//        #else
-//        Group {
-//            NavigationView {
-//                MDProductGroupFormView(isNewProductGroup: true, toastType: Binding.constant(nil))
-//            }
-//            NavigationView {
-//                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: "0", name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: "", userfields: nil), toastType: Binding.constant(nil))
-//            }
-//        }
-//        #endif
-//    }
-//}
-
+struct MDTaskCategoryFormView_Previews: PreviewProvider {
+    static var previews: some View {
+#if os(macOS)
+        Group {
+            MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
+            MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
+        }
+#else
+        Group {
+            NavigationView {
+                MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
+            }
+            NavigationView {
+                MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
+            }
+        }
+#endif
+    }
+}

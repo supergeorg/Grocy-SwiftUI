@@ -146,7 +146,7 @@ struct MDProductPictureFormView: View {
                         openPanel.canChooseDirectories = false
                         openPanel.canCreateDirectories = false
                         openPanel.canChooseFiles = true
-                        openPanel.allowedFileTypes = ["png","jpg","jpeg"]
+                        openPanel.allowedContentTypes = [.image]
                         openPanel.begin { (result) -> Void in
                             if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
                                 selectedPictureURL = openPanel.url

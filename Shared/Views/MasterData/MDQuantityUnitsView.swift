@@ -12,14 +12,17 @@ struct MDQuantityUnitRowView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(quantityUnit.name) (\(quantityUnit.namePlural))")
-                .font(.largeTitle)
+            HStack(alignment: .center) {
+                Text(quantityUnit.name)
+                    .font(.title)
+                Text("(\(quantityUnit.namePlural))")
+                    .font(.title3)
+            }
             if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
-                Text(quantityUnit.mdQuantityUnitDescription!)
+                Text(description)
                     .font(.caption)
             }
         }
-        .padding(10)
         .multilineTextAlignment(.leading)
     }
 }
@@ -27,15 +30,10 @@ struct MDQuantityUnitRowView: View {
 struct MDQuantityUnitsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
-    @State private var isSearching: Bool = false
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
-    
-    @State private var shownEditPopover: MDQuantityUnit? = nil
-    
-    @State private var reloadRotationDeg: Double = 0
     
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteAlert: Bool = false
@@ -43,7 +41,6 @@ struct MDQuantityUnitsView: View {
     @State private var toastType: MDToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units]
-    
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
     }
@@ -55,20 +52,18 @@ struct MDQuantityUnitsView: View {
             }
     }
     
-    private func delete(at offsets: IndexSet) {
-        for offset in offsets {
-            quantityUnitToDelete = filteredQuantityUnits[offset]
-            showDeleteAlert.toggle()
-        }
+    private func deleteItem(itemToDelete: MDQuantityUnit) {
+        quantityUnitToDelete = itemToDelete
+        showDeleteAlert.toggle()
     }
     private func deleteQuantityUnit(toDelID: Int) {
         grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog(message: "Deleting quantity unit was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog(message: "Deleting quantity unit failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })
@@ -76,103 +71,70 @@ struct MDQuantityUnitsView: View {
     
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
+#if os(macOS)
+            NavigationView{
+                bodyContent
+                    .frame(minWidth: Constants.macOSNavWidth)
+            }
+#else
             bodyContent
+#endif
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
         }
     }
     
-    #if os(macOS)
-    var bodyContent: some View {
-        NavigationView {
-            content
-                .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction, content: {
-                        HStack{
-                            if isSearching { SearchBarSwiftUI(text: $searchString, placeholder: "str.md.search") }
-                            Button(action: {
-                                isSearching.toggle()
-                            }, label: {Image(systemName: MySymbols.search)})
-                            Button(action: {
-                                withAnimation {
-                                    self.reloadRotationDeg += 360
-                                }
-                                updateData()
-                            }, label: {
-                                Image(systemName: MySymbols.reload)
-                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
-                            })
-                            Button(action: {
-                                showAddQuantityUnit.toggle()
-                            }, label: {Image(systemName: MySymbols.new)})
-                        }
-                    })
-                    ToolbarItem(placement: .automatic, content: {
-                        ToolbarSearchField(searchTerm: $searchString)
-                    })
-                })
-                .frame(minWidth: Constants.macOSNavWidth)
-        }
-        .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
-    }
-    #elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: MySymbols.search)})
-                        Button(action: {
-                            withAnimation {
-                                self.reloadRotationDeg += 360
-                            }
-                            updateData()
-                        }, label: {
-                            Image(systemName: MySymbols.reload)
-                                .rotationEffect(Angle.degrees(reloadRotationDeg))
-                        })
-                        Button(action: {
-                            showAddQuantityUnit.toggle()
-                        }, label: {Image(systemName: MySymbols.new)})
-                    }
+                ToolbarItemGroup(placement: .primaryAction) {
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+#endif
+                    Button(action: {
+                        showAddQuantityUnit.toggle()
+                    }, label: {Image(systemName: MySymbols.new)})
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
+#if os(iOS)
             .sheet(isPresented: self.$showAddQuantityUnit, content: {
-                    NavigationView {
-                        MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType)
-                    } })
+                NavigationView {
+                    MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType)
+                } })
+#endif
     }
-    #endif
     
     var content: some View {
-        List(){
-            #if os(iOS)
-            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-            #endif
+        List {
             if grocyVM.mdQuantityUnits.isEmpty {
                 Text(LocalizedStringKey("str.md.quantityUnits.empty"))
             } else if filteredQuantityUnits.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
+#if os(macOS)
             if showAddQuantityUnit {
                 NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType), isActive: $showAddQuantityUnit, label: {
                     NewMDRowLabel(title: "str.md.quantityUnit.new")
                 })
             }
-            #endif
+#endif
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
                 NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, showAddQuantityUnit: Binding.constant(false), toastType: $toastType)) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive,
+                           action: { deleteItem(itemToDelete: quantityUnit) },
+                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                    )
+                })
             }
-            .onDelete(perform: delete)
         }
         .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .refreshable { updateData() }
         .animation(.default, value: filteredQuantityUnits.count)
         .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
             switch item {
@@ -188,17 +150,14 @@ struct MDQuantityUnitsView: View {
                 Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
             }
         })
-        .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text(LocalizedStringKey("str.md.quantityUnit.delete.confirm")),
-                  message: Text(quantityUnitToDelete?.name ?? "error"),
-                  primaryButton: .destructive(Text(LocalizedStringKey("str.delete")))
-                  {
-                    if let toDelID = quantityUnitToDelete?.id {
-                        deleteQuantityUnit(toDelID: toDelID)
-                    }
-                  },
-                  secondaryButton: .cancel())
-        }
+        .alert(LocalizedStringKey("str.md.quantityUnit.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                if let toDelID = quantityUnitToDelete?.id {
+                    deleteQuantityUnit(toDelID: toDelID)
+                }
+            }
+        }, message: { Text(quantityUnitToDelete?.name ?? "Name not found") })
     }
 }
 
@@ -206,13 +165,13 @@ struct MDQuantityUnitsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", namePlural: "QU NAME PLURAL", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""))
-            #if os(macOS)
+#if os(macOS)
             MDQuantityUnitsView()
-            #else
+#else
             NavigationView() {
                 MDQuantityUnitsView()
             }
-            #endif
+#endif
         }
     }
 }

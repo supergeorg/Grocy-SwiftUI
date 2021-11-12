@@ -10,7 +10,7 @@ import SwiftUI
 struct MDUserFieldFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -18,7 +18,7 @@ struct MDUserFieldFormView: View {
     @State private var entity: ObjectEntities?
     @State private var name: String = ""
     @State private var caption: String = ""
-    @State private var sortNumber: Int? = -1 // TODO ???
+    @State private var sortNumber: Int? = -1
     @State private var type: UserFieldType = UserFieldType.none
     @State private var showAsColumnInTables: Bool = false
     
@@ -43,26 +43,26 @@ struct MDUserFieldFormView: View {
         entity = ObjectEntities(rawValue: userField?.entity ?? "")
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
-        // TODO FIX
-//        sortNumber = userField?.sortNumber ?? -1
+        sortNumber = userField?.sortNumber ?? -1
         type = UserFieldType(rawValue: userField?.type ?? "") ?? UserFieldType.none
         showAsColumnInTables = userField?.showAsColumnInTables == 1
         isNameCorrect = checkNameCorrect()
         isCaptionCorrect = checkCaptionCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.userfields]
     private func updateData() {
-        grocyVM.requestData(objects: [.userfields])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewUserField {
             showAddUserField = false
         }
-        #endif
+#endif
     }
     
     private func saveUserField() {
@@ -105,12 +105,6 @@ struct MDUserFieldFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView{
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
             .toolbar(content: {
@@ -127,14 +121,7 @@ struct MDUserFieldFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewUserField{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
@@ -155,10 +142,10 @@ struct MDUserFieldFormView: View {
             Section(header: Text(LocalizedStringKey("str.md.userField.name"))){
                 MyTextField(textToEdit: $name, description: "str.md.userField.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.name.required", errorMessage: "str.md.userField.name.invalid", helpText: "str.md.userField.name.info")
                     .onChange(of: name, perform: {newValue in
-                                isNameCorrect = checkNameCorrect() })
+                        isNameCorrect = checkNameCorrect() })
                 MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
                     .onChange(of: caption, perform: {newValue in
-                                isCaptionCorrect = checkCaptionCorrect() })
+                        isCaptionCorrect = checkCaptionCorrect() })
             }
             MyIntStepperOptional(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
             
@@ -169,7 +156,7 @@ struct MDUserFieldFormView: View {
             })
             
             MyToggle(isOn: $showAsColumnInTables, description: "str.md.userField.showAsColumnInTables", icon: "tablecells")
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewUserField{
@@ -186,11 +173,11 @@ struct MDUserFieldFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.userfields], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

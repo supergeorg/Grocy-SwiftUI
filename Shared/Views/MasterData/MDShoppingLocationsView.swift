@@ -13,17 +13,15 @@ struct MDShoppingLocationRowView: View {
     var shoppingLocation: MDShoppingLocation
     
     var body: some View {
-        HStack{
-            VStack(alignment: .leading) {
-                Text(shoppingLocation.name)
-                    .font(.largeTitle)
-                if let description = shoppingLocation.mdShoppingLocationDescription, !description.isEmpty {
-                    Text(description)
-                        .font(.caption)
-                }
+        VStack(alignment: .leading) {
+            Text(shoppingLocation.name)
+                .font(.title)
+            if let description = shoppingLocation.mdShoppingLocationDescription, !description.isEmpty {
+                Text(description)
+                    .font(.caption)
             }
-            .multilineTextAlignment(.leading)
         }
+        .multilineTextAlignment(.leading)
     }
 }
 
@@ -59,10 +57,10 @@ struct MDShoppingLocationsView: View {
                                completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Delete shopping location was successful. \(message)", type: .info)
+                grocyVM.postLog(message: "Deleting shopping location was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Delete shopping location failed. \(error)", type: .error)
+                grocyVM.postLog(message: "Deleting shopping location failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })
@@ -80,7 +78,7 @@ struct MDShoppingLocationsView: View {
             bodyContent
 #endif
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
         }
     }
@@ -88,7 +86,10 @@ struct MDShoppingLocationsView: View {
     var bodyContent: some View {
         content
             .toolbar(content: {
-                ToolbarItem(placement: .primaryAction, content: {
+                ToolbarItemGroup(placement: .primaryAction, content: {
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+#endif
                     Button(action: {
                         showAddShoppingLocation.toggle()
                     }, label: {
@@ -127,8 +128,7 @@ struct MDShoppingLocationsView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: shoppingLocation) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete)
-                        .labelStyle(.titleAndIcon)}
+                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -137,11 +137,8 @@ struct MDShoppingLocationsView: View {
             grocyVM.requestData(objects: dataToUpdate,
                                 ignoreCached: false)
         })
-        .searchable(text: $searchString,
-                    prompt: LocalizedStringKey("str.search"))
-        .refreshable {
-            updateData()
-        }
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .refreshable { updateData() }
         .animation(.default,
                    value: filteredShoppingLocations.count)
         .toast(item: $toastType,
@@ -167,7 +164,7 @@ struct MDShoppingLocationsView: View {
                     deleteShoppingLocation(toDelID: toDelID)
                 }
             }
-        }, message: { Text(shoppingLocationToDelete?.name ?? "error") })
+        }, message: { Text(shoppingLocationToDelete?.name ?? "Name not found") })
     }
 }
 
