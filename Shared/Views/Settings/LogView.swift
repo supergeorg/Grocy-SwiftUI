@@ -12,10 +12,10 @@ import OSLog
 struct LogView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @State private var logEntries: [OSLogEntryLog] = []
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @State private var exportLog: ExportLog = ExportLog(content: Data())
-    @State var isExporting: Bool = false
+    @State private var isExporting: Bool = false
     
     struct ExportLog: FileDocument {
         static var readableContentTypes: [UTType] { [.plainText] }
@@ -37,7 +37,7 @@ struct LogView: View {
     }
     
     func shareFile() {
-        if let logData = logEntries.map({ "\(formatDateAsString($0.date)): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
+        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
             exportLog = ExportLog(content: logData)
             isExporting = true
         } else {
@@ -45,18 +45,10 @@ struct LogView: View {
         }
     }
     
-    func updateLog() {
-        do {
-            logEntries = try grocyVM.getLogEntries()
-        } catch {
-            logEntries = []
-        }
-    }
-    
     var body: some View {
         #if os(macOS)
         List {
-            contentmacOS
+            content
                 .padding()
                 .frame(width: 500, height: 500)
         }
@@ -75,17 +67,20 @@ struct LogView: View {
     
     var content: some View {
         List {
-            ForEach(logEntries.reversed(), id: \.self) { logEntry in
+            if grocyVM.logEntries.isEmpty {
+                Text(LocalizedStringKey("str.settings.log.empty"))
+            }
+            ForEach(grocyVM.logEntries.reversed(), id: \.self) { logEntry in
                 VStack(alignment: .leading) {
-                    Text(formatDateAsString(logEntry.date))
+                    Text(formatDateAsString(logEntry.date, showTime: true, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                     Text(logEntry.composedMessage)
                 }
             }
         }
-        .onAppear(perform: updateLog)
+        .onAppear(perform: { grocyVM.getLogEntries() })
         .refreshable {
-            updateLog()
+            grocyVM.getLogEntries()
         }
         .fileExporter(
             isPresented: $isExporting,
