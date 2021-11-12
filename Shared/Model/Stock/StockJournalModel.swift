@@ -11,7 +11,7 @@ struct StockJournalEntry: Codable {
     let id: Int
     let productID: Int
     let amount: Double
-    let bestBeforeDate: String
+    let bestBeforeDate: String?
     let purchasedDate: String?
     let usedDate: String?
     let spoiled: Int
@@ -60,7 +60,7 @@ struct StockJournalEntry: Codable {
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             do { self.productID = try container.decode(Int.self, forKey: .productID) } catch { self.productID = try Int(container.decode(String.self, forKey: .productID))! }
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
-            self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
+            self.bestBeforeDate = try? container.decode(String.self, forKey: .bestBeforeDate)
             self.purchasedDate = try? container.decodeIfPresent(String.self, forKey: .purchasedDate) ?? nil
             self.usedDate = try? container.decodeIfPresent(String.self, forKey: .usedDate) ?? nil
             do { self.spoiled = try container.decode(Int.self, forKey: .spoiled) } catch { self.spoiled = try Int(container.decode(String.self, forKey: .spoiled))! }

@@ -11,7 +11,7 @@ import Foundation
 struct StockProductDetails: Codable {
     let product: MDProduct
     let productBarcodes: [MDProductBarcode]
-    let lastPurchased, lastUsed: String?
+    let lastPurchased, lastUsed: Date?
     let stockAmount: Double
     let stockValue: Double?
     let stockAmountOpened: Double?
@@ -59,8 +59,12 @@ struct StockProductDetails: Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.product = try container.decode(MDProduct.self, forKey: .product)
             self.productBarcodes = try container.decode([MDProductBarcode].self, forKey: .productBarcodes)
-            self.lastPurchased = try? container.decodeIfPresent(String.self, forKey: .lastPurchased) ?? nil
-            self.lastUsed = try? container.decodeIfPresent(String.self, forKey: .lastUsed) ?? nil
+            if let lastPurchasedTS = try? container.decodeIfPresent(String.self, forKey: .lastPurchased) {
+                self.lastPurchased = getDateFromString(lastPurchasedTS)
+            } else { self.lastPurchased = nil }
+            if let lastUsedTS = try? container.decodeIfPresent(String.self, forKey: .lastUsed) {
+                self.lastUsed = getDateFromString(lastUsedTS)
+            } else { self.lastUsed = nil }
             do { self.stockAmount = try container.decode(Double.self, forKey: .stockAmount) } catch { self.stockAmount = try Double(container.decode(String.self, forKey: .stockAmount))! }
             do { self.stockValue = try container.decodeIfPresent(Double.self, forKey: .stockValue) } catch { self.stockValue = try? Double(container.decodeIfPresent(String.self, forKey: .stockValue) ?? "") }
             do { self.stockAmountOpened = try container.decodeIfPresent(Double.self, forKey: .stockAmountOpened) } catch { self.stockAmountOpened = try? Double(container.decodeIfPresent(String.self, forKey: .stockAmountOpened) ?? "") }

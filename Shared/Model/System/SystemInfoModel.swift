@@ -20,10 +20,14 @@ struct SystemInfo: Codable {
     
     let grocyVersion: GrocyVersion
     let phpVersion, sqliteVersion: String
+    let os: String?
+    let client: String?
 
     enum CodingKeys: String, CodingKey {
         case grocyVersion = "grocy_version"
         case phpVersion = "php_version"
         case sqliteVersion = "sqlite_version"
+        case os
+        case client
     }
 }

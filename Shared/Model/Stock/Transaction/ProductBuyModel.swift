@@ -29,7 +29,7 @@ struct ProductBuy: Codable {
     let amount: Double
     let bestBeforeDate: String?
     let transactionType: TransactionType
-    let price: String?
+    let price: Double?
     let locationID: Int?
     let shoppingLocationID: Int?
     
