@@ -13,20 +13,17 @@ struct FieldDescription: View {
     @State private var showDescription: Bool = false
     
     var body: some View {
-        #if os(macOS)
         Image(systemName: "questionmark.circle.fill")
             .help(LocalizedStringKey(description))
-        #elseif os(iOS)
-        Image(systemName: "questionmark.circle.fill")
+#if os(iOS)
             .onTapGesture {
                 showDescription.toggle()
             }
-            .help(LocalizedStringKey(description))
             .popover(isPresented: $showDescription, content: {
                 Text(LocalizedStringKey(description))
                     .padding()
             })
-        #endif
+#endif
     }
 }
 

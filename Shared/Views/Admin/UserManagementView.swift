@@ -35,7 +35,7 @@ struct UserManagementView: View {
         if grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.admin.user"))
         }
     }
@@ -70,10 +70,6 @@ struct UserManagementView: View {
                             .padding()
                             .frame(width: 500, height: 500)
                     })
-                })
-                
-                ToolbarItem(placement: .automatic, content: {
-                    ToolbarSearchField(searchTerm: $searchString)
                 })
             })
     }

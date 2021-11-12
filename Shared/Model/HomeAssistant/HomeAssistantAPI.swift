@@ -63,7 +63,7 @@ protocol NetworkSession: AnyObject {
 extension URLSession: NetworkSession {
     func publisher(for request: URLRequest) -> AnyPublisher<HomeAssistantSessionCookieReturn, APIError> {
         return dataTaskPublisher(for: request)
-            .mapError{ error in APIError.serverError(error: "\(error)") }
+            .mapError{ error in APIError.serverError(error: error) }
             .flatMap({ result -> AnyPublisher<HomeAssistantSessionCookieReturn, APIError> in
                 if let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) {
                     return Just(result.data)

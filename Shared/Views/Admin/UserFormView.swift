@@ -10,26 +10,26 @@ import SwiftUI
 struct UserFormView: View {
     @StateObject private var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
-    @State var username: String = ""
-    @State var firstName: String = ""
-    @State var lastName: String = ""
-    @State var password: String = ""
-    @State var passwordConfirm: String = ""
+    @State private var username: String = ""
+    @State private var firstName: String = ""
+    @State private var lastName: String = ""
+    @State private var password: String = ""
+    @State private var passwordConfirm: String = ""
     
     var isNewUser: Bool
     var user: GrocyUser?
     
     @Binding var toastType: MDToastType?
     
-    @State var isValidUsername: Bool = false
+    @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
         let foundUsername = grocyVM.users.first(where: {$0.username == username})
         return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
     }
     
-    @State var isMatchingPassword: Bool = true
+    @State private var isMatchingPassword: Bool = true
     private func checkPWParity() {
         if (password == passwordConfirm) && (!password.isEmpty) {
             isMatchingPassword = true
@@ -44,7 +44,7 @@ struct UserFormView: View {
     
     private func finishForm() {
         #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
+        self.dismiss()
         #elseif os(macOS)
         if isNewUser {
             NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
@@ -95,14 +95,14 @@ struct UserFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(LocalizedStringKey("str.cancel")) {
-                        self.presentationMode.wrappedValue.dismiss()
+                        finishForm()
                     }
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button(LocalizedStringKey("str.save")) {
                         saveUser()
-                        self.presentationMode.wrappedValue.dismiss()
+                        finishForm()
                     }
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)

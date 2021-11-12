@@ -11,7 +11,7 @@ struct MasterDataView: View {
     @AppStorage("devMode") private var devMode: Bool = false
     
     var body: some View {
-        List(){
+        List {
             NavigationLink(destination: MDProductsView()) {
                 Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
@@ -41,6 +41,7 @@ struct MasterDataView: View {
                     Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
                 }
             }
+            
             NavigationLink(destination: MDTaskCategoriesView()) {
                 Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
             }

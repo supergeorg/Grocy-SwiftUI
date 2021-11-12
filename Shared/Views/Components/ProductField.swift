@@ -14,7 +14,7 @@ struct ProductField: View {
     var description: String
     
     @State private var searchTerm: String = ""
-    #if os(iOS)
+#if os(iOS)
     @State private var isScannerFlash = false
     @State private var isScannerFrontCamera = false
     @State private var isShowingScanner: Bool = false
@@ -27,7 +27,7 @@ struct ProductField: View {
             grocyVM.postLog(message: "Scanning for product failed. \(error)", type: .error)
         }
     }
-    #endif
+#endif
     
     private func getBarcodes(pID: Int) -> [String] {
         grocyVM.mdProductBarcodes.filter{$0.productID == pID}.map{$0.barcode}
@@ -39,49 +39,49 @@ struct ProductField: View {
         }
     }
     
-    #if os(iOS)
+#if os(iOS)
     var body: some View {
         Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary), content: {
             HStack {
-                SearchBar(text: $searchTerm, placeholder: "str.search")
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
                     Image(systemName: MySymbols.barcodeScan)
                 })
-                .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
-                        .overlay(
-                            HStack{
-                                Button(action: {
-                                    isScannerFlash.toggle()
-                                    toggleTorch(on: isScannerFlash)
-                                }, label: {
-                                    Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
-                                        .font(.title)
-                                })
-                                .disabled(!checkForTorch())
-                                .padding()
-                                if getFrontCameraAvailable() {
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                            .overlay(
+                                HStack{
                                     Button(action: {
-                                        isScannerFrontCamera.toggle()
+                                        isScannerFlash.toggle()
+                                        toggleTorch(on: isScannerFlash)
                                     }, label: {
-                                        Image(systemName: MySymbols.changeCamera)
+                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
-                                    .padding()
+                                        .disabled(!checkForTorch())
+                                        .padding()
+                                    if getFrontCameraAvailable() {
+                                        Button(action: {
+                                            isScannerFrontCamera.toggle()
+                                        }, label: {
+                                            Image(systemName: MySymbols.changeCamera)
+                                                .font(.title)
+                                        })
+                                            .padding()
+                                    }
                                 }
-                            }
-                            , alignment: .topTrailing)
-                }
+                                , alignment: .topTrailing)
+                    }
             }
             Text("").tag(nil as Int?)
             ForEach(filteredProducts, id: \.id) { productElement in
                 Text(productElement.name).tag(productElement.id as Int?)
             }
-        }).pickerStyle(DefaultPickerStyle())
+        }
+        ).pickerStyle(DefaultPickerStyle())
     }
-    #elseif os(macOS)
+#elseif os(macOS)
     var body: some View {
         Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
             Text("").tag(nil as Int?)
@@ -90,7 +90,7 @@ struct ProductField: View {
             }
         })
     }
-    #endif
+#endif
 }
 
 struct ProductField_Previews: PreviewProvider {

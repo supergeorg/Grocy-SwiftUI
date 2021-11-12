@@ -37,7 +37,7 @@ struct AboutView: View {
                 Text(LocalizedStringKey("str.settings.about.thanks"))
                     .lineLimit(.none)
                 
-                AboutLineView(iconName: "info.circle", caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
+                AboutLineView(iconName: MySymbols.info, caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
                 
                 AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
                 
