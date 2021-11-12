@@ -10,7 +10,7 @@ import SwiftUI
 struct ShoppingListEntryFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     
@@ -37,9 +37,6 @@ struct ShoppingListEntryFormView: View {
         return qu
     }
     private var currentQuantityUnit: MDQuantityUnit? {
-        // TODO REMOVE
-//        getQuantityUnit()
-            //?? MDQuantityUnit(id: 0, name: "Piece", mdQuantityUnitDescription: "", rowCreatedTimestamp: "", namePlural: "Pieces", pluralForms: nil, userfields: nil)
         let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
         return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
     }
@@ -49,42 +46,42 @@ struct ShoppingListEntryFormView: View {
     }
     
     private func finishForm() {
-        #if os(iOS)
-        self.presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-        #endif
+#endif
     }
     
     func saveShoppingListEntry() {
         if let productID = productID {
-        if isNewShoppingListEntry{
-            grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: productID, listID: shoppingListID, productAmount: amount, note: note), completion: { result in
-                switch result {
-                case let .success(message):
-                    print(message)
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    print("\(error)")
-                    showFailToast = true
-                }
-            })
-        } else {
-            if let entry = shoppingListEntry {
-                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
+            if isNewShoppingListEntry{
+                grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: productID, listID: shoppingListID, productAmount: amount, note: note), completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Shopping entry saved successfully. \(message)", type: .info)
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Shopping entry save failed. \(error)", type: .error)
                         showFailToast = true
                     }
                 })
+            } else {
+                if let entry = shoppingListEntry {
+                    grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
+                        switch result {
+                        case let .success(message):
+                            grocyVM.postLog(message: "Shopping entry edited successfully. \(message)", type: .info)
+                            updateData()
+                            finishForm()
+                        case let .failure(error):
+                            grocyVM.postLog(message: "Shopping entry edit failed. \(error)", type: .error)
+                            showFailToast = true
+                        }
+                    })
+                }
             }
-        }
         }
     }
     
@@ -97,40 +94,30 @@ struct ShoppingListEntryFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView{
-            content
-                .padding()
-        }
-        .padding()
-        #elseif os(iOS)
-        NavigationView {
-            content
-                .navigationTitle(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title"))
-                .toolbar{
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            finishForm()
-                        }
-                        .keyboardShortcut(.cancelAction)
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(LocalizedStringKey("str.save")) {
-                            saveShoppingListEntry()
-                        }
-                        .keyboardShortcut(.defaultAction)
-                        .disabled(!isFormValid)
+        content
+            .navigationTitle(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title"))
+            .toolbar{
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewShoppingListEntry {
+                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                            .keyboardShortcut(.cancelAction)
                     }
                 }
-        }
-        #endif
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(LocalizedStringKey("str.save")) {
+                        saveShoppingListEntry()
+                    }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(!isFormValid)
+                }
+            }
     }
     
     var content: some View {
         Form {
-            #if os(macOS)
+#if os(macOS)
             Text(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title")).font(.headline)
-            #endif
+#endif
             Picker(selection: $shoppingListID, label: Text(LocalizedStringKey("str.shL.entryForm.shoppingList")), content: {
                 ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shLDescription in
                     Text(shLDescription.name).tag(shLDescription.id)
@@ -154,11 +141,14 @@ struct ShoppingListEntryFormView: View {
                 }).disabled(true)
             }
             
-            Section(header: Label(LocalizedStringKey("str.shL.entryForm.note"), systemImage: "square.and.pencil").labelStyle(TextIconLabelStyle()).font(.headline)) {
+            Section(header: Label(LocalizedStringKey("str.shL.entryForm.note"), systemImage: "square.and.pencil")
+                        .labelStyle(.titleAndIcon)
+                        .font(.headline))
+            {
                 TextEditor(text: $note)
                     .frame(height: 50)
             }
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     finishForm()
@@ -171,7 +161,7 @@ struct ShoppingListEntryFormView: View {
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isFormValid)
             }
-            #endif
+#endif
         }
         .onAppear(perform: {
             if firstAppear {
