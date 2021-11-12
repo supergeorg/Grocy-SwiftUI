@@ -13,3 +13,12 @@ func formatAmount(_ amount: Double) -> String {
     let outStr = formatter.string(from: NSNumber(value: amount))
     return outStr ?? "Format Error"
 }
+
+extension Double {
+    var formattedAmount: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        let outStr = formatter.string(from: NSNumber(value: self))
+        return outStr ?? "Format Error"
+    }
+}

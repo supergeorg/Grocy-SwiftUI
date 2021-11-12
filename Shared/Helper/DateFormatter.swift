@@ -1,6 +1,6 @@
 //
 //  DateFormatter.swift
-//  grocy-ios
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 13.10.20.
 //
@@ -29,58 +29,68 @@ extension String {
 
 func formatDateOutput(_ dateStrIN: String) -> String? {
     if dateStrIN == "2999-12-31" {
-        return "unbegrenzt"
+        return "str.time.unlimited"
     }
     let dateFormatterIN = DateFormatter()
     dateFormatterIN.dateFormat = "yyyy-MM-dd"
     let dateToFormat = dateFormatterIN.date(from: dateStrIN)
     let dateFormatterOUT = DateFormatter()
     dateFormatterOUT.dateFormat = "dd.MM.yyyy"
-    if dateToFormat != nil {
-        let dateStrOut = dateFormatterOUT.string(from: dateToFormat!)
+    if let dateToFormat = dateToFormat {
+        let dateStrOut = dateFormatterOUT.string(from: dateToFormat)
         return dateStrOut
     } else {
-        return nil//"Fehler bei Datum"
+        return nil
     }
 }
 
-func formatDateAsString(_ date: Date, showTime: Bool = true) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .medium
-    if showTime {
-        dateFormatter.timeStyle = .medium
-    }
-    let dateStr = dateFormatter.string(from: date)
-    return dateStr
-}
-
-func formatTimestampOutput(_ timeStampIN: String) -> String {
-    let dateFormatterIN = DateFormatter()
-    //    EX: 2020-11-20 13:04:38
-    dateFormatterIN.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    let dateToFormat = dateFormatterIN.date(from: timeStampIN)
-    let dateFormatterOUT = DateFormatter()
-    dateFormatterOUT.dateFormat = "dd.MM.yyyy HH:mm:ss"
-    if dateToFormat != nil {
-        let dateStrOut = dateFormatterOUT.string(from: dateToFormat!)
-        return dateStrOut
+func formatDateAsString(_ date: Date?, showTime: Bool? = false, localizationKey: String? = nil) -> String? {
+    if let date = date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.current
+        if let localizationKey = localizationKey {
+            dateFormatter.locale = Locale(identifier: localizationKey)
+        } else {
+            dateFormatter.locale = .current
+        }
+        dateFormatter.dateStyle = .medium
+        if showTime == true {
+            dateFormatter.timeStyle = .medium
+        }
+        let dateStr = dateFormatter.string(from: date)
+        return dateStr
     } else {
-        return "Fehler bei Datum"
+        return nil
     }
 }
 
-func getDateFromString(_ dateStrIN: String) -> Date? {
-    let dateFormatterIN = DateFormatter()
-    dateFormatterIN.dateFormat = "yyyy-MM-dd"
-    let dateToFormat = dateFormatterIN.date(from: dateStrIN)
-    return dateToFormat
+func formatTimestampOutput(_ timeStamp: String, localizationKey: String? = nil) -> String? {
+    let timeStampDate = getDateFromTimestamp(timeStamp)
+    let timeStampFormatted = formatDateAsString(timeStampDate, showTime: true, localizationKey: localizationKey)
+    return timeStampFormatted
 }
 
-func getDateFromTimestamp(_ timeStampIN: String) -> Date? {
-    let dateFormatterIN = DateFormatter()
-    dateFormatterIN.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    let dateToFormat = dateFormatterIN.date(from: timeStampIN)
-    return dateToFormat
+func getDateFromString(_ dateString: String) -> Date? {
+    let strategy = Date.ISO8601FormatStyle()
+        .year()
+        .month()
+        .day()
+        .dateSeparator(.dash)
+    let date = try? Date(dateString, strategy: strategy)
+    return date
+}
+
+func getDateFromTimestamp(_ dateString: String) -> Date? {
+    let strategy = Date.ISO8601FormatStyle()
+        .year()
+        .month()
+        .day()
+        .dateSeparator(.dash)
+        .dateTimeSeparator(.space)
+        .time(includingFractionalSeconds: false)
+        .timeSeparator(.colon)
+    let date = try? Date(dateString, strategy: strategy)
+    return date
 }
 
 func getTimeDistanceFromNow(date: Date) -> Int? {
@@ -93,7 +103,7 @@ func getTimeDistanceFromNow(date: Date) -> Int? {
 func getTimeDistanceFromString(_ dateStrIN: String) -> Int? {
     if let date = getDateFromString(dateStrIN) {
         return getTimeDistanceFromNow(date: date)
-    } else {return nil}
+    } else { return nil }
 }
 
 func formatDays(daysToFormat: Int?) -> String? {
@@ -105,27 +115,31 @@ func formatDays(daysToFormat: Int?) -> String? {
     return dcf.string(from: datecomponents)
 }
 
-func getRelativeDateAsText(_ date: Date, localizationKey: String? = nil) -> String {
-    if Calendar.current.isDateInToday(date) || Calendar.current.isDateInTomorrow(date) || Calendar.current.isDateInYesterday(date) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.doesRelativeDateFormatting = true
-        if let localizationKey = localizationKey {
-            dateFormatter.locale = Locale(identifier: localizationKey)
+func getRelativeDateAsText(_ date: Date?, localizationKey: String? = nil) -> String? {
+    if let date = date {
+        if Calendar.current.isDateInToday(date) || Calendar.current.isDateInTomorrow(date) || Calendar.current.isDateInYesterday(date) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.doesRelativeDateFormatting = true
+            if let localizationKey = localizationKey {
+                dateFormatter.locale = Locale(identifier: localizationKey)
+            } else {
+                dateFormatter.locale = .current
+            }
+            return dateFormatter.string(from: date)
         } else {
-            dateFormatter.locale = .current
+            let dateFormatter = RelativeDateTimeFormatter()
+            if let localizationKey = localizationKey {
+                dateFormatter.locale = Locale(identifier: localizationKey)
+            } else {
+                dateFormatter.locale = .current
+            }
+            dateFormatter.dateTimeStyle = .named
+            let startOfToday = Calendar.current.startOfDay(for: Date())
+            
+            return dateFormatter.localizedString(for: date, relativeTo: startOfToday)
         }
-        return dateFormatter.string(from: date)
     } else {
-        let dateFormatter = RelativeDateTimeFormatter()
-        if let localizationKey = localizationKey {
-            dateFormatter.locale = Locale(identifier: localizationKey)
-        } else {
-            dateFormatter.locale = .current
-        }
-        dateFormatter.dateTimeStyle = .named
-        let startOfToday = Calendar.current.startOfDay(for: Date())
-        
-        return dateFormatter.localizedString(for: date, relativeTo: startOfToday)
+        return nil
     }
 }
