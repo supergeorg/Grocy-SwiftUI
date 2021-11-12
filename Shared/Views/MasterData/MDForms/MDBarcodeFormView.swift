@@ -10,7 +10,7 @@ import SwiftUI
 struct MDBarcodeFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -27,11 +27,11 @@ struct MDBarcodeFormView: View {
     
     @Binding var toastType: MDToastType?
     
-    @State var isBarcodeCorrect: Bool = false
+    @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
-        // check if EAN8 or EAN13, or PZN 8/9
-        //        return (Int(barcode) != nil) && (barcode.count == 8 || barcode.count == 13 || barcode.count == 9)
-        return true
+        // check if Barcode is already used
+        let foundBarcode = grocyVM.mdProductBarcodes.filter({ $0.barcode == barcode }).first
+        return ((foundBarcode == nil || foundBarcode?.barcode == editBarcode?.barcode) && (!barcode.isEmpty))
     }
     
     private var product: MDProduct? {
@@ -49,18 +49,15 @@ struct MDBarcodeFormView: View {
         isBarcodeCorrect = checkBarcodeCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     private func updateData() {
-        grocyVM.requestData(objects: [.product_barcodes])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
-        if isNewBarcode {
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-        }
-        #endif
+#if os(iOS)
+        self.dismiss()
+#endif
     }
     
     private func saveBarcode() {
@@ -69,13 +66,13 @@ struct MDBarcodeFormView: View {
             grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog(message: "Barcode add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog(message: "Barcode add failed. \(error)", type: .info)
                     toastType = .failAdd
                 }
             })
@@ -84,12 +81,12 @@ struct MDBarcodeFormView: View {
                 grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Barcode edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Barcode edit failed. \(error)", type: .info)
                         toastType = .failEdit
                     }
                 })
@@ -97,7 +94,7 @@ struct MDBarcodeFormView: View {
         }
     }
     
-    #if os(iOS)
+#if os(iOS)
     @State private var isScannerFlash = false
     @State private var isScannerFrontCamera = false
     @State private var isShowingScanner = false
@@ -111,44 +108,33 @@ struct MDBarcodeFormView: View {
             print(error)
         }
     }
-    #endif
+#endif
     
     var body: some View {
-        #if os(macOS)
-        ScrollView {
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewBarcode ? LocalizedStringKey("str.md.barcode.new") : LocalizedStringKey("str.md.barcode.edit"))
+#if os(iOS)
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewBarcode {
                         Button(LocalizedStringKey("str.cancel")) {
-                            self.presentationMode.wrappedValue.dismiss()
+                            finishForm()
                         }
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.md.barcode.save")) {
                         saveBarcode()
-                        presentationMode.wrappedValue.dismiss()
-                    }.disabled(barcode.isEmpty)
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewBarcode{
-                        Text("")
-                    }
+                        finishForm()
+                    }.disabled(!isBarcodeCorrect)
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
         Form {
-            #if os(macOS)
+#if os(macOS)
             if isNewBarcode {
                 HStack(alignment: .center){
                     Text(LocalizedStringKey("str.md.barcode.new"))
@@ -159,44 +145,44 @@ struct MDBarcodeFormView: View {
                         .foregroundColor(.gray)
                 }
             }
-            #endif
+#endif
             HStack{
                 MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
                     .onChange(of: barcode, perform: {newBC in
                         isBarcodeCorrect = checkBarcodeCorrect()
                     })
-                #if os(iOS)
+#if os(iOS)
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
                     Image(systemName: MySymbols.barcodeScan)
                 })
-                .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
-                        .overlay(
-                            HStack{
-                                Button(action: {
-                                    isScannerFlash.toggle()
-                                    toggleTorch(on: isScannerFlash)
-                                }, label: {
-                                    Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
-                                        .font(.title)
-                                })
-                                .disabled(!checkForTorch())
-                                .padding()
-                                if getFrontCameraAvailable() {
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                            .overlay(
+                                HStack{
                                     Button(action: {
-                                        isScannerFrontCamera.toggle()
+                                        isScannerFlash.toggle()
+                                        toggleTorch(on: isScannerFlash)
                                     }, label: {
-                                        Image(systemName: MySymbols.changeCamera)
+                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
-                                    .padding()
+                                        .disabled(!checkForTorch())
+                                        .padding()
+                                    if getFrontCameraAvailable() {
+                                        Button(action: {
+                                            isScannerFrontCamera.toggle()
+                                        }, label: {
+                                            Image(systemName: MySymbols.changeCamera)
+                                                .font(.title)
+                                        })
+                                            .padding()
+                                    }
                                 }
-                            }
-                            , alignment: .topTrailing)
-                }
-                #endif
+                                , alignment: .topTrailing)
+                    }
+#endif
             }
             Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
                 MyDoubleStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
@@ -217,7 +203,7 @@ struct MDBarcodeFormView: View {
             
             MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewBarcode{
@@ -233,11 +219,11 @@ struct MDBarcodeFormView: View {
                 }
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.product_barcodes], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
