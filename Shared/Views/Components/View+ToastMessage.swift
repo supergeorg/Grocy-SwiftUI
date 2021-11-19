@@ -8,20 +8,20 @@
 import SwiftUI
 
 extension View {
-    func toast<Content>(isPresented: Binding<Bool>, isSuccess: Bool? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
-        ToastMessage(
+    func toast(isPresented: Binding<Bool>, isSuccess: Bool? = nil, text: LocalizedStringKey) -> some View{
+        ToastMessageText(
             isPresented: isPresented,
             isSuccess: isSuccess,
             presenter: { self },
-            content: content
+            text: text
         )
     }
 
-    public func toast<Item, Content>(item: Binding<Item?>, isSuccess: Binding<Bool>, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content : View {
-        ToastMessageItem(
+    public func toast<Item>(item: Binding<Item?>, isSuccess: Binding<Bool>, text: @escaping (Item) -> LocalizedStringKey) -> some View where Item: Identifiable{
+        ToastMessageTextItem(
             item: item,
             presenter: { self },
-            content: content,
+            text: text,
             isSuccess: isSuccess
         )
     }

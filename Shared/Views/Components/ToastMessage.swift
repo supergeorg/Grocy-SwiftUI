@@ -8,47 +8,11 @@
 
 import SwiftUI
 
-struct ToastMessageItem<Presenting, Item, Content>: View where Item: Identifiable, Presenting: View, Content: View {
-    @Binding var item: Item?
-    let presenter: () -> Presenting
-    let content: (Item) -> Content
-    @Binding var isSuccess: Bool
-    let delay: TimeInterval = 2
-
-    var body: some View {
-        if self.item != nil {
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.delay) {
-                withAnimation {
-                    self.item = nil
-                }
-            }
-        }
-        return GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                self.presenter()
-
-                ZStack {
-                    Capsule()
-                        .fill(isSuccess ? Color.green : Color.red)
-
-                    if let item = item {
-                        self.content(item)
-                            .padding()
-                    }
-                }
-                .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
-                .opacity(self.item != nil ? 1 : 0)
-            }
-            .padding(.bottom)
-        }
-    }
-}
-
-struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: View {
+struct ToastMessageText<Presenting>: View where Presenting: View {
     @Binding var isPresented: Bool
     var isSuccess: Bool?
     let presenter: () -> Presenting
-    let content: () -> Content
+    let text: LocalizedStringKey
     let delay: TimeInterval = 2
     
     var body: some View {
@@ -62,15 +26,51 @@ struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: 
         return GeometryReader { geometry in
             ZStack(alignment: .bottom) {
                 self.presenter()
-                
-                ZStack {
-                    Capsule()
-                        .fill(isSuccess != nil ? (isSuccess! ? Color.green : Color.red) : Color.gray)
-                    
-                    self.content()
+                HStack(alignment: .center) {
+                    if let isSuccess = isSuccess {
+                        Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
+                            .font(.title)
+                    }
+                    Text(text)
                 }
                 .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
+                .background(isSuccess != nil ? (isSuccess! ? Color.green.opacity(0.9) : Color.red.opacity(0.9)) : Color.gray, in: RoundedRectangle(cornerRadius: 16.0))
                 .opacity(self.isPresented ? 1 : 0)
+            }
+            .padding(.bottom)
+        }
+    }
+}
+
+struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Presenting: View {
+    @Binding var item: Item?
+    let presenter: () -> Presenting
+    var text: (Item) -> LocalizedStringKey
+    @Binding var isSuccess: Bool
+    let delay: TimeInterval = 2
+    
+    var body: some View {
+        if self.item != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.delay) {
+                withAnimation {
+                    self.item = nil
+                }
+            }
+        }
+        return GeometryReader { geometry in
+            ZStack(alignment: .bottom) {
+                self.presenter()
+                HStack(alignment: .center) {
+                    Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
+                        .font(.title)
+                    if let item = item {
+                        Text(self.text(item))
+                            .fixedSize(horizontal: true, vertical: false)
+                    }
+                }
+                .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
+                .background(isSuccess ? Color.green.opacity(0.9) : Color.red.opacity(0.9), in: RoundedRectangle(cornerRadius: 16.0))
+                .opacity(self.item != nil ? 1 : 0)
             }
             .padding(.bottom)
         }
@@ -80,12 +80,6 @@ struct ToastMessage<Presenting, Content>: View where Presenting: View, Content: 
 struct ToastMessage_Previews: PreviewProvider {
     static var previews: some View {
         Text("Test toast")
-            .toast(isPresented: Binding.constant(true), content: {
-                HStack{
-                    Text("Yay, a toast")
-                    Image(systemName: "sparkles")
-                        .renderingMode(.original)
-                }
-            })
+            .toast(isPresented: Binding.constant(true), isSuccess: true, text: LocalizedStringKey("Yay, a toast"))
     }
 }
