@@ -87,7 +87,7 @@ struct QuickScanModeInputView: View {
                 return (stockElement?.amount ?? 1.0 >= getConsumeAmount())
             }
         case .markAsOpened:
-            return (stockElement?.amount ?? 1.0 >= 1.0)
+            return (stockElement?.amount ?? 0.0 >= 1.0)
         default:
             return true
         }
