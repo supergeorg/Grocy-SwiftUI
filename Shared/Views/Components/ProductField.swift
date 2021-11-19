@@ -8,6 +8,44 @@
 import SwiftUI
 
 struct ProductField: View {
+    struct SearchBar: UIViewRepresentable {
+        // This is needed, since the .searchable modifier destroys the list layout.
+        
+        @Binding var text: String
+        
+        func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
+            let searchBar = UISearchBar(frame: .zero)
+            searchBar.delegate = context.coordinator
+            
+            searchBar.placeholder = "Search"
+            searchBar.autocapitalizationType = .none
+            searchBar.searchBarStyle = .minimal
+            return searchBar
+        }
+        
+        func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
+            uiView.text = text
+        }
+        
+        func makeCoordinator() -> SearchBar.Coordinator {
+            return Coordinator(text: $text)
+        }
+        
+        class Coordinator: NSObject, UISearchBarDelegate {
+            
+            @Binding var text: String
+            
+            init(text: Binding<String>) {
+                _text = text
+            }
+            
+            func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+                text = searchText
+            }
+        }
+    }
+    
+    
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var productID: Int?
@@ -41,8 +79,11 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary), content: {
+        Picker(selection: $productID,
+               label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
+               content: {
             HStack {
+                SearchBar(text: $searchTerm)
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
@@ -79,7 +120,7 @@ struct ProductField: View {
                 Text(productElement.name).tag(productElement.id as Int?)
             }
         }
-        ).pickerStyle(DefaultPickerStyle())
+        )
     }
 #elseif os(macOS)
     var body: some View {
