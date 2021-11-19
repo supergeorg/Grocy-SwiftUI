@@ -192,7 +192,7 @@ struct QuickScanModeInputView: View {
         case .markAsOpened:
             ()
         case .purchase:
-            purchaseDueDate = lastPurchaseDueDate
+            purchaseDueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Calendar.current.startOfDay(for: lastPurchaseDueDate))
             purchaseShoppingLocationID = product?.shoppingLocationID ?? lastPurchaseShoppingLocationID
             purchaseLocationID = product?.locationID ?? lastPurchaseLocationID
         }

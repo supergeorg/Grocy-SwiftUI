@@ -16,7 +16,11 @@ struct PurchaseProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var productToPurchaseID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var directProductToPurchaseID: Int? = nil
+    var productToPurchaseID: Int? {
+        return directProductToPurchaseID ?? stockElement?.wrappedValue?.productID
+    }
     var productToPurchaseAmount: Double?
     
     @State private var productID: Int?
@@ -79,7 +83,7 @@ struct PurchaseProductView: View {
     }
     
     private func resetForm() {
-        self.productID = firstAppear ? productToPurchaseID : nil
+        
         self.amount = firstAppear ? productToPurchaseAmount ?? 1.0 : 1.0
         self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
         self.dueDate = Calendar.current.startOfDay(for: Date())
@@ -88,6 +92,7 @@ struct PurchaseProductView: View {
         self.isTotalPrice = false
         self.shoppingLocationID = nil
         self.locationID = nil
+        self.productID = firstAppear ? productToPurchaseID : nil
         self.searchProductTerm = ""
     }
     
@@ -148,6 +153,7 @@ struct PurchaseProductView: View {
                         if locationID == nil { locationID = selectedProduct.locationID }
                         if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID }
                         quantityUnitID = selectedProduct.quIDPurchase
+                        dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Calendar.current.startOfDay(for: Date()))
                     }
                 }
             
