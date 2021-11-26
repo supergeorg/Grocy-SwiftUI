@@ -16,8 +16,11 @@ struct TransferProductView: View {
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
-    
-    var productToTransferID: Int?
+
+    var stockElement: Binding<StockElement?>? = nil
+    var productToTransferID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
     @State private var locationIDFrom: Int?
@@ -199,12 +202,12 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), text: { item in
             switch item {
             case .successTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
             case .failTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
             }
         })
         .toolbar(content: {

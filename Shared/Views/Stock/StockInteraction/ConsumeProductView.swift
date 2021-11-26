@@ -23,7 +23,10 @@ struct ConsumeProductView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 #endif
     
-    var productToConsumeID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var productToConsumeID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -271,16 +274,16 @@ struct ConsumeProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), text: { item in
             switch item {
             case .successConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
             case .failConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.consume.fail")
             case .successOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
             case .failOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.open.fail")
             }
         })
         .toolbar(content: {

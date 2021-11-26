@@ -15,7 +15,10 @@ struct InventoryProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var productToInventoryID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var productToInventoryID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -210,12 +213,12 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), text: { item in
             switch item {
             case .successInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")")
             case .failInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.inventory.product.inventory.fail")
             }
         })
         .toolbar(content: {

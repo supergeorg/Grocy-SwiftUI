@@ -213,12 +213,12 @@ struct PurchaseProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successPurchase), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successPurchase), text: { item in
             switch item {
             case .successPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
             case .failPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.buy.product.buy.fail")
             }
         })
         .toolbar(content: {
