@@ -22,7 +22,11 @@ struct GrocyInfoView: View {
             } else {
                 Text(grocyServerURL)
             }
-            Text(LocalizedStringKey("str.settings.info.grocyVersion \(systemInfo.grocyVersion.version)"))
+            HStack {
+                Text(LocalizedStringKey("str.settings.info.grocyVersion \(systemInfo.grocyVersion.version)"))
+                Label(LocalizedStringKey(GrocyAPP.supportedVersions.contains(systemInfo.grocyVersion.version) ? "str.settings.about.version.supported" : "str.settings.about.version.notSupported"), systemImage: GrocyAPP.supportedVersions.contains(systemInfo.grocyVersion.version) ? MySymbols.success : MySymbols.failure)
+                    .foregroundColor(GrocyAPP.supportedVersions.contains(systemInfo.grocyVersion.version) ? Color.grocyGreen : Color.grocyRed)
+            }
             Text(LocalizedStringKey("str.settings.info.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? formatTimestampOutput(systemInfo.grocyVersion.releaseDate, localizationKey: localizationKey) ?? "")"))
             Text(LocalizedStringKey("str.settings.info.grocyPHPVersion \(systemInfo.phpVersion)"))
             Text(LocalizedStringKey("str.settings.info.grocySQLiteVersion \(systemInfo.sqliteVersion)"))
