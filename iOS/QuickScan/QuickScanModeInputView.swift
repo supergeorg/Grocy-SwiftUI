@@ -345,16 +345,16 @@ struct QuickScanModeInputView: View {
                 })
             })
         }
-        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), content: { item in
+        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), text: { item in
             switch item {
             case .failQSConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.consume.fail")
             case .failQSOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.open.fail")
             case .failQSPurchase:
-                Label(LocalizedStringKey("str.stock.buy.product.buy.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.buy.product.buy.fail")
             default:
-                EmptyView()
+                return LocalizedStringKey("")
             }
         })
         .onAppear(perform: {

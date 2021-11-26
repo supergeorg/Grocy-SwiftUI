@@ -128,18 +128,18 @@ struct QuickScanModeView: View {
                     QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
                 }
             }
-            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
+            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), text: { item in
                 switch item {
                 case .successQSAddProduct:
-                    Label("str.quickScan.add.product.add.success", systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.quickScan.add.product.add.success")
                 case .successQSConsume:
-                    Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
                 case .successQSOpen:
-                    Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
                 case .successQSPurchase:
-                    Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
                 case .invalidBarcode:
-                    Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
+                    return LocalizedStringKey("str.quickScan.barcode.invalid")
                 }
             })
             .onAppear(perform: {
