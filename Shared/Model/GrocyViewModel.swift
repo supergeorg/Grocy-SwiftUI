@@ -802,10 +802,8 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(productEntriesResult):
                                 self.stockProductEntries[productID] = productEntriesResult
-//                                self.failedToLoadObjects.remove(object)
                             case let .failure(error):
                                 self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
-//                                self.failedToLoadObjects.insert(object)
                             }
                         })
                     }

@@ -25,6 +25,7 @@
 "str.back" = "Powrót";
 "str.retry" = "Spróbuj ponownie";
 "str.connection.failed" = "Brak połączenia z serwerem";
+"str.time.unlimited" = "bez ograniczeń";
 
 // MARK: - Transactions
 "tr.purchase" = "Zakup";
