@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MDShoppingLocationRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
-    
     var shoppingLocation: MDShoppingLocation
     
     var body: some View {
@@ -143,18 +141,18 @@ struct MDShoppingLocationsView: View {
                    value: filteredShoppingLocations.count)
         .toast(item: $toastType,
                isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
-               content: { item in
+               text: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.new.success")
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.new.fail")
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.edit.success")
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.delete.fail")
             }
         })
         .alert(LocalizedStringKey("str.md.shoppingLocation.delete.confirm"), isPresented: $showDeleteAlert, actions: {

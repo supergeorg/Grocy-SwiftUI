@@ -15,8 +15,10 @@ struct MDQuantityUnitRowView: View {
             HStack(alignment: .center) {
                 Text(quantityUnit.name)
                     .font(.title)
-                Text("(\(quantityUnit.namePlural))")
-                    .font(.title3)
+                if let namePlural = quantityUnit.namePlural {
+                    Text("(\(namePlural))")
+                        .font(.title3)
+                }
             }
             if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
                 Text(description)
@@ -136,18 +138,18 @@ struct MDQuantityUnitsView: View {
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }
         .animation(.default, value: filteredQuantityUnits.count)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.new.success")
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.new.fail")
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.edit.success")
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.delete.fail")
             }
         })
         .alert(LocalizedStringKey("str.md.quantityUnit.delete.confirm"), isPresented: $showDeleteAlert, actions: {
