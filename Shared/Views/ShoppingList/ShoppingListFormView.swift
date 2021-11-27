@@ -118,7 +118,7 @@ struct ShoppingListFormView: View {
             #endif
         }
         .onAppear(perform: resetForm)
-        .toast(isPresented: $showFailToast, isSuccess: false, content: {Label("str.shL.form.save.failed", systemImage: MySymbols.failure)})
+        .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.form.save.failed"))
     }
 }
 

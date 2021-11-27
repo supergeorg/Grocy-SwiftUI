@@ -170,7 +170,7 @@ struct ShoppingListEntryFormView: View {
                 firstAppear = false
             }
         })
-        .toast(isPresented: $showFailToast, isSuccess: false, content: {Label("str.shL.entryForm.save.failed", systemImage: MySymbols.failure)})
+        .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.entryForm.save.failed"))
     }
 }
 

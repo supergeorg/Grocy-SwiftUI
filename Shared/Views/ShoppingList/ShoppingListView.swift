@@ -340,10 +340,10 @@ struct ShoppingListView: View {
                 slAction(.clear)
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Name not found") })
-        .toast(item: $toastType, isSuccess: Binding.constant(false), content: {item in
+        .toast(item: $toastType, isSuccess: Binding.constant(false), text: {item in
             switch item {
             case .shLActionFail:
-                Label(LocalizedStringKey("str.shL.action.failed"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.shL.action.failed")
             }
         })
     }
