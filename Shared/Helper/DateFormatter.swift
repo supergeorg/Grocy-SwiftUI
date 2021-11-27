@@ -143,3 +143,16 @@ func getRelativeDateAsText(_ date: Date?, localizationKey: String? = nil) -> Str
         return nil
     }
 }
+
+func getNeverOverdueDate() -> Date {
+    var dateComponents = DateComponents()
+    dateComponents.year = 2999
+    dateComponents.month = 12
+    dateComponents.day = 31
+    dateComponents.timeZone = TimeZone(abbreviation: "UTC")
+    dateComponents.hour = 0
+    dateComponents.minute = 0
+    dateComponents.second = 0
+    return Calendar(identifier: .gregorian)
+        .date(from: dateComponents)!
+}
