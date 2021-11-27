@@ -187,7 +187,7 @@ struct MDProductPictureFormView: View {
                                     } else {
                                         selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
                                     }
-                                    showImagePicker = false
+                                    showCamera = false
                                 }
                             })
                         })
