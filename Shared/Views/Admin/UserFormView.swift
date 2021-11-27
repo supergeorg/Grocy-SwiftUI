@@ -152,14 +152,14 @@ struct UserFormView: View {
         .onChange(of: passwordConfirm) {  newValue in
             checkPWParity()
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(false), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(false), text: { item in
             switch item {
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.new.fail")
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.edit.fail")
             default:
-                EmptyView()
+                return LocalizedStringKey("")
             }
         })
     }

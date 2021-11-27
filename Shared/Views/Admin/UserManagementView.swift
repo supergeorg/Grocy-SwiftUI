@@ -116,16 +116,16 @@ struct UserManagementView: View {
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
         .onAppear(perform: updateData)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.new.success")
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.edit.success")
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.delete.fail")
             default:
-                EmptyView()
+                return LocalizedStringKey("")
             }
         })
     }
