@@ -41,6 +41,18 @@ struct RowInteractionButton: View {
     }
 }
 
+struct GreenInteractionButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(height: 15)
+            .padding(7)
+            .background(Color.grocyGreen)
+            .foregroundColor(.white)
+            .cornerRadius(3)
+            .clipShape(RoundedRectangle(cornerRadius: 3))
+    }
+}
+
 struct RowInteractionButton_Previews: PreviewProvider {
     static var previews: some View {
         RowInteractionButton(title: "test", image: "trash", backgroundColor: Color.blue)
