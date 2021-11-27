@@ -16,44 +16,97 @@ struct StockJournalFilterBar: View {
     @Binding var filteredLocationID: Int?
     @Binding var filteredUserID: Int?
     
-    #if os(iOS)
+#if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    #endif
+#endif
     
     var body: some View {
         VStack{
-            SearchBar(text: $searchString, placeholder: "str.search")
-            #if os(iOS)
+#if os(iOS)
             let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: (horizontalSizeClass == .compact && verticalSizeClass == .regular) ? 2 : 4)
-            #else
+#else
             let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: 4)
-            #endif
+#endif
             LazyVGrid(columns: filterColumns, alignment: .leading, content: {
-                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as Int?)
-                    ForEach(grocyVM.mdProducts, id:\.id) { product in
-                        Text(product.name).tag(product.id as Int?)
+                Menu {
+                    Picker("", selection: $filteredProductID, content: {
+                        Text("str.stock.all").tag(nil as Int?)
+                        ForEach(grocyVM.mdProducts, id:\.id) { product in
+                            Text(product.name).tag(product.id as Int?)
+                        }
+                    })
+                        .labelsHidden()
+                } label: {
+                    HStack {
+                        Image(systemName: MySymbols.filter)
+                        VStack{
+                            Text(LocalizedStringKey("str.stock.journal.product"))
+                            if let filteredProductID = filteredProductID, let filteredProductName = grocyVM.mdProducts.first{ $0.id == filteredProductID }?.name {
+                                Text(filteredProductName)
+                                    .font(.caption)
+                            }
+                        }
                     }
-                }).pickerStyle(MenuPickerStyle())
-                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as TransactionType?)
-                    ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
-                        Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
+                }
+                Menu {
+                    Picker("", selection: $filteredTransactionType, content: {
+                        Text("str.stock.all").tag(nil as TransactionType?)
+                        ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
+                            Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
+                        }
+                    })
+                        .labelsHidden()
+                } label: {
+                    HStack {
+                        Image(systemName: MySymbols.filter)
+                        VStack{
+                            Text(LocalizedStringKey("str.stock.journal.transactionType"))
+                            if let filteredTransactionType = filteredTransactionType {
+                                Text(filteredTransactionType.formatTransactionType())
+                                    .font(.caption)
+                            }
+                        }
                     }
-                }).pickerStyle(MenuPickerStyle())
-                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
-                        Text(location.name).tag(location.id as Int?)
+                }
+                Menu {
+                    Picker("", selection: $filteredLocationID, content: {
+                        Text("str.stock.all").tag(nil as Int?)
+                        ForEach(grocyVM.mdLocations, id:\.id) { location in
+                            Text(location.name).tag(location.id as Int?)
+                        }
+                    })               .labelsHidden()
+                } label: {
+                    HStack {
+                        Image(systemName: MySymbols.filter)
+                        VStack{
+                            Text(LocalizedStringKey("str.stock.journal.location"))
+                            if let filteredLocationID = filteredLocationID, let filteredLocationName = grocyVM.mdLocations.first{ $0.id == filteredLocationID }?.name {
+                                Text(filteredLocationName)
+                                    .font(.caption)
+                            }
+                        }
                     }
-                }).pickerStyle(MenuPickerStyle())
-                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter).fixedSize(horizontal: false, vertical: true), content: {
-                    Text("str.stock.all").tag(nil as Int?)
-                    ForEach(grocyVM.users, id:\.id) { user in
-                        Text(user.displayName).tag(user.id as Int?)
+                }
+                Menu {
+                    Picker("", selection: $filteredUserID, content: {
+                        Text("str.stock.all").tag(nil as Int?)
+                        ForEach(grocyVM.users, id:\.id) { user in
+                            Text(user.displayName).tag(user.id as Int?)
+                        }
+                    })               .labelsHidden()
+                } label: {
+                    HStack {
+                        Image(systemName: MySymbols.filter)
+                        VStack{
+                            Text(LocalizedStringKey("str.stock.journal.user"))
+                            if let filteredUserID = filteredUserID, let filteredUserName = grocyVM.users.first{ $0.id == filteredUserID }?.displayName {
+                                Text(filteredUserName)
+                                    .font(.caption)
+                            }
+                        }
                     }
-                }).pickerStyle(MenuPickerStyle())
+                }
             })
         }
     }
@@ -73,74 +126,63 @@ struct StockJournalRowView: View {
         return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
     }
     
-    private func getQUString(amount: Double) -> String {
-        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
-    }
-    
     private func undoTransaction() {
         grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog(message: "Undo transaction successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.stock_log])
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog(message: "Undo transaction failed. \(error)", type: .error)
                 showToastUndoFailed = true
             }
         })
     }
     
     var body: some View {
-        HStack(alignment: .center) {
-            Image(systemName: "arrow.counterclockwise")
-                .padding()
-                .help(LocalizedStringKey("str.stock.journal.undo"))
-                .foregroundColor(Color.white)
-                .background(journalEntry.undone == 1 ? Color.grocyGrayLight : Color.grocyGray)
-                .cornerRadius(5)
-                .onTapGesture {
-                    if journalEntry.undone == 0 {
-                        undoTransaction()
+        VStack(alignment: .leading){
+            Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
+                .font(.title)
+                .strikethrough(journalEntry.undone == 1, color: .primary)
+            if journalEntry.undone == 1 {
+                if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
+                    HStack(alignment: .bottom){
+                        Text(LocalizedStringKey("str.stock.journal.undo.date \(formatDateAsString(date, showTime: true, localizationKey: localizationKey) ?? "")"))
+                            .font(.caption)
+                        Text(getRelativeDateAsText(date, localizationKey: localizationKey) ?? "")
+                            .font(.caption)
+                            .italic()
                     }
+                    .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
                 }
-            VStack(alignment: .leading){
-                Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
-                    .font(.title)
-                    .strikethrough(journalEntry.undone == 1, color: .primary)
-                if journalEntry.undone == 1 {
-                    if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
-                        HStack(alignment: .bottom){
-                            Text(LocalizedStringKey("str.stock.journal.undo.date \(formatDateAsString(date))"))
-                                .font(.caption)
-                            Text(getRelativeDateAsText(date, localizationKey: localizationKey))
-                                .font(.caption)
-                                .italic()
-                        }
-                        .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
-                    }
-                }
-                Group {
-                    Text(LocalizedStringKey("str.stock.journal.amount.info \("\(formatAmount(journalEntry.amount)) \(getQUString(amount: journalEntry.amount))")"))
-                    Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp))"))
-                    Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
-                        .font(.caption)
-                        +
-                        Text(journalEntry.transactionType.formatTransactionType())
-                        .font(.caption)
-                    Text(LocalizedStringKey("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")"))
-                    Text(LocalizedStringKey("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")"))
-                }
-                .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
-                .font(.caption)
             }
-            Spacer()
+            Group {
+                Text(LocalizedStringKey("str.stock.journal.amount.info \("\(formatAmount(journalEntry.amount)) \(journalEntry.amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")"))
+                Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")"))
+                Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
+                    .font(.caption)
+                +
+                Text(journalEntry.transactionType.formatTransactionType())
+                    .font(.caption)
+                Text(LocalizedStringKey("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")"))
+                Text(LocalizedStringKey("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")"))
+            }
+            .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
+            .font(.caption)
         }
+        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+            Button(action: undoTransaction, label: {
+                Label(LocalizedStringKey("str.stock.journal.undo"), systemImage: MySymbols.undo)
+            })
+                .disabled(journalEntry.undone == 1)
+        })
     }
 }
 
 struct StockJournalView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    @Environment(\.presentationMode) private var presentationMode
+    
+    @Environment(\.dismiss) var dismiss
     
     @State private var searchString: String = ""
     
@@ -158,7 +200,10 @@ struct StockJournalView: View {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
-    var selectedProductID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var selectedProductID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     var filteredJournal: StockJournal {
         grocyVM.stockJournal
@@ -188,32 +233,26 @@ struct StockJournalView: View {
         if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
             bodyContent
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.stock.journal"))
         }
     }
     
     var bodyContent: some View {
-        #if os(iOS)
+#if os(iOS)
         NavigationView {
             content
-                .padding()
                 .toolbar(content: {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.close")) {
-                            self.presentationMode.wrappedValue.dismiss()
-                        }
+                        Button(role: .cancel,
+                               action: { self.dismiss() },
+                               label: { Text(LocalizedStringKey("str.close")) })
                     }
-                    ToolbarItem(placement: .automatic, content: {
-                        Button(action: updateData, label: {
-                            Image(systemName: MySymbols.reload)
-                        })
-                    })
                 })
         }
-        #else
+#else
         content
-        #endif
+#endif
     }
     
     var content: some View {
@@ -228,14 +267,19 @@ struct StockJournalView: View {
                 StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)
             }
         }
+        .navigationTitle(LocalizedStringKey("str.stock.journal"))
+        .searchable(text: $searchString,
+                    prompt: LocalizedStringKey("str.search"))
+        .refreshable {
+            updateData()
+        }
+        .animation(.default,
+                   value: filteredJournal.count)
         .onAppear(perform: {
             grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
             filteredProductID = selectedProductID
         })
-        .toast(isPresented: $showToastUndoFailed, isSuccess: false, content: {
-            Label(LocalizedStringKey("str.stock.journal.undo.failed"), systemImage: MySymbols.failure)
-        })
-        .navigationTitle(LocalizedStringKey("str.stock.journal"))
+        .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))
     }
 }
 
