@@ -10,7 +10,7 @@ import SwiftUI
 struct FilledButtonStyle: ButtonStyle {
     let cornerRadiusValue: CGFloat = 5.0
     let paddingAmount: CGFloat = 12.0
-
+    
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             Spacer()
@@ -18,15 +18,17 @@ struct FilledButtonStyle: ButtonStyle {
                 .label
             Spacer()
         }
-            .foregroundColor(Color.white)
-            .padding(paddingAmount)
-            .background(Color.accentColor)
-            .cornerRadius(cornerRadiusValue)
+        .foregroundColor(Color.white)
+        .padding(paddingAmount)
+        .background(Color.accentColor)
+        .cornerRadius(cornerRadiusValue)
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
 
 
 struct BorderButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) var colorScheme
     let cornerRadiusValue: CGFloat = 5.0
     let paddingAmount: CGFloat = 12.0
     
@@ -37,7 +39,11 @@ struct BorderButtonStyle: ButtonStyle {
                 .label
             Spacer()
         }
-            .padding(paddingAmount)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue, style: .continuous).stroke(Color.accentColor, lineWidth: 1))
+        .foregroundColor(Color.primary)
+        .padding(paddingAmount)
+        .background(colorScheme == .light ? Color.white : Color.black)
+        .cornerRadius(cornerRadiusValue)
+        .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue, style: .continuous).stroke(Color.accentColor, lineWidth: 1))
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
