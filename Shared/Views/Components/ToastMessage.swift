@@ -36,8 +36,8 @@ struct ToastMessageText<Presenting>: View where Presenting: View {
                 .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
                 .background(isSuccess != nil ? (isSuccess! ? Color.green.opacity(0.9) : Color.red.opacity(0.9)) : Color.gray, in: RoundedRectangle(cornerRadius: 16.0))
                 .opacity(self.isPresented ? 1 : 0)
+                .padding(.bottom)
             }
-            .padding(.bottom)
         }
     }
 }
@@ -61,8 +61,10 @@ struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Pr
             ZStack(alignment: .bottom) {
                 self.presenter()
                 HStack(alignment: .center) {
-                    Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
-                        .font(.title)
+                    if item != nil {
+                        Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
+                            .font(.title)
+                    }
                     if let item = item {
                         Text(self.text(item))
                             .fixedSize(horizontal: true, vertical: false)
@@ -71,8 +73,8 @@ struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Pr
                 .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
                 .background(isSuccess ? Color.green.opacity(0.9) : Color.red.opacity(0.9), in: RoundedRectangle(cornerRadius: 16.0))
                 .opacity(self.item != nil ? 1 : 0)
+                .padding(.bottom)
             }
-            .padding(.bottom)
         }
     }
 }
