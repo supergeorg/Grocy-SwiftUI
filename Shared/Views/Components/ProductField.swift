@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductField: View {
+#if os(iOS)
     struct SearchBar: UIViewRepresentable {
         // This is needed, since the .searchable modifier destroys the list layout.
         
@@ -44,6 +45,7 @@ struct ProductField: View {
             }
         }
     }
+#endif
     
     
     @StateObject var grocyVM: GrocyViewModel = .shared
@@ -83,7 +85,9 @@ struct ProductField: View {
                label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
                content: {
             HStack {
+#if os(iOS)
                 SearchBar(text: $searchTerm)
+#endif
                 Button(action: {
                     isShowingScanner.toggle()
                 }, label: {
