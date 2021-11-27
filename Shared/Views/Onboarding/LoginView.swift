@@ -19,32 +19,32 @@ struct LoginInfoView: View {
         CardView{
             HStack(spacing: 20){
                 Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!, label: {
-                    Image(systemName: "chevron.left.slash.chevron.right")
+                    Image(systemName: MySymbols.api)
                 })
                 
-                Image(systemName: "info.circle")
+                Image(systemName: MySymbols.info)
                     .onTapGesture {
                         showAbout.toggle()
                     }
                     .sheet(isPresented: $showAbout, content: {
-                        #if os(iOS)
+#if os(iOS)
                         NavigationView {
                             AboutView()
                                 .toolbar(content: {
                                     ToolbarItem(placement: .cancellationAction, content: {
-                                                    Button(LocalizedStringKey("str.close"))
-                                                        { showAbout = false }})
+                                        Button(LocalizedStringKey("str.close"))
+                                        { showAbout = false }})
                                 })
                         }
-                        #else
+#else
                         AboutView()
                             .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
-                                                Button(LocalizedStringKey("str.close"))
-                                                    { showAbout = false }})
+                                    Button(LocalizedStringKey("str.close"))
+                                    { showAbout = false }})
                             })
-                        #endif
+#endif
                     })
                 
                 Link(destination: URL(string: "https://www.grocy.info")!, label: {
@@ -56,24 +56,24 @@ struct LoginInfoView: View {
                         showSettings.toggle()
                     }
                     .sheet(isPresented: $showSettings, content: {
-                        #if os(iOS)
+#if os(iOS)
                         NavigationView {
                             SettingsView()
                                 .toolbar(content: {
                                     ToolbarItem(placement: .cancellationAction, content: {
-                                                    Button(LocalizedStringKey("str.close"))
-                                                        { showSettings = false }})
+                                        Button(LocalizedStringKey("str.close"))
+                                        { showSettings = false }})
                                 })
                         }
-                        #else
+#else
                         SettingsView()
                             .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
-                                                Button(LocalizedStringKey("str.close"))
-                                                    { showSettings = false }})
+                                    Button(LocalizedStringKey("str.close"))
+                                    { showSettings = false }})
                             })
-                        #endif
+#endif
                     })
             }
             .foregroundColor(.primary)
@@ -92,18 +92,18 @@ struct LoginStartView: View {
                 Text(LocalizedStringKey("str.login.info"))
                 Spacer()
                 Text(LocalizedStringKey("str.login.select"))
-                HStack{
+                HStack {
                     Button(LocalizedStringKey("str.login.demoServer"), action: {
                         loginViewState = .demoServer
                     })
-                    .buttonStyle(BorderButtonStyle())
-                    .matchedGeometryEffect(id: "demoServer", in: animation)
+                        .buttonStyle(BorderButtonStyle())
+                        .matchedGeometryEffect(id: "demoServer", in: animation)
                     
                     Button(LocalizedStringKey("str.login.ownServer"), action: {
                         loginViewState = .ownServer
                     })
-                    .buttonStyle(FilledButtonStyle())
-                    .matchedGeometryEffect(id: "ownServer", in: animation)
+                        .buttonStyle(FilledButtonStyle())
+                        .matchedGeometryEffect(id: "ownServer", in: animation)
                 }
             }
         }
@@ -124,26 +124,32 @@ struct LoginDemoServerView: View {
                 VStack{
                     Text(LocalizedStringKey("str.login.demoServer.info"))
                     
-                    #if os(iOS)
-                    Picker(selection: $demoServerURL, label: CardView{
+#if os(iOS)
+                    Menu {
+                        Picker(selection: $demoServerURL, label: CardView{
+                            HStack(alignment: .center){
+                                Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
+                                Image(systemName: MySymbols.menuPick)
+                            }
+                        }, content: {
+                            ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
+                                Text(demoServer.description).tag(demoServer.rawValue)
+                            })
+                        })
+                            .labelsHidden()
+                    } label: {
                         HStack(alignment: .center){
                             Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
                             Image(systemName: MySymbols.menuPick)
                         }
-                    }, content: {
-                        ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
-                            Text(demoServer.description).tag(demoServer.rawValue)
-                        })
-                    })
-                    .foregroundColor(.primary)
-                    .pickerStyle(MenuPickerStyle())
-                    #elseif os(macOS)
+                    }
+#elseif os(macOS)
                     Picker(selection: $demoServerURL, label: Text(LocalizedStringKey("str.login.demoServer \("")")), content: {
                         ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
                             Text(demoServer.description).tag(demoServer.rawValue)
                         })
                     })
-                    #endif
+#endif
                     
                     Spacer()
                     
@@ -151,13 +157,13 @@ struct LoginDemoServerView: View {
                         Button(LocalizedStringKey("str.back"), action: {
                             loginViewState = .start
                         })
-                        .buttonStyle(BorderButtonStyle())
+                            .buttonStyle(BorderButtonStyle())
                         Button(LocalizedStringKey("str.login.demoServer.use"), action: {
                             passDemoMode = true
                             loginViewState = .logginIn
                         })
-                        .buttonStyle(FilledButtonStyle())
-                        .matchedGeometryEffect(id: "login", in: animation)
+                            .buttonStyle(FilledButtonStyle())
+                            .matchedGeometryEffect(id: "login", in: animation)
                     }
                 }
             }
@@ -181,7 +187,7 @@ struct LoginOwnServerView: View {
     
     @AppStorage("devMode") private var devMode: Bool = false
     
-    #if os(iOS)
+#if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     
@@ -218,40 +224,40 @@ struct LoginOwnServerView: View {
             print(error)
         }
     }
-    #endif
+#endif
     
     var body: some View {
         CardView{
             VStack{
                 MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network", helpText: "str.login.ownServer.manual.serverURL.help")
                 MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.ownServer.manual.APIKey.help")
-                #if os(iOS)
+#if os(iOS)
                 Button(action: {
                     isShowingGrocyScanner.toggle()
                 }, label: {
                     Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
                 })
-                .buttonStyle(FilledButtonStyle())
-                .sheet(isPresented: $isShowingGrocyScanner, content: {
-                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
-                })
-                #endif
+                    .buttonStyle(FilledButtonStyle())
+                    .sheet(isPresented: $isShowingGrocyScanner, content: {
+                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
+                    })
+#endif
                 CardView {
                     VStack(spacing: 20) {
                         MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
                         if useHassIngress {
                             HStack {
                                 MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.hassIngress.token.help")
-                                #if os(iOS)
+#if os(iOS)
                                 Button(action: {
                                     isShowingTokenScanner.toggle()
                                 }, label: {
                                     Image(systemName: MySymbols.qrScan)
                                 })
-                                .sheet(isPresented: $isShowingTokenScanner, content: {
-                                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
-                                })
-                                #endif
+                                    .sheet(isPresented: $isShowingTokenScanner, content: {
+                                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
+                                    })
+#endif
                             }
                         }
                         Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md")!, label: {
@@ -266,25 +272,19 @@ struct LoginOwnServerView: View {
                             Button(LocalizedStringKey("str.back"), action: {
                                 loginViewState = .start
                             })
-                            .buttonStyle(BorderButtonStyle())
+                                .buttonStyle(BorderButtonStyle())
                             Link(destination: URL(string: "\(grocyServerURL)/manageapikeys")!, label: {
                                 Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
                             })
-                            .buttonStyle(BorderButtonStyle())
+                                .buttonStyle(BorderButtonStyle())
                         }
-                        Button(action: {
+                        Button(LocalizedStringKey("str.login.ownServer.manual.login"), action: {
                             passDemoMode = false
                             loginViewState = .logginIn
-                        }, label: {
-                            HStack{
-                                Spacer()
-                                Text(LocalizedStringKey("str.login.ownServer.manual.login"))
-                                Spacer()
-                            }
                         })
-                        .buttonStyle(FilledButtonStyle())
-                        .frame(maxWidth: .infinity)
-                        .matchedGeometryEffect(id: "login", in: animation)
+                            .buttonStyle(FilledButtonStyle())
+                            .frame(maxWidth: .infinity)
+                            .matchedGeometryEffect(id: "login", in: animation)
                     }
                 }
             }
@@ -358,11 +358,11 @@ struct LoginStatusView: View {
                             Button(LocalizedStringKey("str.back"), action: {
                                 loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                             })
-                            .buttonStyle(BorderButtonStyle())
+                                .buttonStyle(BorderButtonStyle())
                             Button(LocalizedStringKey("str.retry"), action: {
                                 tryLogin()
                             })
-                            .buttonStyle(FilledButtonStyle())
+                                .buttonStyle(FilledButtonStyle())
                         }
                     }
                 }
@@ -375,7 +375,7 @@ struct LoginStatusView: View {
                         Button(LocalizedStringKey("str.back"), action: {
                             loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                         })
-                        .buttonStyle(BorderButtonStyle())
+                            .buttonStyle(BorderButtonStyle())
                         Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
                             if isDemoMode ?? false {
                                 grocyVM.setDemoModus()
@@ -383,7 +383,7 @@ struct LoginStatusView: View {
                                 grocyVM.setLoginModus()
                             }
                         })
-                        .buttonStyle(FilledButtonStyle())
+                            .buttonStyle(FilledButtonStyle())
                     }
                 }
             }
@@ -397,30 +397,28 @@ struct LoginView: View {
     @State private var loginViewState: LoginViewState = .start
     @State private var passDemoMode: Bool?
     
-    #if os(iOS)
+#if os(iOS)
     @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    #endif
+#endif
     
     var body: some View {
-        #if os(iOS)
         content
-        #elseif os(macOS)
-        content
-            .frame(minWidth: 500, minHeight: 500)
-        #endif
+#if os(macOS)
+            .frame(minWidth: 500, minHeight: 600)
+#endif
     }
     
     var content: some View {
         VStack{
             Spacer()
-            #if os(iOS)
+#if os(iOS)
             if horizontalSizeClass == .regular || verticalSizeClass == .regular {
                 Image("grocy-logo")
             }
-            #else
+#else
             Image("grocy-logo")
-            #endif
+#endif
             switch loginViewState {
             case .start:
                 LoginStartView(loginViewState: $loginViewState, animation: animation)
