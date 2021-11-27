@@ -9,30 +9,35 @@ import SwiftUI
 
 struct FilledButtonStyle: ButtonStyle {
     let cornerRadiusValue: CGFloat = 5.0
-    let paddingAmount: CGFloat = 9.0
-    
+    let paddingAmount: CGFloat = 12.0
+
     func makeBody(configuration: Configuration) -> some View {
-        configuration
-            .label
+        HStack {
+            Spacer()
+            configuration
+                .label
+            Spacer()
+        }
+            .foregroundColor(Color.white)
             .padding(paddingAmount)
             .background(Color.accentColor)
-            .foregroundColor(Color.white)
             .cornerRadius(cornerRadiusValue)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
     }
 }
 
+
 struct BorderButtonStyle: ButtonStyle {
     let cornerRadiusValue: CGFloat = 5.0
-    let paddingAmount: CGFloat = 9.0
+    let paddingAmount: CGFloat = 12.0
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration
-            .label
+        HStack {
+            Spacer()
+            configuration
+                .label
+            Spacer()
+        }
             .padding(paddingAmount)
-            .cornerRadius(cornerRadiusValue)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
+            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue, style: .continuous).stroke(Color.accentColor, lineWidth: 1))
     }
 }
