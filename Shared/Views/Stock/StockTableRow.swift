@@ -1,8 +1,8 @@
 //
-//  StockRowView.swift
-//  grocy-ios
+//  StockTableRow.swift
+//  Grocy-SwiftUI
 //
-//  Created by Georg Meissner on 29.10.20.
+//  Created by Georg Meissner on 28.12.20.
 //
 
 import SwiftUI
@@ -14,22 +14,18 @@ struct StockTableRow: View {
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @Environment(\.colorScheme) var colorScheme
-    
-    @Binding var showProduct: Bool
-    @Binding var showProductGroup: Bool
-    @Binding var showAmount: Bool
-    @Binding var showValue: Bool
-    @Binding var showNextBestBeforeDate: Bool
-    @Binding var showCaloriesPerStockQU: Bool
-    @Binding var showCalories: Bool
+#if os(iOS)
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+#endif
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-    #if os(iOS)
+#if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
-    #elseif os(macOS)
+#elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
-    #endif
+#endif
     @Binding var toastType: RowActionToastType?
     
     @State private var showDetailView: Bool = false
@@ -37,152 +33,127 @@ struct StockTableRow: View {
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
     }
-    
     private func getQUString(amount: Double) -> String {
         return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var backgroundColor: Color {
-        if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100) {
+        if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100) {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
-        if (stockElement.dueType == 1 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 1 ? (getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
         }
-        if (stockElement.dueType == 2 ? (getTimeDistanceFromString(stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if (stockElement.dueType == 2 ? (getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100 < 0) : false) {
             return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
         }
         if (stockElement.amount < stockElement.product.minStockAmount) {
             return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
         }
-        return Color.clear
+        return colorScheme == .light ? Color.white : Color.black
     }
     
     var body: some View {
-        StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
-        
-        if showProduct {
-            HStack{
-                Divider()
-                Spacer()
-                Text(stockElement.product.name)
-                    .onTapGesture {
-                        showDetailView.toggle()
-                        #if os(iOS)
-                        selectedStockElement = stockElement
-                        activeSheet = .productOverview
-                        #endif
-                    }
-                Spacer()
-            }
-            .background(backgroundColor)
-            .sheet(isPresented: $showDetailView, content: {
-                #if os(macOS)
-                ProductOverviewView(productDetails: ProductDetailsModel(product: stockElement.product))
-                #endif
+        NavigationLink(destination: {
+            StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
+        }, label: {
+            content
+            // The padding is to make space displaying the swipe action labels
+                .padding(.bottom)
+        })
+            .contextMenu(menuItems: {
+                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             })
-        }
-        
-        if showProductGroup {
-            HStack{
-                Divider()
-                Spacer()
-                if let productGroup = grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
-                    Text(productGroup.name)
-                } else {
-                    Text("")
-                }
-                Spacer()
-            }
-            .background(backgroundColor)
-        }
-        
-        if showAmount {
-            VStack(alignment: .center){
-                Spacer()
-                HStack(alignment: .bottom){
-                    Divider()
+            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA], toastType: $toastType)
+            })
+            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
+            })
+            .listRowBackground(backgroundColor)
+    }
+    
+    var content: some View {
+#if os(iOS)
+        Group {
+            if horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                HStack{
+                    VStack(alignment: .leading){
+                        stockElementNameAndActions
+                        stockElementDetails
+                    }
                     Spacer()
-                    Text("\(formatAmount(stockElement.amount)) \(getQUString(amount: stockElement.amount))")
-                    if stockElement.amountOpened > 0 {
-                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
+                }
+            } else {
+                HStack{
+                    stockElementNameAndActions
+                    stockElementDetails
+                    Spacer()
+                }
+            }
+        }
+#else
+        HStack{
+            stockElementNameAndActions
+            stockElementDetails
+            Spacer()
+        }
+#endif
+    }
+    
+    var stockElementNameAndActions: some View {
+        Text(stockElement.product.name)
+            .font(.headline)
+    }
+    
+    var stockElementDetails: some View {
+        VStack(alignment: .leading){
+            if let productGroup = grocyVM.mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
+                Text(productGroup.name)
+                    .font(.caption)
+            } else {Text("")}
+            
+            HStack{
+                Text("\(formatAmount(stockElement.amount)) \(getQUString(amount: stockElement.amount))")
+                if stockElement.amountOpened > 0 {
+                    Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
+                        .font(.caption)
+                        .italic()
+                }
+                if stockElement.amount != stockElement.amountAggregated {
+                    Text("Σ \(formatAmount(stockElement.amountAggregated)) \(getQUString(amount: stockElement.amountAggregated))")
+                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                    if stockElement.amountOpenedAggregated > 0 {
+                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
+                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                             .font(.caption)
                             .italic()
                     }
-                    if stockElement.amount != stockElement.amountAggregated {
-                        Text("Σ \(formatAmount(stockElement.amountAggregated)) \(getQUString(amount: stockElement.amountAggregated))")
-                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                        if stockElement.amountOpenedAggregated > 0 {
-                            Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
-                                .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                                .font(.caption)
-                                .italic()
-                        }
-                    }
-                    if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
-                        Image(systemName: MySymbols.shoppingList)
-                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
-                            .help(LocalizedStringKey("str.stock.info.onShoppingList"))
-                    }
-                    Spacer()
                 }
-                
-                Spacer()
+                if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                    Image(systemName: MySymbols.shoppingList)
+                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                        .help(LocalizedStringKey("str.stock.info.onShoppingList"))
+                }
             }
-            .background(backgroundColor)
-        }
-        
-        if showValue {
-            HStack{
-                Divider()
-                Spacer()
-                Text(stockElement.value == 0 ? "" : "\(formatAmount(stockElement.value)) \(grocyVM.getCurrencySymbol())")
-                Spacer()
-            }
-            .background(backgroundColor)
-        }
-        
-        if showNextBestBeforeDate {
-            VStack{
-                HStack(alignment: .center){
-                    Divider()
-                    Spacer()
-                    if let dueDate = getDateFromString(stockElement.bestBeforeDate) {
-                        Text(formatDateAsString(dueDate, showTime: false))
-                        Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey))
+            if let dueDate = stockElement.bestBeforeDate {
+                HStack {
+                    if dueDate == getNeverOverdueDate() {
+                        Text(LocalizedStringKey("str.stock.buy.product.doesntSpoil"))
+                    } else {
+                        Text(formatDateAsString(dueDate, showTime: false, localizationKey: localizationKey) ?? "")
+                        Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")
                             .font(.caption)
                             .italic()
                     }
-                    Spacer()
                 }
             }
-            .background(backgroundColor)
-        }
-        
-        if showCaloriesPerStockQU {
-            HStack{
-                Divider()
-                Spacer()
-                Text(stockElement.product.calories != 0.0 ? String(formatAmount(stockElement.product.calories ?? 0)) : "")
-                Spacer()
-            }
-            .background(backgroundColor)
-        }
-        
-        if showCalories {
-            HStack {
-                Divider()
-                Spacer()
-                Text(formatAmount(stockElement.product.calories ?? 0 * stockElement.amount))
-                Spacer()
-            }
-            .background(backgroundColor)
         }
     }
 }
 
 //struct StockTableRow_Previews: PreviewProvider {
 //    static var previews: some View {
-//        StockTableRow(expiringDays: 5, showProduct: Binding.constant(true), showProductGroup: Binding.constant(true), showAmount: Binding.constant(true), showValue: Binding.constant(true), showNextBestBeforeDate: Binding.constant(true), showCaloriesPerStockQU: Binding.constant(true), showCalories: Binding.constant(true), stockElement: StockElement(amount: "3", amountAggregated: "3", value: "25", bestBeforeDate: "2020-12-12", amountOpened: "1", amountOpenedAggregated: "1", isAggregatedAmount: "0", dueType: "1", productID: "3", product: MDProduct(id: "3", name: "Productname", mdProductDescription: "Description", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "1", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1233", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", userfields: nil)))
+//        StockTableRow(stockElement: StockElement(amount: "2", amountAggregated: "5", value: "1.0", bestBeforeDate: "12.12.2021", amountOpened: "1", amountOpenedAggregated: "2", isAggregatedAmount: "0", dueType: "1", productID: "1", product: MDProduct(id: "1", name: "Product", mdProductDescription: "", productGroupID: "1", active: "1", locationID: "1", shoppingLocationID: "1", quIDPurchase: "1", quIDStock: "1", quFactorPurchaseToStock: "1", minStockAmount: "0", defaultBestBeforeDays: "0", defaultBestBeforeDaysAfterOpen: "0", defaultBestBeforeDaysAfterFreezing: "0", defaultBestBeforeDaysAfterThawing: "0", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "0", parentProductID: nil, calories: "13", cumulateMinStockAmountOfSubProducts: "1", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", hideOnStockOverview: nil, userfields: nil)), selectedStockElement: Binding.constant(nil), activeSheet: Binding.constant(nil), toastType: Binding.constant(nil))
 //    }
 //}
