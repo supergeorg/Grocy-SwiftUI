@@ -17,10 +17,10 @@ private struct ShoppingListFilterItemView: View {
     var darkColor: Color
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 0.0) {
             Divider()
                 .hidden()
-                .frame(height: 10)
+                .frame(height: 10.0)
                 .background(normalColor)
             HStack {
                 if filteredStatus == ownFilteredStatus {
@@ -30,12 +30,13 @@ private struct ShoppingListFilterItemView: View {
                     .bold()
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
             }
-            .padding(.horizontal, 10)
-            .padding(.top, 10)
-            .padding(.bottom, 10)
+            .padding(.horizontal, 10.0)
+            .padding(.top, 10.0)
+            .padding(.bottom, 10.0)
             .background(colorScheme == .light ? lightColor : darkColor)
         }
         .fixedSize()
+        .cornerRadius(5.0)
         .onTapGesture {
             if filteredStatus != ownFilteredStatus {
                 filteredStatus = ownFilteredStatus
