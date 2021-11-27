@@ -5,10 +5,12 @@
 
 Now available on App Store and Mac App Store! - Jetzt im App Store und Mac App Store erhältlich!
 
-#English
-The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 2, Multiplatform App, Combine) and therefore needs the newest XCode (12.5) as well as at least iOS(14.1) or macOS (Big Sur 11.0) to compile and run. This means the oldest supported devices are iPhone SE (2016), iPad Air 2, MacBook Air/Pro after 2013, please refer to this pages: [iOS](https://support.apple.com/en-en/guide/iphone/iphe3fa5df43/ios) [macOS](https://support.apple.com/kb/sp833).
+#### English
+This app is a companion for [Grocy](https://grocy.info/). It doesn't run on it's own, so you have to have access to a running Grocy instance, preferably with the newest version.
 
-To connect to your own server, Grocy version 3.1.0 is required, for developing purposes a demo server is available.
+The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, macOS). Therefore is this app developed using the newest technologies available (SwiftUI 3, Multiplatform App, Combine) and therefore needs the newest XCode (13.1) as well as at least iOS(15.0) or macOS (Monterey 12.0) to compile and run. This means the oldest supported devices are iPhone SE (2016), iPad Air 2, MacBook Air/Pro 2015 or later, please refer to this pages: [iOS](https://support.apple.com/en-en/guide/iphone/iphe3fa5df43/ios), [macOS](https://support.apple.com/en-in/HT212551).
+
+To connect to your own server, Grocy version 3.1.3 is required, for developing purposes a demo server is available.
 
 What works or doesn't?
 - [x] Master Data: enter, edit or delete
@@ -28,10 +30,12 @@ What features are planned?
 - [ ] own icons (not everything is possible with SF Symbols)
 - [ ] additional comfort features
 
-#German
-Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 2, Zombie, Multiplatform App) und benötigt daher das aktuelle XCode (12.5) sowie mindestens iOS (14.1) oder macOS (Big Sur 11.0). Dies heißt, dass das älteste unterstützte Gerät dasiPhone SE (2016), iPad Air 2, und MacBook Air/Pro nach 2013 sind, für weiteres bitte hier nachschauen: [iOS](https://support.apple.com/de-de/guide/iphone/iphe3fa5df43/ios) [macOS](https://support.apple.com/kb/sp833?locale=de_DE).
+#### Deutsch
+Diese App ist eine Begleiter-App für [Grocy](https://grocy.info/). Sie ist nicht alleine lauffähig, daher musst du Zugriff auf eine laufende Grocy-Instanz haben, welche am besten die neueste Version benutzt.
 
-Weiterhin wird ein Server mit Grocy 3.1.0 benötigt, es ist jedoch auch Zugriff auf einen Demo-Server möglich.
+Das Ziel dieser App ist, ein natives Interface für Grocy auf Apple-Geräten (iOS, macOS) anzubieten. Dazu wird diese App mit den neuesten Technologien entwickelt (SwiftUI 3, Multiplatform App, Combine) und benötigt daher das aktuelle XCode (13.1) sowie mindestens iOS (15.0) oder macOS (Monterey 12.0). Dies heißt, dass das älteste unterstützte Gerät dasiPhone SE (2016), iPad Air 2, und MacBook Air/Pro 2015 oder neuer sind, für weiteres bitte hier nachschauen: [iOS](https://support.apple.com/de-de/guide/iphone/iphe3fa5df43/ios), [macOS](https://support.apple.com/de-de/HT212551).
+
+Es wird ein Server mit Grocy 3.1.3 benötigt, es ist jedoch auch Zugriff auf einen Demo-Server möglich.
 
 Was Funktioniert bzw. was funktioniert nicht?
 - [x] Stammdaten eingeben, bearbeiten und löschen
