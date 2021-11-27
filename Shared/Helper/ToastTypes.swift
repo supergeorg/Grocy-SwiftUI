@@ -39,6 +39,14 @@ enum RowActionToastType: Identifiable {
     }
 }
 
+enum StockEntryToastType: Identifiable {
+    case successConsumeEntry, successOpenEntry, fail
+    
+    var id: Int {
+        self.hashValue
+    }
+}
+
 enum ShoppingListToastType: Identifiable {
     case shLActionFail
     
