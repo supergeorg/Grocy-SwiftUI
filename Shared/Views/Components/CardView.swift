@@ -18,7 +18,7 @@ struct CardView<Content>: View where Content: View {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(colorScheme == .light ? Color.white : Color.black)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    .shadow(color: colorScheme == .light ? .black : .gray, radius: 2, x: 0, y: 0)
             )
     }
 }
