@@ -46,23 +46,17 @@ struct LogView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        List {
-            content
-                .padding()
-                .frame(width: 500, height: 500)
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(LocalizedStringKey("str.settings.log"))
+#if os(iOS)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                        Button(action: {
-                            shareFile()
-                        }, label: { Image(systemName: MySymbols.share) })
+                    Button(action: {
+                        shareFile()
+                    }, label: { Image(systemName: MySymbols.share) })
                 })
             })
-        #endif
+#endif
     }
     
     var content: some View {
@@ -99,12 +93,12 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        #if os(iOS)
+#if os(iOS)
         NavigationView{
             LogView()
         }
-        #else
+#else
         LogView()
-        #endif
+#endif
     }
 }
