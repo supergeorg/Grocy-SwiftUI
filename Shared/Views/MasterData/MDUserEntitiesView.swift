@@ -13,10 +13,9 @@ struct MDUserEntityRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(userEntity.caption)
-                .font(.largeTitle)
+                .font(.title)
             Text(userEntity.name)
         }
-        .padding(10)
         .multilineTextAlignment(.leading)
     }
 }
@@ -24,15 +23,12 @@ struct MDUserEntityRowView: View {
 struct MDUserEntitiesView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
-    @State private var isSearching: Bool = false
     @State private var searchString: String = ""
     @State private var showAddUserEntity: Bool = false
     
     @State private var shownEditPopover: MDUserEntity? = nil
-    
-    @State private var reloadRotationDeg: Double = 0
     
     @State private var userEntityToDelete: MDUserEntity? = nil
     @State private var showDeleteAlert: Bool = false
@@ -52,21 +48,18 @@ struct MDUserEntitiesView: View {
             }
     }
     
-    private func delete(at offsets: IndexSet) {
-        for offset in offsets {
-            userEntityToDelete = filteredUserEntities[offset]
-            showDeleteAlert.toggle()
-        }
+    private func deleteItem(itemToDelete: MDUserEntity) {
+        userEntityToDelete = itemToDelete
+        showDeleteAlert.toggle()
     }
-    
     private func deleteUserEntity(toDelID: Int) {
         grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog(message: "Deleting user entity was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog(message: "Deleting user entity failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })
@@ -74,132 +67,108 @@ struct MDUserEntitiesView: View {
     
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
+#if os(macOS)
+            NavigationView{
+                bodyContent
+                    .frame(minWidth: Constants.macOSNavWidth)
+            }
+#else
             bodyContent
+#endif
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.md.userEntities"))
         }
     }
     
-    #if os(macOS)
-    var bodyContent: some View {
-        NavigationView{
-            content
-                .toolbar(content: {
-                    ToolbarItem(placement: .primaryAction, content: {
-                        HStack{
-                            Button(action: {
-                                withAnimation {
-                                    self.reloadRotationDeg += 360
-                                }
-                                updateData()
-                            }, label: {
-                                Image(systemName: MySymbols.reload)
-                                    .rotationEffect(Angle.degrees(reloadRotationDeg))
-                            })
-                            Button(action: {
-                                showAddUserEntity.toggle()
-                            }, label: {Image(systemName: MySymbols.new)})
-                        }
-                    })
-                    ToolbarItem(placement: .automatic, content: {
-                        ToolbarSearchField(searchTerm: $searchString)
-                    })
-                })
-                .frame(minWidth: Constants.macOSNavWidth)
-        }
-        .navigationTitle(LocalizedStringKey("str.md.userEntities"))
-    }
-    #elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack{
-                        Button(action: {
-                            isSearching.toggle()
-                        }, label: {Image(systemName: MySymbols.search)})
-                        Button(action: {
-                            updateData()
-                        }, label: {
-                            Image(systemName: MySymbols.reload)
-                        })
-                        Button(action: {
-                            showAddUserEntity.toggle()
-                        }, label: {Image(systemName: MySymbols.new)})
-                    }
+                ToolbarItemGroup(placement: .primaryAction) {
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+#endif
+                    Button(action: {
+                        showAddUserEntity.toggle()
+                    }, label: {Image(systemName: MySymbols.new)})
                 }
             }
             .navigationTitle(LocalizedStringKey("str.md.userEntities"))
+#if os(iOS)
             .sheet(isPresented: self.$showAddUserEntity, content: {
-                    NavigationView {
-                        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType)
-                    } })
+                NavigationView {
+                    MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType)
+                } })
+#endif
     }
-    #endif
     
     var content: some View {
-        List(){
-            #if os(iOS)
-            if isSearching { SearchBar(text: $searchString, placeholder: "str.md.search") }
-            #endif
+        List{
             if grocyVM.mdUserEntities.isEmpty {
                 Text(LocalizedStringKey("str.md.userEntities.empty"))
             } else if filteredUserEntities.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
-            #if os(macOS)
+#if os(macOS)
             if showAddUserEntity {
                 NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType), isActive: $showAddUserEntity, label: {
                     NewMDRowLabel(title: "str.md.userEntity.new")
                 })
             }
-            #endif
+#endif
             ForEach(filteredUserEntities, id:\.id) { userEntity in
                 NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false), toastType: $toastType)) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive,
+                           action: { deleteItem(itemToDelete: userEntity) },
+                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                    )
+                })
             }
-            .onDelete(perform: delete)
         }
         .onAppear(perform: {
             grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
         })
-        .animation(.default)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), content: { item in
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .refreshable { updateData() }
+        .animation(.default, value: filteredUserEntities.count)
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
             switch item {
             case .successAdd:
-                Label(LocalizedStringKey("str.md.new.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.new.success")
             case .failAdd:
-                Label(LocalizedStringKey("str.md.new.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.new.fail")
             case .successEdit:
-                Label(LocalizedStringKey("str.md.edit.success"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.md.edit.success")
             case .failEdit:
-                Label(LocalizedStringKey("str.md.edit.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
-                Label(LocalizedStringKey("str.md.delete.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.md.delete.fail")
             }
         })
-        .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text(LocalizedStringKey("str.md.userEntity.delete.confirm")), message: Text(userEntityToDelete?.name ?? "error"), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
+        .alert(LocalizedStringKey("str.md.userEntity.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = userEntityToDelete?.id {
                     deleteUserEntity(toDelID: toDelID)
                 }
-            }, secondaryButton: .cancel())
-        }
+            }
+        }, message: { Text(userEntityToDelete?.name ?? "Name not found") })
     }
 }
 
 struct MDUserEntitiesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            #if os(macOS)
+#if os(macOS)
             MDUserEntitiesView()
-            #else
+#else
             NavigationView() {
                 MDUserEntitiesView()
             }
-            #endif
+#endif
         }
     }
 }

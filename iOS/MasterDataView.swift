@@ -11,7 +11,7 @@ struct MasterDataView: View {
     @AppStorage("devMode") private var devMode: Bool = false
     
     var body: some View {
-        List(){
+        List {
             NavigationLink(destination: MDProductsView()) {
                 Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
@@ -40,20 +40,20 @@ struct MasterDataView: View {
                 NavigationLink(destination: MDBatteriesView()) {
                     Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
                 }
-            }
-            NavigationLink(destination: MDTaskCategoriesView()) {
-                Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
-            }
-            
-            NavigationLink(destination: MDUserFieldsView()) {
-                Label(LocalizedStringKey("str.md.userFields"), systemImage: "bookmark.fill")
-            }
-            
-            NavigationLink(destination: MDUserEntitiesView()) {
-                Label(LocalizedStringKey("str.md.userEntities"), systemImage: "bookmark")
+                
+                NavigationLink(destination: MDTaskCategoriesView()) {
+                    Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+                }
+                
+                NavigationLink(destination: MDUserFieldsView()) {
+                    Label(LocalizedStringKey("str.md.userFields"), systemImage: "bookmark.fill")
+                }
+                
+                NavigationLink(destination: MDUserEntitiesView()) {
+                    Label(LocalizedStringKey("str.md.userEntities"), systemImage: "bookmark")
+                }
             }
         }
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.md.masterData"))
     }
 }

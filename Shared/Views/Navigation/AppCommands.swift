@@ -12,13 +12,13 @@ struct AppCommands: Commands {
         CommandMenu(LocalizedStringKey("str.nav.stockOverview")) {
             Button(action: {}, label: {
                 Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: MySymbols.stockOverview)
-                    .labelStyle(TextIconLabelStyle())
+                    .labelStyle(.titleAndIcon)
             })
             .keyboardShortcut("o")
             
             Button(action: {}, label: {
                 Label(LocalizedStringKey("str.stock.journal"), systemImage: MySymbols.stockJournal)
-                    .labelStyle(TextIconLabelStyle())
+                    .labelStyle(.titleAndIcon)
             })
             .keyboardShortcut("j")
         }

@@ -10,16 +10,21 @@ import SwiftUI
 struct TransferProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @AppStorage("localizationKey") var localizationKey: String = "en"
+    
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
-    
-    var productToTransferID: Int?
+
+    var stockElement: Binding<StockElement?>? = nil
+    var productToTransferID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
     @State private var locationIDFrom: Int?
-    @State private var amount: Double?
+    @State private var amount: Double = 1.0
     @State private var quantityUnitID: Int?
     @State private var locationIDTo: Int?
     @State private var useSpecificStockEntry: Bool = false
@@ -37,7 +42,7 @@ struct TransferProductView: View {
     }
     @State private var infoString: String?
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units]
+    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
     
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
@@ -46,19 +51,36 @@ struct TransferProductView: View {
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == productID})
     }
-    private var currentQuantityUnitName: String? {
-        let quIDP = product?.quIDPurchase
-        let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
-        return amount == 1 ? qu?.name : qu?.namePlural
+    private var currentQuantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID })
+    }
+    private var stockQuantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+    }
+    private func getQUString(stockQU: Bool) -> String {
+        if stockQU {
+            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
+        } else {
+            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
+        }
     }
     private var productName: String {
         product?.name ?? ""
     }
     
+    private var quantityUnitConversions: [MDQuantityUnitConversion] {
+        if let quIDStock = product?.quIDStock {
+            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+        } else { return [] }
+    }
+    private var factoredAmount: Double {
+        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
+    }
+    
     private let priceFormatter = NumberFormatter()
     
     var isFormValid: Bool {
-        (productID != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationIDFrom != nil) && (locationIDTo != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
+        (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationIDFrom != nil) && (locationIDTo != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(locationIDFrom == locationIDTo)
     }
     
     private func resetForm() {
@@ -73,9 +95,9 @@ struct TransferProductView: View {
     }
     
     private func transferProduct() {
-        if let productID = productID, let amount = amount, let locationIDFrom = locationIDFrom, let locationIDTo = locationIDTo {
-            let transferInfo = ProductTransfer(amount: amount, locationIDFrom: locationIDFrom, locationIDTo: locationIDTo, stockEntryID: stockEntryID)
-            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+        if let productID = productID, let locationIDFrom = locationIDFrom, let locationIDTo = locationIDTo {
+            let transferInfo = ProductTransfer(amount: factoredAmount, locationIDFrom: locationIDFrom, locationIDTo: locationIDTo, stockEntryID: stockEntryID)
+            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
                 switch result {
@@ -105,7 +127,7 @@ struct TransferProductView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("str.cancel") {
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                 }
             })
@@ -116,7 +138,7 @@ struct TransferProductView: View {
         Form {
             if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
-                    ServerOfflineView(isCompact: true)
+                    ServerProblemView(isCompact: true)
                 }
             }
             
@@ -135,16 +157,17 @@ struct TransferProductView: View {
                     Text(locationFrom.name).tag(locationFrom.id as Int?)
                 }
             })
-            
-            Section(header: Text(LocalizedStringKey("str.stock.transfer.product.amount")).font(.headline)) {
-                MyDoubleStepperOptional(amount: $amount, description: "str.stock.transfer.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.transfer.product.amount.invalid", systemImage: MySymbols.amount)
-                Picker(selection: $quantityUnitID, label: Label("str.stock.transfer.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-                    }
-                }).disabled(true)
-            }
+  
+            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+//            Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
+//                MyDoubleStepperOptional(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
+//                Picker(selection: $quantityUnitID, label: Label("str.stock.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
+//                    Text("").tag(nil as Int?)
+//                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
+//                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
+//                    }
+//                }).disabled(true)
+//            }
             
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
@@ -166,7 +189,7 @@ struct TransferProductView: View {
                 Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                        Text(stockProduct.stockEntryOpen == 1 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate ?? "") ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate ?? "") ?? "purchasedate error")"))
+                        Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                             .tag(stockProduct.stockID as String?)
                     }
                 })
@@ -179,12 +202,12 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), text: { item in
             switch item {
             case .successTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
             case .failTransfer:
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
             }
         })
         .toolbar(content: {
@@ -204,14 +227,13 @@ struct TransferProductView: View {
                         resetForm()
                     }, label: {
                         Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
                     })
                         .disabled(!isFormValid || isProcessingAction)
                         .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
 }

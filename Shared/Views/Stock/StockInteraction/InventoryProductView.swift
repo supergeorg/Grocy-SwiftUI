@@ -10,15 +10,18 @@ import SwiftUI
 struct InventoryProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var productToInventoryID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var productToInventoryID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
-    @State private var amount: Double?
+    @State private var amount: Double = 1.0
     @State private var quantityUnitID: Int?
     @State private var dueDate: Date = Date()
     @State private var productNeverOverdue: Bool = false
@@ -38,7 +41,7 @@ struct InventoryProductView: View {
     }
     @State private var infoString: String?
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units]
+    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config]
     
     private func updateData() {
@@ -49,20 +52,35 @@ struct InventoryProductView: View {
         grocyVM.mdProducts.first(where: {$0.id == productID})
     }
     private var currentQuantityUnit: MDQuantityUnit? {
-        let quIDP = product?.quIDPurchase
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
+        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
-    private func getQUString(amount: Double) -> String {
-        return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? ""
+    private var stockQuantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+    }
+    private func getQUString(stockQU: Bool) -> String {
+        if stockQU {
+            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
+        } else {
+            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
+        }
     }
     private var productName: String {
         product?.name ?? ""
     }
     
+    private var quantityUnitConversions: [MDQuantityUnitConversion] {
+        if let quIDStock = product?.quIDStock {
+            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+        } else { return [] }
+    }
+    private var factoredAmount: Double {
+        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
+    }
+    
     private let priceFormatter = NumberFormatter()
     
     private var isFormValid: Bool {
-        (productID != nil) && (amount ?? 0 > 0) && (quantityUnitID != nil) && (locationID != nil)
+        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (locationID != nil)
     }
     
     private var selectedProductStock: StockElement? {
@@ -71,13 +89,13 @@ struct InventoryProductView: View {
     
     private var stockAmountDifference: Double {
         if let stockAmount = selectedProductStock?.amount {
-            return amount ?? 0 - stockAmount
+            return factoredAmount - stockAmount
         } else { return 0 }
     }
     
     private func resetForm() {
         productID = firstAppear ? productToInventoryID : nil
-        amount = selectedProductStock?.amount
+        amount = selectedProductStock?.amount ?? 1.0
         quantityUnitID = firstAppear ? product?.quIDStock : nil
         dueDate = Date()
         productNeverOverdue = false
@@ -91,24 +109,22 @@ struct InventoryProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        if let amount = amount {
-            if let productID = productID {
-                let inventoryInfo = ProductInventory(newAmount: amount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price)
-                infoString = "\(formatAmount(amount)) \(getQUString(amount: amount)) \(productName)"
-                isProcessingAction = true
-                grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
-                    switch result {
-                    case let .success(prod):
-                        grocyVM.postLog(message: "Inventory successful. \(prod)", type: .info)
-                        toastType = .successInventory
-                        grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
-                        resetForm()
-                    case let .failure(error):
-                        grocyVM.postLog(message: "Inventory failed: \(error)", type: .error)
-                        toastType = .failInventory
-                    }
-                    isProcessingAction = false
+        if let productID = productID {
+            let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price)
+            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
+            isProcessingAction = true
+            grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
+                switch result {
+                case let .success(prod):
+                    grocyVM.postLog(message: "Inventory successful. \(prod)", type: .info)
+                    toastType = .successInventory
+                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                    resetForm()
+                case let .failure(error):
+                    grocyVM.postLog(message: "Inventory failed: \(error)", type: .error)
+                    toastType = .failInventory
                 }
+                isProcessingAction = false
             }
         }
     }
@@ -125,7 +141,7 @@ struct InventoryProductView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(LocalizedStringKey("str.cancel")) {
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                 }
             })
@@ -134,9 +150,9 @@ struct InventoryProductView: View {
     
     var content: some View {
         Form {
-            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 && grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
+            if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 || grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count > 0 {
                 Section{
-                    ServerOfflineView(isCompact: true)
+                    ServerProblemView(isCompact: true)
                 }
             }
             
@@ -156,17 +172,10 @@ struct InventoryProductView: View {
                     }
                 }
             
-            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.amount")).font(.headline)) {
-                MyDoubleStepperOptional(amount: $amount, description: "str.stock.inventory.product.amount", amountName: getQUString(amount: amount ?? 0), errorMessage: "str.stock.inventory.product.amount.required", systemImage: MySymbols.amount)
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.inventory.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-                    }
-                }).disabled(true)
-                if stockAmountDifference != 0 {
-                    Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(formatAmount(stockAmountDifference)) \(getQUString(amount: stockAmountDifference))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\(-stockAmountDifference) \(getQUString(amount: -stockAmountDifference))")"))
-                }
+            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+            
+            if stockAmountDifference != 0 {
+                Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(formatAmount(stockAmountDifference)) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
@@ -204,12 +213,12 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), text: { item in
             switch item {
             case .successInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")")
             case .failInventory:
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.inventory.product.inventory.fail")
             }
         })
         .toolbar(content: {
@@ -229,14 +238,13 @@ struct InventoryProductView: View {
                         resetForm()
                     }, label: {
                         Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
                     })
                         .disabled(!isFormValid || isProcessingAction)
                         .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.stock.inventory"))
     }
 }

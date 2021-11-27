@@ -17,12 +17,6 @@ struct ShoppingListRowActionsView: View {
     
     @Binding var toastType: ShoppingListToastType?
     
-    #if os(macOS)
-    let ismacOS = true
-    #else
-    let ismacOS = false
-    #endif
-    
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID})
     }
@@ -72,44 +66,45 @@ struct ShoppingListRowActionsView: View {
                 .onTapGesture {
                     showEdit.toggle()
                 }
-                .modifier(if: ismacOS, then: {$0.popover(isPresented: $showEdit, content: {
+#if os(macOS)
+                .popover(isPresented: $showEdit, content: {
                     ScrollView{
                         ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
                             .frame(width: 500, height: 400)
                     }
-                })}, else: {$0.sheet(isPresented: $showEdit, content: {
+                })
+#else
+                .sheet(isPresented: $showEdit, content: {
                     ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
-                })})
+                })
+#endif
             RowInteractionButton(image: "trash.fill", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.shL.entry.delete"))
                 .onTapGesture {
                     deleteSHItem()
                 }
-            #if os(macOS)
+            
             RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }
+#if os(macOS)
                 .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                         .padding()
                 })
-            #elseif os(iOS)
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
-                .onTapGesture {
-                    showPurchase.toggle()
-                }
+#elseif os(iOS)
                 .sheet(isPresented: $showPurchase, content: {
-                        NavigationView{
-                            PurchaseProductView(productToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
-                        }
+                    NavigationView{
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                    }
                 })
-            #endif
+#endif
         }
     }
 }
 
-//struct ShoppingListRowActionsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: "1", productID: "1", note: "note", amount: "1", rowCreatedTimestamp: "", shoppingListID: "", done: "0", quID: "", userfields: nil), toastType: Binding.constant(nil))
-//    }
-//}
+struct ShoppingListRowActionsView_Previews: PreviewProvider {
+    static var previews: some View {
+        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 1, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: ""), toastType: Binding.constant(nil))
+    }
+}

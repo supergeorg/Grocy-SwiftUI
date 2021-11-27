@@ -78,7 +78,7 @@ struct QuickScanModeView: View {
         if grocyVM.failedToLoadObjects.count == 0 && grocyVM.failedToLoadAdditionalObjects.count == 0 {
             bodyContent
         } else {
-            ServerOfflineView()
+            ServerProblemView()
                 .navigationTitle(LocalizedStringKey("str.nav.quickScan"))
         }
     }
@@ -87,13 +87,13 @@ struct QuickScanModeView: View {
         HStack{
             Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
                 Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.consume)
                 Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.markAsOpened)
                 Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
-                    .labelStyle(IconAboveTextLabelStyle())
+                    .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.purchase)
             })
             .pickerStyle(SegmentedPickerStyle())
@@ -128,18 +128,18 @@ struct QuickScanModeView: View {
                     QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
                 }
             }
-            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), content: { item in
+            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), text: { item in
                 switch item {
                 case .successQSAddProduct:
-                    Label("str.quickScan.add.product.add.success", systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.quickScan.add.product.add.success")
                 case .successQSConsume:
-                    Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
                 case .successQSOpen:
-                    Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
                 case .successQSPurchase:
-                    Label(LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                    return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
                 case .invalidBarcode:
-                    Label(LocalizedStringKey("str.quickScan.barcode.invalid"), systemImage: "barcode")
+                    return LocalizedStringKey("str.quickScan.barcode.invalid")
                 }
             })
             .onAppear(perform: {

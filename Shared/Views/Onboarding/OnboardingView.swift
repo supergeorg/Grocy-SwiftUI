@@ -18,16 +18,16 @@ struct OnboardingCard: Identifiable {
 struct OnboardingDevicesView: View {
     var body: some View {
         HStack{
-            #if os(macOS)
+#if os(macOS)
             Image(systemName: "desktopcomputer")
             Image(systemName: "laptopcomputer")
             Image(systemName: "macmini")
-            #elseif os(iOS)
+#elseif os(iOS)
             Image(systemName: "iphone.homebutton")
             Image(systemName: "iphone")
             Image(systemName: "ipad")
             Image(systemName: "ipad.homebutton")
-            #endif
+#endif
         }
     }
 }
@@ -63,25 +63,26 @@ struct OnboardingView: View {
     ]
     var body: some View {
         VStack{
-            #if os(iOS)
+#if os(iOS)
             TabView{
                 ForEach(onboardingCards, id:\.id) {card in
                     OnboardingCardView(card: card)
                 }
             }
             .tabViewStyle(PageTabViewStyle())
-            #else
+#else
             HStack{
                 ForEach(onboardingCards, id:\.id) {card in
                     OnboardingCardView(card: card)
                 }
             }
-            #endif
+#endif
             Button(action: {
                 onboardingNeeded = false
             }, label: {
-                #if os(iOS)
+                
                 Text(LocalizedStringKey("str.onboard.start"))
+#if os(iOS)
                     .padding(20)
                     .background(
                         ZStack {
@@ -90,12 +91,9 @@ struct OnboardingView: View {
                         }
                     )
                     .foregroundColor(.primary)
-                    .animation(.spring())
-                #else
-                Text(LocalizedStringKey("str.onboard.start"))
-                #endif
+#endif                
             })
-            .padding()
+                .padding()
         }
     }
 }

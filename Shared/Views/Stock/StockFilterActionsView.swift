@@ -47,11 +47,11 @@ private struct StockFilterItemView: View {
                 .foregroundColor(colorScheme == .light ? darkColor : lightColor)
 #endif
         }
-        .padding(.horizontal, 10)
-        .padding(.top, 15)
-        .padding(.bottom, 10)
+        .padding(.horizontal, 10.0)
+        .padding(.top, 15.0)
+        .padding(.bottom, 10.0)
         .background(colorScheme == .light ? lightColor : darkColor)
-        .overlay(Rectangle().frame(width: nil, height: 10, alignment: .top).foregroundColor(normalColor), alignment: .top)
+        .overlay(Rectangle().frame(width: nil, height: 10.0, alignment: .top).foregroundColor(normalColor), alignment: .top)
         .onTapGesture {
             if filteredStatus != ownFilteredStatus {
                 filteredStatus = ownFilteredStatus
@@ -59,6 +59,7 @@ private struct StockFilterItemView: View {
                 filteredStatus = ProductStatus.all
             }
         }
+        .cornerRadius(5.0)
         .animation(.default, value: filteredStatus)
     }
 }

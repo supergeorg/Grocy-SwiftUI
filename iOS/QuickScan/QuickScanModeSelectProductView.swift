@@ -9,7 +9,8 @@ import SwiftUI
 
 struct QuickScanModeSelectProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    @Environment(\.presentationMode) var presentationMode
+    
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstOpen: Bool = true
     
@@ -29,7 +30,7 @@ struct QuickScanModeSelectProductView: View {
     }
     
     private func finishForm() {
-        self.presentationMode.wrappedValue.dismiss()
+        self.dismiss()
     }
     
     private func addBarcodeForProduct() {
@@ -39,13 +40,13 @@ struct QuickScanModeSelectProductView: View {
                 grocyVM.postMDObject(object: .product_barcodes, content: newBarcode, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog(message: "Add barcode successful. \(message)", type: .info)
                         toastTypeSuccess = .successQSAddProduct
                         resetForm()
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog(message: "Add barcode failed. \(error)", type: .error)
                         toastTypeFail = .failQSAddProduct
                     }
                 })
@@ -57,40 +58,40 @@ struct QuickScanModeSelectProductView: View {
         NavigationView{
             Form {
                 Section(){
-                    Text(barcode ?? "barcode").font(.title)
+                    Text(barcode ?? "Barcode error").font(.title)
                 }
                 ProductField(productID: $productID, description: "str.quickScan.add.product")
             }
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
                     Button(LocalizedStringKey("str.cancel")) {
-                        self.presentationMode.wrappedValue.dismiss()
+                        finishForm()
                     }
                     .keyboardShortcut(.cancelAction)
                 })
                 ToolbarItem(placement: .automatic, content: {
                     Button(action: addBarcodeForProduct, label: {
                         Label(LocalizedStringKey("str.quickScan.add.product.add"), systemImage: "plus")
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
                     })
-                    .disabled(productID == nil)
-                    .keyboardShortcut(.defaultAction)
+                        .disabled(productID == nil)
+                        .keyboardShortcut(.defaultAction)
                 })
             })
         }
-        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), content: { item in
+        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), text: { item in
             switch item {
             case .failQSAddProduct:
-                Label("str.quickScan.add.product.add.fail", systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.quickScan.add.product.add.fail")
             default:
-                EmptyView()
+                return LocalizedStringKey("")
             }
         })
     }
 }
 
-//struct QuickScanModeSelectProductView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        QuickScanModeSelectProductView(barcode: Binding.constant("12345"), toastType: Binding.constant(.successQSAddProduct))
-//    }
-//}
+struct QuickScanModeSelectProductView_Previews: PreviewProvider {
+    static var previews: some View {
+        QuickScanModeSelectProductView(barcode: "12345", toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct))
+    }
+}

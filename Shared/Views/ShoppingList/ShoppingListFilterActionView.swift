@@ -60,8 +60,8 @@ struct ShoppingListFilterActionView: View {
     }
 }
 
-//struct ShoppingListFilterActionView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ShoppingListFilterActionView()
-//    }
-//}
+struct ShoppingListFilterActionView_Previews: PreviewProvider {
+    static var previews: some View {
+        ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1)
+    }
+}

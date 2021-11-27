@@ -10,7 +10,7 @@ import SwiftUI
 struct MDShoppingLocationFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -24,7 +24,7 @@ struct MDShoppingLocationFormView: View {
     @Binding var showAddShoppingLocation: Bool
     @Binding var toastType: MDToastType?
     
-    @State var isNameCorrect: Bool = true
+    @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundShoppingLocation = grocyVM.mdShoppingLocations.first(where: {$0.name == name})
         return isNewShoppingLocation ? !(name.isEmpty || foundShoppingLocation != nil) : !(name.isEmpty || (foundShoppingLocation != nil && foundShoppingLocation!.id != shoppingLocation!.id))
@@ -36,24 +36,25 @@ struct MDShoppingLocationFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() {
-        grocyVM.requestData(objects: [.shopping_locations])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewShoppingLocation {
             showAddShoppingLocation = false
         }
-        #endif
+#endif
     }
     
     private func saveShoppingLocation() {
         let id = isNewShoppingLocation ? grocyVM.findNextID(.shopping_locations) : shoppingLocation!.id
         let timeStamp = isNewShoppingLocation ? Date().iso8601withFractionalSeconds : shoppingLocation!.rowCreatedTimestamp
-        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp)//, userfields: nil)
+        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewShoppingLocation {
             grocyVM.postMDObject(object: .shopping_locations, content: shoppingLocationPOST, completion: { result in
@@ -88,20 +89,12 @@ struct MDShoppingLocationFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView {
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewShoppingLocation {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            finishForm()
-                        }
+                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -110,26 +103,19 @@ struct MDShoppingLocationFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewShoppingLocation{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.shoppingLocation.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
+                MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
-                MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+                MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewShoppingLocation{
@@ -146,12 +132,11 @@ struct MDShoppingLocationFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.shopping_locations], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
@@ -159,22 +144,22 @@ struct MDShoppingLocationFormView: View {
     }
 }
 
-//struct MDShoppingLocationFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        #if os(macOS)
-//        Group {
-//            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-//            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
-//        }
-//        #else
-//        Group {
-//            NavigationView {
-//                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-//            }
-//            NavigationView {
-//                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: "0", name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: "", userfields: nil), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
-//            }
-//        }
-//        #endif
-//    }
-//}
+struct MDShoppingLocationFormView_Previews: PreviewProvider {
+    static var previews: some View {
+#if os(macOS)
+        Group {
+            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: 0, name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: ""), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+        }
+#else
+        Group {
+            NavigationView {
+                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+            }
+            NavigationView {
+                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: 0, name: "Shoppinglocation", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: ""), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+            }
+        }
+#endif
+    }
+}

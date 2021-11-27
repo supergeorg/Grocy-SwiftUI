@@ -8,9 +8,15 @@
 import Foundation
 import Combine
 
-public enum APIError: Error {
+public enum APIError: Error, Equatable {
+    var value: String? {
+        return String(describing: self).components(separatedBy: "(").first
+    }
+    public static func == (lhs: APIError, rhs: APIError) -> Bool {
+       lhs.value == rhs.value
+    }
     case internalError
-    case serverError(error: String)
+    case serverError(error: Error)
     case encodingError
     case invalidResponse
     case unsuccessful(error: Error)
@@ -72,7 +78,8 @@ protocol GrocyAPI {
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
-    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
+    func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError>
     //    func getStockProductLocations(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockLocations, APIError>
     //    func getStockProductEntries(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockEntries, APIError>
     //    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
@@ -163,7 +170,7 @@ public class GrocyApi: GrocyAPI {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
-                APIError.serverError(error: "\(error)") }
+                APIError.serverError(error: error) }
             .flatMap({ result -> Just<Int> in
                 guard let urlResponse = result.response as? HTTPURLResponse else {
                     return Just(0)
@@ -202,7 +209,7 @@ public class GrocyApi: GrocyAPI {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
-                APIError.serverError(error: "\(error)") }
+                APIError.serverError(error: error) }
             .flatMap({ result -> AnyPublisher<T, APIError> in
                 if let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) {
                     return Just(result.data)
@@ -291,6 +298,7 @@ extension GrocyApi {
         //        Stock
         case stock = "/stock"
         case stockEntryWithID = "/stock/entry/{entryId}"
+        case stockEntryWithIDPrintlabel = "/stock/entry/{entryId}/printlabel"
         case stockVolatile = "/stock/volatile"
         case stockProductWithId = "/stock/products/{productId}"
         case stockProductWithIdLocations = "/stock/products/{productId}/locations"
@@ -400,7 +408,7 @@ extension GrocyApi {
         return call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
     }
     
-    func getStockProductDetails<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
         switch stockModeGet {
         case .details:
             return call(.stockProductWithId, method: .GET, id: id)
@@ -411,6 +419,10 @@ extension GrocyApi {
         case .priceHistory:
             return call(.stockProductWithIdPriceHistory, method: .GET, id: id)
         }
+    }
+    
+    func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError> {
+        return call(.stockEntryWithID, method: .PUT, id: entryID, content: content)
     }
     
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError> {

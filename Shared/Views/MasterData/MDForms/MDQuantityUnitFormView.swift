@@ -10,7 +10,7 @@ import SwiftUI
 struct MDQuantityUnitFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -25,7 +25,7 @@ struct MDQuantityUnitFormView: View {
     @Binding var showAddQuantityUnit: Bool
     @Binding var toastType: MDToastType?
     
-    @State var isNameCorrect: Bool = false
+    @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundQuantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.name == name})
         return isNewQuantityUnit ? !(name.isEmpty || foundQuantityUnit != nil) : !(name.isEmpty || (foundQuantityUnit != nil && foundQuantityUnit!.id != quantityUnit!.id))
@@ -38,18 +38,19 @@ struct MDQuantityUnitFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.quantity_units]
     private func updateData() {
-        grocyVM.requestData(objects: [.quantity_units])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewQuantityUnit {
             showAddQuantityUnit = false
         }
-        #endif
+#endif
     }
     
     private func saveQuantityUnit() {
@@ -90,12 +91,6 @@ struct MDQuantityUnitFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView {
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
             .toolbar(content: {
@@ -112,27 +107,20 @@ struct MDQuantityUnitFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewQuantityUnit{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
+                MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
-                MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag", isEditing: true)
-                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+                MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
+                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewQuantityUnit{
@@ -149,12 +137,11 @@ struct MDQuantityUnitFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.shopping_list], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
@@ -162,22 +149,22 @@ struct MDQuantityUnitFormView: View {
     }
 }
 
-//struct MDQuantityUnitFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        #if os(macOS)
-//        Group {
-//            MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
-//            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
-//        }
-//        #else
-//        Group {
-//            NavigationView {
-//                MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
-//            }
-//            NavigationView {
-//                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: "0", name: "Quantity unit", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: "", namePlural: "QU Plural", pluralForms: nil, userfields: nil), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
-//            }
-//        }
-//        #endif
-//    }
-//}
+struct MDQuantityUnitFormView_Previews: PreviewProvider {
+    static var previews: some View {
+#if os(macOS)
+        Group {
+            MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
+            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+        }
+#else
+        Group {
+            NavigationView {
+                MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
+            }
+            NavigationView {
+                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+            }
+        }
+#endif
+    }
+}

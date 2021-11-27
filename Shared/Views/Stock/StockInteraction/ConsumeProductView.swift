@@ -10,8 +10,9 @@ import SwiftUI
 struct ConsumeProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("devMode") private var devMode: Bool = false
     
     @State private var firstAppear: Bool = true
@@ -22,7 +23,10 @@ struct ConsumeProductView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 #endif
     
-    var productToConsumeID: Int?
+    var stockElement: Binding<StockElement?>? = nil
+    var productToConsumeID: Int? {
+        return stockElement?.wrappedValue?.productID
+    }
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -47,7 +51,7 @@ struct ConsumeProductView: View {
     
     @State private var showRecipeInfo: Bool = false
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations]
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations]
     
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
@@ -56,13 +60,30 @@ struct ConsumeProductView: View {
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == productID})
     }
-    private var currentQuantityUnitName: String? {
-        let quIDP = grocyVM.mdProducts.first(where: {$0.id == productID})?.quIDPurchase
-        let qu = grocyVM.mdQuantityUnits.first(where: {$0.id == quIDP})
-        return amount == 1 ? qu?.name : qu?.namePlural
+    private var currentQuantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID })
+    }
+    private var stockQuantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+    }
+    private func getQUString(stockQU: Bool) -> String {
+        if stockQU {
+            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
+        } else {
+            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
+        }
     }
     private var productName: String {
         product?.name ?? ""
+    }
+    
+    private var quantityUnitConversions: [MDQuantityUnitConversion] {
+        if let quIDStock = product?.quIDStock {
+            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+        } else { return [] }
+    }
+    private var factoredAmount: Double {
+        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
     }
     
     private var filteredLocations: MDLocations {
@@ -112,8 +133,8 @@ struct ConsumeProductView: View {
     
     private func openProduct() {
         if let productID = productID {
-            let openInfo = ProductOpen(amount: amount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
-            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+            let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
+            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
                 switch result {
@@ -133,8 +154,8 @@ struct ConsumeProductView: View {
     
     private func consumeProduct() {
         if let productID = productID {
-            let consumeInfo = ProductConsume(amount: amount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
-            infoString = "\(formatAmount(amount)) \(currentQuantityUnitName ?? "") \(productName)"
+            let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
+            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
                 switch result {
@@ -163,7 +184,7 @@ struct ConsumeProductView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("str.cancel") {
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                 }
             })
@@ -174,7 +195,7 @@ struct ConsumeProductView: View {
         Form {
             if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
-                    ServerOfflineView(isCompact: true)
+                    ServerProblemView(isCompact: true)
                 }
             }
             
@@ -189,15 +210,7 @@ struct ConsumeProductView: View {
                     }
                 }
             
-            Section(header: Text(LocalizedStringKey("str.stock.consume.product.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.consume.product.amount", minAmount: 0.0001, maxAmount: maxAmount, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.consume.product.amount.invalid", errorMessageMax: "str.stock.consume.product.amount.locMax", systemImage: MySymbols.amount)
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.stock.consume.product.quantityUnit"), systemImage: MySymbols.quantityUnit), content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-                    }
-                }).disabled(true)
-            }
+            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
             Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                 Text("").tag(nil as Int?)
@@ -217,7 +230,7 @@ struct ConsumeProductView: View {
                         Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
-                                Text(stockProduct.stockEntryOpen == 0 ? LocalizedStringKey("str.stock.entry.description.notOpened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate ?? "") ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(formatAmount(stockProduct.amount)) \(formatDateOutput(stockProduct.bestBeforeDate) ?? "best before error") \(formatDateOutput(stockProduct.purchasedDate ?? "") ?? "purchasedate error")"))
+                                Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                                     .tag(stockProduct.stockID as String?)
                             }
                         })
@@ -261,17 +274,16 @@ struct ConsumeProductView: View {
                 firstAppear = false
             }
         })
-        .animation(.default)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), content: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), text: { item in
             switch item {
             case .successConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
             case .failConsume:
-                Label(LocalizedStringKey("str.stock.consume.product.consume.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.consume.fail")
             case .successOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")"), systemImage: MySymbols.success)
+                return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
             case .failOpen:
-                Label(LocalizedStringKey("str.stock.consume.product.open.fail"), systemImage: MySymbols.failure)
+                return LocalizedStringKey("str.stock.consume.product.open.fail")
             }
         })
         .toolbar(content: {
@@ -294,11 +306,11 @@ struct ConsumeProductView: View {
                             Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
                         } else {
                             Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                                .labelStyle(TextIconLabelStyle())
+                                .labelStyle(.titleAndIcon)
                         }
 #else
                         Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
 #endif
                     })
                         .disabled(!isFormValid || isProcessingAction)
@@ -311,11 +323,11 @@ struct ConsumeProductView: View {
                             Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
                         } else {
                             Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                                .labelStyle(TextIconLabelStyle())
+                                .labelStyle(.titleAndIcon)
                         }
 #else
                         Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                            .labelStyle(TextIconLabelStyle())
+                            .labelStyle(.titleAndIcon)
 #endif
                     })
                         .disabled(!isFormValid || isProcessingAction)

@@ -40,7 +40,6 @@ struct MyDoubleStepper: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
-            #if os(iOS)
             HStack{
                 Text(LocalizedStringKey(description))
                 if let descriptionU = descriptionInfo {
@@ -48,53 +47,25 @@ struct MyDoubleStepper: View {
                 }
             }
             HStack{
-                if systemImage != nil {
-                    Image(systemName: systemImage!)
+                if let systemImage = systemImage {
+                    Image(systemName: systemImage)
                 }
-                #if os(iOS)
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
+#if os(iOS)
                     .keyboardType(.numbersAndPunctuation)
-                #else
-                TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-                #endif
+                    .submitLabel(.done )
+#endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     amount += amountStep ?? 1.0
                 }, onDecrement: {
-                    if minAmount != nil {
-                        if amount > minAmount! {
+                    if let minAmount = minAmount {
+                        if amount > minAmount {
                             amount -= amountStep ?? 1.0
                         }
                     } else { amount -= amountStep ?? 1.0 }
                 })
             }
-            #elseif os(macOS)
-            // Since Apple botched the form design on macOS with Steppers, this 'hack' is required to workaround the issues
-            HStack{
-                if systemImage != nil {
-                    Image(systemName: systemImage!)
-                }
-                Text(LocalizedStringKey(description))
-                if let descriptionU = descriptionInfo {
-                    FieldDescription(description: descriptionU)
-                }
-            }
-            HStack{
-                Stepper("", onIncrement: {
-                    amount += amountStep ?? 1.0
-                }, onDecrement: {
-                    if minAmount != nil {
-                        if amount > minAmount! {
-                            amount -= amountStep ?? 1.0
-                        }
-                    } else { amount -= amountStep ?? 1.0 }
-                })
-                TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-                Text(LocalizedStringKey(amountName ?? ""))
-            }
-            #endif
             if let minAmount = minAmount {
                 if let amount = amount {
                     if amount < minAmount {
@@ -148,17 +119,15 @@ struct MyDoubleStepperOptional: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
-            f.maximumFractionDigits = 2
         } else {
             f.numberStyle = .decimal
-            f.maximumFractionDigits = 4
         }
+        f.maximumFractionDigits = 4
         return f
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
-            #if os(iOS)
             HStack{
                 Text(LocalizedStringKey(description))
                 if let descriptionU = descriptionInfo {
@@ -169,15 +138,13 @@ struct MyDoubleStepperOptional: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
-                #if os(iOS)
                 // Decimal keypad doesn't have a confirm button to confirm the entry yet
                 TextField("", value: $amount, formatter: formatter)
                     .frame(width: 70)
+#if os(iOS)
                     .keyboardType(.numbersAndPunctuation)
-                #else
-                TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-                #endif
+                    .submitLabel(.done )
+#endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += amountStep ?? 1.0
@@ -187,41 +154,11 @@ struct MyDoubleStepperOptional: View {
                         if minAmount != nil {
                             if amount! > minAmount! {
                                 amount! -= amountStep ?? 1.0
-                            } else if currencySymbol != nil && amount! == 0.0 { amount = nil}
+                            } else if ((currencySymbol != nil) && (amount! == 0.0)) { amount = nil}
                         } else { amount! -= amountStep ?? 1.0 }
                     } else { amount = 0 }
                 })
             }
-            #elseif os(macOS)
-            // Since Apple botched the form design on macOS with Steppers, this 'hack' is required to workaround the issues
-            HStack{
-                if systemImage != nil {
-                    Image(systemName: systemImage!)
-                }
-                Text(LocalizedStringKey(description))
-                if let descriptionU = descriptionInfo {
-                    FieldDescription(description: descriptionU)
-                }
-            }
-            HStack{
-                Stepper("", onIncrement: {
-                    if amount != nil {
-                        amount! += amountStep ?? 1.0
-                    } else { amount = amountStep }
-                }, onDecrement: {
-                    if amount != nil {
-                        if minAmount != nil {
-                            if amount! > minAmount! {
-                                amount! -= amountStep ?? 1.0
-                            } else if currencySymbol != nil && amount! == 0.0 { amount = nil}
-                        } else { amount! -= amountStep ?? 1.0 }
-                    } else { amount = 0 }
-                })
-                TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-                Text(LocalizedStringKey(amountName ?? ""))
-            }
-            #endif
             if let minAmount = minAmount {
                 if let amount = amount {
                     if amount < minAmount {

@@ -10,7 +10,7 @@ import SwiftUI
 struct MDUserEntityFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -46,18 +46,19 @@ struct MDUserEntityFormView: View {
         isCaptionCorrect = checkCaptionCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.userentities]
     private func updateData() {
-        grocyVM.requestData(objects: [.userentities])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewUserEntity {
             showAddUserEntity = false
         }
-        #endif
+#endif
     }
     
     private func saveUserEntity() {
@@ -98,12 +99,6 @@ struct MDUserEntityFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView{
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
             .toolbar(content: {
@@ -120,31 +115,24 @@ struct MDUserEntityFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewUserEntity{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.userEntity.name"))){
-                MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
+                MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
                     .onChange(of: name, perform: {newValue in
-                                isNameCorrect = checkNameCorrect() })
-                MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.userEntity.caption.required")
+                        isNameCorrect = checkNameCorrect() })
+                MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.caption.required")
                     .onChange(of: caption, perform: {newValue in
-                                isCaptionCorrect = checkCaptionCorrect() })
+                        isCaptionCorrect = checkCaptionCorrect() })
             }
             
-            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             MyToggle(isOn: $showInSidebarMenu, description: "str.md.userEntity.showInSideBarMenu", icon: "tablecells")
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewUserEntity{
@@ -161,12 +149,11 @@ struct MDUserEntityFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.userentities], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }

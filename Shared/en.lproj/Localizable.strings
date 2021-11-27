@@ -24,7 +24,12 @@
 "str.clear" = "Clear";
 "str.back" = "Back";
 "str.retry" = "Try again";
-"str.connection.failed" = "No connection to server";
+"str.failed" = "Failed";
+"str.error.connection" = "No connection to server.";
+"str.error.api" = "API error detected.";
+"str.error.other" = "Unknown error occured.";
+"str.error.logInfo" = "Please check the log to determine the problem.";
+"str.time.unlimited" = "unlimited";
 
 // MARK: - Transactions
 "tr.purchase" = "Purchase";
@@ -125,6 +130,13 @@
 "str.stock.tbl.nextBestBefore" = "Next best before date";
 "str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
 "str.stock.tbl.calories" = "Calories";
+"str.stock.tbl.lastPurchased" = "Last purchased";
+"str.stock.tbl.lastPrice" = "Last price";
+"str.stock.tbl.minStockAmount" = "Min. stock amount";
+"str.stock.tbl.productDescription" = "Product description";
+"str.stock.tbl.parentProduct" = "Parent product";
+"str.stock.tbl.defaultLocation" = "Default location";
+"str.stock.tbl.productPicture" = "Product picture";
 "str.stock.tbl.action.all" = "All";
 "str.stock.tbl.action.consume %@" = "Consume %@";
 "str.stock.tbl.action.consume.all %@" = "Consume all %@ which are currently in stock";
@@ -140,16 +152,19 @@
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Consume %@ as spoiled";
 "str.stock.tbl.menu.searchRecipes" = "Search for recipes which contain this product";
 
+"str.stock.product.amount" = "Amount";
+"str.stock.product.amount.factored %@ %@" = "This equals %@ %@";
+"str.stock.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
+"str.stock.product.amount.locMax" = "This amount is not available at the selected location";
+"str.stock.product.quantityUnit" = "Quantity unit";
+"str.stock.product.quantityUnit.required" = "A quantity unit is required";
+
 "str.stock.buy" = "Purchase";
 "str.stock.buy.product" = "Product";
 "str.stock.buy.product.buy" = "Purchase product";
 "str.stock.buy.product.buy.success %@" = "%@ purchased";
 "str.stock.buy.product.buy.fail" = "Purchase failed";
 "str.stock.buy.product.required" = "You have to select a product";
-"str.stock.buy.product.amount" = "Amount";
-"str.stock.buy.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-"str.stock.buy.product.quantityUnit" = "Quantity unit";
-"str.stock.buy.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.buy.product.dueDate" = "Due date";
 "str.stock.buy.product.dueDate.required" = "A due date is required";
 "str.stock.buy.product.doesntSpoil" = "Never overdue";
@@ -170,11 +185,6 @@
 "str.stock.consume.product.open.success %@" = "%@ opened";
 "str.stock.consume.product.open.fail" = "Open failed";
 "str.stock.consume.product.required" = "You have to select a product";
-"str.stock.consume.product.amount" = "Amount";
-"str.stock.consume.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-"str.stock.consume.product.amount.locMax" = "This amount is not available at the selected location";
-"str.stock.consume.product.quantityUnit" = "Quantity unit";
-"str.stock.consume.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.consume.product.location" = "Location";
 "str.stock.consume.product.location.required" = "A location is required";
 "str.stock.consume.product.location.default %@" = "%@ (Default location)";
@@ -194,10 +204,6 @@
 "str.stock.transfer.product.required" = "You have to select a product";
 "str.stock.transfer.product.locationFrom" = "From location";
 "str.stock.transfer.product.locationFrom.required" = "A location is required";
-"str.stock.transfer.product.amount" = "Amount";
-"str.stock.transfer.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-"str.stock.transfer.product.quantityUnit" = "Quantity unit";
-"str.stock.transfer.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.transfer.product.locationTo" = "To location";
 "str.stock.transfer.product.locationTO.required" = "A location is required";
 "str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
@@ -210,12 +216,8 @@
 "str.stock.inventory.product.inventory" = "Perform inventory";
 "str.stock.inventory.product.inventory.success %@" = "%@ inventoried";
 "str.stock.inventory.product.inventory.fail" = "Inventory failed";
-"str.stock.inventory.product.amount" = "New stock amount ";
-"str.stock.inventory.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.stock.inventory.product.amount.lower %@" = "This means %@ will be removed from stock";
 "str.stock.inventory.product.amount.higher %@" = "This means %@ will be added to stock";
-"str.stock.inventory.product.quantityUnit" = "Quantity unit";
-"str.stock.inventory.product.quantityUnit.required" = "A quantity unit is required";
 "str.stock.inventory.product.dueDate" = "Due date";
 "str.stock.inventory.product.dueDate.info" = "This will apply to added products";
 "str.stock.inventory.product.dueDate.required" = "A due date is required";
@@ -244,6 +246,20 @@
 "str.stock.journal.location.info %@" = "Location: %@";
 "str.stock.journal.user" = "User";
 "str.stock.journal.user.info %@" = "Done by: %@";
+
+"str.stock.entries" = "Stock entries";
+"str.stock.entries.empty" = "No matching records found";
+"str.stock.entries.product %@" = "Product: %@";
+"str.stock.entries.amount %@" = "Amount: %@";
+"str.stock.entries.dueDate %@" = "Due date: %@";
+"str.stock.entries.location %@" = "Location: %@";
+"str.stock.entries.shoppingLocation %@" = "Store: %@";
+"str.stock.entries.price %@" = "Price: %@";
+"str.stock.entries.purchasedDate %@" = "Purchased date: %@";
+"str.stock.entry.edit" = "Edit entry";
+"str.stock.entry.save" = "Save entry";
+"str.stock.entry.consume" = "Consume this stock entry";
+"str.stock.entry.open" = "Mark this stock entry as open";
 
 // MARK: - Shopping List
 "str.shL" = "Shopping list";
@@ -412,13 +428,15 @@
 "str.md.barcode.for %@" = "Barcode for product %@";
 "str.md.barcode.barcode" = "Barcode";
 "str.md.barcode.barcode.required" = "A barcode is required";
-"str.md.barcode.barcode.invalid" = "The barcode has to be in the EAN-8 or EAN-13 format";
+"str.md.barcode.barcode.invalid" = "The barcode is invalid or already in use.";
 "str.md.barcode.amount" = "Amount";
 "str.md.barcode.quantityUnit" = "Quantity unit";
 "str.md.barcode.shoppingLocation" = "Store";
 "str.md.barcode.note" = "Note";
 "str.md.barcode.info.amount %@" = "Amount: %@";
 "str.md.barcode.info.store %@" = "Store: %@";
+"str.md.barcode.delete" = "Delete barcode";
+"str.md.barcode.delete.confirm" = "Do you really want to delete this barcode?";
 
 "str.md.locations" = "Locations";
 "str.md.location" = "Location";
@@ -565,6 +583,8 @@
 "str.settings.about" = "About this app";
 "str.settings.about.thanks" = "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.";
 "str.settings.about.version" = "Version";
+"str.settings.about.version.supported" = "Supported";
+"str.settings.about.version.notSupported" = "Not supported";
 "str.settings.about.developer" = "Developer";
 "str.settings.about.translators" = "Translators";
 "str.settings.about.showOnboarding" = "Replay app onboarding";
@@ -573,6 +593,7 @@
 "str.settings.appLanguage" = "App language";
 "str.settings.resetCache" = "Reset cache";
 "str.settings.log" = "App log";
+"str.settings.log.empty" = "No log entry found.";
 "str.settings.log.update" = "Update log";
 "str.settings.log.share" = "Share log";
 
@@ -618,7 +639,7 @@
 "str.onboard.app.title" = "Grocy for iOS/macOS";
 "str.onboard.app.subtitle" = "An app in native design, allowing a comfortable use of Grocy at home and on the go.";
 
-"str.login.info" = "Welcome to Grocy-SwiftUI!\n\n To properly use Grocy, you have to host it on a server yourself.\n If you just want to try this app, you can use the demo server provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.";
+"str.login.info" = "Welcome to Grocy Mobile!\n\n This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server).\n If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.";
 "str.login.select" = "Select a server type:";
 "str.login.demoServer" = "Demo server";
 "str.login.demoServer %@" = "Demo server: %@";

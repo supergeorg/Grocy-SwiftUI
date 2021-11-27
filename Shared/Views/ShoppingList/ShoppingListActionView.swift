@@ -23,7 +23,6 @@ struct ShoppingListActionItem: View {
             .foregroundColor(foregroundColor)
             .background(backgroundColor)
             .cornerRadius(cornerRadiusValue)
-            .modifier(if: hasBorder ?? false, then: {$0.overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(foregroundColor, lineWidth: 1))})
     }
 }
 
@@ -36,12 +35,6 @@ struct ShoppingListActionView: View {
     @Binding var toastType: ShoppingListToastType?
     
     @State private var showClearListAlert: Bool = false
-    
-    #if os(macOS)
-    let ismacOS = true
-    #else
-    let ismacOS = false
-    #endif
     
     private func slAction(_ actionType: ShoppingListActionType) {
         grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
@@ -63,15 +56,20 @@ struct ShoppingListActionView: View {
                     .onTapGesture {
                         showAddItem.toggle()
                     }
-                    .modifier(if: ismacOS, then: {$0.popover(isPresented: $showAddItem, content: {
+#if os(iOS)
+                    .sheet(isPresented: $showAddItem, content: {
+                        NavigationView {
+                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                        }
+                    })
+#elseif os(macOS)
+                    .popover(isPresented: $showAddItem, content: {
                         ScrollView{
                             ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
                                 .frame(width: 500, height: 400)
                         }
-                    })}, else: {$0.sheet(isPresented: $showAddItem, content: {
-                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                    })})
-                
+                    })
+#endif
                 
                 ShoppingListActionItem(title: "str.shL.action.clearList", foregroundColor: .red, hasBorder: true)
                     .onTapGesture {
@@ -94,11 +92,12 @@ struct ShoppingListActionView: View {
                         slAction(.addOverdue)
                     }
             }
-            .alert(isPresented: $showClearListAlert, content: {
-                Alert(title: Text(LocalizedStringKey("str.shL.action.clearList.confirm")), message: Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? ""), primaryButton: .destructive(Text(LocalizedStringKey("str.clear"))) {
+            .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {
+                Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                Button(LocalizedStringKey("str.delete"), role: .destructive) {
                     slAction(.clear)
-                }, secondaryButton: .cancel())
-            })
+                }
+            }, message: { Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Name not found") })
         }
     }
 }

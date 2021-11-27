@@ -22,7 +22,6 @@ struct ActivitiesView: View {
                 }
             }
         }
-        .animation(.default)
         .navigationTitle(LocalizedStringKey("str.nav.activities"))
         .onAppear(perform: {
             grocyVM.requestData(objects: [.userentities], ignoreCached: false)

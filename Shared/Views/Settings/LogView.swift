@@ -7,14 +7,15 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
 
 struct LogView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @State private var logText: [String] = []
+    @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @State private var exportLog: ExportLog = ExportLog(content: Data())
-    @State var isExporting: Bool = false
+    @State private var isExporting: Bool = false
     
     struct ExportLog: FileDocument {
         static var readableContentTypes: [UTType] { [.plainText] }
@@ -36,94 +37,45 @@ struct LogView: View {
     }
     
     func shareFile() {
-        do {
-            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            #if os(macOS)
-            let logFolder = cachesDirectory.appendingPathComponent("Grocy-SwiftUI/")
-            #elseif os(iOS)
-            let logFolder = cachesDirectory
-            #endif
-            let filePath = logFolder.appendingPathComponent("swiftybeaver.log")
-            print(filePath.absoluteString)
-            let fileData = try Data(contentsOf: filePath)
-            exportLog = ExportLog(content: fileData)
+        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
+            exportLog = ExportLog(content: logData)
             isExporting = true
-        } catch {
-            print("Error")
+        } else {
+            print("Error exporting log")
         }
-    }
-    
-    func updateLog() {
-        logText = grocyVM.getLog()
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView{
-            contentmacOS
-                .padding()
-                .frame(width: 500, height: 500)
-        }
-        #elseif os(iOS)
-        contentiOS
+        content
             .navigationTitle(LocalizedStringKey("str.settings.log"))
+#if os(iOS)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                    HStack{
-                        Button(action: {
-                            shareFile()
-                        }, label: { Image(systemName: MySymbols.share) })
-                        Button(action: {
-                            updateLog()
-                        }, label: {
-                            Label("str.settings.log.update", systemImage: MySymbols.reload)
-                        })
-                    }
+                    Button(action: {
+                        shareFile()
+                    }, label: { Image(systemName: MySymbols.share) })
                 })
             })
-        #endif
+#endif
     }
     
-    var contentiOS: some View {
-        Form{
-            ForEach(logText.reversed(), id: \.self) {text in
-                Text(text)
-            }
-        }
-        .onAppear(perform: updateLog)
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportLog,
-            contentType: .plainText,
-            defaultFilename: "Grocy-SwiftUI_LOG.log"
-        ) { result in
-            if case .success = result {
-                print("Export successful.")
-            } else {
-                print("Export failed.")
-            }
-        }
-    }
-    
-    var contentmacOS: some View {
+    var content: some View {
         List {
-            Button(action: {
-                updateLog()
-            }, label: {
-                Label("str.settings.log.update", systemImage: MySymbols.reload)
-            })
-            if !logText.isEmpty {
-                Button(action: {
-                    shareFile()
-                }, label: {
-                    Label(LocalizedStringKey("str.settings.log.share"), systemImage: MySymbols.share)
-                })
+            if grocyVM.logEntries.isEmpty {
+                Text(LocalizedStringKey("str.settings.log.empty"))
             }
-            ForEach(logText, id: \.self) {text in
-                Text(text)
+            ForEach(grocyVM.logEntries.reversed(), id: \.self) { logEntry in
+                VStack(alignment: .leading) {
+                    Text(formatDateAsString(logEntry.date, showTime: true, localizationKey: localizationKey) ?? "")
+                        .font(.caption)
+                    Text(logEntry.composedMessage)
+                }
             }
         }
-        .onAppear(perform: updateLog)
+        .onAppear(perform: { grocyVM.getLogEntries() })
+        .refreshable {
+            grocyVM.getLogEntries()
+        }
         .fileExporter(
             isPresented: $isExporting,
             document: exportLog,
@@ -141,12 +93,12 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        #if os(iOS)
+#if os(iOS)
         NavigationView{
             LogView()
         }
-        #else
+#else
         LogView()
-        #endif
+#endif
     }
 }

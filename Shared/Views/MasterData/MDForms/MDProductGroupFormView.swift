@@ -10,7 +10,7 @@ import SwiftUI
 struct MDProductGroupFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
@@ -24,7 +24,7 @@ struct MDProductGroupFormView: View {
     @Binding var showAddProductGroup: Bool
     @Binding var toastType: MDToastType?
     
-    @State var isNameCorrect: Bool = false
+    @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundProductGroup = grocyVM.mdProductGroups.first(where: {$0.name == name})
         return isNewProductGroup ? !(name.isEmpty || foundProductGroup != nil) : !(name.isEmpty || (foundProductGroup != nil && foundProductGroup!.id != productGroup!.id))
@@ -36,18 +36,19 @@ struct MDProductGroupFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
+    private let dataToUpdate: [ObjectEntities] = [.product_groups]
     private func updateData() {
-        grocyVM.requestData(objects: [.product_groups])
+        grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
-        #if os(iOS)
-        presentationMode.wrappedValue.dismiss()
-        #elseif os(macOS)
+#if os(iOS)
+        self.dismiss()
+#elseif os(macOS)
         if isNewProductGroup {
             showAddProductGroup = false
         }
-        #endif
+#endif
     }
     
     private func saveProductGroup() {
@@ -88,12 +89,6 @@ struct MDProductGroupFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
-        ScrollView {
-            content
-                .padding()
-        }
-        #elseif os(iOS)
         content
             .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
             .toolbar(content: {
@@ -110,26 +105,19 @@ struct MDProductGroupFormView: View {
                     }
                     .disabled(!isNameCorrect || isProcessing)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // Back not shown without it
-                    if !isNewProductGroup{
-                        Text("")
-                    }
-                }
             })
-        #endif
     }
     
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", isEditing: true, emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.productGroup.name.exists")
+                MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.productGroup.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
-                MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description, isEditing: true)
+                MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-            #if os(macOS)
+#if os(macOS)
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
                     if isNewProductGroup{
@@ -146,12 +134,11 @@ struct MDProductGroupFormView: View {
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
-        .animation(.default)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: [.product_groups], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
                 resetForm()
                 firstAppear = false
             }
@@ -161,20 +148,20 @@ struct MDProductGroupFormView: View {
 
 struct MDProductGroupFormView_Previews: PreviewProvider {
     static var previews: some View {
-        #if os(macOS)
+#if os(macOS)
         Group {
             MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
             MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
         }
-        #else
+#else
         Group {
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
             NavigationView {
                 MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
-        #endif
+#endif
     }
 }

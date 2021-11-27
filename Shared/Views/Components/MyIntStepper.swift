@@ -21,7 +21,6 @@ struct MyIntStepper: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
-            #if os(iOS)
             HStack{
                 Text(LocalizedStringKey(description))
                 if let helpTextU = helpText {
@@ -34,7 +33,9 @@ struct MyIntStepper: View {
                 }
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
-                    .keyboardType(.numbersAndPunctuation)
+                #if os(iOS)
+                    .keyboardType(.decimalPad)
+                #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     amount += 1
                 }, onDecrement: {
@@ -42,45 +43,14 @@ struct MyIntStepper: View {
                         if amount > minAmount! {
                             amount -= 1
                         }
-                    } else {amount -= 1}
+                    } else { amount -= 1 }
                 })
             }
-            #elseif os(macOS)
-            HStack{
-                if let systemImage = systemImage {
-                    Image(systemName: systemImage)
-                }
-                Text(LocalizedStringKey(description))
-                if let helpTextU = helpText {
-                    FieldDescription(description: helpTextU)
-                }
-            }
-            HStack{
-                Stepper("", onIncrement: {
-                    amount += 1
-                }, onDecrement: {
-                    if minAmount != nil {
-                        if amount > minAmount! {
-                            amount -= 1
-                        }
-                    } else {amount -= 1}
-                })
-                TextField("", value: $amount, formatter: NumberFormatter())
-                    .frame(width: 70)
-                Text(LocalizedStringKey(amountName ?? ""))
-            }
-            #endif
-            if minAmount != nil {
-                if let amount = amount {
-                    if amount < minAmount! {
-                        if errorMessage != nil {
-                            Text(LocalizedStringKey(errorMessage!))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+                Text(LocalizedStringKey(errorMessage))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -100,7 +70,6 @@ struct MyIntStepperOptional: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
-            #if os(iOS)
             HStack{
                 Text(LocalizedStringKey(description))
                 if let helpTextU = helpText {
@@ -111,64 +80,30 @@ struct MyIntStepperOptional: View {
                 if systemImage != nil {
                     Image(systemName: systemImage!)
                 }
-                // Numberpad doesn't have a confirm button to confirm the entry yet
                 TextField("", value: $amount, formatter: NumberFormatter())
                     .frame(width: 70)
-                    .keyboardType(.numbersAndPunctuation)
+                #if os(iOS)
+                    .keyboardType(.decimalPad)
+                #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += 1
-                    } else { amount = 1 }
-                }, onDecrement: {
-                    if amount != nil {
-                        if minAmount != nil {
-                            if amount! > minAmount! {
-                                amount! -= 1
-                            }
-                        } else {amount! -= 1}
-                    } else { amount = minAmount }
-                })
-            }
-            #elseif os(macOS)
-            HStack{
-                if let systemImage = systemImage {
-                    Image(systemName: systemImage)
-                }
-                Text(LocalizedStringKey(description))
-                if let helpTextU = helpText {
-                    FieldDescription(description: helpTextU)
-                }
-            }
-            HStack{
-                Stepper("", onIncrement: {
-                    if amount != nil {
-                        amount! += 1
-                    } else { amount = 1 }
-                }, onDecrement: {
-                    if amount != nil {
-                        if minAmount != nil {
-                            if amount! > minAmount! {
-                                amount! -= 1
-                            }
-                        } else {amount! -= 1}
-                    } else { amount = minAmount }
-                })
-                TextField("", value: $amount, formatter: NumberFormatter())
-                    .frame(width: 70)
-                Text(LocalizedStringKey(amountName ?? ""))
-            }
-            #endif
-            if minAmount != nil {
-                if let amount = amount {
-                    if amount < minAmount! {
-                        if errorMessage != nil {
-                            Text(LocalizedStringKey(errorMessage!))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
                     }
-                }
+                }, onDecrement: {
+                    if amount != nil {
+                        if minAmount != nil {
+                            if amount! > minAmount! {
+                                amount! -= 1
+                            }
+                        } else { amount! -= 1 }
+                    } else { amount = minAmount }
+                })
+            }
+            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+                Text(LocalizedStringKey(errorMessage))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

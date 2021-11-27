@@ -8,11 +8,13 @@
 import Foundation
 
 // MARK: - StockEntry
-struct StockElement: Codable {
+struct StockElement: Codable, Identifiable {
+    let id = UUID()
+    
     let amount: Double
     let amountAggregated: Double
     let value: Double
-    let bestBeforeDate: String
+    let bestBeforeDate: Date
     let amountOpened: Double
     let amountOpenedAggregated: Double
     let isAggregatedAmount: Bool
@@ -39,7 +41,8 @@ struct StockElement: Codable {
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
             do { self.amountAggregated = try container.decode(Double.self, forKey: .amountAggregated) } catch { self.amountAggregated = try Double(container.decode(String.self, forKey: .amountAggregated))! }
             do { self.value = try container.decode(Double.self, forKey: .value) } catch { self.value = try Double(container.decode(String.self, forKey: .value))! }
-            self.bestBeforeDate = try container.decode(String.self, forKey: .bestBeforeDate)
+            let bestBeforeDateStr = try container.decode(String.self, forKey: .bestBeforeDate)
+            self.bestBeforeDate = getDateFromString(bestBeforeDateStr)!
             do { self.amountOpened = try container.decode(Double.self, forKey: .amountOpened) } catch { self.amountOpened = try Double(container.decode(String.self, forKey: .amountOpened))! }
             do { self.amountOpenedAggregated = try container.decode(Double.self, forKey: .amountOpenedAggregated) } catch { self.amountOpenedAggregated = try Double(container.decode(String.self, forKey: .amountOpenedAggregated))! }
             do {
@@ -62,7 +65,7 @@ struct StockElement: Codable {
     init(amount: Double,
          amountAggregated: Double,
          value: Double,
-         bestBeforeDate: String,
+         bestBeforeDate: Date,
          amountOpened: Double,
          amountOpenedAggregated: Double,
          isAggregatedAmount: Bool,

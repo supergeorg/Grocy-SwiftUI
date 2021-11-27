@@ -9,30 +9,41 @@ import SwiftUI
 
 struct FilledButtonStyle: ButtonStyle {
     let cornerRadiusValue: CGFloat = 5.0
-    let paddingAmount: CGFloat = 9.0
+    let paddingAmount: CGFloat = 12.0
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration
-            .label
-            .padding(paddingAmount)
-            .background(Color.accentColor)
-            .foregroundColor(Color.white)
-            .cornerRadius(cornerRadiusValue)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
+        HStack {
+            Spacer()
+            configuration
+                .label
+            Spacer()
+        }
+        .foregroundColor(Color.white)
+        .padding(paddingAmount)
+        .background(Color.accentColor)
+        .cornerRadius(cornerRadiusValue)
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
 
+
 struct BorderButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) var colorScheme
     let cornerRadiusValue: CGFloat = 5.0
-    let paddingAmount: CGFloat = 9.0
+    let paddingAmount: CGFloat = 12.0
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration
-            .label
-            .padding(paddingAmount)
-            .cornerRadius(cornerRadiusValue)
-            .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue).stroke(Color.gray, lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: cornerRadiusValue))
+        HStack {
+            Spacer()
+            configuration
+                .label
+            Spacer()
+        }
+        .foregroundColor(Color.primary)
+        .padding(paddingAmount)
+        .background(colorScheme == .light ? Color.white : Color.black)
+        .cornerRadius(cornerRadiusValue)
+        .overlay(RoundedRectangle(cornerRadius: cornerRadiusValue, style: .continuous).stroke(Color.accentColor, lineWidth: 1))
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }

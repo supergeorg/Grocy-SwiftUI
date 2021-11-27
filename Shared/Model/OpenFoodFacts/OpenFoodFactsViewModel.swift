@@ -34,7 +34,7 @@ class OpenFoodFactsViewModel: ObservableObject {
         let urlRequest = request(barcode: barcode)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
-                APIError.serverError(error: "\(error)") }
+                APIError.serverError(error: error) }
             .flatMap({ result -> AnyPublisher<OpenFoodFactsResult, APIError> in
                 guard let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) else {
                     return Just(result.data)
