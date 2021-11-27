@@ -16,50 +16,51 @@ struct StockFilterBar: View {
     @Binding var filteredStatus: ProductStatus
     
     var body: some View {
-        VStack{
-            #if os(iOS)
-            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                SearchBar(text: $searchString, placeholder: "str.search")
-                if !searchString.isEmpty {
-                    Button("Exit Search") {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }
-                }
-            }
-            #endif
-            HStack{
-                #if os(iOS)
-                if !(UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-                    SearchBar(text: $searchString, placeholder: "str.search")
-                }
-                Spacer()
-                #endif
-                Picker(selection: $filteredLocation, label: HStack{
-                    Image(systemName: MySymbols.filter)
-                    Text(LocalizedStringKey("str.stock.location"))
-                }, content: {
+        HStack{
+            Menu {
+                Picker("", selection: $filteredLocation, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })
-                .pickerStyle(MenuPickerStyle())
-                Spacer()
-                Picker(selection: $filteredProductGroup, label: HStack{
+                    .labelsHidden()
+            } label: {
+                HStack {
                     Image(systemName: MySymbols.filter)
-                    Text(LocalizedStringKey("str.stock.productGroup"))
-                }, content: {
+                    VStack{
+                        Text(LocalizedStringKey("str.stock.location"))
+                        if let locationName = grocyVM.mdLocations.first(where: { $0.id == filteredLocation })?.name {
+                            Text(locationName)
+                                .font(.caption)
+                        }
+                    }
+                }
+            }
+            Spacer()
+            Menu {
+                Picker("", selection: $filteredProductGroup, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
                     ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 })
-                .pickerStyle(MenuPickerStyle())
-                Spacer()
-                Picker(selection: $filteredStatus, label: HStack{
+                    .labelsHidden()
+            } label: {
+                HStack {
                     Image(systemName: MySymbols.filter)
-                    Text(LocalizedStringKey("str.stock.status"))
-                }, content: {
+                    VStack{
+                        Text(LocalizedStringKey("str.stock.productGroup"))
+                        if let productGroupName = grocyVM.mdProductGroups.first(where: { $0.id == filteredProductGroup })?.name {
+                            Text(productGroupName)
+                                .font(.caption)
+                        }
+                    }
+                }
+            }
+            Spacer()
+            Menu {
+                Picker("", selection: $filteredStatus, content: {
                     Text(LocalizedStringKey(ProductStatus.all.rawValue))
                         .tag(ProductStatus.all)
                     Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
@@ -75,7 +76,18 @@ struct StockFilterBar: View {
                         .tag(ProductStatus.belowMinStock)
                         .background(Color.grocyBlueLight)
                 })
-                .pickerStyle(MenuPickerStyle())
+                    .labelsHidden()
+            } label: {
+                HStack {
+                    Image(systemName: MySymbols.filter)
+                    VStack{
+                        Text(LocalizedStringKey("str.stock.status"))
+                        if filteredStatus != ProductStatus.all {
+                            Text(LocalizedStringKey(filteredStatus.rawValue))
+                                .font(.caption)
+                        }
+                    }
+                }
             }
         }
     }
