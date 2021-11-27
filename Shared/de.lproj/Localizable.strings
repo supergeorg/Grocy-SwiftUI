@@ -24,7 +24,11 @@
 "str.clear" = "Leeren";
 "str.back" = "Zurück";
 "str.retry" = "Erneut versuchen";
-"str.connection.failed" = "Keine Verbindung zum Server";
+"str.failed" = "Fehlgeschlagen";
+"str.error.connection" = "Keine Verbindung zum Server.";
+"str.error.api" = "API-Fehler aufgetreten.";
+"str.error.other" = "Ein unbekannter Fehler ist aufgetreten.";
+"str.error.logInfo" = "Bitte schaue im Log nach, um das Problem genauer zu bestimmen.";
 "str.time.unlimited" = "unbegrenzt";
 
 // MARK: - Transactions
@@ -126,6 +130,13 @@
 "str.stock.tbl.nextBestBefore" = "Nächstes Fälligkeitsdatum";
 "str.stock.tbl.caloriesPerStockQU" = "Kalorien (Pro Bestandsmengeneinheit)";
 "str.stock.tbl.calories" = "Kalorien";
+"str.stock.tbl.lastPurchased" = "Zuletzt gekauft";
+"str.stock.tbl.lastPrice" = "Letzter Preis";
+"str.stock.tbl.minStockAmount" = "Mindestbestand";
+"str.stock.tbl.productDescription" = "Produktbeschreibung";
+"str.stock.tbl.parentProduct" = "Übergeordnetes Produkt";
+"str.stock.tbl.defaultLocation" = "Standard-Standort";
+"str.stock.tbl.productPicture" = "Produktbild";
 "str.stock.tbl.action.all" = "Alle";
 "str.stock.tbl.action.consume %@" = "Verbrauche %@";
 "str.stock.tbl.action.consume.all %@" = "Verbrauche den kompletten Bestand von %@";
@@ -245,6 +256,10 @@
 "str.stock.entries.shoppingLocation %@" = "Geschäft: %@";
 "str.stock.entries.price %@" = "Preis: %@";
 "str.stock.entries.purchasedDate %@" = "Einkaufsdatum: %@";
+"str.stock.entry.edit" = "Eintrag bearbeiten";
+"str.stock.entry.save" = "Eintrag speichern";
+"str.stock.entry.consume" = "Verbrauche diesen Bestandseintrag";
+"str.stock.entry.open" = "Diesen Bestandseintrag als geöffnet markieren";
 
 // MARK: - Shopping List
 "str.shL" = "Einkaufszettel";
@@ -414,13 +429,15 @@
 "str.md.barcode.for %@" = "Barcode für Produkt %@";
 "str.md.barcode.barcode" = "Barcode";
 "str.md.barcode.barcode.required" = "Ein Barcode wird benötigt";
-"str.md.barcode.barcode.invalid" = "Der Barcode muss im Format EAN-13 oder EAN-8 sein";
+"str.md.barcode.barcode.invalid" = "Der Barcode ist ungültig oder wird schon verwendet.";
 "str.md.barcode.amount" = "Menge";
 "str.md.barcode.quantityUnit" = "Mengeneinheit";
 "str.md.barcode.shoppingLocation" = "Geschäft";
 "str.md.barcode.note" = "Notiz";
 "str.md.barcode.info.amount %@" = "Menge: %@";
 "str.md.barcode.info.store %@" = "Geschäft: %@";
+"str.md.barcode.delete" = "Barcode löschen";
+"str.md.barcode.delete.confirm" = "Möchtest du wirklich diesen Barcode löschen?";
 
 "str.md.locations" = "Standorte";
 "str.md.location" = "Standort";
@@ -567,6 +584,8 @@
 "str.settings.about" = "Über diese App";
 "str.settings.about.thanks" = "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich.";
 "str.settings.about.version" = "Version";
+"str.settings.about.version.supported" = "Unterstützt";
+"str.settings.about.version.notSupported" = "Nicht unterstützt";
 "str.settings.about.developer" = "Entwickler";
 "str.settings.about.translators" = "Übersetzer";
 "str.settings.about.showOnboarding" = "App-Einführung wiederholen";
@@ -621,7 +640,7 @@
 "str.onboard.app.title" = "Grocy für iOS/macOS";
 "str.onboard.app.subtitle" = "Eine App in nativen Design, welche eine komfortable Nutzung von Grocy zuhause und unterwegs ermöglicht.";
 
-"str.login.info" = "Willkommen bei Grocy-SwiftUI!\n\n Um Grocy sinnvoll nutzen zu können, muss du es auf einen eigenen Server bereitstellen.\n Wenn du nur diese App ausprobieren willst, kannst du einen vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden können.";
+"str.login.info" = "Willkommen bei Grocy Mobile!\n\n Dies ist eine Begleiter-App, das heißt du musst Zugriff zu einer laufenden Grocy-Instanz haben.\n Wenn du diese App nur kurz ausprobieren willst, kannst du einen der vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden könnten.";
 "str.login.select" = "Wähle einen Server-Typ aus:";
 "str.login.demoServer" = "Demo-Server";
 "str.login.demoServer %@" = "Demo-Server: %@";
