@@ -52,10 +52,6 @@
 		7812FFA725BB0B6900377773 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7812FFA625BB0B6900377773 /* ActivitiesView.swift */; };
 		78138F4925AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
 		78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78138F4825AEF95800B9A50A /* ProductField.swift */; };
-		781610D3272C689000F0E347 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781610D2272C689000F0E347 /* CurrencyFormatter.swift */; };
-		781610D4272C689000F0E347 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781610D2272C689000F0E347 /* CurrencyFormatter.swift */; };
-		781610D5272C689000F0E347 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781610D2272C689000F0E347 /* CurrencyFormatter.swift */; };
-		781610D6272C689000F0E347 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781610D2272C689000F0E347 /* CurrencyFormatter.swift */; };
 		7817658F25F7B40B00978483 /* NullCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7817658E25F7B40B00978483 /* NullCodable.swift */; };
 		7817659025F7B40B00978483 /* NullCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7817658E25F7B40B00978483 /* NullCodable.swift */; };
 		7817659525F7B41200978483 /* NullCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7817658E25F7B40B00978483 /* NullCodable.swift */; };
@@ -458,7 +454,6 @@
 		7228DE4026CBAD0B005821FA /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7812FFA625BB0B6900377773 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		78138F4825AEF95800B9A50A /* ProductField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductField.swift; sourceTree = "<group>"; };
-		781610D2272C689000F0E347 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrencyFormatter.swift; path = ../../../../../Downloads/CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7817658E25F7B40B00978483 /* NullCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullCodable.swift; sourceTree = "<group>"; };
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		781A25A2256690C200560026 /* MDProductGroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductGroupFormView.swift; sourceTree = "<group>"; };
@@ -932,7 +927,6 @@
 				7845120B25C84A5B006B7686 /* SheetTypes.swift */,
 				78DB1BD0268CEE9F005448F3 /* Barcodes.swift */,
 				78ADA1E526D1509100946E1B /* Translators.swift */,
-				781610D2272C689000F0E347 /* CurrencyFormatter.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1266,7 +1260,6 @@
 				78CB7635255EBA3F00319108 /* StockView.swift in Sources */,
 				78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */,
 				786F6E9225640332004D8DE0 /* MDProductsView.swift in Sources */,
-				781610D3272C689000F0E347 /* CurrencyFormatter.swift in Sources */,
 				78CB74D6255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				7853A4CF25DBE74300AF9986 /* LogView.swift in Sources */,
 				78855F8125FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,
@@ -1384,7 +1377,6 @@
 				78CB759A255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				7880F105256FB6E400FB8431 /* ShoppingListDescriptionModel.swift in Sources */,
 				78512061256FE94600171390 /* UserRowView.swift in Sources */,
-				781610D4272C689000F0E347 /* CurrencyFormatter.swift in Sources */,
 				786F6EB325640383004D8DE0 /* MDBatteriesView.swift in Sources */,
 				78CB7601255EB9A000319108 /* StockModel.swift in Sources */,
 				78CB7645255EBA6C00319108 /* Colors.swift in Sources */,
@@ -1546,7 +1538,6 @@
 				78FDCDCA25BAD2DE0089CB5E /* MDProductsModel.swift in Sources */,
 				780B8B4226FA5C18009ACFB7 /* MyIntStepper.swift in Sources */,
 				78FDCE0D25BAD2F40089CB5E /* ShoppingListDescriptionModel.swift in Sources */,
-				781610D5272C689000F0E347 /* CurrencyFormatter.swift in Sources */,
 				78FDCDFA25BAD2F00089CB5E /* ProductBuyModel.swift in Sources */,
 				78FDCE0C25BAD2F40089CB5E /* ShoppingListActionModel.swift in Sources */,
 				78FDCE3625BAEF190089CB5E /* FA2SFSymbols.swift in Sources */,
@@ -1604,7 +1595,6 @@
 			files = (
 				78AF64E62719F38400C439AF /* StockEntryFormView.swift in Sources */,
 				780B8B5226FA5C35009ACFB7 /* FieldDescription.swift in Sources */,
-				781610D6272C689000F0E347 /* CurrencyFormatter.swift in Sources */,
 				78FDCE0425BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */,
 				7817659A25F7B41300978483 /* NullCodable.swift in Sources */,
 				78FDCE1725BAD2F50089CB5E /* ShoppingListStatus.swift in Sources */,
