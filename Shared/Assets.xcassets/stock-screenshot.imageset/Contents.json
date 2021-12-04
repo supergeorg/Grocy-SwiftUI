@@ -1,7 +1,18 @@
 {
   "images" : [
     {
-      "filename" : "stock-iPhone.png",
+      "filename" : "grocy-swiftui_iPhone.png",
+      "idiom" : "iphone",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "grocy-swiftui_iPhone_dark.png",
       "idiom" : "iphone",
       "scale" : "1x"
     },
@@ -10,15 +21,56 @@
       "scale" : "2x"
     },
     {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "idiom" : "iphone",
+      "scale" : "2x"
+    },
+    {
       "idiom" : "iphone",
       "scale" : "3x"
     },
     {
-      "filename" : "stock-ipad.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "idiom" : "iphone",
+      "scale" : "3x"
+    },
+    {
+      "filename" : "grocy-swiftui_iPad.png",
       "idiom" : "ipad",
       "scale" : "1x"
     },
     {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "grocy-swiftui_iPad_dark.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "idiom" : "ipad",
       "scale" : "2x"
     },
@@ -28,6 +80,26 @@
       "scale" : "1x"
     },
     {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "idiom" : "mac",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "mac",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "idiom" : "mac",
       "scale" : "2x"
     }
