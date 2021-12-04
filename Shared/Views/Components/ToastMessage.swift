@@ -23,21 +23,19 @@ struct ToastMessageText<Presenting>: View where Presenting: View {
                 }
             }
         }
-        return GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                self.presenter()
-                HStack(alignment: .center) {
-                    if let isSuccess = isSuccess {
-                        Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
-                            .font(.title)
-                    }
-                    Text(text)
+        return ZStack(alignment: .bottom) {
+            self.presenter()
+            HStack(alignment: .center) {
+                if let isSuccess = isSuccess {
+                    Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
+                        .font(.title)
                 }
-                .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
-                .background(isSuccess != nil ? (isSuccess! ? Color.green.opacity(0.9) : Color.red.opacity(0.9)) : Color.gray, in: RoundedRectangle(cornerRadius: 16.0))
-                .opacity(self.isPresented ? 1 : 0)
-                .padding(.bottom)
+                Text(text)
             }
+            .padding()
+            .background(isSuccess != nil ? (isSuccess! ? Color.green.opacity(0.9) : Color.red.opacity(0.9)) : Color.gray, in: RoundedRectangle(cornerRadius: 16.0))
+            .opacity(self.isPresented ? 1 : 0)
+            .padding(.bottom)
         }
     }
 }
@@ -57,24 +55,21 @@ struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Pr
                 }
             }
         }
-        return GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                self.presenter()
-                HStack(alignment: .center) {
-                    if item != nil {
-                        Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
-                            .font(.title)
-                    }
-                    if let item = item {
-                        Text(self.text(item))
-                            .fixedSize(horizontal: true, vertical: false)
-                    }
+        return ZStack(alignment: .bottom) {
+            self.presenter()
+            HStack(alignment: .center) {
+                if item != nil {
+                    Image(systemName: isSuccess ? MySymbols.success : MySymbols.failure)
+                        .font(.title)
                 }
-                .frame(width: geometry.size.width / 1.25, height: geometry.size.height / 10)
-                .background(isSuccess ? Color.green.opacity(0.9) : Color.red.opacity(0.9), in: RoundedRectangle(cornerRadius: 16.0))
-                .opacity(self.item != nil ? 1 : 0)
-                .padding(.bottom)
+                if let item = item {
+                    Text(self.text(item))
+                }
             }
+            .padding()
+            .background(isSuccess ? Color.green.opacity(0.9) : Color.red.opacity(0.9), in: RoundedRectangle(cornerRadius: 16.0))
+            .opacity(self.item != nil ? 1 : 0)
+            .padding(.bottom)
         }
     }
 }
