@@ -70,13 +70,13 @@ struct MDUserEntityFormView: View {
             grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "User entity add successful. \(message)", type: .info)
+                    grocyVM.postLog("User entity add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "User entity add failed. \(error)", type: .error)
+                    grocyVM.postLog("User entity add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
@@ -85,12 +85,12 @@ struct MDUserEntityFormView: View {
             grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "User entity edit successful. \(message)", type: .info)
+                    grocyVM.postLog("User entity edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "User entity edit failed. \(error)", type: .error)
+                    grocyVM.postLog("User entity edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false

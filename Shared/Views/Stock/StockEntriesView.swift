@@ -48,7 +48,7 @@ struct StockEntryRowView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                 fetchData
             case let .failure(error):
-                grocyVM.postLog(message: "Consume stock entry failed. \(error)", type: .error)
+                grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
                 toastType = .fail
             }
         }
@@ -62,7 +62,7 @@ struct StockEntryRowView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                 fetchData
             case let .failure(error):
-                grocyVM.postLog(message: "Open stock entry failed. \(error)", type: .error)
+                grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
                 toastType = .fail
             }
         }

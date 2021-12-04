@@ -60,10 +60,10 @@ struct MDProductGroupsView: View {
             grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Deleting product group was successful. \(message)", type: .info)
+                    grocyVM.postLog("Deleting product group was successful. \(message)", type: .info)
                     updateData()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Deleting product group failed. \(error)", type: .error)
+                    grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
                     toastType = .failDelete
                 }
             })

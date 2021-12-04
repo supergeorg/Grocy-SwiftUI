@@ -33,7 +33,7 @@ struct StockTableMenuEntriesView: View {
                 toastType = .successConsumeAllSpoiled
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
-                grocyVM.postLog(message: "Consume all as spoiled failed. \(error)", type: .error)
+                grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
                 toastType = .fail
             }
         }

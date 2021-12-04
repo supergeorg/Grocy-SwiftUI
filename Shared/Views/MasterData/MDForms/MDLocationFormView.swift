@@ -62,12 +62,12 @@ struct MDLocationFormView: View {
             grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Location add successful. \(message)", type: .info)
+                    grocyVM.postLog("Location add successful. \(message)", type: .info)
                     toastType = .successAdd
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Location add failed. \(error)", type: .error)
+                    grocyVM.postLog("Location add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
@@ -76,12 +76,12 @@ struct MDLocationFormView: View {
             grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Location edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Location edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Location edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Location edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false

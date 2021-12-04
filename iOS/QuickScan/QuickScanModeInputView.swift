@@ -115,11 +115,11 @@ struct QuickScanModeInputView: View {
             grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume) { result in
                 switch result {
                 case let .success(prod):
-                    grocyVM.postLog(message: "Consume successful. \(prod)", type: .info)
+                    grocyVM.postLog("Consume successful. \(prod)", type: .info)
                     toastTypeSuccess = .successQSConsume
                     finalizeQuickInput()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Consume failed. \(error)", type: .error)
+                    grocyVM.postLog("Consume failed. \(error)", type: .error)
                     toastTypeFail = .failQSConsume
                 }
                 isProcessingAction = false
@@ -135,11 +135,11 @@ struct QuickScanModeInputView: View {
             grocyVM.postStockObject(id: id, stockModePost: .open, content: productOpen) { result in
                 switch result {
                 case let .success(prod):
-                    grocyVM.postLog(message: "Open successful. \(prod)", type: .info)
+                    grocyVM.postLog("Open successful. \(prod)", type: .info)
                     toastTypeSuccess = .successQSOpen
                     finalizeQuickInput()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Open failed. \(error)", type: .error)
+                    grocyVM.postLog("Open failed. \(error)", type: .error)
                     toastTypeFail = .failQSOpen
                 }
                 isProcessingAction = false
@@ -157,11 +157,11 @@ struct QuickScanModeInputView: View {
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
                 switch result {
                 case let .success(prod):
-                    grocyVM.postLog(message: "Purchase successful. \(prod)", type: .info)
+                    grocyVM.postLog("Purchase successful. \(prod)", type: .info)
                     toastTypeSuccess = .successQSPurchase
                     finalizeQuickInput()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Purchase failed. \(error)", type: .error)
+                    grocyVM.postLog("Purchase failed. \(error)", type: .error)
                     toastTypeFail = .failQSPurchase
                 }
                 isProcessingAction = false

@@ -47,7 +47,7 @@ struct StockTableRowActionsView: View {
                 toastType = .successConsumeOne
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
-                grocyVM.postLog(message: "Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+                grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
                 toastType = .fail
             }
         }
@@ -61,7 +61,7 @@ struct StockTableRowActionsView: View {
                 toastType = .successConsumeAll
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
-                grocyVM.postLog(message: "Consume all items failed. \(error)", type: .error)
+                grocyVM.postLog("Consume all items failed. \(error)", type: .error)
                 toastType = .fail
             }
         }
@@ -75,7 +75,7 @@ struct StockTableRowActionsView: View {
                 toastType = .successOpenOne
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
-                grocyVM.postLog(message: "Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+                grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
                 toastType = .fail
             }
         }

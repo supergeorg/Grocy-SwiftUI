@@ -107,12 +107,12 @@ struct PurchaseProductView: View {
             grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
                 switch result {
                 case let .success(prod):
-                    grocyVM.postLog(message: "Purchase successful. \(prod)", type: .info)
+                    grocyVM.postLog("Purchase successful. \(prod)", type: .info)
                     toastType = .successPurchase
                     grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                     resetForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Purchase failed: \(error)", type: .error)
+                    grocyVM.postLog("Purchase failed: \(error)", type: .error)
                     toastType = .failPurchase
                 }
                 isProcessingAction = false

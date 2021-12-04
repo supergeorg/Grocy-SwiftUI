@@ -59,10 +59,10 @@ struct MDTaskCategoriesView: View {
         grocyVM.deleteMDObject(object: .task_categories, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting task category was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting task category was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting task category failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

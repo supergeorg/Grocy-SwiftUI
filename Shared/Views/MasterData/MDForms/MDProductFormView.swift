@@ -131,12 +131,12 @@ struct MDProductFormView: View {
                 grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Product add successful. \(message)", type: .info)
+                        grocyVM.postLog("Product add successful. \(message)", type: .info)
                         toastType = .successAdd
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Product add failed. \(error)", type: .error)
+                        grocyVM.postLog("Product add failed. \(error)", type: .error)
                         toastType = .failAdd
                     }
                     isProcessing = false
@@ -145,12 +145,12 @@ struct MDProductFormView: View {
                 grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Product edit successful. \(message)", type: .info)
+                        grocyVM.postLog("Product edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Product edit failed. \(error)", type: .error)
+                        grocyVM.postLog("Product edit failed. \(error)", type: .error)
                         toastType = .failEdit
                     }
                     isProcessing = false

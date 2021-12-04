@@ -55,10 +55,10 @@ struct MDShoppingLocationsView: View {
                                completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting shopping location was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting shopping location was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting shopping location failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting shopping location failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

@@ -60,10 +60,10 @@ struct MDUserFieldsView: View {
         grocyVM.deleteMDObject(object: .userfields, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting userfield was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting userfield was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting userfield failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

@@ -32,10 +32,10 @@ struct MDProductPictureFormView: View {
         grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Picture successfully deleted. \(message)", type: .info)
+                grocyVM.postLog("Picture successfully deleted. \(message)", type: .info)
                 changeProductPicture(pictureFileName: nil)
             case let .failure(error):
-                grocyVM.postLog(message: "Picture deletion failed. \(error)", type: .error)
+                grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
                 isProcessing = false
             }
         })
@@ -48,10 +48,10 @@ struct MDProductPictureFormView: View {
             grocyVM.uploadFile(fileURL: selectedImageURL, groupName: "productpictures", fileName: base64Encoded, completion: {result in
                 switch result {
                 case let .success(response):
-                    grocyVM.postLog(message: "Picture successfully uploaded. \(response)", type: .info)
+                    grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
                     changeProductPicture(pictureFileName: pictureFileName)
                 case let .failure(error):
-                    grocyVM.postLog(message: "Picture upload failed. \(error)", type: .error)
+                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                     isProcessing = false
                 }
             })
@@ -65,7 +65,7 @@ struct MDProductPictureFormView: View {
             grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Picture successfully changed in product. \(message)", type: .info)
+                    grocyVM.postLog("Picture successfully changed in product. \(message)", type: .info)
                     grocyVM.requestData(objects: [.products])
                     newPictureURL = selectedPictureURL
                     newPictureFileName = selectedPictureFileName
@@ -73,7 +73,7 @@ struct MDProductPictureFormView: View {
                     selectedPictureURL = nil
                     selectedPictureFileName = nil
                 case let .failure(error):
-                    grocyVM.postLog(message: "Adding picture to product failed. \(error)", type: .error)
+                    grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
                 }
                 isProcessing = false
             })

@@ -66,13 +66,13 @@ struct MDTaskCategoryFormView: View {
             grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Task category add successful. \(message)", type: .info)
+                    grocyVM.postLog("Task category add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Task category add failed. \(error)", type: .error)
+                    grocyVM.postLog("Task category add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
@@ -81,12 +81,12 @@ struct MDTaskCategoryFormView: View {
             grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Task category edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Task category edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Task category edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Task category edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false

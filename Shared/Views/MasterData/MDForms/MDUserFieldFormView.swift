@@ -75,13 +75,13 @@ struct MDUserFieldFormView: View {
                 grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Userfield add successful. \(message)", type: .info)
+                        grocyVM.postLog("Userfield add successful. \(message)", type: .info)
                         toastType = .successAdd
                         resetForm()
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Userfield add failed. \(error)", type: .error)
+                        grocyVM.postLog("Userfield add failed. \(error)", type: .error)
                         toastType = .failAdd
                     }
                     isProcessing = true
@@ -90,12 +90,12 @@ struct MDUserFieldFormView: View {
                 grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Userfield edit successful. \(message)", type: .info)
+                        grocyVM.postLog("Userfield edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Userfield edit failed. \(error)", type: .error)
+                        grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
                         toastType = .failEdit
                     }
                     isProcessing = true

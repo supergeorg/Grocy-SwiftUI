@@ -126,10 +126,10 @@ struct ShoppingListView: View {
         grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Shopping list delete successful. \(message)", type: .info)
+                grocyVM.postLog("Shopping list delete successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_lists])
             case let .failure(error):
-                grocyVM.postLog(message: "Shopping list delete failed. \(error)", type: .error)
+                grocyVM.postLog("Shopping list delete failed. \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })
@@ -139,10 +139,10 @@ struct ShoppingListView: View {
         grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "SHLAction successful. \(message)", type: .info)
+                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
-                grocyVM.postLog(message: "SHLAction failed. \(error)", type: .error)
+                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })

@@ -59,11 +59,11 @@ struct ShoppingListEntryFormView: View {
                 grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: productID, listID: shoppingListID, productAmount: amount, note: note), completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Shopping entry saved successfully. \(message)", type: .info)
+                        grocyVM.postLog("Shopping entry saved successfully. \(message)", type: .info)
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Shopping entry save failed. \(error)", type: .error)
+                        grocyVM.postLog("Shopping entry save failed. \(error)", type: .error)
                         showFailToast = true
                     }
                 })
@@ -72,11 +72,11 @@ struct ShoppingListEntryFormView: View {
                     grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
                         switch result {
                         case let .success(message):
-                            grocyVM.postLog(message: "Shopping entry edited successfully. \(message)", type: .info)
+                            grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
                             updateData()
                             finishForm()
                         case let .failure(error):
-                            grocyVM.postLog(message: "Shopping entry edit failed. \(error)", type: .error)
+                            grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
                             showFailToast = true
                         }
                     })

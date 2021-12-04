@@ -56,10 +56,10 @@ struct MDUserEntitiesView: View {
         grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting user entity was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting user entity was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting user entity failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

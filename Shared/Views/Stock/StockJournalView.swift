@@ -130,10 +130,10 @@ struct StockJournalRowView: View {
         grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Undo transaction successful. \(message)", type: .info)
+                grocyVM.postLog("Undo transaction successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.stock_log])
             case let .failure(error):
-                grocyVM.postLog(message: "Undo transaction failed. \(error)", type: .error)
+                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
                 showToastUndoFailed = true
             }
         })

@@ -62,10 +62,10 @@ struct MDQuantityUnitsView: View {
         grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting quantity unit was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting quantity unit was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting quantity unit failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

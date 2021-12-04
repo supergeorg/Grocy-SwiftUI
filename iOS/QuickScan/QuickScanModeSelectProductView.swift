@@ -40,13 +40,13 @@ struct QuickScanModeSelectProductView: View {
                 grocyVM.postMDObject(object: .product_barcodes, content: newBarcode, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Add barcode successful. \(message)", type: .info)
+                        grocyVM.postLog("Add barcode successful. \(message)", type: .info)
                         toastTypeSuccess = .successQSAddProduct
                         resetForm()
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Add barcode failed. \(error)", type: .error)
+                        grocyVM.postLog("Add barcode failed. \(error)", type: .error)
                         toastTypeFail = .failQSAddProduct
                     }
                 })

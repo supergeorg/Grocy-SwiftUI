@@ -61,10 +61,10 @@ struct MDLocationsView: View {
         grocyVM.deleteMDObject(object: .locations, id: toDelID, completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog(message: "Deleting location was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting location was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog(message: "Deleting location failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting location failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })

@@ -60,13 +60,13 @@ struct MDProductGroupFormView: View {
             grocyVM.postMDObject(object: .product_groups, content: productGroupPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Product group add successful. \(message)", type: .info)
+                    grocyVM.postLog("Product group add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Product group add failed. \(error)", type: .error)
+                    grocyVM.postLog("Product group add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
@@ -75,12 +75,12 @@ struct MDProductGroupFormView: View {
             grocyVM.putMDObjectWithID(object: .product_groups, id: id, content: productGroupPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Product group edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Product group edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Product group edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Product group edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false

@@ -42,11 +42,11 @@ struct ShoppingListFormView: View {
             grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescription(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds), completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Shopping list save successful. \(message)", type: .info)
+                    grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Shopping list save failed. \(error)", type: .error)
+                    grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
                     showFailToast = true
                 }
             })
@@ -54,11 +54,11 @@ struct ShoppingListFormView: View {
             grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescription(id: shoppingListDescription!.id, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp), completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Shopping list edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Shopping list edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
                     showFailToast = true
                 }
             })

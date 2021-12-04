@@ -62,13 +62,13 @@ struct MDQuantityUnitFormView: View {
             grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Quantity unit add successful. \(message)", type: .info)
+                    grocyVM.postLog("Quantity unit add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Quantity unit add failed. \(error)", type: .error)
+                    grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
@@ -77,12 +77,12 @@ struct MDQuantityUnitFormView: View {
             grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Quantity unit edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Quantity unit edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Quantity unit edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false

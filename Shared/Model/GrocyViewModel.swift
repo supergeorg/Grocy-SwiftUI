@@ -78,9 +78,9 @@ class GrocyViewModel: ObservableObject {
             } else {
                 grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
             }
-            grocyLog.info("Logged in on startup")
+            self.postLog("Logged in on startup", type: .info)
         } else {
-            grocyLog.info("Not logged in")
+            self.postLog("Not logged in", type: .info)
         }
         jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.outputFormatting = .prettyPrinted
@@ -91,7 +91,7 @@ class GrocyViewModel: ObservableObject {
         isDemoModus = true
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         isLoggedIn = true
-        grocyLog.info("Switched to demo modus")
+        self.postLog("Switched to demo modus", type: .info)
     }
     
     func setLoginModus() {
@@ -101,7 +101,7 @@ class GrocyViewModel: ObservableObject {
         grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         isDemoModus = false
         isLoggedIn = true
-        grocyLog.info("Switched to login modus")
+        self.postLog("Switched to login modus", type: .info)
     }
     
     func logout() {
@@ -119,7 +119,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Error at checkLoginInfo: \("\(error)")")
+                    self.postLog("Error at checkLoginInfo: \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -127,11 +127,11 @@ class GrocyViewModel: ObservableObject {
             }, receiveValue: { (systemInfo: SystemInfo) in
                 DispatchQueue.main.async {
                     if !systemInfo.grocyVersion.version.isEmpty {
-                        self.grocyLog.info("Login info check successful. Logging in.")
+                        self.postLog("Login info check successful. Logging in.", type: .info)
                         self.systemInfo = systemInfo
                         completion(.success(systemInfo.grocyVersion.version))
                     } else {
-                        self.grocyLog.error("Selected server doesn't respond.")
+                        self.postLog("Selected server doesn't respond.", type: .error)
                         self.isLoggedIn = false
                         completion(.failure(APIError.invalidResponse))
                     }
@@ -168,7 +168,7 @@ class GrocyViewModel: ObservableObject {
         case .userentities:
             ints = self.mdUserEntities.map{ $0.id }
         default:
-            self.grocyLog.error("Find next ID not implemented for \(object.rawValue).")
+            self.postLog("Find next ID not implemented for \(object.rawValue).", type: .error)
         }
         var startvar = 1
         while ints.contains(startvar) { startvar += 1 }
@@ -206,7 +206,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdBatteries = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -220,7 +220,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -234,7 +234,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdProductBarcodes = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -248,7 +248,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdProductGroups = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -262,7 +262,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdProducts = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -276,7 +276,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdQuantityUnits = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -290,7 +290,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdQuantityUnitConversions = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -304,7 +304,7 @@ class GrocyViewModel: ObservableObject {
                                 self.shoppingList = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -318,7 +318,7 @@ class GrocyViewModel: ObservableObject {
                                 self.shoppingListDescriptions = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -332,7 +332,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdShoppingLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -346,7 +346,7 @@ class GrocyViewModel: ObservableObject {
                                 self.stockJournal = entityResult
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -360,7 +360,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdTaskCategories = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -374,7 +374,7 @@ class GrocyViewModel: ObservableObject {
                                 self.mdUserEntities = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -388,14 +388,14 @@ class GrocyViewModel: ObservableObject {
                                 self.mdUserFields = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(object.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
                         })
                     }
                 default:
-                    self.grocyLog.error("Request data not implemented for \(object.rawValue).")
+                    self.postLog("Request data not implemented for \(object.rawValue).", type: .error)
                 }
             }
         }
@@ -410,7 +410,7 @@ class GrocyViewModel: ObservableObject {
                                 self.systemConfig = syscfg
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for SystemConfig. Message: \("\(error)")")
+                                self.postLog("Data request failed for SystemConfig. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -424,7 +424,7 @@ class GrocyViewModel: ObservableObject {
                                 self.systemInfo = sysinfo
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for SystemInfo. Message: \("\(error)")")
+                                self.postLog("Data request failed for SystemInfo. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -438,7 +438,7 @@ class GrocyViewModel: ObservableObject {
                                 self.systemDBChangedTime = sysdbchangedtime
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for SystemDBChangedTime. Message: \("\(error)")")
+                                self.postLog("Data request failed for SystemDBChangedTime. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -452,7 +452,7 @@ class GrocyViewModel: ObservableObject {
                                 self.stock = stockRet
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for Stock. Message: \("\(error)")")
+                                self.postLog("Data request failed for Stock. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -466,7 +466,7 @@ class GrocyViewModel: ObservableObject {
                                 self.users = grocyusers
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for Users. Message: \("\(error)")")
+                                self.postLog("Data request failed for Users. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -480,7 +480,7 @@ class GrocyViewModel: ObservableObject {
                                 self.currentUser = currUsRet
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for current user. Message: \("\(error)")")
+                                self.postLog("Data request failed for current user. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
@@ -526,21 +526,21 @@ class GrocyViewModel: ObservableObject {
         lastStockActions = []
         failedToLoadObjects.removeAll()
         failedToLoadAdditionalObjects.removeAll()
-        self.grocyLog.info("Deleted all cached data from the viewmodel.")
+        self.postLog("Deleted all cached data from the viewmodel.", type: .info)
     }
     
-    func postLog(message: String, type: OSLogType) {
+    func postLog(_ message: String, type: OSLogType) {
         switch type {
         case .error:
-            self.grocyLog.error("\(message)")
+            self.grocyLog.error("\(message, privacy: .public)")
         case .info:
-            self.grocyLog.info("\(message)")
+            self.grocyLog.info("\(message, privacy: .public)")
         case .debug:
-            self.grocyLog.debug("\(message)")
+            self.grocyLog.debug("\(message, privacy: .public)")
         case .fault:
-            self.grocyLog.fault("\(message)")
+            self.grocyLog.fault("\(message, privacy: .public)")
         default:
-            self.grocyLog.log("\(message)")
+            self.grocyLog.log("\(message, privacy: .public)")
         }
     }
     
@@ -563,7 +563,7 @@ class GrocyViewModel: ObservableObject {
             
             self.logEntries = logEntriesFiltered
         } catch {
-            self.grocyLog.error("Error getting log entries")
+            self.postLog("Error getting log entries", type: .error)
         }
     }
     
@@ -574,7 +574,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get system info failed. \("\(error)")")
+                    self.postLog("Get system info failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -592,7 +592,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get systemdbchangedtime failed. \("\(error)")")
+                    self.postLog("Get systemdbchangedtime failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -610,7 +610,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get systemconfig failed. \("\(error)")")
+                    self.postLog("Get systemconfig failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -646,7 +646,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get users failed. \("\(error)")")
+                    self.postLog("Get users failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -665,7 +665,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Post user failed. \("\(error)")")
+                    self.postLog("Post users failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -684,7 +684,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Put User failed. \("\(error)")")
+                    self.postLog("Put User failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -702,7 +702,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Delete User failed. \("\(error)")")
+                    self.postLog("Delete User failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -728,7 +728,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get current user failed. \("\(error)")")
+                    self.postLog("Delete current user failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -748,7 +748,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get stock failed. \("\(error)")")
+                    self.postLog("Get stock failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -766,6 +766,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
+                    self.postLog("Get stock product info failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -790,7 +791,7 @@ class GrocyViewModel: ObservableObject {
                             case let .success(productDetailResult):
                                 self.stockProductDetails[productID] = productDetailResult
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(mode.rawValue). Message: \("\(error)")", type: .error)
                             }
                         })
                     }
@@ -803,7 +804,7 @@ class GrocyViewModel: ObservableObject {
                             case let .success(productEntriesResult):
                                 self.stockProductEntries[productID] = productEntriesResult
                             case let .failure(error):
-                                self.grocyLog.error("Data request failed for \(mode.rawValue). Message: \("\(error)")")
+                                self.postLog("Data request failed for \(mode.rawValue). Message: \("\(error)")", type: .error)
                             }
                         })
                     }
@@ -821,7 +822,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get stock product details failed. \("\(error)")")
+                    self.postLog("Get stock product details failed. \("\(error)")", type: .error)
                     break
                 case .finished:
                     break
@@ -839,7 +840,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Get stock product entries failed. \("\(error)")")
+                    self.postLog("Get stock product entries failed. \("\(error)")", type: .error)
                     break
                 case .finished:
                     break
@@ -859,7 +860,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Put stock object failed. \("\(error)")")
+                    self.postLog("Put stock object failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -879,7 +880,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Post stock object failed. \("\(error)")")
+                    self.postLog("Post stock object failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -899,7 +900,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Undo booking failed. \("\(error)")")
+                    self.postLog("Undo booking failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -925,7 +926,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Delete file failed. \("\(error)")")
+                    self.postLog("Delete file failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -946,7 +947,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Add product to shopping list failed. \("\(error)")")
+                    self.postLog("Add product to shopping list failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -963,7 +964,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Shopping list action failed. \("\(error)")")
+                    self.postLog("Shopping list action failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -986,7 +987,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Post MD Object failed. \("\(error)")")
+                    self.postLog("Post MD Object failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -1004,7 +1005,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Delete MD Object failed. \("\(error)")")
+                    self.postLog("Delete MD Object failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -1023,7 +1024,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.grocyLog.error("Put MD Object failed. \("\(error)")")
+                    self.postLog("Put MD Object failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break

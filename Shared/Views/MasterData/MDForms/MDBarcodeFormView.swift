@@ -66,13 +66,13 @@ struct MDBarcodeFormView: View {
             grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog(message: "Barcode add successful. \(message)", type: .info)
+                    grocyVM.postLog("Barcode add successful. \(message)", type: .info)
                     toastType = .successAdd
                     resetForm()
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog(message: "Barcode add failed. \(error)", type: .info)
+                    grocyVM.postLog("Barcode add failed. \(error)", type: .info)
                     toastType = .failAdd
                 }
             })
@@ -81,12 +81,12 @@ struct MDBarcodeFormView: View {
                 grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog(message: "Barcode edit successful. \(message)", type: .info)
+                        grocyVM.postLog("Barcode edit successful. \(message)", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog(message: "Barcode edit failed. \(error)", type: .info)
+                        grocyVM.postLog("Barcode edit failed. \(error)", type: .info)
                         toastType = .failEdit
                     }
                 })
