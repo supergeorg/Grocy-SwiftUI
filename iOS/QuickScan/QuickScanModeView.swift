@@ -62,8 +62,11 @@ struct QuickScanModeView: View {
         isScanPaused = (activeSheet != nil)
     }
     
+    private let dataToUpdate: [ObjectEntities] =  [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units, .quantity_unit_conversions]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config]
+    
     func updateData() {
-        grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations])
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     func searchForGrocyCode(barcodeString: String) -> GrocyCode? {
@@ -173,7 +176,7 @@ struct QuickScanModeView: View {
                 }
             })
             .onAppear(perform: {
-                grocyVM.requestData(objects: [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units], additionalObjects: [.stock, .system_config], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
             })
             .onChange(of: activeSheet, perform: {newItem in
                 checkScanPause()

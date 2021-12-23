@@ -14,15 +14,16 @@ struct AmountSelectionView: View {
     @Binding var amount: Double
     @Binding var quantityUnitID: Int?
     
+    private var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
+    }
+    
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
             return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
         } else { return [] }
     }
 
-    private var product: MDProduct? {
-        grocyVM.mdProducts.first(where: {$0.id == productID})
-    }
     private var currentQuantityUnit: MDQuantityUnit? {
         if let quantityUnitID = quantityUnitID {
             return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID})

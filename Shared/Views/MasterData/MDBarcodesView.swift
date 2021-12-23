@@ -25,7 +25,7 @@ struct MDBarcodeRowView: View {
                 .font(.title)
             HStack{
                 if let amount = barcode.amount {
-                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(formatAmount(amount)) \(quIDName ?? String(barcode.quID ?? 0))")"))
+                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(amount.formattedAmount) \(quIDName ?? String(barcode.quID ?? 0))")"))
                 }
                 if let storeName = shoppingLocationName {
                     Text(LocalizedStringKey("str.md.barcode.info.store \(storeName)"))

@@ -271,7 +271,7 @@ struct QuickScanModeInputView: View {
                         Picker(selection: $consumeLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as Int?)
                             ForEach(grocyVM.mdLocations, id:\.id) {location in
-                                Text("\(location.name) (\(formatAmount(getAmountForLocation(lID: location.id))))").tag(location.id as Int?)
+                                Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
                             }
                         })
                         

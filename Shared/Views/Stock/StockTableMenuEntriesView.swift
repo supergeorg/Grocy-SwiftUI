@@ -84,7 +84,7 @@ struct StockTableMenuEntriesView: View {
                 selectedStockElement = stockElement
                 consumeAsSpoiled()
             }, label: {
-                Label(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(formatAmount(stockElement.amount)) \(quString)")"), systemImage: MySymbols.clear)
+                Label(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount.formattedAmount) \(quString)")"), systemImage: MySymbols.clear)
             })
             
             //                Button(action: {

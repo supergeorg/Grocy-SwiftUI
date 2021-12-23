@@ -157,7 +157,7 @@ struct StockJournalRowView: View {
                 }
             }
             Group {
-                Text(LocalizedStringKey("str.stock.journal.amount.info \("\(formatAmount(journalEntry.amount)) \(journalEntry.amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")"))
+                Text(LocalizedStringKey("str.stock.journal.amount.info \("\(journalEntry.amount.formattedAmount) \(journalEntry.amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")"))
                 Text(LocalizedStringKey("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")"))
                 Text(LocalizedStringKey("str.stock.journal.transactionType.info \("")"))
                     .font(.caption)

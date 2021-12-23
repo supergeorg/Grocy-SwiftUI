@@ -114,17 +114,17 @@ struct StockTableRow: View {
             } else {Text("")}
             
             HStack{
-                Text("\(formatAmount(stockElement.amount)) \(getQUString(amount: stockElement.amount))")
+                Text("\(stockElement.amount.formattedAmount) \(getQUString(amount: stockElement.amount))")
                 if stockElement.amountOpened > 0 {
-                    Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpened))"))
+                    Text(LocalizedStringKey("str.stock.info.opened \(stockElement.amountOpened.formattedAmount)"))
                         .font(.caption)
                         .italic()
                 }
                 if stockElement.amount != stockElement.amountAggregated {
-                    Text("Σ \(formatAmount(stockElement.amountAggregated)) \(getQUString(amount: stockElement.amountAggregated))")
+                    Text("Σ \(stockElement.amountAggregated.formattedAmount) \(getQUString(amount: stockElement.amountAggregated))")
                         .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                     if stockElement.amountOpenedAggregated > 0 {
-                        Text(LocalizedStringKey("str.stock.info.opened \(formatAmount(stockElement.amountOpenedAggregated))"))
+                        Text(LocalizedStringKey("str.stock.info.opened \(stockElement.amountOpenedAggregated.formattedAmount)"))
                             .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                             .font(.caption)
                             .italic()

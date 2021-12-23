@@ -175,7 +175,7 @@ struct InventoryProductView: View {
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
             if stockAmountDifference != 0 {
-                Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(formatAmount(stockAmountDifference)) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
+                Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
