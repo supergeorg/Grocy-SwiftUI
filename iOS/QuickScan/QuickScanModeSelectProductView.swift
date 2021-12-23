@@ -10,6 +10,8 @@ import SwiftUI
 struct QuickScanModeSelectProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @Environment(\.dismiss) var dismiss
     
     @State private var firstOpen: Bool = true
@@ -61,6 +63,13 @@ struct QuickScanModeSelectProductView: View {
                     Text(barcode ?? "Barcode error").font(.title)
                 }
                 ProductField(productID: $productID, description: "str.quickScan.add.product")
+                if devMode {
+                    Section("OPEN FOOD FACTS") {
+                        NavigationLink(destination: QuickScanOpenFoodFactsView(barcode: barcode), label: {
+                            Label("Open Food Facts", systemImage: MySymbols.barcodeScan)
+                        })
+                    }
+                }
             }
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
