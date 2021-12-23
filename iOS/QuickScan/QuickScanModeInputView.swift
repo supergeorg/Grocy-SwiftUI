@@ -44,9 +44,20 @@ struct QuickScanModeInputView: View {
         grocyVM.stock.first(where: { $0.productID == product?.id })
     }
 
-    var quantityUnit: MDQuantityUnit? {
-        quickScanMode == .purchase ? grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDPurchase}) : grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+    var quantityUnitPurchase: MDQuantityUnit? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDPurchase})
     }
+    var quantityUnitStock: MDQuantityUnit? {
+        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+    }
+    
+    private var quantityUnitConversions: [MDQuantityUnitConversion] {
+        return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == product?.quIDStock })
+    }
+    private var purchaseAmountFactored: Double {
+        return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID})?.factor ?? 1)
+    }
+    
     private func getAmountForLocation(lID: Int) -> Double {
         if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
             var maxAmount: Double = 0
@@ -58,8 +69,12 @@ struct QuickScanModeInputView: View {
         }
         return 0.0
     }
-    private func getQUString(amount: Double) -> String {
-        return amount == 1 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
+    private func getQUString(amount: Double, purchase: Bool = false) -> String {
+        if purchase {
+            return amount == 1 ? quantityUnitPurchase?.name ?? "" : quantityUnitPurchase?.namePlural ?? quantityUnitPurchase?.name ?? ""
+        } else {
+            return amount == 1 ? quantityUnitStock?.name ?? "" : quantityUnitStock?.namePlural ?? quantityUnitStock?.name ?? ""
+        }
     }
     
     // Consume
@@ -75,6 +90,7 @@ struct QuickScanModeInputView: View {
     @State private var purchaseDueDate: Date = Date()
     @Binding var lastPurchaseDueDate: Date
     @State private var purchaseAmount: Double = 1.0
+    @State private var purchaseQuantityUnitID: Int?
     @State private var purchasePrice: Double?
     @State private var purchaseShoppingLocationID: Int?
     @Binding var lastPurchaseShoppingLocationID: Int?
@@ -113,7 +129,7 @@ struct QuickScanModeInputView: View {
         if let id = product?.id {
             let amount = getConsumeAmount()
             let productConsume = ProductConsume(amount: amount, transactionType: .consume, spoiled: false, stockEntryID: consumeItemID, recipeID: nil, locationID: consumeLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
-            infoString = "\(formatAmount(amount)) \(getQUString(amount: amount)) \(product?.name ?? "")"
+            infoString = "\(amount.formattedAmount) \(getQUString(amount: amount)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume) { result in
                 switch result {
@@ -154,8 +170,8 @@ struct QuickScanModeInputView: View {
         if let id = product?.id {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let productBuy = ProductBuy(amount: purchaseAmount, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: purchasePrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
-            infoString = "\(formatAmount(purchaseAmount)) \(getQUString(amount: purchaseAmount)) \(product?.name ?? "")"
+            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: purchasePrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
+            infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
                 switch result {
@@ -198,6 +214,7 @@ struct QuickScanModeInputView: View {
             purchaseDueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Calendar.current.startOfDay(for: lastPurchaseDueDate))
             purchaseShoppingLocationID = product?.shoppingLocationID ?? lastPurchaseShoppingLocationID
             purchaseLocationID = product?.locationID ?? lastPurchaseLocationID
+            purchaseQuantityUnitID = quantityUnitPurchase?.id
         }
     }
     
@@ -225,7 +242,7 @@ struct QuickScanModeInputView: View {
                             VStack(alignment: .leading) {
                                 Text(productU.name).font(.title)
                                 if let amount = stockElement?.amount {
-                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(formatAmount(amount)) \(getQUString(amount: amount))")"))
+                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
                                 }
                             }
                         }
@@ -240,11 +257,11 @@ struct QuickScanModeInputView: View {
                                 Text(LocalizedStringKey("str.quickScan.input.consume.default")).tag(ConsumeAmountMode.one)
                                 if let amount = productBarcode?.amount {
                                     if amount != 1.0 {
-                                        Text(LocalizedStringKey("str.quickScan.input.consume.barcodeAmount \(formatAmount(amount))")).tag(ConsumeAmountMode.barcode)
+                                        Text(LocalizedStringKey("str.quickScan.input.consume.barcodeAmount \(amount.formattedAmount)")).tag(ConsumeAmountMode.barcode)
                                     }
                                 }
                                 Text(LocalizedStringKey("str.quickScan.input.consume.custom")).tag(ConsumeAmountMode.custom)
-                                Text(LocalizedStringKey("str.quickScan.input.consume.all \(formatAmount(stockElement?.amount ?? 1.0))")).tag(ConsumeAmountMode.all)
+                                Text(LocalizedStringKey("str.quickScan.input.consume.all \((stockElement?.amount ?? 1.0).formattedAmount))")).tag(ConsumeAmountMode.all)
                             }).pickerStyle(SegmentedPickerStyle())
                             if consumeAmountMode == .custom {
                                 MyDoubleStepper(amount: $consumeAmount, description: "str.stock.product.amount", minAmount: 0.0001, maxAmount: consumeLocationID != nil ? getAmountForLocation(lID: consumeLocationID!) : stockElement?.amount ?? 1.0, amountStep: 1.0, amountName: getQUString(amount: consumeAmount == 1.0 ? 1 : 2), errorMessage: "str.stock.product.amount.invalid", errorMessageMax: "str.stock.product.amount.locMax", systemImage: MySymbols.amount)
@@ -294,8 +311,8 @@ struct QuickScanModeInputView: View {
                             Image(systemName: MySymbols.date)
                             DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
                         }
-                        
-                        MyDoubleStepper(amount: $purchaseAmount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: getQUString(amount: purchaseAmount == 1.0 ? 1 : 2), errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
+  
+                        AmountSelectionView(productID: Binding.constant(product?.id), amount: $purchaseAmount, quantityUnitID: $purchaseQuantityUnitID)
                         
                         MyDoubleStepperOptional(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
                         
