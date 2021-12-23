@@ -102,7 +102,7 @@ struct PurchaseProductView: View {
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: price, locationID: locationID, shoppingLocationID: shoppingLocationID)
         if let productID = productID {
-            infoString = "\(amount.formattedAmount) \(getQUString(stockQU: true)) \(product?.name ?? "")"
+            infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
                 switch result {
