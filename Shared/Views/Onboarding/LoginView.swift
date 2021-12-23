@@ -273,10 +273,12 @@ struct LoginOwnServerView: View {
                                 loginViewState = .start
                             })
                                 .buttonStyle(BorderButtonStyle())
-                            Link(destination: URL(string: "\(grocyServerURL)/manageapikeys")!, label: {
-                                Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
-                            })
-                                .buttonStyle(BorderButtonStyle())
+                            if let manageKeysURL = URL(string: "\(grocyServerURL)/manageapikeys") {
+                                Link(destination: manageKeysURL, label: {
+                                    Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
+                                })
+                                    .buttonStyle(BorderButtonStyle())
+                            }
                         }
                         Button(LocalizedStringKey("str.login.ownServer.manual.login"), action: {
                             passDemoMode = false
