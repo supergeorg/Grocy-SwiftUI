@@ -76,7 +76,7 @@ struct MDProductFormView: View {
         mdProductDescription = product?.mdProductDescription ?? ""
         productGroupID = product?.productGroupID
         calories = product?.calories ?? 0.0
-        hideOnStockOverview = (product?.hideOnStockOverview ?? 0) == 1
+        hideOnStockOverview = product?.hideOnStockOverview == true
         selectedPictureFileName = product?.pictureFileName
         
         locationID = product?.locationID
@@ -125,7 +125,7 @@ struct MDProductFormView: View {
         if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
             let id = isNewProduct ? grocyVM.findNextID(.products) : product!.id
             let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
-            let productPOST = MDProduct(id: id, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? 1 : 0, locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? 1 : 0, tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? 1 : 0, parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0, dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, hideOnStockOverview: hideOnStockOverview ? 1 : 0, rowCreatedTimestamp: timeStamp)
+            let productPOST = MDProduct(id: id, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? 1 : 0, locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? 1 : 0, tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? 1 : 0, parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0, dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, hideOnStockOverview: hideOnStockOverview, rowCreatedTimestamp: timeStamp)
             isProcessing = true
             if isNewProduct {
                 grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in

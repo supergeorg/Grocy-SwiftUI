@@ -119,6 +119,9 @@ struct StockView: View {
             .filter {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
             }
+            .filter {
+                $0.product.hideOnStockOverview == false
+            }
     }
     
     var summedValue: Double {
