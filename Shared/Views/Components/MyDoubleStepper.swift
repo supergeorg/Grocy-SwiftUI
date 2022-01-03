@@ -63,32 +63,22 @@ struct MyDoubleStepper: View {
                         if amount > minAmount {
                             amount -= amountStep ?? 1.0
                         }
-                    } else { amount -= amountStep ?? 1.0 }
+                    } else {
+                        amount -= amountStep ?? 1.0
+                    }
                 })
             }
-            if let minAmount = minAmount {
-                if let amount = amount {
-                    if amount < minAmount {
-                        if let errorMessage = errorMessage {
-                            Text(LocalizedStringKey(errorMessage))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+                Text(LocalizedStringKey(errorMessage))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            if let maxAmount = maxAmount {
-                if let amount = amount {
-                    if amount > maxAmount {
-                        if let errorMessageMax = errorMessageMax {
-                            Text(LocalizedStringKey(errorMessageMax))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+            if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
+                Text(LocalizedStringKey(errorMessageMax))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -148,40 +138,34 @@ struct MyDoubleStepperOptional: View {
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
                     if amount != nil {
                         amount! += amountStep ?? 1.0
-                    } else { amount = amountStep }
+                    } else {
+                        amount = amountStep
+                    }
                 }, onDecrement: {
                     if amount != nil {
-                        if minAmount != nil {
-                            if amount! > minAmount! {
+                        if let minAmount = minAmount {
+                            if amount! > minAmount {
                                 amount! -= amountStep ?? 1.0
-                            } else if ((currencySymbol != nil) && (amount! == 0.0)) { amount = nil}
+                            } else if ((currencySymbol != nil) && (amount! == 0.0)) {
+                                amount = nil
+                            }
                         } else { amount! -= amountStep ?? 1.0 }
-                    } else { amount = 0 }
+                    } else {
+                        amount = 0
+                    }
                 })
             }
-            if let minAmount = minAmount {
-                if let amount = amount {
-                    if amount < minAmount {
-                        if let errorMessage = errorMessage {
-                            Text(LocalizedStringKey(errorMessage))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+                Text(LocalizedStringKey(errorMessage))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            if let maxAmount = maxAmount {
-                if let amount = amount {
-                    if amount > maxAmount {
-                        if let errorMessageMax = errorMessageMax {
-                            Text(LocalizedStringKey(errorMessageMax))
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }
-                }
+            if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
+                Text(LocalizedStringKey(errorMessageMax))
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

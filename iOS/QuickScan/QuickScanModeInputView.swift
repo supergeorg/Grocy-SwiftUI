@@ -262,7 +262,8 @@ struct QuickScanModeInputView: View {
                                 }
                                 Text(LocalizedStringKey("str.quickScan.input.consume.custom")).tag(ConsumeAmountMode.custom)
                                 Text(LocalizedStringKey("str.quickScan.input.consume.all \((stockElement?.amount ?? 1.0).formattedAmount))")).tag(ConsumeAmountMode.all)
-                            }).pickerStyle(SegmentedPickerStyle())
+                            })
+                                .pickerStyle(.segmented)
                             if consumeAmountMode == .custom {
                                 MyDoubleStepper(amount: $consumeAmount, description: "str.stock.product.amount", minAmount: 0.0001, maxAmount: consumeLocationID != nil ? getAmountForLocation(lID: consumeLocationID!) : stockElement?.amount ?? 1.0, amountStep: 1.0, amountName: getQUString(amount: consumeAmount == 1.0 ? 1 : 2), errorMessage: "str.stock.product.amount.invalid", errorMessageMax: "str.stock.product.amount.locMax", systemImage: MySymbols.amount)
                             }

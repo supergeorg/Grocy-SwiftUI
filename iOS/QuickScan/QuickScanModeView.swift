@@ -127,7 +127,7 @@ struct QuickScanModeView: View {
                     .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.purchase)
             })
-                .pickerStyle(SegmentedPickerStyle())
+                .pickerStyle(.segmented)
             Spacer()
             Button(action: {
                 flashOn.toggle()

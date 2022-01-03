@@ -290,7 +290,7 @@ struct ConsumeProductView: View {
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {
                     if isProcessingAction {
-                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                        ProgressView().progressViewStyle(.circular)
                     } else {
                         Button(action: resetForm, label: {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)

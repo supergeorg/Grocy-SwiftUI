@@ -181,7 +181,8 @@ struct PurchaseProductView: View {
                     Picker("", selection: $isTotalPrice, content: {
                         Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
                         Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
-                    }).pickerStyle(SegmentedPickerStyle())
+                    })
+                        .pickerStyle(.segmented)
                 }
             }
             
@@ -225,7 +226,7 @@ struct PurchaseProductView: View {
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {
                     if isProcessingAction {
-                        ProgressView().progressViewStyle(CircularProgressViewStyle())
+                        ProgressView().progressViewStyle(.circular)
                     } else {
                         Button(action: resetForm, label: {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
