@@ -1,6 +1,6 @@
 //
 //  MyTextField.swift
-//  grocy-ios
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 28.10.20.
 //
@@ -17,7 +17,7 @@ struct MyTextField: View {
     var helpText: String?
     
     var showSmallDescription: Bool {
-        (isFocused || !textToEdit.isEmpty)
+        ((isFocused && !textToEdit.isEmpty) || !textToEdit.isEmpty)
     }
     
     var body: some View {
@@ -28,20 +28,23 @@ struct MyTextField: View {
                     FieldDescription(description: helpText)
                 }
             }
+#if os(iOS)
             Text(LocalizedStringKey(description))
                 .font(showSmallDescription ? .caption : .body)
                 .foregroundColor(isCorrect ? Color.gray : Color.red)
                 .padding(.top, showSmallDescription ? 0 : 16)
                 .padding(.leading, (leadingIcon == nil || showSmallDescription) ? 0 : 30)
+                .opacity(showSmallDescription ? 1 : 0)
                 .animation(.default, value: showSmallDescription)
                 .zIndex(0)
+#endif
             HStack {
                 if leadingIcon != nil {
                     Image(systemName: leadingIcon!)
                         .padding(.top, 15)
                         .frame(width: 20, height: 20)
                 }
-                TextField("", text: self.$textToEdit)
+                TextField(LocalizedStringKey(description), text: self.$textToEdit)
                     .disableAutocorrection(true)
                     .focused($isFocused)
                     .font(.body)
