@@ -1,6 +1,6 @@
 //
 //  MDLocationsView.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 13.10.20.
 //
@@ -94,7 +94,7 @@ struct MDLocationsView: View {
                     RefreshButton(updateData: { updateData() })
 #endif
                     Button(action: {
-                        showAddLocation.toggle()
+                        showAddLocation = true
                     }, label: {
                         Image(systemName: MySymbols.new)
                     })
@@ -122,6 +122,7 @@ struct MDLocationsView: View {
                 NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType), isActive: $showAddLocation, label: {
                     NewMDRowLabel(title: "str.md.location.new")
                 })
+                    .frame(height: showAddLocation ? 50 : 0)
             }
 #endif
             ForEach(filteredLocations, id:\.id) {location in
