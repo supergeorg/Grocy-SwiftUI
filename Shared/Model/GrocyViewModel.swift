@@ -27,6 +27,7 @@ class GrocyViewModel: ObservableObject {
     @Published var systemInfo: SystemInfo?
     @Published var systemDBChangedTime: SystemDBChangedTime?
     @Published var systemConfig: SystemConfig?
+    @Published var userSettings: GrocyUserSettings?
     
     @Published var users: GrocyUsers = []
     @Published var currentUser: GrocyUsers = []
@@ -486,6 +487,20 @@ class GrocyViewModel: ObservableObject {
                             }
                         })
                     }
+                case .user_settings:
+                    if userSettings == nil || ignoreCached {
+                        getUserSettings(completion: { result in
+                            switch result {
+                            case let .success(usrSet):
+                                self.userSettings = usrSet
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
+                            case let .failure(error):
+                                self.postLog("Data request failed for UserSettings. Message: \("\(error)")", type: .error)
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
+                            }
+                        })
+                    }
                 }
             }
         }
@@ -728,7 +743,7 @@ class GrocyViewModel: ObservableObject {
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
-                    self.postLog("Delete current user failed. \("\(error)")", type: .error)
+                    self.postLog("Get user failed. \("\(error)")", type: .error)
                     completion(.failure(error))
                 case .finished:
                     break
@@ -736,6 +751,24 @@ class GrocyViewModel: ObservableObject {
             }, receiveValue: { (currentUserOut) in
                 DispatchQueue.main.async {
                     completion(.success(currentUserOut))
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func getUserSettings(completion: @escaping ((Result<GrocyUserSettings, APIError>) -> ())) {
+        grocyApi.getUserSettings()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.postLog("Getting user settings failed. \("\(error)")", type: .error)
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (userSettingsOut) in
+                DispatchQueue.main.async {
+                    completion(.success(userSettingsOut))
                 }
             })
             .store(in: &cancellables)

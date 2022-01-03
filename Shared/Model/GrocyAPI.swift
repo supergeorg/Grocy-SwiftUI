@@ -33,7 +33,7 @@ public enum ObjectEntities: String, CaseIterable {
 }
 
 public enum AdditionalEntities: String, CaseIterable {
-    case system_info, system_db_changed_time, system_config, stock, users, current_user
+    case system_info, system_db_changed_time, system_config, stock, users, current_user, user_settings
 }
 
 public enum StockProductPost: String {
@@ -74,6 +74,7 @@ protocol GrocyAPI {
     func deleteUserWithID(id: Int) -> AnyPublisher<Int, APIError>
     // MARK: - Current user
     func getUser() -> AnyPublisher<GrocyUsers, APIError>
+    func getUserSettings() -> AnyPublisher<GrocyUserSettings, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
@@ -375,6 +376,10 @@ extension GrocyApi {
     
     func getUsers() -> AnyPublisher<GrocyUsers, APIError> {
         return call(.users, method: .GET)
+    }
+    
+    func getUserSettings() -> AnyPublisher<GrocyUserSettings, APIError> {
+        return call(.userSettings, method: .GET)
     }
     
     func postUser(user: Data) -> AnyPublisher<Int, APIError> {
