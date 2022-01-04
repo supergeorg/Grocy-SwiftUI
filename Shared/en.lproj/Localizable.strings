@@ -596,6 +596,7 @@
 "str.settings.log.empty" = "No log entry found.";
 "str.settings.log.update" = "Update log";
 "str.settings.log.share" = "Share log";
+"str.settings.grocy" = "Grocy settings";
 "str.settings.stock" = "Stock settings";
 "str.settings.stock.presets" = "Presets for new products";
 "str.settings.stock.presets.location" = "Location";

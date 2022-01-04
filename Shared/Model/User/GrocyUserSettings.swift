@@ -125,3 +125,55 @@ struct GrocyUserSettings: Codable {
             self.stockDefaultConsumeAmountUseQuickConsumeAmount = stockDefaultConsumeAmountUseQuickConsumeAmount
         }
 }
+
+struct GrocyUserSettingsString: Codable {
+    let value: String?
+    
+    init(value: String) {
+        self.value = value
+    }
+}
+
+struct GrocyUserSettingsInt: Codable {
+    let value: Int?
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            do { self.value = try container.decodeIfPresent(Int.self, forKey: .value) } catch { self.value = try Int(container.decodeIfPresent(String.self, forKey: .value) ?? "") }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    init(value: Int) {
+        self.value = value
+    }
+}
+
+struct GrocyUserSettingsBool: Codable {
+    let value: Bool
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            do {
+                self.value = try container.decode(Bool.self, forKey: .value)
+            } catch {
+                do {
+                    self.value = try container.decodeIfPresent(Int.self, forKey: .value) == 1
+                } catch {
+                    self.value = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .value))
+                }
+            }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    init(value: Bool) {
+        self.value = value
+    }
+}

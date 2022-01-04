@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  grocy-ios
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 28.10.20.
 //
@@ -28,11 +28,12 @@ struct SettingsView: View {
 #if os(macOS)
         NavigationView {
             content
-                .frame(maxWidth: .infinity)
+                .frame(minWidth: Constants.macOSNavWidth, maxWidth: .infinity)
                 .padding()
         }
-        .listStyle(SidebarListStyle())
+        .listStyle(.sidebar)
         .navigationTitle("str.settings")
+        .frame(minWidth: Constants.macOSSettingsWidth, minHeight: Constants.macOSSettingsHeight)
 #else
         Form {
             content
@@ -40,6 +41,8 @@ struct SettingsView: View {
         }
 #endif
     }
+    
+    
     
     var content: some View {
         List {
@@ -62,6 +65,12 @@ struct SettingsView: View {
                     }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
                     Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
                 }
+            }
+            Section(header: Text(LocalizedStringKey("str.settings.grocy"))) {
+                NavigationLink(destination: SettingsStockView(), label: {
+                    Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.barcodeScan)
+                        .foregroundColor(.primary)
+                })
             }
             Section(header: Text("App")){
                 Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {

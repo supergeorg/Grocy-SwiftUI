@@ -774,6 +774,43 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getUserSettingsEntry<T: Codable>(settingKey: String, completion: @escaping ((Result<T, APIError>) -> ())) {
+        grocyApi.getUserSettingKey(settingKey: settingKey)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.postLog("Getting user settings key failed. \("\(error)")", type: .error)
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (usersettingKeyOut) in
+                DispatchQueue.main.async {
+                    completion(.success(usersettingKeyOut))
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func putUserSettingsEntry<T: Codable>(settingKey: String, content: T, completion: @escaping ((Result<Int, Error>) -> ())) {
+        let jsonContent = try! jsonEncoder.encode(content)
+        grocyApi.putUserSettingKey(settingKey: settingKey, content: jsonContent)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.postLog("Put user settings key failed. \("\(error)")", type: .error)
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }) { (returnCode: Int) in
+                DispatchQueue.main.async {
+                    completion(.success(returnCode))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     // MARK: - Stock management
     
     func getStock(completion: @escaping ((Result<Stock, APIError>) -> ())) {

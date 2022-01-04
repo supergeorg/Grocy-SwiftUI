@@ -597,6 +597,7 @@
 "str.settings.log.empty" = "Kein Logeintrag gefunden.";
 "str.settings.log.update" = "Log aktualisieren";
 "str.settings.log.share" = "Log-Datei teilen";
+"str.settings.grocy" = "Grocy-Einstellungen";
 "str.settings.stock" = "Bestand-Einstellungen";
 "str.settings.stock.presets" = "Vorgaben für neue Produkte";
 "str.settings.stock.presets.location" = "Standort";

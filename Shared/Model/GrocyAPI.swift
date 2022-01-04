@@ -75,6 +75,8 @@ protocol GrocyAPI {
     // MARK: - Current user
     func getUser() -> AnyPublisher<GrocyUsers, APIError>
     func getUserSettings() -> AnyPublisher<GrocyUserSettings, APIError>
+    func getUserSettingKey<T: Codable>(settingKey: String) -> AnyPublisher<T, APIError>
+    func putUserSettingKey(settingKey: String, content: Data) -> AnyPublisher<Int, APIError>
     // MARK: - Stock
     func getStock() -> AnyPublisher<Stock, APIError>
     func getStockJournal() -> AnyPublisher<StockJournal, APIError>
@@ -128,7 +130,7 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
         let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
             if let error = error {
@@ -145,7 +147,7 @@ public class GrocyApi: GrocyAPI {
         uploadTask.resume()
     }
     
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
+    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
         if let hassAuthenticator = hassAuthenticator {
             return hassAuthenticator.validToken()
                 .flatMap({ token in
@@ -167,7 +169,7 @@ public class GrocyApi: GrocyAPI {
         }
     }
     
-    private func callAPIEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<Int, APIError> {
+    private func callAPIEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<Int, APIError> {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
@@ -184,7 +186,7 @@ public class GrocyApi: GrocyAPI {
             .eraseToAnyPublisher()
     }
     
-    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
+    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
         if let hassAuthenticator = hassAuthenticator {
             return hassAuthenticator.validToken()
                 .flatMap({ token in
@@ -206,7 +208,7 @@ public class GrocyApi: GrocyAPI {
         }
     }
     
-    private func callAPI<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<T, APIError> {
+    private func callAPI<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<T, APIError> {
         let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassIngressToken)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
@@ -233,27 +235,28 @@ public class GrocyApi: GrocyAPI {
             .eraseToAnyPublisher()
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: Int? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
+    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
         if baseURL.hasSuffix("/") { baseURL = String(baseURL.dropLast()) }
         var path = "\(baseURL)\(baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
-        if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: String(id!)) }
-        if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: String(id!)) }
-        if path.contains("{entryId}") { path = path.replacingOccurrences(of: "{entryId}", with: String(id!)) }
-        if path.contains("{productId}") { path = path.replacingOccurrences(of: "{productId}", with: String(id!)) }
-        if path.contains("{productIdToKeep}") { path = path.replacingOccurrences(of: "{productIdToKeep}", with: String(id!)) }
-        if path.contains("{productIdToRemove}") { path = path.replacingOccurrences(of: "{productIdToRemove}", with: String(id!)) }
-        if path.contains("{bookingId}") { path = path.replacingOccurrences(of: "{bookingId}", with: String(id!)) }
-        if path.contains("{transactionId}") { path = path.replacingOccurrences(of: "{transactionId}", with: String(id!)) }
-        if path.contains("{barcode}") { path = path.replacingOccurrences(of: "{barcode}", with: String(id!)) }
-        if path.contains("{recipeId}") { path = path.replacingOccurrences(of: "{recipeId}", with: String(id!)) }
-        if path.contains("{choreId}") { path = path.replacingOccurrences(of: "{choreId}", with: String(id!)) }
-        if path.contains("{executionId}") { path = path.replacingOccurrences(of: "{executionId}", with: String(id!)) }
-        if path.contains("{batteryId}") { path = path.replacingOccurrences(of: "{batteryId}", with: String(id!)) }
-        if path.contains("{chargeCycleId}") { path = path.replacingOccurrences(of: "{chargeCycleId}", with: String(id!)) }
-        if path.contains("{taskId}") { path = path.replacingOccurrences(of: "{taskId}", with: String(id!)) }
+        if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: id!) }
+        if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: id!) }
+        if path.contains("{entryId}") { path = path.replacingOccurrences(of: "{entryId}", with: id!) }
+        if path.contains("{productId}") { path = path.replacingOccurrences(of: "{productId}", with: id!) }
+        if path.contains("{productIdToKeep}") { path = path.replacingOccurrences(of: "{productIdToKeep}", with: id!) }
+        if path.contains("{productIdToRemove}") { path = path.replacingOccurrences(of: "{productIdToRemove}", with: id!) }
+        if path.contains("{bookingId}") { path = path.replacingOccurrences(of: "{bookingId}", with: id!) }
+        if path.contains("{transactionId}") { path = path.replacingOccurrences(of: "{transactionId}", with: id!) }
+        if path.contains("{barcode}") { path = path.replacingOccurrences(of: "{barcode}", with: id!) }
+        if path.contains("{recipeId}") { path = path.replacingOccurrences(of: "{recipeId}", with: id!) }
+        if path.contains("{choreId}") { path = path.replacingOccurrences(of: "{choreId}", with: id!) }
+        if path.contains("{executionId}") { path = path.replacingOccurrences(of: "{executionId}", with: id!) }
+        if path.contains("{batteryId}") { path = path.replacingOccurrences(of: "{batteryId}", with: id!) }
+        if path.contains("{chargeCycleId}") { path = path.replacingOccurrences(of: "{chargeCycleId}", with: id!) }
+        if path.contains("{taskId}") { path = path.replacingOccurrences(of: "{taskId}", with: id!) }
         if path.contains("{fileName}") { path = path.replacingOccurrences(of: "{fileName}", with: fileName!) }
         if path.contains("{group}") { path = path.replacingOccurrences(of: "{group}", with: groupName!) }
+        if path.contains("{settingKey}") { path = path.replacingOccurrences(of: "{settingKey}", with: id!) }
         if let query = query { path += query }
         
         guard let url = URL(string: path)
@@ -382,16 +385,24 @@ extension GrocyApi {
         return call(.userSettings, method: .GET)
     }
     
+    func getUserSettingKey<T: Codable>(settingKey: String) -> AnyPublisher<T, APIError> {
+        return call(.userSettingsWithKey, method: .GET, id: settingKey)
+    }
+    
+    func putUserSettingKey(settingKey: String, content: Data) -> AnyPublisher<Int, APIError> {
+        return callEmptyResponse(.userSettingsWithKey, method: .PUT, id: settingKey, content: content)
+    }
+    
     func postUser(user: Data) -> AnyPublisher<Int, APIError> {
         return callEmptyResponse(.users, method: .POST, content: user)
     }
     
     func putUserWithID(id: Int, user: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.usersWithID, method: .PUT, id: id, content: user)
+        return callEmptyResponse(.usersWithID, method: .PUT, id: String(id), content: user)
     }
     
     func deleteUserWithID(id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.usersWithID, method: .DELETE, id: id)
+        return callEmptyResponse(.usersWithID, method: .DELETE, id: String(id))
     }
     
     // MARK: - Current user
@@ -416,32 +427,32 @@ extension GrocyApi {
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
         switch stockModeGet {
         case .details:
-            return call(.stockProductWithId, method: .GET, id: id)
+            return call(.stockProductWithId, method: .GET, id: String(id))
         case .entries:
-            return call(.stockProductWithIdEntries, method: .GET, id: id, query: query)
+            return call(.stockProductWithIdEntries, method: .GET, id: String(id), query: query)
         case .locations:
-            return call(.stockProductWithIdLocations, method: .GET, id: id)
+            return call(.stockProductWithIdLocations, method: .GET, id: String(id))
         case .priceHistory:
-            return call(.stockProductWithIdPriceHistory, method: .GET, id: id)
+            return call(.stockProductWithIdPriceHistory, method: .GET, id: String(id))
         }
     }
     
     func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError> {
-        return call(.stockEntryWithID, method: .PUT, id: entryID, content: content)
+        return call(.stockEntryWithID, method: .PUT, id: String(entryID), content: content)
     }
     
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError> {
         switch stockModePost {
         case .add:
-            return call(.stockProductWithIDAdd, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDAdd, method: .POST, id: String(id), content: content)
         case .consume:
-            return call(.stockProductWithIDConsume, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDConsume, method: .POST, id: String(id), content: content)
         case .inventory:
-            return call(.stockProductWithIDInventory, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDInventory, method: .POST, id: String(id), content: content)
         case .open:
-            return call(.stockProductWithIDOpen, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDOpen, method: .POST, id: String(id), content: content)
         case .transfer:
-            return call(.stockProductWithIDTransfer, method: .POST, id: id, content: content)
+            return call(.stockProductWithIDTransfer, method: .POST, id: String(id), content: content)
         }
     }
     
@@ -450,7 +461,7 @@ extension GrocyApi {
     }
     
     func undoBookingWithID(id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: id)
+        return callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: String(id))
     }
     
     func getPictureURL(groupName: String, fileName: String) -> String? {
@@ -493,15 +504,15 @@ extension GrocyApi {
     }
     
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntityWithID, method: .GET, object: object, id: id)
+        return call(.objectsEntityWithID, method: .GET, object: object, id: String(id))
     }
     
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: id, content: content)
+        return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: String(id), content: content)
     }
     
     func deleteObjectWithID(object: ObjectEntities, id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: id)
+        return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
     }
     
     // MARK: - Files
