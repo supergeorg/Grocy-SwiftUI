@@ -596,6 +596,27 @@
 "str.settings.log.empty" = "No log entry found.";
 "str.settings.log.update" = "Update log";
 "str.settings.log.share" = "Share log";
+"str.settings.stock" = "Stock settings";
+"str.settings.stock.presets" = "Presets for new products";
+"str.settings.stock.presets.location" = "Location";
+"str.settings.stock.presets.productGroup" = "Product group";
+"str.settings.stock.presets.quantityUnit" = "Quantity unit";
+"str.settings.stock.presets.defaultDueDays" = "Default due days";
+"str.settings.stock.stockOverview" = "Stock overview";
+"str.settings.stock.stockOverview.dueSoonDays" = "Due soon days";
+"str.settings.stock.stockOverview.showIconShoppingList" = "Show an icon if the product is already on the shopping list";
+"str.settings.stock.purchase" = "Purchase";
+"str.settings.stock.purchase.defaultAmount" = "Default amount for purchase";
+"str.settings.stock.purchase.showPurchasedDate" = "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "Show a warning when the due date of the purchased product is earlier than the next due date in stock";
+"str.settings.stock.consume" = "Consume";
+"str.settings.stock.consume.defaultAmount" = "Default amount for consume";
+"str.settings.stock.consume.useQuickConsume" = "Use the products \"Quick consume amount\"";
+"str.settings.stock.common" = "Common";
+"str.settings.stock.common.amountDecimalPlaces" = "Decimal places allowed for amounts";
+"str.settings.stock.common.priceDecimalPlaces" = "Decimal places allowed for prices";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Add decimal separator automatically for price inputs";
+"str.settings.stock.common.priceAddSeparatorAuto.hint" = "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places";
 
 // MARK: - Admin
 "str.admin.user" = "User management";

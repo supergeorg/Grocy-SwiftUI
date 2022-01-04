@@ -597,6 +597,27 @@
 "str.settings.log.empty" = "Kein Logeintrag gefunden.";
 "str.settings.log.update" = "Log aktualisieren";
 "str.settings.log.share" = "Log-Datei teilen";
+"str.settings.stock" = "Bestand-Einstellungen";
+"str.settings.stock.presets" = "Vorgaben für neue Produkte";
+"str.settings.stock.presets.location" = "Standort";
+"str.settings.stock.presets.productGroup" = "Produktgruppe";
+"str.settings.stock.presets.quantityUnit" = "Mengeneinheit";
+"str.settings.stock.presets.defaultDueDays" = "Standard-Fälligkeitstage ";
+"str.settings.stock.stockOverview" = "Bestand";
+"str.settings.stock.stockOverview.dueSoonDays" = "\"Bald fällig\" Tage ";
+"str.settings.stock.stockOverview.showIconShoppingList" = "Ein Symbol anzeigen, wenn das Produkt bereits auf dem Einkaufszettel steht";
+"str.settings.stock.purchase" = "Einkauf";
+"str.settings.stock.purchase.defaultAmount" = "Standardmenge für Einkauf";
+"str.settings.stock.purchase.showPurchasedDate" = "Einkaufsdattum auf der Einkauf- und Inventur-Seite anzeigen (ansonsten wird heute als Einkaufsdatum verwendet)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "Eine Warnung anzeigen, wenn das Fälligkeitsdatum des eingekauften Produkts früher ist als im Bestand";
+"str.settings.stock.consume" = "Verbrauch";
+"str.settings.stock.consume.defaultAmount" = "Standardmenge für Verbrauch";
+"str.settings.stock.consume.useQuickConsume" = "Die Schnell-Verbrauchs-Menge des Produkts verwenden";
+"str.settings.stock.common" = "Allgemein";
+"str.settings.stock.common.amountDecimalPlaces" = "Erlaubte Nachkommastellen für Mengen";
+"str.settings.stock.common.priceDecimalPlaces" = "Erlaubte Nachkommastellen für Preise";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Dezimaltrennzeichen für Preis-Eingabefelder automatisch hinzufügen";
+"str.settings.stock.common.priceAddSeparatorAuto.hint" = "Wenn aktiviert, müssen Preiseingaben immer inkl. Nachkommastellen erfolgen, das Dezimaltrennzeichen wird automatisch entsprechend der Anzahl der erlaubten Nachkommastellen hinzugefügt";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";
