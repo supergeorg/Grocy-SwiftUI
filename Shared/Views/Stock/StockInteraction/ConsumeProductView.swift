@@ -52,9 +52,10 @@ struct ConsumeProductView: View {
     @State private var showRecipeInfo: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.user_settings]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -206,6 +207,7 @@ struct ConsumeProductView: View {
                         if let product = product {
                             locationID = product.locationID
                             quantityUnitID = product.quIDStock
+                            amount = grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
                         }
                     }
                 }
@@ -262,7 +264,7 @@ struct ConsumeProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
                 resetForm()
                 if let productID = productID {
                     grocyVM.getStockProductEntries(productID: productID)

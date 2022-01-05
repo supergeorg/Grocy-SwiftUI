@@ -55,7 +55,7 @@ struct StockView: View {
 #endif
     
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config, .user_settings]
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
@@ -120,7 +120,7 @@ struct StockView: View {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
             }
             .filter {
-                $0.product.hideOnStockOverview == false
+                $0.product.hideOnStockOverview == 0
             }
     }
     
