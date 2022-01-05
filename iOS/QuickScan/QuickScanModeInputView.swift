@@ -229,10 +229,11 @@ struct QuickScanModeInputView: View {
     var body: some View {
         NavigationView{
             Form {
-                if let productU = product {
+                if let product = product {
                     Section() {
                         HStack{
-                            if let pictureFileName = productU.pictureFileName,
+                            if let pictureFileName = product.pictureFileName,
+                               !pictureFileName.isEmpty,
                                let utf8str = pictureFileName.data(using: .utf8),
                                let base64Encoded = utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
                                let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded),
@@ -248,7 +249,7 @@ struct QuickScanModeInputView: View {
                                     .frame(width: 50, height: 50)
                             }
                             VStack(alignment: .leading) {
-                                Text(productU.name).font(.title)
+                                Text(product.name).font(.title)
                                 if let amount = stockElement?.amount {
                                     Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
                                 }
