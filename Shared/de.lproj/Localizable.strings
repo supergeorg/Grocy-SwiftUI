@@ -644,7 +644,7 @@
 "str.quickScan.markAsOpened" = "Öffnen";
 "str.quickScan.purchase" = "Einkaufen";
 "str.quickScan.input.consume.amount" = "Verbrauchs-Menge";
-"str.quickScan.input.consume.default" = "Standard (1)";
+"str.quickScan.input.consume.default %@" = "Standard (%@)";
 "str.quickScan.input.consume.barcodeAmount %@" = "Schnell (%@)";
 "str.quickScan.input.consume.custom" = "Andere";
 "str.quickScan.input.consume.all %@" = "Alles (%@)";

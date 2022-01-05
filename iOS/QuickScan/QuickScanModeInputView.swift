@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum ConsumeAmountMode {
-    case one, barcode, custom, all
+    case standard, barcode, custom, all
 }
 
 struct QuickScanModeInputView: View {
@@ -28,7 +28,7 @@ struct QuickScanModeInputView: View {
     @State private var toastTypeFail: QSToastTypeFail?
     @Binding var infoString: String?
     
-    @State private var consumeAmountMode: ConsumeAmountMode = .one
+    @State private var consumeAmountMode: ConsumeAmountMode = .standard
     
     @State private var isProcessingAction: Bool = false
     
@@ -112,10 +112,18 @@ struct QuickScanModeInputView: View {
         }
     }
     
+    private func getStandardConsumeAmount() -> Double {
+        if grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount == true {
+            return product?.quickConsumeAmount ?? 1.0
+        } else {
+            return Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
+        }
+    }
+    
     private func getConsumeAmount() -> Double {
         switch consumeAmountMode {
-        case .one:
-            return 1.0
+        case .standard:
+            return getStandardConsumeAmount()
         case .barcode:
             return productBarcode?.amount ?? 1.0
         case .custom:
@@ -254,7 +262,7 @@ struct QuickScanModeInputView: View {
                         VStack(alignment: .leading){
                             Text(LocalizedStringKey("str.quickScan.input.consume.amount"))
                             Picker(selection: $consumeAmountMode, label: Text(""), content: {
-                                Text(LocalizedStringKey("str.quickScan.input.consume.default")).tag(ConsumeAmountMode.one)
+                                Text(LocalizedStringKey("str.quickScan.input.consume.default \(getStandardConsumeAmount().formattedAmount)")).tag(ConsumeAmountMode.standard)
                                 if let amount = productBarcode?.amount {
                                     if amount != 1.0 {
                                         Text(LocalizedStringKey("str.quickScan.input.consume.barcodeAmount \(amount.formattedAmount)")).tag(ConsumeAmountMode.barcode)
