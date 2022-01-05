@@ -28,7 +28,7 @@ struct MDProduct: Codable {
     let cumulateMinStockAmountOfSubProducts: Int?
     let dueType: Int
     @NullCodable var quickConsumeAmount: Double?
-    @NullCodable var hideOnStockOverview: Bool?
+    @NullCodable var hideOnStockOverview: Int?
     let rowCreatedTimestamp: String
     
     enum CodingKeys: String, CodingKey {
@@ -86,15 +86,16 @@ struct MDProduct: Codable {
             do { self.cumulateMinStockAmountOfSubProducts = try container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) } catch { self.cumulateMinStockAmountOfSubProducts = try? Int(container.decodeIfPresent(String.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? "") }
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
-            do {
-                self.hideOnStockOverview = try container.decode(Bool.self, forKey: .hideOnStockOverview)
-            } catch {
-                do {
-                    self.hideOnStockOverview = try container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) == 1
-                } catch {
-                    self.hideOnStockOverview = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .hideOnStockOverview))
-                }
-            }
+            do { self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try Int(container.decode(String.self, forKey: .hideOnStockOverview))! }
+//            do {
+//                self.hideOnStockOverview = try container.decode(Bool.self, forKey: .hideOnStockOverview)
+//            } catch {
+//                do {
+//                    self.hideOnStockOverview = try container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) == 1
+//                } catch {
+//                    self.hideOnStockOverview = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .hideOnStockOverview))
+//                }
+//            }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -125,7 +126,7 @@ struct MDProduct: Codable {
          cumulateMinStockAmountOfSubProducts: Int,
          dueType: Int,
          quickConsumeAmount: Double? = nil,
-         hideOnStockOverview: Bool? = nil,
+         hideOnStockOverview: Int? = nil,
          rowCreatedTimestamp: String) {
         self.id = id
         self.name = name

@@ -38,7 +38,7 @@ struct StockTable: View {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
             }
             .filter {
-                $0.product.hideOnStockOverview == false
+                $0.product.hideOnStockOverview == 0
             }
     }
     
