@@ -261,7 +261,7 @@ struct QuickScanModeInputView: View {
                                     }
                                 }
                                 Text(LocalizedStringKey("str.quickScan.input.consume.custom")).tag(ConsumeAmountMode.custom)
-                                Text(LocalizedStringKey("str.quickScan.input.consume.all \((stockElement?.amount ?? 1.0).formattedAmount))")).tag(ConsumeAmountMode.all)
+                                Text(LocalizedStringKey("str.quickScan.input.consume.all \((stockElement?.amount ?? 1.0).formattedAmount)")).tag(ConsumeAmountMode.all)
                             })
                                 .pickerStyle(.segmented)
                             if consumeAmountMode == .custom {

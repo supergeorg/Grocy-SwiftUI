@@ -155,7 +155,7 @@
 "str.stock.product.amount" = "Menge";
 "str.stock.product.amount.factored %@ %@" = "Dies entspricht %@ %@";
 "str.stock.product.amount.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
-"str.stock.consume.product.amount.locMax" = "Diese Menge ist am gewählten Standort nicht vorhanden";
+"str.stock.product.amount.locMax" = "Diese Menge ist am gewählten Standort nicht vorhanden";
 "str.stock.product.quantityUnit" = "Mengeneinheit";
 "str.stock.product.quantityUnit.required" = "Eine Mengeneinheit muss ausgewählt werden";
 
