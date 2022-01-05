@@ -17,6 +17,7 @@ public enum APIError: Error, Equatable {
     }
     case internalError
     case serverError(error: Error)
+    case serverError(errorMessage: String)
     case encodingError
     case invalidResponse
     case unsuccessful(error: Error)
@@ -174,13 +175,24 @@ public class GrocyApi: GrocyAPI {
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError{ error in
                 APIError.serverError(error: error) }
-            .flatMap({ result -> Just<Int> in
+            .flatMap({ result -> AnyPublisher<Int, APIError> in
                 guard let urlResponse = result.response as? HTTPURLResponse else {
                     return Just(0)
+                        .setFailureType(to: APIError.self)
+                        .eraseToAnyPublisher()
+                }
+                if urlResponse.statusCode != 204 {
+                    if let error = try? JSONDecoder().decode(ErrorMessage.self, from: result.data) {
+                        return Fail(error: APIError.serverError(errorMessage: error.errorMessage))
+                            .eraseToAnyPublisher()
+                    }
+                    return Fail(error: APIError.internalError)
+                        .eraseToAnyPublisher()
                 }
                 return Just(urlResponse.statusCode)
+                    .setFailureType(to: APIError.self)
+                    .eraseToAnyPublisher()
             })
-            .mapError { _ in APIError.invalidResponse }
             .eraseToAnyPublisher()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
