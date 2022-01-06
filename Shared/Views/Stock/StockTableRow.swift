@@ -129,7 +129,8 @@ struct StockTableRow: View {
                             .italic()
                     }
                 }
-                if grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                if grocyVM.userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
+                   grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
                         .help(LocalizedStringKey("str.stock.info.onShoppingList"))
