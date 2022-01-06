@@ -13,19 +13,26 @@ struct GrocyUserSettings: Codable {
     //    let nightModeEnabled: Bool
     //    let autoNightModeEnabled, autoNightModeTimeRangeFrom, autoNightModeTimeRangeTo: String
     //    let autoNightModeTimeRangeGoesOverMidnight, currentlyInsideNightModeRange, keepScreenOn, keepScreenOnWhenFullscreenCard: Bool
-    //    let productPresetsLocationID: Int
-    //    let productPresetsProductGroupID: Int
-    //    let productPresetsQuID: Int
-    //    let productPresetsDefaultDueDays: Int
-    //    let stockDecimalPlacesAmounts: Int
-    //    let stockDecimalPlacesPrices: Int
-    //    let stockAutoDecimalSeparatorPrices: Bool
-    //    let stockDueSoonDays, stockDefaultPurchaseAmount: Int
+    let productPresetsLocationID: Int?
+    let productPresetsProductGroupID: Int?
+    let productPresetsQuID: Int?
+    let productPresetsDefaultDueDays: Int?
+    let stockDecimalPlacesAmounts: Int?
+    let stockDecimalPlacesPrices: Int?
+    let stockAutoDecimalSeparatorPrices: Bool?
+    let stockDueSoonDays: Int?
+    let stockDefaultPurchaseAmount: Int?
     let stockDefaultConsumeAmount: Int?
     let stockDefaultConsumeAmountUseQuickConsumeAmount: Bool?
-    //    let scanModeConsumeEnabled, scanModePurchaseEnabled, showIconOnStockOverviewPageWhenProductIsOnShoppingList, showPurchasedDateOnPurchase: Bool
-    //    let showWarningOnPurchaseWhenDueDateIsEarlierThanNext, shoppingListToStockWorkflowAutoSubmitWhenPrefilled, shoppingListShowCalendar, recipeIngredientsGroupByProductGroup: Bool
-    //    let choresDueSoonDays, batteriesDueSoonDays, tasksDueSoonDays: Int
+    //    let scanModeConsumeEnabled: Bool
+    //let scanModePurchaseEnabled: Bool
+    let showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
+    let showPurchasedDateOnPurchase: Bool?
+    let showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Bool?
+    //    let shoppingListToStockWorkflowAutoSubmitWhenPrefilled, shoppingListShowCalendar, recipeIngredientsGroupByProductGroup: Bool
+    //    let choresDueSoonDays: Int
+    //    let batteriesDueSoonDays: Int
+    //    let tasksDueSoonDays: Int
     //    let showClockInHeader: Bool
     //    let quagga2Numofworkers: Int
     //    let quagga2Halfsample: Bool
@@ -48,22 +55,22 @@ struct GrocyUserSettings: Codable {
         //        case currentlyInsideNightModeRange = "currently_inside_night_mode_range"
         //        case keepScreenOn = "keep_screen_on"
         //        case keepScreenOnWhenFullscreenCard = "keep_screen_on_when_fullscreen_card"
-        //        case productPresetsLocationID = "product_presets_location_id"
-        //        case productPresetsProductGroupID = "product_presets_product_group_id"
-        //        case productPresetsQuID = "product_presets_qu_id"
-        //        case productPresetsDefaultDueDays = "product_presets_default_due_days"
-        //        case stockDecimalPlacesAmounts = "stock_decimal_places_amounts"
-        //        case stockDecimalPlacesPrices = "stock_decimal_places_prices"
-        //        case stockAutoDecimalSeparatorPrices = "stock_auto_decimal_separator_prices"
-        //        case stockDueSoonDays = "stock_due_soon_days"
-        //        case stockDefaultPurchaseAmount = "stock_default_purchase_amount"
+        case productPresetsLocationID = "product_presets_location_id"
+        case productPresetsProductGroupID = "product_presets_product_group_id"
+        case productPresetsQuID = "product_presets_qu_id"
+        case productPresetsDefaultDueDays = "product_presets_default_due_days"
+        case stockDecimalPlacesAmounts = "stock_decimal_places_amounts"
+        case stockDecimalPlacesPrices = "stock_decimal_places_prices"
+        case stockAutoDecimalSeparatorPrices = "stock_auto_decimal_separator_prices"
+        case stockDueSoonDays = "stock_due_soon_days"
+        case stockDefaultPurchaseAmount = "stock_default_purchase_amount"
         case stockDefaultConsumeAmount = "stock_default_consume_amount"
         case stockDefaultConsumeAmountUseQuickConsumeAmount = "stock_default_consume_amount_use_quick_consume_amount"
         //        case scanModeConsumeEnabled = "scan_mode_consume_enabled"
         //        case scanModePurchaseEnabled = "scan_mode_purchase_enabled"
-        //        case showIconOnStockOverviewPageWhenProductIsOnShoppingList = "show_icon_on_stock_overview_page_when_product_is_on_shopping_list"
-        //        case showPurchasedDateOnPurchase = "show_purchased_date_on_purchase"
-        //        case showWarningOnPurchaseWhenDueDateIsEarlierThanNext = "show_warning_on_purchase_when_due_date_is_earlier_than_next"
+        case showIconOnStockOverviewPageWhenProductIsOnShoppingList = "show_icon_on_stock_overview_page_when_product_is_on_shopping_list"
+        case showPurchasedDateOnPurchase = "show_purchased_date_on_purchase"
+        case showWarningOnPurchaseWhenDueDateIsEarlierThanNext = "show_warning_on_purchase_when_due_date_is_earlier_than_next"
         //        case shoppingListToStockWorkflowAutoSubmitWhenPrefilled = "shopping_list_to_stock_workflow_auto_submit_when_prefilled"
         //        case shoppingListShowCalendar = "shopping_list_show_calendar"
         //        case recipeIngredientsGroupByProductGroup = "recipe_ingredients_group_by_product_group"
@@ -102,6 +109,32 @@ struct GrocyUserSettings: Codable {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
+            do { self.productPresetsLocationID = try container.decodeIfPresent(Int.self, forKey: .productPresetsLocationID) } catch { self.productPresetsLocationID = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsLocationID) ?? "") }
+            
+            do { self.productPresetsProductGroupID = try container.decodeIfPresent(Int.self, forKey: .productPresetsProductGroupID) } catch { self.productPresetsProductGroupID = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsProductGroupID) ?? "") }
+            
+            do { self.stockDueSoonDays = try container.decodeIfPresent(Int.self, forKey: .stockDueSoonDays) } catch { self.stockDueSoonDays = try Int(container.decodeIfPresent(String.self, forKey: .stockDueSoonDays) ?? "") }
+            
+            do { self.productPresetsQuID = try container.decodeIfPresent(Int.self, forKey: .productPresetsQuID) } catch { self.productPresetsQuID = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsQuID) ?? "") }
+            
+            do { self.productPresetsDefaultDueDays = try container.decodeIfPresent(Int.self, forKey: .productPresetsDefaultDueDays) } catch { self.productPresetsDefaultDueDays = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsDefaultDueDays) ?? "") }
+            
+            do { self.stockDecimalPlacesAmounts = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesAmounts) } catch { self.stockDecimalPlacesAmounts = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesAmounts) ?? "") }
+            
+            do { self.stockDecimalPlacesPrices = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesPrices) } catch { self.stockDecimalPlacesPrices = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesPrices) ?? "") }
+            
+            do {
+                self.stockAutoDecimalSeparatorPrices = try container.decode(Bool.self, forKey: .stockAutoDecimalSeparatorPrices)
+            } catch {
+                do {
+                    self.stockAutoDecimalSeparatorPrices = try container.decodeIfPresent(Int.self, forKey: .stockAutoDecimalSeparatorPrices) == 1
+                } catch {
+                    self.stockAutoDecimalSeparatorPrices = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .stockAutoDecimalSeparatorPrices))
+                }
+            }
+            
+            do { self.stockDefaultPurchaseAmount = try container.decodeIfPresent(Int.self, forKey: .stockDefaultPurchaseAmount) } catch { self.stockDefaultPurchaseAmount = try Int(container.decodeIfPresent(String.self, forKey: .stockDefaultPurchaseAmount) ?? "") }
+            
             do { self.stockDefaultConsumeAmount = try container.decodeIfPresent(Int.self, forKey: .stockDefaultConsumeAmount) } catch { self.stockDefaultConsumeAmount = try Int(container.decodeIfPresent(String.self, forKey: .stockDefaultConsumeAmount) ?? "") }
             
             do {
@@ -113,17 +146,40 @@ struct GrocyUserSettings: Codable {
                     self.stockDefaultConsumeAmountUseQuickConsumeAmount = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount))
                 }
             }
+            
+            do {
+                self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = try container.decode(Bool.self, forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList)
+            } catch {
+                do {
+                    self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = try container.decodeIfPresent(Int.self, forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList) == 1
+                } catch {
+                    self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList))
+                }
+            }
+            
+            do {
+                self.showPurchasedDateOnPurchase = try container.decode(Bool.self, forKey: .showPurchasedDateOnPurchase)
+            } catch {
+                do {
+                    self.showPurchasedDateOnPurchase = try container.decodeIfPresent(Int.self, forKey: .showPurchasedDateOnPurchase) == 1
+                } catch {
+                    self.showPurchasedDateOnPurchase = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .showPurchasedDateOnPurchase))
+                }
+            }
+            
+            do {
+                self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decode(Bool.self, forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
+            } catch {
+                do {
+                    self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decodeIfPresent(Int.self, forKey: .showPurchasedDateOnPurchase) == 1
+                } catch {
+                    self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext))
+                }
+            }
         } catch {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(
-        stockDefaultConsumeAmount: Int,
-        stockDefaultConsumeAmountUseQuickConsumeAmount: Bool) {
-            self.stockDefaultConsumeAmount = stockDefaultConsumeAmount
-            self.stockDefaultConsumeAmountUseQuickConsumeAmount = stockDefaultConsumeAmountUseQuickConsumeAmount
-        }
 }
 
 struct GrocyUserSettingsString: Codable {
@@ -147,7 +203,7 @@ struct GrocyUserSettingsInt: Codable {
         }
     }
     
-    init(value: Int) {
+    init(value: Int?) {
         self.value = value
     }
 }
