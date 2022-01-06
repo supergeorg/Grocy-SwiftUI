@@ -9,8 +9,7 @@ import SwiftUI
 
 struct StockTableRow: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    
-    @AppStorage("expiringDays") var expiringDays: Int = 5
+
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @Environment(\.colorScheme) var colorScheme
@@ -38,7 +37,7 @@ struct StockTableRow: View {
     }
     
     var backgroundColor: Color {
-        if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100) {
+        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100) {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
         if (stockElement.dueType == 1 ? (getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100 < 0) : false) {

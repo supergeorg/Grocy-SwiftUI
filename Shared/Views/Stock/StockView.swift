@@ -34,8 +34,6 @@ struct StockView: View {
     
     @State private var firstAppear: Bool = true
     
-    @AppStorage("expiringDays") var expiringDays: Int = 5
-    
     @State private var searchString: String = ""
     @State private var showFilter: Bool = false
     
@@ -63,7 +61,7 @@ struct StockView: View {
     var numExpiringSoon: Int {
         grocyVM.stock
             .filter {
-                (0..<(expiringDays + 1)) ~= (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100)
+                (0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100)
             }
             .count
     }
@@ -95,7 +93,7 @@ struct StockView: View {
     var filteredProducts: Stock {
         grocyVM.stock
             .filter {
-                filteredStatus == .expiringSoon ? ((0..<(expiringDays + 1)) ~= getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100) : true
+                filteredStatus == .expiringSoon ? ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100) : true
             }
             .filter {
                 filteredStatus == .overdue ? ($0.dueType == 1 ? (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100 < 0) : false) : true

@@ -11,7 +11,6 @@ struct StockEntryRowView: View {
     let grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
-    @AppStorage("expiringDays") var expiringDays: Int = 5
     @Environment(\.colorScheme) var colorScheme
     
     var stockEntry: StockEntry
@@ -21,7 +20,7 @@ struct StockEntryRowView: View {
     @Binding var toastType: StockEntryToastType?
     
     var backgroundColor: Color {
-        if ((0..<(expiringDays + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
+        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
         if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
