@@ -74,22 +74,22 @@ struct MDProductFormView: View {
         active = (product?.active ?? 1) == 1
         parentProductID = product?.parentProductID
         mdProductDescription = product?.mdProductDescription ?? ""
-        productGroupID = product?.productGroupID
+        productGroupID = product?.productGroupID ?? grocyVM.userSettings?.productPresetsProductGroupID
         calories = product?.calories ?? 0.0
         hideOnStockOverview = product?.hideOnStockOverview == 1
         selectedPictureFileName = product?.pictureFileName
         
-        locationID = product?.locationID
+        locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID
         shoppingLocationID = product?.shoppingLocationID
         
         dueType = (product?.dueType == DueType.bestBefore.rawValue) ? DueType.bestBefore : DueType.expires
-        defaultDueDays = product?.defaultBestBeforeDays ?? 0
+        defaultDueDays = product?.defaultBestBeforeDays ?? grocyVM.userSettings?.productPresetsDefaultDueDays ?? 0
         defaultDueDaysAfterOpen = product?.defaultBestBeforeDaysAfterOpen ?? 0
         defaultDueDaysAfterFreezing = product?.defaultBestBeforeDaysAfterThawing ?? 0
         defaultDueDaysAfterThawing = product?.defaultBestBeforeDaysAfterThawing ?? 0
         
-        quIDStock = product?.quIDStock
-        quIDPurchase = product?.quIDPurchase
+        quIDStock = product?.quIDStock ?? grocyVM.userSettings?.productPresetsQuID
+        quIDPurchase = product?.quIDPurchase ?? grocyVM.userSettings?.productPresetsQuID
         
         minStockAmount = product?.minStockAmount ?? 0.0
         cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts == 1
