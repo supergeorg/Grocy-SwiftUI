@@ -21,14 +21,53 @@ struct StockJournalFilterBar: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 #endif
     
+#if os(macOS)
+    struct SearchField: NSViewRepresentable {
+        // This is needed, since the .searchable modifier is not working on popovers.
+        
+        class Coordinator: NSObject, NSSearchFieldDelegate {
+            var parent: SearchField
+            
+            init(_ parent: SearchField) {
+                self.parent = parent
+            }
+            
+            func controlTextDidChange(_ notification: Notification) {
+                guard let searchField = notification.object as? NSSearchField else {
+                    print("Unexpected control in update notification")
+                    return
+                }
+                self.parent.text = searchField.stringValue
+            }
+        }
+        
+        @Binding var text: String
+        
+        func makeNSView(context: Context) -> NSSearchField {
+            NSSearchField(frame: .zero)
+        }
+        func updateNSView(_ searchField: NSSearchField, context: Context) {
+            searchField.stringValue = text
+            searchField.delegate = context.coordinator
+        }
+        func makeCoordinator() -> Coordinator {
+            return Coordinator(self)
+        }
+    }
+#endif
+    
     var body: some View {
         VStack{
 #if os(iOS)
             let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: (horizontalSizeClass == .compact && verticalSizeClass == .regular) ? 2 : 4)
 #else
-            let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: 4)
+            let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: 2)
+#endif
+#if os(macOS)
+            SearchField(text: $searchString)
 #endif
             LazyVGrid(columns: filterColumns, alignment: .leading, content: {
+#if os(iOS)
                 Menu {
                     Picker("", selection: $filteredProductID, content: {
                         Text("str.stock.all").tag(nil as Int?)
@@ -107,6 +146,32 @@ struct StockJournalFilterBar: View {
                         }
                     }
                 }
+#else
+                Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter), content: {
+                    Text("str.stock.all").tag(nil as Int?)
+                    ForEach(grocyVM.mdProducts, id:\.id) { product in
+                        Text(product.name).tag(product.id as Int?)
+                    }
+                })
+                Picker(selection: $filteredTransactionType, label: Label(LocalizedStringKey("str.stock.journal.transactionType"), systemImage: MySymbols.filter), content: {
+                    Text("str.stock.all").tag(nil as TransactionType?)
+                    ForEach(TransactionType.allCases, id:\.rawValue) { transactionType in
+                        Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
+                    }
+                })
+                Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter), content: {
+                    Text("str.stock.all").tag(nil as Int?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                        Text(location.name).tag(location.id as Int?)
+                    }
+                })
+                Picker(selection: $filteredUserID, label: Label(LocalizedStringKey("str.stock.journal.user"), systemImage: MySymbols.filter), content: {
+                    Text("str.stock.all").tag(nil as Int?)
+                    ForEach(grocyVM.users, id:\.id) { user in
+                        Text(user.displayName).tag(user.id as Int?)
+                    }
+                })
+#endif
             })
         }
     }
