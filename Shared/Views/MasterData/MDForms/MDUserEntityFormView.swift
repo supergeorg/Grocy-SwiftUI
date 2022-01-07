@@ -122,6 +122,12 @@ struct MDUserEntityFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
             Section(header: Text(LocalizedStringKey("str.md.userEntity.name"))){
                 MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
                     .onChange(of: name, perform: {newValue in

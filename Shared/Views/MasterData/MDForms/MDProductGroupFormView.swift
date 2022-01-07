@@ -112,6 +112,12 @@ struct MDProductGroupFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
             Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.productGroup.name.exists")
                     .onChange(of: name, perform: { value in

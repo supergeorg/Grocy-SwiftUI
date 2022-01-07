@@ -118,6 +118,12 @@ struct MDTaskCategoryFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
             Section(header: Text(LocalizedStringKey("str.md.taskCategory.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.taskCategory.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.taskCategory.name.exists")
                     .onChange(of: name, perform: { value in

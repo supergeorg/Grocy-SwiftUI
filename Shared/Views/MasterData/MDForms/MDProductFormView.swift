@@ -49,11 +49,12 @@ struct MDProductFormView: View {
     @State private var showOFFResult: Bool = false
     
     var isNewProduct: Bool
-    var isPopup: Bool = false
     var product: MDProduct?
     
     @Binding var showAddProduct: Bool
     @Binding var toastType: MDToastType?
+    
+    var isPopup: Bool = false
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -200,6 +201,13 @@ struct MDProductFormView: View {
             }
 #endif
             
+#if os(macOS)
+            Text(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
+            
             MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
                 .onChange(of: name, perform: { value in
                     isNameCorrect = checkNameCorrect()
@@ -242,6 +250,13 @@ struct MDProductFormView: View {
                 MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
             })
                 .disabled(isNewProduct)
+            if isPopup {
+                Button(LocalizedStringKey("str.save")) {
+                    saveProduct()
+                }
+                .disabled(!isFormValid || isProcessing)
+                .keyboardShortcut(.defaultAction)
+            }
 #else
             Section {
                 NavigationLink(

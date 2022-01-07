@@ -110,6 +110,13 @@ struct MDShoppingLocationFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
+
             Section(header: Text(LocalizedStringKey("str.md.shoppingLocation.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
                     .onChange(of: name, perform: { value in

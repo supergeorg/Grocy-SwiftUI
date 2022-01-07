@@ -128,6 +128,12 @@ struct MDUserFieldFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
             VStack(alignment: .leading){
                 Picker(selection: $entity, label: Text(LocalizedStringKey("str.md.userField.entity")), content: {
                     Text("").tag(nil as ObjectEntities?)

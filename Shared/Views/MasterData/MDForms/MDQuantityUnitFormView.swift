@@ -114,6 +114,12 @@ struct MDQuantityUnitFormView: View {
     
     var content: some View {
         Form {
+#if os(macOS)
+            Text(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
+                .font(.title)
+                .bold()
+                .padding(.bottom, 20.0)
+#endif
             Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
                     .onChange(of: name, perform: { value in
