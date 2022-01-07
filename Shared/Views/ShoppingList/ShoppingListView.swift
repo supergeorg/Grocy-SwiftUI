@@ -299,6 +299,7 @@ struct ShoppingListView: View {
         List {
             Section {
                 ShoppingListFilterActionView(filteredStatus: $filteredStatus, numBelowStock: numBelowStock)
+#if os(iOS)
                 Menu {
                     Picker("", selection: $filteredStatus, content: {
                         Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
@@ -319,6 +320,16 @@ struct ShoppingListView: View {
                         }
                     }
                 }
+#else
+                Picker(selection: $filteredStatus,
+                       label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: MySymbols.filter),
+                       content: {
+                    Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
+                    Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
+                    Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
+                    Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
+                })
+#endif
             }
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in
                 Section(header: Text(productGroup.name).bold()) {

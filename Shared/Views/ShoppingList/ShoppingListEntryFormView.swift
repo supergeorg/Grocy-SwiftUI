@@ -26,6 +26,7 @@ struct ShoppingListEntryFormView: View {
     var shoppingListEntry: ShoppingListItem?
     var selectedShoppingListID: Int?
     var product: MDProduct?
+    var isPopup: Bool = false
     
     var isFormValid: Bool {
         return (productID != nil && amount > 0 && quantityUnitID != nil)

@@ -14,6 +14,7 @@ struct ShoppingListRowActionsView: View {
     
     @State private var showEdit: Bool = false
     @State private var showPurchase: Bool = false
+    @State private var showEntryDeleteAlert: Bool = false
     
     @Binding var toastType: ShoppingListToastType?
     
@@ -33,24 +34,26 @@ struct ShoppingListRowActionsView: View {
         grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done == 1 ? 0 : 1, quID: shoppingListItem.quID, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp), completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog("Done status change failed. \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })
         
     }
-    
-    private func deleteSHItem() {
+    private func deleteItem() {
+        showEntryDeleteAlert.toggle()
+    }
+    private func deleteSHLItem() {
         grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id, completion: { result in
             switch result {
             case let .success(message):
-                print(message)
+                grocyVM.postLog("Shopping list item delete successful. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
-                print("\(error)")
+                grocyVM.postLog("Shopping list item delete failed. \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })
@@ -71,6 +74,7 @@ struct ShoppingListRowActionsView: View {
                     ScrollView{
                         ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
                             .frame(width: 500, height: 400)
+                            .padding()
                     }
                 })
 #else
@@ -80,10 +84,16 @@ struct ShoppingListRowActionsView: View {
 #endif
             RowInteractionButton(image: "trash.fill", backgroundColor: Color.grocyDelete, helpString: LocalizedStringKey("str.shL.entry.delete"))
                 .onTapGesture {
-                    deleteSHItem()
+                    deleteItem()
                 }
+                .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
+                    Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                    Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                            deleteSHLItem()
+                    }
+                }, message: { Text(grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})?.name ?? "Name not found") })
             
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
                 .onTapGesture {
                     showPurchase.toggle()
                 }

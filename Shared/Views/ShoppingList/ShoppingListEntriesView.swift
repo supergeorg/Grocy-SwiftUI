@@ -14,6 +14,7 @@ struct ShoppingListRowView: View {
     
     var shoppingListItem: ShoppingListItem
     var isBelowStock: Bool
+    @Binding var toastType: ShoppingListToastType?
     
     var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})
@@ -32,14 +33,19 @@ struct ShoppingListRowView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading){
-            Text(product?.name ?? "Name Error")
-                .font(.headline)
-                .strikethrough(shoppingListItem.done == 1)
-            Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))
-                .strikethrough(shoppingListItem.done == 1)
+        HStack {
+#if os(macOS)
+            ShoppingListRowActionsView(shoppingListItem: shoppingListItem, toastType: $toastType)
+#endif
+            VStack(alignment: .leading){
+                Text(product?.name ?? "Name Error")
+                    .font(.headline)
+                    .strikethrough(shoppingListItem.done == 1)
+                Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))
+                    .strikethrough(shoppingListItem.done == 1)
+            }
+            .foregroundColor(shoppingListItem.done == 1 ? Color.gray : Color.primary)
         }
-        .foregroundColor(shoppingListItem.done == 1 ? Color.gray : Color.primary)
     }
 }
 
@@ -75,10 +81,10 @@ struct ShoppingListEntriesView: View {
         grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done == 1 ? 0 : 1, quID: shoppingListItem.quID, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp), completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog("Shopping list done status changed successful. \(message)", type: .info)
+                grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
                 grocyVM.requestData(objects: [.shopping_list])
             case let .failure(error):
-                grocyVM.postLog("Shopping list done status changed failed. \(error)", type: .error)
+                grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
                 toastType = .shLActionFail
             }
         })
@@ -102,8 +108,9 @@ struct ShoppingListEntriesView: View {
     }
     
     var body: some View {
+#if os(iOS)
         NavigationLink(destination: ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem, selectedShoppingListID: selectedShoppingListID)) {
-            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
+            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType)
         }
         .listRowBackground(backgroundColor)
         .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
@@ -126,14 +133,38 @@ struct ShoppingListEntriesView: View {
                 }
             }
         }, message: { Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "Name not found") })
+#else
+        ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType)
+            .listRowBackground(backgroundColor)
+            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                Button(role: .destructive,
+                       action: { deleteItem(itemToDelete: shoppingListItem) },
+                       label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                )
+            })
+            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
+                       label: { Image(systemName: MySymbols.done) }
+                )
+                    .tint(.green)
+            })
+            .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
+                Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                    if let deleteID = shlItemToDelete?.id {
+                        deleteSHLItem(toDelID: deleteID)
+                    }
+                }
+            }, message: { Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "Name not found") })
+#endif
     }
 }
 
 struct ShoppingListRowView_Previews: PreviewProvider {
     static var previews: some View {
         List{
-            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false)
-            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false)
+            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil))
+            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil))
         }
     }
 }
