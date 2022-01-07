@@ -161,14 +161,19 @@ struct MDProductFormView: View {
     }
     
     var body: some View {
-#if os(macOS)
-        NavigationView{
-            content
-                .padding()
-        }
-#elseif os(iOS)
         content
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
+            .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveProduct, label: {
+                        Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
+                }
+            })
+#if os(iOS)
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewProduct || isPopup {
@@ -177,18 +182,12 @@ struct MDProductFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.product.save")) {
-                        saveProduct()
-                    }
-                    .disabled(!isFormValid || isProcessing)
-                }
             })
 #endif
     }
     
     var content: some View {
-        Form {
+        List {
 #if os(iOS)
             if devMode && isNewProduct {
                 Button(action: {
@@ -201,31 +200,55 @@ struct MDProductFormView: View {
             }
 #endif
             
-            
             MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
                 .onChange(of: name, perform: { value in
                     isNameCorrect = checkNameCorrect()
                 })
             
-            Section {
-                
 #if os(macOS)
-                if #available(OSX 11.3, *) {
-                    Text("Navigation currently not working on macOS Big Sur 11.3 and up. It worked in previous versions.")
-                        .foregroundColor(Color.red)
-                }
-                NavigationLink(
-                    destination: NavigationView{optionalPropertiesView},
-                    label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
-                    })
+            DisclosureGroup(content: {
+                optionalPropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
+            })
+            
+            DisclosureGroup(content: {
+                locationPropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.category.defaultLocations", subTitle: "str.md.product.category.defaultLocations.description", systemImage: MySymbols.location, isProblem: locationID == nil)
+            })
+            
+            DisclosureGroup(content: {
+                dueDatePropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.category.dueDate", subTitle: "str.md.product.category.dueDate.description", systemImage: MySymbols.date)
+            })
+            
+            DisclosureGroup(content: {
+                quantityUnitPropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil))
+            })
+            
+            DisclosureGroup(content: {
+                amountPropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.category.amount", subTitle: "str.md.product.category.amount.description", systemImage: MySymbols.amount)
+            })
+            
+            DisclosureGroup(content: {
+                barcodePropertiesView
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
+            })
+                .disabled(isNewProduct)
 #else
+            Section {
                 NavigationLink(
                     destination: optionalPropertiesView,
                     label: {
                         MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
                     })
-#endif
                 
                 NavigationLink(
                     destination: locationPropertiesView,
@@ -258,24 +281,6 @@ struct MDProductFormView: View {
                     })
                     .disabled(isNewProduct)
             }
-            
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewProduct{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveProduct()
-                }
-                .disabled(!isFormValid || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
 #endif
         }
         .onAppear(perform: {
@@ -288,7 +293,7 @@ struct MDProductFormView: View {
     }
     
     var optionalPropertiesView: some View {
-        Form{
+        Form {
             // Active
             MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
             
@@ -313,12 +318,23 @@ struct MDProductFormView: View {
             MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
             
             // Product picture
+#if os(iOS)
             NavigationLink(destination: MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName), label: {
                 MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })
                 .disabled(isNewProduct)
+#elseif os(macOS)
+            DisclosureGroup(content: {
+                MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName)
+            }, label: {
+                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
+            })
+                .disabled(isNewProduct)
+#endif
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.category.optionalProperties"))
+#endif
     }
     var locationPropertiesView: some View {
         Form {
@@ -337,7 +353,9 @@ struct MDProductFormView: View {
                 }
             })
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.category.defaultLocations"))
+#endif
     }
     var dueDatePropertiesView: some View {
         Form {
@@ -364,7 +382,9 @@ struct MDProductFormView: View {
             // Default due days after thawing
             MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: MySymbols.thawing)
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.category.dueDate"))
+#endif
     }
     var quantityUnitPropertiesView: some View {
         Form {
@@ -394,7 +414,9 @@ struct MDProductFormView: View {
                 FieldDescription(description: "str.md.product.quPurchase.info")
             }
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.category.quantityUnits"))
+#endif
     }
     var amountPropertiesView: some View {
         Form {
@@ -434,18 +456,14 @@ struct MDProductFormView: View {
             // Check stock fulfillment for recipes
             MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: MySymbols.recipe)
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.category.amount"))
+#endif
     }
     var barcodePropertiesView: some View {
-        Group{
+        Group {
             if let product = product {
-#if os(macOS)
-                ScrollView{
-                    MDBarcodesView(productID: product.id, toastType: $toastType)
-                }
-#else
                 MDBarcodesView(productID: product.id, toastType: $toastType)
-#endif
             }
         }
     }
