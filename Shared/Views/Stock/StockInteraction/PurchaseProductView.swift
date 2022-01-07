@@ -22,6 +22,7 @@ struct PurchaseProductView: View {
         return directProductToPurchaseID ?? stockElement?.wrappedValue?.productID
     }
     var productToPurchaseAmount: Double?
+    var isPopup: Bool = false
     
     @State private var productID: Int?
     @State private var amount: Double = 0.0
@@ -84,7 +85,7 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         
-        self.amount = firstAppear ? productToPurchaseAmount ?? 1.0 : 1.0
+        self.amount = firstAppear ? productToPurchaseAmount ?? Double(grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1) : Double(grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1)
         self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
         self.dueDate = Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
@@ -206,6 +207,13 @@ struct PurchaseProductView: View {
                     }
                 })
             }
+#if os(macOS)
+            if isPopup {
+                Button(action: purchaseProduct, label: {Text(LocalizedStringKey("str.stock.buy.product.buy"))})
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut(.defaultAction)
+            }
+#endif
         }
         .onAppear(perform: {
             if firstAppear {

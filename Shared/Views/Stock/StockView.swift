@@ -142,7 +142,8 @@ struct StockView: View {
     
 #if os(macOS)
     var bodyContent: some View {
-        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+        content
+//        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     RefreshButton(updateData: { updateData() })
@@ -150,20 +151,20 @@ struct StockView: View {
                         .popover(item: $activeSheet, content: { item in
                             switch item {
                             case .addToShL:
-                                ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
+                                ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product, isPopup: true)
                                     .padding()
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
-                                PurchaseProductView(stockElement: $selectedStockElement)
+                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 500)
                             case .productConsume:
-                                ConsumeProductView(stockElement: $selectedStockElement)
+                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productTransfer:
-                                TransferProductView(stockElement: $selectedStockElement)
+                                TransferProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productInventory:
-                                InventoryProductView(stockElement: $selectedStockElement)
+                                InventoryProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 500)
                             case .productOverview:
                                 StockProductInfoView(stockElement: $selectedStockElement)
@@ -172,7 +173,7 @@ struct StockView: View {
                                 StockJournalView(stockElement: $selectedStockElement)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .editProduct:
-                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType)
+                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType, isPopup: true)
                                     .frame(minWidth: 400, minHeight: 300)
                             }
                         })

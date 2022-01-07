@@ -21,6 +21,7 @@ struct TransferProductView: View {
     var productToTransferID: Int? {
         return stockElement?.wrappedValue?.productID
     }
+    var isPopup: Bool = false
     
     @State private var productID: Int?
     @State private var locationIDFrom: Int?
@@ -194,6 +195,13 @@ struct TransferProductView: View {
                     }
                 })
             }
+#if os(macOS)
+            if isPopup {
+                Button(action: transferProduct, label: {Text(LocalizedStringKey("str.stock.transfer.product.transfer"))})
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut(.defaultAction)
+            }
+#endif
         }
         .onAppear(perform: {
             if firstAppear {

@@ -19,6 +19,7 @@ struct InventoryProductView: View {
     var productToInventoryID: Int? {
         return stockElement?.wrappedValue?.productID
     }
+    var isPopup: Bool = false
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -205,6 +206,13 @@ struct InventoryProductView: View {
                     }
                 })
             }
+#if os(macOS)
+            if isPopup {
+                Button(action: inventoryProduct, label: {Text(LocalizedStringKey("str.stock.inventory.product.inventory"))})
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut(.defaultAction)
+            }
+#endif
         }
         .onAppear(perform: {
             if firstAppear {

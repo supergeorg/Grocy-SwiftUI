@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StockTableRow: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-
+    
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     @Environment(\.colorScheme) var colorScheme
@@ -53,6 +53,7 @@ struct StockTableRow: View {
     }
     
     var body: some View {
+#if os(iOS)
         NavigationLink(destination: {
             StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
         }, label: {
@@ -70,6 +71,20 @@ struct StockTableRow: View {
                 StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
             })
             .listRowBackground(backgroundColor)
+#elseif os(macOS)
+        content
+            .padding(.bottom)
+            .contextMenu(menuItems: {
+                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+            })
+            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA], toastType: $toastType)
+            })
+            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
+            })
+            .listRowBackground(backgroundColor)
+#endif
     }
     
     var content: some View {

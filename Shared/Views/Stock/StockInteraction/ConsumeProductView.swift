@@ -27,6 +27,7 @@ struct ConsumeProductView: View {
     var productToConsumeID: Int? {
         return stockElement?.wrappedValue?.productID
     }
+    var isPopup: Bool = false
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -261,6 +262,13 @@ struct ConsumeProductView: View {
                     }
                 }
             }
+#if os(macOS)
+            if isPopup {
+                Button(action: consumeProduct, label: {Text(LocalizedStringKey("str.stock.consume.product.consume"))})
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut(.defaultAction)
+            }
+#endif
         }
         .onAppear(perform: {
             if firstAppear {
