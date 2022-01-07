@@ -42,7 +42,7 @@ private struct StockFilterItemView: View {
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
             }
 #elseif os(macOS)
-            Text(ownFilteredStatus.getDescription(amount: num, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5.0))
+            Text(ownFilteredStatus.getDescription(amount: num, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                 .bold()
                 .foregroundColor(colorScheme == .light ? darkColor : lightColor)
 #endif
