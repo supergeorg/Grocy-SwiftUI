@@ -143,7 +143,7 @@ struct StockView: View {
 #if os(macOS)
     var bodyContent: some View {
         content
-//        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+        //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     RefreshButton(updateData: { updateData() })
@@ -271,7 +271,7 @@ struct StockView: View {
                     StockJournalView(stockElement: $selectedStockElement)
                 case .editProduct:
                     NavigationView{
-                        MDProductFormView(isNewProduct: false, isPopup: true, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType)
+                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType, isPopup: true)
                     }
                 }
             })

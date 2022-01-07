@@ -603,9 +603,9 @@
 "str.settings.stock.presets.location" = "Standort";
 "str.settings.stock.presets.productGroup" = "Produktgruppe";
 "str.settings.stock.presets.quantityUnit" = "Mengeneinheit";
-"str.settings.stock.presets.defaultDueDays" = "Standard-Fälligkeitstage ";
+"str.settings.stock.presets.defaultDueDays" = "Standard-Fälligkeitstage";
 "str.settings.stock.stockOverview" = "Bestand";
-"str.settings.stock.stockOverview.dueSoonDays" = "\"Bald fällig\" Tage ";
+"str.settings.stock.stockOverview.dueSoonDays" = "\"Bald fällig\" Tage";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Ein Symbol anzeigen, wenn das Produkt bereits auf dem Einkaufszettel steht";
 "str.settings.stock.purchase" = "Einkauf";
 "str.settings.stock.purchase.defaultAmount" = "Standardmenge für Einkauf";
