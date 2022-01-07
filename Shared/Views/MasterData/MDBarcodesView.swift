@@ -92,7 +92,10 @@ struct MDBarcodesView: View {
             
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
                 .popover(isPresented: $showAddBarcode, content: {
-                    MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+                    ScrollView {
+                        MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+                    }
+                        .padding()
                 })
             if filteredBarcodes.isEmpty {
                 Text(LocalizedStringKey("str.md.barcodes.empty"))
