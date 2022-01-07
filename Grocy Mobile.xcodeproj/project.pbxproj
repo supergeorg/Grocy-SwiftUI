@@ -303,8 +303,6 @@
 		78CECD1725879364007780B2 /* MDUserEntitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD1525879364007780B2 /* MDUserEntitiesView.swift */; };
 		78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
-		78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */; };
-		78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */; };
 		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78D75D6325DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
@@ -588,7 +586,6 @@
 		78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpecificUserFields.swift; sourceTree = "<group>"; };
 		78CECD1525879364007780B2 /* MDUserEntitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserEntitiesView.swift; sourceTree = "<group>"; };
 		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
-		78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionView.swift; sourceTree = "<group>"; };
 		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
 		78D75D6225DE9B71009F2C15 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		78D7975A25B6FB4800550C58 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -682,7 +679,6 @@
 			children = (
 				7880F0F0256FB4CB00FB8431 /* ShoppingListView.swift */,
 				78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */,
-				78D0F4C9257122B100E1B732 /* ShoppingListActionView.swift */,
 				7880F10A256FC4F100FB8431 /* ShoppingListEntriesView.swift */,
 				7891C64D257E43460014C59E /* ShoppingListRowActionsView.swift */,
 				7880F111256FC92800FB8431 /* ShoppingListFormView.swift */,
@@ -1379,7 +1375,6 @@
 				78D75D6325DE9B71009F2C15 /* CardView.swift in Sources */,
 				78CB7616255EB9C600319108 /* MDLocationsModel.swift in Sources */,
 				7885B8AF2567F08F003439F5 /* GrocyUserModel.swift in Sources */,
-				78D0F4CA257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
 				781A25C82566B84600560026 /* MyDoubleStepper.swift in Sources */,
 				78CB761E255EB9C600319108 /* MDShoppingLocationsModel.swift in Sources */,
 			);
@@ -1507,7 +1502,6 @@
 				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				78855F7925FB8EB4007F69AF /* MDTaskCategoryFormView.swift in Sources */,
 				78D7975C25B6FB4800550C58 /* OnboardingView.swift in Sources */,
-				78D0F4CB257122B100E1B732 /* ShoppingListActionView.swift in Sources */,
 				781DD5B62578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
 				78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */,
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,

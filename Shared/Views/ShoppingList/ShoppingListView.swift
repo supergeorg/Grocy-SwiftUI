@@ -163,6 +163,7 @@ struct ShoppingListView: View {
                 ToolbarItemGroup(placement: .automatic, content: {
 #if os(macOS)
                     RefreshButton(updateData: { updateData() })
+                        .help(LocalizedStringKey("str.refresh"))
 #endif
 #if os(iOS)
                     Menu(content: {
@@ -183,6 +184,7 @@ struct ShoppingListView: View {
                     }, label: {
                         Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.addToShoppingList)
                     })
+                        .help(LocalizedStringKey("str.shL.action.addItem"))
 #if os(macOS)
                         .popover(isPresented: $showAddItem, content: {
                             ScrollView{
@@ -226,6 +228,7 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.new)
             })
+                .help(LocalizedStringKey("str.shL.new"))
 #if os(macOS)
                 .popover(isPresented: $showNewShoppingList, content: {
                     ShoppingListFormView(isNewShoppingListDescription: true)
@@ -242,11 +245,13 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
             })
+                .help(LocalizedStringKey("str.shL.edit"))
             Button(role: .destructive, action: {
                 showSHLDeleteAlert.toggle()
             }, label: {
                 Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
             })
+                .help(LocalizedStringKey("str.shL.delete"))
             Divider()
             shoppingListItemActionContent
             Divider()
@@ -255,6 +260,7 @@ struct ShoppingListView: View {
                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                 }
             })
+                .help(LocalizedStringKey("str.shL"))
         }
     }
     
@@ -265,22 +271,27 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.clearList"), systemImage: MySymbols.clear)
             })
+                .help(LocalizedStringKey("str.shL.action.clearList"))
             //            Button(action: {
-            //            print("Not implemented")
+            //                print("Not implemented")
             //            }, label: {
             //                Label(LocalizedStringKey("str.shL.action.addListItemsToStock"), systemImage: "questionmark")
             //            })
+            //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
+            //                .disabled(true)
             Button(action: {
                 slAction(.addMissing)
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addBelowMinStock"), systemImage: MySymbols.addToShoppingList)
             })
+                .help(LocalizedStringKey("str.shL.action.addBelowMinStock"))
             Button(action: {
                 slAction(.addExpired)
                 slAction(.addOverdue)
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addOverdue"), systemImage: MySymbols.addToShoppingList)
             })
+                .help(LocalizedStringKey("str.shL.action.addOverdue"))
         }
     }
     
