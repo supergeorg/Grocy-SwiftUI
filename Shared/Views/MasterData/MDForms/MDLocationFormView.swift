@@ -109,7 +109,10 @@ struct MDLocationFormView: View {
                 }
 #endif
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.location.save"), action: saveLocation)
+                    Button(action: saveLocation, label: {
+                        Label(LocalizedStringKey("str.md.location.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
                         .disabled(!isNameCorrect || isProcessing)
                         .keyboardShortcut(.defaultAction)
                 }

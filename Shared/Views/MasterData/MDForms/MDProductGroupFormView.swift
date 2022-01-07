@@ -100,10 +100,12 @@ struct MDProductGroupFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.productGroup.save")) {
-                        saveProductGroup()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
+                    Button(action: saveProductGroup, label: {
+                        Label(LocalizedStringKey("str.md.productGroup.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -117,24 +119,6 @@ struct MDProductGroupFormView: View {
                     })
                 MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewProductGroup{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveProductGroup()
-                }
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
         .onAppear(perform: {
             if firstAppear {

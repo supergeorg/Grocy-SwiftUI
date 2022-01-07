@@ -102,10 +102,12 @@ struct MDQuantityUnitFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.quantityUnit.save")) {
-                        saveQuantityUnit()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
+                    Button(action: saveQuantityUnit, label: {
+                        Label(LocalizedStringKey("str.md.quantityUnit.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -120,24 +122,6 @@ struct MDQuantityUnitFormView: View {
                 MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
                 MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewQuantityUnit{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveQuantityUnit()
-                }
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
         .onAppear(perform: {
             if firstAppear {

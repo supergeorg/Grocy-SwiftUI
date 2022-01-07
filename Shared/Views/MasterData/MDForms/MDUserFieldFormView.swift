@@ -116,10 +116,12 @@ struct MDUserFieldFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.userField.save")) {
-                        saveUserField()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
+                    Button(action: saveUserField, label: {
+                        Label(LocalizedStringKey("str.md.userField.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -156,24 +158,6 @@ struct MDUserFieldFormView: View {
             })
             
             MyToggle(isOn: $showAsColumnInTables, description: "str.md.userField.showAsColumnInTables", icon: "tablecells")
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewUserField{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveUserField()
-                }
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
         .onAppear(perform: {
             if firstAppear {

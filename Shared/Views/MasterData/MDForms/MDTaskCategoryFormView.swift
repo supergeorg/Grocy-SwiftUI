@@ -106,10 +106,12 @@ struct MDTaskCategoryFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.taskCategory.save")) {
-                        saveTaskCategory()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
+                    Button(action: saveTaskCategory, label: {
+                        Label(LocalizedStringKey("str.md.taskCategory.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -123,24 +125,6 @@ struct MDTaskCategoryFormView: View {
                     })
                 MyTextField(textToEdit: $mdTaskCategoryDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewTaskCategory{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveTaskCategory()
-                }
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
         .onAppear(perform: {
             if firstAppear {

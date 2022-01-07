@@ -218,7 +218,9 @@ struct MDProductPictureFormView: View {
                 }
             }
         }
+#if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.picture"))
+#endif
     }
 }
 

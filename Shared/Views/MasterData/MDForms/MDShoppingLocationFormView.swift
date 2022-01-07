@@ -98,10 +98,12 @@ struct MDShoppingLocationFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.shoppingLocation.save")) {
-                        saveShoppingLocation()
-                    }
-                    .disabled(!isNameCorrect || isProcessing)
+                    Button(action: saveShoppingLocation, label: {
+                        Label(LocalizedStringKey("str.md.shoppingLocation.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isNameCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -115,24 +117,6 @@ struct MDShoppingLocationFormView: View {
                     })
                 MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
-#if os(macOS)
-            HStack{
-                Button(LocalizedStringKey("str.cancel")) {
-                    if isNewShoppingLocation{
-                        finishForm()
-                    } else {
-                        resetForm()
-                    }
-                }
-                .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button(LocalizedStringKey("str.save")) {
-                    saveShoppingLocation()
-                }
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
         .onAppear(perform: {
             if firstAppear {

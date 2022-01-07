@@ -57,6 +57,10 @@ struct MDBarcodeFormView: View {
     private func finishForm() {
 #if os(iOS)
         self.dismiss()
+#elseif os(macOS)
+        if isNewBarcode {
+            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+        }
 #endif
     }
     
@@ -123,10 +127,15 @@ struct MDBarcodeFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.md.barcode.save")) {
+                    Button(action: {
                         saveBarcode()
                         finishForm()
-                    }.disabled(!isBarcodeCorrect)
+                    }, label: {
+                        Label(LocalizedStringKey("str.md.barcode.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                        .disabled(!isBarcodeCorrect || isProcessing)
+                        .keyboardShortcut(.defaultAction)
                 }
             })
 #endif
