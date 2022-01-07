@@ -196,6 +196,8 @@ struct SettingsStockView: View {
     
     @State private var isFirst: Bool = true
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     private let dataToUpdate: [ObjectEntities] = [.locations, .product_groups, .quantity_units]
     
     var body: some View {
@@ -223,20 +225,23 @@ struct SettingsStockView: View {
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.purchase")).font(.title)) {
                 SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDefaultPurchaseAmount.rawValue, description: "str.settings.stock.purchase.defaultAmount")
-                SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.showPurchasedDateOnPurchase.rawValue, description: "str.settings.stock.purchase.showPurchasedDate")
-                SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.showWarningOnPurchaseWhenDueDateIsEarlierThanNext.rawValue, description: "str.settings.stock.purchase.showWarningWhenEarlier")
+                if devMode {
+                    SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.showPurchasedDateOnPurchase.rawValue, description: "str.settings.stock.purchase.showPurchasedDate")
+                    SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.showWarningOnPurchaseWhenDueDateIsEarlierThanNext.rawValue, description: "str.settings.stock.purchase.showWarningWhenEarlier")
+                }
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.consume")).font(.title)) {
                 SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmount.rawValue, description: "str.settings.stock.consume.defaultAmount")
                     .disabled(useQuickConsume)
                 SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue, description: "str.settings.stock.consume.useQuickConsume", toggleFeedback: $useQuickConsume)
             }
-            Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
-                SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue, description: "str.settings.stock.common.amountDecimalPlaces")
-                SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue, description: "str.settings.stock.common.priceDecimalPlaces")
-                SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue, description: "str.settings.stock.common.priceAddSeparatorAuto", descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint")
+            if devMode {
+                Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
+                    SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue, description: "str.settings.stock.common.amountDecimalPlaces")
+                    SettingsStockViewIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue, description: "str.settings.stock.common.priceDecimalPlaces")
+                    SettingsStockViewToggle(settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue, description: "str.settings.stock.common.priceAddSeparatorAuto", descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint")
+                }
             }
-            
         }
         .navigationTitle(LocalizedStringKey("str.settings.stock"))
         .onAppear(perform: {
