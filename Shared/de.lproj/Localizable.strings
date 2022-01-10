@@ -296,8 +296,8 @@
 "str.shL.filter.undone" = "Nur unerledigte Einträge";
 "str.shL.filter.info.1belowMinStock" = "1 Produkt ist unter Mindestbestand";
 "str.shL.filter.info.belowMinStock %lld" = "%lld Produkte sind unter Mindestbestand";
-"str.shL.filter.info.1done" = "1 Eintrag ist erledigt";
-"str.shL.filter.info.done %lld" = "%lld Einträge sind erledigt";
+"str.shL.filter.info.1undone" = "1 Eintrag ist noch nicht erledigt";
+"str.shL.filter.info.undone %lld" = "%lld Einträge sind noch nicht erledigt";
 "str.shL.filter.info.1undone" = "1 Eintrag ist noch nicht erledigt";
 "str.shL.filter.info.undone %lld" = "%lld Einträge sind noch nicht erledigt";
 
@@ -419,7 +419,6 @@
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Bestandsprüfung für diese Zutat deaktivieren";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dies wird als Standardeinstellung verwendet wenn dieses Produkt als Rezeptzutat hinzugefügt wird";
 
-// MD Barcode
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";
 "str.md.barcodes.empty" = "Keine Barcodes eingetragen.";
@@ -655,7 +654,7 @@
 "str.quickScan.add.product.add.fail" = "Zuweisung fehlgeschlagen";
 "str.quickScan.barcode.invalid" = "Ungültiger Barcode";
 
-// MARK: - Onboarding and Login
+// MARK: - Onboarding
 "str.onboard.start" = "Los geht's!";
 "str.onboard.grocy.title" = "grocy - ERP für deinen Kühlschrank";
 "str.onboard.grocy.subtitle" = "grocy ist eine selbst gehostete Webanwendung zur Lebensmittel- und Haushaltsverwaltung.";
