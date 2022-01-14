@@ -496,6 +496,7 @@
 		78559CC1278347EA00680600 /* SettingsStockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStockView.swift; sourceTree = "<group>"; };
 		785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductPictureFormView.swift; sourceTree = "<group>"; };
+		78644EC02791E6E0007110CF /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		786618D12718ACEE001552FA /* AmountSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountSelectionView.swift; sourceTree = "<group>"; };
 		786F6E832563FDC7004D8DE0 /* MDShoppingLocationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDShoppingLocationsView.swift; sourceTree = "<group>"; };
 		786F6E8A2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDShoppingLocationFormView.swift; sourceTree = "<group>"; };
@@ -1180,6 +1181,7 @@
 				de,
 				Base,
 				pl,
+				"fr-FR",
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1708,6 +1710,7 @@
 				78CB7562255EA2D300319108 /* en */,
 				78CB7568255EA2D600319108 /* de */,
 				7228DE4026CBAD0B005821FA /* pl */,
+				78644EC02791E6E0007110CF /* fr-FR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
