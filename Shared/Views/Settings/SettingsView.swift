@@ -76,7 +76,8 @@ struct SettingsView: View {
                 Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {
                     Text("🇬🇧 English").tag("en")
                     Text("🇩🇪 Deutsch").tag("de")
-                    Text("🇵🇱 Polish").tag("pl")
+                    Text("🇫🇷 Français").tag("fr-FR")
+                    Text("🇵🇱 Polska").tag("pl")
                 })
 #if os(iOS)
                 NavigationLink(
