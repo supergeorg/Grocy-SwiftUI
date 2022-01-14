@@ -1,6 +1,6 @@
 //
 //  AboutView.swift
-//  grocy-ios
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 26.10.20.
 //
@@ -27,11 +27,19 @@ struct AboutLineView: View {
 
 struct AboutView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
-#if os(macOS)
-    @State private var showTranslators: Bool = false
-#endif
     
     var body: some View {
+#if os(macOS)
+        ScrollView {
+            content
+        }
+        .padding()
+#else
+        content
+#endif
+    }
+    
+    var content: some View {
         Form(){
             Section{
                 Text(LocalizedStringKey("str.settings.about.thanks"))
@@ -56,13 +64,11 @@ struct AboutView: View {
                     AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
                 })
 #else
-                AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
-                    .onTapGesture {
-                        showTranslators.toggle()
-                    }
-                if showTranslators {
+                DisclosureGroup(content: {
                     TranslatorsView()
-                }
+                }, label: {
+                    AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
+                })
 #endif
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
