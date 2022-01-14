@@ -10,15 +10,24 @@ import SwiftUI
 struct TranslatorLineView: View {
     var languageName: String
     var languageFlag: String
-    var languageTranslators: String
+    var languageMaintainers: String
+    var languageContributors: [String]
     var body: some View {
-        HStack{
-            Text(languageFlag).font(.title)
-            VStack(alignment: .leading) {
-                Text(languageName).font(.title3)
-                Text(languageTranslators).font(.body)
+        DisclosureGroup(content: {
+            Group {
+                ForEach(languageContributors, id:\.self) { contributor in
+                    Text(contributor).font(.caption)
+                }
             }
-        }
+        }, label: {
+            HStack {
+                Text(languageFlag).font(.title)
+                VStack(alignment: .leading) {
+                    Text(languageName).font(.title3)
+                    Text(languageMaintainers).font(.body)
+                }
+            }
+        })
     }
 }
 
@@ -26,7 +35,10 @@ struct TranslatorsView: View {
     var body: some View {
         Form() {
             ForEach(Array(Translators.languages).sorted { $0.name < $1.name },id: \.self, content: { language in
-                TranslatorLineView(languageName: language.name, languageFlag: language.flag, languageTranslators: language.translators)
+                TranslatorLineView(languageName: language.name,
+                                   languageFlag: language.flag,
+                                   languageMaintainers: language.maintainers,
+                                   languageContributors: language.contributors)
             })
         }
         .navigationTitle("str.settings.about.translators")
