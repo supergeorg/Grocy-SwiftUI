@@ -1,4 +1,4 @@
-/*
+/* 
   Localizable.strings
   Grocy-SwiftUI
 
@@ -108,7 +108,7 @@
 "str.stock.status.expired" = "Périmé";
 "str.stock.status.belowMinStock" = "En dessous du seuil de stock minimum";
 "str.stock.info.1expiringSoon %lld" = "1 produit est périmé dans les %lld prochains jours ";
-"str.stock.info.1overdue" = "1 produit est périmé";
+"str.stock.info.1overdue" = "1 produit arrive à échéance";
 "str.stock.info.1expired" = "1 produit est périmé";
 "str.stock.info.1belowMinStock" = "1 produit a un stock inférieur à la quantité minimum définie";
 "str.stock.info.expiringSoon %lld %lld" = "%lld produits sont périmés dans les %lld prochains jours ";
@@ -155,7 +155,7 @@
 "str.stock.product.amount" = "Quantité";
 "str.stock.product.amount.factored %@ %@" = "Ceci est équivalent %@ %@";
 "str.stock.product.amount.invalid" = "Cette valeur ne peut être inférieure à 0,0001 et doit être un nombre valide avec un maximum de 4 décimales. 4 décimales au maximum";
-"str.stock.product.amount.locMax" = "Ce montant n'est pas disponible à l'endroit sélectionné";
+"str.stock.product.amount.locMax" = "Cette quantité n'est pas disponible à l'endroit sélectionné";
 "str.stock.product.quantityUnit" = "Format";
 "str.stock.product.quantityUnit.required" = "Un format est requis";
 
@@ -316,7 +316,7 @@
 "str.shL.entry.delete" = "Supprimer cet élément";
 "str.shL.entry.delete.confirm" = "Voulez-vous vraiment supprimer cet élément ?";
 "str.shL.entry.add %@" = "Ajouter %@ dans le stock";
-"str.shL.entry.info.amount %@" = "Montant : %@";
+"str.shL.entry.info.amount %@" = "Quantité : %@";
 
 // MARK: - Master Data
 "str.md.masterData" = "Données de base";
