@@ -20,7 +20,7 @@ extension AppSidebarNavigation {
         case equipment = "latch.2.case"
         case calendar = "calendar"
         case purchase = "cart.badge.plus"
-        case consume = "tuningfork"
+        case consume = "fork.knife"
         case transfer = "arrow.left.arrow.right"
         case inventory = "list.bullet"
         case choreTracking = "play.fill"
