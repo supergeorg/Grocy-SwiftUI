@@ -38,7 +38,7 @@ struct ShoppingListRowView: View {
             ShoppingListRowActionsView(shoppingListItem: shoppingListItem, toastType: $toastType)
 #endif
             VStack(alignment: .leading){
-                Text(product?.name ?? "Name Error")
+                Text(product?.name ?? shoppingListItem.note ?? "?")
                     .font(.headline)
                     .strikethrough(shoppingListItem.done == 1)
                 Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))

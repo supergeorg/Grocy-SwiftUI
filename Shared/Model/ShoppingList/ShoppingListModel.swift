@@ -64,3 +64,18 @@ struct ShoppingListItem: Codable {
 }
 
 typealias ShoppingList = [ShoppingListItem]
+
+// MARK: - ShoppingListAddItem
+struct ShoppingListItemAdd: Codable {
+    let amount: Double
+    let note: String?
+    let productID, quID: Int?
+    let shoppingListID: Int
+
+    enum CodingKeys: String, CodingKey {
+        case amount, note
+        case productID = "product_id"
+        case quID = "qu_id"
+        case shoppingListID = "shopping_list_id"
+    }
+}

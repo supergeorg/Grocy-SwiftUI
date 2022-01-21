@@ -92,7 +92,7 @@ protocol GrocyAPI {
     func undoBookingWithID(id: Int) -> AnyPublisher<Int, APIError>
     func getPictureURL(groupName: String, fileName: String) -> String?
     // MARK: - Shopping List
-    func shoppingListAddProduct(content: Data) -> AnyPublisher<Int, APIError>
+    func shoppingListAddItem(content: Data) -> AnyPublisher<SuccessfulCreationMessage, APIError>
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError>
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
@@ -487,8 +487,9 @@ extension GrocyApi {
     
     // SHOPPING LIST
     
-    func shoppingListAddProduct(content: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
+    func shoppingListAddItem(content: Data) -> AnyPublisher<SuccessfulCreationMessage, APIError> {
+//        return callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
+        return call(.objectsEntity, method: .POST, object: .shopping_list, content: content)
     }
     
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError> {

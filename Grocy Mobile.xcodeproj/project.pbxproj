@@ -313,8 +313,6 @@
 		78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
 		78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
 		78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
-		78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
-		78D98F772577B93000199688 /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */; };
 		78DB1BCE268CEE85005448F3 /* CodeTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */; };
 		78DB1BD1268CEE9F005448F3 /* Barcodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BD0268CEE9F005448F3 /* Barcodes.swift */; };
@@ -415,12 +413,10 @@
 		78FDCE0425BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75FA255EB9A000319108 /* ProductConsumeModel.swift */; };
 		78FDCE0525BAD2F00089CB5E /* ProductInventoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891C65B257E539A0014C59E /* ProductInventoryModel.swift */; };
 		78FDCE0625BAD2F00089CB5E /* ProductOpenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75FC255EB9A000319108 /* ProductOpenModel.swift */; };
-		78FDCE0B25BAD2F40089CB5E /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78FDCE0C25BAD2F40089CB5E /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78FDCE0D25BAD2F40089CB5E /* ShoppingListDescriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */; };
 		78FDCE0E25BAD2F40089CB5E /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78FDCE0F25BAD2F40089CB5E /* ShoppingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F0F8256FB63800FB8431 /* ShoppingListModel.swift */; };
-		78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F752577B93000199688 /* ShoppingListAddProduct.swift */; };
 		78FDCE1525BAD2F50089CB5E /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78FDCE1625BAD2F50089CB5E /* ShoppingListDescriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */; };
 		78FDCE1725BAD2F50089CB5E /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
@@ -591,7 +587,6 @@
 		78D75D6225DE9B71009F2C15 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		78D7975A25B6FB4800550C58 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
-		78D98F752577B93000199688 /* ShoppingListAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListAddProduct.swift; sourceTree = "<group>"; };
 		78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTypeSelectionView.swift; sourceTree = "<group>"; };
 		78DB1BD0268CEE9F005448F3 /* Barcodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Barcodes.swift; sourceTree = "<group>"; };
@@ -732,7 +727,6 @@
 				7880F0F8256FB63800FB8431 /* ShoppingListModel.swift */,
 				7880F103256FB6E400FB8431 /* ShoppingListDescriptionModel.swift */,
 				78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */,
-				78D98F752577B93000199688 /* ShoppingListAddProduct.swift */,
 				78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */,
 			);
 			path = ShoppingList;
@@ -1304,7 +1298,6 @@
 				7826270E256E847F00ECED03 /* StockProductPriceHistory.swift in Sources */,
 				78118FF92769098100891FE7 /* QuickScanOpenFoodFactsView.swift in Sources */,
 				786F6E992564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
-				78D98F762577B93000199688 /* ShoppingListAddProduct.swift in Sources */,
 				786618D22718ACEE001552FA /* AmountSelectionView.swift in Sources */,
 				7885B8BB2567F723003439F5 /* PurchaseProductView.swift in Sources */,
 				78CB756F255EA39200319108 /* GrocyViewModel.swift in Sources */,
@@ -1509,7 +1502,6 @@
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB7590255EA53F00319108 /* GenericResponses.swift in Sources */,
 				78512068256FF0E400171390 /* UserFormView.swift in Sources */,
-				78D98F772577B93000199688 /* ShoppingListAddProduct.swift in Sources */,
 				78F1FAC8255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */,
 				7853A4D025DBE74300AF9986 /* LogView.swift in Sources */,
@@ -1562,7 +1554,6 @@
 				78FDCE0F25BAD2F40089CB5E /* ShoppingListModel.swift in Sources */,
 				78FDCDDC25BAD2E40089CB5E /* VolatileStockModel.swift in Sources */,
 				78FDCDDB25BAD2E40089CB5E /* StockModel.swift in Sources */,
-				78FDCE0B25BAD2F40089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				78846064257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
 				78FDCDF925BAD2F00089CB5E /* ProductTransferModel.swift in Sources */,
 				78FDCDC625BAD2DE0089CB5E /* MDProductBarcodeModel.swift in Sources */,
@@ -1651,7 +1642,6 @@
 				78FDCDE325BAD2E50089CB5E /* VolatileStockModel.swift in Sources */,
 				78ADA1E426D1506800946E1B /* TranslatorsView.swift in Sources */,
 				78FDCDE225BAD2E50089CB5E /* StockModel.swift in Sources */,
-				78FDCE1425BAD2F50089CB5E /* ShoppingListAddProduct.swift in Sources */,
 				7884605F257F9F4A00671C97 /* StockJournalModel.swift in Sources */,
 				780B8B5D26FA5CE3009ACFB7 /* Colors.swift in Sources */,
 				78855F8425FB9B1C007F69AF /* NewMDRowLabel.swift in Sources */,

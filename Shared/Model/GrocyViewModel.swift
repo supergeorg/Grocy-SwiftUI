@@ -1011,9 +1011,9 @@ class GrocyViewModel: ObservableObject {
     
     // MARK: -Shopping Lists
     
-    func addShoppingListProduct(content: ShoppingListAddProduct, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
+    func addShoppingListItem(content: ShoppingListItemAdd, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
         let jsonContent = try! jsonEncoder.encode(content)
-        grocyApi.shoppingListAddProduct(content: jsonContent)
+        grocyApi.shoppingListAddItem(content: jsonContent)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
@@ -1022,8 +1022,8 @@ class GrocyViewModel: ObservableObject {
                 case .finished:
                     break
                 }
-            }, receiveValue: { (responseCode: Int) in
-                completion(.success(SuccessfulCreationMessage(createdObjectID: content.productID)))
+            }, receiveValue: { (creationMessage: SuccessfulCreationMessage) in
+                completion(.success(creationMessage))
             })
             .store(in: &cancellables)
     }

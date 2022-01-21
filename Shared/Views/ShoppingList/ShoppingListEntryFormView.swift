@@ -29,7 +29,7 @@ struct ShoppingListEntryFormView: View {
     var isPopup: Bool = false
     
     var isFormValid: Bool {
-        return (productID != nil && amount > 0 && quantityUnitID != nil)
+        return amount > 0
     }
     
     private func getQuantityUnit() -> MDQuantityUnit? {
@@ -55,33 +55,31 @@ struct ShoppingListEntryFormView: View {
     }
     
     func saveShoppingListEntry() {
-        if let productID = productID {
-            if isNewShoppingListEntry{
-                grocyVM.addShoppingListProduct(content: ShoppingListAddProduct(productID: productID, listID: shoppingListID, productAmount: amount, note: note), completion: { result in
+        if isNewShoppingListEntry{
+            grocyVM.addShoppingListItem(content: ShoppingListItemAdd(amount: amount, note: note, productID: productID, quID: quantityUnitID, shoppingListID: shoppingListID), completion: { result in
+                switch result {
+                case let .success(message):
+                    grocyVM.postLog("Shopping list entry saved successfully. \(message)", type: .info)
+                    updateData()
+                    finishForm()
+                case let .failure(error):
+                    grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
+                    showFailToast = true
+                }
+            })
+        } else {
+            if let entry = shoppingListEntry {
+                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
                     switch result {
                     case let .success(message):
-                        grocyVM.postLog("Shopping entry saved successfully. \(message)", type: .info)
+                        grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        grocyVM.postLog("Shopping entry save failed. \(error)", type: .error)
+                        grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
                         showFailToast = true
                     }
                 })
-            } else {
-                if let entry = shoppingListEntry {
-                    grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
-                        switch result {
-                        case let .success(message):
-                            grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
-                            updateData()
-                            finishForm()
-                        case let .failure(error):
-                            grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
-                            showFailToast = true
-                        }
-                    })
-                }
             }
         }
     }
@@ -104,6 +102,7 @@ struct ShoppingListEntryFormView: View {
                             .keyboardShortcut(.cancelAction)
                     }
                 }
+#if os(iOS)
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.save")) {
                         saveShoppingListEntry()
@@ -111,6 +110,7 @@ struct ShoppingListEntryFormView: View {
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isFormValid)
                 }
+#endif
             }
     }
     
