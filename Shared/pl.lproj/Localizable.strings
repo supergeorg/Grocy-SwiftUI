@@ -1,4 +1,4 @@
-/*
+/* 
   Localizable.strings
   Grocy-SwiftUI
 
@@ -24,11 +24,11 @@
 "str.clear" = "Wyczyść";
 "str.back" = "Powrót";
 "str.retry" = "Spróbuj ponownie";
-"str.failed" = "Failed";
-"str.error.connection" = "No connection to server.";
-"str.error.api" = "API error detected.";
-"str.error.other" = "Unknown error occured.";
-"str.error.logInfo" = "Please check the log to determine the problem.";
+"str.failed" = "Nie powiodło się";
+"str.error.connection" = "Brak połączenia z serwerem.";
+"str.error.api" = "Wystąpił błąd w API.";
+"str.error.other" = "Wystąpił nieznany błąd.";
+"str.error.logInfo" = "Sprawdź logi aby określić problem.";
 "str.time.unlimited" = "bez ograniczeń";
 
 // MARK: - Transactions
@@ -130,13 +130,13 @@
 "str.stock.tbl.nextBestBefore" = "Następna data najlepszego spożycia przed";
 "str.stock.tbl.caloriesPerStockQU" = "Kalorie (na jednostkę miary)";
 "str.stock.tbl.calories" = "Kalorie";
-"str.stock.tbl.lastPurchased" = "Last purchased";
-"str.stock.tbl.lastPrice" = "Last price";
-"str.stock.tbl.minStockAmount" = "Min. stock amount";
-"str.stock.tbl.productDescription" = "Product description";
-"str.stock.tbl.parentProduct" = "Parent product";
-"str.stock.tbl.defaultLocation" = "Default location";
-"str.stock.tbl.productPicture" = "Product picture";
+"str.stock.tbl.lastPurchased" = "Ostatni zakup";
+"str.stock.tbl.lastPrice" = "Ostatnia cena";
+"str.stock.tbl.minStockAmount" = "Min. ilość zapasów";
+"str.stock.tbl.productDescription" = "Opis produktu";
+"str.stock.tbl.parentProduct" = "Produkt nadrzędny";
+"str.stock.tbl.defaultLocation" = "Domyślne miejsce";
+"str.stock.tbl.productPicture" = "Zdjęcie produktu";
 "str.stock.tbl.action.all" = "Wszystko";
 "str.stock.tbl.action.consume %@" = "Spożyj %@";
 "str.stock.tbl.action.consume.all %@" = "Spożyj wszystkie %@ które są w zapasach";
@@ -152,12 +152,12 @@
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Spożyj %@ jako zepsute";
 "str.stock.tbl.menu.searchRecipes" = "Szukaj przepisów zawierających ten produkt";
 
-"str.stock.product.amount" = "Amount";
-"str.stock.product.amount.factored %@ %@" = "This equals %@ %@";
-"str.stock.product.amount.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
-"str.stock.product.amount.locMax" = "This amount is not available at the selected location";
-"str.stock.product.quantityUnit" = "Quantity unit";
-"str.stock.product.quantityUnit.required" = "A quantity unit is required";
+"str.stock.product.amount" = "Ilość";
+"str.stock.product.amount.factored %@ %@" = "Równa się %@%@";
+"str.stock.product.amount.invalid" = "Nie może być mniejsze niż 0.0001 oraz może mieć maksymalnie 4 cyfry po przecinku";
+"str.stock.product.amount.locMax" = "Ta liczba nie jest dostępna dla zaznaczonego miejsca";
+"str.stock.product.quantityUnit" = "Jednostka miary";
+"str.stock.product.quantityUnit.required" = "Jednostka miary jest wymagana";
 
 "str.stock.buy" = "Zakup";
 "str.stock.buy.product" = "Produkt";
@@ -247,19 +247,19 @@
 "str.stock.journal.user" = "Użytkownik";
 "str.stock.journal.user.info %@" = "Wykonane przez: %@";
 
-"str.stock.entries" = "Stock entries";
-"str.stock.entries.empty" = "No matching records found";
-"str.stock.entries.product %@" = "Product: %@";
-"str.stock.entries.amount %@" = "Amount: %@";
-"str.stock.entries.dueDate %@" = "Due date: %@";
-"str.stock.entries.location %@" = "Location: %@";
-"str.stock.entries.shoppingLocation %@" = "Store: %@";
-"str.stock.entries.price %@" = "Price: %@";
-"str.stock.entries.purchasedDate %@" = "Purchased date: %@";
-"str.stock.entry.edit" = "Edit entry";
-"str.stock.entry.save" = "Save entry";
-"str.stock.entry.consume" = "Consume this stock entry";
-"str.stock.entry.open" = "Mark this stock entry as open";
+"str.stock.entries" = "Pozycje zapasu";
+"str.stock.entries.empty" = "Nie znaleziono pasujących rekordów";
+"str.stock.entries.product %@" = "Produkt: %@";
+"str.stock.entries.amount %@" = "Ilość: %@";
+"str.stock.entries.dueDate %@" = "Data ważności: %@";
+"str.stock.entries.location %@" = "Miejsce: %@";
+"str.stock.entries.shoppingLocation %@" = "Sklep: %@";
+"str.stock.entries.price %@" = "Cena: %@";
+"str.stock.entries.purchasedDate %@" = "Data zakupu: %@";
+"str.stock.entry.edit" = "Edytuj pozycję";
+"str.stock.entry.save" = "Zapisz pozycję";
+"str.stock.entry.consume" = "Spożyj pozycję";
+"str.stock.entry.open" = "Oznacz tę pozycję jako otwartą";
 
 // MARK: - Shopping List
 "str.shL" = "Lista zakupów";
@@ -435,8 +435,8 @@
 "str.md.barcode.note" = "Notka";
 "str.md.barcode.info.amount %@" = "Ilość: %@";
 "str.md.barcode.info.store %@" = "Sklep: %@";
-"str.md.barcode.delete" = "Delete barcode";
-"str.md.barcode.delete.confirm" = "Do you really want to delete this barcode?";
+"str.md.barcode.delete" = "Usuń kod kreskowy";
+"str.md.barcode.delete.confirm" = "Na pewno chcesz usunąć ten kod kreskowy?";
 
 "str.md.locations" = "Miejsca";
 "str.md.location" = "Miejsce";
@@ -583,8 +583,8 @@
 "str.settings.about" = "O tej aplikacji";
 "str.settings.about.thanks" = "Chciałbym podziękować Berndowi Bestelowi za stworzenie Grocy. Bez niego ta apka by nie powstała.";
 "str.settings.about.version" = "Wersja";
-"str.settings.about.version.supported" = "Supported";
-"str.settings.about.version.notSupported" = "Not supported";
+"str.settings.about.version.supported" = "Wspierane";
+"str.settings.about.version.notSupported" = "Niewspierane";
 "str.settings.about.developer" = "Deweloper";
 "str.settings.about.translators" = "Tłumacze";
 "str.settings.about.showOnboarding" = "Uruchom ponownie wprowadzenie do aplikacji";
@@ -593,34 +593,34 @@
 "str.settings.appLanguage" = "Język aplikacji";
 "str.settings.resetCache" = "Wyczyść pamięć cache";
 "str.settings.log" = "Logi aplikacji";
-"str.settings.log.empty" = "No log entry found.";
+"str.settings.log.empty" = "Nie znaleziono pozycji w logach.";
 "str.settings.log.update" = "Uaktualnij logi";
 "str.settings.log.share" = "Udostępnij logi";
-"str.settings.grocy" = "Grocy settings";
-"str.settings.stock" = "Stock settings";
-"str.settings.stock.presets" = "Presets for new products";
-"str.settings.stock.presets.location" = "Location";
-"str.settings.stock.presets.productGroup" = "Product group";
-"str.settings.stock.presets.quantityUnit" = "Quantity unit";
-"str.settings.stock.presets.defaultDueDays" = "Default due days";
-"str.settings.stock.stockOverview" = "Stock overview";
-"str.settings.stock.stockOverview.dueSoonDays" = "Due soon days";
-"str.settings.stock.stockOverview.showIconShoppingList" = "Show an icon if the product is already on the shopping list";
-"str.settings.stock.purchase" = "Purchase";
-"str.settings.stock.purchase.defaultAmount" = "Default amount for purchase";
-"str.settings.stock.purchase.showPurchasedDate" = "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)";
-"str.settings.stock.purchase.showWarningWhenEarlier" = "Show a warning when the due date of the purchased product is earlier than the next due date in stock";
-"str.settings.stock.consume" = "Consume";
-"str.settings.stock.consume.defaultAmount" = "Default amount for consume";
-"str.settings.stock.consume.useQuickConsume" = "Use the products \"Quick consume amount\"";
-"str.settings.stock.common" = "Common";
-"str.settings.stock.common.amountDecimalPlaces" = "Decimal places allowed for amounts";
-"str.settings.stock.common.priceDecimalPlaces" = "Decimal places allowed for prices";
-"str.settings.stock.common.priceAddSeparatorAuto" = "Add decimal separator automatically for price inputs";
-"str.settings.stock.common.priceAddSeparatorAuto.hint" = "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places";
+"str.settings.grocy" = "Ustawienia Grocy";
+"str.settings.stock" = "Ustawienia zapasów";
+"str.settings.stock.presets" = "Szablony dla nowych produktów";
+"str.settings.stock.presets.location" = "Miejsce";
+"str.settings.stock.presets.productGroup" = "Grupa produku";
+"str.settings.stock.presets.quantityUnit" = "Jednostka miary";
+"str.settings.stock.presets.defaultDueDays" = "Domyślna ilość dni ważności";
+"str.settings.stock.stockOverview" = "Przegląd zapasów";
+"str.settings.stock.stockOverview.dueSoonDays" = "Ilość dni do daty ważności";
+"str.settings.stock.stockOverview.showIconShoppingList" = "Pokaż ikonę jeśli produkt znajduje się już na liście zakupów";
+"str.settings.stock.purchase" = "Kup";
+"str.settings.stock.purchase.defaultAmount" = "Domyślna ilość sztuk przy zakupach";
+"str.settings.stock.purchase.showPurchasedDate" = "Pokaż datę zakupu na stronach \"Zakup\" i \"Spis produktów\" (w przeciwnym wypadku ustawia datę zakupu na dziś)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "Pokaż ostrzeżenie kiedy data ważności kupowanego produktu jest wcześniejsza od następnej daty ważności w zapasach";
+"str.settings.stock.consume" = "Spożycie";
+"str.settings.stock.consume.defaultAmount" = "Domyślna ilość sztuk przy spożyciu";
+"str.settings.stock.consume.useQuickConsume" = "Użyj ilości z \"Szybkie spożycie\"";
+"str.settings.stock.common" = "Ogólne";
+"str.settings.stock.common.amountDecimalPlaces" = "Wartości po przecinku dla sztuk";
+"str.settings.stock.common.priceDecimalPlaces" = "Wartości po przecinku dla ceny";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Dodaj separator do liczb przy wprowadzeniu ceny";
+"str.settings.stock.common.priceAddSeparatorAuto.hint" = "Kiedy włączone, zawsze musisz wpisać wartość włączając liczby po przecinku, przecinek zostanie automatycznie dodany na podstawie ilości miejsc po przecinku";
 
 // MARK: - Admin
-"str.admin.user" = "User management";
+"str.admin.user" = "Zarządzanie użytkownikami";
 "str.admin.user.empty" = "NIe znaleziono użytkownika";
 "str.admin.user.tooltip.edit" = "Edytuj tego użytkownika";
 "str.admin.user.tooltip.permissions" = "Zmień uprawnienia tego użytkownika";
@@ -643,7 +643,7 @@
 "str.quickScan.markAsOpened" = "Otwórz";
 "str.quickScan.purchase" = "Kup";
 "str.quickScan.input.consume.amount" = "Liczba spożytych";
-"str.quickScan.input.consume.default %@" = "Default (%@)";
+"str.quickScan.input.consume.default %@" = "Domyślnie (%@)";
 "str.quickScan.input.consume.barcodeAmount %@" = "Szybko (%@)";
 "str.quickScan.input.consume.custom" = "NIestandardowe";
 "str.quickScan.input.consume.all %@" = "Wszystkie (%@)";
@@ -672,15 +672,15 @@
 "str.login.ownServer.qr.info" = "Otwiera stronę webinterfejsu Grocy z kluczami API. Jeżeli nie ma żadnego klucza, stwórz go. Kliknij symbol QR, aby wyświetlić kod i aby móc go zeskanować w aplikacji.";
 "str.login.ownServer.manual" = "Wpis manualny";
 "str.login.ownServer.manual.serverURL" = "URL serwera";
-"str.login.ownServer.manual.serverURL.help" = "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)";
+"str.login.ownServer.manual.serverURL.help" = "Adres URL twojej instancji Grocy (jeżeli używasz Ingress z Home Assistanta, możesz go uzyskać za pomocą prawego przycisku myszy w REST API Browser)";
 "str.login.ownServer.manual.APIKey" = "Poprawny klucz API";
-"str.login.ownServer.manual.APIKey.help" = "API key for the user which is shown in the Manage API keys webview. If none exist, you need to create a new one.";
+"str.login.ownServer.manual.APIKey.help" = "Klucz API użytkownika który jest widoczny na stronie \"Manage API keys\". Jeśli nie istnieje, musisz go tam stworzyć.";
 "str.login.ownServer.manual.APIKey.create" = "Stwórz klucz API";
 "str.login.ownServer.manual.login" = "Zaloguj się";
 "str.login.connect.fail" = "Nie udało połączyć się z serwerem.";
 "str.login.connect.fail.info %@ %@" = "Serwer: %@\n\nBłąd: %@";
 "str.login.connect.unsupportedVersion %@" = "Serwer używa wersji %@, która nie jest wpierana przez apkę. Możesz i tak jej używać, jednak mogą pojawić się problemy.";
 "str.login.connect.unsupportedVersion.confirm" = "Kontynuuj mimo wszystko";
-"str.login.hassIngress.use" = "Use Home Assistant Ingress";
-"str.login.hassIngress.token" = "Long-Term-Token for Home Assistant";
-"str.login.hassIngress.token.help" = "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS).";
+"str.login.hassIngress.use" = "Używaj Ingress dla Home Assistanta";
+"str.login.hassIngress.token" = "Long-Term-Token dla Home Assistanta";
+"str.login.hassIngress.token.help" = "Ten token musi zostać wygenerowany w Home Assistancie. Aby to zrobić, otwórz stronę profilu w Home Assistant, przesuń na dół do listy długoterminowych tokenów i stwórz taki. Nazwij go i skopiuj token do aplikacji. Możesz też wybrać opcję stworzenia kodu QR aby zeskanować go (dostępne w przypadku iOS-a).";
