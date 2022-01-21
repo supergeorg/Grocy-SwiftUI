@@ -160,11 +160,7 @@ struct ShoppingListView: View {
     var bodyContent: some View {
         content
             .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-#if os(macOS)
-                    RefreshButton(updateData: { updateData() })
-                        .help(LocalizedStringKey("str.refresh"))
-#endif
+                HStack {
 #if os(iOS)
                     Menu(content: {
                         shoppingListActionContent
@@ -175,6 +171,10 @@ struct ShoppingListView: View {
 #elseif os(macOS)
                     shoppingListActionContent
 #endif
+#if os(macOS)
+                    RefreshButton(updateData: { updateData() })
+                        .help(LocalizedStringKey("str.refresh"))
+#endif
                     Button(action: {
 #if os(iOS)
                         activeSheet = .newShoppingListEntry
@@ -182,7 +182,7 @@ struct ShoppingListView: View {
                         showAddItem.toggle()
 #endif
                     }, label: {
-                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.addToShoppingList)
+                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
                     })
                         .help(LocalizedStringKey("str.shL.action.addItem"))
 #if os(macOS)
@@ -193,7 +193,7 @@ struct ShoppingListView: View {
                             }
                         })
 #endif
-                })
+                }
             })
             .alert(LocalizedStringKey("str.shL.delete.confirm"), isPresented: $showSHLDeleteAlert, actions: {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
@@ -226,7 +226,7 @@ struct ShoppingListView: View {
                 showNewShoppingList.toggle()
 #endif
             }, label: {
-                Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.new)
+                Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.shoppingList)
             })
                 .help(LocalizedStringKey("str.shL.new"))
 #if os(macOS)
