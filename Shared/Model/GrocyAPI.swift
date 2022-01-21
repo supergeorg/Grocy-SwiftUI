@@ -34,7 +34,7 @@ public enum ObjectEntities: String, CaseIterable {
 }
 
 public enum AdditionalEntities: String, CaseIterable {
-    case system_info, system_db_changed_time, system_config, stock, users, current_user, user_settings
+    case system_info, system_db_changed_time, system_config, stock, volatileStock, users, current_user, user_settings
 }
 
 public enum StockProductPost: String {

@@ -10,7 +10,7 @@ import SwiftUI
 private struct StockFilterItemView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     @Environment(\.colorScheme) var colorScheme
-    var num: Int
+    var num: Int?
     @Binding var filteredStatus: ProductStatus
     var ownFilteredStatus: ProductStatus
     var normalColor: Color
@@ -31,18 +31,18 @@ private struct StockFilterItemView: View {
             // check if small display (not widescreen or iPad)
             if horizontalSizeClass == .compact && verticalSizeClass == .regular {
                 HStack{
-                    Text(String(num))
+                    Text(String(num ?? 0))
                         .bold()
                     Image(systemName: ownFilteredStatus.getIconName())
                 }
                 .foregroundColor(colorScheme == .light ? darkColor : lightColor)
             } else {
-                Text(ownFilteredStatus.getDescription(amount: num, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
+                Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                     .bold()
                     .foregroundColor(colorScheme == .light ? darkColor : lightColor)
             }
 #elseif os(macOS)
-            Text(ownFilteredStatus.getDescription(amount: num, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
+            Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                 .bold()
                 .foregroundColor(colorScheme == .light ? darkColor : lightColor)
 #endif
@@ -67,10 +67,10 @@ private struct StockFilterItemView: View {
 struct StockFilterActionsView: View {
     @Binding var filteredStatus: ProductStatus
     
-    var numExpiringSoon: Int
-    var numOverdue: Int
-    var numExpired: Int
-    var numBelowStock: Int
+    var numExpiringSoon: Int?
+    var numOverdue: Int?
+    var numExpired: Int?
+    var numBelowStock: Int?
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){

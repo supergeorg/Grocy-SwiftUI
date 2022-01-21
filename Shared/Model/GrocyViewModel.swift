@@ -32,6 +32,7 @@ class GrocyViewModel: ObservableObject {
     @Published var users: GrocyUsers = []
     @Published var currentUser: GrocyUsers = []
     @Published var stock: Stock = []
+    @Published var volatileStock: VolatileStock? = nil
     @Published var stockJournal: StockJournal = []
     @Published var shoppingListDescriptions: ShoppingListDescriptions = []
     @Published var shoppingList: ShoppingList = []
@@ -459,6 +460,20 @@ class GrocyViewModel: ObservableObject {
                             }
                         })
                     }
+                case .volatileStock:
+                    if volatileStock == nil || ignoreCached  {
+                        getVolatileStock(completion: { result in
+                            switch result {
+                            case let .success(volatileStockRet):
+                                self.volatileStock = volatileStockRet
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
+                            case let .failure(error):
+                                self.postLog("Data request failed for volatile stock. Message: \("\(error)")", type: .error)
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
+                            }
+                        })
+                    }
                 case .users:
                     if users.isEmpty || ignoreCached  {
                         getUsers(completion: { result in
@@ -515,10 +530,12 @@ class GrocyViewModel: ObservableObject {
         systemInfo = nil
         systemDBChangedTime = nil
         systemConfig = nil
+        userSettings = nil
         
         users = []
         currentUser = []
         stock = []
+        volatileStock = nil
         stockJournal = []
         shoppingListDescriptions = []
         shoppingList = []
@@ -528,8 +545,10 @@ class GrocyViewModel: ObservableObject {
         mdLocations = []
         mdShoppingLocations = []
         mdQuantityUnits = []
+        mdQuantityUnitConversions = []
         mdProductGroups = []
         mdBatteries = []
+        mdTaskCategories = []
         mdUserFields = []
         mdUserEntities = []
         
@@ -539,8 +558,10 @@ class GrocyViewModel: ObservableObject {
         stockProductPriceHistories = [:]
         
         lastStockActions = []
+
         failedToLoadObjects.removeAll()
         failedToLoadAdditionalObjects.removeAll()
+        failedToLoadErrors.removeAll()
         self.postLog("Deleted all cached data from the viewmodel.", type: .info)
     }
     
@@ -826,6 +847,24 @@ class GrocyViewModel: ObservableObject {
             }, receiveValue: { (stockOut) in
                 DispatchQueue.main.async {
                     completion(.success(stockOut))
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func getVolatileStock(completion: @escaping ((Result<VolatileStock, APIError>) -> ())) {
+        grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.postLog("Get volatile stock failed. \("\(error)")", type: .error)
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (volatileStockOut) in
+                DispatchQueue.main.async {
+                    completion(.success(volatileStockOut))
                 }
             })
             .store(in: &cancellables)

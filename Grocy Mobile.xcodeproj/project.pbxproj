@@ -947,11 +947,11 @@
 		78CB75F6255EB99400319108 /* Stock */ = {
 			isa = PBXGroup;
 			children = (
-				78262714256E883300ECED03 /* Transaction */,
-				78FA6A932567D40500941460 /* StockJournalModel.swift */,
-				78CB75F9255EB9A000319108 /* VolatileStockModel.swift */,
-				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
 				78CB75F8255EB9A000319108 /* StockModel.swift */,
+				78CB75F9255EB9A000319108 /* VolatileStockModel.swift */,
+				78FA6A932567D40500941460 /* StockJournalModel.swift */,
+				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
+				78262714256E883300ECED03 /* Transaction */,
 				78262701256E839100ECED03 /* ProductDetails */,
 			);
 			path = Stock;

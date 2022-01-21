@@ -102,18 +102,18 @@ struct StockTable: View {
             //                Text(stockElement.value == 0 ? "" : grocyVM.getFormattedCurrency(amount: stockElement.amount))
             //            })
             //
-            TableColumn(LocalizedStringKey("str.stock.tbl.nextBestBefore"), content: { stockElement in
-                HStack {
-                    if stockElement.bestBeforeDate == getNeverOverdueDate() {
-                        Text(LocalizedStringKey("str.stock.buy.product.doesntSpoil"))
-                    } else {
-                        Text(formatDateAsString(stockElement.bestBeforeDate, showTime: false, localizationKey: localizationKey) ?? "")
-                        Text(getRelativeDateAsText(stockElement.bestBeforeDate, localizationKey: localizationKey) ?? "")
-                            .font(.caption)
-                            .italic()
-                    }
-                }
-            })
+            //            TableColumn(LocalizedStringKey("str.stock.tbl.nextBestBefore"), content: { stockElement in
+            //                HStack {
+            //                    if stockElement.bestBeforeDate == getNeverOverdueDate() {
+            //                        Text(LocalizedStringKey("str.stock.buy.product.doesntSpoil"))
+            //                    } else {
+            //                        Text(formatDateAsString(stockElement.bestBeforeDate, showTime: false, localizationKey: localizationKey) ?? "")
+            //                        Text(getRelativeDateAsText(stockElement.bestBeforeDate, localizationKey: localizationKey) ?? "")
+            //                            .font(.caption)
+            //                            .italic()
+            //                    }
+            //                }
+            //            })
             //            TableColumn(LocalizedStringKey("str.stock.tbl.caloriesPerStockQU"), content: { stockElement in
             //                Text(stockElement.product.calories != 0.0 ? stockElement.product.calories?.formattedAmount ?? "" : "")
             //            })

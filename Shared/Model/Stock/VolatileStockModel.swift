@@ -8,49 +8,50 @@
 // Not used for now
 
 import Foundation
-// MARK: - VolatileStockElement
+
+// MARK: - VolatileStock
 struct VolatileStock: Codable {
-    let expiringProducts, expiredProducts: [ExpirProduct]
-    let missingProducts: [MissingProduct]
+    let dueProducts, overdueProducts, expiredProducts: [StockElement]
+    let missingProducts: [VolatileStockProductMissing]
 
     enum CodingKeys: String, CodingKey {
-        case expiringProducts = "expiring_products"
+        case dueProducts = "due_products"
+        case overdueProducts = "overdue_products"
         case expiredProducts = "expired_products"
         case missingProducts = "missing_products"
     }
 }
 
-// MARK: - ExpirProduct
-struct ExpirProduct: Codable {
-    let productID, amount, amountAggregated, amountOpened: Int
-    let amountOpenedAggregated: Int
-    let bestBeforeDate: String
-    let isAggregatedAmount: Bool
-    let product: MDProduct
-
-    enum CodingKeys: String, CodingKey {
-        case productID = "product_id"
-        case amount
-        case amountAggregated = "amount_aggregated"
-        case amountOpened = "amount_opened"
-        case amountOpenedAggregated = "amount_opened_aggregated"
-        case bestBeforeDate = "best_before_date"
-        case isAggregatedAmount = "is_aggregated_amount"
-        case product
-    }
-}
-
-// MARK: - MissingProduct
-struct MissingProduct: Codable {
+// MARK: - VolatileStockProductMissing
+struct VolatileStockProductMissing: Codable {
     let id: Int
-    let name: String
-    let amountMissing, isPartlyInStock: Int
+    let name: String?
+    let amountMissing: Double
+    let isPartlyInStock: Bool
 
     enum CodingKeys: String, CodingKey {
         case id, name
         case amountMissing = "amount_missing"
         case isPartlyInStock = "is_partly_in_stock"
     }
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = try Int(container.decode(String.self, forKey: .id))! }
+            self.name = try container.decodeIfPresent(String.self, forKey: .name)
+            do { self.amountMissing = try container.decode(Double.self, forKey: .amountMissing) } catch { self.amountMissing = try Double(container.decode(String.self, forKey: .amountMissing))! }
+            do {
+                self.isPartlyInStock = try container.decode(Bool.self, forKey: .isPartlyInStock)
+            } catch {
+                do {
+                    self.isPartlyInStock = try container.decode(Int.self, forKey: .isPartlyInStock) == 1
+                } catch {
+                    self.isPartlyInStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .isPartlyInStock))
+                }
+            }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
 }
-
-//typealias VolatileStock = [VolatileStockElement]

@@ -53,56 +53,57 @@ struct StockView: View {
 #endif
     
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config, .user_settings]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
-    var numExpiringSoon: Int {
-        grocyVM.stock
-            .filter {
-                (0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100)
-            }
-            .count
+    var numExpiringSoon: Int? {
+        grocyVM.volatileStock?.dueProducts.count
     }
     
-    var numOverdue: Int {
-        grocyVM.stock
-            .filter {
-                ($0.dueType == 1) && ((getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100) < 0)
-            }
-            .count
+    var numOverdue: Int? {
+        grocyVM.volatileStock?.overdueProducts.count
     }
     
-    var numExpired: Int {
-        grocyVM.stock
-            .filter {
-                ($0.dueType == 2) && ((getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100) < 0)
-            }
-            .count
+    var numExpired: Int? {
+        grocyVM.volatileStock?.expiredProducts.count
     }
     
-    var numBelowStock: Int {
-        grocyVM.stock
-            .filter {
-                $0.amount < $0.product.minStockAmount
+    var numBelowStock: Int? {
+        grocyVM.volatileStock?.missingProducts.count
+    }
+    
+    var missingStock: Stock {
+        var missingStockList: Stock = []
+        for missingProduct in grocyVM.volatileStock?.missingProducts ?? [] {
+            if !(missingProduct.isPartlyInStock) {
+                if let foundProduct = grocyVM.mdProducts.first(where: { $0.id == missingProduct.id }) {
+                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
+                    missingStockList.append(missingStockElement)
+                }
             }
-            .count
+        }
+        return missingStockList
+    }
+    
+    var stockWithMissing: Stock {
+        grocyVM.stock + missingStock
     }
     
     var filteredProducts: Stock {
-        grocyVM.stock
+        stockWithMissing
             .filter {
-                filteredStatus == .expiringSoon ? ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100) : true
+                filteredStatus == .expiringSoon ? grocyVM.volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
             }
             .filter {
-                filteredStatus == .overdue ? ($0.dueType == 1 ? (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100 < 0) : false) : true
+                filteredStatus == .overdue ? (grocyVM.volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
             }
             .filter {
-                filteredStatus == .expired ? ($0.dueType == 2 ? (getTimeDistanceFromNow(date: $0.bestBeforeDate) ?? 100 < 0) : false) : true
+                filteredStatus == .expired ? grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
             }
             .filter {
-                filteredStatus == .belowMinStock ? $0.amount < $0.product.minStockAmount : true
+                filteredStatus == .belowMinStock ? grocyVM.volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
             }
             .filter {
                 filteredLocationID != nil ? $0.product.locationID == filteredLocationID : true
@@ -120,6 +121,7 @@ struct StockView: View {
             .filter {
                 $0.product.hideOnStockOverview == 0
             }
+            .sorted(by: { $0.product.name < $1.product.name })
     }
     
     var summedValue: Double {

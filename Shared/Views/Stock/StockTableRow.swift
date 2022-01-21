@@ -37,19 +37,23 @@ struct StockTableRow: View {
     }
     
     var backgroundColor: Color {
-        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100) {
+        if grocyVM.volatileStock?.dueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
             return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
         }
-        if (stockElement.dueType == 1 ? (getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100 < 0) : false) {
-            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
-        }
-        if (stockElement.dueType == 2 ? (getTimeDistanceFromNow(date: stockElement.bestBeforeDate) ?? 100 < 0) : false) {
+        if grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
             return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
         }
-        if (stockElement.amount < stockElement.product.minStockAmount) {
+        if grocyVM.volatileStock?.overdueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
+            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
+        }
+        if grocyVM.volatileStock?.missingProducts.map({$0.id}).contains(stockElement.product.id) ?? false {
             return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
         }
+#if os(iOS)
         return colorScheme == .light ? Color.white : Color.black
+#elseif os(macOS)
+        return colorScheme == .light ? Color.white : Color.gray.opacity(0.05)
+#endif
     }
     
     var body: some View {
@@ -74,6 +78,7 @@ struct StockTableRow: View {
 #elseif os(macOS)
         content
             .padding(.bottom)
+            .padding(.horizontal)
             .contextMenu(menuItems: {
                 StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             })
@@ -83,7 +88,7 @@ struct StockTableRow: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                 StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
             })
-            .listRowBackground(backgroundColor)
+            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
 #endif
     }
     
