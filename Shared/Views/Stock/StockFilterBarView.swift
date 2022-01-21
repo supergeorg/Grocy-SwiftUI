@@ -17,6 +17,7 @@ struct StockFilterBar: View {
     
     var body: some View {
         HStack{
+#if os(iOS)
             Menu {
                 Picker("", selection: $filteredLocation, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
@@ -37,7 +38,18 @@ struct StockFilterBar: View {
                     }
                 }
             }
+#elseif os(macOS)
+            Picker(selection: $filteredLocation,
+                   label: Label(LocalizedStringKey("str.stock.location"), systemImage: MySymbols.filter),
+                   content: {
+                Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
+                ForEach(grocyVM.mdLocations, id:\.id) { location in
+                    Text(location.name).tag(location.id as Int?)
+                }
+            })
+#endif
             Spacer()
+#if os(iOS)
             Menu {
                 Picker("", selection: $filteredProductGroup, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
@@ -58,7 +70,18 @@ struct StockFilterBar: View {
                     }
                 }
             }
+#elseif os(macOS)
+            Picker(selection: $filteredProductGroup,
+                   label: Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.filter),
+                   content: {
+                Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
+                ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
+                    Text(productGroup.name).tag(productGroup.id as Int?)
+                }
+            })
+#endif
             Spacer()
+#if os(iOS)
             Menu {
                 Picker("", selection: $filteredStatus, content: {
                     Text(LocalizedStringKey(ProductStatus.all.rawValue))
@@ -89,6 +112,26 @@ struct StockFilterBar: View {
                     }
                 }
             }
+#elseif os(macOS)
+            Picker(selection: $filteredStatus,
+                   label: Label(LocalizedStringKey("str.stock.status"), systemImage: MySymbols.filter),
+                   content: {
+                Text(LocalizedStringKey(ProductStatus.all.rawValue))
+                    .tag(ProductStatus.all)
+                Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
+                    .tag(ProductStatus.expiringSoon)
+                    .background(Color.grocyYellowLight)
+                Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
+                    .tag(ProductStatus.overdue)
+                    .background(Color.grocyGrayLight)
+                Text(LocalizedStringKey(ProductStatus.expired.rawValue))
+                    .tag(ProductStatus.expired)
+                    .background(Color.grocyRedLight)
+                Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
+                    .tag(ProductStatus.belowMinStock)
+                    .background(Color.grocyBlueLight)
+            })
+#endif
         }
     }
 }
