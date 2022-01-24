@@ -113,7 +113,7 @@
 "str.stock.info.1belowMinStock" = "1 produit a un stock inférieur à la quantité minimum définie";
 "str.stock.info.expiringSoon %lld %lld" = "%lld produits arrivent à échéance dans les %lld prochains jours ";
 "str.stock.info.overdue %lld" = "%lld produits sont arrivés à échéance";
-"str.stock.info.expired %lld" = "%IId produits sont périmés";
+"str.stock.info.expired %lld" = "%IId produits sont périmés ";
 "str.stock.info.belowMinStock %lld" = "%IId produits ont un stock inférieur à la quantité minimum définie";
 "str.stock.info.opened %@" = "%@ ouvert";
 "str.stock.info.onShoppingList" = "Ce produit est actuellement sur la liste de courses.";
