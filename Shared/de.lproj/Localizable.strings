@@ -85,6 +85,7 @@
 "str.details.averagePrice" = "Durchschnittlicher Preis: ";
 "str.details.averageShelfLife" = "Durchschnittliche Haltbarkeit: ";
 "str.details.spoilRate" = "Verderblichkeitsrate: ";
+"str.details.relation %@ %@" = "%@ pro %@";
 
 "str.details.never" = "Nie";
 "str.details.unknown" = "Unbekannt";
@@ -170,8 +171,10 @@
 "str.stock.buy.product.doesntSpoil" = "Nie überfällig";
 "str.stock.buy.product.price" = "Preis";
 "str.stock.buy.product.price.invalid" = "Dies darf nicht niedriger als 0.01 sein und muss eine gültige Zahl mit max. 2 Nachkommastellen sein";
+"str.stock.buy.product.price.unitPrice %@" = "%@ Preis";
 "str.stock.buy.product.price.unitPrice" = "Einzelpreis";
 "str.stock.buy.product.price.totalPrice" = "Gesamtpreis";
+"str.stock.buy.product.price.relation %@ %@" = "bedeutet %@ pro %@";
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
 "str.stock.buy.product.location.default %@" = "%@ (Standard-Standort)";
