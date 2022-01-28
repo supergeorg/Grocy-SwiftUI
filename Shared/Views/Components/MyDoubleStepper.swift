@@ -51,8 +51,9 @@ struct MyDoubleStepper: View {
                     Image(systemName: systemImage)
                 }
                 TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-#if os(iOS)
+#if os(macOS)
+                    .frame(width: 90)
+#elseif os(iOS)
                     .keyboardType(.numbersAndPunctuation)
                     .submitLabel(.done )
 #endif
@@ -130,8 +131,9 @@ struct MyDoubleStepperOptional: View {
                 }
                 // Decimal keypad doesn't have a confirm button to confirm the entry yet
                 TextField("", value: $amount, formatter: formatter)
-                    .frame(width: 70)
-#if os(iOS)
+#if os(macOS)
+                    .frame(width: 90)
+#elseif os(iOS)
                     .keyboardType(.numbersAndPunctuation)
                     .submitLabel(.done )
 #endif
