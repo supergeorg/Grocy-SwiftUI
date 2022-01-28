@@ -85,6 +85,7 @@
 "str.details.averagePrice" = "Prix moyen :";
 "str.details.averageShelfLife" = "Durée de conservation moyenne :";
 "str.details.spoilRate" = "Taux de gâchis :";
+"str.details.relation %@ %@" = "%@ par %@";
 
 "str.details.never" = "Jamais";
 "str.details.unknown" = "Inconnu";
@@ -170,8 +171,10 @@
 "str.stock.buy.product.doesntSpoil" = "Pas de date de péremption";
 "str.stock.buy.product.price" = "Prix";
 "str.stock.buy.product.price.invalid" = "Pour être valide, le nombre doit avoir au plus 2 décimales, et ne peut pas être inférieur à 0.01.";
+"str.stock.buy.product.price.unitPrice %@" = "Prix du %@";
 "str.stock.buy.product.price.unitPrice" = "Prix unitaire";
 "str.stock.buy.product.price.totalPrice" = "Prix total";
+"str.stock.buy.product.price.relation %@ %@" = "signifie %@ par %@";
 "str.stock.buy.product.shoppingLocation" = "Magasin";
 "str.stock.buy.product.location" = "Emplacement";
 "str.stock.buy.product.location.default %@" = "%@ (Emplacement par défaut)";
