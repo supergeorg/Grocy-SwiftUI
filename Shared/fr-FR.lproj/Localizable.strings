@@ -107,14 +107,14 @@
 "str.stock.status.overdue" = "Arrive à échéance";
 "str.stock.status.expired" = "Périmé";
 "str.stock.status.belowMinStock" = "En dessous du seuil de stock minimum";
-"str.stock.info.1expiringSoon %lld" = "1 produit arrive à échéance dans les %lld prochains jours ";
+"str.stock.info.1expiringSoon %lld" = "1 produit arrive à échéance dans les %lld prochains jours";
 "str.stock.info.1overdue" = "1 produit arrive à échéance";
 "str.stock.info.1expired" = "1 produit est périmé";
 "str.stock.info.1belowMinStock" = "1 produit a un stock inférieur à la quantité minimum définie";
-"str.stock.info.expiringSoon %lld %lld" = "%lld produits arrivent à échéance dans les %lld prochains jours ";
+"str.stock.info.expiringSoon %lld %lld" = "%lld produits arrivent à échéance dans les %lld prochains jours";
 "str.stock.info.overdue %lld" = "%lld produits sont arrivés à échéance";
-"str.stock.info.expired %lld" = "%IId produits sont périmés";
-"str.stock.info.belowMinStock %lld" = "%IId produits ont un stock inférieur à la quantité minimum définie";
+"str.stock.info.expired %lld" = "%lld produits sont périmés";
+"str.stock.info.belowMinStock %lld" = "%lld produits ont un stock inférieur à la quantité minimum définie";
 "str.stock.info.opened %@" = "%@ ouvert";
 "str.stock.info.onShoppingList" = "Ce produit est actuellement sur la liste de courses.";
 
