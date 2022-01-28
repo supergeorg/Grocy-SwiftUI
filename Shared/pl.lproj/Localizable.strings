@@ -85,6 +85,7 @@
 "str.details.averagePrice" = "Średnia cena: ";
 "str.details.averageShelfLife" = "Średni okres trwałości: ";
 "str.details.spoilRate" = "Wskaźnik zepsucia: ";
+"str.details.relation %@ %@" = "%@ na %@";
 
 "str.details.never" = "Nigdy";
 "str.details.unknown" = "Nieznane";
@@ -170,8 +171,10 @@
 "str.stock.buy.product.doesntSpoil" = "Nigdy nie traci ważności";
 "str.stock.buy.product.price" = "Cena";
 "str.stock.buy.product.price.invalid" = "Ilość nie może być mniejsza niż 0.01 oraz może mieć maksymalnie 2 cyfry po przecinku";
+"str.stock.buy.product.price.unitPrice %@" = "%@ Cena";
 "str.stock.buy.product.price.unitPrice" = "Cena jednostkowa";
 "str.stock.buy.product.price.totalPrice" = "Cena całkowita";
+"str.stock.buy.product.price.relation %@ %@" = "oznacza %@ na %@";
 "str.stock.buy.product.shoppingLocation" = "Sklep";
 "str.stock.buy.product.location" = "Miejsce";
 "str.stock.buy.product.location.default %@" = "%@ (Domyślne miejsce)";
