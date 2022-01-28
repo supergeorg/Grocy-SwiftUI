@@ -58,6 +58,14 @@ struct QuickScanModeInputView: View {
         return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID})?.factor ?? 1)
     }
     
+    private var purchaseUnitPrice: Double? {
+        if purchaseIsTotalPrice {
+            return ((purchasePrice ?? 0.0) / purchaseAmountFactored)
+        } else {
+            return purchasePrice
+        }
+    }
+    
     private func getAmountForLocation(lID: Int) -> Double {
         if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
             var maxAmount: Double = 0
@@ -92,6 +100,7 @@ struct QuickScanModeInputView: View {
     @State private var purchaseAmount: Double = 1.0
     @State private var purchaseQuantityUnitID: Int?
     @State private var purchasePrice: Double?
+    @State private var purchaseIsTotalPrice: Bool = false
     @State private var purchaseShoppingLocationID: Int?
     @Binding var lastPurchaseShoppingLocationID: Int?
     @State private var purchaseLocationID: Int?
@@ -178,7 +187,7 @@ struct QuickScanModeInputView: View {
         if let id = product?.id {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: purchasePrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
+            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
             infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
@@ -324,7 +333,25 @@ struct QuickScanModeInputView: View {
   
                         AmountSelectionView(productID: Binding.constant(product?.id), amount: $purchaseAmount, quantityUnitID: $purchaseQuantityUnitID)
                         
-                        MyDoubleStepperOptional(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                        Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
+                            VStack(alignment: .leading) {
+                                MyDoubleStepperOptional(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+
+                                if purchaseIsTotalPrice && product != nil {
+                                    Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: purchaseUnitPrice ?? 0)) \(quantityUnitPurchase?.name ?? "")"))
+                                        .font(.caption)
+                                        .foregroundColor(Color.grocyGray)
+                                }
+                            }
+                            
+                            if purchasePrice != nil {
+                                Picker("", selection: $purchaseIsTotalPrice, content: {
+                                    Text(quantityUnitPurchase?.name != nil ? LocalizedStringKey("str.stock.buy.product.price.unitPrice \(quantityUnitPurchase!.name)") : LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
+                                    Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
+                                })
+                                    .pickerStyle(.segmented)
+                            }
+                        }
                         
                         Picker(selection: $purchaseShoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
                             Text("").tag(nil as Int?)
