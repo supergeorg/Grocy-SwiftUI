@@ -85,6 +85,7 @@
 "str.details.averagePrice" = "Average price: ";
 "str.details.averageShelfLife" = "Average shelf life: ";
 "str.details.spoilRate" = "Spoil rate: ";
+"str.details.relation %@ %@" = "%@ per %@";
 
 "str.details.never" = "Never";
 "str.details.unknown" = "Unknown";
@@ -173,7 +174,7 @@
 "str.stock.buy.product.price.unitPrice %@" = "%@ price";
 "str.stock.buy.product.price.unitPrice" = "Unit price";
 "str.stock.buy.product.price.totalPrice" = "Total price";
-"str.stock.buy.product.price.relation %@ %@" = "means %@ pro %@";
+"str.stock.buy.product.price.relation %@ %@" = "means %@ per %@";
 "str.stock.buy.product.shoppingLocation" = "Store";
 "str.stock.buy.product.location" = "Location";
 "str.stock.buy.product.location.default %@" = "%@ (Default location)";

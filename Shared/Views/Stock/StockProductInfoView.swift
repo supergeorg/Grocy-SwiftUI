@@ -9,8 +9,7 @@ import SwiftUI
 
 struct StockProductInfoView: View {
     let grocyVM: GrocyViewModel = .shared
-    
-//    var productID: Int?
+
     @Binding var stockElement: StockElement?
     
     var productDetails: StockProductDetails? {
@@ -71,11 +70,11 @@ struct StockProductInfoView: View {
                 Group {
                     Text(LocalizedStringKey("str.details.lastPrice")).bold()
                     +
-                    Text(productDetails.lastPrice != nil ? LocalizedStringKey("\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
+                    Text(productDetails.lastPrice != nil ? LocalizedStringKey("str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
                     
                     Text(LocalizedStringKey("str.details.averagePrice")).bold()
                     +
-                    Text(productDetails.avgPrice != nil ? LocalizedStringKey("\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
+                    Text(productDetails.avgPrice != nil ? LocalizedStringKey("str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
                 }
                 
                 Group {

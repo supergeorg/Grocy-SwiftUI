@@ -85,6 +85,7 @@
 "str.details.averagePrice" = "Durchschnittlicher Preis: ";
 "str.details.averageShelfLife" = "Durchschnittliche Haltbarkeit: ";
 "str.details.spoilRate" = "Verderblichkeitsrate: ";
+"str.details.relation %@ %@" = "%@ pro %@";
 
 "str.details.never" = "Nie";
 "str.details.unknown" = "Unbekannt";
