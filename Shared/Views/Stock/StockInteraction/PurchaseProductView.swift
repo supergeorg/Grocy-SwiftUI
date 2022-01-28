@@ -1,6 +1,6 @@
 //
 //  PurchaseProductView.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 20.11.20.
 //
@@ -79,6 +79,14 @@ struct PurchaseProductView: View {
         return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
     }
     
+    private var unitPrice: Double? {
+        if isTotalPrice {
+            return ((price ?? 0.0) / factoredAmount)
+        } else {
+            return price
+        }
+    }
+    
     var isFormValid: Bool {
         (productID != nil) && (amount > 0) && (quantityUnitID != nil)
     }
@@ -101,7 +109,7 @@ struct PurchaseProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: price, locationID: locationID, shoppingLocationID: shoppingLocationID)
+        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: unitPrice, locationID: locationID, shoppingLocationID: shoppingLocationID)
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
@@ -176,11 +184,19 @@ struct PurchaseProductView: View {
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                VStack(alignment: .leading) {
+                    MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+
+                    if isTotalPrice && productID != nil {
+                        Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) \(currentQuantityUnit?.name ?? "")"))
+                            .font(.caption)
+                            .foregroundColor(Color.grocyGray)
+                    }
+                }
                 
                 if price != nil {
                     Picker("", selection: $isTotalPrice, content: {
-                        Text(LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
+                        Text(currentQuantityUnit?.name != nil ? LocalizedStringKey("str.stock.buy.product.price.unitPrice \(currentQuantityUnit!.name)") : LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
                         Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
                     })
                         .pickerStyle(.segmented)
@@ -203,7 +219,6 @@ struct PurchaseProductView: View {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations, id:\.id) { location in
                         Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
-                        //                            Text(location.name).tag(location.id as String?)
                     }
                 })
             }

@@ -170,8 +170,10 @@
 "str.stock.buy.product.doesntSpoil" = "Never overdue";
 "str.stock.buy.product.price" = "Price";
 "str.stock.buy.product.price.invalid" = "This cannot be lower than 0.01 and needs to be a valid number with max. 2 decimal places";
+"str.stock.buy.product.price.unitPrice %@" = "%@ price";
 "str.stock.buy.product.price.unitPrice" = "Unit price";
 "str.stock.buy.product.price.totalPrice" = "Total price";
+"str.stock.buy.product.price.relation %@ %@" = "means %@ pro %@";
 "str.stock.buy.product.shoppingLocation" = "Store";
 "str.stock.buy.product.location" = "Location";
 "str.stock.buy.product.location.default %@" = "%@ (Default location)";
