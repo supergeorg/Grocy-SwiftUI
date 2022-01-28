@@ -96,7 +96,7 @@
 // MARK: - Stock
 "str.stock.stockOverview" = "Aperçu du stock";
 // Products, Summed Value
-"str.stock.stockOverviewInfo %lld %@" = "%lld produits, %@ de valeur totale";
+"str.stock.stockOverviewInfo %lld %@" = "%IId produits, %@ de valeur totale";
 "str.stock.search" = "Recherche dans le stock :";
 "str.stock.empty" = "Rien dans le stock.";
 "str.stock.location" = "Emplacement";
@@ -107,13 +107,13 @@
 "str.stock.status.overdue" = "Arrive à échéance";
 "str.stock.status.expired" = "Périmé";
 "str.stock.status.belowMinStock" = "En dessous du seuil de stock minimum";
-"str.stock.info.1expiringSoon %lld" = "1 produit arrive à échéance dans les %lld prochains jours ";
+"str.stock.info.1expiringSoon %lld" = "1 produit arrive à échéance dans les %IId prochains jours ";
 "str.stock.info.1overdue" = "1 produit arrive à échéance";
 "str.stock.info.1expired" = "1 produit est périmé";
 "str.stock.info.1belowMinStock" = "1 produit a un stock inférieur à la quantité minimum définie";
-"str.stock.info.expiringSoon %lld %lld" = "%lld produits arrivent à échéance dans les %lld prochains jours ";
-"str.stock.info.overdue %lld" = "%lld produits sont arrivés à échéance";
-"str.stock.info.expired %lld" = "%IId produits sont périmés";
+"str.stock.info.expiringSoon %lld %lld" = "%lld produits arrivent à échéance dans les %lld prochains jours";
+"str.stock.info.overdue %lld" = "%IId produits sont arrivés à échéance";
+"str.stock.info.expired %lld" = "%IId produits sont périmés ";
 "str.stock.info.belowMinStock %lld" = "%IId produits ont un stock inférieur à la quantité minimum définie";
 "str.stock.info.opened %@" = "%@ ouvert";
 "str.stock.info.onShoppingList" = "Ce produit est actuellement sur la liste de courses.";
@@ -295,11 +295,11 @@
 "str.shL.filter.done" = "Seulement les éléments faits";
 "str.shL.filter.undone" = "Uniquement les éléments annulés";
 "str.shL.filter.info.1belowMinStock" = "1 produit a un stock inférieur à la quantité minimum définie";
-"str.shL.filter.info.belowMinStock %lld" = "%lld produits ont un stock inférieur à la quantité minimum définie";
+"str.shL.filter.info.belowMinStock %lld" = "%IId produits ont un stock inférieur à la quantité minimum définie";
 "str.shL.filter.info.1undone" = "1 entrée est faite";
-"str.shL.filter.info.undone %lld" = "%lld entrées sont faites";
+"str.shL.filter.info.undone %lld" = "%IId entrées sont faites";
 "str.shL.filter.info.1undone" = "1 entrée est faite";
-"str.shL.filter.info.undone %lld" = "%lld entrées sont faites";
+"str.shL.filter.info.undone %lld" = "%IId entrées sont faites";
 
 "str.shL.entryForm.new.title" = "Créer une liste de courses";
 "str.shL.entryForm.edit.title" = "Modifier une liste de courses";
