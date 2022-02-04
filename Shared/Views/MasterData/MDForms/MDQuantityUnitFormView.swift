@@ -25,6 +25,8 @@ struct MDQuantityUnitFormView: View {
     @Binding var showAddQuantityUnit: Bool
     @Binding var toastType: MDToastType?
     
+    @State private var showAddQuantityUnitConversion: Bool = false
+    
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundQuantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.name == name})
@@ -38,9 +40,17 @@ struct MDQuantityUnitFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
-    private let dataToUpdate: [ObjectEntities] = [.quantity_units]
+    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions]
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
+    }
+    
+    private var quConversions: MDQuantityUnitConversions? {
+        if !isNewQuantityUnit, let quantityUnitID = quantityUnit?.id {
+            return grocyVM.mdQuantityUnitConversions.filter({ $0.fromQuID == quantityUnitID })
+        } else {
+            return nil
+        }
     }
     
     private func finishForm() {
@@ -128,6 +138,41 @@ struct MDQuantityUnitFormView: View {
                 MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
                 MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
+            if !isNewQuantityUnit, let quantityUnit = quantityUnit {
+                Section(header: VStack(alignment: .leading) {
+                    HStack(alignment: .top) {
+                        Text(LocalizedStringKey("str.md.quantityUnit.conversions"))
+                        Spacer()
+                        Button(action: {
+                            showAddQuantityUnitConversion.toggle()
+                        }, label: {
+                            Image(systemName: MySymbols.new)
+                                .font(.body)
+                        })
+                    }
+                    Text(LocalizedStringKey("str.md.quantityUnit.conversions.hint \("1 \(quantityUnit.name)")"))
+                        .italic()
+                })
+                {
+                    List {
+                    ForEach(quConversions ?? [], id:\.id) { quConversion in
+                        NavigationLink(destination: {
+                            MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+                        }, label: {
+                            Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
+                        })
+                    }
+                    }
+                }
+                .sheet(isPresented: $showAddQuantityUnitConversion, content: {
+                    NavigationView {
+                        MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+                    }
+                })
+            }
+        }
+        .refreshable {
+            grocyVM.requestData(objects: [.quantity_unit_conversions])
         }
         .onAppear(perform: {
             if firstAppear {

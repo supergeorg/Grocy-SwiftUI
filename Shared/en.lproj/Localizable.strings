@@ -483,6 +483,17 @@
 "str.md.quantityUnit.namePlural" = "Name (in plural form)";
 "str.md.quantityUnit.delete" = "Delete this quantity unit";
 "str.md.quantityUnit.delete.confirm" = "Do you really want to delete this quantity unit?";
+"str.md.quantityUnit.conversions" = "Default conversions";
+"str.md.quantityUnit.conversions.hint %@" = "%@ is the same as...";
+"str.md.quantityUnit.conversion.new" = "Create QU conversion";
+"str.md.quantityUnit.conversion.edit" = "Edit QU conversion";
+"str.md.quantityUnit.conversion.defaultFor %@" = "Default for QU %@";
+"str.md.quantityUnit.conversion.quFrom" = "Quantity unit from";
+"str.md.quantityUnit.conversion.quTo" = "Quantity unit to";
+"str.md.quantityUnit.conversion.quTo.exists" = "Such a conversion already exists";
+"str.md.quantityUnit.conversion.factor" = "Factor";
+"str.md.quantityUnit.conversion.means %@ %@" = "This means %@ is the same as %@";
+"str.md.quantityUnit.conversion.createInverse" = "Create inverse QU conversion";
 
 "str.md.productGroups" = "Product groups";
 "str.md.productGroup" = "Product group";

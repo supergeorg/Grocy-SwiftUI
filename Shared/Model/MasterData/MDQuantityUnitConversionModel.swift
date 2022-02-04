@@ -38,6 +38,20 @@ struct MDQuantityUnitConversion: Codable {
             throw APIError.decodingError(error: error)
         }
     }
+    
+    init(id: Int,
+         fromQuID: Int,
+         toQuID: Int,
+         factor: Double,
+         productID: Int?,
+         rowCreatedTimestamp: String) {
+        self.id = id
+        self.fromQuID = fromQuID
+        self.toQuID = toQuID
+        self.factor = factor
+        self.productID = productID
+        self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
 }
 
 typealias MDQuantityUnitConversions = [MDQuantityUnitConversion]

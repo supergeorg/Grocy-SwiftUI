@@ -483,6 +483,17 @@
 "str.md.quantityUnit.namePlural" = "Name (plural)";
 "str.md.quantityUnit.delete" = "Mengeneinheit löschen";
 "str.md.quantityUnit.delete.confirm" = "Möchtest du wirklich diese Mengeneinheit löschen?";
+"str.md.quantityUnit.conversions" = "Standardumrechnungen";
+"str.md.quantityUnit.conversions.hint %@" = "%@ entspricht...";
+"str.md.quantityUnit.conversion.new" = "ME-Umrechnung erstellen";
+"str.md.quantityUnit.conversion.edit" = "ME-Umrechnung bearbeiten";
+"str.md.quantityUnit.conversion.defaultFor %@" = "Standard für ME %@";
+"str.md.quantityUnit.conversion.quFrom" = "Mengeneinheit von";
+"str.md.quantityUnit.conversion.quTo" = "Mengeneinheit nach";
+"str.md.quantityUnit.conversion.quTo.exists" = "Es gibt schon eine solche Umwandlung";
+"str.md.quantityUnit.conversion.factor" = "Faktor";
+"str.md.quantityUnit.conversion.means %@ %@" = "Das bedeutet %@ entspricht %@";
+"str.md.quantityUnit.conversion.createInverse" = "Inverse Mengeneinheits-Umrechnung erstellen";
 
 "str.md.productGroups" = "Produktgruppen";
 "str.md.productGroup" = "Produktgruppe";
