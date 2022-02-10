@@ -89,7 +89,7 @@ struct StockEntryFormView: View {
     
     var content: some View {
         Form {
-            VStack(alignment: .trailing){
+            VStack(alignment: .trailing, spacing: 3){
                 HStack {
                     Image(systemName: MySymbols.date)
                     DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $bestBeforeDate, displayedComponents: .date)
