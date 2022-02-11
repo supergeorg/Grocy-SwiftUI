@@ -57,13 +57,21 @@ struct StockTableRow: View {
     }
     
     var body: some View {
-#if os(iOS)
         NavigationLink(destination: {
+#if os(macOS)
+            NavigationView {
+                StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
+            }
+#else
             StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
+#endif
         }, label: {
             content
             // The padding is to make space displaying the swipe action labels
                 .padding(.bottom)
+#if os(macOS)
+                .padding(.horizontal)
+#endif
         })
             .contextMenu(menuItems: {
                 StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
@@ -74,21 +82,10 @@ struct StockTableRow: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                 StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
             })
-            .listRowBackground(backgroundColor)
-#elseif os(macOS)
-        content
-            .padding(.bottom)
-            .padding(.horizontal)
-            .contextMenu(menuItems: {
-                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
-            })
-            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA], toastType: $toastType)
-            })
-            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
-            })
+#if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+#else
+            .listRowBackground(backgroundColor)
 #endif
     }
     
@@ -111,7 +108,7 @@ struct StockTableRow: View {
                 }
             }
         }
-#else
+#elseif os(macOS)
         HStack{
             stockElementNameAndActions
             stockElementDetails

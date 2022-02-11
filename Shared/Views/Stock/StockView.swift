@@ -144,7 +144,7 @@ struct StockView: View {
     
 #if os(macOS)
     var bodyContent: some View {
-        content
+        contentmacOS
         //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
@@ -279,6 +279,49 @@ struct StockView: View {
             })
     }
 #endif
+    
+    var contentmacOS: some View {
+        VStack {
+            Group {
+            StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+            StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
+            }
+            .padding()
+            NavigationView {
+                List {
+                    if grocyVM.stock.isEmpty {
+                        Text("str.stock.empty").padding()
+                    }
+                    ForEach(searchedProducts, id:\.productID) { stockElement in
+                        StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                    }
+                }
+            }
+        }
+        .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .animation(.default, value: searchedProducts.count)
+        .onAppear(perform: {
+            if firstAppear {
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+                firstAppear = false
+            }
+        })
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled), text: { item in
+            switch item {
+            case .successConsumeOne:
+                return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
+            case .successConsumeAll:
+                return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
+            case .successOpenOne:
+                return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
+            case .successConsumeAllSpoiled:
+                return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
+            case .fail:
+                return LocalizedStringKey("str.stock.tbl.action.fail")
+            }
+        })
+    }
     
     var content: some View {
         List {

@@ -42,8 +42,6 @@ struct StockEntryFormView: View {
     private func finishForm() {
         #if os(iOS)
         self.dismiss()
-        #elseif os(macOS)
-        NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
         #endif
     }
     
@@ -67,7 +65,7 @@ struct StockEntryFormView: View {
     private func resetForm() {
         amount = stockEntry.amount
         bestBeforeDate = stockEntry.bestBeforeDate ?? Date()
-        // TODO: Auto find if not spoiling
+        productDoesntSpoil = (stockEntry.bestBeforeDate == getNeverOverdueDate())
         purchasedDate = stockEntry.purchasedDate
         price = stockEntry.price
         stockEntryOpen = stockEntry.stockEntryOpen
@@ -89,7 +87,7 @@ struct StockEntryFormView: View {
     
     var content: some View {
         Form {
-            VStack(alignment: .trailing){
+            VStack(alignment: .trailing, spacing: 5.0){
                 HStack {
                     Image(systemName: MySymbols.date)
                     DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $bestBeforeDate, displayedComponents: .date)

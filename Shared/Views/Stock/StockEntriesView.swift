@@ -43,7 +43,7 @@ struct StockEntryRowView: View {
         grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
             switch result {
             case .success(_):
-//                toastType = .successConsumeEntry
+                //                toastType = .successConsumeEntry
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                 fetchData
             case let .failure(error):
@@ -57,7 +57,7 @@ struct StockEntryRowView: View {
         grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil)) { result in
             switch result {
             case .success(_):
-//                toastType = .successOpenEntry
+                //                toastType = .successOpenEntry
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                 fetchData
             case let .failure(error):
@@ -134,7 +134,11 @@ struct StockEntryRowView: View {
                     .tint(Color.grocyDelete)
                     .help(LocalizedStringKey("str.stock.entry.consume"))
             })
+#if os(macOS)
+            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+#else
             .listRowBackground(backgroundColor)
+#endif
     }
 }
 
