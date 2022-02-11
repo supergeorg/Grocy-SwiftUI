@@ -41,8 +41,17 @@ struct MDQuantityUnitConversionFormView: View {
             return false
         }
     }
+    private func checkReverseConversionExists() -> Bool {
+        let foundQuantityUnitConversionsForQU = grocyVM.mdQuantityUnitConversions.filter({ $0.fromQuID == quIDTo })
+        let foundQuantityUnitConversion = foundQuantityUnitConversionsForQU.first(where: { $0.toQuID == quIDFrom })
+        if foundQuantityUnitConversion != nil {
+            return true
+        } else {
+            return false
+        }
+    }
     private func checkConversionCorrect() -> Bool {
-        return (factor > 0 && !checkConversionExists() && quIDTo != nil)
+        return (factor > 0 && !checkConversionExists() && !(createInverseConversion && checkReverseConversionExists()) && quIDTo != nil)
     }
     
     private func resetForm() {
@@ -87,7 +96,7 @@ struct MDQuantityUnitConversionFormView: View {
                 case let .success(message):
                     grocyVM.postLog("Quantity unit conversion add successful. \(message)", type: .info)
                     if createInverseConversion {
-                        let id = isNewQuantityUnitConversion ? grocyVM.findNextID(.quantity_unit_conversions) : quantityUnitConversion!.id
+                        let id = isNewQuantityUnitConversion ? (grocyVM.findNextID(.quantity_unit_conversions) + 1) : quantityUnitConversion!.id
                         let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
                         let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDTo!, toQuID: quIDFrom!, factor: (1 / factor), productID: nil, rowCreatedTimestamp: timeStamp)
                         grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
@@ -202,6 +211,14 @@ struct MDQuantityUnitConversionFormView: View {
                 if isNewQuantityUnitConversion {
                     VStack(alignment: .leading) {
                         MyToggle(isOn: $createInverseConversion, description: "str.md.quantityUnit.conversion.createInverse", icon: MySymbols.transfer)
+                            .onChange(of: createInverseConversion, perform: { newInverse in
+                                conversionCorrect = checkConversionCorrect()
+                            })
+                        if checkReverseConversionExists() {
+                            Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
+                                .font(.caption)
+                                .foregroundColor(Color.red)
+                        }
                         if let quIDTo = quIDTo {
                             Text(LocalizedStringKey("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) \(getQUString(amount: (1 / factor), qu: quantityUnit))"))
                                 .font(.caption)
