@@ -41,8 +41,8 @@ struct StockElement: Codable, Identifiable {
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
             do { self.amountAggregated = try container.decode(Double.self, forKey: .amountAggregated) } catch { self.amountAggregated = try Double(container.decode(String.self, forKey: .amountAggregated))! }
             do { self.value = try container.decode(Double.self, forKey: .value) } catch { self.value = try Double(container.decode(String.self, forKey: .value))! }
-            let bestBeforeDateStr = try container.decode(String.self, forKey: .bestBeforeDate)
-            self.bestBeforeDate = getDateFromString(bestBeforeDateStr)
+            let bestBeforeDateStr = try container.decodeIfPresent(String.self, forKey: .bestBeforeDate)
+            self.bestBeforeDate = getDateFromString(bestBeforeDateStr ?? "")
             do { self.amountOpened = try container.decode(Double.self, forKey: .amountOpened) } catch { self.amountOpened = try Double(container.decode(String.self, forKey: .amountOpened))! }
             do { self.amountOpenedAggregated = try container.decode(Double.self, forKey: .amountOpenedAggregated) } catch { self.amountOpenedAggregated = try Double(container.decode(String.self, forKey: .amountOpenedAggregated))! }
             do {
