@@ -84,7 +84,14 @@ class GrocyViewModel: ObservableObject {
         } else {
             self.postLog("Not logged in", type: .info)
         }
-        jsonEncoder.dateEncodingStrategy = .iso8601
+//        jsonEncoder.dateEncodingStrategy = .iso8601
+        jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateString = dateFormatter.string(from: date)
+            var container = encoder.singleValueContainer()
+            try container.encode(dateString)
+        })
         jsonEncoder.outputFormatting = .prettyPrinted
 
     }
