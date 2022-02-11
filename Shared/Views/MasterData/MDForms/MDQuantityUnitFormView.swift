@@ -27,6 +27,9 @@ struct MDQuantityUnitFormView: View {
     
     @State private var showAddQuantityUnitConversion: Bool = false
     
+    @State private var conversionToDelete: MDQuantityUnitConversion? = nil
+    @State private var showConversionDeleteAlert: Bool = false
+    
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundQuantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.name == name})
@@ -61,6 +64,24 @@ struct MDQuantityUnitFormView: View {
             showAddQuantityUnit = false
         }
 #endif
+    }
+    
+    private func markDeleteQUConversion(conversion: MDQuantityUnitConversion) {
+        conversionToDelete = conversion
+        showConversionDeleteAlert.toggle()
+    }
+    private func deleteQUConversion(toDelID: Int) {
+        grocyVM.deleteMDObject(object: .quantity_unit_conversions, id: toDelID, completion: { result in
+            switch result {
+            case let .success(message):
+                grocyVM.postLog("QU conversion delete successful. \(message)", type: .info)
+                grocyVM.requestData(objects: [.quantity_unit_conversions])
+                toastType = .successEdit
+            case let .failure(error):
+                grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
+                toastType = .failEdit
+            }
+        })
     }
     
     private func saveQuantityUnit() {
@@ -155,18 +176,38 @@ struct MDQuantityUnitFormView: View {
                 })
                 {
                     List {
-                    ForEach(quConversions ?? [], id:\.id) { quConversion in
-                        NavigationLink(destination: {
-                            MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
-                        }, label: {
-                            Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
-                        })
-                    }
+                        ForEach(quConversions ?? [], id:\.id) { quConversion in
+                            NavigationLink(destination: {
+                                MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+                            }, label: {
+                                Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
+                            })
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                    Button(role: .destructive,
+                                           action: { markDeleteQUConversion(conversion: quConversion) },
+                                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                    )
+                                })
+                        }
                     }
                 }
                 .sheet(isPresented: $showAddQuantityUnitConversion, content: {
                     NavigationView {
                         MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+                    }
+                })
+                .alert(LocalizedStringKey("str.delete"), isPresented: $showConversionDeleteAlert, actions: {
+                    Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                    Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                        if let deleteID = conversionToDelete?.id {
+                            deleteQUConversion(toDelID: deleteID)
+                        }
+                    }
+                }, message: {
+                    if let conversionToDelete = conversionToDelete {
+                        Text("\(conversionToDelete.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")")
+                    } else {
+                        Text(LocalizedStringKey("str.error.other"))
                     }
                 })
             }
