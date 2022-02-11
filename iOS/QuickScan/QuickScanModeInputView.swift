@@ -96,6 +96,7 @@ struct QuickScanModeInputView: View {
     
     // Purchase
     @State private var purchaseDueDate: Date = Date()
+    @State private var purchaseDoesntSpoil: Bool = false
     @Binding var lastPurchaseDueDate: Date
     @State private var purchaseAmount: Double = 1.0
     @State private var purchaseQuantityUnitID: Int?
@@ -187,7 +188,8 @@ struct QuickScanModeInputView: View {
         if let id = product?.id {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: dateFormatter.string(from: purchaseDueDate), transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
+            let strDueDate = purchaseDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: purchaseDueDate)
+            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
             infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
@@ -228,7 +230,13 @@ struct QuickScanModeInputView: View {
         case .markAsOpened:
             markAsOpenItemID = (grocyVM.stockProductEntries[product?.id ?? 0])?.first(where: { $0.stockID == grocyCode?.stockID }) != nil ? grocyCode?.stockID : nil
         case .purchase:
-            purchaseDueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Calendar.current.startOfDay(for: lastPurchaseDueDate))
+            if product?.defaultBestBeforeDays == -1 {
+                purchaseDoesntSpoil = true
+                purchaseDueDate = Calendar.current.startOfDay(for: lastPurchaseDueDate)
+            } else {
+                purchaseDoesntSpoil = false
+                purchaseDueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? lastPurchaseDueDate)
+            }
             purchaseShoppingLocationID = product?.shoppingLocationID ?? lastPurchaseShoppingLocationID
             purchaseLocationID = product?.locationID ?? lastPurchaseLocationID
             purchaseQuantityUnitID = quantityUnitPurchase?.id
@@ -326,17 +334,27 @@ struct QuickScanModeInputView: View {
                 
                 if quickScanMode == .purchase {
                     Group {
-                        HStack {
-                            Image(systemName: MySymbols.date)
-                            DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
+                        Section(header: Text(LocalizedStringKey("str.stock.buy.product.dueDate")).font(.headline)) {
+                            VStack(alignment: .trailing){
+                                HStack {
+                                    Image(systemName: MySymbols.date)
+                                    DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
+                                        .disabled(purchaseDoesntSpoil)
+                                }
+                                Text(getRelativeDateAsText(purchaseDueDate, localizationKey: localizationKey) ?? "")
+                                    .foregroundColor(.gray)
+                                    .italic()
+                            }
+                            
+                            MyToggle(isOn: $purchaseDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
                         }
-  
+                        
                         AmountSelectionView(productID: Binding.constant(product?.id), amount: $purchaseAmount, quantityUnitID: $purchaseQuantityUnitID)
                         
                         Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
                             VStack(alignment: .leading) {
                                 MyDoubleStepperOptional(amount: $purchasePrice, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
-
+                                
                                 if purchaseIsTotalPrice && product != nil {
                                     Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: purchaseUnitPrice ?? 0)) \(quantityUnitPurchase?.name ?? "")"))
                                         .font(.caption)
@@ -431,9 +449,9 @@ struct QuickScanModeInputView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.consume), productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSConsume), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
-
+            
             QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.markAsOpened), productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSOpen), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
-
+            
             QuickScanModeInputView(quickScanMode: Binding.constant(QuickScanMode.purchase), productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"), toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSPurchase), infoString: Binding.constant(nil), lastConsumeLocationID: Binding.constant(nil), lastPurchaseDueDate: Binding.constant(Date()), lastPurchaseShoppingLocationID: Binding.constant(nil), lastPurchaseLocationID: Binding.constant(nil))
         }
     }

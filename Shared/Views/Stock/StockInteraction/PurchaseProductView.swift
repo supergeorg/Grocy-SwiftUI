@@ -162,7 +162,13 @@ struct PurchaseProductView: View {
                         if locationID == nil { locationID = selectedProduct.locationID }
                         if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID }
                         quantityUnitID = selectedProduct.quIDPurchase
-                        dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Calendar.current.startOfDay(for: Date()))
+                        if product?.defaultBestBeforeDays == -1 {
+                            productDoesntSpoil = true
+                            dueDate = Calendar.current.startOfDay(for: Date())
+                        } else {
+                            productDoesntSpoil = false
+                            dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Date())
+                        }
                     }
                 }
             
@@ -187,7 +193,7 @@ struct PurchaseProductView: View {
                 VStack(alignment: .leading) {
                     MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
 
-                    if isTotalPrice && productID != nil {
+                    if (isTotalPrice && productID != nil) {
                         Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) \(currentQuantityUnit?.name ?? "")"))
                             .font(.caption)
                             .foregroundColor(Color.grocyGray)
