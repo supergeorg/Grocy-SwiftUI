@@ -37,15 +37,8 @@ struct MyIntStepper: View {
 #elseif os(iOS)
                     .keyboardType(.decimalPad)
 #endif
-                Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    amount += 1
-                }, onDecrement: {
-                    if minAmount != nil {
-                        if amount > minAmount! {
-                            amount -= 1
-                        }
-                    } else { amount -= 1 }
-                })
+                Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: ((minAmount ?? 0)...(Int.max - 1)), step: 1)
+                    .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
@@ -88,18 +81,27 @@ struct MyIntStepperOptional: View {
                     .keyboardType(.decimalPad)
 #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    if amount != nil {
-                        amount! += 1
+                    if let previousAmount = amount {
+                        amount = previousAmount + 1
+                    } else {
+                        amount = 1
                     }
                 }, onDecrement: {
-                    if amount != nil {
-                        if minAmount != nil {
-                            if amount! > minAmount! {
-                                amount! -= 1
+                    if let previousAmount = amount {
+                        if let minAmount = minAmount {
+                            if previousAmount > minAmount {
+                                amount = previousAmount - 1
+                            } else {
+                                amount = nil
                             }
-                        } else { amount! -= 1 }
-                    } else { amount = minAmount }
+                        } else {
+                            amount = previousAmount - 1
+                        }
+                    } else {
+                        amount = minAmount
+                    }
                 })
+                    .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))

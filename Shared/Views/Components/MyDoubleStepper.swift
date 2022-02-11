@@ -57,17 +57,8 @@ struct MyDoubleStepper: View {
                     .keyboardType(.numbersAndPunctuation)
                     .submitLabel(.done )
 #endif
-                Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    amount += amountStep ?? 1.0
-                }, onDecrement: {
-                    if let minAmount = minAmount {
-                        if amount > minAmount {
-                            amount -= amountStep ?? 1.0
-                        }
-                    } else {
-                        amount -= amountStep ?? 1.0
-                    }
-                })
+                Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: (minAmount ?? 0.0)...Double.greatestFiniteMagnitude, step: 1.0)
+                    .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
@@ -138,24 +129,29 @@ struct MyDoubleStepperOptional: View {
                     .submitLabel(.done )
 #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    if amount != nil {
-                        amount! += amountStep ?? 1.0
+                    if let previousAmount = amount {
+                        amount = previousAmount + (amountStep ?? 1.0)
                     } else {
                         amount = amountStep
                     }
                 }, onDecrement: {
-                    if amount != nil {
+                    if let previousAmount = amount {
                         if let minAmount = minAmount {
-                            if amount! > minAmount {
-                                amount! -= amountStep ?? 1.0
-                            } else if ((currencySymbol != nil) && (amount! == 0.0)) {
+                            if previousAmount == minAmount {
                                 amount = nil
+                            } else if (previousAmount - (amountStep ?? 1.0) < minAmount) {
+                                amount = minAmount
+                            } else {
+                                amount = previousAmount - (amountStep ?? 1.0)
                             }
-                        } else { amount! -= amountStep ?? 1.0 }
+                        } else {
+                            amount = previousAmount - (amountStep ?? 1.0)
+                        }
                     } else {
                         amount = 0
                     }
                 })
+                    .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
