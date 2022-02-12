@@ -283,8 +283,8 @@ struct StockView: View {
     var contentmacOS: some View {
         VStack {
             Group {
-            StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-            StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
+                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+                StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
             }
             .padding()
             NavigationView {
@@ -296,6 +296,7 @@ struct StockView: View {
                         StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
                     }
                 }
+                .frame(minWidth: 350)
             }
         }
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))

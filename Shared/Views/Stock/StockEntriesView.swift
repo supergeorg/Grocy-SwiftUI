@@ -117,11 +117,24 @@ struct StockEntryRowView: View {
                 Text(getRelativeDateAsText(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")
                     .font(.caption)
                     .italic()
+#if os(macOS)
+                Button(action: openEntry, label: {
+                    Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
+                })
+                    .tint(Color.grocyBlue)
+                    .help(LocalizedStringKey("str.stock.entry.open"))
+                    .disabled(stockEntry.stockEntryOpen)
+                Button(action: consumeEntry, label: {
+                    Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
+                })
+                    .tint(Color.grocyDelete)
+                    .help(LocalizedStringKey("str.stock.entry.consume"))
+#endif
             }
         })
             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                 Button(action: openEntry, label: {
-                    Image(systemName: MySymbols.open)
+                    Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
                 })
                     .tint(Color.grocyBlue)
                     .help(LocalizedStringKey("str.stock.entry.open"))
@@ -129,13 +142,14 @@ struct StockEntryRowView: View {
             })
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                 Button(action: consumeEntry, label: {
-                    Image(systemName: MySymbols.consume)
+                    Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
                 })
                     .tint(Color.grocyDelete)
                     .help(LocalizedStringKey("str.stock.entry.consume"))
             })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+            .padding(.horizontal)
 #else
             .listRowBackground(backgroundColor)
 #endif
@@ -181,6 +195,9 @@ struct StockEntriesView: View {
                 StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, fetchData: fetchData(ignoreCached: true), toastType: $toastType)
             }
         }
+#if os(macOS)
+        .frame(minWidth: 350)
+#endif
         .navigationTitle(LocalizedStringKey("str.stock.entries"))
         .refreshable {
             fetchData(ignoreCached: true)
