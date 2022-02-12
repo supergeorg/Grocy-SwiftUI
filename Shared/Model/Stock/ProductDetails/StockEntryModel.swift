@@ -45,7 +45,9 @@ struct StockEntry: Codable, Equatable {
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
             if let bestBeforeDateString = try? container.decode(String.self, forKey: .bestBeforeDate) {
                 self.bestBeforeDate = getDateFromString(bestBeforeDateString)
-            } else { self.bestBeforeDate = nil }
+            } else {
+                self.bestBeforeDate = nil
+            }
             
             let purchasedDateString = try? container.decodeIfPresent(String.self, forKey: .purchasedDate)
             self.purchasedDate = getDateFromString(purchasedDateString ?? "")
@@ -73,7 +75,7 @@ struct StockEntry: Codable, Equatable {
     init(id: Int,
          productID: Int,
          amount: Double,
-         bestBeforeDate: Date? = nil,
+         bestBeforeDate: Date,
          purchasedDate: Date?,
          stockID: String,
          price: Double?,
