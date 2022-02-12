@@ -175,6 +175,25 @@ struct MDQuantityUnitFormView: View {
                         .italic()
                 })
                 {
+#if os(macOS)
+                    NavigationView {
+                        List {
+                            ForEach(quConversions ?? [], id:\.id) { quConversion in
+                                NavigationLink(destination: {
+                                    MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+                                }, label: {
+                                    Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
+                                })
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                        Button(role: .destructive,
+                                               action: { markDeleteQUConversion(conversion: quConversion) },
+                                               label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                        )
+                                    })
+                            }
+                        }
+                    }
+#else
                     List {
                         ForEach(quConversions ?? [], id:\.id) { quConversion in
                             NavigationLink(destination: {
@@ -190,11 +209,16 @@ struct MDQuantityUnitFormView: View {
                                 })
                         }
                     }
+#endif
                 }
                 .sheet(isPresented: $showAddQuantityUnitConversion, content: {
+#if os(macOS)
+                    MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
+#else
                     NavigationView {
                         MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion, toastType: $toastType)
                     }
+#endif
                 })
                 .alert(LocalizedStringKey("str.delete"), isPresented: $showConversionDeleteAlert, actions: {
                     Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
