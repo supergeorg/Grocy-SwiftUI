@@ -119,8 +119,9 @@ class GrocyViewModel: ObservableObject {
         self.deleteAllCachedData()
     }
     
-    func checkServer(baseURL: String, apiKey: String?, isDemoModus: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
-        if useHassIngress && !isDemoModus, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
+    func checkServer(baseURL: String, apiKey: String?, isDemoMode: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
+        self.grocyApi = GrocyApi()
+        if useHassIngress && !isDemoMode, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
