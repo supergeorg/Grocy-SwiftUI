@@ -119,6 +119,14 @@ class GrocyViewModel: ObservableObject {
         self.deleteAllCachedData()
     }
     
+    func cancelAllURLSessionTasks() {
+        URLSession.shared.getAllTasks(completionHandler: { tasks in
+            for task in tasks {
+                task.cancel()
+            }
+        })
+    }
+    
     func checkServer(baseURL: String, apiKey: String?, isDemoMode: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
         self.grocyApi = GrocyApi()
         if useHassIngress && !isDemoMode, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
