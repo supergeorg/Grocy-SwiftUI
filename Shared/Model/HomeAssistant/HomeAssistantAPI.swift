@@ -179,7 +179,7 @@ class HomeAssistantAuthenticator {
             }
         }
         
-        request.timeoutInterval = 3
+        request.timeoutInterval = 60
         return request
     }
 }

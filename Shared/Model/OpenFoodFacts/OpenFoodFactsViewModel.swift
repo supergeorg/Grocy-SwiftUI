@@ -67,7 +67,7 @@ class OpenFoodFactsViewModel: ObservableObject {
         request.allHTTPHeaderFields = ["Content-Type": "application/json",
                                        "Accept": "application/json",
                                        "APP": "Grocy-SwiftUI"]
-        request.timeoutInterval = 3
+        request.timeoutInterval = 60
         return request
     }
 }

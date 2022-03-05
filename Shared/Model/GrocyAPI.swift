@@ -286,7 +286,7 @@ public class GrocyApi: GrocyAPI {
             request.httpBody = content
         }
         
-        request.timeoutInterval = 3
+        request.timeoutInterval = 60
         return request
     }
 }
