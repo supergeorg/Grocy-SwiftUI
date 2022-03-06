@@ -12,7 +12,9 @@ struct QuickScanOpenFoodFactsView: View {
     
     var body: some View {
         if let barcode = barcode {
-            OpenFoodFactsView(barcode: barcode)
+            OpenFoodFactsNewProductView(barcode: barcode)
+        } else {
+            Text("No Barcode")
         }
     }
 }

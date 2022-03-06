@@ -15,13 +15,19 @@ struct OpenFoodFactsView: View {
     }
     
     var body: some View {
-        Form{
+        Form {
             if let offData = offVM.offData {
                 Text(offData.code)
                 Text(offData.product.productName)
+                Text(offData.product.productNameDe ?? "kein en name")
                 Text(offData.product.productNameDe ?? "kein de name")
+                Text(offData.product.productNameFr ?? "kein fr name")
+                Text(offData.product.productNamePl ?? "kein pl name")
+            } else {
+                Text("NO OFF DATA FOUND")
             }
         }
+        .navigationTitle(LocalizedStringKey("OPEN FOOD FACTS"))
     }
 }
 

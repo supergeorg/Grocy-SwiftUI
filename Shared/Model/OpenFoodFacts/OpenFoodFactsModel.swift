@@ -25,10 +25,14 @@ struct Product: Codable {
     let productName: String
     let productNameEn: String?
     let productNameDe: String?
+    let productNameFr: String?
+    let productNamePl: String?
     
     enum CodingKeys: String, CodingKey {
         case productName = "product_name"
         case productNameEn = "product_name_en"
         case productNameDe = "product_name_de"
+        case productNameFr = "product_name_fr"
+        case productNamePl = "product_name_pl"
     }
 }

@@ -435,6 +435,8 @@
 		78FDCE3725BAEF190089CB5E /* FA2SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FDCE3325BAEF190089CB5E /* FA2SFSymbols.swift */; };
 		78FDCE3E25BAF0C70089CB5E /* UserEntityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FDCE3D25BAF0C70089CB5E /* UserEntityView.swift */; };
 		78FDCE3F25BAF0C70089CB5E /* UserEntityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FDCE3D25BAF0C70089CB5E /* UserEntityView.swift */; };
+		78FF7D3727D501F70082D63A /* OpenFoodFactsNewProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FF7D3627D501F70082D63A /* OpenFoodFactsNewProductView.swift */; };
+		78FF7D3827D501F70082D63A /* OpenFoodFactsNewProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FF7D3627D501F70082D63A /* OpenFoodFactsNewProductView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -615,6 +617,7 @@
 		78FDCE2A25BAEA630089CB5E /* MDUserEntityFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserEntityFormView.swift; sourceTree = "<group>"; };
 		78FDCE3325BAEF190089CB5E /* FA2SFSymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FA2SFSymbols.swift; sourceTree = "<group>"; };
 		78FDCE3D25BAF0C70089CB5E /* UserEntityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEntityView.swift; sourceTree = "<group>"; };
+		78FF7D3627D501F70082D63A /* OpenFoodFactsNewProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsNewProductView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -865,6 +868,7 @@
 		78CB74E6255EA12700319108 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				78FF7D3927D502000082D63A /* OpenFoodFacts */,
 				78D7975925B6FAE100550C58 /* Onboarding */,
 				78CB74D4255E9FCD00319108 /* Navigation */,
 				78CB764A255EBAEC00319108 /* Components */,
@@ -1061,11 +1065,19 @@
 			isa = PBXGroup;
 			children = (
 				78FDCE3D25BAF0C70089CB5E /* UserEntityView.swift */,
-				78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */,
-				78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */,
 				78A201C425EE64210031BFDE /* ServerProblemView.swift */,
 			);
 			path = Additional;
+			sourceTree = "<group>";
+		};
+		78FF7D3927D502000082D63A /* OpenFoodFacts */ = {
+			isa = PBXGroup;
+			children = (
+				78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */,
+				78FF7D3627D501F70082D63A /* OpenFoodFactsNewProductView.swift */,
+				78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */,
+			);
+			path = OpenFoodFacts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1347,6 +1359,7 @@
 				7891C64E257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
 				78FDCE3E25BAF0C70089CB5E /* UserEntityView.swift in Sources */,
 				78CB757A255EA39900319108 /* GrocyAPI.swift in Sources */,
+				78FF7D3727D501F70082D63A /* OpenFoodFactsNewProductView.swift in Sources */,
 				786F6EC025640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78EAB74A27AD9B9400154CDD /* MDQuantityUnitConversionFormView.swift in Sources */,
 				78CB75FE255EB9A000319108 /* StockEntryModel.swift in Sources */,
@@ -1398,6 +1411,7 @@
 				78F47E8625BF10CE00579B69 /* MDBatteriesModel.swift in Sources */,
 				78CECD1725879364007780B2 /* MDUserEntitiesView.swift in Sources */,
 				78467E8B25C2C6D9000592EE /* ToastMessage.swift in Sources */,
+				78FF7D3827D501F70082D63A /* OpenFoodFactsNewProductView.swift in Sources */,
 				78CB7619255EB9C600319108 /* MDProductsModel.swift in Sources */,
 				78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */,
 				781A25A4256690C200560026 /* MDProductGroupFormView.swift in Sources */,
