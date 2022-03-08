@@ -469,6 +469,9 @@ class GrocyViewModel: ObservableObject {
                             case let .success(stockRet):
                                 self.stock = stockRet
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                for stockEntry in self.stock {
+                                    self.getStockProductLocations(productID: stockEntry.product.id)
+                                }
                             case let .failure(error):
                                 self.postLog("Data request failed for Stock. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -940,7 +943,23 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    func getStockProductLocations(productID: Int) {}
+    func getStockProductLocations(productID: Int) {
+        grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, query: nil)
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    self.postLog("Get stock product locations failed. \("\(error)")", type: .error)
+                    break
+                case .finished:
+                    break
+                }
+            }, receiveValue: { (stockLocationsOut: StockLocations) in
+                DispatchQueue.main.async {
+                    self.stockProductLocations[productID] = stockLocationsOut
+                }
+            })
+            .store(in: &cancellables)
+    }
     
     func getStockProductDetails(productID: Int) {
         grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, query: nil)

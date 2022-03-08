@@ -106,7 +106,7 @@ struct StockView: View {
                 filteredStatus == .belowMinStock ? grocyVM.volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
             }
             .filter {
-                filteredLocationID != nil ? $0.product.locationID == filteredLocationID : true
+                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
             }
             .filter {
                 filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true

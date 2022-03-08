@@ -84,9 +84,6 @@ protocol GrocyAPI {
     func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
     func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError>
-    //    func getStockProductLocations(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockLocations, APIError>
-    //    func getStockProductEntries(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<StockEntries, APIError>
-    //    func getStockProductPriceHistory(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<ProductPriceHistory, APIError>
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
     func getBookingWithID(id: Int) -> AnyPublisher<StockJournalEntry, APIError>
     func undoBookingWithID(id: Int) -> AnyPublisher<Int, APIError>
