@@ -317,7 +317,7 @@ struct LoginStatusView: View {
     
     private func tryLogin() {
         if let isDemoMode = isDemoMode {
-            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoModus: isDemoMode, completion: {result in
+            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoMode: isDemoMode, completion: {result in
                 switch result {
                 case let .success(message):
                     if GrocyAPP.supportedVersions.contains(message) {
@@ -339,10 +339,16 @@ struct LoginStatusView: View {
         Group{
             switch loginState{
             case .loading:
-                ProgressView()
-                    .scaleEffect(1.5, anchor: .center)
-                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
-                    .onAppear(perform: {tryLogin()})
+                VStack(spacing: 20) {
+                    ProgressView()
+                        .scaleEffect(1.5, anchor: .center)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                        .onAppear(perform: tryLogin)
+                    Button(LocalizedStringKey("str.cancel"), action: {
+                        grocyVM.cancelAllURLSessionTasks()
+                    })
+                        .buttonStyle(BorderButtonStyle())
+                }
             case .success:
                 Text("success")
             case .fail:
