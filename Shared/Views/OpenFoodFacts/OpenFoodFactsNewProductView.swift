@@ -61,14 +61,27 @@ struct OpenFoodFactsNewProductView: View {
                 switch result {
                 case let .success(message):
                     grocyVM.postLog("Product add successful. \(message)", type: .info)
+                    if let barcode = offVM.offData?.code {
+                        let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: productPOST.id, barcode: barcode, quID: nil, amount: nil, shoppingLocationID: nil, lastPrice: nil, rowCreatedTimestamp: timeStamp, note: nil)
+                        grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
+                            switch barcodeResult {
+                            case let .success(barcodeMessage):
+                                grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
+                            case let .failure(barcodeError):
+                                grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)
+                            }
+                            grocyVM.requestData(objects: [.product_barcodes])
+                            isProcessing = false
+                            finishForm()
+                        })
+                    }
                     //                        toastType = .successAdd
                     grocyVM.requestData(objects: [.products], ignoreCached: true)
-                    finishForm()
                 case let .failure(error):
                     grocyVM.postLog("Product add failed. \(error)", type: .error)
                     //                        toastType = .failAdd
+                    isProcessing = false
                 }
-                isProcessing = false
             })
         }
     }
@@ -163,11 +176,6 @@ struct OpenFoodFactsNewProductView: View {
                 })
                     .disabled(!isNameCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)
-            }
-            ToolbarItem(placement: .cancellationAction) {
-                Button(LocalizedStringKey("str.cancel")) {
-                    finishForm()
-                }
             }
         })
     }
