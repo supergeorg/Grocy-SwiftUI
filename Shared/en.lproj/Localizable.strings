@@ -666,6 +666,7 @@
 "str.quickScan.add.product.add" = "Add barcode";
 "str.quickScan.add.product.add.success" = "Barcode added";
 "str.quickScan.add.product.add.fail" = "Adding barcode failed";
+"str.quickScan.add.product.new.openfoodfacts" = "Create new product with Open Food Facts";
 "str.quickScan.barcode.invalid" = "Invalid barcode";
 
 // MARK: - Onboarding

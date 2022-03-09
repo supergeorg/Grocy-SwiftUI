@@ -666,6 +666,7 @@
 "str.quickScan.add.product.add" = "Barcode hinzufügen";
 "str.quickScan.add.product.add.success" = "Barcode erfolgreich zugewiesen";
 "str.quickScan.add.product.add.fail" = "Zuweisung fehlgeschlagen";
+"str.quickScan.add.product.new.openfoodfacts" = "Neues Produkt mit Open Food Facts erstellen";
 "str.quickScan.barcode.invalid" = "Ungültiger Barcode";
 
 // MARK: - Onboarding

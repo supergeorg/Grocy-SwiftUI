@@ -63,10 +63,11 @@ struct QuickScanModeSelectProductView: View {
                     Text(barcode ?? "Barcode error").font(.title)
                 }
                 ProductField(productID: $productID, description: "str.quickScan.add.product")
-                if devMode {
-                    Section("OPEN FOOD FACTS") {
-                        NavigationLink(destination: QuickScanOpenFoodFactsView(barcode: barcode), label: {
-                            Label("Open Food Facts", systemImage: MySymbols.barcodeScan)
+                
+                if let barcode = barcode {
+                    Section("Open Food Facts") {
+                        NavigationLink(destination: OpenFoodFactsNewProductView(barcode: barcode), label: {
+                            Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
                         })
                     }
                 }
