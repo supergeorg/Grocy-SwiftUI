@@ -83,19 +83,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.settings"))
             }
             .tag(Tab.settings)
-            .navigationViewStyle(StackNavigationViewStyle())
-            
-            if devMode {
-                NavigationView {
-                    OpenFoodFactsScannerView()
-                }
-                .tabItem {
-                    Label("OPEN FOOD FACTS", systemImage: Tab.quickScanMode.rawValue)
-                        .accessibility(label: Text("OPEN FOOD FACTS"))
-                }
-                .tag(Tab.openFoodFacts)
-            }
-            
+            .navigationViewStyle(StackNavigationViewStyle())            
         }
     }
 }
