@@ -84,6 +84,7 @@ struct StockTableRow: View {
             })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+            .foregroundColor(colorScheme == .light ? Color.black : Color.white)
 #else
             .listRowBackground(backgroundColor)
 #endif

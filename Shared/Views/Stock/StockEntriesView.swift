@@ -149,6 +149,7 @@ struct StockEntryRowView: View {
             })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+            .foregroundColor(colorScheme == .light ? Color.black : Color.white)
             .padding(.horizontal)
 #else
             .listRowBackground(backgroundColor)
