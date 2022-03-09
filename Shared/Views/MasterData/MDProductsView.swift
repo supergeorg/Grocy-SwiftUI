@@ -71,7 +71,7 @@ struct MDProductsView: View {
             switch result {
             case let .success(message):
                 grocyVM.postLog("Deleting product was successful. \(message)", type: .info)
-                updateData()
+                grocyVM.requestData(objects: [.products, .product_barcodes])
             case let .failure(error):
                 grocyVM.postLog("Deleting product failed. \(error)", type: .error)
                 toastType = .failDelete
