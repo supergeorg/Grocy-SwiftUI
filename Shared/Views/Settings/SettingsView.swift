@@ -77,6 +77,7 @@ struct SettingsView: View {
                     Text("🇬🇧 English").tag("en")
                     Text("🇩🇪 Deutsch").tag("de")
                     Text("🇫🇷 Français").tag("fr-FR")
+                    Text("🇳🇱 Dutch").tag("nl")
                     Text("🇵🇱 Polska").tag("pl")
                 })
 #if os(iOS)

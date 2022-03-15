@@ -16,6 +16,7 @@ struct GrocyAPP {
         case english = "https://en.demo.grocy.info"
         case german = "https://de.demo.grocy.info"
         case french = "https://fr.demo.grocy.info"
+        case dutch = "https://nl.demo.grocy.info"
         case polish = "https://pl.demo.grocy.info"
         case develop = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
@@ -33,6 +34,8 @@ struct GrocyAPP {
                 return "German Grocy server"
             case .french:
                 return "French Grocy server"
+            case .dutch:
+                return "Dutch Grocy server"
             case .polish:
                 return "Polish Grocy server"
             case .develop:

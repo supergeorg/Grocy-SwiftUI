@@ -87,6 +87,40 @@ struct Translators {
                                     "Alexandre Mechineau <admin@alexsaphir.com>, 2021",
                                     "Pierre Penninckx <ibizapeanut@gmail.com>, 2021"
                                  ])
+    static let dutch = Language(name: "Dutch",
+                                flag: "🇳🇱",
+                                maintainers: "Heimen Stoffels",
+                                contributors: [
+                                    "Llewy <carlvanoene@gmail.com>, 2019",
+                                    "Adriaan Peeters <apeeters@lashout.net>, 2019",
+                                    "Seppe <van.winkel.seppe@me.com>, 2019",
+                                    "Bernd Bestel <bernd@berrnd.de>, 2019",
+                                    "Jelte L <jelte@ollavogala.org>, 2019",
+                                    "Tarik Faik <filoor1@gmail.com>, 2019",
+                                    "Niels Tholenaar <info@123quality.nl>, 2019",
+                                    "Kees van Nieuwenhuijzen <kees@vannieuwenhuijzen.com>, 2019",
+                                    "BodingClockchian <joost_nl@live.nl>, 2020",
+                                    "gggg <bashankamp@gmail.com>, 2020",
+                                    "Bastien Van Houdt <bastienvanhoudt@gmail.com>, 2020",
+                                    "D. Polders <zigurana@gmail.com>, 2020",
+                                    "crnh <corne@haasjes.nu>, 2020",
+                                    "Sigi 789 <ssigi333lvl3@outlook.com>, 2020",
+                                    "Jesse Nagel <jnagel24@gmail.com>, 2020",
+                                    "Peter van den Heuvel <peter@pvandenheuvel.nl>, 2020",
+                                    "ellem, 2020",
+                                    "Frank <frank@frankklaassen.nl>, 2020",
+                                    "Stan Overgauw <stan.overgauw@gmail.com>, 2020",
+                                    "L. P. <lloyd4post11@hotmail.com>, 2021",
+                                    "Jeroen Blevi <jeroen@triponoid.com>, 2021",
+                                    "Anne Gerben van Assen <annegerben+transifex@vanassen.eu>, 2021",
+                                    "Sebastiaan Ammerlaan <steelbas@gmail.com>, 2021",
+                                    "Mark Peters <forkless@gmail.com>, 2021",
+                                    "Daan Breur <daanbreur@gmail.com>, 2021",
+                                    "Grocy NL, 2021",
+                                    "mc bloch <transifex@mcbloch.dev>, 2021",
+                                    "Gerard stn, 2021",
+                                    "Simon Bor <mail@simonbor.nl>, 2022"
+                                ])
     
-    static let languages: Set<Language> = [english, german, french, polish]
+    static let languages: Set<Language> = [english, german, french, polish, dutch]
 }

@@ -532,6 +532,7 @@
 		78A201CB25EE810A0031BFDE /* MyLabelWithSubtitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLabelWithSubtitle.swift; sourceTree = "<group>"; };
 		78A33CB9257528B900C450D4 /* StockProductInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductInfoView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
+		78AB1BAA27E148F800C7F380 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssistantAPI.swift; sourceTree = "<group>"; };
 		78ADA1E026D1506800946E1B /* TranslatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorsView.swift; sourceTree = "<group>"; };
 		78ADA1E526D1509100946E1B /* Translators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translators.swift; sourceTree = "<group>"; };
@@ -1188,6 +1189,7 @@
 				Base,
 				pl,
 				"fr-FR",
+				nl,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1715,6 +1717,7 @@
 				78CB7568255EA2D600319108 /* de */,
 				7228DE4026CBAD0B005821FA /* pl */,
 				78644EC02791E6E0007110CF /* fr-FR */,
+				78AB1BAA27E148F800C7F380 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
