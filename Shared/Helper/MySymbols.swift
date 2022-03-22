@@ -44,6 +44,7 @@ struct MySymbols {
     static let offline = "wifi.slash"
     static let api = "chevron.left.forwardslash.chevron.right"
     static let unknown = "questionmark"
+    static let timeout = "clock.arrow.circlepath"
 
     static let new = "plus"
     static let edit = "square.and.pencil"

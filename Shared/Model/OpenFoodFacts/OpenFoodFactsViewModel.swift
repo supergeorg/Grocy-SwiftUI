@@ -13,7 +13,9 @@ class OpenFoodFactsViewModel: ObservableObject {
     
     var cancellables = Set<AnyCancellable>()
     
-    init(barcode: String) {
+    private var timeoutInterval: Double = 60.0
+    
+    init(barcode: String, timeoutInterval: Double = 60.0) {
         if !barcode.isEmpty {
             self.fetchForBarcode(barcode: barcode)
                 .sink(receiveCompletion: { result in
@@ -27,6 +29,7 @@ class OpenFoodFactsViewModel: ObservableObject {
                     DispatchQueue.main.async { self.offData = offResult }
                 })
                 .store(in: &cancellables)
+            self.timeoutInterval = timeoutInterval
         }
     }
     
@@ -38,11 +41,11 @@ class OpenFoodFactsViewModel: ObservableObject {
             .flatMap({ result -> AnyPublisher<OpenFoodFactsResult, APIError> in
                 guard let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) else {
                     return Just(result.data)
-                        // decode if it is an error message
+                    // decode if it is an error message
                         .decode(type: ErrorMessage.self, decoder: JSONDecoder())
-                        // neither valid response nor error message
+                    // neither valid response nor error message
                         .mapError { error in APIError.decodingError(error: error) }
-                        // display error message
+                    // display error message
                         .tryMap { throw APIError.errorString(description: $0.errorMessage) }
                         .mapError { $0 as! APIError }
                         .eraseToAnyPublisher()
@@ -67,7 +70,7 @@ class OpenFoodFactsViewModel: ObservableObject {
         request.allHTTPHeaderFields = ["Content-Type": "application/json",
                                        "Accept": "application/json",
                                        "APP": "Grocy-SwiftUI"]
-        request.timeoutInterval = 60
+        request.timeoutInterval = self.timeoutInterval
         return request
     }
 }

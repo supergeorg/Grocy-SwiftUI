@@ -606,6 +606,7 @@
 "str.settings.simplifiedStockView" = "Vereinfachte Bestandsansicht";
 "str.settings.appLanguage" = "App-Sprache";
 "str.settings.resetCache" = "Cache löschen";
+"str.settings.serverTimeoutInterval" = "Server-Timeout-Intervall";
 "str.settings.log" = "App-Log";
 "str.settings.log.empty" = "Kein Logeintrag gefunden.";
 "str.settings.log.update" = "Log aktualisieren";

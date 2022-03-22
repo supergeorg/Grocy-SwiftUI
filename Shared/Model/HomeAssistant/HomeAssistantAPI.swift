@@ -89,6 +89,8 @@ class HomeAssistantAuthenticator {
     private var hassIngressToken: String?
     private var hassIngressTokenDate: Date?
     
+    private var timeoutInterval: Double = 60.0
+    
     private let session: NetworkSession
     private let queue = DispatchQueue(label: "Authenticator.\(UUID().uuidString)")
     
@@ -99,10 +101,11 @@ class HomeAssistantAuthenticator {
         self.session = session
     }
     
-    init(hassURL: String, hassToken: String, session: NetworkSession = URLSession.shared) {
+    init(hassURL: String, hassToken: String, session: NetworkSession = URLSession.shared, timeoutInterval: Double = 60) {
         self.hassURL = hassURL
         self.hassToken = hassToken
         self.session = session
+        self.timeoutInterval = timeoutInterval
     }
     
     func getToken() -> String? {
@@ -179,7 +182,7 @@ class HomeAssistantAuthenticator {
             }
         }
         
-        request.timeoutInterval = 60
+        request.timeoutInterval = self.timeoutInterval
         return request
     }
 }

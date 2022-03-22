@@ -19,6 +19,7 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("isDemoModus") var isDemoModus: Bool = false
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
     @AppStorage("localizationKey") var localizationKey: String = "en"
+    @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
     
     static let shared = GrocyViewModel()
     
@@ -80,6 +81,7 @@ class GrocyViewModel: ObservableObject {
             } else {
                 grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
             }
+            grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
             self.postLog("Logged in on startup", type: .info)
         } else {
             self.postLog("Not logged in", type: .info)
@@ -99,6 +101,7 @@ class GrocyViewModel: ObservableObject {
     func setDemoModus() {
         isDemoModus = true
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
+        grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isLoggedIn = true
         self.postLog("Switched to demo modus", type: .info)
     }
@@ -108,6 +111,7 @@ class GrocyViewModel: ObservableObject {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+        grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isDemoModus = false
         isLoggedIn = true
         self.postLog("Switched to login modus", type: .info)
@@ -133,6 +137,7 @@ class GrocyViewModel: ObservableObject {
             grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
+        grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         grocyApi.getSystemInfo()
             .sink(receiveCompletion: { result in
                 switch result {

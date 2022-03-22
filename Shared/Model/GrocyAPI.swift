@@ -64,6 +64,7 @@ protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
     func setHassData(hassURL: String, hassToken: String)
     func clearHassData()
+    func setTimeoutInterval(timeoutInterval: Double)
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
@@ -105,6 +106,8 @@ protocol GrocyAPI {
 public class GrocyApi: GrocyAPI {
     var hassAuthenticator: HomeAssistantAuthenticator?
     
+    private var timeoutInterval: Double = 60.0
+    
     private var baseURL: String = ""
     private var apiKey: String = ""
     
@@ -119,6 +122,10 @@ public class GrocyApi: GrocyAPI {
     
     func clearHassData() {
         self.hassAuthenticator = nil
+    }
+    
+    func setTimeoutInterval(timeoutInterval: Double) {
+        self.timeoutInterval = timeoutInterval
     }
     
     private enum Method: String {
@@ -283,7 +290,7 @@ public class GrocyApi: GrocyAPI {
             request.httpBody = content
         }
         
-        request.timeoutInterval = 60
+        request.timeoutInterval = self.timeoutInterval
         return request
     }
 }
