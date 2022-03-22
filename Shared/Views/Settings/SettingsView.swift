@@ -22,10 +22,6 @@ struct SettingsView: View {
     
     @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
     
-    func updateData() {
-        grocyVM.requestData(additionalObjects: [.system_info, .current_user])
-    }
-    
     var body: some View {
 #if os(macOS)
         NavigationView {
@@ -56,9 +52,9 @@ struct SettingsView: View {
                             Label(LocalizedStringKey("str.settings.info"), systemImage: MySymbols.info)
                                 .foregroundColor(.primary)
                         })
-                    if let currentUser = grocyVM.currentUser.first {
+                    if let currentUser = grocyVM.currentUser {
                         NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
-                            Label(LocalizedStringKey("str.settings.loggedInAs \(grocyVM.currentUser.first?.displayName ?? "ERROR")"), systemImage: "person")
+                            Label(LocalizedStringKey("str.settings.loggedInAs \(currentUser.displayName)"), systemImage: "person")
                                 .foregroundColor(.primary)
                         })
                     }
@@ -110,7 +106,7 @@ struct SettingsView: View {
             }
         }
         .onAppear(perform: {
-            updateData()
+            grocyVM.requestData(additionalObjects: [.system_info, .current_user])
         })
     }
 }

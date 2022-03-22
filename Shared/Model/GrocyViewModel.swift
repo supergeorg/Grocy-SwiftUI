@@ -31,7 +31,7 @@ class GrocyViewModel: ObservableObject {
     @Published var userSettings: GrocyUserSettings?
     
     @Published var users: GrocyUsers = []
-    @Published var currentUser: GrocyUsers = []
+    @Published var currentUser: GrocyUser? = nil
     @Published var stock: Stock = []
     @Published var volatileStock: VolatileStock? = nil
     @Published var stockJournal: StockJournal = []
@@ -513,12 +513,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .current_user:
-                    if currentUser.isEmpty || ignoreCached  {
+                    if currentUser == nil || ignoreCached  {
                         getUser(completion: { result in
                             switch result {
                             case let .success(currUsRet):
-                                self.currentUser = currUsRet
-                                self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                if let firstCurrUsRet = currUsRet.first {
+                                    self.currentUser = firstCurrUsRet
+                                    self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                }
                             case let .failure(error):
                                 self.postLog("Data request failed for current user. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -557,7 +559,7 @@ class GrocyViewModel: ObservableObject {
         userSettings = nil
         
         users = []
-        currentUser = []
+        currentUser = nil
         stock = []
         volatileStock = nil
         stockJournal = []
