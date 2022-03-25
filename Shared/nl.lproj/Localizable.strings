@@ -606,6 +606,7 @@
 "str.settings.simplifiedStockView" = "Eenvoudig voorraadoverzicht";
 "str.settings.appLanguage" = "Taal";
 "str.settings.resetCache" = "Cache herstellen";
+"str.settings.serverTimeoutInterval" = "Servertime-out-tussenpoos";
 "str.settings.log" = "Logboek";
 "str.settings.log.empty" = "Er is geen logboekitem gevonden.";
 "str.settings.log.update" = "Werk logboek bij";
