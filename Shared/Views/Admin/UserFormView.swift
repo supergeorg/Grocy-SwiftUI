@@ -58,12 +58,12 @@ struct UserFormView: View {
             grocyVM.postUser(user: userPost, completion: { result in
                 switch result {
                 case let .success(message):
-                    print(message)
+                    grocyVM.postLog("Successfully created object with id \(message.createdObjectID).", type: .info)
                     toastType = .successAdd
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    print("\(error)")
+                    grocyVM.postLog("Saving user failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
             })
@@ -73,12 +73,12 @@ struct UserFormView: View {
                 grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
                     switch result {
                     case let .success(message):
-                        print(message)
+                        grocyVM.postLog("Successfully edited object with id \(message.changedObjectID).", type: .info)
                         toastType = .successEdit
                         updateData()
                         finishForm()
                     case let .failure(error):
-                        print("\(error)")
+                        grocyVM.postLog("Editing user failed. \(error)", type: .error)
                         toastType = .failAdd
                     }
                 })

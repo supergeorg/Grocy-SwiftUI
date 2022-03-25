@@ -101,7 +101,7 @@ struct QuickScanModeView: View {
                 activeSheet = .selectProduct
             }
         case .failure(let error):
-            print(error)
+            grocyVM.postLog("Barcode scan failed. \(error)", type: .error)
         }
     }
     

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OpenFoodFactsScannerView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
     @State private var scanBarcode: String = ""
     @State private var isShowingResult: Bool = false
     
@@ -17,8 +19,7 @@ struct OpenFoodFactsScannerView: View {
             scanBarcode = code
             isShowingResult = true
         case .failure(let error):
-            print("Scanning failed")
-            print(error)
+            grocyVM.postLog("Scanning open food facts barcode failed. \(error)", type: .error)
         }
     }
     

@@ -108,8 +108,7 @@ struct MDBarcodeFormView: View {
         case .success(let code):
             barcode = code
         case .failure(let error):
-            print("Scanning failed")
-            print(error)
+            grocyVM.postLog("Scanning barcode failed. \(error)", type: .error)
         }
     }
 #endif
