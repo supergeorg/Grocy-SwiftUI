@@ -303,6 +303,10 @@
 		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
 		78D0F4DD2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
+		78D2CAD427EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */; };
+		78D2CAD527EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */; };
+		78D2CAD627EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */; };
+		78D2CAD727EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */; };
 		78D75D6325DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
 		78D75D6425DE9B71009F2C15 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D75D6225DE9B71009F2C15 /* CardView.swift */; };
 		78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7975A25B6FB4800550C58 /* OnboardingView.swift */; };
@@ -586,6 +590,7 @@
 		78CECD1525879364007780B2 /* MDUserEntitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserEntitiesView.swift; sourceTree = "<group>"; };
 		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
 		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
+		78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsFillProductView.swift; sourceTree = "<group>"; };
 		78D75D6225DE9B71009F2C15 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		78D7975A25B6FB4800550C58 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
@@ -1072,6 +1077,7 @@
 			children = (
 				78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */,
 				78FF7D3627D501F70082D63A /* OpenFoodFactsNewProductView.swift */,
+				78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */,
 				78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */,
 			);
 			path = OpenFoodFacts;
@@ -1379,6 +1385,7 @@
 				789D167125DE73C5006FC33F /* ButtonStyles.swift in Sources */,
 				78CECD1625879364007780B2 /* MDUserEntitiesView.swift in Sources */,
 				78CB7644255EBA6C00319108 /* Colors.swift in Sources */,
+				78D2CAD427EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */,
 				78CB759D255EA56D00319108 /* SettingsView.swift in Sources */,
 				7817658F25F7B40B00978483 /* NullCodable.swift in Sources */,
 				785D7C5025F65FE0009DCA88 /* ImagePicker.swift in Sources */,
@@ -1421,6 +1428,7 @@
 				78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
 				78A201CD25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
 				7880F0F2256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
+				78D2CAD527EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */,
 				786F6EA52564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78CB759C255EA56D00319108 /* AboutView.swift in Sources */,
@@ -1558,6 +1566,7 @@
 				78AF64E52719F38400C439AF /* StockEntryFormView.swift in Sources */,
 				780B8B5B26FA5CDF009ACFB7 /* CameraTools.swift in Sources */,
 				78FDCDA925BAD2D50089CB5E /* SystemConfigModel.swift in Sources */,
+				78D2CAD627EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */,
 				78FDCDCA25BAD2DE0089CB5E /* MDProductsModel.swift in Sources */,
 				780B8B4226FA5C18009ACFB7 /* MyIntStepper.swift in Sources */,
 				78FDCE0D25BAD2F40089CB5E /* ShoppingListDescriptionModel.swift in Sources */,
@@ -1617,6 +1626,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D2CAD727EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */,
 				78AF64E62719F38400C439AF /* StockEntryFormView.swift in Sources */,
 				780B8B5226FA5C35009ACFB7 /* FieldDescription.swift in Sources */,
 				78FDCE0425BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */,
