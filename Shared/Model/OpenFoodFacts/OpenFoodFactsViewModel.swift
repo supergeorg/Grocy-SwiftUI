@@ -5,23 +5,30 @@
 //  Created by Georg Meissner on 15.02.21.
 //
 
+import SwiftUI
 import Foundation
 import Combine
 
 class OpenFoodFactsViewModel: ObservableObject {
+    @StateObject var grocyVM: GrocyViewModel = .shared
     @Published var offData: OpenFoodFactsResult?
     
     var cancellables = Set<AnyCancellable>()
     
     private var timeoutInterval: Double = 60.0
     
-    init(barcode: String, timeoutInterval: Double = 60.0) {
+    init(barcode: String = "", timeoutInterval: Double = 60.0) {
+        updateBarcode(barcode: barcode)
+        self.timeoutInterval = timeoutInterval
+    }
+    
+    func updateBarcode(barcode: String) {
         if !barcode.isEmpty {
             self.fetchForBarcode(barcode: barcode)
                 .sink(receiveCompletion: { result in
                     switch result {
                     case .failure(let error):
-                        print("Handle error: fetch off \(error)")
+                        self.grocyVM.postLog("Handle error: fetch off \(error)", type: .error)
                     case .finished:
                         break
                     }
@@ -29,7 +36,6 @@ class OpenFoodFactsViewModel: ObservableObject {
                     DispatchQueue.main.async { self.offData = offResult }
                 })
                 .store(in: &cancellables)
-            self.timeoutInterval = timeoutInterval
         }
     }
     

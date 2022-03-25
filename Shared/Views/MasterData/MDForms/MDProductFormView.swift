@@ -170,8 +170,8 @@ struct MDProductFormView: View {
                         Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
                 }
             })
 #if os(iOS)
@@ -189,17 +189,23 @@ struct MDProductFormView: View {
     
     var content: some View {
         List {
-#if os(iOS)
-            if devMode && isNewProduct {
+            if isNewProduct {
                 Button(action: {
                     showOFFResult.toggle()
-                }, label: {Label("FILL WITH OFF", systemImage: "plus")})
-                    .popover(isPresented: $showOFFResult, content: {
-                        OpenFoodFactsScannerView()
-                            .frame(width: 500, height: 500)
-                    })
-            }
+                }, label: {Label("Open Food Facts", systemImage: "plus")})
+#if os(iOS)
+                .sheet(isPresented: $showOFFResult, content: {
+                    NavigationView {
+                        OpenFoodFactsFillProductView(productName: $name)
+                    }
+                })
+#elseif os(macOS)
+                .popover(isPresented: $showOFFResult, content: {
+                    OpenFoodFactsFillProductView(productName: $name)
+                        .frame(width: 500, height: 500)
+                })
 #endif
+            }
             
 #if os(macOS)
             Text(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
@@ -249,7 +255,7 @@ struct MDProductFormView: View {
             }, label: {
                 MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
             })
-                .disabled(isNewProduct)
+            .disabled(isNewProduct)
             if isPopup {
                 Button(LocalizedStringKey("str.save")) {
                     saveProduct()
@@ -294,7 +300,7 @@ struct MDProductFormView: View {
                     label: {
                         MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
                     })
-                    .disabled(isNewProduct)
+                .disabled(isNewProduct)
             }
 #endif
         }
@@ -337,14 +343,14 @@ struct MDProductFormView: View {
             NavigationLink(destination: MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName), label: {
                 MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })
-                .disabled(isNewProduct)
+            .disabled(isNewProduct)
 #elseif os(macOS)
             DisclosureGroup(content: {
                 MDProductPictureFormView(product: product, selectedPictureURL: $selectedPictureURL, selectedPictureFileName: $selectedPictureFileName)
             }, label: {
                 MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })
-                .disabled(isNewProduct)
+            .disabled(isNewProduct)
 #endif
         }
 #if os(iOS)
@@ -382,7 +388,7 @@ struct MDProductFormView: View {
                     Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
                     Text("str.md.product.dueType.expires").tag(DueType.expires)
                 })
-                    .pickerStyle(.segmented)
+                .pickerStyle(.segmented)
             }
             
             // Default due days
@@ -411,9 +417,9 @@ struct MDProductFormView: View {
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                    .onChange(of: quIDStock, perform: { newValue in
-                        if quIDPurchase == nil { quIDPurchase = quIDStock }
-                    })
+                .onChange(of: quIDStock, perform: { newValue in
+                    if quIDPurchase == nil { quIDPurchase = quIDStock }
+                })
                 
                 FieldDescription(description: "str.md.product.quStock.info")
             }

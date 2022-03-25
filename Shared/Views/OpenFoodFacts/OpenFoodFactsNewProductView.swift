@@ -104,8 +104,21 @@ struct OpenFoodFactsNewProductView: View {
     
     var body: some View {
         Form {
-            MyTextField(textToEdit: Binding.constant(offVM.offData?.code ?? "?"), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
-                .disabled(true)
+            VStack {
+                if let imageLink = offVM.offData?.product.imageThumbURL, let imageURL = URL(string: imageLink) {
+                    AsyncImage(url: imageURL, content: { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                    .frame(maxWidth: 150.0, maxHeight: 150.0)
+                }
+                MyTextField(textToEdit: Binding.constant(offVM.offData?.code ?? "?"), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
+                    .disabled(true)
+            }
             
             Picker(selection: $productName, content: {
                 ForEach(productNames.sorted(by: >), id: \.key) { key, value in
@@ -128,9 +141,9 @@ struct OpenFoodFactsNewProductView: View {
                     }
                 }
             })
-                .onChange(of: productName, perform: { value in
-                    isNameCorrect = checkNameCorrect()
-                })
+            .onChange(of: productName, perform: { value in
+                isNameCorrect = checkNameCorrect()
+            })
             Picker(selection: $locationID, label: MyLabelWithSubtitle(title: "str.md.product.location", subTitle: "str.md.product.location.required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: locationID != nil), content: {
                 ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
                     Text(grocyLocation.name).tag(grocyLocation.id as Int?)
@@ -143,9 +156,9 @@ struct OpenFoodFactsNewProductView: View {
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                    .onChange(of: quIDStock, perform: { newValue in
-                        if quIDPurchase == nil { quIDPurchase = quIDStock }
-                    })
+                .onChange(of: quIDStock, perform: { newValue in
+                    if quIDPurchase == nil { quIDPurchase = quIDStock }
+                })
                 
                 FieldDescription(description: "str.md.product.quStock.info")
             }
@@ -174,8 +187,8 @@ struct OpenFoodFactsNewProductView: View {
                     Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
-                    .disabled(!isNameCorrect || isProcessing)
-                    .keyboardShortcut(.defaultAction)
+                .disabled(!isNameCorrect || isProcessing)
+                .keyboardShortcut(.defaultAction)
             }
         })
     }

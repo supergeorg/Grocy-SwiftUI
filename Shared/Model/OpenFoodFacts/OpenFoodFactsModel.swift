@@ -27,6 +27,9 @@ struct Product: Codable {
     let productNameDe: String?
     let productNameFr: String?
     let productNamePl: String?
+    let productNameNl: String?
+    let imageURL: String?
+    let imageThumbURL: String?
     
     enum CodingKeys: String, CodingKey {
         case productName = "product_name"
@@ -34,5 +37,8 @@ struct Product: Codable {
         case productNameDe = "product_name_de"
         case productNameFr = "product_name_fr"
         case productNamePl = "product_name_pl"
+        case productNameNl = "product_name_nl"
+        case imageURL = "image_url"
+        case imageThumbURL = "image_thumb_url"
     }
 }
