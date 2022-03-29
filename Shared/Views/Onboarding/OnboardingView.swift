@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-struct OnboardingCard: Identifiable {
-    let id = UUID()
-    let title: String
-    let subtitle: String
-    let imageName: String
-    
-}
-
 struct OnboardingDevicesView: View {
     var body: some View {
         HStack{
@@ -33,7 +25,7 @@ struct OnboardingDevicesView: View {
 }
 
 struct OnboardingCardView: View {
-    var card: OnboardingCard
+    var card: OnboardingCards
     var body: some View {
         VStack{
             Image(card.imageName)
@@ -56,23 +48,18 @@ struct OnboardingCardView: View {
 struct OnboardingView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
     
-    let onboardingCards: [OnboardingCard] = [
-        OnboardingCard(title: "Grocy", subtitle: "", imageName: "grocy-logo"),
-        OnboardingCard(title: "str.onboard.grocy.title", subtitle: "str.onboard.grocy.subtitle", imageName: "web-stock"),
-        OnboardingCard(title: "str.onboard.app.title", subtitle: "str.onboard.app.subtitle", imageName: "stock-screenshot")
-    ]
     var body: some View {
         VStack{
 #if os(iOS)
             TabView{
-                ForEach(onboardingCards, id:\.id) {card in
+                ForEach(OnboardingCards.allCases, id:\.self) {card in
                     OnboardingCardView(card: card)
                 }
             }
             .tabViewStyle(PageTabViewStyle())
 #else
             HStack{
-                ForEach(onboardingCards, id:\.id) {card in
+                ForEach(OnboardingCards.allCases, id:\.self) {card in
                     OnboardingCardView(card: card)
                 }
             }
@@ -103,3 +90,43 @@ struct OnboardingView_Previews: PreviewProvider {
         OnboardingView()
     }
 }
+
+public enum OnboardingCards: CaseIterable {
+    case GROCY
+    case ERP_BEYOND
+    case IOS_MACOS
+    
+    public var title: String {
+        switch self {
+        case .GROCY:
+            return "Grocy"
+        case .ERP_BEYOND:
+            return "str.onboard.grocy.title"
+        case .IOS_MACOS:
+            return "str.onboard.app.title"
+        }
+    }
+    
+    public var subtitle: String {
+        switch self {
+        case .GROCY:
+            return ""
+        case .ERP_BEYOND:
+            return "str.onboard.grocy.subtitle"
+        case .IOS_MACOS:
+            return "str.onboard.app.subtitle"
+        }
+    }
+    
+    public var imageName: String {
+        switch self {
+        case .GROCY:
+            return "grocy-logo"
+        case .ERP_BEYOND:
+            return "web-stock"
+        case .IOS_MACOS:
+            return "stock-screenshot"
+        }
+    }
+}
+
