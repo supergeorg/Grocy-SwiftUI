@@ -45,6 +45,8 @@ struct MDProductFormView: View {
     @State private var quickConsumeAmount: Double = 1.0
     @State private var hideOnStockOverview: Bool = false
     
+    @State private var queuedBarcode: String = ""
+    
     @State private var showDeleteAlert: Bool = false
     @State private var showOFFResult: Bool = false
     
@@ -60,6 +62,12 @@ struct MDProductFormView: View {
     private func checkNameCorrect() -> Bool {
         let foundProduct = grocyVM.mdProducts.first(where: {$0.name == name})
         return isNewProduct ? !(name.isEmpty || foundProduct != nil) : !(name.isEmpty || (foundProduct != nil && foundProduct!.id != product!.id))
+    }
+    
+    @State private var isBarcodeCorrect: Bool = true
+    private func checkBarcodeCorrect() -> Bool {
+        let foundBarcode = grocyVM.mdProductBarcodes.first(where: { $0.barcode == queuedBarcode })
+        return (queuedBarcode.isEmpty || (foundBarcode == nil))
     }
     
     private var currentQUPurchase: MDQuantityUnit? {
@@ -103,7 +111,7 @@ struct MDProductFormView: View {
         isNameCorrect = checkNameCorrect()
     }
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations]
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
     }
@@ -119,7 +127,7 @@ struct MDProductFormView: View {
     }
     
     private var isFormValid: Bool {
-        !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil)
+        !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil) &&  isBarcodeCorrect
     }
     
     private func saveProduct() {
@@ -135,8 +143,26 @@ struct MDProductFormView: View {
                     case let .success(message):
                         grocyVM.postLog("Product add successful. \(message)", type: .info)
                         toastType = .successAdd
-                        updateData()
-                        finishForm()
+                        grocyVM.requestData(objects: [.products])
+                        if !queuedBarcode.isEmpty {
+                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+                            grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
+                                switch result {
+                                case let .success(barcodeMessage):
+                                    grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
+                                    toastType = .successAdd
+                                    grocyVM.requestData(objects: [.product_barcodes])
+                                    finishForm()
+                                case let .failure(barcodeError):
+                                    grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)
+                                    toastType = .failAdd
+                                }
+                                isProcessing = false
+                            })
+                        } else {
+                            isProcessing = false
+                            finishForm()
+                        }
                     case let .failure(error):
                         grocyVM.postLog("Product add failed. \(error)", type: .error)
                         toastType = .failAdd
@@ -149,7 +175,7 @@ struct MDProductFormView: View {
                     case let .success(message):
                         grocyVM.postLog("Product edit successful. \(message)", type: .info)
                         toastType = .successEdit
-                        updateData()
+                        grocyVM.requestData(objects: [.products])
                         finishForm()
                     case let .failure(error):
                         grocyVM.postLog("Product edit failed. \(error)", type: .error)
@@ -170,7 +196,7 @@ struct MDProductFormView: View {
                         Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
-                    .disabled(!isNameCorrect || isProcessing)
+                    .disabled(!isNameCorrect || isProcessing || !isBarcodeCorrect)
                     .keyboardShortcut(.defaultAction)
                 }
             })
@@ -189,19 +215,22 @@ struct MDProductFormView: View {
     
     var content: some View {
         List {
-            if isNewProduct {
+            if isNewProduct || devMode {
                 Button(action: {
                     showOFFResult.toggle()
-                }, label: {Label("Open Food Facts", systemImage: "plus")})
+                }, label: {Label("Open Food Facts", systemImage: MySymbols.barcodeScan)})
+                .onChange(of: queuedBarcode, perform: { newBarcode in
+                    isBarcodeCorrect = checkBarcodeCorrect()
+                })
 #if os(iOS)
                 .sheet(isPresented: $showOFFResult, content: {
                     NavigationView {
-                        OpenFoodFactsFillProductView(productName: $name)
+                        OpenFoodFactsFillProductView(productName: $name, queuedBarcode: $queuedBarcode)
                     }
                 })
 #elseif os(macOS)
                 .popover(isPresented: $showOFFResult, content: {
-                    OpenFoodFactsFillProductView(productName: $name)
+                    OpenFoodFactsFillProductView(productName: $name, queuedBarcode: $queuedBarcode)
                         .frame(width: 500, height: 500)
                 })
 #endif
@@ -218,6 +247,13 @@ struct MDProductFormView: View {
                 .onChange(of: name, perform: { value in
                     isNameCorrect = checkNameCorrect()
                 })
+            
+            if !queuedBarcode.isEmpty && isNewProduct {
+                MyTextField(textToEdit: $queuedBarcode, description: "str.md.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "str.md.barcode.barcode.invalid")
+                    .onChange(of: queuedBarcode, perform: { newBarcode in
+                        isBarcodeCorrect = checkBarcodeCorrect()
+                    })
+            }
             
 #if os(macOS)
             DisclosureGroup(content: {
@@ -256,13 +292,14 @@ struct MDProductFormView: View {
                 MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
             })
             .disabled(isNewProduct)
-            if isPopup {
-                Button(LocalizedStringKey("str.save")) {
-                    saveProduct()
-                }
-                .disabled(!isFormValid || isProcessing)
-                .keyboardShortcut(.defaultAction)
-            }
+
+//            if isPopup {
+//                Button(LocalizedStringKey("str.save")) {
+//                    saveProduct()
+//                }
+//                .disabled(!isFormValid || isProcessing)
+//                .keyboardShortcut(.defaultAction)
+//            }
 #else
             Section {
                 NavigationLink(

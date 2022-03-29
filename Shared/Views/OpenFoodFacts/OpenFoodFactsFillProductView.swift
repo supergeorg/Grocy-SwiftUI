@@ -15,6 +15,7 @@ struct OpenFoodFactsFillProductView: View {
     
     @Binding var productName: String
     @State private var selectedProductName: String = ""
+    @Binding var queuedBarcode: String
     
     @State private var scanBarcode: String = ""
     
@@ -64,6 +65,7 @@ struct OpenFoodFactsFillProductView: View {
     
     func confirmData() {
         productName = selectedProductName
+        queuedBarcode = offVM.offData?.code ?? ""
         finishForm()
     }
     
@@ -148,6 +150,9 @@ struct OpenFoodFactsFillProductView: View {
                         isNameCorrect = checkNameCorrect()
                     })
                 }
+            } else if let errorMessage = offVM.errorMessage {
+                Text("Error: \(errorMessage)")
+                    .foregroundColor(.red)
             }
 #if os(macOS)
             if !selectedProductName.isEmpty {
@@ -155,7 +160,7 @@ struct OpenFoodFactsFillProductView: View {
                     Label(LocalizedStringKey("str.confirm"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
-                .disabled(!isNameCorrect)
+                .disabled(!isNameCorrect || selectedProductName.isEmpty)
                 .keyboardShortcut(.defaultAction)
             }
 #endif
@@ -172,7 +177,7 @@ struct OpenFoodFactsFillProductView: View {
                     Label(LocalizedStringKey("str.confirm"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
-                .disabled(!isNameCorrect)
+                .disabled(!isNameCorrect || selectedProductName.isEmpty)
                 .keyboardShortcut(.defaultAction)
             }
         })

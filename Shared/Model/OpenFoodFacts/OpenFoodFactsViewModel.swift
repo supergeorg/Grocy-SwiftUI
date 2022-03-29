@@ -12,6 +12,7 @@ import Combine
 class OpenFoodFactsViewModel: ObservableObject {
     @StateObject var grocyVM: GrocyViewModel = .shared
     @Published var offData: OpenFoodFactsResult?
+    @Published var errorMessage: String? = nil
     
     var cancellables = Set<AnyCancellable>()
     
@@ -28,8 +29,9 @@ class OpenFoodFactsViewModel: ObservableObject {
                 .sink(receiveCompletion: { result in
                     switch result {
                     case .failure(let error):
-                        self.grocyVM.postLog("Handle error: fetch off \(error)", type: .error)
+                        self.errorMessage = "Handle error: fetch off \(error)"
                     case .finished:
+                        self.errorMessage = nil
                         break
                     }
                 }, receiveValue: { (offResult) in
