@@ -41,6 +41,8 @@ struct OpenFoodFactsFillProductView: View {
     }
     
 #if os(iOS)
+    @State private var isScannerFlash = false
+    @State private var isScannerFrontCamera = false
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         switch result {
         case .success(let code):
@@ -70,8 +72,29 @@ struct OpenFoodFactsFillProductView: View {
     var body: some View {
 #if os(iOS)
         if productNames.count == 0 {
-            CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: simulatedData, completion: self.handleScan)
-            //                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: simulatedData, isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                .overlay(
+                    HStack{
+                        Button(action: {
+                            isScannerFlash.toggle()
+                            toggleTorch(on: isScannerFlash)
+                        }, label: {
+                            Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                .font(.title)
+                        })
+                        .disabled(!checkForTorch())
+                        .padding()
+                        if getFrontCameraAvailable() {
+                            Button(action: {
+                                isScannerFrontCamera.toggle()
+                            }, label: {
+                                Image(systemName: MySymbols.changeCamera)
+                                    .font(.title)
+                            })
+                            .padding()
+                        }
+                    }
+                    , alignment: .topTrailing)
         }
 #endif
         List {
