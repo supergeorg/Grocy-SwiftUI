@@ -43,6 +43,7 @@ struct MyTextField: View {
                     Image(systemName: leadingIcon!)
                         .padding(.top, 15)
                         .frame(width: 20, height: 20)
+                        .foregroundColor(isCorrect ? .primary : .red)
                 }
                 TextField(LocalizedStringKey(description), text: self.$textToEdit)
                     .disableAutocorrection(true)
