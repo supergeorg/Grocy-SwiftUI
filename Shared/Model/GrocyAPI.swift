@@ -330,6 +330,7 @@ extension GrocyApi {
         case stockProductWithIDInventory = "/stock/products/{productId}/inventory"
         case stockProductWithIDOpen = "/stock/products/{productId}/open"
         case stockProductMergeWithIDs = "/stock/products/{productIdToKeep}/merge/{productIdToRemove}"
+        case stockLocationsWithIdEntries = "/stock/locations/{locationId}/entries"
         case stockShoppingListAddMissing = "/stock/shoppinglist/add-missing-products"
         case stockShoppingListAddOverdue = "/stock/shoppinglist/add-overdue-products"
         case stockShoppingListAddExpired = "/stock/shoppinglist/add-expired-products"
