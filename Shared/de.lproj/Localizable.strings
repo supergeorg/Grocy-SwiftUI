@@ -423,6 +423,8 @@
 "str.md.product.tareWeight.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Bestandsprüfung für diese Zutat deaktivieren";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dies wird als Standardeinstellung verwendet wenn dieses Produkt als Rezeptzutat hinzugefügt wird";
+"str.md.product.disableOwnStock" = "Eigenen Bestand deaktivieren";
+"str.md.product.disableOwnStock.hint" = "Wenn aktiviert kann dieses Produkt keinen eigenen Bestand haben. Das heißt, es kann nicht beim Einkauf ausgewählt werden (dies ist für übergeordnete Produkte sinnvoll, welche nur als Übersicht/Gesamtansicht für untergeordnete Produkte gedacht sind).";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";

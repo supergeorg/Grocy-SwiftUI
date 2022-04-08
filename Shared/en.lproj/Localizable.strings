@@ -423,6 +423,8 @@
 "str.md.product.tareWeight.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Disable stock fulfillment checking for this ingredient";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "This will be used as the default setting when adding this product as a recipe ingredient";
+"str.md.product.disableOwnStock" = "Disable own stock";
+"str.md.product.disableOwnStock.hint" = "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";

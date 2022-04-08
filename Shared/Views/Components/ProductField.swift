@@ -77,6 +77,9 @@ struct ProductField: View {
         grocyVM.mdProducts.filter {
             searchTerm.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchTerm) || getBarcodes(pID: $0.id).contains(searchTerm))
         }
+        .filter {
+            $0.noOwnStock != 1
+        }
     }
     
 #if os(iOS)
