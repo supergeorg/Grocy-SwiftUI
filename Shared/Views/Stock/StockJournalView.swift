@@ -231,6 +231,9 @@ struct StockJournalRowView: View {
                     .font(.caption)
                 Text(LocalizedStringKey("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")"))
                 Text(LocalizedStringKey("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")"))
+                if let note = journalEntry.note {
+                    Text(LocalizedStringKey("str.stock.entries.note \(note)"))
+                }
             }
             .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
             .font(.caption)

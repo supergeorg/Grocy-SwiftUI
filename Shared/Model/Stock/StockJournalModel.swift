@@ -29,6 +29,7 @@ struct StockJournalEntry: Codable {
     let stockRowID: Int?
     let shoppingLocationID: Int?
     let userID: Int
+    let note: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -52,6 +53,7 @@ struct StockJournalEntry: Codable {
         case stockRowID = "stock_row_id"
         case shoppingLocationID = "shopping_location_id"
         case userID = "user_id"
+        case note
     }
     
     init(from decoder: Decoder) throws {
@@ -78,6 +80,7 @@ struct StockJournalEntry: Codable {
             do { self.stockRowID = try container.decodeIfPresent(Int.self, forKey: .stockRowID) } catch { self.stockRowID = try? Int(container.decodeIfPresent(String.self, forKey: .stockRowID) ?? "") }
             do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
             do { self.userID = try container.decode(Int.self, forKey: .userID) } catch { self.userID = try Int(container.decode(String.self, forKey: .userID))! }
+            self.note = try? container.decodeIfPresent(String.self, forKey: .note)
         } catch {
             throw APIError.decodingError(error: error)
         }
