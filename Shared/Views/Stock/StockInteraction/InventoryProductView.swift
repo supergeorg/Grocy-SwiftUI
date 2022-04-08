@@ -29,6 +29,7 @@ struct InventoryProductView: View {
     @State private var price: Double?
     @State private var shoppingLocationID: Int?
     @State private var locationID: Int?
+    @State private var note: String = ""
     
     @State private var searchProductTerm: String = ""
     
@@ -43,7 +44,7 @@ struct InventoryProductView: View {
     @State private var infoString: String?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -103,6 +104,7 @@ struct InventoryProductView: View {
         price = nil
         shoppingLocationID = nil
         locationID = nil
+        note = ""
         searchProductTerm = ""
     }
     
@@ -110,8 +112,9 @@ struct InventoryProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
+        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
         if let productID = productID {
-            let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price)
+            let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price, note: noteText)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
@@ -119,7 +122,7 @@ struct InventoryProductView: View {
                 case let .success(prod):
                     grocyVM.postLog("Inventory successful. \(prod)", type: .info)
                     toastType = .successInventory
-                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
                     resetForm()
                 case let .failure(error):
                     grocyVM.postLog("Inventory failed: \(error)", type: .error)
@@ -206,6 +209,10 @@ struct InventoryProductView: View {
                     }
                 })
             }
+            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
+                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true))
+            }
+            
 #if os(macOS)
             if isPopup {
                 Button(action: inventoryProduct, label: {Text(LocalizedStringKey("str.stock.inventory.product.inventory"))})
@@ -239,7 +246,7 @@ struct InventoryProductView: View {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
                                 .help(LocalizedStringKey("str.clear"))
                         })
-                            .keyboardShortcut("r", modifiers: [.command])
+                        .keyboardShortcut("r", modifiers: [.command])
                     }
                     Button(action: {
                         inventoryProduct()
@@ -248,8 +255,8 @@ struct InventoryProductView: View {
                         Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("s", modifiers: [.command])
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })

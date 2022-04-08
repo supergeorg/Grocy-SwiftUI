@@ -38,6 +38,9 @@ struct GrocyInfoView: View {
             }
         }
         .navigationTitle("Grocy")
+#if os(macOS)
+        .frame(minWidth: Constants.macOSSettingsWidth, minHeight: Constants.macOSSettingsHeight)
+#endif
     }
 }
 

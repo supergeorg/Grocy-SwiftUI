@@ -21,6 +21,7 @@ struct StockEntry: Codable, Equatable {
     let rowCreatedTimestamp: String
     let locationID: Int?
     let shoppingLocationID: Int?
+    let note: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -35,6 +36,7 @@ struct StockEntry: Codable, Equatable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case locationID = "location_id"
         case shoppingLocationID = "shopping_location_id"
+        case note
     }
     
     init(from decoder: Decoder) throws {
@@ -67,6 +69,7 @@ struct StockEntry: Codable, Equatable {
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do { self.locationID = try container.decodeIfPresent(Int.self, forKey: .locationID) } catch { self.locationID = try? Int(container.decodeIfPresent(String.self, forKey: .locationID) ?? "") }
             do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
+            self.note = try container.decodeIfPresent(String.self, forKey: .note)
         } catch {
             throw APIError.decodingError(error: error)
         }
@@ -83,7 +86,8 @@ struct StockEntry: Codable, Equatable {
          openedDate: Date?,
          rowCreatedTimestamp: String,
          locationID: Int? = nil,
-         shoppingLocationID: Int? = nil) {
+         shoppingLocationID: Int? = nil,
+         note: String?) {
         self.id = id
         self.productID = productID
         self.amount = amount
@@ -96,6 +100,7 @@ struct StockEntry: Codable, Equatable {
         self.rowCreatedTimestamp = rowCreatedTimestamp
         self.locationID = locationID
         self.shoppingLocationID = shoppingLocationID
+        self.note = note
     }
 }
 

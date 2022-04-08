@@ -178,6 +178,7 @@
 "str.stock.buy.product.shoppingLocation" = "Geschäft";
 "str.stock.buy.product.location" = "Standort";
 "str.stock.buy.product.location.default %@" = "%@ (Standard-Standort)";
+"str.stock.buy.product.note" = "Notiz";
 
 "str.stock.consume" = "Verbrauch";
 "str.stock.consume.product" = "Produkt";
@@ -259,6 +260,7 @@
 "str.stock.entries.shoppingLocation %@" = "Geschäft: %@";
 "str.stock.entries.price %@" = "Preis: %@";
 "str.stock.entries.purchasedDate %@" = "Einkaufsdatum: %@";
+"str.stock.entries.note %@" = "Notiz: %@";
 "str.stock.entry.edit" = "Eintrag bearbeiten";
 "str.stock.entry.save" = "Eintrag speichern";
 "str.stock.entry.consume" = "Verbrauche diesen Bestandseintrag";

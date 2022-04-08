@@ -33,6 +33,7 @@ struct PurchaseProductView: View {
     @State private var isTotalPrice: Bool = false
     @State private var shoppingLocationID: Int?
     @State private var locationID: Int?
+    @State private var note: String = ""
     
     @State private var searchProductTerm: String = ""
     
@@ -47,7 +48,7 @@ struct PurchaseProductView: View {
     @State private var infoString: String?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations, .shopping_locations, .product_barcodes]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -102,6 +103,7 @@ struct PurchaseProductView: View {
         self.shoppingLocationID = nil
         self.locationID = nil
         self.productID = firstAppear ? productToPurchaseID : nil
+        self.note = ""
         self.searchProductTerm = ""
     }
     
@@ -109,7 +111,8 @@ struct PurchaseProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: unitPrice, locationID: locationID, shoppingLocationID: shoppingLocationID)
+        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: unitPrice, locationID: locationID, shoppingLocationID: shoppingLocationID, note: noteText)
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
@@ -118,7 +121,7 @@ struct PurchaseProductView: View {
                 case let .success(prod):
                     grocyVM.postLog("Purchase successful. \(prod)", type: .info)
                     toastType = .successPurchase
-                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
                     resetForm()
                 case let .failure(error):
                     grocyVM.postLog("Purchase failed: \(error)", type: .error)
@@ -192,7 +195,7 @@ struct PurchaseProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
                 VStack(alignment: .leading) {
                     MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
-
+                    
                     if (isTotalPrice && productID != nil) {
                         Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) \(currentQuantityUnit?.name ?? "")"))
                             .font(.caption)
@@ -205,7 +208,7 @@ struct PurchaseProductView: View {
                         Text(currentQuantityUnit?.name != nil ? LocalizedStringKey("str.stock.buy.product.price.unitPrice \(currentQuantityUnit!.name)") : LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
                         Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
                     })
-                        .pickerStyle(.segmented)
+                    .pickerStyle(.segmented)
                 }
             }
             
@@ -228,6 +231,10 @@ struct PurchaseProductView: View {
                     }
                 })
             }
+            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
+                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true))
+            }
+            
 #if os(macOS)
             if isPopup {
                 Button(action: purchaseProduct, label: {Text(LocalizedStringKey("str.stock.buy.product.buy"))})
@@ -261,14 +268,14 @@ struct PurchaseProductView: View {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
                                 .help(LocalizedStringKey("str.clear"))
                         })
-                            .keyboardShortcut("r", modifiers: [.command])
+                        .keyboardShortcut("r", modifiers: [.command])
                     }
                     Button(action: purchaseProduct, label: {
                         Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("s", modifiers: [.command])
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })

@@ -16,7 +16,7 @@ struct TransferProductView: View {
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
-
+    
     var stockElement: Binding<StockElement?>? = nil
     var productToTransferID: Int? {
         return stockElement?.wrappedValue?.productID
@@ -158,17 +158,17 @@ struct TransferProductView: View {
                     Text(locationFrom.name).tag(locationFrom.id as Int?)
                 }
             })
-  
+            
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
-//            Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
-//                MyDoubleStepperOptional(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
-//                Picker(selection: $quantityUnitID, label: Label("str.stock.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
-//                    Text("").tag(nil as Int?)
-//                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-//                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-//                    }
-//                }).disabled(true)
-//            }
+            //            Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
+            //                MyDoubleStepperOptional(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
+            //                Picker(selection: $quantityUnitID, label: Label("str.stock.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
+            //                    Text("").tag(nil as Int?)
+            //                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
+            //                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
+            //                    }
+            //                }).disabled(true)
+            //            }
             
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
@@ -190,8 +190,14 @@ struct TransferProductView: View {
                 Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
                     Text("").tag(nil as String?)
                     ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                        Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
-                            .tag(stockProduct.stockID as String?)
+                        Group {
+                            Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                            +
+                            Text("; ")
+                            +
+                            Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                        }
+                        .tag(stockProduct.stockID as String?)
                     }
                 })
             }
@@ -228,7 +234,7 @@ struct TransferProductView: View {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
                                 .help(LocalizedStringKey("str.clear"))
                         })
-                            .keyboardShortcut("r", modifiers: [.command])
+                        .keyboardShortcut("r", modifiers: [.command])
                     }
                     Button(action: {
                         transferProduct()
@@ -237,8 +243,8 @@ struct TransferProductView: View {
                         Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("s", modifiers: [.command])
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })

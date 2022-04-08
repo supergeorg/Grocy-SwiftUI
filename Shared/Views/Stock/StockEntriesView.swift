@@ -44,7 +44,7 @@ struct StockEntryRowView: View {
             switch result {
             case .success(_):
                 //                toastType = .successConsumeEntry
-                grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
@@ -58,7 +58,7 @@ struct StockEntryRowView: View {
             switch result {
             case .success(_):
                 //                toastType = .successOpenEntry
-                grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
@@ -117,6 +117,10 @@ struct StockEntryRowView: View {
                 Text(getRelativeDateAsText(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")
                     .font(.caption)
                     .italic()
+                
+                if let note = stockEntry.note {
+                    Text("str.stock.entries.note \(note)")
+                }
 #if os(macOS)
                 Button(action: openEntry, label: {
                     Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)

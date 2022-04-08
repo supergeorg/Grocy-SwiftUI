@@ -233,8 +233,14 @@ struct ConsumeProductView: View {
                         Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
-                                Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
-                                    .tag(stockProduct.stockID as String?)
+                                Group {
+                                    Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                                    +
+                                    Text("; ")
+                                    +
+                                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                                }
+                                .tag(stockProduct.stockID as String?)
                             }
                         })
                     }
@@ -306,7 +312,7 @@ struct ConsumeProductView: View {
                             Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
                                 .help(LocalizedStringKey("str.clear"))
                         })
-                            .keyboardShortcut("r", modifiers: [.command])
+                        .keyboardShortcut("r", modifiers: [.command])
                     }
                     Button(action: {
                         openProduct()
@@ -323,8 +329,8 @@ struct ConsumeProductView: View {
                             .labelStyle(.titleAndIcon)
 #endif
                     })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("o", modifiers: [.command])
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("o", modifiers: [.command])
                     Button(action: {
                         consumeProduct()
                     }, label: {
@@ -340,8 +346,8 @@ struct ConsumeProductView: View {
                             .labelStyle(.titleAndIcon)
 #endif
                     })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("s", modifiers: [.command])
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
                 }
             })
         })

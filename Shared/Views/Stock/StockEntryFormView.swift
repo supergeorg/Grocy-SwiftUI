@@ -26,6 +26,7 @@ struct StockEntryFormView: View {
     @State private var locationID: Int?
     @State private var purchasedDate: Date?
     @State private var stockEntryOpen: Bool = false
+    @State private var note: String = ""
     
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: { $0.id == stockEntry.productID })
@@ -40,23 +41,24 @@ struct StockEntryFormView: View {
     }
     
     private func finishForm() {
-        #if os(iOS)
+#if os(iOS)
         self.dismiss()
-        #endif
+#endif
     }
     
     private func editEntryForm() {
-        let entryFormPOST = StockEntry(id: stockEntry.id, productID: stockEntry.productID, amount: amount, bestBeforeDate: bestBeforeDate, purchasedDate: purchasedDate, stockID: stockEntry.stockID, price: price, stockEntryOpen: stockEntryOpen, openedDate: stockEntry.openedDate, rowCreatedTimestamp: stockEntry.rowCreatedTimestamp, locationID: locationID, shoppingLocationID: shoppingLocationID)
+        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+        let entryFormPOST = StockEntry(id: stockEntry.id, productID: stockEntry.productID, amount: amount, bestBeforeDate: bestBeforeDate, purchasedDate: purchasedDate, stockID: stockEntry.stockID, price: price, stockEntryOpen: stockEntryOpen, openedDate: stockEntry.openedDate, rowCreatedTimestamp: stockEntry.rowCreatedTimestamp, locationID: locationID, shoppingLocationID: shoppingLocationID, note: noteText)
         isProcessing = true
         grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST, completion: { result in
             switch result {
             case let .success(message):
                 grocyVM.postLog("Stock entry edit successful. \(message)", type: .info)
-//                toastType = .successEdit
+                //                toastType = .successEdit
                 finishForm()
             case let .failure(error):
                 grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
-//                toastType = .failEdit
+                //                toastType = .failEdit
             }
             isProcessing = false
         })
@@ -71,6 +73,7 @@ struct StockEntryFormView: View {
         stockEntryOpen = stockEntry.stockEntryOpen
         locationID = stockEntry.locationID
         shoppingLocationID = stockEntry.shoppingLocationID
+        note = stockEntry.note ?? ""
     }
     
     var body: some View {
@@ -120,6 +123,10 @@ struct StockEntryFormView: View {
                     Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
                 }
             })
+            
+            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
+                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true))
+            }
         }
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
@@ -127,14 +134,15 @@ struct StockEntryFormView: View {
                     Label(LocalizedStringKey("str.stock.entry.save"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
-                    .disabled(!isFormValid || isProcessing)
-                    .keyboardShortcut("s", modifiers: [.command])
+                .disabled(!isFormValid || isProcessing)
+                .keyboardShortcut("s", modifiers: [.command])
             })
         })
         .navigationTitle(LocalizedStringKey("str.stock.entry.edit"))
         .onAppear(perform: {
             if firstAppear {
                 resetForm()
+                grocyVM.requestData(additionalObjects: [.system_info])
                 firstAppear = false
             }
         })

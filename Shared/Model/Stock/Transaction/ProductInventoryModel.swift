@@ -29,6 +29,7 @@ struct ProductInventory: Codable {
     let shoppingLocationID: Int?
     let locationID: Int?
     let price: Double?
+    let note: String?
 
     enum CodingKeys: String, CodingKey {
         case newAmount = "new_amount"
@@ -36,5 +37,6 @@ struct ProductInventory: Codable {
         case shoppingLocationID = "shopping_location_id"
         case locationID = "location_id"
         case price
+        case note
     }
 }
