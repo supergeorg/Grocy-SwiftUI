@@ -178,6 +178,7 @@
 "str.stock.buy.product.shoppingLocation" = "Winkel";
 "str.stock.buy.product.location" = "Locatie";
 "str.stock.buy.product.location.default %@" = "%@ (standaardlocatie)";
+"str.stock.buy.product.note" = "Aantekening";
 
 "str.stock.consume" = "Verbruik";
 "str.stock.consume.product" = "Product";
@@ -259,6 +260,7 @@
 "str.stock.entries.shoppingLocation %@" = "Winkel: %@";
 "str.stock.entries.price %@" = "Prijs: %@";
 "str.stock.entries.purchasedDate %@" = "Aankoopdatum: %@";
+"str.stock.entries.note %@" = "Aantekening: %@";
 "str.stock.entry.edit" = "Bewerk product";
 "str.stock.entry.save" = "Bewaar product";
 "str.stock.entry.consume" = "Verbruik deze voorraad";
@@ -421,6 +423,8 @@
 "str.md.product.tareWeight.invalid" = "De waarde hiervan mag niet lager zijn dan 0.0001 en dient een geldig getal te zijn met max. 4 cijfers achter de komma";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Schakel voorraadcontrole van dit ingrediënt uit";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dit wordt gebruikt als de standaardinstelling bij het toevoegen van dit product als receptingrediënt";
+"str.md.product.disableOwnStock" = "Houd geen eigen voorraden bij";
+"str.md.product.disableOwnStock.hint" = "Schakel in om dit product niet te voorzien van eigen voorraden. Let op: hierdoor is het product niet beschikbaar bij aankoop.";
 
 "str.md.barcodes" = "Streepjescodes";
 "str.md.barcode" = "Streepjescode";
