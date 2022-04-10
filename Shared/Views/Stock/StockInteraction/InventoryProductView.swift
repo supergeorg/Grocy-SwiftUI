@@ -43,8 +43,8 @@ struct InventoryProductView: View {
     }
     @State private var infoString: String?
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
+    private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .quantity_units, .quantity_unit_conversions]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .system_info]
     
     private func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -75,14 +75,17 @@ struct InventoryProductView: View {
             return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
         } else { return [] }
     }
+    private var quConversion: MDQuantityUnitConversion? {
+        return quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})
+    }
     private var factoredAmount: Double {
-        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
+        return amount * (quConversion?.factor ?? 1)
     }
     
     private let priceFormatter = NumberFormatter()
     
     private var isFormValid: Bool {
-        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (locationID != nil)
+        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (locationID != nil) && factoredAmount != selectedProductStock?.amount
     }
     
     private var selectedProductStock: StockElement? {
@@ -92,7 +95,7 @@ struct InventoryProductView: View {
     private var stockAmountDifference: Double {
         if let stockAmount = selectedProductStock?.amount {
             return factoredAmount - stockAmount
-        } else { return 0 }
+        } else { return factoredAmount }
     }
     
     private func resetForm() {
@@ -166,20 +169,21 @@ struct InventoryProductView: View {
                     if let productID = productID {
                         grocyVM.getStockProductEntries(productID: productID)
                     }
-                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                        shoppingLocationID = selectedProduct.shoppingLocationID
-                        locationID = selectedProduct.locationID
-                        quantityUnitID = selectedProduct.quIDStock
-                        if let productStock = selectedProductStock {
-                            amount = productStock.amount
-                        }
-                    }
+                    shoppingLocationID = selectedProductStock?.product.shoppingLocationID
+                    locationID = selectedProductStock?.product.locationID
+                    quantityUnitID = selectedProductStock?.product.quIDStock
+                    amount = selectedProductStock?.amount ?? 1.0
                 }
             
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
             if stockAmountDifference != 0 {
                 Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
+                    .font(.caption)
+            } else {
+                Text(LocalizedStringKey("str.stock.inventory.product.amount.equal"))
+                    .font(.caption)
+                    .foregroundColor(.red)
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {

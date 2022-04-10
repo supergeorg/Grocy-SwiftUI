@@ -222,6 +222,7 @@
 "str.stock.inventory.product.inventory.fail" = "Inventarisierung fehlgeschlagen";
 "str.stock.inventory.product.amount.lower %@" = "Das bedeutet %@ wird aus dem Bestand entfernt";
 "str.stock.inventory.product.amount.higher %@" = "Das bedeutet %@ wird dem Bestand hinzugefügt";
+"str.stock.inventory.product.amount.equal" = "Die ausgewählte Menge ist gleich der Bestandsmenge.";
 "str.stock.inventory.product.dueDate" = "Fälligkeitsdatum";
 "str.stock.inventory.product.dueDate.info" = "Dies gilt für hinzugefügte Produkte";
 "str.stock.inventory.product.dueDate.required" = "Ein Fälligkeitsdatum ist erforderlich";

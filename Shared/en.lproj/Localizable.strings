@@ -222,6 +222,7 @@
 "str.stock.inventory.product.inventory.fail" = "Inventory failed";
 "str.stock.inventory.product.amount.lower %@" = "This means %@ will be removed from stock";
 "str.stock.inventory.product.amount.higher %@" = "This means %@ will be added to stock";
+"str.stock.inventory.product.amount.equal" = "The selected amount is equal to the stock amount.";
 "str.stock.inventory.product.dueDate" = "Due date";
 "str.stock.inventory.product.dueDate.info" = "This will apply to added products";
 "str.stock.inventory.product.dueDate.required" = "A due date is required";
