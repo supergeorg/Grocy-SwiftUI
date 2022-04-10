@@ -169,21 +169,25 @@ struct InventoryProductView: View {
                     if let productID = productID {
                         grocyVM.getStockProductEntries(productID: productID)
                     }
-                    shoppingLocationID = selectedProductStock?.product.shoppingLocationID
-                    locationID = selectedProductStock?.product.locationID
-                    quantityUnitID = selectedProductStock?.product.quIDStock
-                    amount = selectedProductStock?.amount ?? 1.0
+                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        shoppingLocationID = selectedProduct.shoppingLocationID
+                        locationID = selectedProduct.locationID
+                        quantityUnitID = selectedProduct.quIDStock
+                    }
+                    amount = selectedProductStock?.amount ?? 1
                 }
             
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
-            if stockAmountDifference != 0 {
-                Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
-                    .font(.caption)
-            } else {
-                Text(LocalizedStringKey("str.stock.inventory.product.amount.equal"))
-                    .font(.caption)
-                    .foregroundColor(.red)
+            if productID != nil {
+                if stockAmountDifference != 0 {
+                    Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
+                        .font(.caption)
+                } else {
+                    Text(LocalizedStringKey("str.stock.inventory.product.amount.equal"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
