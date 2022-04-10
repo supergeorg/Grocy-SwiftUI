@@ -7,6 +7,25 @@
 
 import SwiftUI
 
+extension UIImage {
+    func resized(withPercentage percentage: CGFloat, isOpaque: Bool = true) -> UIImage? {
+        let canvas = CGSize(width: size.width * percentage, height: size.height * percentage)
+        let format = imageRendererFormat
+        format.opaque = isOpaque
+        return UIGraphicsImageRenderer(size: canvas, format: format).image {
+            _ in draw(in: CGRect(origin: .zero, size: canvas))
+        }
+    }
+    func resized(toWidth width: CGFloat, isOpaque: Bool = true) -> UIImage? {
+        let canvas = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
+        let format = imageRendererFormat
+        format.opaque = isOpaque
+        return UIGraphicsImageRenderer(size: canvas, format: format).image {
+            _ in draw(in: CGRect(origin: .zero, size: canvas))
+        }
+    }
+}
+
 struct ImagePicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIImagePickerController
     typealias SourceType = UIImagePickerController.SourceType
@@ -45,7 +64,8 @@ struct ImagePicker: UIViewControllerRepresentable {
                 let localPath = documentDirectory?.appending(imgName)
                 
                 let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-                let data = image.pngData()! as NSData
+                let resizedImage = image.resized(toWidth: 300.0)!
+                let data = resizedImage.jpegData(compressionQuality: 0.8)! as NSData
                 data.write(toFile: localPath!, atomically: true)
                 let photoURL = URL.init(fileURLWithPath: localPath!)
                 completionHandler(photoURL)
