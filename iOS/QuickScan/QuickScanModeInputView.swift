@@ -106,6 +106,7 @@ struct QuickScanModeInputView: View {
     @Binding var lastPurchaseShoppingLocationID: Int?
     @State private var purchaseLocationID: Int?
     @Binding var lastPurchaseLocationID: Int?
+    @State private var note: String = ""
     
     var isValidForm: Bool {
         switch quickScanMode {
@@ -189,7 +190,8 @@ struct QuickScanModeInputView: View {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let strDueDate = purchaseDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: purchaseDueDate)
-            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID)
+            let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
             infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
@@ -384,6 +386,10 @@ struct QuickScanModeInputView: View {
                                 Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
                             }
                         })
+                        
+                        if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
+                            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                        }
                     }
                 }
             }

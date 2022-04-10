@@ -125,7 +125,7 @@ struct StockEntryFormView: View {
             })
             
             if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
-                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true))
+                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
         .toolbar(content: {
