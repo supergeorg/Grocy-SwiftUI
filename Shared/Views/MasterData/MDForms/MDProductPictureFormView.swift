@@ -12,17 +12,17 @@ struct MDProductPictureFormView: View {
     
     var product: MDProduct?
     
-    @Binding var selectedPictureURL: URL?
-    @Binding var selectedPictureFileName: String?
-    @State private var newPictureURL: URL? = nil
-    @State private var newPictureFileName: String?
-    @State private var showNewPicture: Bool = false
+    @State private var selectedPictureFileName: String?
+    @Binding var pictureFilename: String?
     
     @State private var isProcessing: Bool = false
     
 #if os(iOS)
     @State private var showImagePicker: Bool = false
     @State private var showCamera: Bool = false
+    @State private var picture: UIImage? = nil
+#elseif os(macOS)
+    @State private var picture: NSImage? = nil
 #endif
     
     let groupName = "productpictures"
@@ -33,7 +33,7 @@ struct MDProductPictureFormView: View {
             switch result {
             case let .success(message):
                 grocyVM.postLog("Picture successfully deleted. \(message)", type: .info)
-                changeProductPicture(pictureFileName: nil)
+                changeProductPicture(newPictureFilename: nil)
             case let .failure(error):
                 grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
                 isProcessing = false
@@ -41,15 +41,17 @@ struct MDProductPictureFormView: View {
         })
     }
     
-    private func uploadPicture(pictureFileName: String, selectedImageURL: URL) {
-        if let pictureFileNameData = pictureFileName.data(using: .utf8) {
+    #if os(iOS)
+    private func uploadPicture(imagepicture: UIImage, newPictureFilename: String) {
+        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegpicture = imagepicture.jpegData(compressionQuality: 0.8) {
             let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+            
             isProcessing = true
-            grocyVM.uploadFile(fileURL: selectedImageURL, groupName: "productpictures", fileName: base64Encoded, completion: {result in
+            grocyVM.uploadFileData(fileData: jpegpicture, groupName: "productpictures", fileName: base64Encoded, completion: { result in
                 switch result {
                 case let .success(response):
                     grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
-                    changeProductPicture(pictureFileName: pictureFileName)
+                    changeProductPicture(newPictureFilename: newPictureFilename)
                 case let .failure(error):
                     grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                     isProcessing = false
@@ -57,20 +59,37 @@ struct MDProductPictureFormView: View {
             })
         }
     }
+    #elseif os(macOS)
+    private func uploadPicture(imagepicture: NSImage, newPictureFilename: String) {
+//        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegpicture = imagepicture.jpegData(compressionQuality: 0.8) {
+//            let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+//
+//            isProcessing = true
+//            grocyVM.uploadFileData(fileData: jpegpicture, groupName: "productpictures", fileName: base64Encoded, completion: { result in
+//                switch result {
+//                case let .success(response):
+//                    grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
+//                    changeProductPicture(newPictureFilename: newPictureFilename)
+//                case let .failure(error):
+//                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+//                    isProcessing = false
+//                }
+//            })
+//        }
+    }
+    #endif
     
-    private func changeProductPicture(pictureFileName: String?){
+    private func changeProductPicture(newPictureFilename: String?){
         if let product = product {
             var productPOST = product
-            productPOST.pictureFileName = pictureFileName
+            productPOST.pictureFileName = newPictureFilename
             grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST, completion: { result in
                 switch result {
                 case let .success(message):
                     grocyVM.postLog("Picture successfully changed in product. \(message)", type: .info)
                     grocyVM.requestData(objects: [.products])
-                    newPictureURL = selectedPictureURL
-                    newPictureFileName = selectedPictureFileName
-                    showNewPicture = true
-                    selectedPictureURL = nil
+                    pictureFilename = selectedPictureFileName
+                    picture = nil
                     selectedPictureFileName = nil
                 case let .failure(error):
                     grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
@@ -81,25 +100,11 @@ struct MDProductPictureFormView: View {
     }
     
     var body: some View {
-        VStack{
-            if showNewPicture {
-                if let newPictureURL = newPictureURL, let newPictureFileName = newPictureFileName {
-                    AsyncImage(url: newPictureURL, content: { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(Color.white)
-                    }, placeholder: {
-                        ProgressView()
-                    })
-                        .frame(maxHeight: 100)
-                    Text(newPictureFileName)
-                        .font(.caption)
-                }
-            } else {
-                if let pictureFileName = product?.pictureFileName, !pictureFileName.isEmpty {
-                    if let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = URL(string: grocyVM.getPictureURL(groupName: groupName, fileName: base64Encoded) ?? "") {
-                        AsyncImage(url: pictureURL, content: { image in
+        Form {
+            Section {
+                if let pictureFilename = pictureFilename, !pictureFilename.isEmpty {
+                    if let base64Encoded = pictureFilename.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
+                        AsyncImage(url: url, content: { image in
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -107,113 +112,88 @@ struct MDProductPictureFormView: View {
                         }, placeholder: {
                             ProgressView()
                         })
-                            .frame(maxHeight: 100)
+                        .frame(maxHeight: 100)
                     }
-                    Text(pictureFileName)
+                    Text(pictureFilename)
                         .font(.caption)
+                    if let pictureFilenameData = pictureFilename.data(using: .utf8) {
+                        Button(action: {
+                            deletePicture(savedPictureFileNameData: pictureFilenameData)
+                        }, label: {
+                            Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
+                                .foregroundColor(.red)
+                        })
+                        .disabled(isProcessing)
+                    }
                 }
             }
-            Form{
-                Section{
-                    if showNewPicture {
-                        if let newPictureFileName = newPictureFileName, newPictureURL != nil, let newPictureFileNameData = newPictureFileName.data(using: .utf8) {
-                            Button(action: {
-                                deletePicture(savedPictureFileNameData: newPictureFileNameData)
-                            }, label: {
-                                Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
-                                    .foregroundColor(.red)
-                            })
-                                .disabled(isProcessing)
-                        }
-                    } else {
-                        if let savedPictureFileName = product?.pictureFileName, !savedPictureFileName.isEmpty, let savedPictureFileNameData = savedPictureFileName.data(using: .utf8) {
-                            Button(action: {
-                                deletePicture(savedPictureFileNameData: savedPictureFileNameData)
-                            }, label: {
-                                Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
-                                    .foregroundColor(.red)
-                            })
-                                .disabled(isProcessing)
+            Section {
+#if os(macOS)
+                Button(LocalizedStringKey("str.md.product.picture.add.file")) {
+                    let openPanel = NSOpenPanel()
+                    openPanel.prompt = "Select File"
+                    openPanel.allowsMultipleSelection = false
+                    openPanel.canChooseDirectories = false
+                    openPanel.canCreateDirectories = false
+                    openPanel.canChooseFiles = true
+                    openPanel.allowedContentTypes = [.image]
+                    openPanel.begin { (result) -> Void in
+                        if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
+                            selectedPictureFileName = openPanel.url?.lastPathComponent
                         }
                     }
                 }
-                Section{
-#if os(macOS)
-                    Button(LocalizedStringKey("str.md.product.picture.add.file")) {
-                        let openPanel = NSOpenPanel()
-                        openPanel.prompt = "Select File"
-                        openPanel.allowsMultipleSelection = false
-                        openPanel.canChooseDirectories = false
-                        openPanel.canCreateDirectories = false
-                        openPanel.canChooseFiles = true
-                        openPanel.allowedContentTypes = [.image]
-                        openPanel.begin { (result) -> Void in
-                            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
-                                selectedPictureURL = openPanel.url
-                                selectedPictureFileName = openPanel.url?.lastPathComponent
-                            }
-                        }
-                    }
 #elseif os(iOS)
-                    Button(action: {
-                        showImagePicker.toggle()
-                    }, label: {
-                        Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
-                    })
-                        .sheet(isPresented: $showImagePicker, content: {
-                            ImagePicker(sourceType: .photoLibrary, completionHandler: { imageURL in
-                                if let imageURL = imageURL {
-                                    selectedPictureURL = imageURL
-                                    if let product = product {
-                                        selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
-                                    } else {
-                                        selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
-                                    }
-                                    showImagePicker = false
-                                }
-                            })
-                        })
-                    Button(action: {
-                        showCamera.toggle()
-                    }, label: {
-                        Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
-                    })
-                        .sheet(isPresented: $showCamera, content: {
-                            ImagePicker(sourceType: .camera, completionHandler: { imageURL in
-                                if let imageURL = imageURL {
-                                    selectedPictureURL = imageURL
-                                    if let product = product {
-                                        selectedPictureFileName = "\(UUID())_\(product.name).\(imageURL.pathExtension)"
-                                    } else {
-                                        selectedPictureFileName = "\(UUID())_\(imageURL.lastPathComponent)"
-                                    }
-                                    showCamera = false
-                                }
-                            })
-                        })
-#endif
-                    if let selectedPictureURL = selectedPictureURL, let selectedPictureFileName = selectedPictureFileName {
-                        VStack(alignment: .center){
-                            AsyncImage(url: selectedPictureURL, content: { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .background(Color.white)
-                            }, placeholder: {
-                                ProgressView()
-                            })
-                                .frame(maxWidth: 100)
-                            Text(selectedPictureFileName)
-                                .font(.caption)
-                        }
+                Button(action: {
+                    showImagePicker.toggle()
+                }, label: {
+                    Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
+                })
+                .sheet(isPresented: $showImagePicker, onDismiss: {
+                    if let product = product {
+                        selectedPictureFileName = "\(UUID())_\(product.name).jpg"
+                    } else {
+                        selectedPictureFileName = "\(UUID())_.jpg"
                     }
-                    if let selectedPictureFileName = selectedPictureFileName, let selectedPictureURL = selectedPictureURL{
+                }, content: {
+                    ImageLibraryPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name)
+                })
+                Button(action: {
+                    showCamera.toggle()
+                }, label: {
+                    Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
+                })
+                .sheet(isPresented: $showCamera, onDismiss: {
+                    if let product = product {
+                        selectedPictureFileName = "\(UUID())_\(product.name).jpg"
+                    } else {
+                        selectedPictureFileName = "\(UUID())_.jpg"
+                    }
+                }, content: {
+                    CameraPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name, showCamera: $showCamera)
+                })
+#endif
+                if let picture = picture {
+                    #if os(iOS)
+                    Image(uiImage: picture)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 150)
+                    #elseif os(macOS)
+                    Image(nsImage: picture)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 150)
+                    #endif
+                    if let selectedPictureFileName = selectedPictureFileName {
+                        Text(selectedPictureFileName)
+                            .font(.caption)
                         Button(action: {
-                            uploadPicture(pictureFileName: selectedPictureFileName, selectedImageURL: selectedPictureURL)
+                            uploadPicture(imagepicture: picture, newPictureFilename: selectedPictureFileName)
                         }, label: {
                             Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
                         })
-                            .disabled(isProcessing)
+                        .disabled(isProcessing)
                     }
                 }
             }

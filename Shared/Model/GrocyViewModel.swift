@@ -1072,6 +1072,10 @@ class GrocyViewModel: ObservableObject {
         grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
     }
     
+    func uploadFileData(fileData: Data, groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
+        grocyApi.putFileData(fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
+    }
+    
     func deleteFile(groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
         grocyApi.deleteFile(fileName: fileName, groupName: groupName)
             .sink(receiveCompletion: { result in

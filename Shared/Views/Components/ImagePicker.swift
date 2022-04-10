@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 08.03.21.
 //
 
+import PhotosUI
 import SwiftUI
 
 extension UIImage {
@@ -26,62 +27,102 @@ extension UIImage {
     }
 }
 
-struct ImagePicker: UIViewControllerRepresentable {
-    typealias UIViewControllerType = UIImagePickerController
-    typealias SourceType = UIImagePickerController.SourceType
-    
-    let sourceType: SourceType
-    let completionHandler: (URL?) -> Void
-    
+struct CameraPicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Binding var selectedPictureFileName: String?
+    var productName: String?
+    @Binding var showCamera: Bool
+
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let viewController = UIImagePickerController()
         viewController.delegate = context.coordinator
-        #if targetEnvironment(simulator)
-        viewController.sourceType = (sourceType == .camera) ? SourceType.photoLibrary : sourceType
-        #else
-        viewController.sourceType = sourceType
-        #endif
+#if targetEnvironment(simulator)
+        viewController.sourceType = .photoLibrary
+#else
+        viewController.sourceType = .camera
+#endif
         return viewController
     }
     
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(completionHandler: completionHandler)
+        return Coordinator(self)
     }
     
     final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let completionHandler: (URL?) -> Void
+        let parent: CameraPicker
         
-        init(completionHandler: @escaping (URL?) -> Void) {
-            self.completionHandler = completionHandler
+        init(_ parent: CameraPicker) {
+            self.parent = parent
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL{
-                let imgName = imgUrl.lastPathComponent
-                let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-                let localPath = documentDirectory?.appending(imgName)
-                
-                let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-                let resizedImage = image.resized(toWidth: 300.0)!
-                let data = resizedImage.jpegData(compressionQuality: 0.8)! as NSData
-                data.write(toFile: localPath!, atomically: true)
-                let photoURL = URL.init(fileURLWithPath: localPath!)
-                completionHandler(photoURL)
+            let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+            let resizedImage = image.resized(toWidth: 300.0)
+            if let productName = self.parent.productName {
+                self.parent.selectedPictureFileName = "\(UUID())_\(productName).jpg"
+            } else {
+                self.parent.selectedPictureFileName = "\(UUID())_.jpg"
             }
-        }
-        
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            completionHandler(nil)
+            self.parent.image = resizedImage
+            self.parent.showCamera = false
         }
     }
 }
 
-struct ImagePicker_Previews: PreviewProvider {
-    static var previews: some View {
-        ImagePicker(sourceType: .photoLibrary, completionHandler: {imageURL in
-            print(imageURL?.absoluteURL ?? "error")
-        })
+struct ImageLibraryPicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Binding var selectedPictureFileName: String?
+    var productName: String?
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+        
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let parent: ImageLibraryPicker
+        
+        init(_ parent: ImageLibraryPicker) {
+            self.parent = parent
+        }
+        
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            picker.dismiss(animated: true)
+            
+            guard let provider = results.first?.itemProvider else { return }
+            
+            if provider.canLoadObject(ofClass: UIImage.self) {
+                provider.loadObject(ofClass: UIImage.self) { image, _ in
+                    let resizedImage = (image as? UIImage)?.resized(toWidth: 300)
+                    if let productName = self.parent.productName {
+                        self.parent.selectedPictureFileName = "\(UUID())_\(productName).jpg"
+                    } else {
+                        self.parent.selectedPictureFileName = "\(UUID())_.jpg"
+                    }
+                    self.parent.image = resizedImage
+                }
+            }
+        }
     }
 }
+
+//struct ImagePicker_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ImagePicker(sourceType: .photoLibrary, completionHandler: {imageURL in
+//            print(imageURL?.absoluteURL ?? "error")
+//        })
+//    }
+//}

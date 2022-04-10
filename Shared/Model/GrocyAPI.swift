@@ -100,6 +100,7 @@ protocol GrocyAPI {
     func deleteObjectWithID(object: ObjectEntities, id: Int) -> AnyPublisher<Int, APIError>
     // MARK: - Files
     func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
+    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
     func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError>
 }
 
@@ -135,7 +136,24 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callUpload(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUploadFileData(_ endPoint: Endpoint, fileData: Data, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+        let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
+        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, from: fileData) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let response = response as? HTTPURLResponse,
+                  response.statusCode == 204 else {
+                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
+                return
+            }
+            completion(.success(204))
+        }
+        uploadTask.resume()
+    }
+    
+    private func callUploadFile(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
         let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
             if let error = error {
@@ -535,7 +553,11 @@ extension GrocyApi {
     
     // MARK: - Files
     func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-        return callUpload(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+        return callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+    }
+    
+    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
+        return callUploadFileData(.filesGroupFilename, fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
     }
     
     func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError> {
