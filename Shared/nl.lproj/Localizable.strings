@@ -179,7 +179,7 @@
 "str.stock.buy.product.location" = "Locatie";
 "str.stock.buy.product.location.default %@" = "%@ (standaardlocatie)";
 "str.stock.buy.product.note" = "Aantekening";
-"str.stock.buy.product.selfProduction" = "Eigen gemaakt";
+"str.stock.buy.product.selfProduction" = "Zelf-geproduceerd";
 
 "str.stock.consume" = "Verbruik";
 "str.stock.consume.product" = "Product";
@@ -599,7 +599,7 @@
 "str.settings.info.grocyRLSDate %@" = "Uitgebracht op %@";
 "str.settings.info.grocyPHPVersion %@" = "PHP-versie: %@";
 "str.settings.info.grocySQLiteVersion %@" = "SQLite-versie: %@";
-"str.settings.info.openInBrowser" = "Open in browser (om de database te migreren)";
+"str.settings.info.openInBrowser" = "Open in webbrowser (om de databank te migreren)";
 "str.settings.codeTypes" = "Streepjescode-instellingen";
 "str.settings.about" = "Over deze app";
 "str.settings.about.thanks" = "Ik wil graag Bernd Bestel bedanken voor de ontwikkeling van Grocy. Zonder hem was deze app er niet geweest.";
