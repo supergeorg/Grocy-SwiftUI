@@ -64,7 +64,12 @@ struct StockJournalFilterBar: View {
             let filterColumns = [GridItem](repeating: GridItem(.flexible()), count: 2)
 #endif
 #if os(macOS)
-            SearchField(text: $searchString)
+            HStack {
+                SearchField(text: $searchString)
+                RefreshButton(updateData: {
+                    grocyVM.requestData(objects: [.stock_log])
+                })
+            }
 #endif
             LazyVGrid(columns: filterColumns, alignment: .leading, content: {
 #if os(iOS)
