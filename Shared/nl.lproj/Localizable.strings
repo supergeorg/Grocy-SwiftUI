@@ -598,6 +598,7 @@
 "str.settings.info.grocyRLSDate %@" = "Uitgebracht op %@";
 "str.settings.info.grocyPHPVersion %@" = "PHP-versie: %@";
 "str.settings.info.grocySQLiteVersion %@" = "SQLite-versie: %@";
+"str.settings.info.openInBrowser" = "Open in browser (om de database te migreren)";
 "str.settings.codeTypes" = "Streepjescode-instellingen";
 "str.settings.about" = "Over deze app";
 "str.settings.about.thanks" = "Ik wil graag Bernd Bestel bedanken voor de ontwikkeling van Grocy. Zonder hem was deze app er niet geweest.";

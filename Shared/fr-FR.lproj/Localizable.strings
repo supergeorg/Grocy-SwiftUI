@@ -582,6 +582,7 @@
 "str.settings.info.grocyRLSDate %@" = "Date Release: %@";
 "str.settings.info.grocyPHPVersion %@" = "Version PHP: %@";
 "str.settings.info.grocySQLiteVersion %@" = "Version SQLite: %@";
+"str.settings.info.openInBrowser" = "Ouvrir dans le navigateur (pour migrer la base de données)";
 "str.settings.codeTypes" = "Paramètres des codes barres";
 "str.settings.about" = "A propos de l'application";
 "str.settings.about.thanks" = "Je tiens à remercier Bernd Bestel pour le développement de Grocy. Sans lui, cette application n'existerai pas. ";

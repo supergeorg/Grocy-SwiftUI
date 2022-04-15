@@ -36,6 +36,9 @@ struct GrocyInfoView: View {
             if let client = systemInfo.client {
                 Text(client)
             }
+            Link(destination: URL(string: isDemoModus ? demoServerURL : grocyServerURL)!, label: {
+                Text(LocalizedStringKey("str.settings.info.openInBrowser"))
+            })
         }
         .navigationTitle("Grocy")
 #if os(macOS)
