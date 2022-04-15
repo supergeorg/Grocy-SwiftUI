@@ -41,13 +41,13 @@ struct MDProductPictureFormView: View {
         })
     }
     
-    #if os(iOS)
-    private func uploadPicture(imagepicture: UIImage, newPictureFilename: String) {
-        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegpicture = imagepicture.jpegData(compressionQuality: 0.8) {
+#if os(iOS)
+    private func uploadPicture(imagePicture: UIImage, newPictureFilename: String) {
+        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegData = imagePicture.jpegData(compressionQuality: 0.8) {
             let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
             
             isProcessing = true
-            grocyVM.uploadFileData(fileData: jpegpicture, groupName: "productpictures", fileName: base64Encoded, completion: { result in
+            grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
                 switch result {
                 case let .success(response):
                     grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
@@ -59,25 +59,27 @@ struct MDProductPictureFormView: View {
             })
         }
     }
-    #elseif os(macOS)
+#elseif os(macOS)
     private func uploadPicture(imagepicture: NSImage, newPictureFilename: String) {
-//        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegpicture = imagepicture.jpegData(compressionQuality: 0.8) {
-//            let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-//
-//            isProcessing = true
-//            grocyVM.uploadFileData(fileData: jpegpicture, groupName: "productpictures", fileName: base64Encoded, completion: { result in
-//                switch result {
-//                case let .success(response):
-//                    grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
-//                    changeProductPicture(newPictureFilename: newPictureFilename)
-//                case let .failure(error):
-//                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
-//                    isProcessing = false
-//                }
-//            })
-//        }
+        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let cgImage = imagepicture.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+            let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+            let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+            if let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:]) {
+                isProcessing = true
+                grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
+                    switch result {
+                    case let .success(response):
+                        grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
+                        changeProductPicture(newPictureFilename: newPictureFilename)
+                    case let .failure(error):
+                        grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+                        isProcessing = false
+                    }
+                })
+            }
+        }
     }
-    #endif
+#endif
     
     private func changeProductPicture(newPictureFilename: String?){
         if let product = product {
@@ -139,7 +141,13 @@ struct MDProductPictureFormView: View {
                     openPanel.allowedContentTypes = [.image]
                     openPanel.begin { (result) -> Void in
                         if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
-                            selectedPictureFileName = openPanel.url?.lastPathComponent
+                            do {
+                                let imageData = try Data(contentsOf: openPanel.url!)
+                                picture = NSImage(data: imageData)
+                                selectedPictureFileName = openPanel.url?.lastPathComponent
+                            } catch {
+                                print("Error loading image : \(error)")
+                            }
                         }
                     }
                 }
@@ -174,22 +182,22 @@ struct MDProductPictureFormView: View {
                 })
 #endif
                 if let picture = picture {
-                    #if os(iOS)
+#if os(iOS)
                     Image(uiImage: picture)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 150)
-                    #elseif os(macOS)
+#elseif os(macOS)
                     Image(nsImage: picture)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 150)
-                    #endif
+#endif
                     if let selectedPictureFileName = selectedPictureFileName {
                         Text(selectedPictureFileName)
                             .font(.caption)
                         Button(action: {
-                            uploadPicture(imagepicture: picture, newPictureFilename: selectedPictureFileName)
+                            uploadPicture(imagePicture: picture, newPictureFilename: selectedPictureFileName)
                         }, label: {
                             Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
                         })
