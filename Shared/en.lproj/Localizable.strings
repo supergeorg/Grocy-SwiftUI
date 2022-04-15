@@ -179,6 +179,7 @@
 "str.stock.buy.product.location" = "Location";
 "str.stock.buy.product.location.default %@" = "%@ (Default location)";
 "str.stock.buy.product.note" = "Note";
+"str.stock.buy.product.selfProduction" = "Self-production";
 
 "str.stock.consume" = "Consume";
 "str.stock.consume.product" = "Product";

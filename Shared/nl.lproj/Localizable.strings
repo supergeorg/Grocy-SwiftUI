@@ -179,6 +179,7 @@
 "str.stock.buy.product.location" = "Locatie";
 "str.stock.buy.product.location.default %@" = "%@ (standaardlocatie)";
 "str.stock.buy.product.note" = "Aantekening";
+"str.stock.buy.product.selfProduction" = "Eigen gemaakt";
 
 "str.stock.consume" = "Verbruik";
 "str.stock.consume.product" = "Product";

@@ -178,6 +178,7 @@
 "str.stock.buy.product.shoppingLocation" = "Sklep";
 "str.stock.buy.product.location" = "Miejsce";
 "str.stock.buy.product.location.default %@" = "%@ (Domyślne miejsce)";
+"str.stock.buy.product.selfProduction" = "Wytworzone własnoręcznie";
 
 "str.stock.consume" = "Spożyj";
 "str.stock.consume.product" = "Produkt";

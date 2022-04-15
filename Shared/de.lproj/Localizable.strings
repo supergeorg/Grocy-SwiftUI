@@ -179,6 +179,7 @@
 "str.stock.buy.product.location" = "Standort";
 "str.stock.buy.product.location.default %@" = "%@ (Standard-Standort)";
 "str.stock.buy.product.note" = "Notiz";
+"str.stock.buy.product.selfProduction" = "Eigenproduktion";
 
 "str.stock.consume" = "Verbrauch";
 "str.stock.consume.product" = "Produkt";

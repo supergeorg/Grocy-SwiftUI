@@ -178,6 +178,7 @@
 "str.stock.buy.product.shoppingLocation" = "Magasin";
 "str.stock.buy.product.location" = "Emplacement";
 "str.stock.buy.product.location.default %@" = "%@ (Emplacement par défaut)";
+"str.stock.buy.product.selfProduction" = "Autoproduction";
 
 "str.stock.consume" = "Consommer";
 "str.stock.consume.product" = "Produit";

@@ -12,6 +12,7 @@ struct PurchaseProductView: View {
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
+    @AppStorage("devMode") private var devMode: Bool = false
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
@@ -34,6 +35,7 @@ struct PurchaseProductView: View {
     @State private var shoppingLocationID: Int?
     @State private var locationID: Int?
     @State private var note: String = ""
+    @State private var selfProduction: Bool = false
     
     @State private var searchProductTerm: String = ""
     
@@ -112,7 +114,9 @@ struct PurchaseProductView: View {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
-        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: .purchase, price: unitPrice, locationID: locationID, shoppingLocationID: shoppingLocationID, note: noteText)
+        let purchasePrice = selfProduction ? nil : unitPrice
+        let purchaseShoppingLocationID = selfProduction ? nil : shoppingLocationID
+        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
@@ -192,35 +196,39 @@ struct PurchaseProductView: View {
                 MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
-            Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
-                VStack(alignment: .leading) {
-                    MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
-                    
-                    if (isTotalPrice && productID != nil) {
-                        Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) \(currentQuantityUnit?.name ?? "")"))
-                            .font(.caption)
-                            .foregroundColor(Color.grocyGray)
+            if !selfProduction {
+                Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
+                    VStack(alignment: .leading) {
+                        MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", errorMessage: "str.stock.buy.product.price.invalid", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                        
+                        if (isTotalPrice && productID != nil) {
+                            Text(LocalizedStringKey("str.stock.buy.product.price.relation \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) \(currentQuantityUnit?.name ?? "")"))
+                                .font(.caption)
+                                .foregroundColor(Color.grocyGray)
+                        }
                     }
-                }
-                
-                if price != nil {
-                    Picker("", selection: $isTotalPrice, content: {
-                        Text(currentQuantityUnit?.name != nil ? LocalizedStringKey("str.stock.buy.product.price.unitPrice \(currentQuantityUnit!.name)") : LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
-                        Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
-                    })
-                    .pickerStyle(.segmented)
+                    
+                    if price != nil {
+                        Picker("", selection: $isTotalPrice, content: {
+                            Text(currentQuantityUnit?.name != nil ? LocalizedStringKey("str.stock.buy.product.price.unitPrice \(currentQuantityUnit!.name)") : LocalizedStringKey("str.stock.buy.product.price.unitPrice")).tag(false)
+                            Text(LocalizedStringKey("str.stock.buy.product.price.totalPrice")).tag(true)
+                        })
+                        .pickerStyle(.segmented)
+                    }
                 }
             }
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
-                Picker(selection: $shoppingLocationID,
-                       label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
-                       content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                        Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
-                    }
-                })
+                if !selfProduction {
+                    Picker(selection: $shoppingLocationID,
+                           label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
+                           content: {
+                        Text("").tag(nil as Int?)
+                        ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
+                            Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
+                        }
+                    })
+                }
                 
                 Picker(selection: $locationID,
                        label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundColor(.primary),
@@ -233,6 +241,10 @@ struct PurchaseProductView: View {
             }
             if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
                 MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            }
+            
+            if devMode {
+                MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
             }
             
 #if os(macOS)

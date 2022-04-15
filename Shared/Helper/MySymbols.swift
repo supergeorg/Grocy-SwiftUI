@@ -38,6 +38,7 @@ struct MySymbols {
     static let thawing = "thermometer.sun"
     static let accumulate = "arrow.triangle.merge"
     static let tareWeight = "scalemass.fill"
+    static let selfProduction = "house"
 
     static let logFile = "doc.plaintext"
     static let info = "info.circle"
