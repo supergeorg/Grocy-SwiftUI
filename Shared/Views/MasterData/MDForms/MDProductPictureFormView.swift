@@ -60,8 +60,8 @@ struct MDProductPictureFormView: View {
         }
     }
 #elseif os(macOS)
-    private func uploadPicture(imagepicture: NSImage, newPictureFilename: String) {
-        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let cgImage = imagepicture.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+    private func uploadPicture(imagePicture: NSImage, newPictureFilename: String) {
+        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let cgImage = imagePicture.cgImage(forProposedRect: nil, context: nil, hints: nil) {
             let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
             let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
             if let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:]) {
