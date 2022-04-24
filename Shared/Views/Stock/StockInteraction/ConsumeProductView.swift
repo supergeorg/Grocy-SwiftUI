@@ -123,7 +123,7 @@ struct ConsumeProductView: View {
     
     private func resetForm() {
         productID = firstAppear ? productToConsumeID : nil
-        amount = 1.0
+        amount = grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
         quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationID = nil
         spoiled = false

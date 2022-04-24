@@ -21,8 +21,8 @@ struct GrocyUserSettings: Codable {
     let stockDecimalPlacesPrices: Int?
     let stockAutoDecimalSeparatorPrices: Bool?
     let stockDueSoonDays: Int?
-    let stockDefaultPurchaseAmount: Int?
-    let stockDefaultConsumeAmount: Int?
+    let stockDefaultPurchaseAmount: Double?
+    let stockDefaultConsumeAmount: Double?
     let stockDefaultConsumeAmountUseQuickConsumeAmount: Bool?
     //    let scanModeConsumeEnabled: Bool
     //let scanModePurchaseEnabled: Bool
@@ -133,9 +133,9 @@ struct GrocyUserSettings: Codable {
                 }
             }
             
-            do { self.stockDefaultPurchaseAmount = try container.decodeIfPresent(Int.self, forKey: .stockDefaultPurchaseAmount) } catch { self.stockDefaultPurchaseAmount = try Int(container.decodeIfPresent(String.self, forKey: .stockDefaultPurchaseAmount) ?? "") }
+            do { self.stockDefaultPurchaseAmount = try container.decodeIfPresent(Double.self, forKey: .stockDefaultPurchaseAmount) } catch { self.stockDefaultPurchaseAmount = try Double(container.decodeIfPresent(String.self, forKey: .stockDefaultPurchaseAmount) ?? "") }
             
-            do { self.stockDefaultConsumeAmount = try container.decodeIfPresent(Int.self, forKey: .stockDefaultConsumeAmount) } catch { self.stockDefaultConsumeAmount = try Int(container.decodeIfPresent(String.self, forKey: .stockDefaultConsumeAmount) ?? "") }
+            do { self.stockDefaultConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .stockDefaultConsumeAmount) } catch { self.stockDefaultConsumeAmount = try Double(container.decodeIfPresent(String.self, forKey: .stockDefaultConsumeAmount) ?? "") }
             
             do {
                 self.stockDefaultConsumeAmountUseQuickConsumeAmount = try container.decode(Bool.self, forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount)
@@ -204,6 +204,24 @@ struct GrocyUserSettingsInt: Codable {
     }
     
     init(value: Int?) {
+        self.value = value
+    }
+}
+
+struct GrocyUserSettingsDouble: Codable {
+    let value: Double?
+    
+    init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            do { self.value = try container.decodeIfPresent(Double.self, forKey: .value) } catch { self.value = try Double(container.decodeIfPresent(String.self, forKey: .value) ?? "") }
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    init(value: Double?) {
         self.value = value
     }
 }

@@ -95,8 +95,7 @@ struct PurchaseProductView: View {
     }
     
     private func resetForm() {
-        
-        self.amount = firstAppear ? productToPurchaseAmount ?? Double(grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1) : Double(grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1)
+        self.amount = firstAppear ? (productToPurchaseAmount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1)
         self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
         self.dueDate = Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false

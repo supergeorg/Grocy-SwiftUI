@@ -127,7 +127,7 @@ struct QuickScanModeInputView: View {
         if grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount == true {
             return product?.quickConsumeAmount ?? 1.0
         } else {
-            return Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
+            return grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1
         }
     }
     
@@ -232,6 +232,7 @@ struct QuickScanModeInputView: View {
         case .markAsOpened:
             markAsOpenItemID = (grocyVM.stockProductEntries[product?.id ?? 0])?.first(where: { $0.stockID == grocyCode?.stockID }) != nil ? grocyCode?.stockID : nil
         case .purchase:
+            purchaseAmount = grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0
             if product?.defaultBestBeforeDays == -1 {
                 purchaseDoesntSpoil = true
                 purchaseDueDate = Calendar.current.startOfDay(for: lastPurchaseDueDate)
