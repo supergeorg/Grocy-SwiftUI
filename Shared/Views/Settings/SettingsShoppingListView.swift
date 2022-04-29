@@ -10,11 +10,9 @@ import SwiftUI
 struct SettingsShoppingListView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
-    @State private var useQuickConsume: Bool = false
+    @State private var useAutoAddBelowMinStockAmount: Bool = false
     
     @State private var isFirst: Bool = true
-    
-    @AppStorage("devMode") private var devMode: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_lists]
     
@@ -32,8 +30,9 @@ struct SettingsShoppingListView: View {
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.settings.shoppingList.shoppingList")).font(.title)) {
-                ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmount.rawValue, description: "str.settings.shoppingList.autoAddToShL")
+                ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmount.rawValue, description: "str.settings.shoppingList.autoAddToShL", toggleFeedback: $useAutoAddBelowMinStockAmount)
                 ServerSettingsObjectPicker(settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmountListID.rawValue, description: "str.shL", objects: .shoppingLists)
+                    .disabled(!useAutoAddBelowMinStockAmount)
             }
             Section(header: Text(LocalizedStringKey("str.settings.shoppingList.shLToStockWF")).font(.title)) {
                 ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.shoppingListToStockWorkflowAutoSubmitWhenPrefilled.rawValue, description: "str.settings.shoppingList.autoAddToStock")
