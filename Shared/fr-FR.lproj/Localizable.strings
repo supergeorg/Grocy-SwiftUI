@@ -623,6 +623,11 @@
 "str.settings.stock.common.priceDecimalPlaces" = "Nombre de décimales pour les prix";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Ajout automatique du séparateur de décimales pour les prix";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Lorsque activé, vous devez toujours entrer les valeurs en incluant les décimales, le séparateur de décimal sera automatiquement ajouté après le nombre requis de décimales";
+"str.settings.shoppingList" = "Paramètres de la liste de courses";
+"str.settings.shoppingList.shoppingList" = "Liste de courses";
+"str.settings.shoppingList.autoAddToShL" = "Ajouter automatiquement à la liste des courses les produits dont le stock est inférieur à la quantité minimale définie.";
+"str.settings.shoppingList.shLToStockWF" = "Transition de la liste de courses vers le stock";
+"str.settings.shoppingList.autoAddToStock" = "Réaliser automatiquement les achats en utilisant le dernier prix connu et la quantité indiquée dans la liste, si le premier a une date de péremption par défaut renseignée";
 
 // MARK: - Admin
 "str.admin.user" = "Gestion des utilisateurs";

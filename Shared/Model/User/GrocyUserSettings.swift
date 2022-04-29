@@ -29,7 +29,11 @@ struct GrocyUserSettings: Codable {
     let showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
     let showPurchasedDateOnPurchase: Bool?
     let showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Bool?
-    //    let shoppingListToStockWorkflowAutoSubmitWhenPrefilled, shoppingListShowCalendar, recipeIngredientsGroupByProductGroup: Bool
+    let shoppingListShowCalendar: Bool
+    let shoppingListAutoAddBelowMinStockAmount: Bool
+    let shoppingListAutoAddBelowMinStockAmountListID: Int?
+    let shoppingListToStockWorkflowAutoSubmitWhenPrefilled: Bool
+    //    let recipeIngredientsGroupByProductGroup: Bool
     //    let choresDueSoonDays: Int
     //    let batteriesDueSoonDays: Int
     //    let tasksDueSoonDays: Int
@@ -71,8 +75,10 @@ struct GrocyUserSettings: Codable {
         case showIconOnStockOverviewPageWhenProductIsOnShoppingList = "show_icon_on_stock_overview_page_when_product_is_on_shopping_list"
         case showPurchasedDateOnPurchase = "show_purchased_date_on_purchase"
         case showWarningOnPurchaseWhenDueDateIsEarlierThanNext = "show_warning_on_purchase_when_due_date_is_earlier_than_next"
-        //        case shoppingListToStockWorkflowAutoSubmitWhenPrefilled = "shopping_list_to_stock_workflow_auto_submit_when_prefilled"
-        //        case shoppingListShowCalendar = "shopping_list_show_calendar"
+        case shoppingListShowCalendar = "shopping_list_show_calendar"
+        case shoppingListAutoAddBelowMinStockAmount = "shopping_list_auto_add_below_min_stock_amount"
+        case shoppingListAutoAddBelowMinStockAmountListID = "shopping_list_auto_add_below_min_stock_amount_list_id"
+        case shoppingListToStockWorkflowAutoSubmitWhenPrefilled = "shopping_list_to_stock_workflow_auto_submit_when_prefilled"
         //        case recipeIngredientsGroupByProductGroup = "recipe_ingredients_group_by_product_group"
         //        case choresDueSoonDays = "chores_due_soon_days"
         //        case batteriesDueSoonDays = "batteries_due_soon_days"
@@ -174,6 +180,38 @@ struct GrocyUserSettings: Codable {
                     self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decodeIfPresent(Int.self, forKey: .showPurchasedDateOnPurchase) == 1
                 } catch {
                     self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext))
+                }
+            }
+            
+            do {
+                self.shoppingListShowCalendar = try container.decode(Bool.self, forKey: .shoppingListShowCalendar)
+            } catch {
+                do {
+                    self.shoppingListShowCalendar = try container.decodeIfPresent(Int.self, forKey: .shoppingListShowCalendar) == 1
+                } catch {
+                    self.shoppingListShowCalendar = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .shoppingListShowCalendar))
+                }
+            }
+            
+            do {
+                self.shoppingListAutoAddBelowMinStockAmount = try container.decode(Bool.self, forKey: .shoppingListAutoAddBelowMinStockAmount)
+            } catch {
+                do {
+                    self.shoppingListAutoAddBelowMinStockAmount = try container.decodeIfPresent(Int.self, forKey: .shoppingListAutoAddBelowMinStockAmount) == 1
+                } catch {
+                    self.shoppingListAutoAddBelowMinStockAmount = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .shoppingListAutoAddBelowMinStockAmount))
+                }
+            }
+            
+            do { self.shoppingListAutoAddBelowMinStockAmountListID = try container.decodeIfPresent(Int.self, forKey: .shoppingListAutoAddBelowMinStockAmountListID) } catch { self.shoppingListAutoAddBelowMinStockAmountListID = try Int(container.decodeIfPresent(String.self, forKey: .shoppingListAutoAddBelowMinStockAmountListID) ?? "") }
+            
+            do {
+                self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decode(Bool.self, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
+            } catch {
+                do {
+                    self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decodeIfPresent(Int.self, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled) == 1
+                } catch {
+                    self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled))
                 }
             }
         } catch {

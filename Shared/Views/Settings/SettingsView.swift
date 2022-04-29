@@ -69,6 +69,10 @@ struct SettingsView: View {
                     Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.barcodeScan)
                         .foregroundColor(.primary)
                 })
+                NavigationLink(destination: SettingsShoppingListView(), label: {
+                    Label(LocalizedStringKey("str.settings.shoppingList"), systemImage: MySymbols.shoppingList)
+                        .foregroundColor(.primary)
+                })
             }
             Section(header: Text("App")){
                 Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {

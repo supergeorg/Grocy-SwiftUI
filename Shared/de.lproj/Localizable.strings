@@ -640,6 +640,11 @@
 "str.settings.stock.common.priceDecimalPlaces" = "Erlaubte Nachkommastellen für Preise";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Dezimaltrennzeichen für Preis-Eingabefelder automatisch hinzufügen";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Wenn aktiviert, müssen Preiseingaben immer inkl. Nachkommastellen erfolgen, das Dezimaltrennzeichen wird automatisch entsprechend der Anzahl der erlaubten Nachkommastellen hinzugefügt";
+"str.settings.shoppingList" = "Einkaufszetteleinstellungen";
+"str.settings.shoppingList.shoppingList" = "Einkaufszettel";
+"str.settings.shoppingList.autoAddToShL" = "Produkte unter Mindestbestand automatisch zum Einkaufszettel hinzufügen";
+"str.settings.shoppingList.shLToStockWF" = "Einkaufszettel -> Bestand Workflow";
+"str.settings.shoppingList.autoAddToStock" = "Buchung automatisch ausführen, wenn das Produkt Standardfälligkeitstage hinterlegt hat (als Preis wird der letzte Preis verwendet)";
 
 // MARK: - Admin
 "str.admin.user" = "Benutzerverwaltung";
