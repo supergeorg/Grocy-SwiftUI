@@ -61,6 +61,7 @@ struct ShoppingListEntriesView: View {
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     @State private var showPurchase: Bool = false
+    @State private var showAutoPurchase: Bool = false
     
     var isBelowStock: Bool {
         if let product = grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID}) {
@@ -122,7 +123,12 @@ struct ShoppingListEntriesView: View {
         })
         .swipeActions(edge: .leading, allowsFullSwipe: shoppingListItem.done != 1, content: {
             Group {
-                Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
+                Button(action: {
+                    changeDoneStatus(shoppingListItem: shoppingListItem)
+                    if shoppingListItem.done != 1, grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true {
+                        showAutoPurchase.toggle()
+                    }
+                },
                        label: { Image(systemName: MySymbols.done) }
                 )
                 .tint(.green)
@@ -135,6 +141,11 @@ struct ShoppingListEntriesView: View {
         .sheet(isPresented: $showPurchase, content: {
             NavigationView{
                 PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+            }
+        })
+        .sheet(isPresented: $showAutoPurchase, content: {
+            NavigationView{
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
             }
         })
         .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {

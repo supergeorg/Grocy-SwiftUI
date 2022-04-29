@@ -24,6 +24,7 @@ struct PurchaseProductView: View {
     }
     var productToPurchaseAmount: Double?
     var isPopup: Bool = false
+    var autoPurchase: Bool = false
     
     @State private var productID: Int?
     @State private var amount: Double = 0.0
@@ -95,17 +96,22 @@ struct PurchaseProductView: View {
     }
     
     private func resetForm() {
+        self.productID = firstAppear ? productToPurchaseID : nil
         self.amount = firstAppear ? (productToPurchaseAmount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1)
         self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
-        self.dueDate = Calendar.current.startOfDay(for: Date())
+        let dateComponents = DateComponents(day: product?.defaultBestBeforeDays ?? 0)
+        self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
         self.price = nil
         self.isTotalPrice = false
         self.shoppingLocationID = nil
         self.locationID = nil
-        self.productID = firstAppear ? productToPurchaseID : nil
         self.note = ""
         self.searchProductTerm = ""
+        if autoPurchase, firstAppear, product?.defaultBestBeforeDays != nil, let productID = productID, isFormValid {
+            self.price = grocyVM.stockProductDetails[productID]?.lastPrice
+            purchaseProduct()
+        }
     }
     
     private func purchaseProduct() {
@@ -126,6 +132,9 @@ struct PurchaseProductView: View {
                     toastType = .successPurchase
                     grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
                     resetForm()
+                    if autoPurchase {
+                        self.dismiss()
+                    }
                 case let .failure(error):
                     grocyVM.postLog("Purchase failed: \(error)", type: .error)
                     toastType = .failPurchase
