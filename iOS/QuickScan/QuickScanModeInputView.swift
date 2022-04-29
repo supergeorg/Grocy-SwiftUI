@@ -154,6 +154,17 @@ struct QuickScanModeInputView: View {
                 switch result {
                 case let .success(prod):
                     grocyVM.postLog("Consume successful. \(prod)", type: .info)
+                    if let autoAddBelowMinStock = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+                        grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing, completion: { result in
+                            switch result {
+                            case let .success(message):
+                                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
+                                grocyVM.requestData(objects: [.shopping_list])
+                            case let .failure(error):
+                                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+                            }
+                        })
+                    }
                     toastTypeSuccess = .successQSConsume
                     finalizeQuickInput()
                 case let .failure(error):
