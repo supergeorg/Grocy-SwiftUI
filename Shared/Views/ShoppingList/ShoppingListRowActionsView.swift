@@ -14,6 +14,7 @@ struct ShoppingListRowActionsView: View {
     
     @State private var showEdit: Bool = false
     @State private var showPurchase: Bool = false
+    @State private var showAutoPurchase: Bool = false
     @State private var showEntryDeleteAlert: Bool = false
     
     @Binding var toastType: ShoppingListToastType?
@@ -64,6 +65,9 @@ struct ShoppingListRowActionsView: View {
             RowInteractionButton(image: "checkmark", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.shL.entry.done"))
                 .onTapGesture {
                     changeDoneStatus()
+                    if shoppingListItem.done != 1, grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true {
+                        showAutoPurchase.toggle()
+                    }
                 }
             RowInteractionButton(image: "square.and.pencil", backgroundColor: Color.grocyTurquoise, helpString: LocalizedStringKey("str.shL.entry.edit"))
                 .onTapGesture {
@@ -102,10 +106,19 @@ struct ShoppingListRowActionsView: View {
                     PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                         .padding()
                 })
+                .popover(isPresented: $showAutoPurchase, content: {
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                        .padding()
+                })
 #elseif os(iOS)
                 .sheet(isPresented: $showPurchase, content: {
                     NavigationView{
                         PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                    }
+                })
+                .sheet(isPresented: $showAutoPurchase, content: {
+                    NavigationView{
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
                     }
                 })
 #endif
