@@ -60,6 +60,7 @@ struct ShoppingListEntriesView: View {
     @Binding var toastType: ShoppingListToastType?
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
+    @State private var showPurchase: Bool = false
     
     var isBelowStock: Bool {
         if let product = grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID}) {
@@ -119,11 +120,22 @@ struct ShoppingListEntriesView: View {
                    label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
             )
         })
-        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-            Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
-                   label: { Image(systemName: MySymbols.done) }
-            )
+        .swipeActions(edge: .leading, allowsFullSwipe: shoppingListItem.done != 1, content: {
+            Group {
+                Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
+                       label: { Image(systemName: MySymbols.done) }
+                )
                 .tint(.green)
+                Button(action: {
+                    showPurchase.toggle()
+                }, label: { Image(systemName: "shippingbox") })
+                .tint(.blue)
+            }
+        })
+        .sheet(isPresented: $showPurchase, content: {
+            NavigationView{
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+            }
         })
         .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
@@ -146,7 +158,7 @@ struct ShoppingListEntriesView: View {
                 Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
                        label: { Image(systemName: MySymbols.done) }
                 )
-                    .tint(.green)
+                .tint(.green)
             })
             .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
