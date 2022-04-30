@@ -640,11 +640,12 @@
 "str.settings.stock.common.priceDecimalPlaces" = "Decimalen zijn toegestaan in de prijs";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Voeg automatisch scheidingsteken toe aan prijzen";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Schakel in om automatisch een scheidingsteken toe te voegen, inclusief een aantal cijfers achter de komma.";
-"str.settings.shoppingList" = "Instellingen voor het boodschappenlijstje";
+"str.settings.shoppingList" = "Boodschappenlijstinstellingen";
 "str.settings.shoppingList.shoppingList" = "Boodschappenlijst";
-"str.settings.shoppingList.autoAddToShL" = "Automatisch producten aan de boodschappenlijst toevoegen die onder hun gedefinieerde minimumvoorraad zitten";
-"str.settings.shoppingList.shLToStockWF" = "Boodschappenlijst voor voorraad workflow";
-"str.settings.shoppingList.autoAddToStock" = "Voer de boeking automatisch uit met behulp van de vorige prijs en het hoeveelheid van het artikel op de boodschappenlijst, als voor het product 'standaard vervaldagen' is ingesteld";
+"str.settings.shoppingList.autoAddToShL" = "Voeg automatisch producten toe aan de boodschappenlijst waarvan de voorraad onder het minimumniveau ligt";
+"str.settings.shoppingList.shLToStockWF" = "Boodschappenlijst → Voorraad";
+"str.settings.shoppingList.autoAddToStock" = "Bereken de prijs automatisch op basis van de recentste en het aantal als er standaard houdbaarheidsdata zijn ingesteld";
+
 
 // MARK: - Admin
 "str.admin.user" = "Beheer gebruikers";
