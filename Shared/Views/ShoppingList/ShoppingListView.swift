@@ -34,7 +34,14 @@ struct ShoppingListView: View {
     @State private var activeSheet: InteractionSheet?
 #endif
     
-    private let dataToUpdate: [ObjectEntities] = [.products, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
+    private let dataToUpdate: [ObjectEntities] = [
+        .products,
+        .product_groups,
+        .quantity_units,
+        .quantity_unit_conversions,
+        .shopping_lists,
+        .shopping_list,
+    ]
     func updateData() {
         grocyVM.requestData(objects: dataToUpdate)
     }
@@ -184,14 +191,14 @@ struct ShoppingListView: View {
                     }, label: {
                         Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
                     })
-                        .help(LocalizedStringKey("str.shL.action.addItem"))
+                    .help(LocalizedStringKey("str.shL.action.addItem"))
 #if os(macOS)
-                        .popover(isPresented: $showAddItem, content: {
-                            ScrollView{
-                                ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                                    .frame(width: 500, height: 400)
-                            }
-                        })
+                    .popover(isPresented: $showAddItem, content: {
+                        ScrollView{
+                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                                .frame(width: 500, height: 400)
+                        }
+                    })
 #endif
                 }
             })
@@ -228,13 +235,13 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.shoppingList)
             })
-                .help(LocalizedStringKey("str.shL.new"))
+            .help(LocalizedStringKey("str.shL.new"))
 #if os(macOS)
-                .popover(isPresented: $showNewShoppingList, content: {
-                    ShoppingListFormView(isNewShoppingListDescription: true)
-                        .padding()
-                        .frame(width: 250, height: 150)
-                })
+            .popover(isPresented: $showNewShoppingList, content: {
+                ShoppingListFormView(isNewShoppingListDescription: true)
+                    .padding()
+                    .frame(width: 250, height: 150)
+            })
 #endif
             Button(action: {
 #if os(iOS)
@@ -245,13 +252,13 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
             })
-                .help(LocalizedStringKey("str.shL.edit"))
+            .help(LocalizedStringKey("str.shL.edit"))
             Button(role: .destructive, action: {
                 showSHLDeleteAlert.toggle()
             }, label: {
                 Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
             })
-                .help(LocalizedStringKey("str.shL.delete"))
+            .help(LocalizedStringKey("str.shL.delete"))
             Divider()
             shoppingListItemActionContent
             Divider()
@@ -260,7 +267,7 @@ struct ShoppingListView: View {
                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                 }
             })
-                .help(LocalizedStringKey("str.shL"))
+            .help(LocalizedStringKey("str.shL"))
         }
     }
     
@@ -271,7 +278,7 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.clearList"), systemImage: MySymbols.clear)
             })
-                .help(LocalizedStringKey("str.shL.action.clearList"))
+            .help(LocalizedStringKey("str.shL.action.clearList"))
             //            Button(action: {
             //                print("Not implemented")
             //            }, label: {
@@ -284,14 +291,14 @@ struct ShoppingListView: View {
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addBelowMinStock"), systemImage: MySymbols.addToShoppingList)
             })
-                .help(LocalizedStringKey("str.shL.action.addBelowMinStock"))
+            .help(LocalizedStringKey("str.shL.action.addBelowMinStock"))
             Button(action: {
                 slAction(.addExpired)
                 slAction(.addOverdue)
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addOverdue"), systemImage: MySymbols.addToShoppingList)
             })
-                .help(LocalizedStringKey("str.shL.action.addOverdue"))
+            .help(LocalizedStringKey("str.shL.action.addOverdue"))
         }
     }
     
@@ -307,7 +314,7 @@ struct ShoppingListView: View {
                         Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
                         Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
                     })
-                        .labelsHidden()
+                    .labelsHidden()
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)

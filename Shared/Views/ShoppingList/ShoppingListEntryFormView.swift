@@ -25,11 +25,15 @@ struct ShoppingListEntryFormView: View {
     var isNewShoppingListEntry: Bool
     var shoppingListEntry: ShoppingListItem?
     var selectedShoppingListID: Int?
-    var product: MDProduct?
+    var productIDToSelect: Int?
     var isPopup: Bool = false
     
     var isFormValid: Bool {
         return amount > 0
+    }
+    
+    var product: MDProduct? {
+        grocyVM.mdProducts.first(where: {$0.id == productID})
     }
     
     private func getQuantityUnit() -> MDQuantityUnit? {
@@ -55,8 +59,9 @@ struct ShoppingListEntryFormView: View {
     }
     
     func saveShoppingListEntry() {
+        let factoredAmount = amount * (product?.quFactorPurchaseToStock ?? 1.0)
         if isNewShoppingListEntry{
-            grocyVM.addShoppingListItem(content: ShoppingListItemAdd(amount: amount, note: note, productID: productID, quID: quantityUnitID, shoppingListID: shoppingListID), completion: { result in
+            grocyVM.addShoppingListItem(content: ShoppingListItemAdd(amount: factoredAmount, note: note, productID: productID, quID: quantityUnitID, shoppingListID: shoppingListID), completion: { result in
                 switch result {
                 case let .success(message):
                     grocyVM.postLog("Shopping list entry saved successfully. \(message)", type: .info)
@@ -69,7 +74,7 @@ struct ShoppingListEntryFormView: View {
             })
         } else {
             if let entry = shoppingListEntry {
-                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: amount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
+                grocyVM.putMDObjectWithID(object: .shopping_list, id: entry.id, content: ShoppingListItem(id: entry.id, productID: productID, note: note, amount: factoredAmount, shoppingListID: entry.shoppingListID, done: entry.done, quID: entry.quID, rowCreatedTimestamp: entry.rowCreatedTimestamp), completion: { result in
                     switch result {
                     case let .success(message):
                         grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
@@ -87,7 +92,7 @@ struct ShoppingListEntryFormView: View {
     private func resetForm() {
         self.shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? 1
         self.productID = shoppingListEntry?.productID ?? product?.id
-        self.amount = shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)
+        self.amount = (shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)) / (product?.quFactorPurchaseToStock ?? 1.0)
         self.quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase
         self.note = shoppingListEntry?.note ?? ""
     }
@@ -132,19 +137,11 @@ struct ShoppingListEntryFormView: View {
                     }
                 }
             
-            Section(header: Text(LocalizedStringKey("str.shL.entryForm.amount")).font(.headline)) {
-                MyDoubleStepper(amount: $amount, description: "str.shL.entryForm.amount", minAmount: 1, amountName: (amount == 1 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? ""), errorMessage: "str.shL.entryForm.amount.required", systemImage: MySymbols.amount)
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.shL.entryForm.quantityUnit"), systemImage: "scalemass"), content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-                    }
-                }).disabled(true)
-            }
+            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
             Section(header: Label(LocalizedStringKey("str.shL.entryForm.note"), systemImage: "square.and.pencil")
-                        .labelStyle(.titleAndIcon)
-                        .font(.headline))
+                .labelStyle(.titleAndIcon)
+                .font(.headline))
             {
                 TextEditor(text: $note)
                     .frame(height: 50)

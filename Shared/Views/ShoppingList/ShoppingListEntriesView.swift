@@ -21,14 +21,23 @@ struct ShoppingListRowView: View {
     }
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDPurchase})
+    }
+    
+    
+    private var quantityUnitConversions: [MDQuantityUnitConversion] {
+        return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == shoppingListItem.quID })
+    }
+    
+    private var factoredAmount: Double {
+        return shoppingListItem.amount * (quantityUnitConversions.first(where: { $0.fromQuID == shoppingListItem.quID})?.factor ?? 1) / (product?.quFactorPurchaseToStock ?? 1)
     }
     
     var amountString: String {
         if let quantityUnit = quantityUnit {
-            return "\(shoppingListItem.amount.formattedAmount) \(shoppingListItem.amount == 1 ? quantityUnit.name : quantityUnit.namePlural)"
+            return "\(factoredAmount.formattedAmount) \(factoredAmount == 1 ? quantityUnit.name : quantityUnit.namePlural)"
         } else {
-            return "\(shoppingListItem.amount.formattedAmount)"
+            return "\(factoredAmount.formattedAmount)"
         }
     }
     

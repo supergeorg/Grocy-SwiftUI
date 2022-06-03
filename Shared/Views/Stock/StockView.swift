@@ -153,7 +153,7 @@ struct StockView: View {
                         .popover(item: $activeSheet, content: { item in
                             switch item {
                             case .addToShL:
-                                ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product, isPopup: true)
+                                ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID, isPopup: true)
                                     .padding()
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
@@ -248,7 +248,7 @@ struct StockView: View {
                         InventoryProductView()
                     }
                 case .addToShL:
-                    ShoppingListEntryFormView(isNewShoppingListEntry: true, product: selectedStockElement?.product)
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID)
                 case .productPurchase:
                     NavigationView{
                         PurchaseProductView(stockElement: $selectedStockElement)
