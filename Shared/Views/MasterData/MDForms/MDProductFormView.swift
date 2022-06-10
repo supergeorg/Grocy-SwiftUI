@@ -7,6 +7,84 @@
 
 import SwiftUI
 
+struct MDProductFormOFFView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    @StateObject var offVM: OpenFoodFactsViewModel
+    
+    @Binding var name: String
+    
+    init(barcode: String, name: Binding<String>) {
+        self._offVM = StateObject(wrappedValue: OpenFoodFactsViewModel(barcode: barcode))
+        self._name = name
+    }
+    
+    var productNames: [String: String] {
+        if let offData = offVM.offData {
+            let allProductNames = [
+                "generic": offData.product.productName,
+                "en": offData.product.productNameEn,
+                "de": offData.product.productNameDe,
+                "fr": offData.product.productNameFr,
+                "pl": offData.product.productNamePl
+            ]
+            return allProductNames.compactMapValues({ $0 })
+        } else {
+            return [:]
+        }
+    }
+    
+    @State private var isNameCorrect: Bool = true
+    private func checkNameCorrect() -> Bool {
+        let foundProduct = grocyVM.mdProducts.first(where: {$0.name == name})
+        return !(name.isEmpty || foundProduct != nil)
+    }
+    
+    var body: some View {
+        Group {
+            VStack {
+                if let imageLink = offVM.offData?.product.imageThumbURL, let imageURL = URL(string: imageLink) {
+                    AsyncImage(url: imageURL, content: { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                    .frame(maxWidth: 150.0, maxHeight: 150.0)
+                }
+                MyTextField(textToEdit: Binding.constant(offVM.offData?.code ?? "?"), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
+                    .disabled(true)
+            }
+            
+            Picker(selection: $name, content: {
+                ForEach(productNames.sorted(by: >), id: \.key) { key, value in
+                    Text("\(value) (\(key))").tag(value)
+                }
+            }, label: {
+                HStack{
+                    Image(systemName: "tag")
+                    VStack(alignment: .leading){
+                        Text(LocalizedStringKey("str.md.product.name"))
+                        if name.isEmpty {
+                            Text(LocalizedStringKey("str.md.product.name.required"))
+                                .font(.caption)
+                                .foregroundColor(Color.red)
+                        } else if !isNameCorrect {
+                            Text("str.md.product.name.exists")
+                                .font(.caption)
+                                .foregroundColor(Color.red)
+                        }
+                    }
+                }
+            })
+            .onChange(of: name, perform: { value in
+                isNameCorrect = checkNameCorrect()
+            })
+        }
+    }
+}
+
 struct MDProductFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
@@ -51,6 +129,8 @@ struct MDProductFormView: View {
     
     var isNewProduct: Bool
     var product: MDProduct?
+    
+    var openFoodFactsBarcode: String?
     
     @Binding var showAddProduct: Bool
     @Binding var toastType: MDToastType?
@@ -145,8 +225,8 @@ struct MDProductFormView: View {
                         grocyVM.postLog("Product add successful. \(message)", type: .info)
                         toastType = .successAdd
                         grocyVM.requestData(objects: [.products])
-                        if !queuedBarcode.isEmpty {
-                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+                        if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
+                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
                             grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
                                 switch result {
                                 case let .success(barcodeMessage):
@@ -216,7 +296,7 @@ struct MDProductFormView: View {
     
     var content: some View {
         List {
-            if isNewProduct || devMode {
+            if (isNewProduct || devMode) && openFoodFactsBarcode == nil {
                 Button(action: {
                     showOFFResult.toggle()
                 }, label: {Label("Open Food Facts", systemImage: MySymbols.barcodeScan)})
@@ -244,10 +324,17 @@ struct MDProductFormView: View {
                 .padding(.bottom, 20.0)
 #endif
             
-            MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
-                .onChange(of: name, perform: { value in
-                    isNameCorrect = checkNameCorrect()
-                })
+            if let openFoodFactsBarcode = openFoodFactsBarcode {
+                MDProductFormOFFView(barcode: openFoodFactsBarcode, name: $name)
+                    .onChange(of: name, perform: { value in
+                        isNameCorrect = checkNameCorrect()
+                    })
+            } else {
+                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+                    .onChange(of: name, perform: { value in
+                        isNameCorrect = checkNameCorrect()
+                    })
+            }
             
             if !queuedBarcode.isEmpty && isNewProduct {
                 MyTextField(textToEdit: $queuedBarcode, description: "str.md.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "str.md.barcode.barcode.invalid")

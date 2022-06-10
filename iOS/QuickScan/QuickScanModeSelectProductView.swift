@@ -22,6 +22,7 @@ struct QuickScanModeSelectProductView: View {
     
     @Binding var toastTypeSuccess: QSToastTypeSuccess?
     @State private var toastTypeFail: QSToastTypeFail?
+    @State private var toastType: MDToastType?
     
     private func resetForm() {
         productID = nil
@@ -66,9 +67,11 @@ struct QuickScanModeSelectProductView: View {
                 
                 if let barcode = barcode {
                     Section("Open Food Facts") {
-                        NavigationLink(destination: OpenFoodFactsNewProductView(barcode: barcode), label: {
-                            Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
-                        })
+                        NavigationLink(
+                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true),
+                            label: {
+                                Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
+                            })
                     }
                 }
             }
@@ -84,8 +87,8 @@ struct QuickScanModeSelectProductView: View {
                         Label(LocalizedStringKey("str.quickScan.add.product.add"), systemImage: "plus")
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(productID == nil)
-                        .keyboardShortcut(.defaultAction)
+                    .disabled(productID == nil)
+                    .keyboardShortcut(.defaultAction)
                 })
             })
         }
