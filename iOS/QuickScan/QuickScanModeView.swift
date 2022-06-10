@@ -22,22 +22,23 @@ enum QuickScanMode {
     }
 }
 
+enum QSActiveSheet: Identifiable {
+    case barcode, grocyCode, selectProduct
+    
+    var id: Int {
+        hashValue
+    }
+}
+
 struct QuickScanModeView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("devMode") private var devMode: Bool = false
+    @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     
     @State private var flashOn: Bool = false
     @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
-    
-    enum QSActiveSheet: Identifiable {
-        case barcode, grocyCode, selectProduct
-        
-        var id: Int {
-            hashValue
-        }
-    }
     
     @State private var activeSheet: QSActiveSheet?
     
@@ -158,7 +159,7 @@ struct QuickScanModeView: View {
                 case .barcode:
                     QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: recognizedBarcode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
                 case .selectProduct:
-                    QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess)
+                    QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess, activeSheet: $activeSheet)
                 }
             }
             .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), text: { item in
@@ -181,6 +182,11 @@ struct QuickScanModeView: View {
             .onChange(of: activeSheet, perform: {newItem in
                 checkScanPause()
             })
+//            .onChange(of: toastTypeSuccess, perform: { toastTypeSuccess in
+//                if (toastTypeSuccess == .successQSAddProduct) && (activeSheet == .selectProduct) && quickScanActionAfterAdd {
+//                    activeSheet = .barcode
+//                }
+//            })
     }
 }
 

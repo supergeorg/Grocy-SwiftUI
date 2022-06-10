@@ -11,6 +11,7 @@ struct QuickScanModeSelectProductView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("devMode") private var devMode: Bool = false
+    @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,6 +22,7 @@ struct QuickScanModeSelectProductView: View {
     @State private var productID: Int?
     
     @Binding var toastTypeSuccess: QSToastTypeSuccess?
+    @Binding var activeSheet: QSActiveSheet?
     @State private var toastTypeFail: QSToastTypeFail?
     @State private var toastType: MDToastType?
     
@@ -44,10 +46,14 @@ struct QuickScanModeSelectProductView: View {
                     switch result {
                     case let .success(message):
                         grocyVM.postLog("Add barcode successful. \(message)", type: .info)
-                        toastTypeSuccess = .successQSAddProduct
                         resetForm()
                         updateData()
-                        finishForm()
+                        if quickScanActionAfterAdd {
+                            self.activeSheet = .barcode
+                        } else {
+                            toastTypeSuccess = .successQSAddProduct
+                            self.dismiss()
+                        }
                     case let .failure(error):
                         grocyVM.postLog("Add barcode failed. \(error)", type: .error)
                         toastTypeFail = .failQSAddProduct
@@ -72,6 +78,16 @@ struct QuickScanModeSelectProductView: View {
                             label: {
                                 Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
                             })
+                        .onChange(of: toastType, perform: { ttype in
+                            if ttype == .successAdd {
+                                if quickScanActionAfterAdd {
+                                    self.activeSheet = .barcode
+                                } else {
+                                    toastTypeSuccess = .successQSAddProduct
+                                    self.dismiss()
+                                }
+                            }
+                        })
                     }
                 }
             }
@@ -105,6 +121,6 @@ struct QuickScanModeSelectProductView: View {
 
 struct QuickScanModeSelectProductView_Previews: PreviewProvider {
     static var previews: some View {
-        QuickScanModeSelectProductView(barcode: "12345", toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct))
+        QuickScanModeSelectProductView(barcode: "12345", toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct), activeSheet: Binding.constant(QSActiveSheet.selectProduct))
     }
 }
