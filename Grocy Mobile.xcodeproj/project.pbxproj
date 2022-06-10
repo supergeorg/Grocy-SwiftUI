@@ -99,6 +99,8 @@
 		78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */; };
 		78467E8A25C2C6D9000592EE /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78467E8925C2C6D9000592EE /* ToastMessage.swift */; };
 		78467E8B25C2C6D9000592EE /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78467E8925C2C6D9000592EE /* ToastMessage.swift */; };
+		7847F4FB2853B4630041D511 /* SettingsAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7847F4FA2853B4630041D511 /* SettingsAppView.swift */; };
+		7847F4FC2853B4630041D511 /* SettingsAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7847F4FA2853B4630041D511 /* SettingsAppView.swift */; };
 		7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */; };
 		7848A0CE256BD2C3004EAF18 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */; };
 		7848A0DB256BE3D5004EAF18 /* ConsumeProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */; };
@@ -487,6 +489,7 @@
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
 		78408AD025A481DE0075A365 /* GrocyUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserInfoView.swift; sourceTree = "<group>"; };
 		78467E8925C2C6D9000592EE /* ToastMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessage.swift; sourceTree = "<group>"; };
+		7847F4FA2853B4630041D511 /* SettingsAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAppView.swift; sourceTree = "<group>"; };
 		7848A0CC256BD2C3004EAF18 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
 		7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeProductView.swift; sourceTree = "<group>"; };
 		7848A0E1256BE3E3004EAF18 /* TransferProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferProductView.swift; sourceTree = "<group>"; };
@@ -921,6 +924,7 @@
 			isa = PBXGroup;
 			children = (
 				78CB7598255EA56D00319108 /* SettingsView.swift */,
+				7847F4FA2853B4630041D511 /* SettingsAppView.swift */,
 				78559CC1278347EA00680600 /* SettingsStockView.swift */,
 				787E7DBF281C533500E4D269 /* SettingsShoppingListView.swift */,
 				7853A4CE25DBE74300AF9986 /* LogView.swift */,
@@ -1381,6 +1385,7 @@
 				78E02CBD25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
 				785D7C5B25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */,
 				786F6EB925640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
+				7847F4FB2853B4630041D511 /* SettingsAppView.swift in Sources */,
 				78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */,
 				78FDCE3425BAEF190089CB5E /* FA2SFSymbols.swift in Sources */,
 				7891C640257E33430014C59E /* StockTableRowActionsView.swift in Sources */,
@@ -1429,6 +1434,7 @@
 				7891C648257E3BDD0014C59E /* RowInteractionButton.swift in Sources */,
 				7880F113256FC92800FB8431 /* ShoppingListFormView.swift in Sources */,
 				786F6E8C2563FFA7004D8DE0 /* MDShoppingLocationFormView.swift in Sources */,
+				7847F4FC2853B4630041D511 /* SettingsAppView.swift in Sources */,
 				78408AD225A481DE0075A365 /* GrocyUserInfoView.swift in Sources */,
 				78A201CD25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
 				7880F0F2256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,

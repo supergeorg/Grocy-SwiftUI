@@ -619,6 +619,9 @@
 "str.settings.log.update" = "Log aktualisieren";
 "str.settings.log.share" = "Log-Datei teilen";
 "str.settings.grocy" = "Grocy-Einstellungen";
+"str.settings.app" = "App-Einstellungen";
+"str.settings.app.quickScan" = "QuickScan-Einstellungen";
+"str.settings.app.quickScan.actionAfterAdd" = "Ausgewählte Aktion nach Zuweisen des Barcodes durchführen";
 "str.settings.stock" = "Bestand-Einstellungen";
 "str.settings.stock.presets" = "Vorgaben für neue Produkte";
 "str.settings.stock.presets.location" = "Standort";

@@ -65,6 +65,10 @@ struct SettingsView: View {
                 }
             }
             Section(header: Text(LocalizedStringKey("str.settings.grocy"))) {
+                NavigationLink(destination: SettingsAppView(), label: {
+                    Label(LocalizedStringKey("str.settings.app"), systemImage: MySymbols.app)
+                        .foregroundColor(.primary)
+                })
                 NavigationLink(destination: SettingsStockView(), label: {
                     Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.barcodeScan)
                         .foregroundColor(.primary)

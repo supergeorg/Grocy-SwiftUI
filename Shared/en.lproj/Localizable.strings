@@ -619,6 +619,9 @@
 "str.settings.log.update" = "Update log";
 "str.settings.log.share" = "Share log";
 "str.settings.grocy" = "Grocy settings";
+"str.settings.app" = "App Settings";
+"str.settings.app.quickScan" = "QuickScan settings";
+"str.settings.app.quickScan.actionAfterAdd" = "Do selected action after assigning a barcode";
 "str.settings.stock" = "Stock settings";
 "str.settings.stock.presets" = "Presets for new products";
 "str.settings.stock.presets.location" = "Location";
