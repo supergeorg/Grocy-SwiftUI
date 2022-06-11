@@ -619,6 +619,9 @@
 "str.settings.log.update" = "Werk logboek bij";
 "str.settings.log.share" = "Deel logboek";
 "str.settings.grocy" = "Grocy-instellingen";
+"str.settings.app" = "Appinstellingen";
+"str.settings.app.quickScan" = "Snelscaninstellingen";
+"str.settings.app.quickScan.actionAfterAdd" = "Voer gekozen actie uit na toekennen van barcode";
 "str.settings.stock" = "Voorraadinstellingen";
 "str.settings.stock.presets" = "Voorinstellingen voor nieuwe producten";
 "str.settings.stock.presets.location" = "Locatie";
