@@ -14,6 +14,8 @@ class OpenFoodFactsViewModel: ObservableObject {
     @Published var offData: OpenFoodFactsResult?
     @Published var errorMessage: String? = nil
     
+    @Published var searchedBarcode: String? = nil
+    
     var cancellables = Set<AnyCancellable>()
     
     private var timeoutInterval: Double = 60.0
@@ -25,6 +27,7 @@ class OpenFoodFactsViewModel: ObservableObject {
     
     func updateBarcode(barcode: String) {
         if !barcode.isEmpty {
+            searchedBarcode = barcode
             self.fetchForBarcode(barcode: barcode)
                 .sink(receiveCompletion: { result in
                     switch result {

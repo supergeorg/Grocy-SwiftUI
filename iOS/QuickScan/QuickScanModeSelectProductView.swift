@@ -22,9 +22,11 @@ struct QuickScanModeSelectProductView: View {
     @State private var productID: Int?
     
     @Binding var toastTypeSuccess: QSToastTypeSuccess?
-    @Binding var activeSheet: QSActiveSheet?
+    @Binding var qsActiveSheet: QSActiveSheet?
     @State private var toastTypeFail: QSToastTypeFail?
     @State private var toastType: MDToastType?
+    @Binding var newRecognizedBarcode: MDProductBarcode?
+    @State var newProductBarcode: MDProductBarcode?
     
     private func resetForm() {
         productID = nil
@@ -46,14 +48,10 @@ struct QuickScanModeSelectProductView: View {
                     switch result {
                     case let .success(message):
                         grocyVM.postLog("Add barcode successful. \(message)", type: .info)
-                        resetForm()
-                        updateData()
-                        if quickScanActionAfterAdd {
-                            self.activeSheet = .barcode
-                        } else {
-                            toastTypeSuccess = .successQSAddProduct
-                            self.dismiss()
-                        }
+                        grocyVM.requestData(objects: [.product_barcodes], ignoreCached: true)
+                        newRecognizedBarcode = newBarcode
+                        toastTypeSuccess = .successQSAddProduct
+                        finishForm()
                     case let .failure(error):
                         grocyVM.postLog("Add barcode failed. \(error)", type: .error)
                         toastTypeFail = .failQSAddProduct
@@ -74,18 +72,15 @@ struct QuickScanModeSelectProductView: View {
                 if let barcode = barcode {
                     Section("Open Food Facts") {
                         NavigationLink(
-                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true),
+                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: false, mdBarcodeReturn: $newProductBarcode),
                             label: {
                                 Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
                             })
-                        .onChange(of: toastType, perform: { ttype in
-                            if ttype == .successAdd {
-                                if quickScanActionAfterAdd {
-                                    self.activeSheet = .barcode
-                                } else {
-                                    toastTypeSuccess = .successQSAddProduct
-                                    self.dismiss()
-                                }
+                        .onChange(of: newProductBarcode?.id, perform: { newBarcode in
+                            if newProductBarcode != nil {
+                                toastTypeSuccess = .successQSAddProduct
+                                finishForm()
+                                newRecognizedBarcode = newProductBarcode
                             }
                         })
                     }
@@ -121,6 +116,6 @@ struct QuickScanModeSelectProductView: View {
 
 struct QuickScanModeSelectProductView_Previews: PreviewProvider {
     static var previews: some View {
-        QuickScanModeSelectProductView(barcode: "12345", toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct), activeSheet: Binding.constant(QSActiveSheet.selectProduct))
+        QuickScanModeSelectProductView(barcode: "12345", toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct), qsActiveSheet: Binding.constant(QSActiveSheet.selectProduct), newRecognizedBarcode: Binding.constant(nil))
     }
 }

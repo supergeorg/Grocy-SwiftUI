@@ -12,9 +12,11 @@ struct MDProductFormOFFView: View {
     @StateObject var offVM: OpenFoodFactsViewModel
     
     @Binding var name: String
+    @State private var barcode: String
     
     init(barcode: String, name: Binding<String>) {
         self._offVM = StateObject(wrappedValue: OpenFoodFactsViewModel(barcode: barcode))
+        self.barcode = barcode
         self._name = name
     }
     
@@ -27,7 +29,8 @@ struct MDProductFormOFFView: View {
                 "fr": offData.product.productNameFr,
                 "pl": offData.product.productNamePl
             ]
-            return allProductNames.compactMapValues({ $0 })
+            
+            return allProductNames.compactMapValues({ $0 }).filter({ !$0.value.isEmpty })
         } else {
             return [:]
         }
@@ -53,34 +56,41 @@ struct MDProductFormOFFView: View {
                     })
                     .frame(maxWidth: 150.0, maxHeight: 150.0)
                 }
-                MyTextField(textToEdit: Binding.constant(offVM.offData?.code ?? "?"), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
+                MyTextField(textToEdit: Binding.constant(barcode), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
                     .disabled(true)
             }
             
-            Picker(selection: $name, content: {
-                ForEach(productNames.sorted(by: >), id: \.key) { key, value in
-                    Text("\(value) (\(key))").tag(value)
-                }
-            }, label: {
-                HStack{
-                    Image(systemName: "tag")
-                    VStack(alignment: .leading){
-                        Text(LocalizedStringKey("str.md.product.name"))
-                        if name.isEmpty {
-                            Text(LocalizedStringKey("str.md.product.name.required"))
-                                .font(.caption)
-                                .foregroundColor(Color.red)
-                        } else if !isNameCorrect {
-                            Text("str.md.product.name.exists")
-                                .font(.caption)
-                                .foregroundColor(Color.red)
+            if productNames.isEmpty {
+                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+                    .onChange(of: name, perform: { value in
+                        isNameCorrect = checkNameCorrect()
+                    })
+            } else {
+                Picker(selection: $name, content: {
+                    ForEach(productNames.sorted(by: >), id: \.key) { key, value in
+                        Text("\(value) (\(key))").tag(value)
+                    }
+                }, label: {
+                    HStack{
+                        Image(systemName: "tag")
+                        VStack(alignment: .leading){
+                            Text(LocalizedStringKey("str.md.product.name"))
+                            if name.isEmpty {
+                                Text(LocalizedStringKey("str.md.product.name.required"))
+                                    .font(.caption)
+                                    .foregroundColor(Color.red)
+                            } else if !isNameCorrect {
+                                Text("str.md.product.name.exists")
+                                    .font(.caption)
+                                    .foregroundColor(Color.red)
+                            }
                         }
                     }
-                }
-            })
-            .onChange(of: name, perform: { value in
-                isNameCorrect = checkNameCorrect()
-            })
+                })
+                .onChange(of: name, perform: { value in
+                    isNameCorrect = checkNameCorrect()
+                })
+            }
         }
     }
 }
@@ -136,6 +146,8 @@ struct MDProductFormView: View {
     @Binding var toastType: MDToastType?
     
     var isPopup: Bool = false
+    
+    var mdBarcodeReturn: Binding<MDProductBarcode?>?
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -224,15 +236,16 @@ struct MDProductFormView: View {
                     case let .success(message):
                         grocyVM.postLog("Product add successful. \(message)", type: .info)
                         toastType = .successAdd
-                        grocyVM.requestData(objects: [.products])
+                        grocyVM.requestData(objects: [.products], ignoreCached: true)
                         if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
                             let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
                             grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
                                 switch result {
                                 case let .success(barcodeMessage):
                                     grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
+                                    grocyVM.requestData(objects: [.product_barcodes], ignoreCached: true)
+                                    mdBarcodeReturn?.wrappedValue = barcodePOST
                                     toastType = .successAdd
-                                    grocyVM.requestData(objects: [.product_barcodes])
                                     finishForm()
                                 case let .failure(barcodeError):
                                     grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)

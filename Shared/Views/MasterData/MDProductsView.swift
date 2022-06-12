@@ -9,9 +9,9 @@ import SwiftUI
 
 struct MDProductRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-    
+
     var product: MDProduct
-    
+
     var body: some View {
         HStack{
             if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {

@@ -40,15 +40,16 @@ struct QuickScanModeView: View {
     @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
     
-    @State private var activeSheet: QSActiveSheet?
+    @State private var qsActiveSheet: QSActiveSheet?
     
     @State private var firstInSession: Bool = true
     
     @State private var showDemoGrocyCode: Bool = false
     
-    @State private var recognizedBarcode: MDProductBarcode? = nil
-    @State private var recognizedGrocyCode: GrocyCode? = nil
-    @State private var notRecognizedBarcode: String? = nil
+    @State var recognizedBarcode: MDProductBarcode? = nil
+    @State var newRecognizedBarcode: MDProductBarcode? = nil
+    @State var recognizedGrocyCode: GrocyCode? = nil
+    @State var notRecognizedBarcode: String? = nil
     
     @State private var toastTypeSuccess: QSToastTypeSuccess?
     @State private var infoString: String?
@@ -60,7 +61,7 @@ struct QuickScanModeView: View {
     
     @State private var isScanPaused: Bool = false
     func checkScanPause() {
-        isScanPaused = (activeSheet != nil)
+        isScanPaused = (qsActiveSheet != nil)
     }
     
     private let dataToUpdate: [ObjectEntities] =  [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units, .quantity_unit_conversions]
@@ -92,14 +93,14 @@ struct QuickScanModeView: View {
         case .success(let barcodeString):
             if let grocyCode = searchForGrocyCode(barcodeString: barcodeString) {
                 recognizedGrocyCode = grocyCode
-                activeSheet = .grocyCode
+                qsActiveSheet = .grocyCode
             }
             else if let barcode = searchForBarcode(barcodeString: barcodeString) {
                 recognizedBarcode = barcode
-                activeSheet = .barcode
+                qsActiveSheet = .barcode
             } else {
                 notRecognizedBarcode = barcodeString
-                activeSheet = .selectProduct
+                qsActiveSheet = .selectProduct
             }
         case .failure(let error):
             grocyVM.postLog("Barcode scan failed. \(error)", type: .error)
@@ -128,7 +129,7 @@ struct QuickScanModeView: View {
                     .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.purchase)
             })
-                .pickerStyle(.segmented)
+            .pickerStyle(.segmented)
             Spacer()
             Button(action: {
                 flashOn.toggle()
@@ -137,7 +138,7 @@ struct QuickScanModeView: View {
                 Image(systemName: flashOn ? "bolt.circle" : "bolt.slash.circle")
                     .font(.title)
             })
-                .disabled(!checkForTorch())
+            .disabled(!checkForTorch())
             if getFrontCameraAvailable() {
                 Button(action: {
                     isFrontCamera.toggle()
@@ -146,20 +147,53 @@ struct QuickScanModeView: View {
                         .font(.title)
                 })
             }
+            if isScanPaused {
+                Button(action: {
+                    qsActiveSheet = nil
+                }, label: {
+                    Image(systemName: "pause.rectangle")
+                        .font(.title)
+                })
+            }
         }
+        .padding(.bottom)
+        .background(Color.black)
     }
     
     var bodyContent: some View {
         CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: showDemoGrocyCode ? "grcy:p:13:5fe1f33579ef4" : "5901234123457", isPaused: $isScanPaused, isFrontCamera: $isFrontCamera, completion: self.handleScan)
             .overlay(modePicker, alignment: .top)
-            .sheet(item: $activeSheet) { item in
+            .sheet(item: $qsActiveSheet) { item in
                 switch item {
                 case .grocyCode:
-                    QuickScanModeInputView(quickScanMode: $quickScanMode, grocyCode: recognizedGrocyCode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
+                    QuickScanModeInputView(
+                        quickScanMode: $quickScanMode,
+                        grocyCode: recognizedGrocyCode,
+                        toastTypeSuccess: $toastTypeSuccess,
+                        infoString: $infoString,
+                        lastConsumeLocationID: $lastConsumeLocationID,
+                        lastPurchaseDueDate: $lastPurchaseDueDate,
+                        lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                        lastPurchaseLocationID: $lastPurchaseLocationID
+                    )
                 case .barcode:
-                    QuickScanModeInputView(quickScanMode: $quickScanMode, productBarcode: recognizedBarcode, toastTypeSuccess: $toastTypeSuccess, infoString: $infoString, lastConsumeLocationID: $lastConsumeLocationID, lastPurchaseDueDate: $lastPurchaseDueDate, lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID, lastPurchaseLocationID: $lastPurchaseLocationID)
+                    QuickScanModeInputView(
+                        quickScanMode: $quickScanMode,
+                        productBarcode: recognizedBarcode,
+                        toastTypeSuccess: $toastTypeSuccess,
+                        infoString: $infoString,
+                        lastConsumeLocationID: $lastConsumeLocationID,
+                        lastPurchaseDueDate: $lastPurchaseDueDate,
+                        lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                        lastPurchaseLocationID: $lastPurchaseLocationID
+                    )
                 case .selectProduct:
-                    QuickScanModeSelectProductView(barcode: notRecognizedBarcode, toastTypeSuccess: $toastTypeSuccess, activeSheet: $activeSheet)
+                    QuickScanModeSelectProductView(
+                        barcode: notRecognizedBarcode,
+                        toastTypeSuccess: $toastTypeSuccess,
+                        qsActiveSheet: $qsActiveSheet,
+                        newRecognizedBarcode: $newRecognizedBarcode
+                    )
                 }
             }
             .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), text: { item in
@@ -179,14 +213,20 @@ struct QuickScanModeView: View {
             .onAppear(perform: {
                 grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
             })
-            .onChange(of: activeSheet, perform: {newItem in
-                checkScanPause()
+            .onChange(of: newRecognizedBarcode?.id, perform: { newRecBC in
+                DispatchQueue.main.async {
+                    if quickScanActionAfterAdd {
+                        recognizedBarcode = newRecognizedBarcode
+                        qsActiveSheet = .barcode
+                        checkScanPause()
+                    }
+                }
             })
-//            .onChange(of: toastTypeSuccess, perform: { toastTypeSuccess in
-//                if (toastTypeSuccess == .successQSAddProduct) && (activeSheet == .selectProduct) && quickScanActionAfterAdd {
-//                    activeSheet = .barcode
-//                }
-//            })
+            .onChange(of: qsActiveSheet, perform: { newActiveSheet in
+                DispatchQueue.main.async {
+                    checkScanPause()
+                }
+            })
     }
 }
 
