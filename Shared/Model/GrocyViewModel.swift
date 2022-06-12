@@ -63,6 +63,9 @@ class GrocyViewModel: ObservableObject {
     
     @Published var logEntries: [OSLogEntryLog] = []
     
+    @Published var loadingObjectEntities: Set<ObjectEntities> = Set()
+    @Published var loadingAdditionalEntities: Set<AdditionalEntities> = Set()
+    
     var cancellables = Set<AnyCancellable>()
     
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
@@ -86,7 +89,7 @@ class GrocyViewModel: ObservableObject {
         } else {
             self.postLog("Not logged in", type: .info)
         }
-//        jsonEncoder.dateEncodingStrategy = .iso8601
+        //        jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -95,7 +98,7 @@ class GrocyViewModel: ObservableObject {
             try container.encode(dateString)
         })
         jsonEncoder.outputFormatting = .prettyPrinted
-
+        
     }
     
     func setDemoModus() {
@@ -223,6 +226,7 @@ class GrocyViewModel: ObservableObject {
                 switch object {
                 case .batteries:
                     if mdBatteries.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDBatteries, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -233,10 +237,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .locations:
                     if mdLocations.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -247,10 +253,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .product_barcodes:
                     if mdProductBarcodes.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProductBarcodes, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -261,10 +269,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .product_groups:
                     if mdProductGroups.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProductGroups, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -275,10 +285,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .products:
                     if mdProducts.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProducts, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -289,10 +301,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .quantity_units:
                     if mdQuantityUnits.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -303,10 +317,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .quantity_unit_conversions:
                     if mdQuantityUnitConversions.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDQuantityUnitConversions, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -317,10 +333,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .shopping_list:
                     if shoppingList.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<ShoppingList, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -331,10 +349,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .shopping_lists:
                     if shoppingListDescriptions.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<ShoppingListDescriptions, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -345,10 +365,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .shopping_locations:
                     if mdShoppingLocations.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -359,10 +381,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .stock_log:
                     if stockJournal.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<StockJournal, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -373,10 +397,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .task_categories:
                     if mdTaskCategories.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDTaskCategories, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -387,10 +413,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .userentities:
                     if mdUserEntities.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDUserEntities, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -401,10 +429,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 case .userfields:
                     if mdUserFields.isEmpty || ignoreCached {
+                        loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDUserFields, APIError>) in
                             switch result {
                             case let .success(entityResult):
@@ -415,6 +445,7 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadObjects.insert(object)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingObjectEntities.remove(object)
                         })
                     }
                 default:
@@ -427,6 +458,7 @@ class GrocyViewModel: ObservableObject {
                 switch additionalObject {
                 case .system_config:
                     if systemConfig == nil || ignoreCached {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getSystemConfig(completion: { result in
                             switch result {
                             case let .success(syscfg):
@@ -437,10 +469,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .system_info:
                     if systemInfo == nil || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getSystemInfo(completion: { result in
                             switch result {
                             case let .success(sysinfo):
@@ -451,10 +485,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .system_db_changed_time:
                     if systemDBChangedTime == nil || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getSystemDBChangedTime(completion: { result in
                             switch result {
                             case let .success(sysdbchangedtime):
@@ -465,10 +501,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .stock:
                     if stock.isEmpty || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getStock(completion: { result in
                             switch result {
                             case let .success(stockRet):
@@ -482,10 +520,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .volatileStock:
                     if volatileStock == nil || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getVolatileStock(completion: { result in
                             switch result {
                             case let .success(volatileStockRet):
@@ -496,10 +536,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .users:
                     if users.isEmpty || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getUsers(completion: { result in
                             switch result {
                             case let .success(grocyusers):
@@ -510,10 +552,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .current_user:
                     if currentUser == nil || ignoreCached  {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getUser(completion: { result in
                             switch result {
                             case let .success(currUsRet):
@@ -526,10 +570,12 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 case .user_settings:
                     if userSettings == nil || ignoreCached {
+                        loadingAdditionalEntities.insert(additionalObject)
                         getUserSettings(completion: { result in
                             switch result {
                             case let .success(usrSet):
@@ -540,6 +586,7 @@ class GrocyViewModel: ObservableObject {
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
                                 self.failedToLoadErrors.append(error)
                             }
+                            self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
                 }
@@ -584,7 +631,7 @@ class GrocyViewModel: ObservableObject {
         stockProductPriceHistories = [:]
         
         lastStockActions = []
-
+        
         failedToLoadObjects.removeAll()
         failedToLoadAdditionalObjects.removeAll()
         failedToLoadErrors.removeAll()
