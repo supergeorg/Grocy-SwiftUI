@@ -157,7 +157,7 @@ struct QuickScanModeView: View {
             }
         }
         .padding(.bottom)
-        .background(Color.black)
+        .background(Color.secondary)
     }
     
     var bodyContent: some View {
