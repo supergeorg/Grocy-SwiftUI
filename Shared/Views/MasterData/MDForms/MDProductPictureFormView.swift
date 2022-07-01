@@ -159,7 +159,7 @@ struct MDProductPictureFormView: View {
                 })
                 .sheet(isPresented: $showImagePicker, onDismiss: {
                     if let product = product {
-                        selectedPictureFileName = "\(UUID())_\(product.name).jpg"
+                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
                     } else {
                         selectedPictureFileName = "\(UUID())_.jpg"
                     }
@@ -173,7 +173,7 @@ struct MDProductPictureFormView: View {
                 })
                 .sheet(isPresented: $showCamera, onDismiss: {
                     if let product = product {
-                        selectedPictureFileName = "\(UUID())_\(product.name).jpg"
+                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
                     } else {
                         selectedPictureFileName = "\(UUID())_.jpg"
                     }

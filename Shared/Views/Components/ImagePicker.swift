@@ -61,7 +61,7 @@ struct CameraPicker: UIViewControllerRepresentable {
             let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
             let resizedImage = image.resized(toWidth: 300.0)
             if let productName = self.parent.productName {
-                self.parent.selectedPictureFileName = "\(UUID())_\(productName).jpg"
+                self.parent.selectedPictureFileName = "\(UUID())_\(productName.cleanedFileName).jpg"
             } else {
                 self.parent.selectedPictureFileName = "\(UUID())_.jpg"
             }
@@ -108,7 +108,7 @@ struct ImageLibraryPicker: UIViewControllerRepresentable {
                 provider.loadObject(ofClass: UIImage.self) { image, _ in
                     let resizedImage = (image as? UIImage)?.resized(toWidth: 300)
                     if let productName = self.parent.productName {
-                        self.parent.selectedPictureFileName = "\(UUID())_\(productName).jpg"
+                        self.parent.selectedPictureFileName = "\(UUID())_\(productName.cleanedFileName).jpg"
                     } else {
                         self.parent.selectedPictureFileName = "\(UUID())_.jpg"
                     }
