@@ -58,6 +58,9 @@ struct QuickScanModeInputView: View {
     private var purchaseAmountFactored: Double {
         return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID})?.factor ?? 1)
     }
+    private var purchaseStockAmountFactored: Double {
+        return purchaseAmountFactored * (product?.quFactorPurchaseToStock ?? 1.0)
+    }
     
     private var purchaseUnitPrice: Double? {
         if purchaseIsTotalPrice {
@@ -203,7 +206,7 @@ struct QuickScanModeInputView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let strDueDate = purchaseDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: purchaseDueDate)
             let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
-            let productBuy = ProductBuy(amount: purchaseAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
+            let productBuy = ProductBuy(amount: purchaseStockAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
             infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in

@@ -68,7 +68,7 @@ struct PurchaseProductView: View {
     }
     private func getQUString(stockQU: Bool) -> String {
         if stockQU {
-            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
+            return factoredStockAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
         } else {
             return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
         }
@@ -82,7 +82,9 @@ struct PurchaseProductView: View {
     private var factoredAmount: Double {
         return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
     }
-    
+    private var factoredStockAmount: Double {
+        return factoredAmount * (product?.quFactorPurchaseToStock ?? 1.0)
+    }
     private var unitPrice: Double? {
         if isTotalPrice {
             return ((price ?? 0.0) / factoredAmount)
@@ -121,7 +123,7 @@ struct PurchaseProductView: View {
         let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
         let purchasePrice = selfProduction ? nil : unitPrice
         let purchaseShoppingLocationID = selfProduction ? nil : shoppingLocationID
-        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
+        let purchaseInfo = ProductBuy(amount: factoredStockAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
