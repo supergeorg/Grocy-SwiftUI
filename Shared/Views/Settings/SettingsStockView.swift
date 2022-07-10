@@ -53,10 +53,11 @@ struct SettingsStockView: View {
                     .disabled(useQuickConsume)
                 ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue, description: "str.settings.stock.consume.useQuickConsume", toggleFeedback: $useQuickConsume)
             }
-            if devMode {
-                Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
-                    ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue, description: "str.settings.stock.common.amountDecimalPlaces")
-                    ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue, description: "str.settings.stock.common.priceDecimalPlaces")
+            
+            Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
+                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue, description: "str.settings.stock.common.amountDecimalPlaces")
+                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue, description: "str.settings.stock.common.priceDecimalPlaces")
+                if devMode {
                     ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue, description: "str.settings.stock.common.priceAddSeparatorAuto", descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint")
                 }
             }

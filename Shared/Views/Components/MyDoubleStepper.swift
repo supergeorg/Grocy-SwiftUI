@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MyDoubleStepper: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
     @Binding var amount: Double
     
     var description: String
@@ -31,10 +32,11 @@ struct MyDoubleStepper: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPrices ?? 2
         } else {
             f.numberStyle = .decimal
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
         }
-        f.maximumFractionDigits = 4
         return f
     }
     
@@ -55,7 +57,7 @@ struct MyDoubleStepper: View {
                     .frame(width: 90)
 #elseif os(iOS)
                     .keyboardType(.numbersAndPunctuation)
-                    .submitLabel(.done )
+                    .submitLabel(.done)
 #endif
                 Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: (minAmount ?? 0.0)...Double.greatestFiniteMagnitude, step: 1.0)
                     .fixedSize()
@@ -78,6 +80,7 @@ struct MyDoubleStepper: View {
 
 
 struct MyDoubleStepperOptional: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
     @Binding var amount: Double?
     
     var description: String
@@ -101,10 +104,11 @@ struct MyDoubleStepperOptional: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPrices ?? 2
         } else {
             f.numberStyle = .decimal
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
         }
-        f.maximumFractionDigits = 4
         return f
     }
     
