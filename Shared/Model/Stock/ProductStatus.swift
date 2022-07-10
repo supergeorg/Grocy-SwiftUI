@@ -14,7 +14,7 @@ enum ProductStatus: String {
     case overdue = "str.stock.status.overdue"
     case expired = "str.stock.status.expired"
     case belowMinStock = "str.stock.status.belowMinStock"
-    
+
     func getDescription(amount: Int, expiringDays: Int? = 5) -> LocalizedStringKey {
         switch self {
         case .all:
@@ -29,7 +29,7 @@ enum ProductStatus: String {
             return amount == 1 ? LocalizedStringKey("str.stock.info.1belowMinStock") : LocalizedStringKey("str.stock.info.belowMinStock \(amount)")
         }
     }
-    
+
     func getIconName() -> String {
         switch self {
         case .expiringSoon:

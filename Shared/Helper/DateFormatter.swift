@@ -108,7 +108,6 @@ func getTimeDistanceFromString(_ dateStrIN: String) -> Int? {
 
 func formatDays(daysToFormat: Int?) -> String? {
     let datecomponents = DateComponents(day: daysToFormat)
-    
     let dcf = DateComponentsFormatter()
     dcf.allowedUnits = [.day, .month, .year]
     dcf.unitsStyle = .abbreviated
@@ -136,7 +135,6 @@ func getRelativeDateAsText(_ date: Date?, localizationKey: String? = nil) -> Str
             }
             dateFormatter.dateTimeStyle = .named
             let startOfToday = Calendar.current.startOfDay(for: Date())
-            
             return dateFormatter.localizedString(for: date, relativeTo: startOfToday)
         }
     } else {

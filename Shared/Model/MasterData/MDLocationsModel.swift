@@ -8,20 +8,21 @@
 import Foundation
 
 // MARK: - MDLocation
+
 struct MDLocation: Codable {
     let id: Int
     let name: String
     let mdLocationDescription: String?
     let rowCreatedTimestamp: String
     var isFreezer: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
         case isFreezer = "is_freezer"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -40,12 +41,14 @@ struct MDLocation: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         mdLocationDescription: String? = nil,
-         rowCreatedTimestamp: String,
-         isFreezer: Bool) {
+
+    init(
+        id: Int,
+        name: String,
+        mdLocationDescription: String? = nil,
+        rowCreatedTimestamp: String,
+        isFreezer: Bool
+    ) {
         self.id = id
         self.name = name
         self.mdLocationDescription = mdLocationDescription

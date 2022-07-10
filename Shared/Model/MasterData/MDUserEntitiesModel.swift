@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - MDUserEntity
+
 struct MDUserEntity: Codable {
     let id: Int
     let name: String
@@ -16,7 +17,7 @@ struct MDUserEntity: Codable {
     let showInSidebarMenu: Int?
     let iconCSSClass: String?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -26,7 +27,7 @@ struct MDUserEntity: Codable {
         case iconCSSClass = "icon_css_class"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -41,14 +42,16 @@ struct MDUserEntity: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         caption: String,
-         mdUserEntityDescription: String? = nil,
-         showInSidebarMenu: Int? = nil,
-         iconCSSClass: String? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        caption: String,
+        mdUserEntityDescription: String? = nil,
+        showInSidebarMenu: Int? = nil,
+        iconCSSClass: String? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.caption = caption

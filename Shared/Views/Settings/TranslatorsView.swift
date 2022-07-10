@@ -15,7 +15,7 @@ struct TranslatorLineView: View {
     var body: some View {
         DisclosureGroup(content: {
             Group {
-                ForEach(languageContributors, id:\.self) { contributor in
+                ForEach(languageContributors, id: \.self) { contributor in
                     Text(contributor).font(.caption)
                 }
             }
@@ -33,12 +33,14 @@ struct TranslatorLineView: View {
 
 struct TranslatorsView: View {
     var body: some View {
-        Form() {
-            ForEach(Array(Translators.languages).sorted { $0.name < $1.name },id: \.self, content: { language in
-                TranslatorLineView(languageName: language.name,
-                                   languageFlag: language.flag,
-                                   languageMaintainers: language.maintainers,
-                                   languageContributors: language.contributors)
+        Form {
+            ForEach(Array(Translators.languages).sorted { $0.name < $1.name }, id: \.self, content: { language in
+                TranslatorLineView(
+                    languageName: language.name,
+                    languageFlag: language.flag,
+                    languageMaintainers: language.maintainers,
+                    languageContributors: language.contributors
+                )
             })
         }
         .navigationTitle("str.settings.about.translators")

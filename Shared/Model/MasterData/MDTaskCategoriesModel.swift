@@ -8,18 +8,19 @@
 import Foundation
 
 // MARK: - MDTaskCategory
+
 struct MDTaskCategory: Codable {
     let id: Int
     let name: String
     let mdTaskCategoryDescription: String?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdTaskCategoryDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -31,11 +32,13 @@ struct MDTaskCategory: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         mdTaskCategoryDescription: String? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        mdTaskCategoryDescription: String? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.mdTaskCategoryDescription = mdTaskCategoryDescription

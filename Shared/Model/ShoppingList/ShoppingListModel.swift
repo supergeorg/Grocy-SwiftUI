@@ -1,6 +1,6 @@
 //
 //  ShoppingListModel.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 26.11.20.
 //
@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - ShoppingListElement
+
 struct ShoppingListItem: Codable {
     let id: Int
     let productID: Int?
@@ -17,7 +18,7 @@ struct ShoppingListItem: Codable {
     let done: Int
     let quID: Int?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -27,7 +28,7 @@ struct ShoppingListItem: Codable {
         case quID = "qu_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -43,15 +44,17 @@ struct ShoppingListItem: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         productID: Int? = nil,
-         note: String? = nil,
-         amount: Double,
-         shoppingListID: Int,
-         done: Int,
-         quID: Int? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        productID: Int? = nil,
+        note: String? = nil,
+        amount: Double,
+        shoppingListID: Int,
+        done: Int,
+        quID: Int? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.productID = productID
         self.note = note
@@ -66,6 +69,7 @@ struct ShoppingListItem: Codable {
 typealias ShoppingList = [ShoppingListItem]
 
 // MARK: - ShoppingListAddItem
+
 struct ShoppingListItemAdd: Codable {
     let amount: Double
     let note: String?

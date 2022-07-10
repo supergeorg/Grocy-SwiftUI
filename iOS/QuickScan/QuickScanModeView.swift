@@ -55,7 +55,7 @@ struct QuickScanModeView: View {
     @State private var infoString: String?
     
     @State private var lastConsumeLocationID: Int?
-    @State private var lastPurchaseDueDate: Date = Date()
+    @State private var lastPurchaseDueDate: Date = .init()
     @State private var lastPurchaseShoppingLocationID: Int?
     @State private var lastPurchaseLocationID: Int?
     
@@ -64,8 +64,18 @@ struct QuickScanModeView: View {
         isScanPaused = (qsActiveSheet != nil)
     }
     
-    private let dataToUpdate: [ObjectEntities] =  [.product_barcodes, .products, .locations, .shopping_locations, .quantity_units, .quantity_unit_conversions]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .system_config]
+    private let dataToUpdate: [ObjectEntities] = [
+        .product_barcodes,
+        .products,
+        .locations,
+        .shopping_locations,
+        .quantity_units,
+        .quantity_unit_conversions,
+    ]
+    private let additionalDataToUpdate: [AdditionalEntities] = [
+        .stock,
+        .system_config,
+    ]
     
     func updateData() {
         grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -76,7 +86,8 @@ struct QuickScanModeView: View {
         if codeComponents.count >= 3,
            codeComponents[0] == "grcy",
            codeComponents[1] == "p",
-           let productID = Int(codeComponents[2]) {
+           let productID = Int(codeComponents[2])
+        {
             let stockID: String? = codeComponents.count == 4 ? codeComponents[3] : nil
             return GrocyCode(entityType: .product, entityID: productID, stockID: stockID)
         } else {
@@ -85,7 +96,7 @@ struct QuickScanModeView: View {
     }
     
     func searchForBarcode(barcodeString: String) -> MDProductBarcode? {
-        return grocyVM.mdProductBarcodes.first(where: {$0.barcode == barcodeString})
+        return grocyVM.mdProductBarcodes.first(where: { $0.barcode == barcodeString })
     }
     
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
@@ -94,8 +105,7 @@ struct QuickScanModeView: View {
             if let grocyCode = searchForGrocyCode(barcodeString: barcodeString) {
                 recognizedGrocyCode = grocyCode
                 qsActiveSheet = .grocyCode
-            }
-            else if let barcode = searchForBarcode(barcodeString: barcodeString) {
+            } else if let barcode = searchForBarcode(barcodeString: barcodeString) {
                 recognizedBarcode = barcode
                 qsActiveSheet = .barcode
             } else {
@@ -117,7 +127,7 @@ struct QuickScanModeView: View {
     }
     
     var modePicker: some View {
-        HStack{
+        HStack {
             Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
                 Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
                     .labelStyle(.titleAndIcon)
@@ -161,7 +171,14 @@ struct QuickScanModeView: View {
     }
     
     var bodyContent: some View {
-        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .continuous, simulatedData: showDemoGrocyCode ? "grcy:p:13:5fe1f33579ef4" : "5901234123457", isPaused: $isScanPaused, isFrontCamera: $isFrontCamera, completion: self.handleScan)
+        CodeScannerView(
+            codeTypes: getSavedCodeTypes().map { $0.type },
+            scanMode: .continuous,
+            simulatedData: showDemoGrocyCode ? "grcy:p:13:5fe1f33579ef4" : "5901234123457",
+            isPaused: $isScanPaused,
+            isFrontCamera: $isFrontCamera,
+            completion: self.handleScan
+        )
             .overlay(modePicker, alignment: .top)
             .sheet(item: $qsActiveSheet) { item in
                 switch item {
@@ -213,7 +230,7 @@ struct QuickScanModeView: View {
             .onAppear(perform: {
                 grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
             })
-            .onChange(of: newRecognizedBarcode?.id, perform: { newRecBC in
+            .onChange(of: newRecognizedBarcode?.id, perform: { _ in
                 DispatchQueue.main.async {
                     if quickScanActionAfterAdd {
                         recognizedBarcode = newRecognizedBarcode
@@ -222,7 +239,7 @@ struct QuickScanModeView: View {
                     }
                 }
             })
-            .onChange(of: qsActiveSheet, perform: { newActiveSheet in
+            .onChange(of: qsActiveSheet, perform: { _ in
                 DispatchQueue.main.async {
                     checkScanPause()
                 }

@@ -37,27 +37,31 @@ struct QuickScanModeInputView: View {
         if let grocyCode = grocyCode {
             return grocyVM.mdProducts.first(where: { $0.id == grocyCode.entityID })
         } else if let productBarcode = productBarcode {
-            return grocyVM.mdProducts.first(where: {$0.id == productBarcode.productID})
+            return grocyVM.mdProducts.first(where: { $0.id == productBarcode.productID })
         }
         return nil
     }
+
     var stockElement: StockElement? {
         grocyVM.stock.first(where: { $0.productID == product?.id })
     }
     
     var quantityUnitPurchase: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDPurchase})
+        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
+
     var quantityUnitStock: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == product?.quIDStock })
+        return grocyVM.mdQuantityUnitConversions.filter { $0.toQuID == product?.quIDStock }
     }
+
     private var purchaseAmountFactored: Double {
-        return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID})?.factor ?? 1)
+        return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID })?.factor ?? 1)
     }
+
     private var purchaseStockAmountFactored: Double {
         return purchaseAmountFactored * (product?.quFactorPurchaseToStock ?? 1.0)
     }
@@ -73,7 +77,7 @@ struct QuickScanModeInputView: View {
     private func getAmountForLocation(lID: Int) -> Double {
         if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
             var maxAmount: Double = 0
-            let filtEntries = entries.filter{ $0.locationID == lID }
+            let filtEntries = entries.filter { $0.locationID == lID }
             for filtEntry in filtEntries {
                 maxAmount += filtEntry.amount
             }
@@ -81,6 +85,7 @@ struct QuickScanModeInputView: View {
         }
         return 0.0
     }
+
     private func getQUString(amount: Double, purchase: Bool = false) -> String {
         if purchase {
             return amount == 1 ? quantityUnitPurchase?.name ?? "" : quantityUnitPurchase?.namePlural ?? quantityUnitPurchase?.name ?? ""
@@ -99,7 +104,7 @@ struct QuickScanModeInputView: View {
     @State private var markAsOpenItemID: String?
     
     // Purchase
-    @State private var purchaseDueDate: Date = Date()
+    @State private var purchaseDueDate: Date = .init()
     @State private var purchaseDoesntSpoil: Bool = false
     @Binding var lastPurchaseDueDate: Date
     @State private var purchaseAmount: Double = 1.0
@@ -151,7 +156,16 @@ struct QuickScanModeInputView: View {
     private func consumeItem() {
         if let id = product?.id {
             let amount = getConsumeAmount()
-            let productConsume = ProductConsume(amount: amount, transactionType: .consume, spoiled: false, stockEntryID: consumeItemID, recipeID: nil, locationID: consumeLocationID, exactAmount: nil, allowSubproductSubstitution: nil)
+            let productConsume = ProductConsume(
+                amount: amount,
+                transactionType: .consume,
+                spoiled: false,
+                stockEntryID: consumeItemID,
+                recipeID: nil,
+                locationID: consumeLocationID,
+                exactAmount: nil,
+                allowSubproductSubstitution: nil
+            )
             infoString = "\(amount.formattedAmount) \(getQUString(amount: amount)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .consume, content: productConsume) { result in
@@ -206,7 +220,15 @@ struct QuickScanModeInputView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let strDueDate = purchaseDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: purchaseDueDate)
             let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
-            let productBuy = ProductBuy(amount: purchaseStockAmountFactored, bestBeforeDate: strDueDate, transactionType: .purchase, price: purchaseUnitPrice, locationID: purchaseLocationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
+            let productBuy = ProductBuy(
+                amount: purchaseStockAmountFactored,
+                bestBeforeDate: strDueDate,
+                transactionType: .purchase,
+                price: purchaseUnitPrice,
+                locationID: purchaseLocationID,
+                shoppingLocationID: purchaseShoppingLocationID,
+                note: noteText
+            )
             infoString = "\(purchaseAmount.formattedAmount) \(getQUString(amount: purchaseAmount, purchase: true)) \(product?.name ?? "")"
             isProcessingAction = true
             grocyVM.postStockObject(id: id, stockModePost: .add, content: productBuy) { result in
@@ -236,7 +258,7 @@ struct QuickScanModeInputView: View {
             lastPurchaseShoppingLocationID = purchaseShoppingLocationID
             lastPurchaseLocationID = purchaseLocationID
         }
-        self.dismiss()
+        dismiss()
     }
     
     private func restoreLastInput() {
@@ -262,17 +284,18 @@ struct QuickScanModeInputView: View {
     }
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             Form {
                 if let product = product {
-                    Section() {
-                        HStack{
+                    Section {
+                        HStack {
                             if let pictureFileName = product.pictureFileName,
                                !pictureFileName.isEmpty,
                                let utf8str = pictureFileName.data(using: .utf8),
                                let base64Encoded = utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
                                let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded),
-                               let url = URL(string: pictureURL) {
+                               let url = URL(string: pictureURL)
+                            {
                                 AsyncImage(url: url, content: { image in
                                     image
                                         .resizable()
@@ -295,7 +318,7 @@ struct QuickScanModeInputView: View {
                 
                 if quickScanMode == .consume {
                     Group {
-                        VStack(alignment: .leading){
+                        VStack(alignment: .leading) {
                             Text(LocalizedStringKey("str.quickScan.input.consume.amount"))
                             Picker(selection: $consumeAmountMode, label: Text(""), content: {
                                 Text(LocalizedStringKey("str.quickScan.input.consume.default \(getStandardConsumeAmount().formattedAmount)")).tag(ConsumeAmountMode.standard)
@@ -315,7 +338,7 @@ struct QuickScanModeInputView: View {
                         
                         Picker(selection: $consumeLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as Int?)
-                            ForEach(grocyVM.mdLocations, id:\.id) {location in
+                            ForEach(grocyVM.mdLocations, id: \.id) { location in
                                 Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
                             }
                         })
@@ -324,9 +347,9 @@ struct QuickScanModeInputView: View {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[product?.id ?? 0] ?? [], id: \.stockID) { stockProduct in
                                 Text(stockProduct.stockEntryOpen == false ?
-                                     LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
-                                     :
-                                        LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
+                                    LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
+                                    :
+                                    LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
                                 )
                                 .tag(stockProduct.stockID as String?)
                             }
@@ -340,9 +363,9 @@ struct QuickScanModeInputView: View {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[product?.id ?? 0] ?? [], id: \.stockID) { stockProduct in
                                 Text(stockProduct.stockEntryOpen == false ?
-                                     LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
-                                     :
-                                        LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
+                                    LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
+                                    :
+                                    LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")")
                                 )
                                 .tag(stockProduct.stockID as String?)
                             }
@@ -353,7 +376,7 @@ struct QuickScanModeInputView: View {
                 if quickScanMode == .purchase {
                     Group {
                         Section(header: Text(LocalizedStringKey("str.stock.buy.product.dueDate")).font(.headline)) {
-                            VStack(alignment: .trailing){
+                            VStack(alignment: .trailing) {
                                 HStack {
                                     Image(systemName: MySymbols.date)
                                     DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $purchaseDueDate, displayedComponents: .date)
@@ -391,14 +414,14 @@ struct QuickScanModeInputView: View {
                         
                         Picker(selection: $purchaseShoppingLocationID, label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation), content: {
                             Text("").tag(nil as Int?)
-                            ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
+                            ForEach(grocyVM.mdShoppingLocations, id: \.id) { shoppingLocation in
                                 Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
                             }
                         })
                         
                         Picker(selection: $purchaseLocationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                             Text("").tag(nil as Int?)
-                            ForEach(grocyVM.mdLocations, id:\.id) { location in
+                            ForEach(grocyVM.mdLocations, id: \.id) { location in
                                 Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
                             }
                         })

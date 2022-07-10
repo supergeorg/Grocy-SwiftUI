@@ -1,6 +1,6 @@
 //
 //  StockLocationModel.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 25.11.20.
 //
@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - StockLocation
+
 struct StockLocation: Codable {
     let id: Int
     let productID: Int
@@ -15,7 +16,7 @@ struct StockLocation: Codable {
     let locationID: Int
     let locationName: String
     let locationIsFreezer: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -24,7 +25,7 @@ struct StockLocation: Codable {
         case locationName = "location_name"
         case locationIsFreezer = "location_is_freezer"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -39,7 +40,7 @@ struct StockLocation: Codable {
                 do {
                     self.locationIsFreezer = (try container.decode(Int.self, forKey: .locationIsFreezer) == 1)
                 } catch {
-                    self.locationIsFreezer = ["1",  "true"].contains(try container.decode(String.self, forKey: .locationIsFreezer))
+                    self.locationIsFreezer = ["1", "true"].contains(try container.decode(String.self, forKey: .locationIsFreezer))
                 }
             }
         } catch {

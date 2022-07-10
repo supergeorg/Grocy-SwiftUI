@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - MDProductBarcode
+
 struct MDProductBarcode: Codable {
     let id, productID: Int
     let barcode: String
@@ -17,7 +18,7 @@ struct MDProductBarcode: Codable {
     let lastPrice: Double?
     let rowCreatedTimestamp: String
     let note: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -29,7 +30,7 @@ struct MDProductBarcode: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case note
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -46,16 +47,18 @@ struct MDProductBarcode: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         productID: Int,
-         barcode: String,
-         quID: Int? = nil,
-         amount: Double? = nil,
-         shoppingLocationID: Int? = nil,
-         lastPrice: Double? = nil,
-         rowCreatedTimestamp: String,
-         note: String? = nil) {
+
+    init(
+        id: Int,
+        productID: Int,
+        barcode: String,
+        quID: Int? = nil,
+        amount: Double? = nil,
+        shoppingLocationID: Int? = nil,
+        lastPrice: Double? = nil,
+        rowCreatedTimestamp: String,
+        note: String? = nil
+    ) {
         self.id = id
         self.productID = productID
         self.barcode = String(barcode)
@@ -65,7 +68,6 @@ struct MDProductBarcode: Codable {
         self.lastPrice = lastPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
         self.note = note
-        
     }
 }
 

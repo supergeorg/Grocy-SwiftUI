@@ -8,13 +8,14 @@
 import Foundation
 
 // MARK: - MDQuantityUnit
+
 struct MDQuantityUnit: Codable {
     let id: Int
     let name: String
     let namePlural: String
     let mdQuantityUnitDescription: String?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -22,7 +23,7 @@ struct MDQuantityUnit: Codable {
         case mdQuantityUnitDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -35,12 +36,14 @@ struct MDQuantityUnit: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         namePlural: String,
-         mdQuantityUnitDescription: String? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        namePlural: String,
+        mdQuantityUnitDescription: String? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.namePlural = namePlural

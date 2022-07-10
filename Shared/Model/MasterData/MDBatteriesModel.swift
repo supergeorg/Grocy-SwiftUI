@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - MDBattery
+
 struct MDBattery: Codable {
     let id: Int
     let name: String
@@ -16,7 +17,7 @@ struct MDBattery: Codable {
     let chargeIntervalDays: Int
     let active: Int
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -26,7 +27,7 @@ struct MDBattery: Codable {
         case active
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -41,14 +42,16 @@ struct MDBattery: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         mdBatteryDescription: String? = nil,
-         usedIn: String? = nil,
-         chargeIntervalDays: Int,
-         active: Int,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        mdBatteryDescription: String? = nil,
+        usedIn: String? = nil,
+        chargeIntervalDays: Int,
+        active: Int,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.mdBatteryDescription = mdBatteryDescription

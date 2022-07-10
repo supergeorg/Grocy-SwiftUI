@@ -10,6 +10,7 @@
 import Foundation
 
 // MARK: - VolatileStock
+
 struct VolatileStock: Codable {
     let dueProducts, overdueProducts, expiredProducts: [StockElement]
     let missingProducts: [VolatileStockProductMissing]
@@ -23,6 +24,7 @@ struct VolatileStock: Codable {
 }
 
 // MARK: - VolatileStockProductMissing
+
 struct VolatileStockProductMissing: Codable {
     let id: Int
     let name: String?
@@ -34,7 +36,7 @@ struct VolatileStockProductMissing: Codable {
         case amountMissing = "amount_missing"
         case isPartlyInStock = "is_partly_in_stock"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)

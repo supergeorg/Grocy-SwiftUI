@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - MDUserField
+
 struct MDUserField: Codable {
     let id: Int
     let name: String
@@ -18,7 +19,7 @@ struct MDUserField: Codable {
     let config: String?
     let sortNumber: Int?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -30,7 +31,7 @@ struct MDUserField: Codable {
         case sortNumber = "sort_number"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -47,16 +48,18 @@ struct MDUserField: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         entity: String,
-         caption: String,
-         type: String,
-         showAsColumnInTables: Int,
-         config: String? = nil,
-         sortNumber: Int? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        entity: String,
+        caption: String,
+        type: String,
+        showAsColumnInTables: Int,
+        config: String? = nil,
+        sortNumber: Int? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.entity = entity
@@ -77,15 +80,15 @@ enum UserFieldType: String, CaseIterable {
     case textMultiLine = "text-multi-line"
     case numberIntegral = "number-integral"
     case numberDezimal = "number-decimal"
-    case date = "date"
+    case date
     case dateTime = "datetime"
-    case checkbox = "checkbox"
+    case checkbox
     case presetList = "preset-list"
     case presetChecklist = "preset-checklist"
-    case link = "link"
-    case file = "file"
-    case image = "image"
-    
+    case link
+    case file
+    case image
+
     func getDescription() -> String {
         switch self {
         case .none:

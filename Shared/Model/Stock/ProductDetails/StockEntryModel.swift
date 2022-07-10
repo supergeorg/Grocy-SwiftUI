@@ -1,6 +1,6 @@
 //
 //  StockEntriesModel.swift
-//  grocy-ios
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 23.10.20.
 //
@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - StockEntry
+
 struct StockEntry: Codable, Equatable {
     let id: Int
     let productID: Int
@@ -22,7 +23,7 @@ struct StockEntry: Codable, Equatable {
     let locationID: Int?
     let shoppingLocationID: Int?
     let note: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -38,7 +39,7 @@ struct StockEntry: Codable, Equatable {
         case shoppingLocationID = "shopping_location_id"
         case note
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -50,7 +51,7 @@ struct StockEntry: Codable, Equatable {
             } else {
                 self.bestBeforeDate = nil
             }
-            
+
             let purchasedDateString = try? container.decodeIfPresent(String.self, forKey: .purchasedDate)
             self.purchasedDate = getDateFromString(purchasedDateString ?? "")
             do { self.stockID = try container.decode(String.self, forKey: .stockID) } catch { self.stockID = try String(container.decode(Int.self, forKey: .stockID)) }
@@ -74,20 +75,22 @@ struct StockEntry: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         productID: Int,
-         amount: Double,
-         bestBeforeDate: Date,
-         purchasedDate: Date?,
-         stockID: String,
-         price: Double?,
-         stockEntryOpen: Bool,
-         openedDate: Date?,
-         rowCreatedTimestamp: String,
-         locationID: Int? = nil,
-         shoppingLocationID: Int? = nil,
-         note: String?) {
+
+    init(
+        id: Int,
+        productID: Int,
+        amount: Double,
+        bestBeforeDate: Date,
+        purchasedDate: Date?,
+        stockID: String,
+        price: Double?,
+        stockEntryOpen: Bool,
+        openedDate: Date?,
+        rowCreatedTimestamp: String,
+        locationID: Int? = nil,
+        shoppingLocationID: Int? = nil,
+        note: String?
+    ) {
         self.id = id
         self.productID = productID
         self.amount = amount

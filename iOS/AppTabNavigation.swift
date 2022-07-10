@@ -27,11 +27,11 @@ struct AppTabNavigation: View {
     var body: some View {
         TabView(selection: $tabSelection) {
             QuickScanModeView()
-            .tabItem {
-                Label(LocalizedStringKey("str.nav.quickScan"), systemImage: Tab.quickScanMode.rawValue)
-                    .accessibility(label: Text(LocalizedStringKey("str.nav.quickScan")))
-            }
-            .tag(Tab.quickScanMode)
+                .tabItem {
+                    Label(LocalizedStringKey("str.nav.quickScan"), systemImage: Tab.quickScanMode.rawValue)
+                        .accessibility(label: Text(LocalizedStringKey("str.nav.quickScan")))
+                }
+                .tag(Tab.quickScanMode)
             
             NavigationView {
                 StockView()
@@ -52,7 +52,6 @@ struct AppTabNavigation: View {
             }
             .tag(Tab.shoppingList)
             .navigationViewStyle(StackNavigationViewStyle())
-            
             
 //            if devMode {
 //                NavigationView {
@@ -83,7 +82,7 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.settings"))
             }
             .tag(Tab.settings)
-            .navigationViewStyle(StackNavigationViewStyle())            
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

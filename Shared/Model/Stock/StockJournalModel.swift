@@ -30,7 +30,7 @@ struct StockJournalEntry: Codable {
     let shoppingLocationID: Int?
     let userID: Int
     let note: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -55,7 +55,7 @@ struct StockJournalEntry: Codable {
         case userID = "user_id"
         case note
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -1,6 +1,6 @@
 //
 //  ShoppingListStatus.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 27.11.20.
 //
@@ -13,7 +13,7 @@ enum ShoppingListStatus: String {
     case belowMinStock = "str.shL.filter.belowMinStock"
     case done = "str.shL.filter.done"
     case undone = "str.shL.filter.undone"
-    
+
     func getDescription(amount: Int) -> LocalizedStringKey {
         switch self {
         case .all:

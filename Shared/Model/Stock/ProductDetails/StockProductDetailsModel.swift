@@ -1,6 +1,6 @@
 //
 //  ProductDetailsModel.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 25.11.20.
 //
@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - StockProductDetails
+
 struct StockProductDetails: Codable {
     let product: MDProduct
     let productBarcodes: [MDProductBarcode]
@@ -28,7 +29,7 @@ struct StockProductDetails: Codable {
     let spoilRatePercent: Double
     let isAggregatedAmount: Bool
     let hasChilds: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case product
         case productBarcodes = "product_barcodes"
@@ -53,7 +54,7 @@ struct StockProductDetails: Codable {
         case isAggregatedAmount = "is_aggregated_amount"
         case hasChilds = "has_childs"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)

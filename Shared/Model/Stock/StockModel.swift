@@ -8,9 +8,9 @@
 import Foundation
 
 // MARK: - StockEntry
+
 struct StockElement: Codable, Identifiable {
     let id = UUID()
-    
     let amount: Double
     let amountAggregated: Double
     let value: Double
@@ -21,7 +21,7 @@ struct StockElement: Codable, Identifiable {
     let dueType: Int
     let productID: Int
     let product: MDProduct
-    
+
     enum CodingKeys: String, CodingKey {
         case amount
         case amountAggregated = "amount_aggregated"
@@ -34,7 +34,7 @@ struct StockElement: Codable, Identifiable {
         case productID = "product_id"
         case product
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -61,17 +61,19 @@ struct StockElement: Codable, Identifiable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(amount: Double,
-         amountAggregated: Double,
-         value: Double,
-         bestBeforeDate: Date?,
-         amountOpened: Double,
-         amountOpenedAggregated: Double,
-         isAggregatedAmount: Bool,
-         dueType: Int,
-         productID: Int,
-         product: MDProduct) {
+
+    init(
+        amount: Double,
+        amountAggregated: Double,
+        value: Double,
+        bestBeforeDate: Date?,
+        amountOpened: Double,
+        amountOpenedAggregated: Double,
+        isAggregatedAmount: Bool,
+        dueType: Int,
+        productID: Int,
+        product: MDProduct
+    ) {
         self.amount = amount
         self.amountAggregated = amountAggregated
         self.value = value

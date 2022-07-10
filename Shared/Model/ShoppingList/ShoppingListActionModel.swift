@@ -1,16 +1,17 @@
 //
 //  ShoppingListActionModel.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 02.12.20.
 //
 
-//list_id    integer
-//The shopping list id to clear, when omitted, the default shopping list (with id 1) is used
+// list_id    integer
+// The shopping list id to clear, when omitted, the default shopping list (with id 1) is used
 
 import Foundation
 
 // MARK: - ShoppingListAction
+
 struct ShoppingListAction: Codable {
     let listID: Int
 

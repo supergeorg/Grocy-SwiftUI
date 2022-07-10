@@ -8,12 +8,13 @@
 import Foundation
 
 // MARK: - MDProductGroup
+
 struct MDProductGroup: Codable {
     let id: Int
     let name: String
     let mdProductGroupDescription: String?
     let rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdProductGroupDescription = "description"
@@ -31,11 +32,13 @@ struct MDProductGroup: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         name: String,
-         mdProductGroupDescription: String? = nil,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        name: String,
+        mdProductGroupDescription: String? = nil,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.name = name
         self.mdProductGroupDescription = mdProductGroupDescription

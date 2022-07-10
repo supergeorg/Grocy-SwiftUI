@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - MDQuantityUnitConversion
+
 struct MDQuantityUnitConversion: Codable {
     let id: Int
     let fromQuID: Int
@@ -24,7 +25,7 @@ struct MDQuantityUnitConversion: Codable {
         case productID = "product_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -38,13 +39,15 @@ struct MDQuantityUnitConversion: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-    
-    init(id: Int,
-         fromQuID: Int,
-         toQuID: Int,
-         factor: Double,
-         productID: Int?,
-         rowCreatedTimestamp: String) {
+
+    init(
+        id: Int,
+        fromQuID: Int,
+        toQuID: Int,
+        factor: Double,
+        productID: Int?,
+        rowCreatedTimestamp: String
+    ) {
         self.id = id
         self.fromQuID = fromQuID
         self.toQuID = toQuID
