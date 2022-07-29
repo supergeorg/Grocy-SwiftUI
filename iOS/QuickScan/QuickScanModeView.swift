@@ -166,8 +166,8 @@ struct QuickScanModeView: View {
                 })
             }
         }
-        .padding(.bottom)
-        .background(Color.secondary)
+        .padding(.vertical)
+        .animation(.default, value: isScanPaused)
     }
     
     var bodyContent: some View {
