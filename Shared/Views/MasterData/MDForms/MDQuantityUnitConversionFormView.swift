@@ -25,7 +25,7 @@ struct MDQuantityUnitConversionFormView: View {
     var quantityUnitConversion: MDQuantityUnitConversion?
     
     @Binding var showAddQuantityUnitConversion: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var conversionCorrect: Bool = false
     private func checkConversionExists() -> Bool {

@@ -42,8 +42,7 @@ struct StockView: View {
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
-    @State private var toastType: RowActionToastType?
-    @State private var mdToastType: MDToastType?
+    @State private var toastType: ToastType?
     
 #if os(iOS)
     @State private var activeSheet: StockInteractionSheet?
@@ -157,10 +156,10 @@ struct StockView: View {
                                     .padding()
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
-                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true)
+                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType)
                                     .frame(minWidth: 500, minHeight: 500)
                             case .productConsume:
-                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true)
+                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productTransfer:
                                 TransferProductView(stockElement: $selectedStockElement, isPopup: true)
@@ -175,7 +174,7 @@ struct StockView: View {
                                 StockJournalView(stockElement: $selectedStockElement)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .editProduct:
-                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType, isPopup: true)
+                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true)
                                     .frame(minWidth: 400, minHeight: 300)
                             }
                         })
@@ -233,11 +232,11 @@ struct StockView: View {
                     StockJournalView()
                 case .purchaseProduct:
                     NavigationView{
-                        PurchaseProductView()
+                        PurchaseProductView(toastType: $toastType)
                     }
                 case .consumeProduct:
                     NavigationView{
-                        ConsumeProductView()
+                        ConsumeProductView(toastType: $toastType)
                     }
                 case .transferProduct:
                     NavigationView{
@@ -251,11 +250,11 @@ struct StockView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID)
                 case .productPurchase:
                     NavigationView{
-                        PurchaseProductView(stockElement: $selectedStockElement)
+                        PurchaseProductView(stockElement: $selectedStockElement, toastType: $toastType)
                     }
                 case .productConsume:
                     NavigationView{
-                        ConsumeProductView(stockElement: $selectedStockElement)
+                        ConsumeProductView(stockElement: $selectedStockElement, toastType: $toastType)
                     }
                 case .productTransfer:
                     NavigationView{
@@ -273,7 +272,7 @@ struct StockView: View {
                     StockJournalView(stockElement: $selectedStockElement)
                 case .editProduct:
                     NavigationView{
-                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $mdToastType, isPopup: true)
+                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true)
                     }
                 }
             })
@@ -318,8 +317,12 @@ struct StockView: View {
                 return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
             case .successConsumeAllSpoiled:
                 return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-            case .fail:
+            case .failOpen:
                 return LocalizedStringKey("str.stock.tbl.action.fail")
+            case .failConsume:
+                return LocalizedStringKey("str.stock.tbl.action.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
     }
@@ -361,8 +364,12 @@ struct StockView: View {
                 return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
             case .successConsumeAllSpoiled:
                 return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-            case .fail:
+            case .failOpen:
                 return LocalizedStringKey("str.stock.tbl.action.fail")
+            case .failConsume:
+                return LocalizedStringKey("str.stock.tbl.action.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
     }

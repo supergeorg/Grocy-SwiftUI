@@ -45,7 +45,7 @@ struct MDBarcodesView: View {
     
     @State private var showAddBarcode: Bool = false
     
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     
@@ -134,6 +134,8 @@ struct MDBarcodesView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.barcode.delete.confirm"), isPresented: $showDeleteAlert, actions: {
@@ -182,6 +184,8 @@ struct MDBarcodesView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .toolbar(content: {

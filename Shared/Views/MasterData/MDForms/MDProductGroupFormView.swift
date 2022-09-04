@@ -22,7 +22,7 @@ struct MDProductGroupFormView: View {
     var productGroup: MDProductGroup?
     
     @Binding var showAddProductGroup: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {

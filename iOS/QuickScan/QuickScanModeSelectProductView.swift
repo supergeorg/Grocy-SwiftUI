@@ -21,10 +21,8 @@ struct QuickScanModeSelectProductView: View {
     
     @State private var productID: Int?
     
-    @Binding var toastTypeSuccess: QSToastTypeSuccess?
+    @Binding var toastType: ToastType?
     @Binding var qsActiveSheet: QSActiveSheet?
-    @State private var toastTypeFail: QSToastTypeFail?
-    @State private var toastType: MDToastType?
     @Binding var newRecognizedBarcode: MDProductBarcode?
     @State var newProductBarcode: MDProductBarcode?
     
@@ -60,11 +58,11 @@ struct QuickScanModeSelectProductView: View {
                         grocyVM.postLog("Add barcode successful. \(message)", type: .info)
                         grocyVM.requestData(objects: [.product_barcodes], ignoreCached: true)
                         newRecognizedBarcode = newBarcode
-                        toastTypeSuccess = .successQSAddProduct
+                        toastType = .successAdd
                         finishForm()
                     case let .failure(error):
                         grocyVM.postLog("Add barcode failed. \(error)", type: .error)
-                        toastTypeFail = .failQSAddProduct
+                        toastType = .failAdd
                     }
                 })
             }
@@ -89,7 +87,7 @@ struct QuickScanModeSelectProductView: View {
                         )
                         .onChange(of: newProductBarcode?.id, perform: { _ in
                             if newProductBarcode != nil {
-                                toastTypeSuccess = .successQSAddProduct
+                                toastType = .successAdd
                                 finishForm()
                                 newRecognizedBarcode = newProductBarcode
                             }
@@ -114,9 +112,9 @@ struct QuickScanModeSelectProductView: View {
                 })
             })
         }
-        .toast(item: $toastTypeFail, isSuccess: Binding.constant(false), text: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(false), text: { item in
             switch item {
-            case .failQSAddProduct:
+            case .failAdd:
                 return LocalizedStringKey("str.quickScan.add.product.add.fail")
             default:
                 return LocalizedStringKey("")
@@ -129,7 +127,7 @@ struct QuickScanModeSelectProductView_Previews: PreviewProvider {
     static var previews: some View {
         QuickScanModeSelectProductView(
             barcode: "12345",
-            toastTypeSuccess: Binding.constant(QSToastTypeSuccess.successQSAddProduct),
+            toastType: Binding.constant(ToastType.successAdd),
             qsActiveSheet: Binding.constant(QSActiveSheet.selectProduct),
             newRecognizedBarcode: Binding.constant(nil)
         )

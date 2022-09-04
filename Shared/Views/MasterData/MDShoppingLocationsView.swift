@@ -31,7 +31,7 @@ struct MDShoppingLocationsView: View {
     @State private var showAddShoppingLocation: Bool = false
     @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
     @State private var showDeleteAlert: Bool = false
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() {
@@ -153,6 +153,8 @@ struct MDShoppingLocationsView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.shoppingLocation.delete.confirm"), isPresented: $showDeleteAlert, actions: {

@@ -37,7 +37,7 @@ struct MDUserFieldsView: View {
     @State private var userFieldToDelete: MDUserField? = nil
     @State private var showDeleteAlert: Bool = false
     
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.userfields]
     
@@ -150,6 +150,8 @@ struct MDUserFieldsView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.userField.delete.confirm"), isPresented: $showDeleteAlert, actions: {

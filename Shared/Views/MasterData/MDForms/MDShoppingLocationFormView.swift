@@ -22,7 +22,7 @@ struct MDShoppingLocationFormView: View {
     var shoppingLocation: MDShoppingLocation?
     
     @Binding var showAddShoppingLocation: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {

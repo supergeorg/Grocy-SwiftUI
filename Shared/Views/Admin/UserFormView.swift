@@ -21,7 +21,7 @@ struct UserFormView: View {
     var isNewUser: Bool
     var user: GrocyUser?
     
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {

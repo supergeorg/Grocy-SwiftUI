@@ -143,7 +143,7 @@ struct MDProductFormView: View {
     var openFoodFactsBarcode: String?
     
     @Binding var showAddProduct: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     var isPopup: Bool = false
     

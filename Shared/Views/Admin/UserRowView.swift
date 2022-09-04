@@ -13,7 +13,7 @@ struct UserRowActionsView: View {
     var user: GrocyUser
     var isCurrentUser: Bool
     
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
@@ -65,7 +65,7 @@ struct UserRowView: View {
     
     var isCurrentUser: Bool
     
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     var body: some View {
         HStack{

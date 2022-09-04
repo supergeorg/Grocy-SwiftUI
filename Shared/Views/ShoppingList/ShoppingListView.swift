@@ -16,7 +16,7 @@ struct ShoppingListView: View {
     @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
     
     @State private var showSHLDeleteAlert: Bool = false
-    @State private var toastType: ShoppingListToastType?
+    @State private var toastType: ToastType?
     
     @State private var showClearListAlert: Bool = false
     
@@ -373,6 +373,8 @@ struct ShoppingListView: View {
             switch item {
             case .shLActionFail:
                 return LocalizedStringKey("str.shL.action.failed")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
     }

@@ -36,7 +36,7 @@ struct MDTaskCategoriesView: View {
     @State private var taskCategoryToDelete: MDTaskCategory? = nil
     @State private var showDeleteAlert: Bool = false
     
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
     
@@ -148,6 +148,8 @@ struct MDTaskCategoriesView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.taskCategory.delete.confirm"), isPresented: $showDeleteAlert, actions: {

@@ -17,7 +17,7 @@ struct StockEntryRowView: View {
     var dueType: Int
     var fetchData: ()
     
-    @Binding var toastType: StockEntryToastType?
+    @Binding var toastType: ToastType?
     
     var backgroundColor: Color {
         if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
@@ -48,7 +48,7 @@ struct StockEntryRowView: View {
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .failConsume
             }
         }
     }
@@ -62,7 +62,7 @@ struct StockEntryRowView: View {
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .failOpen
             }
         }
     }
@@ -174,7 +174,7 @@ struct StockEntriesView: View {
     
     @State private var selectedStockElement: StockElement? = nil
     @State private var stockEntries: StockEntries = []
-    @State private var toastType: StockEntryToastType?
+    @State private var toastType: ToastType?
     
     func fetchData(ignoreCached: Bool = true) {
         // This local management is needed due to the SwiftUI Views not updating correctly.
@@ -211,9 +211,9 @@ struct StockEntriesView: View {
         .onAppear(perform: {
             fetchData(ignoreCached: false)
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType != StockEntryToastType.fail), text: { item in
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType != ToastType.failEdit), text: { item in
             switch item {
-            case .fail:
+            case .failEdit:
                 return LocalizedStringKey("str.failed")
             default:
                 return LocalizedStringKey("")

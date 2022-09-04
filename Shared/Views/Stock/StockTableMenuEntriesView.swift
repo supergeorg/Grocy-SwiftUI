@@ -17,7 +17,7 @@ struct StockTableMenuEntriesView: View {
 #elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
 #endif
-    @Binding var toastType: RowActionToastType?
+    @Binding var toastType: ToastType?
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
@@ -34,7 +34,7 @@ struct StockTableMenuEntriesView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
                 grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .shLActionFail
             }
         }
     }

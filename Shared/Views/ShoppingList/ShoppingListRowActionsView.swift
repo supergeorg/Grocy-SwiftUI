@@ -17,7 +17,7 @@ struct ShoppingListRowActionsView: View {
     @State private var showAutoPurchase: Bool = false
     @State private var showEntryDeleteAlert: Bool = false
     
-    @Binding var toastType: ShoppingListToastType?
+    @Binding var toastType: ToastType?
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID})
@@ -103,22 +103,22 @@ struct ShoppingListRowActionsView: View {
                 }
 #if os(macOS)
                 .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType)
                         .padding()
                 })
                 .popover(isPresented: $showAutoPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType)
                         .padding()
                 })
 #elseif os(iOS)
                 .sheet(isPresented: $showPurchase, content: {
                     NavigationView{
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType)
                     }
                 })
                 .sheet(isPresented: $showAutoPurchase, content: {
                     NavigationView{
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType)
                     }
                 })
 #endif

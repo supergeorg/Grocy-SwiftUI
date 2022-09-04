@@ -23,7 +23,7 @@ struct MDQuantityUnitFormView: View {
     var quantityUnit: MDQuantityUnit?
     
     @Binding var showAddQuantityUnit: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var showAddQuantityUnitConversion: Bool = false
     

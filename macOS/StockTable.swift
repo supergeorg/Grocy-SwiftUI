@@ -44,7 +44,7 @@ struct StockTable: View {
     
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionPopover?
-    @Binding var toastType: RowActionToastType?
+    @Binding var toastType: ToastType?
     //
     var body: some View {
         Table(searchedStock, columns: {

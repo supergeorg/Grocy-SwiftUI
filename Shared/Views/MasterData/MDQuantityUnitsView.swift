@@ -40,7 +40,7 @@ struct MDQuantityUnitsView: View {
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteAlert: Bool = false
     
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units]
     private func updateData() {
@@ -150,6 +150,8 @@ struct MDQuantityUnitsView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.quantityUnit.delete.confirm"), isPresented: $showDeleteAlert, actions: {

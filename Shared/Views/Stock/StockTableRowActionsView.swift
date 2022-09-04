@@ -29,8 +29,7 @@ struct StockTableRowActionsView: View {
         }
     }
     
-    @Binding var toastType: RowActionToastType?
-    @State private var mdToastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
@@ -48,7 +47,7 @@ struct StockTableRowActionsView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
                 grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .shLActionFail
             }
         }
     }
@@ -62,7 +61,7 @@ struct StockTableRowActionsView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
                 grocyVM.postLog("Consume all items failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .shLActionFail
             }
         }
     }
@@ -76,7 +75,7 @@ struct StockTableRowActionsView: View {
                 grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
             case let .failure(error):
                 grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .fail
+                toastType = .shLActionFail
             }
         }
     }

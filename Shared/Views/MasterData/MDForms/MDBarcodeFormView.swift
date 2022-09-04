@@ -25,7 +25,7 @@ struct MDBarcodeFormView: View {
     var productID: Int
     var editBarcode: MDProductBarcode?
     
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {

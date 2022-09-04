@@ -7,48 +7,26 @@
 
 import Foundation
 
-enum MDToastType: Identifiable {
-    case successAdd, failAdd, successEdit, failEdit, failDelete
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-enum QSToastTypeSuccess: Identifiable {
-    case successQSPurchase, successQSOpen, successQSConsume, successQSAddProduct, invalidBarcode
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-enum QSToastTypeFail: Identifiable {
-    case failQSPurchase, failQSOpen, failQSConsume, failQSAddProduct
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-enum RowActionToastType: Identifiable {
-    case successConsumeOne, successConsumeAll, successOpenOne, successConsumeAllSpoiled, fail
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-enum StockEntryToastType: Identifiable {
-    case successConsumeEntry, successOpenEntry, fail
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-
-enum ShoppingListToastType: Identifiable {
-    case shLActionFail
+enum ToastType: Identifiable {
+    case successPurchase,
+         failPurchase,
+         successOpen,
+         failOpen,
+         successConsume,
+         failConsume,
+         successAdd,
+         failAdd,
+         successEdit,
+         failEdit,
+         successDelete,
+         failDelete,
+         successConsumeOne,
+         successConsumeAll,
+         successOpenOne,
+         successConsumeAllSpoiled,
+         successConsumeEntry,
+         successOpenEntry,
+         shLActionFail
     
     var id: Int {
         self.hashValue

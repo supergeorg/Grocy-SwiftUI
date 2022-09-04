@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ActivitiesView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
+    
+    @State var toastType: ToastType?
 
     var body: some View {
         List {
-            NavigationLink(destination: PurchaseProductView()) {
+            NavigationLink(destination: PurchaseProductView(toastType: $toastType)) {
                 Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
 

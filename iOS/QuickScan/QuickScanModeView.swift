@@ -51,7 +51,7 @@ struct QuickScanModeView: View {
     @State var recognizedGrocyCode: GrocyCode? = nil
     @State var notRecognizedBarcode: String? = nil
     
-    @State private var toastTypeSuccess: QSToastTypeSuccess?
+    @State var toastType: ToastType?
     @State private var infoString: String?
     
     @State private var lastConsumeLocationID: Int?
@@ -186,7 +186,7 @@ struct QuickScanModeView: View {
                     QuickScanModeInputView(
                         quickScanMode: $quickScanMode,
                         grocyCode: recognizedGrocyCode,
-                        toastTypeSuccess: $toastTypeSuccess,
+                        toastType: $toastType,
                         infoString: $infoString,
                         lastConsumeLocationID: $lastConsumeLocationID,
                         lastPurchaseDueDate: $lastPurchaseDueDate,
@@ -197,7 +197,7 @@ struct QuickScanModeView: View {
                     QuickScanModeInputView(
                         quickScanMode: $quickScanMode,
                         productBarcode: recognizedBarcode,
-                        toastTypeSuccess: $toastTypeSuccess,
+                        toastType: $toastType,
                         infoString: $infoString,
                         lastConsumeLocationID: $lastConsumeLocationID,
                         lastPurchaseDueDate: $lastPurchaseDueDate,
@@ -207,24 +207,24 @@ struct QuickScanModeView: View {
                 case .selectProduct:
                     QuickScanModeSelectProductView(
                         barcode: notRecognizedBarcode,
-                        toastTypeSuccess: $toastTypeSuccess,
+                        toastType: $toastType,
                         qsActiveSheet: $qsActiveSheet,
                         newRecognizedBarcode: $newRecognizedBarcode
                     )
                 }
             }
-            .toast(item: $toastTypeSuccess, isSuccess: Binding.constant(toastTypeSuccess != QSToastTypeSuccess.invalidBarcode), text: { item in
+            .toast(item: $toastType, isSuccess: Binding.constant(true), text: { item in
                 switch item {
-                case .successQSAddProduct:
+                case .successAdd:
                     return LocalizedStringKey("str.quickScan.add.product.add.success")
-                case .successQSConsume:
+                case .successConsume:
                     return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
-                case .successQSOpen:
+                case .successOpen:
                     return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
-                case .successQSPurchase:
+                case .successPurchase:
                     return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
-                case .invalidBarcode:
-                    return LocalizedStringKey("str.quickScan.barcode.invalid")
+                default:
+                    return LocalizedStringKey("str.error")
                 }
             })
             .onAppear(perform: {

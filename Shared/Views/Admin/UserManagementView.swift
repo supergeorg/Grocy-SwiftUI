@@ -16,7 +16,7 @@ struct UserManagementView: View {
     
     @State private var showAddUser: Bool = false
     
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
     

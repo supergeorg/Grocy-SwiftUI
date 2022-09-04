@@ -49,6 +49,8 @@ struct AppSidebarNavigation: View {
     
     @State private var firstAppear: Bool = true
     
+    @State var toastType: ToastType?
+    
     @AppStorage("devMode") private var devMode: Bool = false
     
     //    #if os(iOS)
@@ -138,12 +140,12 @@ struct AppSidebarNavigation: View {
                 //                }
                 
                 Group {
-                    NavigationLink(destination: PurchaseProductView(), tag: NavigationItem.purchase, selection: $selection) {
+                    NavigationLink(destination: PurchaseProductView(toastType: $toastType), tag: NavigationItem.purchase, selection: $selection) {
                         Label(LocalizedStringKey("str.nav.purchase"), systemImage: NavigationItem.purchase.rawValue)
                     }
                     .tag(NavigationItem.purchase)
                     
-                    NavigationLink(destination: ConsumeProductView(), tag: NavigationItem.consume, selection: $selection) {
+                    NavigationLink(destination: ConsumeProductView(toastType: $toastType), tag: NavigationItem.consume, selection: $selection) {
                         Label(LocalizedStringKey("str.nav.consume"), systemImage: NavigationItem.consume.rawValue)
                     }
                     .tag(NavigationItem.consume)

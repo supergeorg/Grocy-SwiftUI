@@ -14,7 +14,7 @@ struct ShoppingListRowView: View {
     
     var shoppingListItem: ShoppingListItem
     var isBelowStock: Bool
-    @Binding var toastType: ShoppingListToastType?
+    @Binding var toastType: ToastType?
     
     var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})
@@ -66,7 +66,7 @@ struct ShoppingListEntriesView: View {
     let shoppingListItem: ShoppingListItem
     @Binding var selectedShoppingListID: Int
     
-    @Binding var toastType: ShoppingListToastType?
+    @Binding var toastType: ToastType?
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     @State private var showPurchase: Bool = false
@@ -149,12 +149,12 @@ struct ShoppingListEntriesView: View {
         })
         .sheet(isPresented: $showPurchase, content: {
             NavigationView{
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType)
             }
         })
         .sheet(isPresented: $showAutoPurchase, content: {
             NavigationView{
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType)
             }
         })
         .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {

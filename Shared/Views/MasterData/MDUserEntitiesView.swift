@@ -33,7 +33,7 @@ struct MDUserEntitiesView: View {
     @State private var userEntityToDelete: MDUserEntity? = nil
     @State private var showDeleteAlert: Bool = false
     
-    @State private var toastType: MDToastType?
+    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
@@ -146,6 +146,8 @@ struct MDUserEntitiesView: View {
                 return LocalizedStringKey("str.md.edit.fail")
             case .failDelete:
                 return LocalizedStringKey("str.md.delete.fail")
+            default:
+                return LocalizedStringKey("str.error")
             }
         })
         .alert(LocalizedStringKey("str.md.userEntity.delete.confirm"), isPresented: $showDeleteAlert, actions: {

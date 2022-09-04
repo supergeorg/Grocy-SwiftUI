@@ -22,7 +22,7 @@ struct MDTaskCategoryFormView: View {
     var taskCategory: MDTaskCategory?
     
     @Binding var showAddTaskCategory: Bool
-    @Binding var toastType: MDToastType?
+    @Binding var toastType: ToastType?
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
