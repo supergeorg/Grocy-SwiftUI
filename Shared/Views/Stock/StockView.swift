@@ -157,10 +157,10 @@ struct StockView: View {
                                     .padding()
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
-                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType)
+                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType, infoString: $infoString)
                                     .frame(minWidth: 500, minHeight: 500)
                             case .productConsume:
-                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType)
+                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType, infoString: $infoString)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productTransfer:
                                 TransferProductView(stockElement: $selectedStockElement, isPopup: true)

@@ -104,11 +104,11 @@ struct ShoppingListRowActionsView: View {
                 }
 #if os(macOS)
                 .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType, infoString: $infoString)
                         .padding()
                 })
                 .popover(isPresented: $showAutoPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType, infoString: $infoString)
                         .padding()
                 })
 #elseif os(iOS)

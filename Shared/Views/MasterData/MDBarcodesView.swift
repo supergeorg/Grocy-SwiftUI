@@ -122,7 +122,11 @@ struct MDBarcodesView: View {
             }
         }
         .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
+            isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
+            text: { item in
             switch item {
             case .successAdd:
                 return LocalizedStringKey("str.md.new.success")

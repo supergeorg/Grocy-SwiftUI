@@ -15,6 +15,7 @@ struct ShoppingListRowView: View {
     var shoppingListItem: ShoppingListItem
     var isBelowStock: Bool
     @Binding var toastType: ToastType?
+    @Binding var infoString: String?
     
     var product: MDProduct? {
         grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})
@@ -44,7 +45,7 @@ struct ShoppingListRowView: View {
     var body: some View {
         HStack {
 #if os(macOS)
-            ShoppingListRowActionsView(shoppingListItem: shoppingListItem, toastType: $toastType)
+            ShoppingListRowActionsView(shoppingListItem: shoppingListItem, toastType: $toastType, infoString: $infoString)
 #endif
             VStack(alignment: .leading){
                 Text(product?.name ?? shoppingListItem.note ?? "?")
@@ -122,7 +123,7 @@ struct ShoppingListEntriesView: View {
     var body: some View {
 #if os(iOS)
         NavigationLink(destination: ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem, selectedShoppingListID: selectedShoppingListID)) {
-            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType)
+            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType, infoString: $infoString)
         }
         .listRowBackground(backgroundColor)
         .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
@@ -167,7 +168,7 @@ struct ShoppingListEntriesView: View {
             }
         }, message: { Text(grocyVM.mdProducts.first(where: {$0.id == shlItemToDelete?.productID})?.name ?? "Name not found") })
 #else
-        ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType)
+        ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock, toastType: $toastType, infoString: $infoString)
             .listRowBackground(backgroundColor)
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                 Button(role: .destructive,
@@ -196,8 +197,8 @@ struct ShoppingListEntriesView: View {
 struct ShoppingListRowView_Previews: PreviewProvider {
     static var previews: some View {
         List{
-            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil))
-            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil))
+            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil), infoString: Binding.constant(nil))
+            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, toastType: Binding.constant(nil), infoString: Binding.constant(nil))
         }
     }
 }
