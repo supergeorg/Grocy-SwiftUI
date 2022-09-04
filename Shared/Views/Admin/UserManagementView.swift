@@ -40,7 +40,7 @@ struct UserManagementView: View {
         }
     }
     
-    #if os(macOS)
+#if os(macOS)
     var bodyContent: some View {
         content
             .toolbar(content: {
@@ -73,7 +73,7 @@ struct UserManagementView: View {
                 })
             })
     }
-    #elseif os(iOS)
+#elseif os(iOS)
     var bodyContent: some View {
         content
             .toolbar(content: {
@@ -103,7 +103,7 @@ struct UserManagementView: View {
                 })
             })
     }
-    #endif
+#endif
     
     var content: some View {
         List{
@@ -116,18 +116,22 @@ struct UserManagementView: View {
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
         .onAppear(perform: updateData)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
-            switch item {
-            case .successAdd:
-                return LocalizedStringKey("str.md.new.success")
-            case .successEdit:
-                return LocalizedStringKey("str.md.edit.success")
-            case .failDelete:
-                return LocalizedStringKey("str.md.delete.fail")
-            default:
-                return LocalizedStringKey("")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
+            isShown: [.successAdd, .successEdit, .failDelete].contains(toastType),
+            text: { item in
+                switch item {
+                case .successAdd:
+                    return LocalizedStringKey("str.md.new.success")
+                case .successEdit:
+                    return LocalizedStringKey("str.md.edit.success")
+                case .failDelete:
+                    return LocalizedStringKey("str.md.delete.fail")
+                default:
+                    return LocalizedStringKey("")
+                }
+            })
     }
 }
 

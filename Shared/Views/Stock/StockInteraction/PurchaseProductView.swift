@@ -44,8 +44,7 @@ struct PurchaseProductView: View {
     @State private var searchProductTerm: String = ""
     
     @Binding var toastType: ToastType?
-    
-    @State private var infoString: String?
+    @Binding var infoString: String?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations, .shopping_locations, .product_barcodes]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
@@ -204,7 +203,11 @@ struct PurchaseProductView: View {
         Form {
             purchaseForm
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successPurchase), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successPurchase),
+            isShown: [.successPurchase, .failPurchase].contains(toastType),
+            text: { item in
             switch item {
             case .successPurchase:
                 return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
@@ -335,10 +338,10 @@ struct PurchaseProductView_Previews: PreviewProvider {
     static var previews: some View {
 #if os(iOS)
         NavigationView {
-            PurchaseProductView(toastType: Binding.constant(nil))
+            PurchaseProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
         }
 #else
-        PurchaseProductView(toastType: Binding.constant(nil))
+        PurchaseProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
 #endif
     }
 }

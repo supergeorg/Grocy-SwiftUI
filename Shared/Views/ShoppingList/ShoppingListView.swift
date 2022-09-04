@@ -16,7 +16,8 @@ struct ShoppingListView: View {
     @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
     
     @State private var showSHLDeleteAlert: Bool = false
-    @State private var toastType: ToastType?
+    @State var toastType: ToastType?
+    @State var infoString: String?
     
     @State private var showClearListAlert: Bool = false
     
@@ -341,14 +342,14 @@ struct ShoppingListView: View {
             ForEach(shoppingListProductGroups, id:\.id) {productGroup in
                 Section(header: Text(productGroup.name).bold()) {
                     ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) { shItem in
-                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType)
+                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
                     }
                 }
             }
             if !(groupedShoppingList[0]?.isEmpty ?? true) {
                 Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
                     ForEach(groupedShoppingList[0] ?? [], id:\.id) { shItem in
-                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType)
+                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
                     }
                 }
             }
@@ -369,14 +370,18 @@ struct ShoppingListView: View {
                 slAction(.clear)
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Name not found") })
-        .toast(item: $toastType, isSuccess: Binding.constant(false), text: {item in
-            switch item {
-            case .shLActionFail:
-                return LocalizedStringKey("str.shL.action.failed")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(false),
+            isShown: [.shLActionFail].contains(toastType),
+            text: {item in
+                switch item {
+                case .shLActionFail:
+                    return LocalizedStringKey("str.shL.action.failed")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
     }
 }
 

@@ -211,7 +211,11 @@ struct StockEntriesView: View {
         .onAppear(perform: {
             fetchData(ignoreCached: false)
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType != ToastType.failEdit), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType != ToastType.failEdit),
+            isShown: [.failEdit].contains(toastType),
+            text: { item in
             switch item {
             case .failEdit:
                 return LocalizedStringKey("str.failed")

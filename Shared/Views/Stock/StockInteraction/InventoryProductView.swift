@@ -236,14 +236,18 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successInventory), text: { item in
-            switch item {
-            case .successInventory:
-                return LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")")
-            case .failInventory:
-                return LocalizedStringKey("str.stock.inventory.product.inventory.fail")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successInventory),
+            isShown: [.successInventory, .failInventory].contains(toastType),
+            text: { item in
+                switch item {
+                case .successInventory:
+                    return LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")")
+                case .failInventory:
+                    return LocalizedStringKey("str.stock.inventory.product.inventory.fail")
+                }
+            })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {

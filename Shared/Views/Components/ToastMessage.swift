@@ -44,6 +44,7 @@ struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Pr
     @Binding var item: Item?
     let presenter: () -> Presenting
     var text: (Item) -> LocalizedStringKey
+    var isShown: Bool
     @Binding var isSuccess: Bool
     let delay: TimeInterval = 2
     
@@ -68,7 +69,7 @@ struct ToastMessageTextItem<Presenting, Item>: View where Item: Identifiable, Pr
             }
             .padding()
             .background(isSuccess ? Color.green.opacity(0.9) : Color.red.opacity(0.9), in: RoundedRectangle(cornerRadius: 16.0))
-            .opacity(self.item != nil ? 1 : 0)
+            .opacity((self.item != nil && isShown) ? 1 : 0)
             .padding(.bottom)
         }
     }

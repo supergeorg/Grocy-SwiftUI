@@ -42,7 +42,7 @@ struct QuickScanModeInputView: View {
         }
         return nil
     }
-
+    
     var stockElement: StockElement? {
         grocyVM.stock.first(where: { $0.productID == product?.id })
     }
@@ -50,7 +50,7 @@ struct QuickScanModeInputView: View {
     var quantityUnitPurchase: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
-
+    
     var quantityUnitStock: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
@@ -58,11 +58,11 @@ struct QuickScanModeInputView: View {
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         return grocyVM.mdQuantityUnitConversions.filter { $0.toQuID == product?.quIDStock }
     }
-
+    
     private var purchaseAmountFactored: Double {
         return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID })?.factor ?? 1)
     }
-
+    
     private var purchaseStockAmountFactored: Double {
         return purchaseAmountFactored * (product?.quFactorPurchaseToStock ?? 1.0)
     }
@@ -86,7 +86,7 @@ struct QuickScanModeInputView: View {
         }
         return 0.0
     }
-
+    
     private func getQUString(amount: Double, purchase: Bool = false) -> String {
         if purchase {
             return amount == 1 ? quantityUnitPurchase?.name ?? "" : quantityUnitPurchase?.namePlural ?? quantityUnitPurchase?.name ?? ""
@@ -156,7 +156,8 @@ struct QuickScanModeInputView: View {
                             consumeType: .consume,
                             quickScan: true,
                             actionFinished: $actionFinished,
-                            toastType: $toastType
+                            toastType: $toastType,
+                            infoString: $infoString
                         )
                     }
                     
@@ -166,7 +167,8 @@ struct QuickScanModeInputView: View {
                             consumeType: .open,
                             quickScan: true,
                             actionFinished: $actionFinished,
-                            toastType: $toastType
+                            toastType: $toastType,
+                            infoString: $infoString
                         )
                     }
                     
@@ -175,7 +177,8 @@ struct QuickScanModeInputView: View {
                             directProductToPurchaseID: product.id,
                             quickScan: true,
                             actionFinished: $actionFinished,
-                            toastType: $toastType
+                            toastType: $toastType,
+                            infoString: $infoString
                         )
                     }
                 }
@@ -196,18 +199,22 @@ struct QuickScanModeInputView: View {
             })
         }
         .interactiveDismissDisabled(grocyVM.loadingObjectEntities.count > 0)
-        .toast(item: $toastType, isSuccess: Binding.constant(false), text: { item in
-            switch item {
-            case .failConsume:
-                return LocalizedStringKey("str.stock.consume.product.consume.fail")
-            case .failOpen:
-                return LocalizedStringKey("str.stock.consume.product.open.fail")
-            case .failPurchase:
-                return LocalizedStringKey("str.stock.buy.product.buy.fail")
-            default:
-                return LocalizedStringKey("")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(false),
+            isShown: [.failConsume, .failOpen, .failPurchase].contains(toastType),
+            text: { item in
+                switch item {
+                case .failConsume:
+                    return LocalizedStringKey("str.stock.consume.product.consume.fail")
+                case .failOpen:
+                    return LocalizedStringKey("str.stock.consume.product.open.fail")
+                case .failPurchase:
+                    return LocalizedStringKey("str.stock.buy.product.buy.fail")
+                default:
+                    return LocalizedStringKey("")
+                }
+            })
         .onAppear(perform: {
             if firstOpen {
                 if let productID = product?.id {

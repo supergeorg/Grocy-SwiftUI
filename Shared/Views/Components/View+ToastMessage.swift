@@ -17,11 +17,12 @@ extension View {
         )
     }
 
-    public func toast<Item>(item: Binding<Item?>, isSuccess: Binding<Bool>, text: @escaping (Item) -> LocalizedStringKey) -> some View where Item: Identifiable{
+    public func toast<Item>(item: Binding<Item?>, isSuccess: Binding<Bool>, isShown: Bool, text: @escaping (Item) -> LocalizedStringKey) -> some View where Item: Identifiable{
         ToastMessageTextItem(
             item: item,
             presenter: { self },
             text: text,
+            isShown: isShown,
             isSuccess: isSuccess
         )
     }

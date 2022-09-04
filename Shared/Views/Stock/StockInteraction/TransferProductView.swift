@@ -216,7 +216,11 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successTransfer), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successTransfer),
+            isShown: [.successTransfer, .failTransfer].contains(toastType),
+            text: { item in
             switch item {
             case .successTransfer:
                 return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")

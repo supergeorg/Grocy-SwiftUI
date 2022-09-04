@@ -179,41 +179,45 @@ struct QuickScanModeView: View {
             isFrontCamera: $isFrontCamera,
             completion: self.handleScan
         )
-            .overlay(modePicker, alignment: .top)
-            .sheet(item: $qsActiveSheet) { item in
-                switch item {
-                case .grocyCode:
-                    QuickScanModeInputView(
-                        quickScanMode: $quickScanMode,
-                        grocyCode: recognizedGrocyCode,
-                        toastType: $toastType,
-                        infoString: $infoString,
-                        lastConsumeLocationID: $lastConsumeLocationID,
-                        lastPurchaseDueDate: $lastPurchaseDueDate,
-                        lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
-                        lastPurchaseLocationID: $lastPurchaseLocationID
-                    )
-                case .barcode:
-                    QuickScanModeInputView(
-                        quickScanMode: $quickScanMode,
-                        productBarcode: recognizedBarcode,
-                        toastType: $toastType,
-                        infoString: $infoString,
-                        lastConsumeLocationID: $lastConsumeLocationID,
-                        lastPurchaseDueDate: $lastPurchaseDueDate,
-                        lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
-                        lastPurchaseLocationID: $lastPurchaseLocationID
-                    )
-                case .selectProduct:
-                    QuickScanModeSelectProductView(
-                        barcode: notRecognizedBarcode,
-                        toastType: $toastType,
-                        qsActiveSheet: $qsActiveSheet,
-                        newRecognizedBarcode: $newRecognizedBarcode
-                    )
-                }
+        .overlay(modePicker, alignment: .top)
+        .sheet(item: $qsActiveSheet) { item in
+            switch item {
+            case .grocyCode:
+                QuickScanModeInputView(
+                    quickScanMode: $quickScanMode,
+                    grocyCode: recognizedGrocyCode,
+                    toastType: $toastType,
+                    infoString: $infoString,
+                    lastConsumeLocationID: $lastConsumeLocationID,
+                    lastPurchaseDueDate: $lastPurchaseDueDate,
+                    lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                    lastPurchaseLocationID: $lastPurchaseLocationID
+                )
+            case .barcode:
+                QuickScanModeInputView(
+                    quickScanMode: $quickScanMode,
+                    productBarcode: recognizedBarcode,
+                    toastType: $toastType,
+                    infoString: $infoString,
+                    lastConsumeLocationID: $lastConsumeLocationID,
+                    lastPurchaseDueDate: $lastPurchaseDueDate,
+                    lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                    lastPurchaseLocationID: $lastPurchaseLocationID
+                )
+            case .selectProduct:
+                QuickScanModeSelectProductView(
+                    barcode: notRecognizedBarcode,
+                    toastType: $toastType,
+                    qsActiveSheet: $qsActiveSheet,
+                    newRecognizedBarcode: $newRecognizedBarcode
+                )
             }
-            .toast(item: $toastType, isSuccess: Binding.constant(true), text: { item in
+        }
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(true),
+            isShown: [.successAdd, .successConsume, .successOpen, .successPurchase].contains(toastType),
+            text: { item in
                 switch item {
                 case .successAdd:
                     return LocalizedStringKey("str.quickScan.add.product.add.success")
@@ -227,23 +231,23 @@ struct QuickScanModeView: View {
                     return LocalizedStringKey("str.error")
                 }
             })
-            .onAppear(perform: {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
-            })
-            .onChange(of: newRecognizedBarcode?.id, perform: { _ in
-                DispatchQueue.main.async {
-                    if quickScanActionAfterAdd {
-                        recognizedBarcode = newRecognizedBarcode
-                        qsActiveSheet = .barcode
-                        checkScanPause()
-                    }
-                }
-            })
-            .onChange(of: qsActiveSheet, perform: { _ in
-                DispatchQueue.main.async {
+        .onAppear(perform: {
+            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+        })
+        .onChange(of: newRecognizedBarcode?.id, perform: { _ in
+            DispatchQueue.main.async {
+                if quickScanActionAfterAdd {
+                    recognizedBarcode = newRecognizedBarcode
+                    qsActiveSheet = .barcode
                     checkScanPause()
                 }
-            })
+            }
+        })
+        .onChange(of: qsActiveSheet, perform: { _ in
+            DispatchQueue.main.async {
+                checkScanPause()
+            }
+        })
     }
 }
 

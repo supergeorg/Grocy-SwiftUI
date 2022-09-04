@@ -42,7 +42,8 @@ struct StockView: View {
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
-    @State private var toastType: ToastType?
+    @State var toastType: ToastType?
+    @State var infoString: String?
     
 #if os(iOS)
     @State private var activeSheet: StockInteractionSheet?
@@ -183,11 +184,11 @@ struct StockView: View {
                     }, label: {
                         Label("Journal", systemImage: MySymbols.stockJournal)
                     })
-                        .popover(isPresented: $showStockJournal, content: {
-                            StockJournalView()
-                                .padding()
-                                .frame(width: 700, height: 500, alignment: .leading)
-                        })
+                    .popover(isPresented: $showStockJournal, content: {
+                        StockJournalView()
+                            .padding()
+                            .frame(width: 700, height: 500, alignment: .leading)
+                    })
                 })
             })
             .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
@@ -232,11 +233,11 @@ struct StockView: View {
                     StockJournalView()
                 case .purchaseProduct:
                     NavigationView{
-                        PurchaseProductView(toastType: $toastType)
+                        PurchaseProductView(toastType: $toastType, infoString: $infoString)
                     }
                 case .consumeProduct:
                     NavigationView{
-                        ConsumeProductView(toastType: $toastType)
+                        ConsumeProductView(toastType: $toastType, infoString: $infoString)
                     }
                 case .transferProduct:
                     NavigationView{
@@ -250,11 +251,11 @@ struct StockView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID)
                 case .productPurchase:
                     NavigationView{
-                        PurchaseProductView(stockElement: $selectedStockElement, toastType: $toastType)
+                        PurchaseProductView(stockElement: $selectedStockElement, toastType: $toastType, infoString: $infoString)
                     }
                 case .productConsume:
                     NavigationView{
-                        ConsumeProductView(stockElement: $selectedStockElement, toastType: $toastType)
+                        ConsumeProductView(stockElement: $selectedStockElement, toastType: $toastType, infoString: $infoString)
                     }
                 case .productTransfer:
                     NavigationView{
@@ -307,24 +308,28 @@ struct StockView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled), text: { item in
-            switch item {
-            case .successConsumeOne:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
-            case .successConsumeAll:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
-            case .successOpenOne:
-                return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
-            case .successConsumeAllSpoiled:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-            case .failOpen:
-                return LocalizedStringKey("str.stock.tbl.action.fail")
-            case .failConsume:
-                return LocalizedStringKey("str.stock.tbl.action.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),
+            isShown: [.successConsumeOne, .successConsumeAll, .successOpenOne, .successConsumeAllSpoiled, .failOpen, .failConsume].contains(toastType),
+            text: { item in
+                switch item {
+                case .successConsumeOne:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
+                case .successConsumeAll:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
+                case .successOpenOne:
+                    return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
+                case .successConsumeAllSpoiled:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
+                case .failOpen:
+                    return LocalizedStringKey("str.stock.tbl.action.fail")
+                case .failConsume:
+                    return LocalizedStringKey("str.stock.tbl.action.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
     }
     
     var content: some View {
@@ -354,24 +359,28 @@ struct StockView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled), text: { item in
-            switch item {
-            case .successConsumeOne:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
-            case .successConsumeAll:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
-            case .successOpenOne:
-                return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
-            case .successConsumeAllSpoiled:
-                return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-            case .failOpen:
-                return LocalizedStringKey("str.stock.tbl.action.fail")
-            case .failConsume:
-                return LocalizedStringKey("str.stock.tbl.action.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),
+            isShown: [.successConsumeOne, .successConsumeAll, .successOpenOne, .successConsumeAllSpoiled, .failOpen, .failConsume].contains(toastType),
+            text: { item in
+                switch item {
+                case .successConsumeOne:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
+                case .successConsumeAll:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
+                case .successOpenOne:
+                    return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
+                case .successConsumeAllSpoiled:
+                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
+                case .failOpen:
+                    return LocalizedStringKey("str.stock.tbl.action.fail")
+                case .failConsume:
+                    return LocalizedStringKey("str.stock.tbl.action.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
     }
 }
 

@@ -152,7 +152,11 @@ struct UserFormView: View {
         .onChange(of: passwordConfirm) {  newValue in
             checkPWParity()
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(false), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(false),
+            isShown: [.failAdd, .failEdit].contains(toastType),
+            text: { item in
             switch item {
             case .failAdd:
                 return LocalizedStringKey("str.md.new.fail")

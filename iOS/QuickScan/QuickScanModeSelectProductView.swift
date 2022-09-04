@@ -112,7 +112,11 @@ struct QuickScanModeSelectProductView: View {
                 })
             })
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(false), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(false),
+            isShown: [.failAdd].contains(toastType),
+            text: { item in
             switch item {
             case .failAdd:
                 return LocalizedStringKey("str.quickScan.add.product.add.fail")

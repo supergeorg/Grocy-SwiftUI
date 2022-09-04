@@ -11,10 +11,11 @@ struct ActivitiesView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @State var toastType: ToastType?
+    @State var infoString: String?
 
     var body: some View {
         List {
-            NavigationLink(destination: PurchaseProductView(toastType: $toastType)) {
+            NavigationLink(destination: PurchaseProductView(toastType: $toastType, infoString: $infoString)) {
                 Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
 

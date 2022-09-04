@@ -95,7 +95,7 @@ struct MDBarcodesView: View {
                     ScrollView {
                         MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
                     }
-                        .padding()
+                    .padding()
                 })
             if filteredBarcodes.isEmpty {
                 Text(LocalizedStringKey("str.md.barcodes.empty"))
@@ -110,12 +110,12 @@ struct MDBarcodesView: View {
                             label: {
                                 MDBarcodeRowView(barcode: productBarcode)
                             })
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                Button(role: .destructive,
-                                       action: { deleteItem(itemToDelete: productBarcode) },
-                                       label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
-                                )
-                            })
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                            Button(role: .destructive,
+                                   action: { deleteItem(itemToDelete: productBarcode) },
+                                   label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                            )
+                        })
                     }
                 }
                 .frame(minWidth: 200, minHeight: 400)
@@ -159,12 +159,12 @@ struct MDBarcodesView: View {
                         label: {
                             MDBarcodeRowView(barcode: productBarcode)
                         })
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                            Button(role: .destructive,
-                                   action: { deleteItem(itemToDelete: productBarcode) },
-                                   label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
-                            )
-                        })
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                        Button(role: .destructive,
+                               action: { deleteItem(itemToDelete: productBarcode) },
+                               label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                        )
+                    })
                 }
             }
         }
@@ -172,22 +172,26 @@ struct MDBarcodesView: View {
         .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
         .refreshable { updateData() }
         .animation(.default, value: filteredBarcodes.count)
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit), text: { item in
-            switch item {
-            case .successAdd:
-                return LocalizedStringKey("str.md.new.success")
-            case .failAdd:
-                return LocalizedStringKey("str.md.new.fail")
-            case .successEdit:
-                return LocalizedStringKey("str.md.edit.success")
-            case .failEdit:
-                return LocalizedStringKey("str.md.edit.fail")
-            case .failDelete:
-                return LocalizedStringKey("str.md.delete.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
+            isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
+            text: { item in
+                switch item {
+                case .successAdd:
+                    return LocalizedStringKey("str.md.new.success")
+                case .failAdd:
+                    return LocalizedStringKey("str.md.new.fail")
+                case .successEdit:
+                    return LocalizedStringKey("str.md.edit.success")
+                case .failEdit:
+                    return LocalizedStringKey("str.md.edit.fail")
+                case .failDelete:
+                    return LocalizedStringKey("str.md.delete.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
         .toolbar(content: {
             ToolbarItem(placement: .automatic, content: {
                 Button(action: {showAddBarcode.toggle()}, label: {

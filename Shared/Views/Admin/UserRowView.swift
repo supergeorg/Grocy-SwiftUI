@@ -25,7 +25,7 @@ struct UserRowActionsView: View {
             switch result {
             case let .success(message):
                 print(message)
-//                toastType = .successAdd
+                toastType = .successAdd
                 grocyVM.requestData(additionalObjects: [.users])
             case let .failure(error):
                 print("\(error)")

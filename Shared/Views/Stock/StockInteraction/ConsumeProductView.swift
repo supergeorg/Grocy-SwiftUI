@@ -54,7 +54,7 @@ struct ConsumeProductView: View {
     
     @Binding var toastType: ToastType?
 
-    @State private var infoString: String?
+    @Binding var infoString: String?
     
     @State private var showRecipeInfo: Bool = false
     
@@ -308,7 +308,11 @@ struct ConsumeProductView: View {
         Form {
             consumeForm
         }
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), text: { item in
+        .toast(
+            item: $toastType,
+            isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen),
+            isShown: [.successConsume, .failConsume, .successOpen, .failOpen].contains(toastType),
+            text: { item in
             switch item {
             case .successConsume:
                 return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
@@ -431,6 +435,6 @@ struct ConsumeProductView: View {
 
 struct ConsumeProductView_Previews: PreviewProvider {
     static var previews: some View {
-        ConsumeProductView(toastType: Binding.constant(nil))
+        ConsumeProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
     }
 }

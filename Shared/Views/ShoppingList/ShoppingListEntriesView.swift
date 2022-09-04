@@ -67,6 +67,7 @@ struct ShoppingListEntriesView: View {
     @Binding var selectedShoppingListID: Int
     
     @Binding var toastType: ToastType?
+    @Binding var infoString: String?
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     @State private var showPurchase: Bool = false
@@ -149,12 +150,12 @@ struct ShoppingListEntriesView: View {
         })
         .sheet(isPresented: $showPurchase, content: {
             NavigationView{
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType)
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType, infoString: $infoString)
             }
         })
         .sheet(isPresented: $showAutoPurchase, content: {
             NavigationView{
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType)
+                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType, infoString: $infoString)
             }
         })
         .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
