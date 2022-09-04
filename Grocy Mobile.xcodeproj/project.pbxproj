@@ -531,6 +531,7 @@
 		7885B8A62567ED14003439F5 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		7885B8AE2567F08F003439F5 /* GrocyUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserModel.swift; sourceTree = "<group>"; };
 		7885B8BA2567F723003439F5 /* PurchaseProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseProductView.swift; sourceTree = "<group>"; };
+		788C32AA2896D0A800CB81D2 /* sv-SE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sv-SE"; path = "sv-SE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7891C63F257E33430014C59E /* StockTableRowActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableRowActionsView.swift; sourceTree = "<group>"; };
 		7891C646257E3BDD0014C59E /* RowInteractionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowInteractionButton.swift; sourceTree = "<group>"; };
 		7891C64D257E43460014C59E /* ShoppingListRowActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListRowActionsView.swift; sourceTree = "<group>"; };
@@ -1210,6 +1211,7 @@
 				pl,
 				"fr-FR",
 				nl,
+				"sv-SE",
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1750,6 +1752,7 @@
 				7228DE4026CBAD0B005821FA /* pl */,
 				78644EC02791E6E0007110CF /* fr-FR */,
 				78AB1BAA27E148F800C7F380 /* nl */,
+				788C32AA2896D0A800CB81D2 /* sv-SE */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
