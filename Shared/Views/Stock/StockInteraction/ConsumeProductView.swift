@@ -1,6 +1,6 @@
 //
 //  ConsumeProductView.swift
-//  Grocy-SwiftUI
+//  Grocy Mobile
 //
 //  Created by Georg Meissner on 23.11.20.
 //
@@ -24,10 +24,22 @@ struct ConsumeProductView: View {
 #endif
     
     var stockElement: Binding<StockElement?>? = nil
+    var directProductToConsumeID: Int? = nil
     var productToConsumeID: Int? {
-        return stockElement?.wrappedValue?.productID
+        return directProductToConsumeID ?? stockElement?.wrappedValue?.productID
     }
     var isPopup: Bool = false
+    
+    enum ConsumeType: Identifiable {
+        case both, consume, open
+        
+        var id: Int {
+            self.hashValue
+        }
+    }
+    var consumeType: ConsumeType = .both
+    var quickScan: Bool = false
+    var actionFinished: Binding<Bool>? = nil
     
     @State private var productID: Int?
     @State private var amount: Double = 1.0
@@ -40,14 +52,8 @@ struct ConsumeProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var toastType: ConsumeToastType?
-    private enum ConsumeToastType: Identifiable {
-        case successConsume, successOpen, failConsume, failOpen
-        
-        var id: Int {
-            self.hashValue
-        }
-    }
+    @Binding var toastType: ToastType?
+
     @State private var infoString: String?
     
     @State private var showRecipeInfo: Bool = false
@@ -117,8 +123,34 @@ struct ConsumeProductView: View {
     
     private let priceFormatter = NumberFormatter()
     
-    var isFormValid: Bool {
-        (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
+    private var isFormValid: Bool {
+        return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
+    }
+    
+    private var stockEntriesForLocation: StockEntries {
+        if let productID = productID {
+            if let locationID = locationID {
+                return grocyVM.stockProductEntries[productID]?.filter({
+                    $0.locationID == locationID
+                }) ?? []
+            } else {
+                return grocyVM.stockProductEntries[productID] ?? []
+            }
+        } else {
+            return []
+        }
+    }
+    
+    private func getAmountForLocation(lID: Int) -> Double {
+        if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
+            var maxAmount: Double = 0
+            let filtEntries = entries.filter { $0.locationID == lID }
+            for filtEntry in filtEntries {
+                maxAmount += filtEntry.amount
+            }
+            return maxAmount
+        }
+        return 0.0
     }
     
     private func resetForm() {
@@ -145,6 +177,9 @@ struct ConsumeProductView: View {
                     toastType = .successOpen
                     grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
                     resetForm()
+                    if self.actionFinished != nil {
+                        self.actionFinished?.wrappedValue = true
+                    }
                 case let .failure(error):
                     grocyVM.postLog("Opening failed: \(error)", type: .error)
                     toastType = .failOpen
@@ -176,6 +211,9 @@ struct ConsumeProductView: View {
                     }
                     toastType = .successConsume
                     resetForm()
+                    if self.actionFinished != nil {
+                        self.actionFinished?.wrappedValue = true
+                    }
                 case let .failure(error):
                     grocyVM.postLog("Consume failed: \(error)", type: .error)
                     toastType = .failConsume
@@ -186,64 +224,151 @@ struct ConsumeProductView: View {
     }
     
     var body: some View {
+        Group {
 #if os(macOS)
-        ScrollView{
-            content
-                .padding()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-        }
+            ScrollView{
+                content
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            }
 #else
-        content
-            .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("str.cancel") {
-                        self.dismiss()
+            if quickScan {
+                consumeForm
+            } else {
+                content
+                    .toolbar(content: {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("str.cancel") {
+                                self.dismiss()
+                            }
+                        }
+                    })
+            }
+#endif
+        }
+        .toolbar(content: {
+            ToolbarItem(placement: .confirmationAction, content: {
+                HStack {
+                    if !quickScan {
+                        if isProcessingAction {
+                            ProgressView().progressViewStyle(.circular)
+                        } else {
+                            Button(action: resetForm, label: {
+                                Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                                    .help(LocalizedStringKey("str.clear"))
+                            })
+                            .keyboardShortcut("r", modifiers: [.command])
+                        }
+                    }
+                    
+                    if (consumeType == .open) || (consumeType == .both) {
+                        Button(action: {
+                            openProduct()
+                        }, label: {
+#if os(iOS)
+                            if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                                Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                            } else {
+                                Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                                    .labelStyle(.titleAndIcon)
+                            }
+#else
+                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                                .labelStyle(.titleAndIcon)
+#endif
+                        })
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("o", modifiers: [.command])
+                    }
+                    if (consumeType == .consume) || (consumeType == .both) {
+                        Button(action: {
+                            consumeProduct()
+                        }, label: {
+#if os(iOS)
+                            if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                                Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                            } else {
+                                Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                                    .labelStyle(.titleAndIcon)
+                            }
+#else
+                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                                .labelStyle(.titleAndIcon)
+#endif
+                        })
+                        .disabled(!isFormValid || isProcessingAction)
+                        .keyboardShortcut("s", modifiers: [.command])
                     }
                 }
             })
-#endif
+        })
     }
     
     var content: some View {
         Form {
+            consumeForm
+        }
+        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), text: { item in
+            switch item {
+            case .successConsume:
+                return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
+            case .failConsume:
+                return LocalizedStringKey("str.stock.consume.product.consume.fail")
+            case .successOpen:
+                return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
+            case .failOpen:
+                return LocalizedStringKey("str.stock.consume.product.open.fail")
+            default:
+                return LocalizedStringKey("str.error")
+            }
+        })
+        .navigationTitle(LocalizedStringKey("str.stock.consume"))
+    }
+    
+    var consumeForm: some View {
+        Group {
             if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerProblemView(isCompact: true)
                 }
             }
             
-            ProductField(productID: $productID, description: "str.stock.consume.product")
-                .onChange(of: productID) { newProduct in
-                    if let productID = productID {
-                        grocyVM.getStockProductEntries(productID: productID)
-                        if let product = product {
-                            locationID = product.locationID
-                            quantityUnitID = product.quIDStock
-                            amount = grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
+            if !quickScan {
+                ProductField(productID: $productID, description: "str.stock.consume.product")
+                    .onChange(of: productID) { newProduct in
+                        if let productID = productID {
+                            grocyVM.getStockProductEntries(productID: productID)
+                            if let product = product {
+                                locationID = product.locationID
+                                quantityUnitID = product.quIDStock
+                                amount = grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
+                            }
                         }
                     }
-                }
+            }
             
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
             Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
                 Text("").tag(nil as Int?)
                 ForEach(filteredLocations, id:\.id) { location in
-                    Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
+                    Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
                 }
             })
             
             Section(header: Text(LocalizedStringKey("str.stock.consume.product.details")).font(.headline)) {
                 
-                MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: MySymbols.spoiled)
+                if (consumeType == .consume) || (consumeType == .both) {
+                    MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: MySymbols.spoiled)
+                }
                 
-                if let productID = productID {
+                if productID != nil {
                     MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
                     
                     if useSpecificStockEntry {
                         Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
                             Text("").tag(nil as String?)
-                            ForEach(grocyVM.stockProductEntries[productID] ?? [], id: \.stockID) { stockProduct in
+                            ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
                                 Group {
                                     Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                                     +
@@ -301,73 +426,11 @@ struct ConsumeProductView: View {
                 firstAppear = false
             }
         })
-        .toast(item: $toastType, isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen), text: { item in
-            switch item {
-            case .successConsume:
-                return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
-            case .failConsume:
-                return LocalizedStringKey("str.stock.consume.product.consume.fail")
-            case .successOpen:
-                return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
-            case .failOpen:
-                return LocalizedStringKey("str.stock.consume.product.open.fail")
-            }
-        })
-        .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction, content: {
-                HStack {
-                    if isProcessingAction {
-                        ProgressView().progressViewStyle(.circular)
-                    } else {
-                        Button(action: resetForm, label: {
-                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                                .help(LocalizedStringKey("str.clear"))
-                        })
-                        .keyboardShortcut("r", modifiers: [.command])
-                    }
-                    Button(action: {
-                        openProduct()
-                    }, label: {
-#if os(iOS)
-                        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                        } else {
-                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                                .labelStyle(.titleAndIcon)
-                        }
-#else
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                            .labelStyle(.titleAndIcon)
-#endif
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("o", modifiers: [.command])
-                    Button(action: {
-                        consumeProduct()
-                    }, label: {
-#if os(iOS)
-                        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                        } else {
-                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                                .labelStyle(.titleAndIcon)
-                        }
-#else
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                            .labelStyle(.titleAndIcon)
-#endif
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("s", modifiers: [.command])
-                }
-            })
-        })
-        .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }
 }
 
 struct ConsumeProductView_Previews: PreviewProvider {
     static var previews: some View {
-        ConsumeProductView()
+        ConsumeProductView(toastType: Binding.constant(nil))
     }
 }
