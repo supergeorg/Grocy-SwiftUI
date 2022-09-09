@@ -30,11 +30,17 @@ struct MDProduct: Codable {
     let dueType: Int
     @NullCodable var quickConsumeAmount: Double?
     @NullCodable var hideOnStockOverview: Int?
+    let defaultStockLabelType: Int?
+    let shouldNotBeFrozen: Bool?
+    let treatOpenedAsOutOfStock: Bool?
     let noOwnStock: Int?
+    @NullCodable var defaultConsumeLocationID: Int?
+    let moveOnOpen: Bool?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
-        case id, name
+        case id
+        case name
         case mdProductDescription = "description"
         case productGroupID = "product_group_id"
         case active
@@ -57,9 +63,14 @@ struct MDProduct: Codable {
         case cumulateMinStockAmountOfSubProducts = "cumulate_min_stock_amount_of_sub_products"
         case dueType = "due_type"
         case quickConsumeAmount = "quick_consume_amount"
-        case rowCreatedTimestamp = "row_created_timestamp"
         case hideOnStockOverview = "hide_on_stock_overview"
+        case defaultStockLabelType = "default_stock_label_type"
+        case shouldNotBeFrozen = "should_not_be_frozen"
+        case treatOpenedAsOutOfStock = "treat_opened_as_out_of_stock"
         case noOwnStock = "no_own_stock"
+        case defaultConsumeLocationID = "default_consume_location_id"
+        case moveOnOpen = "move_on_open"
+        case rowCreatedTimestamp = "row_created_timestamp"
     }
 
     init(from decoder: Decoder) throws {
@@ -90,7 +101,36 @@ struct MDProduct: Codable {
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
             do { self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try Int(container.decode(String.self, forKey: .hideOnStockOverview))! }
+            do { self.defaultStockLabelType = try container.decode(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try Int(container.decode(String.self, forKey: .defaultStockLabelType))! }
+            do {
+                self.shouldNotBeFrozen = try container.decode(Bool.self, forKey: .shouldNotBeFrozen)
+            } catch {
+                do {
+                    self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) == 1
+                } catch {
+                    self.shouldNotBeFrozen = ["1", "true"].contains(try? container.decode(String.self, forKey: .shouldNotBeFrozen))
+                }
+            }
+            do {
+                self.treatOpenedAsOutOfStock = try container.decode(Bool.self, forKey: .treatOpenedAsOutOfStock)
+            } catch {
+                do {
+                    self.treatOpenedAsOutOfStock = try container.decode(Int.self, forKey: .treatOpenedAsOutOfStock) == 1
+                } catch {
+                    self.treatOpenedAsOutOfStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .treatOpenedAsOutOfStock))
+                }
+            }
             do { self.noOwnStock = try container.decode(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
+            do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
+            do {
+                self.moveOnOpen = try container.decode(Bool.self, forKey: .moveOnOpen)
+            } catch {
+                do {
+                    self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) == 1
+                } catch {
+                    self.moveOnOpen = ["1", "true"].contains(try? container.decode(String.self, forKey: .moveOnOpen))
+                }
+            }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -123,7 +163,12 @@ struct MDProduct: Codable {
         dueType: Int,
         quickConsumeAmount: Double? = nil,
         hideOnStockOverview: Int? = nil,
+        defaultStockLabelType: Int? = nil,
+        shouldNotBeFrozen: Bool? = nil,
+        treatOpenedAsOutOfStock: Bool? = nil,
         noOwnStock: Int? = nil,
+        defaultConsumeLocationID: Int? = nil,
+        moveOnOpen: Bool? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
@@ -151,7 +196,12 @@ struct MDProduct: Codable {
         self.dueType = dueType
         self.quickConsumeAmount = quickConsumeAmount
         self.hideOnStockOverview = hideOnStockOverview
+        self.defaultStockLabelType = defaultStockLabelType
+        self.shouldNotBeFrozen = shouldNotBeFrozen
+        self.treatOpenedAsOutOfStock = treatOpenedAsOutOfStock
         self.noOwnStock = noOwnStock
+        self.defaultConsumeLocationID = defaultConsumeLocationID
+        self.moveOnOpen = moveOnOpen
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
