@@ -48,7 +48,22 @@ struct StockEntryFormView: View {
     
     private func editEntryForm() {
         let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
-        let entryFormPOST = StockEntry(id: stockEntry.id, productID: stockEntry.productID, amount: amount, bestBeforeDate: bestBeforeDate, purchasedDate: purchasedDate, stockID: stockEntry.stockID, price: price, stockEntryOpen: stockEntryOpen, openedDate: stockEntry.openedDate, rowCreatedTimestamp: stockEntry.rowCreatedTimestamp, locationID: locationID, shoppingLocationID: shoppingLocationID, note: noteText)
+        let realBestBeforeDate = productDoesntSpoil ? getNeverOverdueDate() : bestBeforeDate
+        let entryFormPOST = StockEntry(
+            id: stockEntry.id,
+            productID: stockEntry.productID,
+            amount: amount,
+            bestBeforeDate: realBestBeforeDate,
+            purchasedDate: purchasedDate,
+            stockID: stockEntry.stockID,
+            price: price,
+            stockEntryOpen: stockEntryOpen,
+            openedDate: stockEntry.openedDate,
+            rowCreatedTimestamp: stockEntry.rowCreatedTimestamp,
+            locationID: locationID,
+            shoppingLocationID: shoppingLocationID,
+            note: noteText
+        )
         isProcessing = true
         grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST, completion: { result in
             switch result {
