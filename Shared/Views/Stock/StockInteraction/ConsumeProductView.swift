@@ -28,6 +28,7 @@ struct ConsumeProductView: View {
     var productToConsumeID: Int? {
         return directProductToConsumeID ?? stockElement?.wrappedValue?.productID
     }
+    var directStockEntryID: String? = nil
     var isPopup: Bool = false
     
     enum ConsumeType: Identifiable {
@@ -425,6 +426,10 @@ struct ConsumeProductView: View {
                     if let product = product {
                         locationID = product.locationID
                         quantityUnitID = product.quIDStock
+                        if let directStockEntryID = directStockEntryID {
+                            useSpecificStockEntry = true
+                            stockEntryID = directStockEntryID
+                        }
                     }
                 }
                 firstAppear = false

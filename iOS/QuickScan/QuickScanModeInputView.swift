@@ -153,6 +153,7 @@ struct QuickScanModeInputView: View {
                     if quickScanMode == .consume {
                         ConsumeProductView(
                             directProductToConsumeID: product.id,
+                            directStockEntryID: grocyCode?.stockID,
                             consumeType: .consume,
                             quickScan: true,
                             actionFinished: $actionFinished,
@@ -164,6 +165,7 @@ struct QuickScanModeInputView: View {
                     if quickScanMode == .markAsOpened {
                         ConsumeProductView(
                             directProductToConsumeID: product.id,
+                            directStockEntryID: grocyCode?.stockID,
                             consumeType: .open,
                             quickScan: true,
                             actionFinished: $actionFinished,
@@ -181,6 +183,8 @@ struct QuickScanModeInputView: View {
                             infoString: $infoString
                         )
                     }
+                } else {
+                    Text(LocalizedStringKey("str.md.products.empty"))
                 }
             }
             .onChange(of: actionFinished, perform: { actionFinished in

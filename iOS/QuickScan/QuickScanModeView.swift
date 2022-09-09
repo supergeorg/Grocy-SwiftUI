@@ -174,7 +174,7 @@ struct QuickScanModeView: View {
         CodeScannerView(
             codeTypes: getSavedCodeTypes().map { $0.type },
             scanMode: .continuous,
-            simulatedData: showDemoGrocyCode ? "grcy:p:13:5fe1f33579ef4" : "5901234123457",
+            simulatedData: showDemoGrocyCode ? "grcy:p:1:62596f7263051" : "5901234123457",
             isPaused: $isScanPaused,
             isFrontCamera: $isFrontCamera,
             completion: self.handleScan
