@@ -47,7 +47,7 @@ struct StockEntryFormView: View {
     }
     
     private func editEntryForm() {
-        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+        let noteText = note.isEmpty ? nil : note
         let realBestBeforeDate = productDoesntSpoil ? getNeverOverdueDate() : bestBeforeDate
         let entryFormPOST = StockEntry(
             id: stockEntry.id,
@@ -139,9 +139,7 @@ struct StockEntryFormView: View {
                 }
             })
             
-            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
-                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
-            }
+            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
         }
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {

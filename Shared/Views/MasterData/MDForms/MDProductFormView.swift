@@ -227,8 +227,36 @@ struct MDProductFormView: View {
             let id = isNewProduct ? grocyVM.findNextID(.products) : product!.id
             let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
             let hideOnStockOverviewInt = hideOnStockOverview ? 1 : 0
-            let disableOwnStockInt = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (disableOwnStock ? 1 : 0) : nil
-            let productPOST = MDProduct(id: id, name: name, mdProductDescription: mdProductDescription, productGroupID: productGroupID, active: active ? 1 : 0, locationID: locationID, shoppingLocationID: shoppingLocationID, quIDPurchase: quIDPurchase, quIDStock: quIDStock, quFactorPurchaseToStock: quFactorPurchaseToStock, minStockAmount: minStockAmount, defaultBestBeforeDays: defaultDueDays, defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen, defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing, pictureFileName: product?.pictureFileName, enableTareWeightHandling: enableTareWeightHandling ? 1 : 0, tareWeight: tareWeight, notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? 1 : 0, parentProductID: parentProductID, calories: calories, cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0, dueType: dueType.rawValue, quickConsumeAmount: quickConsumeAmount, hideOnStockOverview: hideOnStockOverviewInt, noOwnStock: disableOwnStockInt, rowCreatedTimestamp: timeStamp)
+            let disableOwnStockInt = disableOwnStock ? 1 : 0
+            let productPOST = MDProduct(
+                id: id,
+                name: name,
+                mdProductDescription: mdProductDescription,
+                productGroupID: productGroupID,
+                active: active ? 1 : 0,
+                locationID: locationID,
+                shoppingLocationID: shoppingLocationID,
+                quIDPurchase: quIDPurchase,
+                quIDStock: quIDStock,
+                quFactorPurchaseToStock: quFactorPurchaseToStock,
+                minStockAmount: minStockAmount,
+                defaultBestBeforeDays: defaultDueDays,
+                defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen,
+                defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing,
+                defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing,
+                pictureFileName: product?.pictureFileName,
+                enableTareWeightHandling: enableTareWeightHandling ? 1 : 0,
+                tareWeight: tareWeight,
+                notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? 1 : 0,
+                parentProductID: parentProductID,
+                calories: calories,
+                cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0,
+                dueType: dueType.rawValue,
+                quickConsumeAmount: quickConsumeAmount,
+                hideOnStockOverview: hideOnStockOverviewInt,
+                noOwnStock: disableOwnStockInt,
+                rowCreatedTimestamp: timeStamp
+            )
             isProcessing = true
             if isNewProduct {
                 grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
@@ -477,9 +505,7 @@ struct MDProductFormView: View {
             MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
             
             // Disable own stock
-            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
-                MyToggle(isOn: $disableOwnStock, description: "str.md.product.disableOwnStock", descriptionInfo: "str.md.product.disableOwnStock.hint", icon: MySymbols.stockOverview)
-            }
+            MyToggle(isOn: $disableOwnStock, description: "str.md.product.disableOwnStock", descriptionInfo: "str.md.product.disableOwnStock.hint", icon: MySymbols.stockOverview)
             
             // Product picture
 #if os(iOS)

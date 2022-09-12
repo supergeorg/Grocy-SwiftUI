@@ -115,7 +115,7 @@ struct InventoryProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+        let noteText = note.isEmpty ? nil : note
         if let productID = productID {
             let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price, note: noteText)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
@@ -217,9 +217,7 @@ struct InventoryProductView: View {
                     }
                 })
             }
-            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
-                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
-            }
+            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
 #if os(macOS)
             if isPopup {

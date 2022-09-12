@@ -122,7 +122,7 @@ struct PurchaseProductView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
-        let noteText = (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") ? (note.isEmpty ? nil : note) : nil
+        let noteText = note.isEmpty ? nil : note
         let purchasePrice = selfProduction ? nil : unitPrice
         let purchaseShoppingLocationID = selfProduction ? nil : shoppingLocationID
         let purchaseInfo = ProductBuy(amount: factoredStockAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
@@ -208,15 +208,15 @@ struct PurchaseProductView: View {
             isSuccess: Binding.constant(toastType == .successPurchase),
             isShown: [.successPurchase, .failPurchase].contains(toastType),
             text: { item in
-            switch item {
-            case .successPurchase:
-                return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
-            case .failPurchase:
-                return LocalizedStringKey("str.stock.buy.product.buy.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+                switch item {
+                case .successPurchase:
+                    return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
+                case .failPurchase:
+                    return LocalizedStringKey("str.stock.buy.product.buy.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
         .navigationTitle(LocalizedStringKey("str.stock.buy"))
     }
     
@@ -308,9 +308,7 @@ struct PurchaseProductView: View {
                     }
                 })
             }
-            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3") {
-                MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
-            }
+            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             if devMode {
                 MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
