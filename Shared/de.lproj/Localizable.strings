@@ -377,6 +377,10 @@
 "str.md.product.category.defaultLocations.description" = "Standort, Geschäft";
 "str.md.product.location" = "Standard-Standort";
 "str.md.product.location.required" = "Ein Standort ist erforderlich";
+"str.md.product.location.consume" = "Standardverbrauchsstandort";
+"str.md.product.location.consume.info" = "Bestandseinträge an diesem Standort werden zuerst verbraucht";
+"str.md.product.location.consume.moveOnOpen" = "Beim Öffnen umlagern";
+"str.md.product.location.consume.moveOnOpen.info" = "Wenn aktiviert, wird wenn das Produkt als geöffnet markiert wurde, die entsprechende Menge an den Standardverbrauchsstandort umgelagert";
 "str.md.product.shoppingLocation" = "Standardgeschäft";
 // due date
 "str.md.product.category.dueDate" = "Fälligkeitsdatum";

@@ -377,6 +377,10 @@
 "str.md.product.category.defaultLocations.description" = "Location, Store";
 "str.md.product.location" = "Default location";
 "str.md.product.location.required" = "A location is required";
+"str.md.product.location.consume" = "Default consume location";
+"str.md.product.location.consume.info" = "Stock entries at this location will be consumed first";
+"str.md.product.location.consume.moveOnOpen" = "Move on open";
+"str.md.product.location.consume.moveOnOpen.info" = "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location";
 "str.md.product.shoppingLocation" = "Default store";
 // due date
 "str.md.product.category.dueDate" = "Due date";
