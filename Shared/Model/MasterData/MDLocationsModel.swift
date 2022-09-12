@@ -15,14 +15,14 @@ struct MDLocation: Codable {
     let mdLocationDescription: String?
     let rowCreatedTimestamp: String
     var isFreezer: Bool
-
+    
     enum CodingKeys: String, CodingKey {
         case id, name
         case mdLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
         case isFreezer = "is_freezer"
     }
-
+    
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -31,17 +31,19 @@ struct MDLocation: Codable {
             self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do {
-                let freezerInt = try container.decodeIfPresent(Int.self, forKey: .isFreezer)
-                self.isFreezer = freezerInt == 1
-            } catch DecodingError.typeMismatch {
-                let freezerStr = try container.decode(String.self, forKey: .isFreezer)
-                self.isFreezer = freezerStr == "true" || freezerStr == "1"
+                self.isFreezer = try container.decode(Bool.self, forKey: .isFreezer)
+            } catch {
+                do {
+                    self.isFreezer = try container.decode(Int.self, forKey: .isFreezer) == 1
+                } catch {
+                    self.isFreezer = ["1", "true"].contains(try? container.decode(String.self, forKey: .isFreezer))
+                }
             }
         } catch {
             throw APIError.decodingError(error: error)
         }
     }
-
+    
     init(
         id: Int,
         name: String,

@@ -14,7 +14,8 @@ struct MDProduct: Codable {
     let name: String
     @NullCodable var mdProductDescription: String?
     @NullCodable var productGroupID: Int?
-    let active, locationID: Int
+    let active: Int?
+    let locationID: Int
     @NullCodable var shoppingLocationID: Int?
     let quIDPurchase, quIDStock: Int
     @NullCodable var quFactorPurchaseToStock: Double?
@@ -31,11 +32,11 @@ struct MDProduct: Codable {
     @NullCodable var quickConsumeAmount: Double?
     @NullCodable var hideOnStockOverview: Int?
     let defaultStockLabelType: Int?
-    let shouldNotBeFrozen: Bool?
+    let shouldNotBeFrozen: Int?
     let treatOpenedAsOutOfStock: Bool?
     let noOwnStock: Int?
     @NullCodable var defaultConsumeLocationID: Int?
-    let moveOnOpen: Bool?
+    let moveOnOpen: Int?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
@@ -102,15 +103,7 @@ struct MDProduct: Codable {
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
             do { self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try Int(container.decode(String.self, forKey: .hideOnStockOverview))! }
             do { self.defaultStockLabelType = try container.decode(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try Int(container.decode(String.self, forKey: .defaultStockLabelType))! }
-            do {
-                self.shouldNotBeFrozen = try container.decode(Bool.self, forKey: .shouldNotBeFrozen)
-            } catch {
-                do {
-                    self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) == 1
-                } catch {
-                    self.shouldNotBeFrozen = ["1", "true"].contains(try? container.decode(String.self, forKey: .shouldNotBeFrozen))
-                }
-            }
+            do { self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) } catch { self.shouldNotBeFrozen = try Int(container.decode(String.self, forKey: .shouldNotBeFrozen))! }
             do {
                 self.treatOpenedAsOutOfStock = try container.decode(Bool.self, forKey: .treatOpenedAsOutOfStock)
             } catch {
@@ -122,15 +115,7 @@ struct MDProduct: Codable {
             }
             do { self.noOwnStock = try container.decode(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
             do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
-            do {
-                self.moveOnOpen = try container.decode(Bool.self, forKey: .moveOnOpen)
-            } catch {
-                do {
-                    self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) == 1
-                } catch {
-                    self.moveOnOpen = ["1", "true"].contains(try? container.decode(String.self, forKey: .moveOnOpen))
-                }
-            }
+            do { self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try Int(container.decode(String.self, forKey: .moveOnOpen)) ?? 0 }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -164,11 +149,11 @@ struct MDProduct: Codable {
         quickConsumeAmount: Double? = nil,
         hideOnStockOverview: Int? = nil,
         defaultStockLabelType: Int? = nil,
-        shouldNotBeFrozen: Bool? = nil,
+        shouldNotBeFrozen: Int? = nil,
         treatOpenedAsOutOfStock: Bool? = nil,
         noOwnStock: Int? = nil,
         defaultConsumeLocationID: Int? = nil,
-        moveOnOpen: Bool? = nil,
+        moveOnOpen: Int? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
