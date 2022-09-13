@@ -377,6 +377,10 @@
 "str.md.product.category.defaultLocations.description" = "Locatie, winkel";
 "str.md.product.location" = "Standaardlocatie";
 "str.md.product.location.required" = "Geef een locatie op";
+"str.md.product.location.consume" = "Standaard verbruikslocatie";
+"str.md.product.location.consume.info" = "Voorraaditems op deze locatie worden het eerst opgebruikt";
+"str.md.product.location.consume.moveOnOpen" = "Verplaats na openen";
+"str.md.product.location.consume.moveOnOpen.info" = "Schakel in om het product in kwestie te markeren als geopend en het verbruiksaantal te verplaatsen naar de standaardlocatie";
 "str.md.product.shoppingLocation" = "Standaardwinkel";
 // due date
 "str.md.product.category.dueDate" = "Houdbaarheidsdatum";
