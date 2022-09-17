@@ -158,6 +158,11 @@ struct PurchaseProductView: View {
                 content
                     .padding()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    .toolbar(content: {
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
+                    })
             }
 #else
             if quickScan {
@@ -170,33 +175,13 @@ struct PurchaseProductView: View {
                                 self.dismiss()
                             }
                         }
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
                     })
             }
 #endif
         }
-        .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction, content: {
-                HStack {
-                    if !quickScan {
-                        if isProcessingAction {
-                            ProgressView().progressViewStyle(.circular)
-                        } else {
-                            Button(action: resetForm, label: {
-                                Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                                    .help(LocalizedStringKey("str.clear"))
-                            })
-                            .keyboardShortcut("r", modifiers: [.command])
-                        }
-                    }
-                    Button(action: purchaseProduct, label: {
-                        Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
-                            .labelStyle(.titleAndIcon)
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("s", modifiers: [.command])
-                }
-            })
-        })
     }
     
     var content: some View {
@@ -310,6 +295,16 @@ struct PurchaseProductView: View {
             }
             MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
+            if quickScan {
+                // This is a workaround for a bug which shows the toolbar multiple times
+                Text("")
+                    .toolbar(content: {
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
+                    })
+            }
+            
             if devMode {
                 MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
             }
@@ -329,6 +324,28 @@ struct PurchaseProductView: View {
                 firstAppear = false
             }
         })
+    }
+    
+    var toolbarContent: some View {
+        HStack {
+            if !quickScan {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(.circular)
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            }
+            Button(action: purchaseProduct, label: {
+                Label(LocalizedStringKey("str.stock.buy.product.buy"), systemImage: MySymbols.purchase)
+                    .labelStyle(.titleAndIcon)
+            })
+            .disabled(!isFormValid || isProcessingAction)
+            .keyboardShortcut("s", modifiers: [.command])
+        }
     }
 }
 

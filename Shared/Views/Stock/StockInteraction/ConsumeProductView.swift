@@ -54,7 +54,7 @@ struct ConsumeProductView: View {
     @State private var searchProductTerm: String = ""
     
     @Binding var toastType: ToastType?
-
+    
     @Binding var infoString: String?
     
     @State private var showRecipeInfo: Bool = false
@@ -231,6 +231,11 @@ struct ConsumeProductView: View {
                 content
                     .padding()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    .toolbar(content: {
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
+                    })
             }
 #else
             if quickScan {
@@ -243,66 +248,13 @@ struct ConsumeProductView: View {
                                 self.dismiss()
                             }
                         }
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
                     })
             }
 #endif
         }
-        .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction, content: {
-                HStack {
-                    if !quickScan {
-                        if isProcessingAction {
-                            ProgressView().progressViewStyle(.circular)
-                        } else {
-                            Button(action: resetForm, label: {
-                                Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                                    .help(LocalizedStringKey("str.clear"))
-                            })
-                            .keyboardShortcut("r", modifiers: [.command])
-                        }
-                    }
-                    
-                    if (consumeType == .open) || (consumeType == .both) {
-                        Button(action: {
-                            openProduct()
-                        }, label: {
-#if os(iOS)
-                            if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                                Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                            } else {
-                                Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                                    .labelStyle(.titleAndIcon)
-                            }
-#else
-                            Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
-                                .labelStyle(.titleAndIcon)
-#endif
-                        })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("o", modifiers: [.command])
-                    }
-                    if (consumeType == .consume) || (consumeType == .both) {
-                        Button(action: {
-                            consumeProduct()
-                        }, label: {
-#if os(iOS)
-                            if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                                Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                            } else {
-                                Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                                    .labelStyle(.titleAndIcon)
-                            }
-#else
-                            Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
-                                .labelStyle(.titleAndIcon)
-#endif
-                        })
-                        .disabled(!isFormValid || isProcessingAction)
-                        .keyboardShortcut("s", modifiers: [.command])
-                    }
-                }
-            })
-        })
     }
     
     var content: some View {
@@ -314,19 +266,19 @@ struct ConsumeProductView: View {
             isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen),
             isShown: [.successConsume, .failConsume, .successOpen, .failOpen].contains(toastType),
             text: { item in
-            switch item {
-            case .successConsume:
-                return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
-            case .failConsume:
-                return LocalizedStringKey("str.stock.consume.product.consume.fail")
-            case .successOpen:
-                return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
-            case .failOpen:
-                return LocalizedStringKey("str.stock.consume.product.open.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+                switch item {
+                case .successConsume:
+                    return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
+                case .failConsume:
+                    return LocalizedStringKey("str.stock.consume.product.consume.fail")
+                case .successOpen:
+                    return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
+                case .failOpen:
+                    return LocalizedStringKey("str.stock.consume.product.open.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
         .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }
     
@@ -387,6 +339,16 @@ struct ConsumeProductView: View {
                     }
                 }
                 
+                if quickScan {
+                    // This is a workaround for a bug which shows the toolbar multiple times
+                    Text("")
+                        .toolbar(content: {
+                            ToolbarItem(placement: .confirmationAction, content: {
+                                toolbarContent
+                            })
+                        })
+                }
+                
                 if devMode {
                     HStack{
                         Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
@@ -435,6 +397,61 @@ struct ConsumeProductView: View {
                 firstAppear = false
             }
         })
+    }
+    
+    var toolbarContent: some View {
+        HStack {
+            if !quickScan {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(.circular)
+                } else {
+                    Button(action: resetForm, label: {
+                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                            .help(LocalizedStringKey("str.clear"))
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            }
+            
+            if (consumeType == .open) || (consumeType == .both) {
+                Button(action: {
+                    openProduct()
+                }, label: {
+#if os(iOS)
+                    if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                    } else {
+                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                            .labelStyle(.titleAndIcon)
+                    }
+#else
+                    Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                        .labelStyle(.titleAndIcon)
+#endif
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("o", modifiers: [.command])
+            }
+            if (consumeType == .consume) || (consumeType == .both) {
+                Button(action: {
+                    consumeProduct()
+                }, label: {
+#if os(iOS)
+                    if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                    } else {
+                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                            .labelStyle(.titleAndIcon)
+                    }
+#else
+                    Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                        .labelStyle(.titleAndIcon)
+#endif
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            }
+        }
     }
 }
 
