@@ -69,6 +69,10 @@ struct TransferProductView: View {
         product?.name ?? ""
     }
     
+    private var locationTo: MDLocation? {
+        grocyVM.mdLocations.first(where: {$0.id == locationIDTo})
+    }
+    
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
             return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
@@ -152,33 +156,47 @@ struct TransferProductView: View {
                     }
                 }
             
-            Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up"), content: {
-                Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
-                    Text(locationFrom.name).tag(locationFrom.id as Int?)
-                }
-            })
-            
-            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
-            //            Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
-            //                MyDoubleStepperOptional(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
-            //                Picker(selection: $quantityUnitID, label: Label("str.stock.product.quantityUnit", systemImage: MySymbols.quantityUnit), content: {
-            //                    Text("").tag(nil as Int?)
-            //                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
-            //                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
-            //                    }
-            //                }).disabled(true)
-            //            }
-            
             VStack(alignment: .leading) {
-                Picker(selection: $locationIDTo, label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary), content: {
+                Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up").foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
-                        Text(locationTo.name).tag(locationTo.id as Int?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
+                        Text(locationFrom.name).tag(locationFrom.id as Int?)
                     }
                 })
+                
+                if locationIDFrom == nil {
+                    Text(LocalizedStringKey("str.stock.transfer.product.locationFrom.required"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+            
+            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+            
+            VStack(alignment: .leading) {
+                Picker(
+                    selection: $locationIDTo,
+                    label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary),
+                    content: {
+                        Text("").tag(nil as Int?)
+                        ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
+                            Text(locationTo.name).tag(locationTo.id as Int?)
+                        }
+                    })
+                if locationIDTo == nil {
+                    Text(LocalizedStringKey("str.stock.transfer.product.locationTo.required"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
                 if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
-                    Text(LocalizedStringKey("str.stock.transfer.product.locationTO.same"))
+                    Text(LocalizedStringKey("str.stock.transfer.product.locationTo.same"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+                if product?.shouldNotBeFrozen == 1,
+                   locationTo?.isFreezer == true
+                {
+                    Text(LocalizedStringKey("str.stock.transfer.product.shouldNotBeFrozen"))
                         .font(.caption)
                         .foregroundColor(.red)
                 }
@@ -221,13 +239,13 @@ struct TransferProductView: View {
             isSuccess: Binding.constant(toastType == .successTransfer),
             isShown: [.successTransfer, .failTransfer].contains(toastType),
             text: { item in
-            switch item {
-            case .successTransfer:
-                return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
-            case .failTransfer:
-                return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
-            }
-        })
+                switch item {
+                case .successTransfer:
+                    return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
+                case .failTransfer:
+                    return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
+                }
+            })
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {
