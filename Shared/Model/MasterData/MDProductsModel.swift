@@ -33,7 +33,7 @@ struct MDProduct: Codable {
     @NullCodable var hideOnStockOverview: Int?
     let defaultStockLabelType: Int?
     let shouldNotBeFrozen: Int?
-    let treatOpenedAsOutOfStock: Bool?
+    let treatOpenedAsOutOfStock: Int?
     let noOwnStock: Int?
     @NullCodable var defaultConsumeLocationID: Int?
     let moveOnOpen: Int?
@@ -104,15 +104,7 @@ struct MDProduct: Codable {
             do { self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try Int(container.decode(String.self, forKey: .hideOnStockOverview))! }
             do { self.defaultStockLabelType = try container.decode(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try Int(container.decode(String.self, forKey: .defaultStockLabelType))! }
             do { self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) } catch { self.shouldNotBeFrozen = try Int(container.decode(String.self, forKey: .shouldNotBeFrozen))! }
-            do {
-                self.treatOpenedAsOutOfStock = try container.decode(Bool.self, forKey: .treatOpenedAsOutOfStock)
-            } catch {
-                do {
-                    self.treatOpenedAsOutOfStock = try container.decode(Int.self, forKey: .treatOpenedAsOutOfStock) == 1
-                } catch {
-                    self.treatOpenedAsOutOfStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .treatOpenedAsOutOfStock))
-                }
-            }
+            do { self.treatOpenedAsOutOfStock = try container.decode(Int.self, forKey: .treatOpenedAsOutOfStock) } catch { self.treatOpenedAsOutOfStock = try Int(container.decode(String.self, forKey: .treatOpenedAsOutOfStock))! }
             do { self.noOwnStock = try container.decode(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
             do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
             do { self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try Int(container.decode(String.self, forKey: .moveOnOpen)) ?? 0 }
@@ -150,7 +142,7 @@ struct MDProduct: Codable {
         hideOnStockOverview: Int? = nil,
         defaultStockLabelType: Int? = nil,
         shouldNotBeFrozen: Int? = nil,
-        treatOpenedAsOutOfStock: Bool? = nil,
+        treatOpenedAsOutOfStock: Int? = nil,
         noOwnStock: Int? = nil,
         defaultConsumeLocationID: Int? = nil,
         moveOnOpen: Int? = nil,
