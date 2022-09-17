@@ -33,14 +33,7 @@ struct TransferProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var toastType: TransferToastType?
-    private enum TransferToastType: Identifiable {
-        case successTransfer, failTransfer
-        
-        var id: Int {
-            self.hashValue
-        }
-    }
+    @State private var toastType: ToastType?
     @State private var infoString: String?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
@@ -244,6 +237,8 @@ struct TransferProductView: View {
                     return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
                 case .failTransfer:
                     return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
+                default:
+                    return LocalizedStringKey("str.error")
                 }
             })
         .toolbar(content: {

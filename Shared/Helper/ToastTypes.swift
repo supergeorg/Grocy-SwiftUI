@@ -14,6 +14,8 @@ enum ToastType: Identifiable {
          failOpen,
          successConsume,
          failConsume,
+         successTransfer,
+         failTransfer,
          successAdd,
          failAdd,
          successEdit,
