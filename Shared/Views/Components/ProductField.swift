@@ -84,18 +84,15 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        Picker(selection: $productID,
-               label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
-               content: {
+        VStack {
             HStack {
-#if os(iOS)
                 SearchBar(text: $searchTerm)
-#endif
-                Button(action: {
-                    isShowingScanner.toggle()
-                }, label: {
-                    Image(systemName: MySymbols.barcodeScan)
-                })
+                HStack {
+                    Button(action: {
+                        isShowingScanner.toggle()
+                    }, label: {
+                        Image(systemName: MySymbols.barcodeScan)
+                    })
                     .sheet(isPresented: $isShowingScanner) {
                         CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
                             .overlay(
@@ -107,8 +104,8 @@ struct ProductField: View {
                                         Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
-                                        .disabled(!checkForTorch())
-                                        .padding()
+                                    .disabled(!checkForTorch())
+                                    .padding()
                                     if getFrontCameraAvailable() {
                                         Button(action: {
                                             isScannerFrontCamera.toggle()
@@ -116,18 +113,24 @@ struct ProductField: View {
                                             Image(systemName: MySymbols.changeCamera)
                                                 .font(.title)
                                         })
-                                            .padding()
+                                        .padding()
                                     }
                                 }
                                 , alignment: .topTrailing)
                     }
+                }
             }
-            Text("").tag(nil as Int?)
-            ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name).tag(productElement.id as Int?)
+            Picker(selection: $productID,
+                   label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
+                   content: {
+                Text("").tag(nil as Int?)
+                ForEach(filteredProducts, id: \.id) { productElement in
+                    Text(productElement.name).tag(productElement.id as Int?)
+                }
             }
+            )
+            .pickerStyle(.automatic)
         }
-        )
     }
 #elseif os(macOS)
     var body: some View {
