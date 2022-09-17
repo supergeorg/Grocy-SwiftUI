@@ -209,8 +209,8 @@
 "str.stock.transfer.product.locationFrom" = "Z miejsca";
 "str.stock.transfer.product.locationFrom.required" = "Miejsce jest wymagane";
 "str.stock.transfer.product.locationTo" = "Na miejsce";
-"str.stock.transfer.product.locationTO.required" = "Miejsce jest wymagane";
-"str.stock.transfer.product.locationTO.same" = "Nie może być takie same jak miejsce poprzednie";
+"str.stock.transfer.product.locationTo.required" = "Miejsce jest wymagane";
+"str.stock.transfer.product.locationTo.same" = "Nie może być takie same jak miejsce poprzednie";
 "str.stock.transfer.product.useStockEntry" = "Użyj konkretnej pozycji z zapasów";
 "str.stock.transfer.product.useStockEntry.description" = "Pierwsza pozycja z tej listy będzie wybrana przez domyślną zasadę jaką jest \"Najpierw otwarte, potem z kończącą się wartością, potem First In - First Out\"";
 "str.stock.transfer.product.stockEntry" = "Pozycja zapasu";

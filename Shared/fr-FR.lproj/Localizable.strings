@@ -209,8 +209,8 @@
 "str.stock.transfer.product.locationFrom" = "De";
 "str.stock.transfer.product.locationFrom.required" = "Un emplacement est requis";
 "str.stock.transfer.product.locationTo" = "A";
-"str.stock.transfer.product.locationTO.required" = "Un emplacement est requis";
-"str.stock.transfer.product.locationTO.same" = "Ce ne peut pas être le même endroit d'origine";
+"str.stock.transfer.product.locationTo.required" = "Un emplacement est requis";
+"str.stock.transfer.product.locationTo.same" = "Ce ne peut pas être le même endroit d'origine";
 "str.stock.transfer.product.useStockEntry" = "Utiliser un objet spécifique du stock";
 "str.stock.transfer.product.useStockEntry.description" = "Le premier élément de cette liste est choisi par à la règle de consommation par défaut : 'Ouvert en premier, puis périme en premier, puis plus ancien ajouté'";
 "str.stock.transfer.product.stockEntry" = "Entrée dans le stock";

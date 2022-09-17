@@ -210,8 +210,9 @@
 "str.stock.transfer.product.locationFrom" = "From location";
 "str.stock.transfer.product.locationFrom.required" = "A location is required";
 "str.stock.transfer.product.locationTo" = "To location";
-"str.stock.transfer.product.locationTO.required" = "A location is required";
-"str.stock.transfer.product.locationTO.same" = "This cannot be the same as the \"From\" location";
+"str.stock.transfer.product.locationTo.required" = "A location is required";
+"str.stock.transfer.product.locationTo.same" = "This cannot be the same as the \"From\" location";
+"str.stock.transfer.product.shouldNotBeFrozen" = "This product shouldn't be frozen";
 "str.stock.transfer.product.useStockEntry" = "Use a specific stock item";
 "str.stock.transfer.product.useStockEntry.description" = "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"";
 "str.stock.transfer.product.stockEntry" = "Stock entry";
@@ -429,8 +430,12 @@
 "str.md.product.tareWeight.invalid" = "This cannot be lower than 0.0001 and needs to be a valid number with max. 4 decimal places";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Disable stock fulfillment checking for this ingredient";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "This will be used as the default setting when adding this product as a recipe ingredient";
-"str.md.product.disableOwnStock" = "Disable own stock";
-"str.md.product.disableOwnStock.hint" = "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)";
+"str.md.product.treatOpenedAsOutOfStock" = "Treat opened as out of stock";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount";
+"str.md.product.shouldNotBeFrozen" = "Should not be frozen";
+"str.md.product.shouldNotBeFrozen.hint" = "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown";
+"str.md.product.noOwnStock" = "Disable own stock";
+"str.md.product.noOwnStock.hint" = "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";

@@ -210,8 +210,9 @@
 "str.stock.transfer.product.locationFrom" = "Von Standort";
 "str.stock.transfer.product.locationFrom.required" = "Ein Standort ist erforderlich";
 "str.stock.transfer.product.locationTo" = "Nach Standort";
-"str.stock.transfer.product.locationTO.required" = "Ein Standort ist erforderlich";
-"str.stock.transfer.product.locationTO.same" = "Dies kann nicht derselbe Standort wie \"Von Standort\" sein";
+"str.stock.transfer.product.locationTo.required" = "Ein Standort ist erforderlich";
+"str.stock.transfer.product.locationTo.same" = "Dies kann nicht derselbe Standort wie \"Von Standort\" sein";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Dieses Produkt sollte nicht eingefroren werden";
 "str.stock.transfer.product.useStockEntry" = "Einen bestimmten Bestandseintrag verwenden";
 "str.stock.transfer.product.useStockEntry.description" = "Der erste Eintrag in dieser Liste würde von der Standardregel \"Geöffnete zuerst, dann zuerst fällige, dann First In - First Out\" ausgewählt werden";
 "str.stock.transfer.product.stockEntry" = "Bestandseintrag";
@@ -429,8 +430,12 @@
 "str.md.product.tareWeight.invalid" = "Dies darf nicht niedriger als 0.0001 sein und muss eine gültige Zahl mit max. 4 Nachkommastellen sein";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Bestandsprüfung für diese Zutat deaktivieren";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dies wird als Standardeinstellung verwendet wenn dieses Produkt als Rezeptzutat hinzugefügt wird";
-"str.md.product.disableOwnStock" = "Eigenen Bestand deaktivieren";
-"str.md.product.disableOwnStock.hint" = "Wenn aktiviert kann dieses Produkt keinen eigenen Bestand haben. Das heißt, es kann nicht beim Einkauf ausgewählt werden (dies ist für übergeordnete Produkte sinnvoll, welche nur als Übersicht/Gesamtansicht für untergeordnete Produkte gedacht sind).";
+"str.md.product.treatOpenedAsOutOfStock" = "Geöffnete als nicht vorrätig behandeln";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Wenn aktiviert, werden geöffnete Bestandseinträge für die Ermittlung des Mindestbestands als bereits verbraucht betrachtet";
+"str.md.product.shouldNotBeFrozen" = "Sollte nicht eingefroren werden";
+"str.md.product.shouldNotBeFrozen.hint" = "Wenn aktiviert und wenn dieses Produkt zu einem Gefrierstandort umgelagert (sprich eingefroren) wird, wird eine entsprechende Warnung angezeigt";
+"str.md.product.noOwnStock" = "Eigenen Bestand deaktivieren";
+"str.md.product.noOwnStock.hint" = "Wenn aktiviert kann dieses Produkt keinen eigenen Bestand haben. Das heißt, es kann nicht beim Einkauf ausgewählt werden (dies ist für übergeordnete Produkte sinnvoll, welche nur als Übersicht/Gesamtansicht für untergeordnete Produkte gedacht sind).";
 
 "str.md.barcodes" = "Barcodes";
 "str.md.barcode" = "Barcode";

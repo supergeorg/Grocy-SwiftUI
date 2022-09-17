@@ -96,8 +96,8 @@
 "str.stock.transfer.product.locationFrom" = "Från plats";
 "str.stock.transfer.product.locationFrom.required" = "En plats krävs";
 "str.stock.transfer.product.locationTo" = "Till plats";
-"str.stock.transfer.product.locationTO.required" = "En plats krävs";
-"str.stock.transfer.product.locationTO.same" = "Kan ej vara samma som 'Från' platsen";
+"str.stock.transfer.product.locationTo.required" = "En plats krävs";
+"str.stock.transfer.product.locationTo.same" = "Kan ej vara samma som 'Från' platsen";
 "str.stock.transfer.product.useStockEntry" = "Använd ett specifikt lagerobjekt";
 "str.stock.transfer.product.stockEntry" = "Lagerpost";
 "str.stock.inventory" = "Lager";
