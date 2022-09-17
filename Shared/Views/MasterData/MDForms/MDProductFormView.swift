@@ -517,9 +517,6 @@ struct MDProductFormView: View {
             // Disable own stock
             MyToggle(isOn: $noOwnStock, description: "str.md.product.noOwnStock", descriptionInfo: "str.md.product.noOwnStock.hint", icon: MySymbols.stockOverview)
             
-            // Treat opened as out of stock
-            MyToggle(isOn: $treatOpenedAsOutOfStock, description: "str.md.product.treatOpenedAsOutOfStock", descriptionInfo: "str.md.product.treatOpenedAsOutOfStock.hint", icon: MySymbols.stockOverview)
-            
             // Product should not be frozen
             MyToggle(isOn: $shouldNotBeFrozen, description: "str.md.product.shouldNotBeFrozen", descriptionInfo: "str.md.product.shouldNotBeFrozen.hint", icon: MySymbols.freezing)
             
@@ -648,6 +645,9 @@ struct MDProductFormView: View {
             
             // Accumulate sub products min stock amount
             MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info", icon: MySymbols.accumulate)
+            
+            // Treat opened as out of stock
+            MyToggle(isOn: $treatOpenedAsOutOfStock, description: "str.md.product.treatOpenedAsOutOfStock", descriptionInfo: "str.md.product.treatOpenedAsOutOfStock.hint", icon: MySymbols.stockOverview)
             
             // Quick consume amount
             MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, errorMessage: "str.md.product.quickConsumeAmount.invalid", systemImage: MySymbols.consume)
