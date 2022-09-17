@@ -132,7 +132,9 @@ struct MDProductFormView: View {
     @State private var defaultDueDaysAfterThawing: Int = 0
     @State private var quickConsumeAmount: Double = 1.0
     @State private var hideOnStockOverview: Bool = false
-    @State private var disableOwnStock: Bool = false
+    @State private var noOwnStock: Bool = false
+    @State private var treatOpenedAsOutOfStock: Bool = false
+    @State private var shouldNotBeFrozen: Bool = false
     
     @State private var queuedBarcode: String = ""
     
@@ -179,7 +181,9 @@ struct MDProductFormView: View {
         productGroupID = product?.productGroupID ?? grocyVM.userSettings?.productPresetsProductGroupID
         calories = product?.calories ?? 0.0
         hideOnStockOverview = product?.hideOnStockOverview == 1
-        disableOwnStock = product?.noOwnStock == 1
+        noOwnStock = product?.noOwnStock == 1
+        shouldNotBeFrozen = product?.shouldNotBeFrozen == 1
+        treatOpenedAsOutOfStock = product?.treatOpenedAsOutOfStock == 1
         pictureFilename = product?.pictureFileName
         
         locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID
@@ -230,8 +234,6 @@ struct MDProductFormView: View {
         if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
             let id = isNewProduct ? grocyVM.findNextID(.products) : product!.id
             let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
-            let hideOnStockOverviewInt = hideOnStockOverview ? 1 : 0
-            let disableOwnStockInt = disableOwnStock ? 1 : 0
             let productPOST = MDProduct(
                 id: id,
                 name: name,
@@ -257,8 +259,10 @@ struct MDProductFormView: View {
                 cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0,
                 dueType: dueType.rawValue,
                 quickConsumeAmount: quickConsumeAmount,
-                hideOnStockOverview: hideOnStockOverviewInt,
-                noOwnStock: disableOwnStockInt,
+                hideOnStockOverview: hideOnStockOverview ? 1 : 0,
+                shouldNotBeFrozen: shouldNotBeFrozen ? 1 : 0,
+                treatOpenedAsOutOfStock: treatOpenedAsOutOfStock ? 1 : 0,
+                noOwnStock: noOwnStock ? 1 : 0,
                 defaultConsumeLocationID: defaultConsumeLocationID,
                 moveOnOpen: defaultConsumeLocationID != nil ? (moveOnOpen ? 1 : 0) : 0,
                 rowCreatedTimestamp: timeStamp
@@ -511,7 +515,14 @@ struct MDProductFormView: View {
             MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
             
             // Disable own stock
-            MyToggle(isOn: $disableOwnStock, description: "str.md.product.disableOwnStock", descriptionInfo: "str.md.product.disableOwnStock.hint", icon: MySymbols.stockOverview)
+            MyToggle(isOn: $noOwnStock, description: "str.md.product.noOwnStock", descriptionInfo: "str.md.product.noOwnStock.hint", icon: MySymbols.stockOverview)
+            
+            // Treat opened as out of stock
+            MyToggle(isOn: $treatOpenedAsOutOfStock, description: "str.md.product.treatOpenedAsOutOfStock", descriptionInfo: "str.md.product.treatOpenedAsOutOfStock.hint", icon: MySymbols.stockOverview)
+            
+            // Product should not be frozen
+            MyToggle(isOn: $shouldNotBeFrozen, description: "str.md.product.shouldNotBeFrozen", descriptionInfo: "str.md.product.shouldNotBeFrozen.hint", icon: MySymbols.freezing)
+            
             
             // Product picture
 #if os(iOS)
