@@ -23,7 +23,7 @@ struct AmountSelectionView: View {
             return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
         } else { return [] }
     }
-
+    
     private var currentQuantityUnit: MDQuantityUnit? {
         if let quantityUnitID = quantityUnitID {
             return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID})
@@ -57,17 +57,26 @@ struct AmountSelectionView: View {
                 }
             }
             
-            Picker(selection: $quantityUnitID,
-                   label: Label(LocalizedStringKey("str.stock.product.quantityUnit"), systemImage: MySymbols.quantityUnit),
-                   content: {
-                if let stockQU = grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
-                    Text(stockQU.name).tag(stockQU.id as Int?)
-                }
-                ForEach(quantityUnitConversions, id:\.id, content: { quConversion in
-                    Text(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.fromQuID})?.name ?? String(quConversion.fromQuID))
-                        .tag(quConversion.fromQuID as Int?)
+            VStack(alignment: .leading) {
+                Picker(selection: $quantityUnitID,
+                       label: Label(LocalizedStringKey("str.stock.product.quantityUnit"), systemImage: MySymbols.quantityUnit).foregroundColor(.primary),
+                       content: {
+                    Text("").tag(nil as Int?)
+                    if let stockQU = grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
+                        Text(stockQU.name).tag(stockQU.id as Int?)
+                    }
+                    ForEach(quantityUnitConversions, id:\.id, content: { quConversion in
+                        Text(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.fromQuID})?.name ?? String(quConversion.fromQuID))
+                            .tag(quConversion.fromQuID as Int?)
+                    })
                 })
-            }).disabled(quantityUnitConversions.isEmpty)
+                .disabled(quantityUnitConversions.isEmpty)
+                if quantityUnitID == nil {
+                    Text(LocalizedStringKey("str.stock.product.quantityUnit.required"))
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
         }
     }
 }
