@@ -30,8 +30,6 @@
 "str.error.other" = "Er is een onbekende fout opgetreden.";
 "str.error.logInfo" = "Controleer het logboek.";
 "str.time.unlimited" = "onbeperkt";
-
-// MARK: - Transactions
 "tr.purchase" = "Aankoop";
 "tr.consume" = "Verbruik";
 "tr.opened" = "Geopend";
@@ -41,8 +39,6 @@
 "tr.transferFrom" = "Verplaats van";
 "tr.transferTo" = "Verplaats naar";
 "tr.selfProduction" = "Zelf-geproduceerd";
-
-// MARK: - Navigation
 "str.nav.stockOverview" = "Voorraadoverzicht";
 "str.nav.shoppingList" = "Boodschappenlijst";
 "str.nav.recipes" = "Recepten";
@@ -73,8 +69,6 @@
 "str.nav.settings" = "Instellingen";
 "str.nav.userManagement" = "Beheer gebruikers";
 "str.nav.quickScan" = "Snelle scan";
-
-// MARK: - Details
 "str.details.title" = "Productoverzicht";
 "str.details.amount" = "Op voorraad:";
 "str.details.stockValue" = "Waarde:";
@@ -86,17 +80,12 @@
 "str.details.averageShelfLife" = "Gemiddelde houdbaarheid:";
 "str.details.spoilRate" = "Verspilling:";
 "str.details.relation %@ %@" = "%@ per %@";
-
 "str.details.never" = "Nooit";
 "str.details.unknown" = "Onbekend";
-
 "str.details.stockEntries" = "Producten op voorraad";
 "str.details.stockJournal" = "Voorraaddagboek";
 "str.details.edit" = "Bewerk product";
-
-// MARK: - Stock
 "str.stock.stockOverview" = "Voorraadoverzicht";
-// Products, Summed Value
 "str.stock.stockOverviewInfo %lld %@" = "%lld producten met een totale waarde van %@";
 "str.stock.search" = "Doorzoek voorraad";
 "str.stock.empty" = "Er is geen enkel product op voorraad.";
@@ -118,12 +107,10 @@
 "str.stock.info.belowMinStock %lld" = "%lld producten zijn onder de min. voorraadhoeveelheid";
 "str.stock.info.opened %@" = "%@ geopend";
 "str.stock.info.onShoppingList" = "Dit product staat op een boodschappenlijst.";
-
 "str.stock.entry.description.notOpened %@ %@ %@" = "Hoeveelheid: %@ - Houdbaarheidsdatum: %@ - Gekocht op %@ - Ongeopend";
 "str.stock.entry.description.opened %@ %@ %@" = "Hoeveelheid: %@ - Houdbaarheidsdatum: %@ - Gekocht op %@ - Geopend";
 "str.stock.entry.status.notOpened" = "Ongeopend";
 "str.stock.entry.status.opened" = "Geopend";
-
 "str.stock.tbl.product" = "Product";
 "str.stock.tbl.productGroup" = "Productcategorie";
 "str.stock.tbl.amount" = "Hoeveelheid";
@@ -148,18 +135,15 @@
 "str.stock.tbl.action.successOpenOne %@" = "1 %@ geopend";
 "str.stock.tbl.action.successConsumeAllSpoiled %@" = "Alle %@ geopend";
 "str.stock.tbl.action.fail" = "Mislukt";
-
 "str.stock.tbl.menu.addToShL" = "Voeg toe aan boodschappenlijst";
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Markeer %@ als bedorven";
 "str.stock.tbl.menu.searchRecipes" = "Zoek naar recepten waarin dit product wordt verwerkt";
-
 "str.stock.product.amount" = "Hoeveelheid";
 "str.stock.product.amount.factored %@ %@" = "Dit staat gelijk aan %@ %@";
 "str.stock.product.amount.invalid" = "De waarde hiervan mag niet lager zijn dan 0.0001 en dient een geldig getal te zijn met max. 4 cijfers achter de komma";
 "str.stock.product.amount.locMax" = "Deze hoeveelheid is niet beschikbaar op de gekozen locatie";
 "str.stock.product.quantityUnit" = "Hoeveelheidseenheid";
 "str.stock.product.quantityUnit.required" = "Kies een hoeveelheidseenheid";
-
 "str.stock.buy" = "Aankoop";
 "str.stock.buy.product" = "Product";
 "str.stock.buy.product.buy" = "Koop product";
@@ -180,7 +164,6 @@
 "str.stock.buy.product.location.default %@" = "%@ (standaardlocatie)";
 "str.stock.buy.product.note" = "Aantekening";
 "str.stock.buy.product.selfProduction" = "Zelf-geproduceerd";
-
 "str.stock.consume" = "Verbruik";
 "str.stock.consume.product" = "Product";
 "str.stock.consume.product.consume" = "Verbruik product";
@@ -200,7 +183,6 @@
 "str.stock.consume.product.stockEntry" = "Product op voorraad";
 "str.stock.consume.product.recipe" = "Recept";
 "str.stock.consume.product.recipe.info" = "Dit is enkel voor statistische doeleinden";
-
 "str.stock.transfer" = "Verplaats";
 "str.stock.transfer.product" = "Product";
 "str.stock.transfer.product.transfer" = "Verplaats product";
@@ -212,10 +194,10 @@
 "str.stock.transfer.product.locationTo" = "Naar locatie";
 "str.stock.transfer.product.locationTo.required" = "Geef een locatie op";
 "str.stock.transfer.product.locationTo.same" = "Deze locatie kan niet hetzelfde zijn als de ‘Van’-locatie";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Dit product mag niet worden ingevroren";
 "str.stock.transfer.product.useStockEntry" = "Gebruik een specifiek product uit de voorraad";
 "str.stock.transfer.product.useStockEntry.description" = "Het eerste product op deze lijst wordt gekozen met de standaardregel: ‘Als eerste geopend; als eerste over datum; eerste in, eerste uit’";
 "str.stock.transfer.product.stockEntry" = "Product op voorraad";
-
 "str.stock.inventory" = "Voorraad";
 "str.stock.inventory.product" = "Product";
 "str.stock.inventory.product.inventory" = "Inventariseer";
@@ -235,7 +217,6 @@
 "str.stock.inventory.product.location" = "Locatie";
 "str.stock.inventory.product.location.info" = "Wordt toegepast op toegevoegde producten";
 "str.stock.inventory.product.location.required" = "Geef een locatie op";
-
 "str.stock.journal" = "Voorraaddagboek";
 "str.stock.journal.summary" = "Samenvatting van voorraaddagboek";
 "str.stock.journal.empty" = "Er zijn geen transacties gevonden.";
@@ -252,7 +233,6 @@
 "str.stock.journal.location.info %@" = "Locatie: %@";
 "str.stock.journal.user" = "Gebruiker";
 "str.stock.journal.user.info %@" = "Uitgevoerd door %@";
-
 "str.stock.entries" = "Producten op voorraad";
 "str.stock.entries.empty" = "Er zijn geen producten gevonden";
 "str.stock.entries.product %@" = "Product: %@";
@@ -267,8 +247,6 @@
 "str.stock.entry.save" = "Bewaar product";
 "str.stock.entry.consume" = "Verbruik deze voorraad";
 "str.stock.entry.open" = "Markeer deze voorraad als geopend";
-
-// MARK: - Shopping List
 "str.shL" = "Boodschappenlijst";
 "str.shL.manage" = "Beheer boodschappenlijsten";
 "str.shL.new" = "Nieuwe boodschappenlijst";
@@ -278,7 +256,6 @@
 "str.shL.print" = "Druk af";
 "str.shL.amount" = "Hoeveelheid";
 "str.shL.ungrouped" = "Ongecategoriseerd";
-
 "str.shL.form.new" = "Maak boodschappenlijst";
 "str.shL.form.edit" = "Wijzig boodschappenlijst";
 "str.shL.form.name" = "Naam";
@@ -286,7 +263,6 @@
 "str.shL.form.name.exists" = "Deze naam is al in gebruik";
 "str.shL.form.save" = "Bewaar";
 "str.shL.form.save.failed" = "Het bewaren is mislukt";
-
 "str.shL.action.addItem" = "Voeg product toe";
 "str.shL.action.clearList" = "Wis lijst";
 "str.shL.action.clearList.confirm" = "Weet je zeker dat je deze lijst wilt wissen?";
@@ -294,7 +270,6 @@
 "str.shL.action.addBelowMinStock" = "Voeg producten toe die onder min. voorraadhoeveelheid zijn";
 "str.shL.action.addOverdue" = "Voeg producten toe die over de datum zijn";
 "str.shL.action.failed" = "Mislukt";
-
 "str.shL.filter.status" = "Status";
 "str.shL.filter.reset" = "Herstel filter";
 "str.shL.filter.all" = "Alle";
@@ -305,9 +280,6 @@
 "str.shL.filter.info.belowMinStock %lld" = "%lld producten zijn onder de min. voorraadhoeveelheid";
 "str.shL.filter.info.1undone" = "Je hebt 1 taak afgerond";
 "str.shL.filter.info.undone %lld" = "Je hebt %lld taken afgerond";
-"str.shL.filter.info.1undone" = "Je hebt 1 taak afgerond";
-"str.shL.filter.info.undone %lld" = "Je hebt %lld taken afgerond";
-
 "str.shL.entryForm.new.title" = "Voeg product toe aan boodschappenlijst";
 "str.shL.entryForm.edit.title" = "Bewerk product";
 "str.shL.entryForm.save.failed" = "Het bewaren is mislukt.";
@@ -317,15 +289,12 @@
 "str.shL.entryForm.amount.required" = "De waarde hiervan mag niet lager zijn dan 0.0001 en dient een geldig getal te zijn met max. 4 cijfers achter de komma";
 "str.shL.entryForm.quantityUnit" = "Hoeveelheidseenheid";
 "str.shL.entryForm.note" = "Opmerking";
-
 "str.shL.entry.done" = "Markeer als afgerond";
 "str.shL.entry.edit" = "Wijzig product";
 "str.shL.entry.delete" = "Verwijder product";
 "str.shL.entry.delete.confirm" = "Weet je zeker dat je dit product wilt verwijderen?";
 "str.shL.entry.add %@" = "Voeg %@ toe aan voorraad";
 "str.shL.entry.info.amount %@" = "Hoeveelheid: %@";
-
-// MARK: - Master Data
 "str.md.masterData" = "Hoofdgegevens";
 "str.md.description" = "Beschrijving";
 "str.md.search" = "Zoek";
@@ -335,8 +304,6 @@
 "str.md.edit.fail" = "Het bewerken is mislukt";
 "str.md.delete.success" = "Het product is verwijderd";
 "str.md.delete.fail" = "Het verwijderen is mislukt";
-
-// MD Product
 "str.md.products" = "Producten";
 "str.md.product" = "Product";
 "str.md.products.empty" = "Er zijn geen producten gevonden.";
@@ -352,7 +319,6 @@
 "str.md.product.name" = "Productnaam";
 "str.md.product.name.required" = "Voer een naam in";
 "str.md.product.name.exists" = "Deze naam is al in gebruik";
-// optional properties
 "str.md.product.category.optionalProperties" = "Optionele informatie";
 "str.md.product.category.optionalProperties.description" = "Status, hoofdproduct, beschrijving, productcategorie, energie, foto";
 "str.md.product.active" = "Actief";
@@ -372,13 +338,11 @@
 "str.md.product.picture.add.camera" = "Maak productfoto met camera";
 "str.md.product.picture.upload" = "Upload productfoto";
 "str.md.product.picture.delete" = "Verwijder productfoto";
-// default locations
 "str.md.product.category.defaultLocations" = "Standaardlocaties";
 "str.md.product.category.defaultLocations.description" = "Locatie, winkel";
 "str.md.product.location" = "Standaardlocatie";
 "str.md.product.location.required" = "Geef een locatie op";
 "str.md.product.shoppingLocation" = "Standaardwinkel";
-// due date
 "str.md.product.category.dueDate" = "Houdbaarheidsdatum";
 "str.md.product.category.dueDate.description" = "Soort, standaarddagen; na openen, bevriezen, ontdooien";
 "str.md.product.dueType" = "Soort houdbaarheidsdatum";
@@ -397,7 +361,6 @@
 "str.md.product.defaultDueDaysAfterThawing" = "Standaard houdbaarheidsdatum na ontdooien";
 "str.md.product.defaultDueDaysAfterThawing.info" = "Als dit product wordt ontdooid, dan zal de THT-datum vervangen worden door vandaag + dit aantal dagen";
 "str.md.product.defaultDueDaysAfterThawing.invalid" = "De waarde hiervan mag niet lager zijn dan 0 en dient een geldig getal te zijn met 0 cijfers achter de komma";
-// quantity units
 "str.md.product.category.quantityUnits" = "Hoeveelheidseenheden";
 "str.md.product.category.quantityUnits.description" = "Voorraad, aankoop";
 "str.md.product.quStock" = "Voorraadeenheid";
@@ -406,7 +369,6 @@
 "str.md.product.quPurchase" = "Standaard hoeveelheid bij aankoop";
 "str.md.product.quPurchase.info" = "Dit is de standaard hoeveelheid die wordt gebruikt bij het toevoegen van dit product aan de boodschappenlijst";
 "str.md.product.quPurchase.required" = "Kies een hoeveelheidseenheid";
-// amount
 "str.md.product.category.amount" = "Hoeveelheden";
 "str.md.product.category.amount.description" = "Min. voorraad, snel opeten/-drinken, factor, gewicht";
 "str.md.product.minStockAmount" = "Min. voorraadhoeveelheid";
@@ -425,9 +387,12 @@
 "str.md.product.tareWeight.invalid" = "De waarde hiervan mag niet lager zijn dan 0.0001 en dient een geldig getal te zijn met max. 4 cijfers achter de komma";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Schakel voorraadcontrole van dit ingrediënt uit";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dit wordt gebruikt als de standaardinstelling bij het toevoegen van dit product als receptingrediënt";
+"str.md.product.treatOpenedAsOutOfStock" = "Behandel als geopend wanneer niet op voorraad";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Indien ingeschakeld, worden geopende artikelen als ontbrekend geteld voor de berekening als dit product minder dan de minimale voorraad heeft ";
+"str.md.product.shouldNotBeFrozen" = "Mag niet worden ingevroren";
+"str.md.product.shouldNotBeFrozen.hint" = "Indien ingeschakeld, wordt bij het verplaatsen van dit product naar een vriezer locatie (dus bij het invriezen) een waarschuwing weergegeven";
 "str.md.product.noOwnStock" = "Houd geen eigen voorraden bij";
 "str.md.product.noOwnStock.hint" = "Schakel in om dit product niet te voorzien van eigen voorraden. Let op: hierdoor is het product niet beschikbaar bij aankoop.";
-
 "str.md.barcodes" = "Streepjescodes";
 "str.md.barcode" = "Streepjescode";
 "str.md.barcodes.empty" = "Er zijn geen streepjescodes toegevoegd.";
@@ -446,7 +411,6 @@
 "str.md.barcode.info.store %@" = "Winkel: %@";
 "str.md.barcode.delete" = "Verwijder streepjescode";
 "str.md.barcode.delete.confirm" = "Weet je zeker dat je deze streepjescode wilt verwijderen?";
-
 "str.md.locations" = "Locaties";
 "str.md.location" = "Locatie";
 "str.md.locations.empty" = "Er zijn geen locaties gevonden.";
@@ -462,7 +426,6 @@
 "str.md.location.isFreezing.description" = "Als een product in een vriezer wordt geplaatst of er uit wordt gehaald, dan wordt de houdbaarheidsdatum automatisch aangepast op basis van de productinstellingen";
 "str.md.location.delete" = "Verwijder locatie";
 "str.md.location.delete.confirm" = "Weet je zeker dat je deze locatie wilt verwijderen?";
-
 "str.md.shoppingLocations" = "Winkels";
 "str.md.shoppingLocation" = "Winkel";
 "str.md.shoppingLocations.empty" = "Er zijn geen winkels gevonden.";
@@ -475,7 +438,6 @@
 "str.md.shoppingLocation.name.exists" = "Deze naam is al in gebruik";
 "str.md.shoppingLocation.delete" = "Verwijder winkel";
 "str.md.shoppingLocation.delete.confirm" = "Weet je zeker dat je deze winkel wilt verwijderen?";
-
 "str.md.quantityUnits" = "Hoeveelheidseenheden";
 "str.md.quantityUnit" = "Hoeveelheidseenheid";
 "str.md.quantityUnits.empty" = "Er zijn geen hoeveelheidseenheden gevonden.";
@@ -500,7 +462,6 @@
 "str.md.quantityUnit.conversion.factor" = "Factor";
 "str.md.quantityUnit.conversion.means %@ %@" = "Dit betekent dat %@ gelijk is aan %@";
 "str.md.quantityUnit.conversion.createInverse" = "Voeg omgekeerde HE-conversie toe";
-
 "str.md.productGroups" = "Productcategorieën";
 "str.md.productGroup" = "Productcategorie";
 "str.md.productGroups.empty" = "Er zijn geen productcategorieën gevonden.";
@@ -513,10 +474,8 @@
 "str.md.productGroup.name.exists" = "Deze naam is al in gebruik";
 "str.md.productGroup.delete" = "Verwijder productcategorie";
 "str.md.productGroup.delete.confirm" = "Weet je zeker dat je deze productcategorie wilt verwijderen?";
-
 "str.md.chores" = "Klusjes";
 "str.md.batteries" = "Batterijen";
-
 "str.md.taskCategories" = "Taakcategorieën";
 "str.md.taskCategory" = "Taakcategorie";
 "str.md.taskCategories.empty" = "Er zijn geen taakcategorieën gevonden.";
@@ -529,7 +488,6 @@
 "str.md.taskCategory.name.exists" = "Deze naam is al in gebruik";
 "str.md.taskCategory.delete" = "Verwijder taakcategorie";
 "str.md.taskCategory.delete.confirm" = "Weet je zeker dat je deze taakcategorie wilt verwijderen?";
-
 "str.md.userFields" = "Eigen velden";
 "str.md.userField" = "Eigen veld";
 "str.md.userFields.empty" = "Er zijn geen eigen velden gevonden.";
@@ -556,7 +514,6 @@
 "str.md.userField.showAsColumnInTables" = "Toon als kolom in tabellen";
 "str.md.userField.delete" = "Verwijder eigen veld";
 "str.md.userField.delete.confirm" = "Weet je zeker dat je dit eigen veld wilt verwijderen?";
-
 "str.md.userField.type.textSingleLine" = "Tekst (één regel)";
 "str.md.userField.type.textMultiLine" = "Tekst (meerdere regels)";
 "str.md.userField.type.numberIntegral" = "Getal (integraal)";
@@ -569,7 +526,6 @@
 "str.md.userField.type.link" = "Link";
 "str.md.userField.type.file" = "Bestand";
 "str.md.userField.type.image" = "Afbeelding";
-
 "str.md.userEntities" = "Eigen eenheden";
 "str.md.userEntity" = "Eigen eenheid";
 "str.md.userEntities.empty" = "Er zijn geen eigen eenheden gevonden.";
@@ -588,8 +544,6 @@
 "str.md.userEntity.iconCSSClass.example" = "Voorbeeld: ‘fas fa-smile’";
 "str.md.userEntity.delete" = "Verwijder eigen eenheid";
 "str.md.userEntity.delete.confirm" = "Weet je zeker dat je deze eigen eenheid wilt verwijderen?";
-
-// MARK: - Settings
 "str.settings" = "Instellingen";
 "str.settings.logout" = "Log uit op server";
 "str.settings.loggedInAs %@" = "Ingelogd als %@";
@@ -648,9 +602,6 @@
 "str.settings.shoppingList.autoAddToShL" = "Voeg automatisch producten toe aan de boodschappenlijst waarvan de voorraad onder het minimumniveau ligt";
 "str.settings.shoppingList.shLToStockWF" = "Boodschappenlijst → Voorraad";
 "str.settings.shoppingList.autoAddToStock" = "Bereken de prijs automatisch op basis van de recentste en het aantal als er standaard houdbaarheidsdata zijn ingesteld";
-
-
-// MARK: - Admin
 "str.admin.user" = "Beheer gebruikers";
 "str.admin.user.empty" = "Er zijn geen gebruikers gevonden";
 "str.admin.user.tooltip.edit" = "Bewerk dit item";
@@ -668,8 +619,6 @@
 "str.admin.user.new.password" = "Wachtwoord";
 "str.admin.user.new.password.confirm" = "Bevestig wachtwoord";
 "str.admin.user.new.password.mismatch" = "De wachtwoorden komen niet overeen";
-
-// MARK: - Quick Scan
 "str.quickScan.consume" = "Verbruik";
 "str.quickScan.markAsOpened" = "Open";
 "str.quickScan.purchase" = "Aankoop";
@@ -685,14 +634,11 @@
 "str.quickScan.add.product.add.fail" = "Het toevoegen is mislukt";
 "str.quickScan.add.product.new.openfoodfacts" = "Voeg nieuw product toe met behulp van Open Food Facts";
 "str.quickScan.barcode.invalid" = "Ongeldige streepjescode";
-
-// MARK: - Onboarding
 "str.onboard.start" = "Aan de slag!";
 "str.onboard.grocy.title" = "grocy - ERP buiten je koelkast";
 "str.onboard.grocy.subtitle" = "Met Grocy kun je een eigen server hosten waarop je je boodschappen en huishoudelijke taken kunt beheren.";
 "str.onboard.app.title" = "Grocy voor iOS/macOS";
 "str.onboard.app.subtitle" = "Een app met platform-eigen ontwerp om Grocy onderweg te kunnen gebruiken.";
-
 "str.login.info" = "Welkom bij Grocy Mobile!\n\n Dit is een zogeheten ‘client-app’, wat betekent dat je toegang dient te hebben tot een Grocy-instantie, bijv. op je server.\n Als je deze app gewoon even wilt uitproberen, dan kun je een van de uitprobeerservers van Grocy-ontwikkelaar Bernd Bestel gebruiken. Maar let op: alles wat je invoert op de uitprobeerservers wordt niet bewaard.";
 "str.login.select" = "Kies het soort server:";
 "str.login.demoServer" = "Uitprobeerserver";
