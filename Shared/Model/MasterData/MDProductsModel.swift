@@ -101,13 +101,13 @@ struct MDProduct: Codable {
             do { self.cumulateMinStockAmountOfSubProducts = try container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) } catch { self.cumulateMinStockAmountOfSubProducts = try? Int(container.decodeIfPresent(String.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? "") }
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
-            do { self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try Int(container.decode(String.self, forKey: .hideOnStockOverview))! }
-            do { self.defaultStockLabelType = try container.decode(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try Int(container.decode(String.self, forKey: .defaultStockLabelType))! }
-            do { self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) } catch { self.shouldNotBeFrozen = try Int(container.decode(String.self, forKey: .shouldNotBeFrozen))! }
-            do { self.treatOpenedAsOutOfStock = try container.decode(Int.self, forKey: .treatOpenedAsOutOfStock) } catch { self.treatOpenedAsOutOfStock = try Int(container.decode(String.self, forKey: .treatOpenedAsOutOfStock))! }
-            do { self.noOwnStock = try container.decode(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
+            do { self.hideOnStockOverview = try container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try? Int(container.decodeIfPresent(String.self, forKey: .hideOnStockOverview) ?? "") }
+            do { self.defaultStockLabelType = try container.decodeIfPresent(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try? Int(container.decodeIfPresent(String.self, forKey: .defaultStockLabelType) ?? "") }
+            do { self.shouldNotBeFrozen = try container.decodeIfPresent(Int.self, forKey: .shouldNotBeFrozen) } catch { self.shouldNotBeFrozen = try? Int(container.decodeIfPresent(String.self, forKey: .shouldNotBeFrozen) ?? "") }
+            do { self.treatOpenedAsOutOfStock = try container.decodeIfPresent(Int.self, forKey: .treatOpenedAsOutOfStock) } catch { self.treatOpenedAsOutOfStock = try? Int(container.decodeIfPresent(String.self, forKey: .treatOpenedAsOutOfStock) ?? "") }
+            do { self.noOwnStock = try container.decodeIfPresent(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try? Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
             do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
-            do { self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try Int(container.decode(String.self, forKey: .moveOnOpen)) ?? 0 }
+            do { self.moveOnOpen = try container.decodeIfPresent(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try? Int(container.decodeIfPresent(String.self, forKey: .moveOnOpen) ?? "") }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
