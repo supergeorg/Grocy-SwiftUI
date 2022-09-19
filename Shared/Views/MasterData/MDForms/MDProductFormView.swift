@@ -263,8 +263,8 @@ struct MDProductFormView: View {
                 shouldNotBeFrozen: shouldNotBeFrozen ? 1 : 0,
                 treatOpenedAsOutOfStock: treatOpenedAsOutOfStock ? 1 : 0,
                 noOwnStock: noOwnStock ? 1 : 0,
-                defaultConsumeLocationID: defaultConsumeLocationID,
-                moveOnOpen: defaultConsumeLocationID != nil ? (moveOnOpen ? 1 : 0) : 0,
+                defaultConsumeLocationID: (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") ? defaultConsumeLocationID : nil,
+                moveOnOpen: (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") ? (defaultConsumeLocationID != nil ? (moveOnOpen ? 1 : 0) : 0) : nil,
                 rowCreatedTimestamp: timeStamp
             )
             isProcessing = true
@@ -549,20 +549,22 @@ struct MDProductFormView: View {
                 }
             })
             
-            // Default consume location
-            HStack {
-                Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
-                        Text(grocyLocation.name).tag(grocyLocation.id as Int?)
-                    }
-                })
-                FieldDescription(description: "str.md.product.location.consume.info")
-            }
-            
-            // Move on open
-            if defaultConsumeLocationID != nil {
-                MyToggle(isOn: $moveOnOpen, description: "str.md.product.location.consume.moveOnOpen", descriptionInfo: "str.md.product.location.consume.moveOnOpen.info", icon: MySymbols.transfer)
+            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") {
+                // Default consume location
+                HStack {
+                    Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
+                        Text("").tag(nil as Int?)
+                        ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                            Text(grocyLocation.name).tag(grocyLocation.id as Int?)
+                        }
+                    })
+                    FieldDescription(description: "str.md.product.location.consume.info")
+                }
+                
+                // Move on open
+                if defaultConsumeLocationID != nil {
+                    MyToggle(isOn: $moveOnOpen, description: "str.md.product.location.consume.moveOnOpen", descriptionInfo: "str.md.product.location.consume.moveOnOpen.info", icon: MySymbols.transfer)
+                }
             }
             
             // Default Shopping Location
