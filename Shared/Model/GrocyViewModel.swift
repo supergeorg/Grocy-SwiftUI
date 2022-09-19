@@ -151,7 +151,7 @@ class GrocyViewModel: ObservableObject {
             }, receiveValue: { (systemInfo: SystemInfo) in
                 DispatchQueue.main.async {
                     if !systemInfo.grocyVersion.version.isEmpty {
-                        self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version).", type: .info)
+                        self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").", type: .info)
                         self.systemInfo = systemInfo
                         completion(.success(systemInfo.grocyVersion.version))
                     } else {
