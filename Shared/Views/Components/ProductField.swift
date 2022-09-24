@@ -84,40 +84,38 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        VStack {
+        Group {
             HStack {
                 SearchBar(text: $searchTerm)
-                HStack {
-                    Button(action: {
-                        isShowingScanner.toggle()
-                    }, label: {
-                        Image(systemName: MySymbols.barcodeScan)
-                    })
-                    .sheet(isPresented: $isShowingScanner) {
-                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
-                            .overlay(
-                                HStack{
+                Button(action: {
+                    isShowingScanner.toggle()
+                }, label: {
+                    Image(systemName: MySymbols.barcodeScan)
+                })
+                .sheet(isPresented: $isShowingScanner) {
+                    CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                        .overlay(
+                            HStack{
+                                Button(action: {
+                                    isScannerFlash.toggle()
+                                    toggleTorch(on: isScannerFlash)
+                                }, label: {
+                                    Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                        .font(.title)
+                                })
+                                .disabled(!checkForTorch())
+                                .padding()
+                                if getFrontCameraAvailable() {
                                     Button(action: {
-                                        isScannerFlash.toggle()
-                                        toggleTorch(on: isScannerFlash)
+                                        isScannerFrontCamera.toggle()
                                     }, label: {
-                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                        Image(systemName: MySymbols.changeCamera)
                                             .font(.title)
                                     })
-                                    .disabled(!checkForTorch())
                                     .padding()
-                                    if getFrontCameraAvailable() {
-                                        Button(action: {
-                                            isScannerFrontCamera.toggle()
-                                        }, label: {
-                                            Image(systemName: MySymbols.changeCamera)
-                                                .font(.title)
-                                        })
-                                        .padding()
-                                    }
                                 }
-                                , alignment: .topTrailing)
-                    }
+                            }
+                            , alignment: .topTrailing)
                 }
             }
             Picker(selection: $productID,
