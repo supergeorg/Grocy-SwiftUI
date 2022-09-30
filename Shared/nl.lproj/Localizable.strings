@@ -342,6 +342,10 @@
 "str.md.product.category.defaultLocations.description" = "Locatie, winkel";
 "str.md.product.location" = "Standaardlocatie";
 "str.md.product.location.required" = "Geef een locatie op";
+"str.md.product.location.consume" = "Standaard verbruikslocatie";
+"str.md.product.location.consume.info" = "Voorraaditems op deze locatie worden het eerst opgebruikt";
+"str.md.product.location.consume.moveOnOpen" = "Verplaats na openen";
+"str.md.product.location.consume.moveOnOpen.info" = "Schakel in om het product in kwestie te markeren als geopend en het verbruiksaantal te verplaatsen naar de standaardlocatie";
 "str.md.product.shoppingLocation" = "Standaardwinkel";
 "str.md.product.category.dueDate" = "Houdbaarheidsdatum";
 "str.md.product.category.dueDate.description" = "Soort, standaarddagen; na openen, bevriezen, ontdooien";
@@ -387,10 +391,10 @@
 "str.md.product.tareWeight.invalid" = "De waarde hiervan mag niet lager zijn dan 0.0001 en dient een geldig getal te zijn met max. 4 cijfers achter de komma";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Schakel voorraadcontrole van dit ingrediënt uit";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dit wordt gebruikt als de standaardinstelling bij het toevoegen van dit product als receptingrediënt";
-"str.md.product.treatOpenedAsOutOfStock" = "Behandel als geopend wanneer niet op voorraad";
-"str.md.product.treatOpenedAsOutOfStock.hint" = "Indien ingeschakeld, worden geopende artikelen als ontbrekend geteld voor de berekening als dit product minder dan de minimale voorraad heeft ";
+"str.md.product.treatOpenedAsOutOfStock" = "Geopende producten zijn niet op voorraad";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Schakel in om geopende items als niet op voorraad mee te tellen bij de voorraadanalyse";
 "str.md.product.shouldNotBeFrozen" = "Mag niet worden ingevroren";
-"str.md.product.shouldNotBeFrozen.hint" = "Indien ingeschakeld, wordt bij het verplaatsen van dit product naar een vriezer locatie (dus bij het invriezen) een waarschuwing weergegeven";
+"str.md.product.shouldNotBeFrozen.hint" = "Schakel in om een waarschuwing te tonen bij het verplaatsen van een product naar een vriezer";
 "str.md.product.noOwnStock" = "Houd geen eigen voorraden bij";
 "str.md.product.noOwnStock.hint" = "Schakel in om dit product niet te voorzien van eigen voorraden. Let op: hierdoor is het product niet beschikbaar bij aankoop.";
 "str.md.barcodes" = "Streepjescodes";
