@@ -486,6 +486,7 @@
 		78262706256E83A900ECED03 /* StockLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockLocationModel.swift; sourceTree = "<group>"; };
 		7826270D256E847F00ECED03 /* StockProductPriceHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductPriceHistory.swift; sourceTree = "<group>"; };
 		7826271D256E884F00ECED03 /* ProductTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTransferModel.swift; sourceTree = "<group>"; };
+		782A68F728DF6AC000BD4EB2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		782A7F1225838C3E0010472F /* MDUserFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldsView.swift; sourceTree = "<group>"; };
 		782A7F1925838C630010472F /* MDUserFieldModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldModel.swift; sourceTree = "<group>"; };
 		78396E8B25629FE600B9878F /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
@@ -1212,6 +1213,7 @@
 				"fr-FR",
 				nl,
 				"sv-SE",
+				cs,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1753,6 +1755,7 @@
 				78644EC02791E6E0007110CF /* fr-FR */,
 				78AB1BAA27E148F800C7F380 /* nl */,
 				788C32AA2896D0A800CB81D2 /* sv-SE */,
+				782A68F728DF6AC000BD4EB2 /* cs */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1883,7 +1886,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1892,7 +1895,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -1907,7 +1910,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -1916,7 +1919,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -1935,7 +1938,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1946,7 +1949,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -1963,7 +1966,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1975,7 +1978,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -2142,7 +2145,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -2151,7 +2154,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = iphoneos;
@@ -2169,7 +2172,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2184,7 +2187,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.0;
+				MARKETING_VERSION = 2.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;

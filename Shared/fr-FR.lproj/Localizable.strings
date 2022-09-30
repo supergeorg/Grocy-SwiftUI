@@ -1,12 +1,3 @@
-/* 
-  Localizable.strings
-  Grocy-SwiftUI
-
-  Created by Georg Meissner on 13.11.20.
-  
-*/
-
-// MARK: - Generic
 "str.cancel" = "Annuler";
 "str.ok" = "OK";
 "str.confirm" = "Confirmer";
@@ -30,8 +21,6 @@
 "str.error.other" = "Une erreur inconnue s'est produite";
 "str.error.logInfo" = "Veuillez vérifier le journal pour déterminer le problème.";
 "str.time.unlimited" = "Illimité";
-
-// MARK: - Transactions
 "tr.purchase" = "Achat";
 "tr.consume" = "Consommer";
 "tr.opened" = "Ouvert";
@@ -41,8 +30,6 @@
 "tr.transferFrom" = "Transférer depuis";
 "tr.transferTo" = "Transférer vers";
 "tr.selfProduction" = "Autoproduction";
-
-// MARK: - Navigation
 "str.nav.stockOverview" = "Aperçu du stock";
 "str.nav.shoppingList" = "Liste de courses";
 "str.nav.recipes" = "Recettes";
@@ -73,8 +60,6 @@
 "str.nav.settings" = "Paramètres";
 "str.nav.userManagement" = "Gestion des utilisateurs";
 "str.nav.quickScan" = "Scan-rapide";
-
-// MARK: - Details
 "str.details.title" = "Aperçu du produit";
 "str.details.amount" = "Quantité de stock :";
 "str.details.stockValue" = "Valeur du stock :";
@@ -86,17 +71,12 @@
 "str.details.averageShelfLife" = "Durée de conservation moyenne :";
 "str.details.spoilRate" = "Taux de gâchis :";
 "str.details.relation %@ %@" = "%@ par %@";
-
 "str.details.never" = "Jamais";
 "str.details.unknown" = "Inconnu";
-
 "str.details.stockEntries" = "Entrées du stock";
 "str.details.stockJournal" = "Journal du stock";
 "str.details.edit" = "Modifier le produit";
-
-// MARK: - Stock
 "str.stock.stockOverview" = "Aperçu du stock";
-// Products, Summed Value
 "str.stock.stockOverviewInfo %lld %@" = "%lld produits, %@ de valeur totale";
 "str.stock.search" = "Recherche dans le stock :";
 "str.stock.empty" = "Rien dans le stock.";
@@ -118,12 +98,10 @@
 "str.stock.info.belowMinStock %lld" = "%lld produits ont un stock inférieur à la quantité minimum définie";
 "str.stock.info.opened %@" = "%@ ouvert";
 "str.stock.info.onShoppingList" = "Ce produit est actuellement sur la liste de courses.";
-
 "str.stock.entry.description.notOpened %@ %@ %@" = "Quantité : %@ ; Périmée le %@ ; Acheté le %@ ; Non ouvert";
 "str.stock.entry.description.opened %@ %@ %@" = "Quantité : %@ ; Périmée le %@ ; Acheté le %@ ; Ouvert";
 "str.stock.entry.status.notOpened" = "Non ouvert";
 "str.stock.entry.status.opened" = "Ouvert";
-
 "str.stock.tbl.product" = "Produit";
 "str.stock.tbl.productGroup" = "Groupe de produit";
 "str.stock.tbl.amount" = "Quantité";
@@ -148,18 +126,15 @@
 "str.stock.tbl.action.successOpenOne %@" = "1 %@ ouvert";
 "str.stock.tbl.action.successConsumeAllSpoiled %@" = "Tous %@ périmés";
 "str.stock.tbl.action.fail" = "L'action a échoué";
-
 "str.stock.tbl.menu.addToShL" = "Ajouter à la liste de courses";
 "str.stock.tbl.menu.consumeAsSpoiled %@" = "Consommé %@ comme gâté";
 "str.stock.tbl.menu.searchRecipes" = "Recherchez les recettes qui contiennent ce produit";
-
 "str.stock.product.amount" = "Quantité";
 "str.stock.product.amount.factored %@ %@" = "Ceci est équivalent %@ %@";
 "str.stock.product.amount.invalid" = "Cette valeur ne peut être inférieure à 0,0001 et doit être un nombre valide avec un maximum de 4 décimales. 4 décimales au maximum";
 "str.stock.product.amount.locMax" = "Cette quantité n'est pas disponible à l'endroit sélectionné";
 "str.stock.product.quantityUnit" = "Format";
 "str.stock.product.quantityUnit.required" = "Un format est requis";
-
 "str.stock.buy" = "Achat";
 "str.stock.buy.product" = "Produit";
 "str.stock.buy.product.buy" = "Produit acheté";
@@ -178,8 +153,8 @@
 "str.stock.buy.product.shoppingLocation" = "Magasin";
 "str.stock.buy.product.location" = "Emplacement";
 "str.stock.buy.product.location.default %@" = "%@ (Emplacement par défaut)";
+"str.stock.buy.product.note" = "Remarque";
 "str.stock.buy.product.selfProduction" = "Autoproduction";
-
 "str.stock.consume" = "Consommer";
 "str.stock.consume.product" = "Produit";
 "str.stock.consume.product.consume" = "Consommer le produit";
@@ -199,7 +174,6 @@
 "str.stock.consume.product.stockEntry" = "Entrée dans le stock";
 "str.stock.consume.product.recipe" = "Recette";
 "str.stock.consume.product.recipe.info" = "À des fins statistiques uniquement";
-
 "str.stock.transfer" = "Transfert";
 "str.stock.transfer.product" = "Produit";
 "str.stock.transfer.product.transfer" = "Transfert de produit";
@@ -211,10 +185,10 @@
 "str.stock.transfer.product.locationTo" = "A";
 "str.stock.transfer.product.locationTo.required" = "Un emplacement est requis";
 "str.stock.transfer.product.locationTo.same" = "Ce ne peut pas être le même endroit d'origine";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Ce produit ne doit pas être congelé";
 "str.stock.transfer.product.useStockEntry" = "Utiliser un objet spécifique du stock";
 "str.stock.transfer.product.useStockEntry.description" = "Le premier élément de cette liste est choisi par à la règle de consommation par défaut : 'Ouvert en premier, puis périme en premier, puis plus ancien ajouté'";
 "str.stock.transfer.product.stockEntry" = "Entrée dans le stock";
-
 "str.stock.inventory" = "Inventaire";
 "str.stock.inventory.product" = "Produit";
 "str.stock.inventory.product.inventory" = "Effectuer l'inventaire";
@@ -233,7 +207,6 @@
 "str.stock.inventory.product.location" = "Emplacement";
 "str.stock.inventory.product.location.info" = "Sera appliqué aux produits ajoutés";
 "str.stock.inventory.product.location.required" = "Un emplacement est requis";
-
 "str.stock.journal" = "Journal du stock";
 "str.stock.journal.summary" = "Synthèse du stock";
 "str.stock.journal.empty" = "Aucune transaction trouvée";
@@ -250,7 +223,6 @@
 "str.stock.journal.location.info %@" = "Localisation : %@";
 "str.stock.journal.user" = "Utilisateur";
 "str.stock.journal.user.info %@" = "Réalisé par : %@";
-
 "str.stock.entries" = "Entrées du stock";
 "str.stock.entries.empty" = "Aucune correspondance enregistrée n'a été trouvée";
 "str.stock.entries.product %@" = "Produit : %@";
@@ -264,8 +236,6 @@
 "str.stock.entry.save" = "Enregistrer l’entrée";
 "str.stock.entry.consume" = "Consommer cette entrée du stock";
 "str.stock.entry.open" = "Indiquer cette entrée du stock comme ouverte";
-
-// MARK: - Shopping List
 "str.shL" = "Liste de courses";
 "str.shL.manage" = "Gérer la liste d'achats";
 "str.shL.new" = "Nouvelle liste de courses";
@@ -275,7 +245,6 @@
 "str.shL.print" = "Imprimer";
 "str.shL.amount" = "Quantité";
 "str.shL.ungrouped" = "Sans groupe";
-
 "str.shL.form.new" = "Créer liste de courses";
 "str.shL.form.edit" = "Modifier liste de courses";
 "str.shL.form.name" = "Nom";
@@ -283,7 +252,6 @@
 "str.shL.form.name.exists" = "Le nom existe déjà";
 "str.shL.form.save" = "Sauvegarder";
 "str.shL.form.save.failed" = "La sauvegarde a échoué";
-
 "str.shL.action.addItem" = "Ajouter un produit";
 "str.shL.action.clearList" = "Vider la liste";
 "str.shL.action.clearList.confirm" = "Voulez-vous vraiment vider cette liste de courses ?";
@@ -291,7 +259,6 @@
 "str.shL.action.addBelowMinStock" = "Ajouter des produits qui ont un stock inférieur à la quantité minimum définie";
 "str.shL.action.addOverdue" = "Ajouter les produits dépassés/périmés";
 "str.shL.action.failed" = "L'action a échoué";
-
 "str.shL.filter.status" = "Status";
 "str.shL.filter.reset" = "Réinitialiser le filtre";
 "str.shL.filter.all" = "Tout";
@@ -302,9 +269,6 @@
 "str.shL.filter.info.belowMinStock %lld" = "%lld produits ont un stock inférieur à la quantité minimum définie";
 "str.shL.filter.info.1undone" = "1 entrée est faite";
 "str.shL.filter.info.undone %lld" = "%lld entrées sont faites";
-"str.shL.filter.info.1undone" = "1 entrée est faite";
-"str.shL.filter.info.undone %lld" = "%lld entrées sont faites";
-
 "str.shL.entryForm.new.title" = "Créer une liste de courses";
 "str.shL.entryForm.edit.title" = "Modifier une liste de courses";
 "str.shL.entryForm.save.failed" = "Enregistrement a échoué";
@@ -314,15 +278,12 @@
 "str.shL.entryForm.amount.required" = "Pour être valide, le nombre doit avoir au plus 4 décimales, et ne peut pas être inférieur à 0.0001.";
 "str.shL.entryForm.quantityUnit" = "Format";
 "str.shL.entryForm.note" = "Remarque";
-
 "str.shL.entry.done" = "Indiqué cet élément comme fait";
 "str.shL.entry.edit" = "Éditer cet élément";
 "str.shL.entry.delete" = "Supprimer cet élément";
 "str.shL.entry.delete.confirm" = "Voulez-vous vraiment supprimer cet élément ?";
 "str.shL.entry.add %@" = "Ajouter %@ dans le stock";
 "str.shL.entry.info.amount %@" = "Quantité : %@";
-
-// MARK: - Master Data
 "str.md.masterData" = "Données de base";
 "str.md.description" = "Description";
 "str.md.search" = "Recherche";
@@ -332,8 +293,6 @@
 "str.md.edit.fail" = "La modification a échoué";
 "str.md.delete.success" = "Suppression réussie";
 "str.md.delete.fail" = "La suppression a échoué";
-
-// MD Product
 "str.md.products" = "Produits";
 "str.md.product" = "Produit";
 "str.md.products.empty" = "Aucun produit trouvé";
@@ -349,7 +308,6 @@
 "str.md.product.name" = "Nom produit";
 "str.md.product.name.required" = "Un nom est requis";
 "str.md.product.name.exists" = "Le nom existe déjà";
-// optional properties
 "str.md.product.category.optionalProperties" = "Propriétés optionnelles";
 "str.md.product.category.optionalProperties.description" = "État, Produit parent, Description, Groupe de produits, Énergie, Image";
 "str.md.product.active" = "actif";
@@ -369,13 +327,15 @@
 "str.md.product.picture.add.camera" = "Ajouter l'image produit depuis l'appareil photo";
 "str.md.product.picture.upload" = "Charger l'image produit";
 "str.md.product.picture.delete" = "Supprimer l'image produit";
-// default locations
 "str.md.product.category.defaultLocations" = "Emplacements par défaut";
 "str.md.product.category.defaultLocations.description" = "Localisation, Magasin";
 "str.md.product.location" = "Emplacement par défaut";
 "str.md.product.location.required" = "Un emplacement est requis";
+"str.md.product.location.consume" = "Emplacement de consommation par défaut";
+"str.md.product.location.consume.info" = "Les entrées de stock à cet emplacement seront consommées en premier";
+"str.md.product.location.consume.moveOnOpen" = "Déplacer à l'ouverture";
+"str.md.product.location.consume.moveOnOpen.info" = "Lorsque activé, en marquant ce produit comme ouvert, le montant correspondant sera déplacé vers l'emplacement de consommation par défaut";
 "str.md.product.shoppingLocation" = "Magasin par défaut";
-// due date
 "str.md.product.category.dueDate" = "Date de péremption";
 "str.md.product.category.dueDate.description" = "Type, Jours par défaut ; après ouverture, congélation, décongélation ";
 "str.md.product.dueType" = "Type d'échéance";
@@ -394,7 +354,6 @@
 "str.md.product.defaultDueDaysAfterThawing" = "Date de péremption par défaut après décongélation en jours";
 "str.md.product.defaultDueDaysAfterThawing.info" = "Lorsque ce produit est sorti du congélateur (décongélation), la date de durabilité minimale sera remplacée par la date du jour + ce nombre de jours";
 "str.md.product.defaultDueDaysAfterThawing.invalid" = "Pour être valide, le nombre doit avoir au plus 0 décimale, et ne peut pas être inférieur à 0.";
-// quantity units
 "str.md.product.category.quantityUnits" = "Unités";
 "str.md.product.category.quantityUnits.description" = "Stock, Achat";
 "str.md.product.quStock" = "Format au stockage";
@@ -403,7 +362,6 @@
 "str.md.product.quPurchase" = "Unité de quantité par défaut";
 "str.md.product.quPurchase.info" = "C'est la quantité par défaut lors de l'ajout de ce produit à la liste d'achats";
 "str.md.product.quPurchase.required" = "Un format est requis";
-// amount
 "str.md.product.category.amount" = "Quantités";
 "str.md.product.category.amount.description" = "Stock minimum, Consommation rapide, Facteur, Tare";
 "str.md.product.minStockAmount" = "Quantité minimum en stock";
@@ -422,7 +380,12 @@
 "str.md.product.tareWeight.invalid" = "Pour être valide, le nombre doit avoir au plus 4 décimales, et ne peut pas être inférieur à 0.0001.";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Désactiver la vérification du stock pour cet ingrédient";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Ce paramétrage sera utilisé par défaut quand ce produit sera ajouté en tant qu'ingrédient dans une recette";
-
+"str.md.product.treatOpenedAsOutOfStock" = "Considérer ouvert comme ne faisant plus partie du stock";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Lorsque activé, les articles ouverts seront comptés comme manquants pour définir si ce produit est en dessous de son stock minimum";
+"str.md.product.shouldNotBeFrozen" = "Ne doit pas être congelé";
+"str.md.product.shouldNotBeFrozen.hint" = "Lorsque activé, une alerte sera émise lorsque ce produit sera placé dans le congélateur";
+"str.md.product.noOwnStock" = "Désactiver le stock propre ";
+"str.md.product.noOwnStock.hint" = "Lorsque activé, ce produit ne peut pas avoir son propre stock, ce qui signifie qu'il ne sera pas sélectionnable à l'achat (utile pour les produits parents qui ne sont utilisés que comme vue récapitulative/totale des produits enfants)";
 "str.md.barcodes" = "Code-barres";
 "str.md.barcode" = "Code-barre";
 "str.md.barcodes.empty" = "Aucun code-barre ajouté";
@@ -441,7 +404,6 @@
 "str.md.barcode.info.store %@" = "Magasin : %@";
 "str.md.barcode.delete" = "Supprimer le code-barre";
 "str.md.barcode.delete.confirm" = "Voulez-vous supprimer le code-barre ?";
-
 "str.md.locations" = "Emplacements";
 "str.md.location" = "Emplacement";
 "str.md.locations.empty" = "Aucune localisation trouvée";
@@ -457,7 +419,6 @@
 "str.md.location.isFreezing.description" = "Lors du déplacement de produits depuis/vers un congélateur, la date d'échéance des produits est automatiquement ajustée en fonction des paramètres du produit ";
 "str.md.location.delete" = "Supprimer cette localisation";
 "str.md.location.delete.confirm" = "Voulez-vous supprimer cette localisation ?";
-
 "str.md.shoppingLocations" = "Localisations du magasin";
 "str.md.shoppingLocation" = "Localisation du magasin";
 "str.md.shoppingLocations.empty" = "Aucune localisation de magasin trouvée";
@@ -470,7 +431,6 @@
 "str.md.shoppingLocation.name.exists" = "Ce nom existe déjà";
 "str.md.shoppingLocation.delete" = "Supprimer la localisation de ce magasin";
 "str.md.shoppingLocation.delete.confirm" = "Voulez-vous supprimer cette localisation pour le magasin ?";
-
 "str.md.quantityUnits" = "Unités";
 "str.md.quantityUnit" = "Format";
 "str.md.quantityUnits.empty" = "Aucune unité de quantité trouvée";
@@ -484,7 +444,12 @@
 "str.md.quantityUnit.namePlural" = "Nom (pluriel)";
 "str.md.quantityUnit.delete" = "Supprimer cette unité de quantité";
 "str.md.quantityUnit.delete.confirm" = "Voulez-vous supprimer cette unité de quantité ?";
-
+"str.md.quantityUnit.conversions" = "Conversions par défaut";
+"str.md.quantityUnit.conversion.new" = "Créer une conversion d'UQ";
+"str.md.quantityUnit.conversion.edit" = "Éditer la conversion d'UQ";
+"str.md.quantityUnit.conversion.quFrom" = "De l'unité";
+"str.md.quantityUnit.conversion.quTo" = "À l'unité";
+"str.md.quantityUnit.conversion.factor" = "Facteur";
 "str.md.productGroups" = "Groupes de produit";
 "str.md.productGroup" = "Groupe de produit";
 "str.md.productGroups.empty" = "Aucun groupe de produits trouvé";
@@ -497,10 +462,8 @@
 "str.md.productGroup.name.exists" = "Ce nom existe déjà";
 "str.md.productGroup.delete" = "Supprimer ce groupe de produits";
 "str.md.productGroup.delete.confirm" = "Voulez-vous supprimer ce groupe de produits";
-
 "str.md.chores" = "Corvées";
 "str.md.batteries" = "Piles";
-
 "str.md.taskCategories" = "Catégories de tâche";
 "str.md.taskCategory" = "Catégorie de tâches";
 "str.md.taskCategories.empty" = "Aucune catégorie de tâches trouvée";
@@ -513,7 +476,6 @@
 "str.md.taskCategory.name.exists" = "Ce nom existe déjà";
 "str.md.taskCategory.delete" = "Supprimer cette catégorie de tâches";
 "str.md.taskCategory.delete.confirm" = "Voulez-vous supprimer cette catégorie de tâches";
-
 "str.md.userFields" = "Attributs personalisés";
 "str.md.userField" = "Champ utilisateur";
 "str.md.userFields.empty" = "Aucun champ utilisateur trouvé";
@@ -540,7 +502,6 @@
 "str.md.userField.showAsColumnInTables" = "Affichage des valeurs dans une colonne";
 "str.md.userField.delete" = "Supprimer ce champ utilisateur";
 "str.md.userField.delete.confirm" = "Voulez-vous supprimer ce champ utilisateur ?";
-
 "str.md.userField.type.textSingleLine" = "Texte (ligne unique)";
 "str.md.userField.type.textMultiLine" = "Texte (plusieurs lignes)";
 "str.md.userField.type.numberIntegral" = "Nombre (entier)";
@@ -553,7 +514,6 @@
 "str.md.userField.type.link" = "Lien";
 "str.md.userField.type.file" = "Fichier";
 "str.md.userField.type.image" = "Image";
-
 "str.md.userEntities" = "Entités utilisateur";
 "str.md.userEntity" = "Entité utilisateur";
 "str.md.userEntities.empty" = "Aucune entité utilisateur trouvée";
@@ -572,8 +532,6 @@
 "str.md.userEntity.iconCSSClass.example" = "Par exemple \"fas fa-smile\"";
 "str.md.userEntity.delete" = "Supprimer l'entité utilisateur";
 "str.md.userEntity.delete.confirm" = "Voulez-vous supprimer cette entité utilisateur ?";
-
-// MARK: - Settings
 "str.settings" = "Paramètres";
 "str.settings.logout" = "Déconnexion du serveur";
 "str.settings.loggedInAs %@" = "Connecté en tant qu'utilisateur : %@";
@@ -628,8 +586,6 @@
 "str.settings.shoppingList.autoAddToShL" = "Ajouter automatiquement à la liste des courses les produits dont le stock est inférieur à la quantité minimale définie.";
 "str.settings.shoppingList.shLToStockWF" = "Transition de la liste de courses vers le stock";
 "str.settings.shoppingList.autoAddToStock" = "Réaliser automatiquement les achats en utilisant le dernier prix connu et la quantité indiquée dans la liste, si le premier a une date de péremption par défaut renseignée";
-
-// MARK: - Admin
 "str.admin.user" = "Gestion des utilisateurs";
 "str.admin.user.empty" = "Aucun utilisateur trouvé";
 "str.admin.user.tooltip.edit" = "Éditer cet élément";
@@ -647,8 +603,6 @@
 "str.admin.user.new.password" = "Mot de passe";
 "str.admin.user.new.password.confirm" = "Confirmation du mot de passe";
 "str.admin.user.new.password.mismatch" = "Les mots de passe ne sont pas identiques";
-
-// MARK: - Quick Scan
 "str.quickScan.consume" = "Consommer";
 "str.quickScan.markAsOpened" = "Ouvrir";
 "str.quickScan.purchase" = "Achat";
@@ -663,14 +617,11 @@
 "str.quickScan.add.product.add.success" = "Code-barres ajouté";
 "str.quickScan.add.product.add.fail" = "L'ajout du code-barres a échoué";
 "str.quickScan.barcode.invalid" = "Code-barres non valide";
-
-// MARK: - Onboarding
 "str.onboard.start" = "C'est parti !";
 "str.onboard.grocy.title" = "grocy - ERP au-delà de votre réfrigérateur";
 "str.onboard.grocy.subtitle" = "Grocy est une solution Web auto-hébergée de gestion d'épicerie et de ménage pour votre maison. ";
 "str.onboard.app.title" = "Grocy pour iOS/macOS";
 "str.onboard.app.subtitle" = "Une application au design natif, permettant une utilisation confortable de Grocy à la maison et en déplacement. ";
-
 "str.login.info" = "Bienvenue sur Grocy Mobile !\n\nIl s'agit d'une application compagnon, ce qui signifie que vous devez avoir accès à une instance Grocy en cours d'exécution (par exemple sur votre serveur).\nSi vous souhaitez juste essayer cette application, vous pouvez utiliser l'un des serveurs de démonstration fournis par le développeur Grocy : Bernd Bestel. Mais n'utilisez pas le serveur de démonstration pour vos propres données, car il n'est pas persistant.";
 "str.login.select" = "Sélectionnez un type de serveur :";
 "str.login.demoServer" = "Serveur de démo";

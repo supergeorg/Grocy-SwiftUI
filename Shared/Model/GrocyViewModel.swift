@@ -76,16 +76,14 @@ class GrocyViewModel: ObservableObject {
     init() {
         self.grocyApi = GrocyApi()
         if isLoggedIn {
-            if !isDemoModus {
-                if useHassIngress, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
-                    grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
-                }
-                grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
-            } else {
-                grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
-            }
-            grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
-            self.postLog("Logged in on startup", type: .info)
+            grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+            checkServer(
+                baseURL: !isDemoModus ? grocyServerURL : demoServerURL,
+                apiKey: !isDemoModus ? grocyAPIKey : "",
+                isDemoMode: isDemoModus,
+                completion: { result in
+                    print(result)
+                })
         } else {
             self.postLog("Not logged in", type: .info)
         }
@@ -153,7 +151,7 @@ class GrocyViewModel: ObservableObject {
             }, receiveValue: { (systemInfo: SystemInfo) in
                 DispatchQueue.main.async {
                     if !systemInfo.grocyVersion.version.isEmpty {
-                        self.postLog("Login info check successful. Logging in.", type: .info)
+                        self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").", type: .info)
                         self.systemInfo = systemInfo
                         completion(.success(systemInfo.grocyVersion.version))
                     } else {

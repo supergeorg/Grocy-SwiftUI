@@ -79,6 +79,7 @@
 "str.stock.buy.product.price.totalPrice" = "Totalpris";
 "str.stock.buy.product.shoppingLocation" = "Affär";
 "str.stock.buy.product.location" = "Plats";
+"str.stock.buy.product.note" = "Anteckning";
 "str.stock.consume" = "Förbruka";
 "str.stock.consume.product" = "Produkt";
 "str.stock.consume.product.open" = "Markera som öppnat";
@@ -98,6 +99,7 @@
 "str.stock.transfer.product.locationTo" = "Till plats";
 "str.stock.transfer.product.locationTo.required" = "En plats krävs";
 "str.stock.transfer.product.locationTo.same" = "Kan ej vara samma som 'Från' platsen";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Denna produkt bör ej frysas";
 "str.stock.transfer.product.useStockEntry" = "Använd ett specifikt lagerobjekt";
 "str.stock.transfer.product.stockEntry" = "Lagerpost";
 "str.stock.inventory" = "Lager";
@@ -196,6 +198,8 @@
 "str.md.product.tareWeight" = "Förpackningsvikt";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Inaktivera kontroll av lageruppfyllelse för denna ingrediens";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Detta kommer att användas som standardinställning när du lägger till denna produkt som receptkomponent";
+"str.md.product.treatOpenedAsOutOfStock" = "Behandla öppnad som slut i lager";
+"str.md.product.shouldNotBeFrozen" = "Bör ej frysas";
 "str.md.barcodes" = "Streckkoder";
 "str.md.barcode" = "Streckkod";
 "str.md.barcode.barcode" = "Streckkod";
@@ -214,6 +218,12 @@
 "str.md.quantityUnit" = "Mängdenhet";
 "str.md.quantityUnit.edit" = "Redigera mängdenhet";
 "str.md.quantityUnit.name.required" = "Ett namn krävs";
+"str.md.quantityUnit.conversions" = "Standardkonverteringar";
+"str.md.quantityUnit.conversion.new" = "Skapa konvertering för mängdenhet";
+"str.md.quantityUnit.conversion.edit" = "Redigera konvertering för mängdenhet";
+"str.md.quantityUnit.conversion.quFrom" = "Från mängdenhet";
+"str.md.quantityUnit.conversion.quTo" = "Till mängdenhet";
+"str.md.quantityUnit.conversion.factor" = "Faktor";
 "str.md.productGroups" = "Produktgrupper";
 "str.md.productGroup" = "Produktgrupp";
 "str.md.productGroup.new" = "Skapa produktgrupp";
@@ -269,6 +279,9 @@
 "str.settings.stock.common.amountDecimalPlaces" = "Decimaler tillåtet för antal";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Lägg till decimalseparator automatiskt för priser";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "";
+"str.settings.shoppingList" = "Inköpslista, inställningar";
+"str.settings.shoppingList.shoppingList" = "Inköpslista";
+"str.settings.shoppingList.shLToStockWF" = "Arbetsflöde för inköpslista till lager";
 "str.admin.user.tooltip.edit" = "Redigera den här posten";
 "str.admin.user.tooltip.permissions" = "Konfigurera användarrättigheter";
 "str.admin.user.tooltip.delete" = "Radera den här posten";
