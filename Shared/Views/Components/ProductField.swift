@@ -84,50 +84,94 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        Group {
-            HStack {
-                SearchBar(text: $searchTerm)
-                Button(action: {
-                    isShowingScanner.toggle()
-                }, label: {
-                    Image(systemName: MySymbols.barcodeScan)
-                })
-                .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
-                        .overlay(
-                            HStack{
-                                Button(action: {
-                                    isScannerFlash.toggle()
-                                    toggleTorch(on: isScannerFlash)
-                                }, label: {
-                                    Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
-                                        .font(.title)
-                                })
-                                .disabled(!checkForTorch())
-                                .padding()
-                                if getFrontCameraAvailable() {
+        if #available(iOS 16.0, *) {
+            Group {
+                HStack {
+                    SearchBar(text: $searchTerm)
+                    Button(action: {
+                        isShowingScanner.toggle()
+                    }, label: {
+                        Image(systemName: MySymbols.barcodeScan)
+                    })
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                            .overlay(
+                                HStack{
                                     Button(action: {
-                                        isScannerFrontCamera.toggle()
+                                        isScannerFlash.toggle()
+                                        toggleTorch(on: isScannerFlash)
                                     }, label: {
-                                        Image(systemName: MySymbols.changeCamera)
+                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
+                                    .disabled(!checkForTorch())
                                     .padding()
+                                    if getFrontCameraAvailable() {
+                                        Button(action: {
+                                            isScannerFrontCamera.toggle()
+                                        }, label: {
+                                            Image(systemName: MySymbols.changeCamera)
+                                                .font(.title)
+                                        })
+                                        .padding()
+                                    }
                                 }
-                            }
-                            , alignment: .topTrailing)
+                                , alignment: .topTrailing)
+                    }
                 }
+                Picker(selection: $productID,
+                       label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
+                       content: {
+                    Text("").tag(nil as Int?)
+                    ForEach(filteredProducts, id: \.id) { productElement in
+                        Text(productElement.name).tag(productElement.id as Int?)
+                    }
+                })
+                .pickerStyle(.automatic)
             }
+        } else {
             Picker(selection: $productID,
                    label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
                    content: {
+                HStack {
+                    SearchBar(text: $searchTerm)
+                    Button(action: {
+                        isShowingScanner.toggle()
+                    }, label: {
+                        Image(systemName: MySymbols.barcodeScan)
+                    })
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                            .overlay(
+                                HStack{
+                                    Button(action: {
+                                        isScannerFlash.toggle()
+                                        toggleTorch(on: isScannerFlash)
+                                    }, label: {
+                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                            .font(.title)
+                                    })
+                                    .disabled(!checkForTorch())
+                                    .padding()
+                                    if getFrontCameraAvailable() {
+                                        Button(action: {
+                                            isScannerFrontCamera.toggle()
+                                        }, label: {
+                                            Image(systemName: MySymbols.changeCamera)
+                                                .font(.title)
+                                        })
+                                        .padding()
+                                    }
+                                }
+                                , alignment: .topTrailing)
+                    }
+                }
                 Text("").tag(nil as Int?)
                 ForEach(filteredProducts, id: \.id) { productElement in
                     Text(productElement.name).tag(productElement.id as Int?)
                 }
             }
             )
-            .pickerStyle(.automatic)
         }
     }
 #elseif os(macOS)
