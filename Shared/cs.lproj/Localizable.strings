@@ -6,19 +6,43 @@
   
 */
 
+// MARK: - Generic
 "str.cancel" = "Zrušit";
 "str.ok" = "OK";
+"str.confirm" = "Potvrdit";
 "str.delete" = "Smazat";
+"str.edit" = "Upravit";
 "str.save" = "Uložit";
 "str.search" = "Hledat";
+"str.noSearchResult" = "Nebyl nalezen žádný výsledek hledání.";
 "str.day" = "Den";
+"str.days" = "Dny";
+"str.refresh" = "Obnovit";
 "str.close" = "Zavřít";
 "str.add" = "Vytvořit";
+"str.misc" = "Různé";
 "str.clear" = "Vymazat";
+"str.back" = "Zpět";
+"str.retry" = "Obnovit";
+"str.failed" = "Neúspěšné";
+"str.error.connection" = "Žádné připojení k serveru.";
+"str.error.api" = "Zjištěna chyba API.";
+"str.error.other" = "Neznámá chyba.";
+"str.error.logInfo" = "Ke zjištění problému zkontrolujte log.";
+"str.time.unlimited" = "neomezené";
+
+// MARK: - Transactions
 "tr.purchase" = "Nakoupit";
 "tr.consume" = "Spotřebovat";
 "tr.opened" = "Otevřené";
 "tr.inventoryCorrection" = "Inventura zásob";
+"tr.stockEditOld" = "Editace zásob (stará)";
+"tr.stockEditNew" = "Editace zásob (nová)";
+"tr.transferFrom" = "Převod z";
+"tr.transferTo" = "Převod do ";
+"tr.selfProduction" = "Vlastní výroba";
+
+// MARK: - Navigation
 "str.nav.stockOverview" = "Přehled zásob";
 "str.nav.shoppingList" = "Nákupní seznam";
 "str.nav.recipes" = "Recepty";
@@ -28,27 +52,54 @@
 "str.nav.batteriesOverview" = "Přehled baterií";
 "str.nav.equipment" = "Vybavení";
 "str.nav.calendar" = "Kalendář";
+"str.nav.activities" = "Aktivity";
 "str.nav.purchase" = "Nakoupit";
 "str.nav.consume" = "Spotřebovat";
 "str.nav.transfer" = "Přesun";
 "str.nav.inventory" = "Inventura zásob";
 "str.nav.choreTracking" = "Plnění povinností";
 "str.nav.batteryTracking" = "Výměna baterií";
+"str.nav.md" = "Master data";
 "str.nav.md.products" = "Produkty";
 "str.nav.md.locations" = "Umístění produktů";
+"str.nav.md.shoppingLocations" = "Nákupní místa";
 "str.nav.md.quantityUnits" = "Měrné jednotky";
 "str.nav.md.productGroups" = "Skupiny produktů";
 "str.nav.md.chores" = "Povinnosti";
 "str.nav.md.batteries" = "Baterie";
 "str.nav.md.taskCategories" = "Kategorie úkolů";
+"str.nav.md.userFields" = "Uživatelská pole";
+"str.nav.md.userEntities" = "Uživatelské entity";
 "str.nav.settings" = "Nastavení";
+"str.nav.userManagement" = "Správa uživatelů";
+"str.nav.quickScan" = "Rychlé vyhledávání";
+
+// MARK: - Details
 "str.details.title" = "Přehled dat k produktu";
+"str.details.amount" = "Skladové množství:";
+"str.details.stockValue" = "Skladová hodnota:";
+"str.details.defaultLocation" = "Výchozí umístění:";
+"str.details.lastPurchaseDate" = "Naposled koupeno:";
+"str.details.lastUseDate" = "Naposledy použito:";
+"str.details.lastPrice" = "Poslední cena:";
+"str.details.averagePrice" = "Průměrná cena:";
+"str.details.averageShelfLife" = "Průměrná délka skladování:";
+"str.details.spoilRate" = "Kazivost:";
+"str.details.relation %@ %@" = "%@ na %@";
+
 "str.details.never" = "Nikdy";
 "str.details.unknown" = "Neznámý";
+
 "str.details.stockEntries" = "Seznam zásob";
 "str.details.stockJournal" = "Deník zásob";
 "str.details.edit" = "Upravit produkt";
+
+// MARK: - Stock
 "str.stock.stockOverview" = "Přehled zásob";
+// Products, Summed Value
+"str.stock.stockOverviewInfo %lld %@" = "%lld Produkty, %@celková hodnota";
+"str.stock.search" = "Prohledat sklad";
+"str.stock.empty" = "Nic skladem.";
 "str.stock.location" = "Umístění";
 "str.stock.productGroup" = "Skupina produktů";
 "str.stock.all" = "Vše";
@@ -57,12 +108,28 @@
 "str.stock.status.overdue" = "po datu min. trvanlivosti";
 "str.stock.status.expired" = "expirovalo";
 "str.stock.status.belowMinStock" = "pod min. množstvím zásoby";
+"str.stock.info.1expiringSoon %lld" = "1 produkt bude po termínu za %lld dní";
+"str.stock.info.1overdue" = "1 produkt po minimální době spotřeby";
+"str.stock.info.1expired" = "1 produkt expiroval";
+"str.stock.info.1belowMinStock" = "1 produkt je pod minimálním definovaným skladovým množstvím.";
+"str.stock.info.expiringSoon %lld %lld" = "%lld produkty budou expirovat v příštích %lld dnech";
+"str.stock.info.overdue %lld" = "%lld produkty expirovaly";
+"str.stock.info.expired %lld" = "%lld produkty expirovaly";
+"str.stock.info.belowMinStock %lld" = "%lld je pod minimální definovanou skladovou zásobou";
+"str.stock.info.opened %@" = "%@otevřeno";
+"str.stock.info.onShoppingList" = "Produkt je již v nákupním seznamu.";
+
+"str.stock.entry.description.notOpened %@ %@ %@" = "Množství: %@; Spotřeba: %@; Zakoupeno %@; Neotevřeno";
+"str.stock.entry.description.opened %@ %@ %@" = "Množství: %@; Spotřeba: %@; Zakoupeno: %@; Otevřeno";
 "str.stock.entry.status.notOpened" = "Neotevřené";
 "str.stock.entry.status.opened" = "Otevřené";
+
 "str.stock.tbl.product" = "Produkt";
 "str.stock.tbl.productGroup" = "Skupina produktů";
 "str.stock.tbl.amount" = "Množství";
 "str.stock.tbl.value" = "Cena";
+"str.stock.tbl.nextBestBefore" = "Doporučené datum spotřeby";
+"str.stock.tbl.caloriesPerStockQU" = "Kalorie (na skladovou jednotku)";
 "str.stock.tbl.calories" = "Kalorie";
 "str.stock.tbl.lastPurchased" = "Naposledy nakoupeno";
 "str.stock.tbl.lastPrice" = "Poslední cena";
@@ -72,35 +139,73 @@
 "str.stock.tbl.defaultLocation" = "Obvyklé umístění";
 "str.stock.tbl.productPicture" = "Obrázek produktu";
 "str.stock.tbl.action.all" = "Vše";
+"str.stock.tbl.action.consume %@" = "Spotřebovat %@";
+"str.stock.tbl.action.consume.all %@" = "Spotřebovat všechny %@, které jsou skladem. ";
+"str.stock.tbl.action.consume.all.confirm %@ %@" = "Opravdu chcete spotřebovat všechny (%@) %@skladem?";
+"str.stock.tbl.action.consume.open %@" = "Označit %@jako otevřeno";
+"str.stock.tbl.action.successConsumeOne %@" = "1 %@spotřebováno";
+"str.stock.tbl.action.successConsumeAll %@" = "Vše %@ spotřebováno";
+"str.stock.tbl.action.successOpenOne %@" = "1 %@otevřeno";
+"str.stock.tbl.action.successConsumeAllSpoiled %@" = "Vše %@zkaženo";
+"str.stock.tbl.action.fail" = "Akce selhala";
+
 "str.stock.tbl.menu.addToShL" = "Přidat do nákupního seznamu";
+"str.stock.tbl.menu.consumeAsSpoiled %@" = "Spotřebovat %@ jako zkažené";
+"str.stock.tbl.menu.searchRecipes" = "Vyhledej recepty, které obsahují tento produkt.";
+
 "str.stock.product.amount" = "Množství";
+"str.stock.product.amount.factored %@ %@" = "Rovná se %@%@";
+"str.stock.product.amount.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
+"str.stock.product.amount.locMax" = "Toto množství není ve vybraném místě k dispozici.";
 "str.stock.product.quantityUnit" = "Měrná jednotka";
 "str.stock.product.quantityUnit.required" = "Měrná jednotka je povinný údaj";
+
 "str.stock.buy" = "Nakoupit";
 "str.stock.buy.product" = "Produkt";
+"str.stock.buy.product.buy" = "Nakoupit produkt";
+"str.stock.buy.product.buy.success %@" = "%@nakoupeno";
+"str.stock.buy.product.buy.fail" = "Nákup se nezdařil";
 "str.stock.buy.product.required" = "Produkt musí být vybrán";
 "str.stock.buy.product.dueDate" = "Datum min. trvanlivosti";
 "str.stock.buy.product.dueDate.required" = "Datum je povinné";
 "str.stock.buy.product.doesntSpoil" = "Produkt má neomezenou trvanlivost";
 "str.stock.buy.product.price" = "Cena";
+"str.stock.buy.product.price.invalid" = "Nemůže být méně než 0.01 a musí být číslo s maximálně 2 desetinnými místy.";
+"str.stock.buy.product.price.unitPrice %@" = "%@cena";
 "str.stock.buy.product.price.unitPrice" = "Cena za jednotku";
 "str.stock.buy.product.price.totalPrice" = "Celková cena";
+"str.stock.buy.product.price.relation %@ %@" = "znamená %@za%@";
 "str.stock.buy.product.shoppingLocation" = "Obchod";
 "str.stock.buy.product.location" = "Umístění";
+"str.stock.buy.product.location.default %@" = "%@ (Výchozí umístění)";
 "str.stock.buy.product.note" = "Poznámka";
+"str.stock.buy.product.selfProduction" = "Vlastní výroba";
+
 "str.stock.consume" = "Spotřebovat";
 "str.stock.consume.product" = "Produkt";
+"str.stock.consume.product.consume" = "Spotřebovat produkt";
+"str.stock.consume.product.consume.success %@" = "%@spotřebováno";
+"str.stock.consume.product.consume.fail" = "Spotřebování se nezdařilo";
 "str.stock.consume.product.open" = "Označit jako otevřené";
+"str.stock.consume.product.open.success %@" = "%@ otevřeno";
+"str.stock.consume.product.open.fail" = "Otevření selhalo";
 "str.stock.consume.product.required" = "Produkt musí být vybrán";
 "str.stock.consume.product.location" = "Umístění";
 "str.stock.consume.product.location.required" = "Umístění je povinný údaj";
+"str.stock.consume.product.location.default %@" = "%@(Výchozí umístění)";
+"str.stock.consume.product.details" = "Detaily";
 "str.stock.consume.product.spoiled" = "Zkažené";
 "str.stock.consume.product.useStockEntry" = "Ručně vybrat balení produktu ze zásob";
+"str.stock.consume.product.useStockEntry.description" = "První položka v tomto seznamu by byla vybrána podle výchozího pravidla, které zní \"Nejdříve otevřeno, pak nejdříve po termínu spotřeby, FIFO\".";
 "str.stock.consume.product.stockEntry" = "Položka zásob";
 "str.stock.consume.product.recipe" = "Recept";
 "str.stock.consume.product.recipe.info" = "Určeno pouze pro statistické účely";
+
 "str.stock.transfer" = "Přesun";
 "str.stock.transfer.product" = "Produkt";
+"str.stock.transfer.product.transfer" = "Převést produkt";
+"str.stock.transfer.product.transfer.success %@" = "%@převedeno";
+"str.stock.transfer.product.transfer.fail" = "Převod se nezdařil";
 "str.stock.transfer.product.required" = "Produkt musí být vybrán";
 "str.stock.transfer.product.locationFrom" = "Z umístění";
 "str.stock.transfer.product.locationFrom.required" = "Umístění je povinný údaj";
@@ -109,83 +214,178 @@
 "str.stock.transfer.product.locationTo.same" = "Nemůže být stejné jako „Z umístění“";
 "str.stock.transfer.product.shouldNotBeFrozen" = "Tento produkt by neměl být zmrazen";
 "str.stock.transfer.product.useStockEntry" = "Ručně vybrat balení produktu ze zásob";
+"str.stock.transfer.product.useStockEntry.description" = "První položka v tomto seznamu by byla vybrána podle výchozího pravidla, které zní \"Nejdříve otevřeno, pak nejdříve po termínu spotřeby, FIFO\".";
 "str.stock.transfer.product.stockEntry" = "Položka zásob";
+
 "str.stock.inventory" = "Inventura zásob";
 "str.stock.inventory.product" = "Produkt";
+"str.stock.inventory.product.inventory" = "Proveď inventuru";
+"str.stock.inventory.product.inventory.success %@" = "%@inventurováno";
+"str.stock.inventory.product.inventory.fail" = "Inventura se nezdařila";
+"str.stock.inventory.product.amount.lower %@" = "Znamená, že %@bude odstraněno ze skladu";
+"str.stock.inventory.product.amount.higher %@" = "Znamená, že %@ bude přidáno na sklad";
+"str.stock.inventory.product.amount.equal" = "Označené množství je rovno množství na skladě.";
 "str.stock.inventory.product.dueDate" = "Datum min. trvanlivosti";
 "str.stock.inventory.product.dueDate.info" = "Určuje, jak se změna množství balení produktu zapíše do Seznamu zásob a zda se k této změně vytisknou nálepky na produkt";
 "str.stock.inventory.product.dueDate.required" = "Datum je povinné";
 "str.stock.inventory.product.neverOverdue" = "Produkt má neomezenou trvanlivost";
 "str.stock.inventory.product.price" = "Cena";
 "str.stock.inventory.product.price.info" = "Na jednotku množství zásob";
+"str.stock.inventory.product.price.invalid" = "Nemůže být méně než 0.01 a musí být číslo s maximálně 2 desetinnými místy.";
 "str.stock.inventory.product.shoppingLocation" = "Obchod";
 "str.stock.inventory.product.location" = "Umístění";
 "str.stock.inventory.product.location.info" = "Určuje, jak se změna množství balení produktu zapíše do Seznamu zásob a zda se k této změně vytisknou nálepky na produkt";
 "str.stock.inventory.product.location.required" = "Umístění je povinný údaj";
+
 "str.stock.journal" = "Deník zásob";
 "str.stock.journal.summary" = "Shrnutí deníku zásob";
+"str.stock.journal.empty" = "Nenaleženy žádné transakce.";
 "str.stock.journal.undo" = "Vrátit transakci";
+"str.stock.journal.undo.failed" = "Transakce vrácení selhala";
+"str.stock.journal.undo.date %@" = "Rozbaleno na %@";
 "str.stock.journal.product" = "Produkt";
+"str.stock.journal.product.info %@" = "Produkt: %@";
+"str.stock.journal.amount.info %@" = "Množství: %@";
+"str.stock.journal.transactionTime.info %@" = "Čas transakce: %@";
 "str.stock.journal.transactionType" = "Typ transakce";
+"str.stock.journal.transactionType.info %@" = "Typ transakce: %@";
 "str.stock.journal.location" = "Umístění";
+"str.stock.journal.location.info %@" = "Umístění: %@";
 "str.stock.journal.user" = "Uživatel";
+"str.stock.journal.user.info %@" = "Dokončeno: %@";
+
 "str.stock.entries" = "Seznam zásob";
+"str.stock.entries.empty" = "Nebyly nalezeny žádné odpovídající záznamy";
+"str.stock.entries.product %@" = "Produkt: %@";
+"str.stock.entries.amount %@" = "Množství: %@";
+"str.stock.entries.dueDate %@" = "Expirace: %@";
+"str.stock.entries.location %@" = "Umístění: %@";
+"str.stock.entries.shoppingLocation %@" = "Obchod: %@";
+"str.stock.entries.price %@" = "Cena: %@";
+"str.stock.entries.purchasedDate %@" = "Datum nákupu: %@";
+"str.stock.entries.note %@" = "Poznámka: %@";
+"str.stock.entry.edit" = "Upravit záznam";
+"str.stock.entry.save" = "Uložit záznam";
 "str.stock.entry.consume" = "Spotřebovat všechny jednotky této položky";
 "str.stock.entry.open" = "Označit nejstarší jednotku zásob jako otevřenou";
+
+// MARK: - Shopping List
 "str.shL" = "Nákupní seznam";
+"str.shL.manage" = "Spravovat nákupní seznamy";
 "str.shL.new" = "Nový nákupní seznam";
 "str.shL.edit" = "Upravit nákupní seznam";
 "str.shL.delete" = "Smazat nákupní seznam";
+"str.shL.delete.confirm" = "Opravdu chcete tento nákupní seznam smazat?";
 "str.shL.print" = "Vytisknout";
 "str.shL.amount" = "Množství";
 "str.shL.ungrouped" = "Bez skupiny";
+
 "str.shL.form.new" = "Vytvořit nákupní seznam";
 "str.shL.form.edit" = "Upravit nákupní seznam";
 "str.shL.form.name" = "Název";
 "str.shL.form.name.required" = "Jméno je povinný údaj";
+"str.shL.form.name.exists" = "Jméno již existuje";
 "str.shL.form.save" = "Uložit";
+"str.shL.form.save.failed" = "Uložení selhalo";
+
 "str.shL.action.addItem" = "Přidat produkt";
 "str.shL.action.clearList" = "Vyprázdnit seznam";
+"str.shL.action.clearList.confirm" = "Opravdu chcete tento nákupní seznam vyprázdnit?";
 "str.shL.action.addListItemsToStock" = "Přidat všechny položky seznamu do zásob";
 "str.shL.action.addBelowMinStock" = "Přidat produkty se stavem pod minimální zásobou";
 "str.shL.action.addOverdue" = "Přidat min. trvanlivost/expiraci produktu";
+"str.shL.action.failed" = "Akce selhala";
+
 "str.shL.filter.status" = "Stav";
+"str.shL.filter.reset" = "Resetuj filtr";
 "str.shL.filter.all" = "Vše";
 "str.shL.filter.belowMinStock" = "pod min. množstvím zásoby";
 "str.shL.filter.done" = "produkty v košíku";
 "str.shL.filter.undone" = "produkty, které nejsou v košíku";
+"str.shL.filter.info.1belowMinStock" = "1 produkt je pod minimální definovanou skladovou zásobou.";
+"str.shL.filter.info.belowMinStock %lld" = "%lld produkt je pod minimální definovanou skladovou zásobou.";
+"str.shL.filter.info.1undone" = "1 záznam je hotov";
+"str.shL.filter.info.undone %lld" = "%lld záznamy jsou hotovy";
+"str.shL.filter.info.1undone" = "1 záznam je hotov";
+"str.shL.filter.info.undone %lld" = "%lld záznamy jsou hotovy";
+
 "str.shL.entryForm.new.title" = "Nová položka nákupního seznamu";
 "str.shL.entryForm.edit.title" = "Upravit položku nákupního seznamu";
+"str.shL.entryForm.save.failed" = "Uložení selhalo";
 "str.shL.entryForm.shoppingList" = "Nákupní seznam";
 "str.shL.entryForm.product" = "Produkt";
 "str.shL.entryForm.amount" = "Množství";
+"str.shL.entryForm.amount.required" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.shL.entryForm.quantityUnit" = "Měrná jednotka";
 "str.shL.entryForm.note" = "Poznámka";
+
 "str.shL.entry.done" = "Je/není vybráno";
 "str.shL.entry.edit" = "Upravit";
 "str.shL.entry.delete" = "Smazat";
+"str.shL.entry.delete.confirm" = "Opravdu chcete tuto položku smazat?";
+"str.shL.entry.add %@" = "Přidat %@na sklad";
+"str.shL.entry.info.amount %@" = "Množství: %@";
+
+// MARK: - Master Data
+"str.md.masterData" = "Kmenová data";
 "str.md.description" = "Popis";
 "str.md.search" = "Hledat";
+"str.md.new.success" = "Přidána položka";
+"str.md.new.fail" = "Přidání selhalo";
+"str.md.edit.success" = "Úspěšná úprava";
+"str.md.edit.fail" = "Editace selhala";
+"str.md.delete.success" = "Úspěšné smazání";
+"str.md.delete.fail" = "Neúspěšné smazání";
+
+// MD Product
 "str.md.products" = "Produkty";
 "str.md.product" = "Produkt";
+"str.md.products.empty" = "Produkt nenalezen.";
+"str.md.product.rowLocation %@" = "Umístění: %@";
+"str.md.product.rowProductGroup %@" = "Skupina produktů: %@";
 "str.md.product.new" = "Vytvořit produkt";
 "str.md.product.edit" = "Upravit produkt";
+"str.md.product.save" = "Uložit produkt";
+"str.md.product.info" = "Informace o produktu";
+"str.md.product.notOnServer" = "Produkt není na serveru";
+"str.md.product.delete" = "Smazat produkt";
+"str.md.product.delete.confirm" = "Opravdu chcete tento produkt smazat?";
+"str.md.product.name" = "Jméno produktu";
 "str.md.product.name.required" = "Jméno je povinný údaj";
+"str.md.product.name.exists" = "Jméno již existuje";
+// optional properties
+"str.md.product.category.optionalProperties" = "Volitelné vlastnosti";
+"str.md.product.category.optionalProperties.description" = "Stav, Nadřazený produkt, Popis, Skupina produktů, Energie, Obrázek";
 "str.md.product.active" = "Aktivní";
+"str.md.product.parentProduct" = "Nadřazený produkt";
 "str.md.product.description" = "Popis";
 "str.md.product.productGroup" = "Skupina produktů";
 "str.md.product.calories" = "Energie (kcal)";
 "str.md.product.calories.info" = "Na jednotku množství zásob";
+"str.md.product.calories.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
+"str.md.product.dontShowOnStockOverview" = "Nikdy se nezobrazí v přehledu zásob";
 "str.md.product.dontShowOnStockOverview.info" = "Stránka Přehledu zásob zobrazuje všechny produkty, které jsou v zásobě nebo pod jejich minimálním stavem. Zaškrtnutím se v něm produkt nikdy neobjeví.";
 "str.md.product.picture" = "Obrázek produktu";
-"str.md.product.location" = "Obvyklé umístění";
+"str.md.product.picture.saved" = "Obrázek produktu nalezen";
+"str.md.product.picture.none" = "Žádný produktový obrázek";
+"str.md.product.picture.add.file" = "Vybrat fotku produktu ze souboru";
+"str.md.product.picture.add.gallery" = "Vybrat fotku produktu z galerie";
+"str.md.product.picture.add.camera" = "Přidat fotku produktu z fotoaparátu";
+"str.md.product.picture.upload" = "Nahrát fotku produktu";
+"str.md.product.picture.delete" = "Smazat fotku produktu";
+// default locations
+"str.md.product.category.defaultLocations" = "Výchozí umístění";
+"str.md.product.category.defaultLocations.description" = "Umístění, Prodejna";
+"str.md.product.location" = "Výchozí umístění";
 "str.md.product.location.required" = "Umístění je povinný údaj";
 "str.md.product.location.consume" = "Spotřebovávat z umístění";
 "str.md.product.location.consume.info" = "Produkty budou spotřebovávány nejprve z tohoto umístění, (nebude-li při spotřebě zadáno jiné umístění)";
 "str.md.product.location.consume.moveOnOpen" = "Přesunout „otevřený” produkt";
 "str.md.product.location.consume.moveOnOpen.info" = "Označíte-li produkt jako otevřený, automaticky se přesune z Obvyklého umístění do Spotřebovávat z umístění. Abyste mohli funkci použít, musíte pro obě umístění vybrat různá místa.";
 "str.md.product.shoppingLocation" = "Obvyklý obchod";
+// due date
 "str.md.product.category.dueDate" = "Datum min. trvanlivosti";
+"str.md.product.category.dueDate.description" = "Typ, výchozí dny; po otevření, zmrazení, rozmrazení";
 "str.md.product.dueType" = "Typ trvanlivosti produktu";
 "str.md.product.dueType.info" = "Podle vybraného typu trvanlivosti bude produkt po datu min. trvanlivosti či expiraci v Přehledu zásob zvýrazněn různými barvami.";
 "str.md.product.dueType.bestBefore" = "Datum min. trvanlivosti";
@@ -193,21 +393,41 @@
 "str.md.product.dueType.expires" = "Datum expirace";
 "str.md.product.dueType.expires.info" = "Po vypršení doby expirace není vhodné produkt konzumovat";
 "str.md.product.defaultDueDays" = "Výchozí počet dní min. trvanlivosti";
+"str.md.product.defaultDueDays.info" = "U nákupů bude tento počet dní přičten k dnešnímu dni pro návrh data spotřeby (-1 znamená, že tento produkt nebude nikdy po termínu spotřeby).";
 "str.md.product.defaultDueDaysAfterOpen" = "Výchozí počet dní min. trvanlivosti po otevření";
+"str.md.product.defaultDueDaysAfterOpen.info" = "Pokud byl tento produkt označen jako otevřený, bude datum spotřeby nahrazeno dnešním dnem + tímto počtem dní (hodnota 0 tuto funkci vypne).";
 "str.md.product.defaultDueDaysAfterFreezing" = "Výchozí počet dní min. trvanlivosti po zamražení";
 "str.md.product.defaultDueDaysAfterFreezing.info" = "Přesunete-li tento produkt do mrazničky, bude datum min. trvanlivosti vypočítáno jako součet dnešního data a počtu zde uvedených dní.";
+"str.md.product.defaultDueDaysAfterFreezing.invalid" = "Nemůže být nižší než -1 a musí to být platné číslo s max. 0 desetinných míst";
 "str.md.product.defaultDueDaysAfterThawing" = "Výchozí počet dní min. trvanlivosti po rozmrazení";
 "str.md.product.defaultDueDaysAfterThawing.info" = "Při přesunutí produktu z mrazničky (produkt rozmražen) se datum min. trvanlivosti vypočítá jako dnešní datum + zadaný počet dní";
+"str.md.product.defaultDueDaysAfterThawing.invalid" = "Nemůže být nižší než 0 a musí to být platné číslo s max. 0 desetinných míst";
+// quantity units
 "str.md.product.category.quantityUnits" = "Měrné jednotky";
+"str.md.product.category.quantityUnits.description" = "Sklad, Nákup";
 "str.md.product.quStock" = "Měrná jednotka zásoby";
+"str.md.product.quStock.info" = "Množstevní jednotku skladem nelze po prvním nákupu změnit";
 "str.md.product.quStock.required" = "Měrná jednotka je povinný údaj";
+"str.md.product.quPurchase" = "Výchozí množství nákupní jednotky";
 "str.md.product.quPurchase.info" = "Měrná jednotka produktu při jeho přidání do nákupního seznamu";
 "str.md.product.quPurchase.required" = "Měrná jednotka je povinný údaj";
+// amount
+"str.md.product.category.amount" = "Množství";
+"str.md.product.category.amount.description" = "Min. zásoba, Rychlá spotřeba, Faktor, Hmotnost táry";
+"str.md.product.minStockAmount" = "Minimální skladová zásoba";
+"str.md.product.minStockAmount.invalid" = "Nemůže být méně než 0 a musí být číslo s maximálně 4 desetinnými místy.";
+"str.md.product.cumulateMinStockAmountOfSubProducts" = "Akumulace dílčích produktů min. množství zásob ";
+"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Pokud je povoleno, bude se do tohoto produktu kumulovat minimální množství zásob dílčích produktů, což znamená, že dílčí produkt nikdy nebude \"chybět\", pouze tento produkt.";
 "str.md.product.quickConsumeAmount" = "Množství pro „rychle spotřebovat“";
 "str.md.product.quickConsumeAmount.info" = "Tento počet je použit pro tlačítko „rychle spotřebovat/otevřít“ na stránce přehledu zásob. Vztaženo k početní jednotce zásoby.";
+"str.md.product.quickConsumeAmount.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
+"str.md.product.quFactorPurchaseToStock" = "Faktor nákup na skladovou jednotku množství ";
+"str.md.product.quFactorPurchaseToStock.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Znamená 1 %@ nákup bude konvertován do %@%@na skladě";
 "str.md.product.enableTareWeightHandling" = "Použít táru";
 "str.md.product.enableTareWeightHandling.info" = "Hodí se například pro produkty v nádobách, které se zváží včetně ní. Tára je tedy hmotnost nádoby, která se automaticky odečte.";
 "str.md.product.tareWeight" = "Tára";
+"str.md.product.tareWeight.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Vypnout kontrolu stavu zásob pro tuto ingredienci";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Výchozí nastavení pro přidání tohoto produktu jako ingredience do receptu.";
 "str.md.product.treatOpenedAsOutOfStock" = "Považovat otevřené balení jako spotřebované";
@@ -216,45 +436,120 @@
 "str.md.product.shouldNotBeFrozen.hint" = "Při pokusu přesunout takto označený produkt do mrazničky se zobrazí varování";
 "str.md.product.noOwnStock" = "Produkt nemá vlastní zásobu";
 "str.md.product.noOwnStock.hint" = "Tento produkt nebude možné vybrat při nákupu. To je vhodné pro nadřazené produkty, které používáte jen jako sumář řady podřízených produktů.";
+
 "str.md.barcodes" = "Čárové kódy";
 "str.md.barcode" = "Čárový kód";
+"str.md.barcodes.empty" = "Nebyl přidán čárový kód.";
+"str.md.barcode.new" = "Přidat čárový kód";
+"str.md.barcode.edit" = "Editovat čárový kód";
+"str.md.barcode.save" = "Uložit čárový kód";
+"str.md.barcode.for %@" = "Čárový kód pro produkt %@";
 "str.md.barcode.barcode" = "Čárový kód";
+"str.md.barcode.barcode.required" = "Čárový kód je požadován";
+"str.md.barcode.barcode.invalid" = "Čárový kód je neplatný, nebo již používaný.";
 "str.md.barcode.amount" = "Množství";
 "str.md.barcode.quantityUnit" = "Měrná jednotka";
 "str.md.barcode.shoppingLocation" = "Obchod";
 "str.md.barcode.note" = "Poznámka";
+"str.md.barcode.info.amount %@" = "Množství: %@";
+"str.md.barcode.info.store %@" = "Obchod: %@";
+"str.md.barcode.delete" = "Smazat čárový kód";
+"str.md.barcode.delete.confirm" = "Opravdu chcete čárový kód smazat?";
+
 "str.md.locations" = "Umístění produktů";
 "str.md.location" = "Umístění";
+"str.md.locations.empty" = "Umístění nenalezeno";
+"str.md.location.new" = "Nové umístění";
 "str.md.location.edit" = "Upravit umístění";
+"str.md.location.save" = "Uložit umístění";
+"str.md.location.info" = "Info o umístění";
 "str.md.location.name" = "Umístění";
 "str.md.location.name.required" = "Jméno je povinný údaj";
+"str.md.location.name.exists" = "Jméno již existuje";
+"str.md.location.freezer" = "Mražák";
 "str.md.location.isFreezing" = "Místo je mrazící box";
+"str.md.location.isFreezing.description" = "Při přesunu produktu z/do mrazicího boxu se datum spotřeby automaticky upraví podle nastavení produktu.";
+"str.md.location.delete" = "Smazat umístění";
+"str.md.location.delete.confirm" = "Opravdu chcete umístění smazat?";
+
+"str.md.shoppingLocations" = "Nákupní místa";
+"str.md.shoppingLocation" = "Nákupní místo";
+"str.md.shoppingLocations.empty" = "Nenalezeno umístění obchodu.";
+"str.md.shoppingLocation.new" = "Nové nákupní místo";
+"str.md.shoppingLocation.edit" = "Editovat nákupní místo";
+"str.md.shoppingLocation.save" = "Uložit nákupní místo";
+"str.md.shoppingLocation.info" = "Informace o nákupním místě";
+"str.md.shoppingLocation.name" = "Nákupní místo";
 "str.md.shoppingLocation.name.required" = "Jméno je povinný údaj";
+"str.md.shoppingLocation.name.exists" = "Jméno již existuje";
+"str.md.shoppingLocation.delete" = "Smazat nákupní místo";
+"str.md.shoppingLocation.delete.confirm" = "Opravdu chcete smazat nákupní místo?";
+
 "str.md.quantityUnits" = "Měrné jednotky";
 "str.md.quantityUnit" = "Měrná jednotka";
+"str.md.quantityUnits.empty" = "Nenalezena měrná jednotka";
+"str.md.quantityUnit.new" = "Nová měrná jednotka";
 "str.md.quantityUnit.edit" = "Upravit měrnou jednotku";
+"str.md.quantityUnit.save" = "Uložit měrnou jednotku";
+"str.md.quantityUnit.info" = "Informace o měrné jednotce";
+"str.md.quantityUnit.name" = "Jméno (v jednotném čísle)";
 "str.md.quantityUnit.name.required" = "Jméno je povinný údaj";
+"str.md.quantityUnit.name.exists" = "Jméno již existuje";
+"str.md.quantityUnit.namePlural" = "Jméno (v množném čísle):";
+"str.md.quantityUnit.delete" = "Smazat měrnou jednotku";
+"str.md.quantityUnit.delete.confirm" = "Opravdu chcete tuto měrnou jednotku smazat?";
 "str.md.quantityUnit.conversions" = "Převody jednotek";
+"str.md.quantityUnit.conversions.hint %@" = "%@je stejné jako ...";
 "str.md.quantityUnit.conversion.new" = "Nový převod měrné jednotky";
 "str.md.quantityUnit.conversion.edit" = "Upravit převod měrné jednotky";
+"str.md.quantityUnit.conversion.defaultFor %@" = "Výchozí Množstevní jednotka %@";
 "str.md.quantityUnit.conversion.quFrom" = "Z měrné jednotky";
 "str.md.quantityUnit.conversion.quTo" = "Do měrné jednotky";
+"str.md.quantityUnit.conversion.quTo.exists" = "Takový přepočet již existuje";
 "str.md.quantityUnit.conversion.factor" = "Násobek";
+"str.md.quantityUnit.conversion.means %@ %@" = "Znamená %@je stejné jako %@";
+"str.md.quantityUnit.conversion.createInverse" = "Vytvořit inverzní konverzní Množstevní jednotku";
+
 "str.md.productGroups" = "Skupiny produktů";
 "str.md.productGroup" = "Skupina produktů";
+"str.md.productGroups.empty" = "Nenalezena skupina produktů.";
 "str.md.productGroup.new" = "Vytvořit skupinu produktů";
 "str.md.productGroup.edit" = "Upravit skupinu produktů";
+"str.md.productGroup.save" = "Uložit skupinu produktů";
+"str.md.productGroup.info" = "Informace o skupině produktů";
+"str.md.productGroup.name" = "Jméno skupiny produktů";
 "str.md.productGroup.name.required" = "Jméno je povinný údaj";
+"str.md.productGroup.name.exists" = "Jméno již existuje";
+"str.md.productGroup.delete" = "Smazat skupinu produktů";
+"str.md.productGroup.delete.confirm" = "Opravdu chcete smazat skupinu produktů?";
+
 "str.md.chores" = "Povinnosti";
 "str.md.batteries" = "Baterie";
+
 "str.md.taskCategories" = "Kategorie úkolů";
+"str.md.taskCategory" = "Kategorie úkolů";
+"str.md.taskCategories.empty" = "Nenalezena kategorie úkolů";
 "str.md.taskCategory.new" = "Vytvořit kategorii úkolů";
 "str.md.taskCategory.edit" = "Upravit kategorii úkolu";
+"str.md.taskCategory.save" = "Uložit kategorii ůkolů ";
+"str.md.taskCategory.info" = "Informace o kategorii úkolů";
+"str.md.taskCategory.name" = "Jméno kategorie úkolů";
 "str.md.taskCategory.name.required" = "Jméno je povinný údaj";
+"str.md.taskCategory.name.exists" = "Jméno již existuje";
+"str.md.taskCategory.delete" = "Smazat kategorii úkolů";
+"str.md.taskCategory.delete.confirm" = "Opravdu chcete smazat kategorii úkolů?";
+
 "str.md.userFields" = "Uživatelská pole";
+"str.md.userField" = "Uživatelské pole";
+"str.md.userFields.empty" = "Nenalezena uživatelská pole";
+"str.md.userFields.rowName %@" = "Jméno: %@";
+"str.md.userFields.rowEntity %@" = "Entita: %@";
+"str.md.userFields.rowType %@" = "Typ: %@";
 "str.md.userField.new" = "Vytvoř uživatelské pole";
 "str.md.userField.edit" = "Upravit uživatelská pole";
+"str.md.userField.save" = "Uložit uživatelské pole";
 "str.md.userField.entity" = "Entita";
+"str.md.userField.entity.required" = "Entita je povinný údaj";
 "str.md.userField.name" = "Název";
 "str.md.userField.name.info" = "Toto je systémový název položky vhodný např. pro API";
 "str.md.userField.name.required" = "Toto je povinné pole a může obsahovat pouze písmena a číslice";
@@ -264,17 +559,78 @@
 "str.md.userField.caption.required" = "Popisek je povinný údaj";
 "str.md.userField.sortNumber" = "Uspořádávací číslo";
 "str.md.userField.sortNumber.info" = "Řada uživatelských položek bude uspořádána podle tohoto čísla při jejich zadávání";
+"str.md.userField.sortNumber.invalid" = "Nemůže být méně než 0 a musí být číslo s maximálně 0 desetinnými místy.";
 "str.md.userField.type" = "Typ";
 "str.md.userField.type.required" = "Typ je je povinný údaj";
 "str.md.userField.showAsColumnInTables" = "Zobrazit jako řádek v tabulkách";
+"str.md.userField.delete" = "Smaž uživatelské pole";
+"str.md.userField.delete.confirm" = "Opravdu chcete smazat uživatelské pole?";
+
+"str.md.userField.type.textSingleLine" = "Text: (jeden řádek)";
+"str.md.userField.type.textMultiLine" = "Text (více řádků)";
+"str.md.userField.type.numberIntegral" = "Číslo (celé číslo)";
+"str.md.userField.type.numberDezimal" = "Číslo (desetinné)";
+"str.md.userField.type.date" = "Datum (bez času)";
+"str.md.userField.type.dateTime" = "Datum a čas";
+"str.md.userField.type.checkbox" = "Zaškrtávací pole";
+"str.md.userField.type.presetList" = "Výběrový seznam (lze vybrat jednu položku)";
+"str.md.userField.type.presetChecklist" = "Výběrový seznam (lze vybrat více položek)";
 "str.md.userField.type.link" = "Odkaz";
+"str.md.userField.type.file" = "Soubor";
+"str.md.userField.type.image" = "Obrázek";
+
+"str.md.userEntities" = "Uživatelské entity";
+"str.md.userEntity" = "Uživatelská entita";
+"str.md.userEntities.empty" = "Nenalezeny uživatelské entity";
+"str.md.userEntity.new" = "Nová uživatelská entita";
+"str.md.userEntity.edit" = "Editovat uživatelskou entitu";
+"str.md.userEntity.save" = "Uložit uživatelskou entitu";
+"str.md.userEntity.info" = "Informace o uživatelské entitě";
+"str.md.userEntity.name" = "Jméno uživatelské entity";
 "str.md.userEntity.name.required" = "Toto je povinné pole a může obsahovat pouze písmena a číslice";
+"str.md.userEntity.name.exists" = "Jméno již existuje";
 "str.md.userEntity.caption" = "Nadpis";
 "str.md.userEntity.caption.required" = "Popisek je povinný údaj";
 "str.md.userEntity.description" = "Popis";
 "str.md.userEntity.showInSideBarMenu" = "Zobrazit v postranní nabídce";
 "str.md.userEntity.iconCSSClass" = "CSS třída ikony";
+"str.md.userEntity.iconCSSClass.example" = "Například \"fas fa-smile\"";
+"str.md.userEntity.delete" = "Smazat uživatelskou entitu";
+"str.md.userEntity.delete.confirm" = "Opravdu chcete uživatelskou entitu smazat?";
+
+// MARK: - Settings
 "str.settings" = "Nastavení";
+"str.settings.logout" = "Odhlásit ze serveru";
+"str.settings.loggedInAs %@" = "Přihlášen jako uživatel %@";
+"str.settings.info" = "Informace o serveru Grocy";
+"str.settings.info.version %@" = "Verze Grocy: %@";
+"str.settings.info.grocyVersion %@" = "Verze: %@";
+"str.settings.info.grocyRLSDate %@" = "Datum vydání: %@";
+"str.settings.info.grocyPHPVersion %@" = "PHP Verze: %@";
+"str.settings.info.grocySQLiteVersion %@" = "Verze SQLite: %@";
+"str.settings.info.openInBrowser" = "Otevřít v prohlížeči (migrace databáze)";
+"str.settings.codeTypes" = "Nastavení čárových kódů";
+"str.settings.about" = "O této aplikaci";
+"str.settings.about.thanks" = "Chtěl bych poděkovat Berndu Bestelovi za vývoj Grocy. Bez něj by tato aplikace nebyla možná.";
+"str.settings.about.version" = "Verze";
+"str.settings.about.version.supported" = "Podporováno";
+"str.settings.about.version.notSupported" = "Nepodporováno";
+"str.settings.about.developer" = "Vývojáři";
+"str.settings.about.translators" = "Překladatelé";
+"str.settings.about.showOnboarding" = "Znovu přehrát onboarding aplikace.";
+"str.settings.loginQRcode.scan" = "Skenuj QR-kód k rychlému přihlášení";
+"str.settings.simplifiedStockView" = "Zjednodušené skladový pohled";
+"str.settings.appLanguage" = "Jazyk aplikace";
+"str.settings.resetCache" = "Resetuj cache";
+"str.settings.serverTimeoutInterval" = "Server timeout interval";
+"str.settings.log" = "Log aplikace";
+"str.settings.log.empty" = "Nenalezen záznam v logu.";
+"str.settings.log.update" = "Aktualizuj log";
+"str.settings.log.share" = "sdílej log";
+"str.settings.grocy" = "Nastavení Grocy";
+"str.settings.app" = "Nastavení aplikace";
+"str.settings.app.quickScan" = "Nastavení QuickScan";
+"str.settings.app.quickScan.actionAfterAdd" = "Proveď vybrané akce po přidělení čárového kódu.";
 "str.settings.stock" = "Nastavení zásob";
 "str.settings.stock.presets" = "Výchozí hodnoty pro nové produkty";
 "str.settings.stock.presets.location" = "Umístění";
@@ -293,6 +649,7 @@
 "str.settings.stock.consume.useQuickConsume" = "Použij množství „rychle spotřebovat“ z parametrů produktu";
 "str.settings.stock.common" = "Nastavení pro všechny produkty";
 "str.settings.stock.common.amountDecimalPlaces" = "Počet desetinných míst pro množství produktu";
+"str.settings.stock.common.priceDecimalPlaces" = "Desetinná místa povolena pro cenu";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Automatické vkládání desetinné čárky";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Cenu pak vždy zapíšete včetně desetinných míst. Desetinná čárka se vloží automaticky.";
 "str.settings.shoppingList" = "Nastavení nákupního seznamu";
@@ -300,18 +657,71 @@
 "str.settings.shoppingList.autoAddToShL" = "Automaticky vkládat produkty pod min. množstvím zásoby do nákupního seznamu:";
 "str.settings.shoppingList.shLToStockWF" = "Způsob přidávání produktů z nákupního seznamu do Přehledu zásob";
 "str.settings.shoppingList.autoAddToStock" = "Má-li produkt vyplněno výchozí datum min. trvanlivosti, pak přidej produkt do stavu zásob automaticky s vyplněním počtu balení podle nákupního seznamu a ceny podle posledního nákupu.";
+
+
+// MARK: - Admin
+"str.admin.user" = "Správa uživatelů";
+"str.admin.user.empty" = "Uživatel nenalezen";
 "str.admin.user.tooltip.edit" = "Upravit";
 "str.admin.user.tooltip.permissions" = "Nastavit uživatelská oprávnění";
 "str.admin.user.tooltip.delete" = "Smazat";
+"str.admin.user.delete.question" = "Opravdu chcete tohoto uživatele smazat?";
+"str.admin.user.new" = "Nový uživatel";
 "str.admin.user.new.create" = "Vytvořit uživatele";
 "str.admin.user.new.edit" = "Upravit uživatele";
 "str.admin.user.new.userName" = "Uživatelské jméno";
 "str.admin.user.new.userName.required" = "Přihlašovací jméno je povinný údaj";
+"str.admin.user.new.userName.exists" = "Uživatel již existuje";
 "str.admin.user.new.firstName" = "Křestní jméno";
 "str.admin.user.new.lastName" = "Příjmení";
 "str.admin.user.new.password" = "Heslo";
 "str.admin.user.new.password.confirm" = "Potvrdit heslo";
 "str.admin.user.new.password.mismatch" = "Hesla se neshodují";
+
+// MARK: - Quick Scan
 "str.quickScan.consume" = "Spotřebovat";
+"str.quickScan.markAsOpened" = "Otevřít";
 "str.quickScan.purchase" = "Nakoupit";
+"str.quickScan.input.consume.amount" = "Spotřebovat množství";
+"str.quickScan.input.consume.default %@" = "Výchozí (%@)";
+"str.quickScan.input.consume.barcodeAmount %@" = "Rychlé (%@)";
+"str.quickScan.input.consume.custom" = "Uživatelské";
+"str.quickScan.input.consume.all %@" = "Vše (%@)";
+"str.quickScan.input.info.stockAmount %@" = "Skladové množství: %@";
+"str.quickScan.add.product" = "Produkt pro tento čárový kód";
+"str.quickScan.add.product.add" = "Přidej čárový kód";
+"str.quickScan.add.product.add.success" = "Čárový kód přidán";
+"str.quickScan.add.product.add.fail" = "Přidání čárového kódu selhalo";
+"str.quickScan.add.product.new.openfoodfacts" = "Vytvoř nový produkt s Open Food Facts";
+"str.quickScan.barcode.invalid" = "Nesprávný čárový kód";
+
+// MARK: - Onboarding
+"str.onboard.start" = "Začínáme!";
+"str.onboard.grocy.title" = "grocy - ERP beyond your fridge";
+"str.onboard.grocy.subtitle" = "Grocy je webové samoobslužné řešení pro správu potravin a domácnosti ve vaší domácnosti.";
+"str.onboard.app.title" = "Grocy pro iOS/macOS";
+"str.onboard.app.subtitle" = "Aplikace v nativním designu, která umožňuje pohodlné používání aplikace Grocy doma i na cestách.";
+
+"str.login.info" = "Vítejte v Grocy Mobile!\n\nJedná se o doprovodnou aplikaci, což znamená, že potřebujete mít přístup k běžící instanci Grocy (např. na vašem serveru).\nPokud si chcete tuto aplikaci pouze vyzkoušet, můžete použít jeden z demo serverů, které poskytuje vývojář Grocy Bernd Bestel. Demo server však nepoužívejte pro svá data, protože nejsou trvalá.";
+"str.login.select" = "Vyber typ serveru:";
+"str.login.demoServer" = "Demo server";
+"str.login.demoServer %@" = "Demo server: %@";
+"str.login.demoServer.info" = "Výběr demo serveru:";
+"str.login.demoServer.use" = "Použij demo server";
+"str.login.ownServer" = "Vlastní server";
+"str.login.ownServer.qr" = "QR-Scan";
+"str.login.ownServer.qr.info" = "Otevřete stránku Klíče API na webovém rozhraní Grocy. Pokud není k dispozici žádný klíč, vytvořte si ho. Kliknutím na symbol QR poté zobrazte kód a naskenujte jej pomocí aplikace.";
+"str.login.ownServer.manual" = "Ruční vstup";
+"str.login.ownServer.manual.serverURL" = "Adresa serveru URL";
+"str.login.ownServer.manual.serverURL.help" = "Server-URL vaší instance Grocy (pokud používáte Home Assistant Ingress, lze k němu získat přístup kliknutím pravým tlačítkem myši na REST API Browser ve webovém rozhraní).";
+"str.login.ownServer.manual.APIKey" = "Platný klíč API";
+"str.login.ownServer.manual.APIKey.help" = "Klíč API pro uživatele, který je zobrazen ve webovém zobrazení Správa klíčů API. Pokud žádný neexistuje, je třeba vytvořit nový.";
+"str.login.ownServer.manual.APIKey.create" = "Vytvoř API klíč";
 "str.login.ownServer.manual.login" = "Přihlásit se";
+"str.login.connect.fail" = "Připojení k serveru selhalo.";
+"str.login.connect.fail.info %@ %@" = "Server: %@\n\nChyba: %@";
+"str.login.connect.unsupportedVersion %@" = "Tato verze serveru %@ je v současnosti nepodporovaná aplikací. Můžete ji, použít, ale můžou se vyskytnout problémy.";
+"str.login.connect.unsupportedVersion.confirm" = "Pokračovat i tak";
+"str.login.hassIngress.use" = "Použij Home Assistant Ingress";
+"str.login.hassIngress.token" = "Long-Term-Token pro Home Assistant";
+"str.login.hassIngress.token.help" = "Tento token musí být vygenerován z webového rozhraní aplikace Home Assistant. Chcete-li to provést, otevřete stránku s profilem asistenta Home Assistant, přejděte dolů k položce Dlouhodobé přístupové tokeny a vytvořte jej. Pojmenujte jej a výsledný token zkopírujte do aplikace nebo vytvořte QR kód a naskenujte jej (iOS).";
