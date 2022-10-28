@@ -199,12 +199,16 @@ struct TransferProductView: View {
                 MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
                 
                 if (useSpecificStockEntry) {
+#if os(iOS)
                     if #available(iOS 16.1, *) {
                         stockEntryPicker
                             .pickerStyle(.navigationLink)
                     } else {
                         stockEntryPicker
                     }
+#else
+                    stockEntryPicker
+#endif
                 }
             }
 #if os(macOS)

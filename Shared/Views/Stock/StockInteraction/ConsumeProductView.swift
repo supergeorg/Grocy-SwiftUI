@@ -323,12 +323,16 @@ struct ConsumeProductView: View {
                     MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
                     
                     if useSpecificStockEntry {
+#if os(iOS)
                         if #available(iOS 16.1, *) {
                             stockEntryPicker
                                 .pickerStyle(.navigationLink)
                         } else {
                             stockEntryPicker
                         }
+#else
+                        stockEntryPicker
+#endif
                     }
                 }
                 
