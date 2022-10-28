@@ -121,6 +121,20 @@ struct Translators {
                                     "Gerard stn, 2021",
                                     "Simon Bor <mail@simonbor.nl>, 2022"
                                 ])
+    static let czech = Language(name: "Czech",
+                                 flag: "🇨🇿",
+                                 maintainers: "zemanl79",
+                                 contributors: [
+                                    "Tomas Reznicek <tomas.reznicek@gmail.com>, 2019",
+                                    "Michal Petříček <michal@petricek.org>, 2019",
+                                    "Jose Riha <jose1711@gmail.com>, 2020",
+                                    "Matyas Bobek <matyas.bobek@gmail.com>, 2020",
+                                    "Adam Kroupa <mavi222@seznam.cz>, 2020",
+                                    "Radim Kabeláč <radim.ekk@gmail.com>, 2020",
+                                    "Jaroslav Lichtblau <jlichtblau@seznam.cz>, 2020",
+                                    "Jarda Tesar <intossh@gmail.com>, 2021",
+                                    "Pavel Paseka, 2022",
+                                 ])
     
-    static let languages: Set<Language> = [english, german, french, polish, dutch]
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech]
 }
