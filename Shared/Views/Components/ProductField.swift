@@ -84,52 +84,14 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        if #available(iOS 16.0, *) {
-            Group {
-                HStack {
-                    SearchBar(text: $searchTerm)
-                    Button(action: {
-                        isShowingScanner.toggle()
-                    }, label: {
-                        Image(systemName: MySymbols.barcodeScan)
-                    })
-                    .sheet(isPresented: $isShowingScanner) {
-                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
-                            .overlay(
-                                HStack{
-                                    Button(action: {
-                                        isScannerFlash.toggle()
-                                        toggleTorch(on: isScannerFlash)
-                                    }, label: {
-                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
-                                            .font(.title)
-                                    })
-                                    .disabled(!checkForTorch())
-                                    .padding()
-                                    if getFrontCameraAvailable() {
-                                        Button(action: {
-                                            isScannerFrontCamera.toggle()
-                                        }, label: {
-                                            Image(systemName: MySymbols.changeCamera)
-                                                .font(.title)
-                                        })
-                                        .padding()
-                                    }
-                                }
-                                , alignment: .topTrailing)
-                    }
-                }
-                Picker(selection: $productID,
-                       label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
-                       content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(filteredProducts, id: \.id) { productElement in
-                        Text(productElement.name).tag(productElement.id as Int?)
-                    }
-                })
-                .pickerStyle(.automatic)
-            }
+        if #available(iOS 16.1, *) {
+            pickerView
+                .pickerStyle(.navigationLink)
         } else {
+            pickerView
+        }
+    }
+    var pickerView: some View {
             Picker(selection: $productID,
                    label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundColor(.primary),
                    content: {
@@ -172,7 +134,6 @@ struct ProductField: View {
                 }
             }
             )
-        }
     }
 #elseif os(macOS)
     var body: some View {

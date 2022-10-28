@@ -323,19 +323,12 @@ struct ConsumeProductView: View {
                     MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
                     
                     if useSpecificStockEntry {
-                        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
-                            Text("").tag(nil as String?)
-                            ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
-                                Group {
-                                    Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
-                                    +
-                                    Text("; ")
-                                    +
-                                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
-                                }
-                                .tag(stockProduct.stockID as String?)
-                            }
-                        })
+                        if #available(iOS 16.1, *) {
+                            stockEntryPicker
+                                .pickerStyle(.navigationLink)
+                        } else {
+                            stockEntryPicker
+                        }
                     }
                 }
                 
@@ -395,6 +388,22 @@ struct ConsumeProductView: View {
                     }
                 }
                 firstAppear = false
+            }
+        })
+    }
+    
+    var stockEntryPicker: some View {
+        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
+            Text("").tag(nil as String?)
+            ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
+                Group {
+                    Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    +
+                    Text("; ")
+                    +
+                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                }
+                .tag(stockProduct.stockID as String?)
             }
         })
     }

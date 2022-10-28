@@ -195,22 +195,17 @@ struct TransferProductView: View {
                 }
             }
             
-            MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
-            
-            if (useSpecificStockEntry) && (productID != nil) {
-                Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
-                    Text("").tag(nil as String?)
-                    ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                        Group {
-                            Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
-                            +
-                            Text("; ")
-                            +
-                            Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
-                        }
-                        .tag(stockProduct.stockID as String?)
+            if productID != nil {
+                MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
+                
+                if (useSpecificStockEntry) {
+                    if #available(iOS 16.1, *) {
+                        stockEntryPicker
+                            .pickerStyle(.navigationLink)
+                    } else {
+                        stockEntryPicker
                     }
-                })
+                }
             }
 #if os(macOS)
             if isPopup {
@@ -266,6 +261,22 @@ struct TransferProductView: View {
             })
         })
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
+    }
+    
+    var stockEntryPicker: some View {
+        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
+            Text("").tag(nil as String?)
+            ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
+                Group {
+                    Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    +
+                    Text("; ")
+                    +
+                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                }
+                .tag(stockProduct.stockID as String?)
+            }
+        })
     }
 }
 
