@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SystemDBChangedTime: Codable {
+struct SystemDBChangedTime: Codable, Equatable {
     let changedTime: String
 
     enum CodingKeys: String, CodingKey {

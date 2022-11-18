@@ -61,6 +61,9 @@ class GrocyViewModel: ObservableObject {
     @Published var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
     @Published var failedToLoadErrors: [APIError] = []
     
+    @Published var timeStampsObjects: [ObjectEntities: SystemDBChangedTime] = [:]
+    @Published var timeStampsAdditionalObjects: [AdditionalEntities: SystemDBChangedTime] = [:]
+    
     @Published var logEntries: [OSLogEntryLog] = []
     
     @Published var loadingObjectEntities: Set<ObjectEntities> = Set()
@@ -219,17 +222,29 @@ class GrocyViewModel: ObservableObject {
     }
     
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, ignoreCached: Bool = true) {
+        getSystemDBChangedTime(completion: { result in
+            switch result {
+            case .success(let timestamp):
+                self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, ignoreCached: ignoreCached, timeStamp: timestamp)
+            case .failure(let error):
+                self.postLog("Getting timestamp failed. Message: \("\(error)")", type: .error)
+            }
+        })
+    }
+    
+    func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, ignoreCached: Bool = true, timeStamp: SystemDBChangedTime) {
         if let objects = objects {
             for object in objects {
                 switch object {
                 case .batteries:
-                    if mdBatteries.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDBatteries, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdBatteries = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -239,13 +254,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .locations:
-                    if mdLocations.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -255,13 +271,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .product_barcodes:
-                    if mdProductBarcodes.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProductBarcodes, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductBarcodes = entityResult
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -271,13 +288,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .product_groups:
-                    if mdProductGroups.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProductGroups, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProductGroups = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -287,13 +305,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .products:
-                    if mdProducts.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDProducts, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdProducts = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -303,13 +322,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .quantity_units:
-                    if mdQuantityUnits.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDQuantityUnits, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnits = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -319,13 +339,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .quantity_unit_conversions:
-                    if mdQuantityUnitConversions.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDQuantityUnitConversions, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnitConversions = entityResult
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -335,13 +356,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .shopping_list:
-                    if shoppingList.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<ShoppingList, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingList = entityResult
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -351,13 +373,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .shopping_lists:
-                    if shoppingListDescriptions.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<ShoppingListDescriptions, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.shoppingListDescriptions = entityResult
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -367,13 +390,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .shopping_locations:
-                    if mdShoppingLocations.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdShoppingLocations = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -383,13 +407,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .stock_log:
-                    if stockJournal.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<StockJournal, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.stockJournal = entityResult
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -399,13 +424,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .task_categories:
-                    if mdTaskCategories.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDTaskCategories, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdTaskCategories = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -415,13 +441,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .userentities:
-                    if mdUserEntities.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDUserEntities, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserEntities = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -431,13 +458,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .userfields:
-                    if mdUserFields.isEmpty || ignoreCached {
+                    if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
                         getEntity(entity: object, completion: { (result: Result<MDUserFields, APIError>) in
                             switch result {
                             case let .success(entityResult):
                                 self.mdUserFields = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
                                 self.failedToLoadObjects.insert(object)
@@ -455,13 +483,14 @@ class GrocyViewModel: ObservableObject {
             for additionalObject in additionalObjects {
                 switch additionalObject {
                 case .system_config:
-                    if systemConfig == nil || ignoreCached {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getSystemConfig(completion: { result in
                             switch result {
                             case let .success(syscfg):
                                 self.systemConfig = syscfg
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for SystemConfig. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -471,13 +500,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .system_info:
-                    if systemInfo == nil || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getSystemInfo(completion: { result in
                             switch result {
                             case let .success(sysinfo):
                                 self.systemInfo = sysinfo
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for SystemInfo. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -487,13 +517,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .system_db_changed_time:
-                    if systemDBChangedTime == nil || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getSystemDBChangedTime(completion: { result in
                             switch result {
                             case let .success(sysdbchangedtime):
                                 self.systemDBChangedTime = sysdbchangedtime
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for SystemDBChangedTime. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -503,7 +534,7 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .stock:
-                    if stock.isEmpty || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getStock(completion: { result in
                             switch result {
@@ -513,6 +544,7 @@ class GrocyViewModel: ObservableObject {
                                 for stockEntry in self.stock {
                                     self.getStockProductLocations(productID: stockEntry.product.id)
                                 }
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for Stock. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -522,13 +554,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .volatileStock:
-                    if volatileStock == nil || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getVolatileStock(completion: { result in
                             switch result {
                             case let .success(volatileStockRet):
                                 self.volatileStock = volatileStockRet
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for volatile stock. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -538,13 +571,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .users:
-                    if users.isEmpty || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getUsers(completion: { result in
                             switch result {
                             case let .success(grocyusers):
                                 self.users = grocyusers
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for Users. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -554,7 +588,7 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .current_user:
-                    if currentUser == nil || ignoreCached  {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getUser(completion: { result in
                             switch result {
@@ -563,6 +597,7 @@ class GrocyViewModel: ObservableObject {
                                     self.currentUser = firstCurrUsRet
                                     self.failedToLoadAdditionalObjects.remove(additionalObject)
                                 }
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for current user. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -572,13 +607,14 @@ class GrocyViewModel: ObservableObject {
                         })
                     }
                 case .user_settings:
-                    if userSettings == nil || ignoreCached {
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
                         loadingAdditionalEntities.insert(additionalObject)
                         getUserSettings(completion: { result in
                             switch result {
                             case let .success(usrSet):
                                 self.userSettings = usrSet
                                 self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                             case let .failure(error):
                                 self.postLog("Data request failed for UserSettings. Message: \("\(error)")", type: .error)
                                 self.failedToLoadAdditionalObjects.insert(additionalObject)
@@ -595,6 +631,10 @@ class GrocyViewModel: ObservableObject {
     func retryFailedRequests() {
         self.failedToLoadErrors = []
         self.requestData(objects: Array(failedToLoadObjects), additionalObjects: Array(failedToLoadAdditionalObjects))
+    }
+    
+    func updateData() {
+        self.requestData(objects: Array(self.timeStampsObjects.keys), additionalObjects: Array(self.timeStampsAdditionalObjects.keys))
     }
     
     func deleteAllCachedData() {
@@ -629,6 +669,9 @@ class GrocyViewModel: ObservableObject {
         stockProductPriceHistories = [:]
         
         lastStockActions = []
+        
+        timeStampsObjects.removeAll()
+        timeStampsAdditionalObjects.removeAll()
         
         failedToLoadObjects.removeAll()
         failedToLoadAdditionalObjects.removeAll()
