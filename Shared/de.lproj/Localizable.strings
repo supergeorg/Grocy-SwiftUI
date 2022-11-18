@@ -631,6 +631,9 @@
 "str.settings.app" = "App-Einstellungen";
 "str.settings.app.quickScan" = "QuickScan-Einstellungen";
 "str.settings.app.quickScan.actionAfterAdd" = "Ausgewählte Aktion nach Zuweisen des Barcodes durchführen";
+"str.settings.app.update" = "Aktualisierungs-Einstellungen";
+"str.settings.app.update.autoReload" = "Autom. akt. bei externen Änderungen";
+"str.settings.app.update.autoReload.interval" = "Aktualisierungsintervall";
 "str.settings.stock" = "Bestand-Einstellungen";
 "str.settings.stock.presets" = "Vorgaben für neue Produkte";
 "str.settings.stock.presets.location" = "Standort";

@@ -631,6 +631,9 @@
 "str.settings.app" = "App Settings";
 "str.settings.app.quickScan" = "QuickScan settings";
 "str.settings.app.quickScan.actionAfterAdd" = "Do selected action after assigning a barcode";
+"str.settings.app.update" = "Update settings";
+"str.settings.app.update.autoReload" = "Auto reload on external changes";
+"str.settings.app.update.autoReload.interval" = "Reload interval";
 "str.settings.stock" = "Stock settings";
 "str.settings.stock.presets" = "Presets for new products";
 "str.settings.stock.presets.location" = "Location";
