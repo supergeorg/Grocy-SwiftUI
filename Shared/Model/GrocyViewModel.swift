@@ -679,27 +679,6 @@ class GrocyViewModel: ObservableObject {
         self.postLog("Deleted all cached data from the viewmodel.", type: .info)
     }
     
-    func fastShoppingList() {
-        getSystemDBChangedTime(completion: { result in
-            switch result {
-            case .success(let time):
-                if time.changedTime != self.systemDBChangedTime?.changedTime {
-                    self.systemDBChangedTime = time
-                    self.getEntity(entity: .shopping_list, completion: { (shoppingListResult: Result<ShoppingList, APIError>) in
-                        switch shoppingListResult {
-                        case .success(let shL):
-                            self.shoppingList = shL
-                        case .failure(let error):
-                            self.postLog(error.value ?? "", type: .error)
-                        }
-                    })
-                }
-            case .failure(let error):
-                self.postLog(error.value ?? "", type: .error)
-            }
-        })
-    }
-    
     func postLog(_ message: String, type: OSLogType) {
         switch type {
         case .error:

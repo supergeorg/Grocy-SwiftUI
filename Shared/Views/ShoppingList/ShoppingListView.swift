@@ -36,10 +36,10 @@ struct ShoppingListView: View {
 #endif
     
     private enum RefreshInterval: Int, Identifiable, CaseIterable {
-        case oneSecond = 1
         case threeSecond = 3
         case fiveSecond = 5
         case tenSecond = 10
+        case thirtySecond = 30
         case oneMinute = 60
         
         var id: Int {
@@ -196,7 +196,7 @@ struct ShoppingListView: View {
                     .onChange(of: currentRefreshInterval, perform: { newInterval in
                         if let currentRefreshInterval = currentRefreshInterval {
                             self.refreshTimer = Timer.scheduledTimer(withTimeInterval: Double(currentRefreshInterval.rawValue), repeats: true, block: { _ in
-                                grocyVM.fastShoppingList()
+                                grocyVM.requestData(objects: [.shopping_list])
                             })
                         } else {
                             if self.refreshTimer != nil {
