@@ -27,7 +27,7 @@ struct ActivitiesView: View {
         }
         .navigationTitle(LocalizedStringKey("str.nav.activities"))
         .onAppear(perform: {
-            grocyVM.requestData(objects: [.userentities], ignoreCached: false)
+            grocyVM.requestData(objects: [.userentities])
         })
     }
 }

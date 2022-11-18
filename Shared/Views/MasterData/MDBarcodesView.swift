@@ -121,7 +121,7 @@ struct MDBarcodesView: View {
                 .frame(minWidth: 200, minHeight: 400)
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
+        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
@@ -173,7 +173,7 @@ struct MDBarcodesView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.md.barcodes"))
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
+        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
         .refreshable { updateData() }
         .animation(.default, value: filteredBarcodes.count)
         .toast(

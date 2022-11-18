@@ -232,7 +232,7 @@ struct QuickScanModeView: View {
                 }
             })
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
         })
         .onChange(of: newRecognizedBarcode?.id, perform: { _ in
             DispatchQueue.main.async {

@@ -138,8 +138,7 @@ struct MDLocationsView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate,
-                                ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate)
         })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }

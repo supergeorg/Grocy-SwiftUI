@@ -221,18 +221,18 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, ignoreCached: Bool = true) {
+    func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) {
         getSystemDBChangedTime(completion: { result in
             switch result {
             case .success(let timestamp):
-                self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, ignoreCached: ignoreCached, timeStamp: timestamp)
+                self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
             case .failure(let error):
                 self.postLog("Getting timestamp failed. Message: \("\(error)")", type: .error)
             }
         })
     }
     
-    func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, ignoreCached: Bool = true, timeStamp: SystemDBChangedTime) {
+    func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) {
         if let objects = objects {
             for object in objects {
                 switch object {

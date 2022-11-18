@@ -274,14 +274,14 @@ struct MDProductFormView: View {
                     case let .success(message):
                         grocyVM.postLog("Product add successful. \(message)", type: .info)
                         toastType = .successAdd
-                        grocyVM.requestData(objects: [.products], ignoreCached: true)
+                        grocyVM.requestData(objects: [.products])
                         if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
                             let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
                             grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
                                 switch result {
                                 case let .success(barcodeMessage):
                                     grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
-                                    grocyVM.requestData(objects: [.product_barcodes], ignoreCached: true)
+                                    grocyVM.requestData(objects: [.product_barcodes])
                                     mdBarcodeReturn?.wrappedValue = barcodePOST
                                     toastType = .successAdd
                                     finishForm()
@@ -482,7 +482,7 @@ struct MDProductFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info], ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info])
                 resetForm()
                 firstAppear = false
             }

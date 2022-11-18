@@ -134,7 +134,7 @@ struct PurchaseProductView: View {
                 case let .success(prod):
                     grocyVM.postLog("Purchase successful. \(prod)", type: .info)
                     toastType = .successPurchase
-                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
+                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                     resetForm()
                     if autoPurchase {
                         self.dismiss()
@@ -319,7 +319,7 @@ struct PurchaseProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
                 resetForm()
                 firstAppear = false
             }

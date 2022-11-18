@@ -56,7 +56,7 @@ struct QuickScanModeSelectProductView: View {
                     switch result {
                     case let .success(message):
                         grocyVM.postLog("Add barcode successful. \(message)", type: .info)
-                        grocyVM.requestData(objects: [.product_barcodes], ignoreCached: true)
+                        grocyVM.requestData(objects: [.product_barcodes])
                         newRecognizedBarcode = newBarcode
                         toastType = .successAdd
                         finishForm()

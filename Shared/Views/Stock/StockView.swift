@@ -304,7 +304,7 @@ struct StockView: View {
         .animation(.default, value: searchedProducts.count)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
                 firstAppear = false
             }
         })
@@ -355,7 +355,7 @@ struct StockView: View {
         .animation(.default, value: searchedProducts.count)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
                 firstAppear = false
             }
         })

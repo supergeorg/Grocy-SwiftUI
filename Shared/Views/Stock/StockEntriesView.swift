@@ -44,7 +44,7 @@ struct StockEntryRowView: View {
             switch result {
             case .success(_):
                 //                toastType = .successConsumeEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
+                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
@@ -58,7 +58,7 @@ struct StockEntryRowView: View {
             switch result {
             case .success(_):
                 //                toastType = .successOpenEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock], ignoreCached: true)
+                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 fetchData
             case let .failure(error):
                 grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
@@ -176,9 +176,9 @@ struct StockEntriesView: View {
     @State private var stockEntries: StockEntries = []
     @State private var toastType: ToastType?
     
-    func fetchData(ignoreCached: Bool = true) {
+    func fetchData(ignoreCachedStock: Bool = true) {
         // This local management is needed due to the SwiftUI Views not updating correctly.
-        if stockEntries.isEmpty || ignoreCached {
+        if stockEntries.isEmpty || ignoreCachedStock {
             grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID, completion: { (result: Result<StockEntries, Error>) in
                 switch result {
                 case let .success(productEntriesResult):
@@ -197,7 +197,7 @@ struct StockEntriesView: View {
                 Text(LocalizedStringKey("str.stock.entries.empty"))
             }
             ForEach(stockEntries, id:\.id) { entry in
-                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, fetchData: fetchData(ignoreCached: true), toastType: $toastType)
+                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, fetchData: fetchData(ignoreCachedStock: true), toastType: $toastType)
             }
         }
 #if os(macOS)
@@ -205,11 +205,11 @@ struct StockEntriesView: View {
 #endif
         .navigationTitle(LocalizedStringKey("str.stock.entries"))
         .refreshable {
-            fetchData(ignoreCached: true)
+            fetchData(ignoreCachedStock: true)
         }
         .animation(.default, value: stockEntries.count)
         .onAppear(perform: {
-            fetchData(ignoreCached: false)
+            fetchData(ignoreCachedStock: false)
         })
         .toast(
             item: $toastType,

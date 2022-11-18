@@ -176,7 +176,7 @@ struct ConsumeProductView: View {
                 case let .success(prod):
                     grocyVM.postLog("Opening successful. \(prod)", type: .info)
                     toastType = .successOpen
-                    grocyVM.requestData(additionalObjects: [.stock], ignoreCached: true)
+                    grocyVM.requestData(additionalObjects: [.stock])
                     resetForm()
                     if self.actionFinished != nil {
                         self.actionFinished?.wrappedValue = true
@@ -378,7 +378,7 @@ struct ConsumeProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
                 resetForm()
                 if let productID = productID {
                     grocyVM.getStockProductEntries(productID: productID)

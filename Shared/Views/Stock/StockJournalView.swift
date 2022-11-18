@@ -349,7 +349,7 @@ struct StockJournalView: View {
         .animation(.default,
                    value: filteredJournal.count)
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate, ignoreCached: false)
+            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
             filteredProductID = selectedProductID
         })
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))

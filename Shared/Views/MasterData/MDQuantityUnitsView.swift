@@ -134,7 +134,7 @@ struct MDQuantityUnitsView: View {
                 })
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate, ignoreCached: false) })
+        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }
         .animation(.default, value: filteredQuantityUnits.count)

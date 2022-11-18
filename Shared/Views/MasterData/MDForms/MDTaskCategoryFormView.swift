@@ -134,7 +134,7 @@ struct MDTaskCategoryFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, ignoreCached: false)
+                grocyVM.requestData(objects: dataToUpdate)
                 resetForm()
                 firstAppear = false
             }
