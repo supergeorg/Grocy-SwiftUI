@@ -18,7 +18,6 @@ struct ShoppingListView: View {
     @State private var showSHLDeleteAlert: Bool = false
     @State var toastType: ToastType?
     @State var infoString: String?
-    
     @State private var showClearListAlert: Bool = false
     
 #if os(macOS)
@@ -34,20 +33,6 @@ struct ShoppingListView: View {
     }
     @State private var activeSheet: InteractionSheet?
 #endif
-    
-    private enum RefreshInterval: Int, Identifiable, CaseIterable {
-        case threeSecond = 3
-        case fiveSecond = 5
-        case tenSecond = 10
-        case thirtySecond = 30
-        case oneMinute = 60
-        
-        var id: Int {
-            self.hashValue
-        }
-    }
-    @State private var currentRefreshInterval: RefreshInterval? = nil
-    @State private var refreshTimer: Timer?
     
     private let dataToUpdate: [ObjectEntities] = [
         .products,
@@ -183,27 +168,6 @@ struct ShoppingListView: View {
         content
             .toolbar(content: {
                 HStack {
-                    Picker(selection: $currentRefreshInterval, content: {
-                        Text("NO REFRESH").tag(nil as RefreshInterval?)
-                        ForEach(RefreshInterval.allCases, id: \.id, content: { interval in
-                            Text("\(interval.rawValue.formatted())s").tag(interval as RefreshInterval?)
-                        })
-                    }, label: {
-                        HStack {
-                            Image(systemName: MySymbols.timedRefresh)
-                        }
-                    })
-                    .onChange(of: currentRefreshInterval, perform: { newInterval in
-                        if let currentRefreshInterval = currentRefreshInterval {
-                            self.refreshTimer = Timer.scheduledTimer(withTimeInterval: Double(currentRefreshInterval.rawValue), repeats: true, block: { _ in
-                                grocyVM.requestData(objects: [.shopping_list])
-                            })
-                        } else {
-                            if self.refreshTimer != nil {
-                                self.refreshTimer!.invalidate()
-                            }
-                        }
-                    })
 #if os(iOS)
                     Menu(content: {
                         shoppingListActionContent
