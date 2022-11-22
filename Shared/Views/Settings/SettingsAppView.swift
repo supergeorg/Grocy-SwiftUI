@@ -11,8 +11,9 @@ struct SettingsAppView: View {
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     @AppStorage("autoReload") private var autoReload: Bool = false
     @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
+    @AppStorage("isDemoModus") var isDemoModus: Bool = true
     
-    let refreshIntervals: [Int] = [3, 5, 10, 30, 60]
+    let refreshIntervals: [Int] = [3, 5, 10, 30, 60, 300]
     
     var body: some View {
         Form {
@@ -26,7 +27,12 @@ struct SettingsAppView: View {
                 Picker(selection: $autoReloadInterval, content: {
                     Text("").tag(0)
                     ForEach(refreshIntervals, id:\.self, content: { interval in
-                        Text("\(interval.formatted())s").tag(interval)
+                        if !isDemoModus {
+                            Text("\(interval.formatted())s").tag(interval)
+                        } else {
+                            // Add factor to reduce server load on demo servers
+                            Text("\((interval * 2).formatted())s").tag(interval * 2)
+                        }
                     })
                 }, label: {
                     Label(title: {
@@ -36,6 +42,7 @@ struct SettingsAppView: View {
                     })
                 }
                 )
+                .disabled(!autoReload)
             }
         }
         .navigationTitle(LocalizedStringKey("str.settings.app"))
