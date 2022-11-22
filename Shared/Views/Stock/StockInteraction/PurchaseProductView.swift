@@ -12,7 +12,6 @@ struct PurchaseProductView: View {
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
-    @AppStorage("devMode") private var devMode: Bool = false
     
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
@@ -305,9 +304,7 @@ struct PurchaseProductView: View {
                     })
             }
             
-            if devMode {
-                MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
-            }
+            MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
             
 #if os(macOS)
             if isPopup {
