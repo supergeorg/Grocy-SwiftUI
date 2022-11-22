@@ -20,6 +20,8 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
+    @AppStorage("autoReload") private var autoReload: Bool = false
+    @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
     
     static let shared = GrocyViewModel()
     
@@ -74,6 +76,8 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
     @AppStorage("hassToken") var hassToken: String = ""
     
+    @State private var refreshTimer: Timer?
+    
     let jsonEncoder = JSONEncoder()
     
     init() {
@@ -85,7 +89,14 @@ class GrocyViewModel: ObservableObject {
                 apiKey: !isDemoModus ? grocyAPIKey : "",
                 isDemoMode: isDemoModus,
                 completion: { result in
-                    print(result)
+                    switch result {
+                    case .success(let success):
+                        print(success)
+                        self.setUpdateTimer()
+                    case .failure(let failure):
+                        self.postLog("Login failed: \(failure)", type: .error)
+                    }
+                    
                 })
         } else {
             self.postLog("Not logged in", type: .info)
@@ -107,6 +118,7 @@ class GrocyViewModel: ObservableObject {
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "")
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isLoggedIn = true
+        self.setUpdateTimer()
         self.postLog("Switched to demo modus", type: .info)
     }
     
@@ -118,13 +130,15 @@ class GrocyViewModel: ObservableObject {
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isDemoModus = false
         isLoggedIn = true
+        self.setUpdateTimer()
         self.postLog("Switched to login modus", type: .info)
     }
     
     func logout() {
-        isLoggedIn = false
+        self.stopUpdateTimer()
         grocyApi.clearHassData()
         self.deleteAllCachedData()
+        isLoggedIn = false
     }
     
     func cancelAllURLSessionTasks() {
@@ -133,6 +147,26 @@ class GrocyViewModel: ObservableObject {
                 task.cancel()
             }
         })
+    }
+    
+    func stopUpdateTimer() {
+        if self.refreshTimer != nil {
+            self.refreshTimer!.invalidate()
+        }
+    }
+    
+    func setUpdateTimer() {
+        if self.autoReload && self.autoReloadInterval != 0 {
+            self.stopUpdateTimer()
+            self.refreshTimer = Timer
+                .scheduledTimer(
+                    withTimeInterval: Double(autoReloadInterval),
+                    repeats: true,
+                    block: { _ in
+                        self.updateData()
+                    }
+                )
+        }
     }
     
     func checkServer(baseURL: String, apiKey: String?, isDemoMode: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
@@ -634,6 +668,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     func updateData() {
+        self.postLog("Update triggered", type: .debug)
         self.requestData(objects: Array(self.timeStampsObjects.keys), additionalObjects: Array(self.timeStampsAdditionalObjects.keys))
     }
     
