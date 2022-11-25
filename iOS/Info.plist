@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Uses the Camera to scan QR codes and BarCodes.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Uses reminders access to show shopping list entries in the reminders list.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct SettingsAppView: View {
+    @StateObject var grocyVM: GrocyViewModel = .shared
+    
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     @AppStorage("autoReload") private var autoReload: Bool = false
     @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
@@ -43,6 +47,36 @@ struct SettingsAppView: View {
                 }
                 )
                 .disabled(!autoReload)
+            }
+            
+            if devMode {
+                Section(header: Text(LocalizedStringKey("REMINDER SYNC")).font(.title)) {
+                    Button(action: {
+                        Task {
+                            do {
+                                try await ReminderStore.shared.requestAccess()
+                                ReminderStore.shared.initCalendar()
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }, label: {
+                        Text("INIT CALENDAR")
+                    })
+                    Button(action: {
+                        do {
+                            for shoppingListItem in grocyVM.shoppingList {
+                                let title = "\(shoppingListItem.amount.formattedAmount) \(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "\(shoppingListItem.productID ?? 0)")"
+                                try ReminderStore.shared.save(Reminder(title: title, dueDate: Date(), isComplete: shoppingListItem.done == 1))
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }, label: {
+                        Text("ADD TO CALENDAR")
+                    })
+                    .disabled(!ReminderStore.shared.isAvailable_)
+                }
             }
         }
         .navigationTitle(LocalizedStringKey("str.settings.app"))

@@ -109,6 +109,10 @@
 		7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0E1256BE3E3004EAF18 /* TransferProductView.swift */; };
 		7848A0E9256BE3EF004EAF18 /* InventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */; };
 		7848A0EA256BE3EF004EAF18 /* InventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */; };
+		784AB2D6292D6F00009B346C /* ReminderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784AB2D5292D6EFF009B346C /* ReminderStore.swift */; };
+		784AB2D7292D6F00009B346C /* ReminderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784AB2D5292D6EFF009B346C /* ReminderStore.swift */; };
+		784AB2D8292D6F00009B346C /* ReminderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784AB2D5292D6EFF009B346C /* ReminderStore.swift */; };
+		784AB2D9292D6F00009B346C /* ReminderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784AB2D5292D6EFF009B346C /* ReminderStore.swift */; };
 		78512060256FE94600171390 /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851205F256FE94600171390 /* UserRowView.swift */; };
 		78512061256FE94600171390 /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851205F256FE94600171390 /* UserRowView.swift */; };
 		78512067256FF0E400171390 /* UserFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78512066256FF0E400171390 /* UserFormView.swift */; };
@@ -499,6 +503,7 @@
 		7848A0DA256BE3D5004EAF18 /* ConsumeProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeProductView.swift; sourceTree = "<group>"; };
 		7848A0E1256BE3E3004EAF18 /* TransferProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferProductView.swift; sourceTree = "<group>"; };
 		7848A0E8256BE3EF004EAF18 /* InventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryProductView.swift; sourceTree = "<group>"; };
+		784AB2D5292D6EFF009B346C /* ReminderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderStore.swift; sourceTree = "<group>"; };
 		7851205F256FE94600171390 /* UserRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRowView.swift; sourceTree = "<group>"; };
 		78512066256FF0E400171390 /* UserFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFormView.swift; sourceTree = "<group>"; };
 		78520B4E2710B5D9006437F4 /* MDQuantityUnitConversionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDQuantityUnitConversionModel.swift; sourceTree = "<group>"; };
@@ -958,6 +963,7 @@
 				789ADDB125C45B3000D7EB35 /* ToastTypes.swift */,
 				78DB1BD0268CEE9F005448F3 /* Barcodes.swift */,
 				78ADA1E526D1509100946E1B /* Translators.swift */,
+				784AB2D5292D6EFF009B346C /* ReminderStore.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1338,6 +1344,7 @@
 				786F6E992564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
 				786618D22718ACEE001552FA /* AmountSelectionView.swift in Sources */,
 				7885B8BB2567F723003439F5 /* PurchaseProductView.swift in Sources */,
+				784AB2D6292D6F00009B346C /* ReminderStore.swift in Sources */,
 				78CB756F255EA39200319108 /* GrocyViewModel.swift in Sources */,
 				78CB7618255EB9C600319108 /* MDProductsModel.swift in Sources */,
 				78A201C525EE64210031BFDE /* ServerProblemView.swift in Sources */,
@@ -1554,6 +1561,7 @@
 				78F1FAC8255EEDD1007D2E8B /* StockTable.swift in Sources */,
 				7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */,
 				7853A4D025DBE74300AF9986 /* LogView.swift in Sources */,
+				784AB2D7292D6F00009B346C /* ReminderStore.swift in Sources */,
 				78CB757B255EA39900319108 /* GrocyAPI.swift in Sources */,
 				78D75D6425DE9B71009F2C15 /* CardView.swift in Sources */,
 				78CB761F255EB9C600319108 /* MDShoppingLocationsModel.swift in Sources */,
@@ -1616,6 +1624,7 @@
 				780B8B4C26FA5C18009ACFB7 /* ProductField.swift in Sources */,
 				78FDCDFC25BAD2F00089CB5E /* ProductInventoryModel.swift in Sources */,
 				78FDCDB925BAD2D90089CB5E /* GenericResponses.swift in Sources */,
+				784AB2D8292D6F00009B346C /* ReminderStore.swift in Sources */,
 				78ADA1DE26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
 				78FDCDA725BAD2D50089CB5E /* SystemDBChangedTimeModel.swift in Sources */,
 				780B8B2D26FA5BAB009ACFB7 /* AmountFormatter.swift in Sources */,
@@ -1655,6 +1664,7 @@
 				78AF64E62719F38400C439AF /* StockEntryFormView.swift in Sources */,
 				780B8B5226FA5C35009ACFB7 /* FieldDescription.swift in Sources */,
 				78FDCE0425BAD2F00089CB5E /* ProductConsumeModel.swift in Sources */,
+				784AB2D9292D6F00009B346C /* ReminderStore.swift in Sources */,
 				7817659A25F7B41300978483 /* NullCodable.swift in Sources */,
 				78FDCE1725BAD2F50089CB5E /* ShoppingListStatus.swift in Sources */,
 				78FDCDD625BAD2DE0089CB5E /* MDUserFieldModel.swift in Sources */,
