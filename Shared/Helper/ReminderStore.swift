@@ -66,15 +66,17 @@ extension EKReminder {
         notes = reminder.notes
         isCompleted = reminder.isComplete
         calendar = store.defaultCalendarForNewReminders()
-        alarms?.forEach { alarm in
-            guard let absoluteDate = alarm.absoluteDate else { return }
-            let comparison = Locale.current.calendar.compare(reminder.dueDate, to: absoluteDate, toGranularity: .minute)
-            if comparison != .orderedSame {
-                removeAlarm(alarm)
+        if let dueDate = reminder.dueDate {
+            alarms?.forEach { alarm in
+                guard let absoluteDate = alarm.absoluteDate else { return }
+                let comparison = Locale.current.calendar.compare(dueDate, to: absoluteDate, toGranularity: .minute)
+                if comparison != .orderedSame {
+                    removeAlarm(alarm)
+                }
             }
-        }
-        if !hasAlarms {
-            addAlarm(EKAlarm(absoluteDate: reminder.dueDate))
+            if !hasAlarms {
+                addAlarm(EKAlarm(absoluteDate: dueDate))
+            }
         }
     }
 }
@@ -82,19 +84,16 @@ extension EKReminder {
 struct Reminder: Equatable, Identifiable {
     var id: String = UUID().uuidString
     var title: String
-    var dueDate: Date
+    var dueDate: Date? = nil
     var notes: String? = nil
     var isComplete: Bool = false
 }
 
 extension Reminder {
     init(with ekReminder: EKReminder) throws {
-        guard let dueDate = ekReminder.alarms?.first?.absoluteDate else {
-            throw TodayError.reminderHasNoDueDate
-        }
         id = ekReminder.calendarItemIdentifier
         title = ekReminder.title
-        self.dueDate = dueDate
+        dueDate = ekReminder.alarms?.first?.absoluteDate
         notes = ekReminder.notes
         isComplete = ekReminder.isCompleted
     }
@@ -127,10 +126,6 @@ class ReminderStore {
     
     private var isCalendarSelected: Bool = false
     
-    private func updateIsAvailable() {
-        isAvailable_ = isAvailable
-    }
-    
     func requestAccess() async throws {
         let status = EKEventStore.authorizationStatus(for: .reminder)
         
@@ -149,14 +144,13 @@ class ReminderStore {
         @unknown default:
             throw TodayError.unknown
         }
-        updateIsAvailable()
     }
     
     func initCalendar() {
         if let cal = ekStore.calendar(withIdentifier: calendarIdentifier) {
             ekCalendar = cal
             isCalendarSelected = true
-            updateIsAvailable()
+            isAvailable_ = true
         } else {
             createCalendar()
         }
@@ -181,8 +175,9 @@ class ReminderStore {
         do {
             try ekStore.saveCalendar(calendar, commit: true)
             calendarIdentifier = calendar.calendarIdentifier
+            ekCalendar = calendar
             isCalendarSelected = true
-            updateIsAvailable()
+            isAvailable_ = true
         } catch {
             print(error)
         }
