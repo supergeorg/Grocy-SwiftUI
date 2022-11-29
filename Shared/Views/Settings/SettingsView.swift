@@ -17,11 +17,6 @@ struct SettingsView: View {
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     
-    @AppStorage("localizationKey") var localizationKey: String = "en"
-    @AppStorage("devMode") private var devMode: Bool = false
-    
-    @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
-    
     var body: some View {
 #if os(macOS)
         NavigationView {
@@ -40,12 +35,10 @@ struct SettingsView: View {
 #endif
     }
     
-    
-    
     var content: some View {
         List {
             if isLoggedIn {
-                Section(header: Text("Grocy")){
+                Section(header: Text("Grocy")) {
                     NavigationLink(
                         destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite", os: "iOS", client: "Grocy Mobile")),
                         label: {
@@ -59,9 +52,17 @@ struct SettingsView: View {
                         })
                     }
                     Button(action: {
+                        grocyVM.deleteAllCachedData()
+                    }, label: {
+                        Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")
+                            .foregroundColor(.primary)
+                    })
+                    Button(action: {
                         grocyVM.logout()
-                    }, label: { Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up").foregroundColor(.primary)})
-                    Button(action: {grocyVM.deleteAllCachedData()}, label: {Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")})
+                    }, label: {
+                        Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up")
+                            .foregroundColor(.red)
+                    })
                 }
             }
             Section(header: Text(LocalizedStringKey("str.settings.grocy"))) {
@@ -78,28 +79,7 @@ struct SettingsView: View {
                         .foregroundColor(.primary)
                 })
             }
-            Section(header: Text("App")){
-                Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {
-                    Text("🇬🇧 English").tag("en")
-                    Text("🇩🇪 Deutsch").tag("de")
-                    Text("🇫🇷 Français").tag("fr-FR")
-                    Text("🇳🇱 Dutch").tag("nl")
-                    Text("🇵🇱 Polska").tag("pl")
-                    Text("🇨🇿 Czech").tag("cs")
-                })
-                MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)
-                    .onChange(of: timeoutInterval, perform: { newTimeoutInterval in
-                        grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: newTimeoutInterval)
-                    })
-#if os(iOS)
-                NavigationLink(
-                    destination: CodeTypeSelectionView(),
-                    label: {
-                        Label(LocalizedStringKey("str.settings.codeTypes"), systemImage: MySymbols.barcodeScan)
-                            .foregroundColor(.primary)
-                    })
-#endif
-                Toggle("DEV MODE", isOn: $devMode)
+            Section(header: Text("App")) {
                 NavigationLink(
                     destination: LogView(),
                     label: {

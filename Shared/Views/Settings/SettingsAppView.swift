@@ -16,11 +16,35 @@ struct SettingsAppView: View {
     @AppStorage("autoReload") private var autoReload: Bool = false
     @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
+    @AppStorage("localizationKey") var localizationKey: String = "en"
+    
+    @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
     
     let refreshIntervals: [Int] = [3, 5, 10, 30, 60, 300]
     
     var body: some View {
         Form {
+            Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {
+                Text("🇬🇧 English").tag("en")
+                Text("🇩🇪 Deutsch").tag("de")
+                Text("🇫🇷 Français").tag("fr-FR")
+                Text("🇳🇱 Dutch").tag("nl")
+                Text("🇵🇱 Polska").tag("pl")
+                Text("🇨🇿 Czech").tag("cs")
+            })
+            MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)
+                .onChange(of: timeoutInterval, perform: { newTimeoutInterval in
+                    grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: newTimeoutInterval)
+                })
+#if os(iOS)
+            NavigationLink(
+                destination: CodeTypeSelectionView(),
+                label: {
+                    Label(LocalizedStringKey("str.settings.codeTypes"), systemImage: MySymbols.barcodeScan)
+                        .foregroundColor(.primary)
+                })
+#endif
+            Toggle("DEV MODE", isOn: $devMode)
 #if os(iOS)
             Section(header: Text(LocalizedStringKey("str.settings.app.quickScan")).font(.title)) {
                 MyToggle(isOn: $quickScanActionAfterAdd, description: "str.settings.app.quickScan.actionAfterAdd")
@@ -43,6 +67,7 @@ struct SettingsAppView: View {
                         Text(LocalizedStringKey("str.settings.app.update.autoReload.interval"))
                     }, icon: {
                         Image(systemName: MySymbols.timedRefresh)
+                            .foregroundColor(.primary)
                     })
                 }
                 )
