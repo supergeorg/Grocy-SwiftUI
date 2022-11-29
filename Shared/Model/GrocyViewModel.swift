@@ -752,6 +752,40 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
+    func updateShoppingListFromReminders(reminders: [Reminder]) {
+        for reminder in reminders {
+            var nameComponents = reminder.title.components(separatedBy: " ")
+            let amount = Double(nameComponents.removeFirst())
+            let name = nameComponents.joined(separator: " ")
+            
+            if let product = self.mdProducts.first(where: { $0.name == name }), let entry = self.shoppingList.first(where: { $0.productID == product.id } ) {
+                self.putMDObjectWithID(
+                    object: .shopping_list,
+                    id: entry.id,
+                    content: ShoppingListItem(
+                        id: entry.id,
+                        productID: entry.productID,
+                        note: reminder.notes,
+                        amount: amount ?? entry.amount,
+                        shoppingListID: entry.shoppingListID,
+                        done: reminder.isComplete ? 1 : 0,
+                        quID: entry.quID,
+                        rowCreatedTimestamp: entry.rowCreatedTimestamp
+                    ), completion: { result in
+                    switch result {
+                    case let .success(message):
+                        self.postLog("Shopping entry edited successfully. \(message)", type: .info)
+                    case let .failure(error):
+                        self.postLog("Shopping entry edit failed. \(error)", type: .error)
+                    }
+                })
+                
+            } else {
+                print("NO PRODUCT FOUND!")
+            }
+        }
+    }
+    
     //MARK: - SYSTEM
     
     func getSystemInfo(completion: @escaping ((Result<SystemInfo, APIError>) -> ())) {

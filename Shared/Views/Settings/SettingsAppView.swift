@@ -92,13 +92,26 @@ struct SettingsAppView: View {
                         do {
                             for shoppingListItem in grocyVM.shoppingList {
                                 let title = "\(shoppingListItem.amount.formattedAmount) \(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "\(shoppingListItem.productID ?? 0)")"
-                                try ReminderStore.shared.save(Reminder(title: title, dueDate: Date(), isComplete: shoppingListItem.done == 1))
+                                try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done == 1))
                             }
                         } catch {
                             print(error)
                         }
                     }, label: {
                         Text("ADD TO CALENDAR")
+                    })
+                    .disabled(!ReminderStore.shared.isAvailable_)
+                    Button(action: {
+                        Task {
+                            do {
+                                let allReminders = try await ReminderStore.shared.readAll()
+                                grocyVM.updateShoppingListFromReminders(reminders: allReminders)
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }, label: {
+                        Text("READ ALL")
                     })
                     .disabled(!ReminderStore.shared.isAvailable_)
                 }
