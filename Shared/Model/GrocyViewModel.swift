@@ -759,29 +759,31 @@ class GrocyViewModel: ObservableObject {
             let name = nameComponents.joined(separator: " ")
             
             if let product = self.mdProducts.first(where: { $0.name == name }), let entry = self.shoppingList.first(where: { $0.productID == product.id } ) {
-                self.putMDObjectWithID(
-                    object: .shopping_list,
+                let shoppingListEntryNew = ShoppingListItem(
                     id: entry.id,
-                    content: ShoppingListItem(
+                    productID: entry.productID,
+                    note: reminder.notes,
+                    amount: amount ?? entry.amount,
+                    shoppingListID: entry.shoppingListID,
+                    done: reminder.isComplete ? 1 : 0,
+                    quID: entry.quID,
+                    rowCreatedTimestamp: entry.rowCreatedTimestamp
+                )
+                if shoppingListEntryNew.note != entry.note, shoppingListEntryNew.amount != entry.amount, shoppingListEntryNew.done != entry.done {
+                    self.putMDObjectWithID(
+                        object: .shopping_list,
                         id: entry.id,
-                        productID: entry.productID,
-                        note: reminder.notes,
-                        amount: amount ?? entry.amount,
-                        shoppingListID: entry.shoppingListID,
-                        done: reminder.isComplete ? 1 : 0,
-                        quID: entry.quID,
-                        rowCreatedTimestamp: entry.rowCreatedTimestamp
-                    ), completion: { result in
-                    switch result {
-                    case let .success(message):
-                        self.postLog("Shopping entry edited successfully. \(message)", type: .info)
-                    case let .failure(error):
-                        self.postLog("Shopping entry edit failed. \(error)", type: .error)
-                    }
-                })
-                
+                        content: shoppingListEntryNew, completion: { result in
+                            switch result {
+                            case let .success(message):
+                                self.postLog("Shopping entry edited successfully. \(message)", type: .info)
+                            case let .failure(error):
+                                self.postLog("Shopping entry edit failed. \(error)", type: .error)
+                            }
+                        })
+                }
             } else {
-                print("NO PRODUCT FOUND!")
+                self.postLog("Found no matching product for the shopping list entry \(name).", type: .info)
             }
         }
     }
