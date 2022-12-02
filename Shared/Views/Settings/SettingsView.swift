@@ -54,13 +54,13 @@ struct SettingsView: View {
                     Button(action: {
                         grocyVM.deleteAllCachedData()
                     }, label: {
-                        Label(LocalizedStringKey("str.settings.resetCache"), systemImage: "trash")
+                        Label(LocalizedStringKey("str.settings.resetCache"), systemImage: MySymbols.delete)
                             .foregroundColor(.primary)
                     })
                     Button(action: {
                         grocyVM.logout()
                     }, label: {
-                        Label(LocalizedStringKey("str.settings.logout"), systemImage: "square.and.arrow.up")
+                        Label(LocalizedStringKey("str.settings.logout"), systemImage: MySymbols.logout)
                             .foregroundColor(.red)
                     })
                 }
@@ -71,7 +71,7 @@ struct SettingsView: View {
                         .foregroundColor(.primary)
                 })
                 NavigationLink(destination: SettingsStockView(), label: {
-                    Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.barcodeScan)
+                    Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.stockOverview)
                         .foregroundColor(.primary)
                 })
                 NavigationLink(destination: SettingsShoppingListView(), label: {
