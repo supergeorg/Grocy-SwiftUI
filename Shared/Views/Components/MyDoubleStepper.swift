@@ -59,7 +59,12 @@ struct MyDoubleStepper: View {
                     .keyboardType(.numbersAndPunctuation)
                     .submitLabel(.done)
 #endif
-                Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: (minAmount ?? 0.0)...Double.greatestFiniteMagnitude, step: 1.0)
+                Stepper(
+                    LocalizedStringKey(amountName ?? ""),
+                    value: $amount,
+                    in: -Double.greatestFiniteMagnitude...Double.greatestFiniteMagnitude,
+                    step: 1.0
+                )
                     .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
