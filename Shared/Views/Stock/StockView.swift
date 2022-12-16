@@ -36,6 +36,8 @@ struct StockView: View {
     
     @State private var searchString: String = ""
     @State private var showFilter: Bool = false
+    @State private var sortSetting = [KeyPathComparator(\StockElement.product.name)]
+    @State private var sortOrder: SortOrder = .forward
     
     @State private var filteredLocationID: Int?
     @State private var filteredProductGroupID: Int?
@@ -121,7 +123,7 @@ struct StockView: View {
             .filter {
                 $0.product.hideOnStockOverview == 0
             }
-            .sorted(by: { $0.product.name < $1.product.name })
+            .sorted(using: sortSetting)
     }
     
     var summedValue: Double {
@@ -149,6 +151,7 @@ struct StockView: View {
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     RefreshButton(updateData: { updateData() })
+                    sortMenu
                     Text("")
                         .popover(item: $activeSheet, content: { item in
                             switch item {
@@ -199,6 +202,7 @@ struct StockView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {
                     HStack{
+                        sortMenu
                         Button(action: {
                             activeSheet = .stockJournal
                         }, label: {
@@ -302,6 +306,7 @@ struct StockView: View {
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .animation(.default, value: searchedProducts.count)
+        .animation(.default, value: sortSetting)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -381,6 +386,36 @@ struct StockView: View {
                     return LocalizedStringKey("str.error")
                 }
             })
+    }
+    
+    var sortMenu: some View {
+        Menu(content: {
+            Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
+                if sortOrder == .forward {
+                    Text(LocalizedStringKey("str.md.product.name")).tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
+                    Text(LocalizedStringKey("str.stock.buy.product.dueDate")).tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
+                    Text(LocalizedStringKey("str.stock.product.amount")).tag([KeyPathComparator(\StockElement.amount, order: .forward)])
+                } else {
+                    Text(LocalizedStringKey("str.md.product.name")).tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
+                    Text(LocalizedStringKey("str.stock.buy.product.dueDate")).tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
+                    Text(LocalizedStringKey("str.stock.product.amount")).tag([KeyPathComparator(\StockElement.amount, order: .reverse)])
+                }
+            })
+            .pickerStyle(.inline)
+            Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
+                Text(LocalizedStringKey("str.sort.order.forward")).tag(SortOrder.forward)
+                Text(LocalizedStringKey("str.sort.order.reverse")).tag(SortOrder.reverse)
+            })
+            .pickerStyle(.inline)
+            .onChange(of: sortOrder, perform: { newOrder in
+                if var sortElement = sortSetting.first {
+                    sortElement.order = newOrder
+                    sortSetting = [sortElement]
+                }
+            })
+        }, label: {
+            Label(LocalizedStringKey("str.sort"), systemImage: "arrow.up.arrow.down.square")
+        })
     }
 }
 

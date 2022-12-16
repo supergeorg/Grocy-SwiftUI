@@ -30,6 +30,11 @@
 "str.error.other" = "Unknown error occured.";
 "str.error.logInfo" = "Please check the log to determine the problem.";
 "str.time.unlimited" = "unlimited";
+"str.sort" = "Sort";
+"str.sort.category" = "Sort category";
+"str.sort.order" = "Sort order";
+"str.sort.order.forward" = "Ascending";
+"str.sort.order.reverse" = "Descending";
 
 // MARK: - Transactions
 "tr.purchase" = "Purchase";

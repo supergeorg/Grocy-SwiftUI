@@ -30,6 +30,11 @@
 "str.error.other" = "Ein unbekannter Fehler ist aufgetreten.";
 "str.error.logInfo" = "Bitte schaue im Log nach, um das Problem genauer zu bestimmen.";
 "str.time.unlimited" = "unbegrenzt";
+"str.sort" = "Sortieren";
+"str.sort.category" = "Sortier-Kategorie";
+"str.sort.order" = "Sortier-Reihenfolge";
+"str.sort.order.forward" = "Aufsteigend";
+"str.sort.order.reverse" = "Absteigend";
 
 // MARK: - Transactions
 "tr.purchase" = "Einkauf";
