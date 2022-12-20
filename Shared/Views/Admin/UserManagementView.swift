@@ -79,15 +79,6 @@ struct UserManagementView: View {
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     Button(action: {
-                        withAnimation {
-                            self.reloadRotationDeg += 360
-                        }
-                        updateData()
-                    }, label: {
-                        Image(systemName: MySymbols.reload)
-                            .rotationEffect(Angle.degrees(reloadRotationDeg))
-                    })
-                    Button(action: {
                         showAddUser.toggle()
                     }, label: {
                         HStack{
@@ -116,6 +107,9 @@ struct UserManagementView: View {
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
         .onAppear(perform: updateData)
+        .refreshable {
+            updateData()
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
