@@ -32,33 +32,94 @@ struct SettingsStockView: View {
     var content: some View {
         Form {
             Section(header: Text(LocalizedStringKey("str.settings.stock.presets")).font(.title)) {
-                ServerSettingsObjectPicker(settingKey: GrocyUserSettings.CodingKeys.productPresetsLocationID.rawValue, description: "str.settings.stock.presets.location", objects: .location)
-                ServerSettingsObjectPicker(settingKey: GrocyUserSettings.CodingKeys.productPresetsProductGroupID.rawValue, description: "str.settings.stock.presets.productGroup", objects: .productGroup)
-                ServerSettingsObjectPicker(settingKey: GrocyUserSettings.CodingKeys.productPresetsQuID.rawValue, description: "str.settings.stock.presets.quantityUnit", objects: .quantityUnit)
-                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue, description: "str.settings.stock.presets.defaultDueDays")
+                ServerSettingsObjectPicker(
+                    settingKey: GrocyUserSettings.CodingKeys.productPresetsLocationID.rawValue,
+                    description: "str.settings.stock.presets.location",
+                    icon: MySymbols.location,
+                    objects: .location
+                )
+                ServerSettingsObjectPicker(
+                    settingKey: GrocyUserSettings.CodingKeys.productPresetsProductGroupID.rawValue,
+                    description: "str.settings.stock.presets.productGroup",
+                    icon: MySymbols.productGroup,
+                    objects: .productGroup
+                )
+                ServerSettingsObjectPicker(
+                    settingKey: GrocyUserSettings.CodingKeys.productPresetsQuID.rawValue,
+                    description: "str.settings.stock.presets.quantityUnit",
+                    icon: MySymbols.quantityUnit,
+                    objects: .quantityUnit
+                )
+                ServerSettingsIntStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue,
+                    description: "str.settings.stock.presets.defaultDueDays",
+                    icon: MySymbols.date
+                )
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.stockOverview")).font(.title)) {
-                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDueSoonDays.rawValue, description: "str.settings.stock.stockOverview.dueSoonDays")
-                ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.showIconOnStockOverviewPageWhenProductIsOnShoppingList.rawValue, description: "str.settings.stock.stockOverview.showIconShoppingList")
+                ServerSettingsIntStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDueSoonDays.rawValue,
+                    description: "str.settings.stock.stockOverview.dueSoonDays",
+                    icon: MySymbols.date
+                )
+                ServerSettingsToggle(
+                    settingKey: GrocyUserSettings.CodingKeys.showIconOnStockOverviewPageWhenProductIsOnShoppingList.rawValue,
+                    description: "str.settings.stock.stockOverview.showIconShoppingList",
+                    icon: MySymbols.shoppingList
+                )
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.purchase")).font(.title)) {
-                ServerSettingsDoubleStepper(settingKey: GrocyUserSettings.CodingKeys.stockDefaultPurchaseAmount.rawValue, description: "str.settings.stock.purchase.defaultAmount")
+                ServerSettingsDoubleStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDefaultPurchaseAmount.rawValue,
+                    description: "str.settings.stock.purchase.defaultAmount",
+                    icon: MySymbols.amount
+                )
                 if devMode {
-                    ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.showPurchasedDateOnPurchase.rawValue, description: "str.settings.stock.purchase.showPurchasedDate")
-                    ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.showWarningOnPurchaseWhenDueDateIsEarlierThanNext.rawValue, description: "str.settings.stock.purchase.showWarningWhenEarlier")
+                    ServerSettingsToggle(
+                        settingKey: GrocyUserSettings.CodingKeys.showPurchasedDateOnPurchase.rawValue,
+                        description: "str.settings.stock.purchase.showPurchasedDate",
+                        icon: MySymbols.date
+                    )
+                    ServerSettingsToggle(
+                        settingKey: GrocyUserSettings.CodingKeys.showWarningOnPurchaseWhenDueDateIsEarlierThanNext.rawValue,
+                        description: "str.settings.stock.purchase.showWarningWhenEarlier",
+                        icon: MySymbols.date
+                    )
                 }
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.consume")).font(.title)) {
-                ServerSettingsDoubleStepper(settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmount.rawValue, description: "str.settings.stock.consume.defaultAmount")
+                ServerSettingsDoubleStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmount.rawValue,
+                    description: "str.settings.stock.consume.defaultAmount",
+                    icon: MySymbols.amount
+                )
                     .disabled(useQuickConsume)
-                ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue, description: "str.settings.stock.consume.useQuickConsume", toggleFeedback: $useQuickConsume)
+                ServerSettingsToggle(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue,
+                    description: "str.settings.stock.consume.useQuickConsume",
+                    icon: MySymbols.amount,
+                    toggleFeedback: $useQuickConsume
+                )
             }
             
             Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
-                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue, description: "str.settings.stock.common.amountDecimalPlaces")
-                ServerSettingsIntStepper(settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue, description: "str.settings.stock.common.priceDecimalPlaces")
+                ServerSettingsIntStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue,
+                    description: "str.settings.stock.common.amountDecimalPlaces",
+                    icon: MySymbols.decimalPlaces
+                )
+                ServerSettingsIntStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue,
+                    description: "str.settings.stock.common.priceDecimalPlaces",
+                    icon: MySymbols.decimalPlaces
+                )
                 if devMode {
-                    ServerSettingsToggle(settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue, description: "str.settings.stock.common.priceAddSeparatorAuto", descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint")
+                    ServerSettingsToggle(
+                        settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue,
+                        description: "str.settings.stock.common.priceAddSeparatorAuto",
+                        descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint",
+                        icon: MySymbols.price
+                    )
                 }
             }
         }

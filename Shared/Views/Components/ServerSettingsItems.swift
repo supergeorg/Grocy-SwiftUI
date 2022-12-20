@@ -17,7 +17,7 @@ struct ServerSettingsToggle: View {
     let settingKey: String
     let description: String
     var descriptionInfo: String? = nil
-    let icon: String? = nil
+    var icon: String? = nil
     
     var toggleFeedback: Binding<Bool>? = nil
     
@@ -70,8 +70,8 @@ struct ServerSettingsIntStepper: View {
     
     let settingKey: String
     let description: String
-    let descriptionInfo: String? = nil
-    let icon: String? = nil
+    var descriptionInfo: String? = nil
+    var icon: String? = nil
     
     func getSetting() {
         grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
@@ -121,8 +121,8 @@ struct ServerSettingsDoubleStepper: View {
     
     let settingKey: String
     let description: String
-    let descriptionInfo: String? = nil
-    let icon: String? = nil
+    var descriptionInfo: String? = nil
+    var icon: String? = nil
     
     func getSetting() {
         grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsDouble, APIError>) in
@@ -176,8 +176,8 @@ struct ServerSettingsObjectPicker: View {
     
     let settingKey: String
     let description: String
-    let descriptionInfo: String? = nil
-    let icon: String? = nil
+    var descriptionInfo: String? = nil
+    var icon: String? = nil
     let objects: Objects
     
     func getSetting() {
@@ -231,16 +231,7 @@ struct ServerSettingsObjectPicker: View {
                 }
             }
         }, label: {
-            HStack{
-                if let icon = icon {
-                    Label(LocalizedStringKey(description), systemImage: icon)
-                } else {
-                    Text(LocalizedStringKey(description))
-                }
-                if let descriptionInfo = descriptionInfo {
-                    FieldDescription(description: descriptionInfo)
-                }
-            }
+            MyLabelWithSubtitle(title: description, subTitle: descriptionInfo, systemImage: icon, isProblem: false, isSubtitleProblem: false, hideSubtitle: false)
         })
         .onAppear(perform: {
             if isFirstShown {
