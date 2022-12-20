@@ -46,6 +46,7 @@ struct MySymbols {
     static let api = "chevron.left.forwardslash.chevron.right"
     static let unknown = "questionmark"
     static let timeout = "clock.arrow.circlepath"
+    static let decimalPlaces = "00.square"
 
     static let new = "plus"
     static let edit = "square.and.pencil"
@@ -73,4 +74,5 @@ struct MySymbols {
     static let camera = "camera"
     static let changeCamera = "arrow.triangle.2.circlepath.camera"
     static let app = "app"
+    static let devMode = "wrench.and.screwdriver"
 }
