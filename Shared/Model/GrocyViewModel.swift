@@ -22,6 +22,8 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
     @AppStorage("autoReload") private var autoReload: Bool = false
     @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
+    @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
+    @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
     
     static let shared = GrocyViewModel()
     
@@ -39,6 +41,8 @@ class GrocyViewModel: ObservableObject {
     @Published var stockJournal: StockJournal = []
     @Published var shoppingListDescriptions: ShoppingListDescriptions = []
     @Published var shoppingList: ShoppingList = []
+    @Published var recipes: Recipes = []
+    @Published var recipeFulfillments: RecipeFulfilments = []
     
     @Published var mdProducts: MDProducts = []
     @Published var mdProductBarcodes: MDProductBarcodes = []
@@ -255,6 +259,25 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    // Gets the data of a selected additional entity
+    func getRecipeFulfillments(completion: @escaping ((Result<RecipeFulfilments, APIError>) -> ())) {
+        grocyApi.getRecipeFulfillments()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .finished:
+                    break
+                }
+                
+            }) { (recipeFulfillments: RecipeFulfilments) in
+                DispatchQueue.main.async {
+                    completion(.success(recipeFulfillments))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) {
         getSystemDBChangedTime(completion: { result in
             switch result {
@@ -379,6 +402,23 @@ class GrocyViewModel: ObservableObject {
                             switch result {
                             case let .success(entityResult):
                                 self.mdQuantityUnitConversions = entityResult
+                                self.failedToLoadObjects.remove(object)
+                                self.timeStampsObjects[object] = timeStamp
+                            case let .failure(error):
+                                self.postLog("Data request failed for \(object.rawValue). Message: \("\(error)")", type: .error)
+                                self.failedToLoadObjects.insert(object)
+                                self.failedToLoadErrors.append(error)
+                            }
+                            self.loadingObjectEntities.remove(object)
+                        })
+                    }
+                case .recipes:
+                    if timeStamp != self.timeStampsObjects[object] {
+                        loadingObjectEntities.insert(object)
+                        getEntity(entity: object, completion: { (result: Result<Recipes, APIError>) in
+                            switch result {
+                            case let .success(entityResult):
+                                self.recipes = entityResult
                                 self.failedToLoadObjects.remove(object)
                                 self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
@@ -657,6 +697,23 @@ class GrocyViewModel: ObservableObject {
                             self.loadingAdditionalEntities.remove(additionalObject)
                         })
                     }
+                case .recipeFulfillments:
+                    if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
+                        loadingAdditionalEntities.insert(additionalObject)
+                        getRecipeFulfillments(completion: { result in
+                            switch result {
+                            case let .success(recFul):
+                                self.recipeFulfillments = recFul
+                                self.failedToLoadAdditionalObjects.remove(additionalObject)
+                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
+                            case let .failure(error):
+                                self.postLog("Data request failed for recipe fulfillments. Message: \("\(error)")", type: .error)
+                                self.failedToLoadAdditionalObjects.insert(additionalObject)
+                                self.failedToLoadErrors.append(error)
+                            }
+                            self.loadingAdditionalEntities.remove(additionalObject)
+                        })
+                    }
                 }
             }
         }
@@ -685,6 +742,8 @@ class GrocyViewModel: ObservableObject {
         stockJournal = []
         shoppingListDescriptions = []
         shoppingList = []
+        recipes = []
+        recipeFulfillments = []
         
         mdProducts = []
         mdProductBarcodes = []
