@@ -200,7 +200,7 @@ struct TransferProductView: View {
                 
                 if (useSpecificStockEntry) {
 #if os(iOS)
-                    if #available(iOS 16.1, *) {
+                    if #available(iOS 16.0, *) {
                         stockEntryPicker
                             .pickerStyle(.navigationLink)
                     } else {

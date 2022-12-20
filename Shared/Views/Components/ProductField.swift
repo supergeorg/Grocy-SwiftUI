@@ -84,7 +84,7 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        if #available(iOS 16.1, *) {
+        if #available(iOS 16.0, *) {
             pickerView
                 .pickerStyle(.navigationLink)
         } else {
