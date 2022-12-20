@@ -12,7 +12,9 @@ import SwiftUI
 struct RecipesView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+#if os(iOS)
     private var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+#endif
     
     private let dataToUpdate: [ObjectEntities] = [.recipes, .products]
     private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]
@@ -55,24 +57,10 @@ struct RecipesView: View {
     }
     
     var bodyContent: some View {
+#if os(iOS)
         Group {
             if #available(iOS 16.0, *), idiom == .pad {
-                Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
-                    TableColumn("NAME", value: \.name)
-                    TableColumn("DUE SCORE", value: \.dueScore) { recipe in
-                        Text(String(recipe.dueScore))
-                    }
-                    TableColumn("REQUIREMENTS FULFILLED", value: \.needFulfilled.rawValue) { recipe in
-                        switch recipe.needFulfilled {
-                        case .fulfilled:
-                            Text("OK")
-                        case .shoppingList:
-                            Text("SHL")
-                        case .none:
-                            Text("None")
-                        }
-                    }
-                })
+                tableView
             } else {
                 List {
                     ForEach(recipes, id:\.id) { recipe in
@@ -81,6 +69,27 @@ struct RecipesView: View {
                 }
             }
         }
+#else
+        tableView
+#endif
+    }
+    var tableView: some View {
+        Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
+            TableColumn(LocalizedStringKey("str.recipes.name"), value: \.name)
+            TableColumn(LocalizedStringKey("str.recipes.dueScore"), value: \.dueScore) { recipe in
+                Text(String(recipe.dueScore))
+            }
+            TableColumn(LocalizedStringKey("str.recipes.fulfillment"), value: \.needFulfilled.rawValue) { recipe in
+                switch recipe.needFulfilled {
+                case .fulfilled:
+                    Text(LocalizedStringKey("str.recipes.fulfillment.enough"))
+                case .shoppingList:
+                    Text("SHL")
+                case .none:
+                    Text(LocalizedStringKey("str.recipes.fulfillment.notEnough"))
+                }
+            }
+        })
     }
 }
 

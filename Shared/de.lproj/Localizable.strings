@@ -331,6 +331,19 @@
 "str.shL.entry.add %@" = "Füge %@ dem Bestand hinzu";
 "str.shL.entry.info.amount %@" = "Menge: %@";
 
+// MARK: - Recipes
+"str.recipes" = "Rezepte";
+"str.recipes.name" = "Name";
+"str.recipes.dueScore" = "Fällig.-Punkte";
+"str.recipes.dueScore.hint" = "Je höher diese Zahl ist, desto mehr Zutaten, die derzeit im Bestand sind, sind bald fällig, überfällig oder bereits abgelaufen";
+"str.recipes.fulfillment" = "Bedarf im Bestand";
+"str.recipes.fulfillment.enough" = "Bestand reicht aus";
+"str.recipes.fulfillment.notEnough" = "Nicht ausreichend im Bestand";
+"str.recipes.fulfillment.notEnough %lld" = "Nicht ausreichend im Bestand, %lld Zutat(en) fehlt(en)";
+"str.recipes.fulfillment.notEnough.shL" = "Bestand nicht ausreichend, steht aber bereits auf dem Einkaufszettel";
+"str.recipes.fulfillment.notEnough.shLAll %lld" = "Bestand nicht ausreichend, %lld Zutat(en) fehlt(en), steht aber bereits auf dem Einkaufszettel";
+"str.recipes.fulfillment.notEnough.shLSome %lld %lld" = "Nicht ausreichend im Bestand, %lld fehlen, %lld stehen bereits auf dem Einkaufszettel";
+
 // MARK: - Master Data
 "str.md.masterData" = "Stammdaten";
 "str.md.description" = "Beschreibung";

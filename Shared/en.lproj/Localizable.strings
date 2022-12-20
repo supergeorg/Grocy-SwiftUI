@@ -331,6 +331,19 @@
 "str.shL.entry.add %@" = "Add %@ to stock";
 "str.shL.entry.info.amount %@" = "Amount: %@";
 
+// MARK: - Recipes
+"str.recipes" = "Recipes";
+"str.recipes.name" = "Name";
+"str.recipes.dueScore" = "Due score";
+"str.recipes.dueScore.hint" = "The higher this number is, the more ingredients currently in stock are due soon, overdue or already expired";
+"str.recipes.fulfillment" = "Requirements fulfilled";
+"str.recipes.fulfillment.enough" = "Enough in stock";
+"str.recipes.fulfillment.notEnough" = "Not enough in stock";
+"str.recipes.fulfillment.notEnough %lld" = "Not enough in stock, %lld ingredients missing";
+"str.recipes.fulfillment.notEnough.shL" = "Not enough in stock, but already on the shopping list";
+"str.recipes.fulfillment.notEnough.shLAll %lld" = "Not enough in stock, %lld ingredients missing but already on the shopping list";
+"str.recipes.fulfillment.notEnough.shLSome %lld %lld" = "Not enough in stock, %lld missing, %lld already on shopping list";
+
 // MARK: - Master Data
 "str.md.masterData" = "Master Data";
 "str.md.description" = "Description";
