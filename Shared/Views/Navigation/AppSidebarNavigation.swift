@@ -61,27 +61,27 @@ struct AppSidebarNavigation: View {
     //    #endif
     
     private func toggleSidebar() {
-        #if os(macOS)
+#if os(macOS)
         NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
-        #endif
+#endif
     }
     
     var body: some View {
         NavigationView {
             List(selection: $selection) {
-                #if os(macOS)
+#if os(macOS)
                 Image("grocy-logo")
                     .resizable()
                     .frame(width: 240/2.5, height: 92/2.5)
                 Divider()
-                #endif
+#endif
                 Group {
-                    #if os(iOS)
+#if os(iOS)
                     NavigationLink(destination: QuickScanModeView(), tag: NavigationItem.quickScan, selection: $selection) {
                         Label(LocalizedStringKey("str.nav.quickScan"), systemImage: NavigationItem.quickScan.rawValue)
                     }
                     .tag(NavigationItem.quickScan)
-                    #endif
+#endif
                     
                     NavigationLink(destination: StockView(), tag: NavigationItem.stockOverview, selection: $selection) {
                         Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: NavigationItem.stockOverview.rawValue)
@@ -96,19 +96,20 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-                //                                Group {
-                //                                    NavigationLink(destination: EmptyView(), tag: NavigationItem.recipes, selection: $selection) {
-                //                                        Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
-                //                                    }
-                //                                    .tag(NavigationItem.recipes)
-                //
-                //                                    NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
-                //                                        Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
-                //                                    }
-                //                                    .tag(NavigationItem.mealPlan)
-                //                                    Divider()
-                //                                }
-                
+                if devMode {
+                    Group {
+                        NavigationLink(destination: RecipesView(), tag: NavigationItem.recipes, selection: $selection) {
+                            Label("str.nav.recipes", systemImage: NavigationItem.recipes.rawValue)
+                        }
+                        .tag(NavigationItem.recipes)
+                        
+                        //                                                        NavigationLink(destination: EmptyView(), tag: NavigationItem.mealPlan, selection: $selection) {
+                        //                                                            Label("str.nav.mealPlan", systemImage: NavigationItem.mealPlan.rawValue)
+                        //                                                        }
+                        //                                                        .tag(NavigationItem.mealPlan)
+                        Divider()
+                    }
+                }
                 //                Group {
                 //                    NavigationLink(destination: EmptyView(), tag: NavigationItem.choresOverview, selection: $selection) {
                 //                        Label("str.nav.choresOverview", systemImage: NavigationItem.choresOverview.rawValue)
@@ -245,11 +246,11 @@ struct AppSidebarNavigation: View {
                     Divider()
                 }
                 
-                #if os(iOS)
+#if os(iOS)
                 NavigationLink(destination: SettingsView(), tag: NavigationItem.settings, selection: $selection) {
                     Label(LocalizedStringKey("str.nav.settings"), systemImage: NavigationItem.settings.rawValue)
                 }
-                #endif
+#endif
                 
                 NavigationLink(destination: UserManagementView(), tag: NavigationItem.userManagement, selection: $selection) {
                     Label(LocalizedStringKey("str.nav.userManagement"), systemImage: NavigationItem.userManagement.rawValue)
@@ -257,13 +258,13 @@ struct AppSidebarNavigation: View {
                 .tag(NavigationItem.userManagement)
             }
             .toolbar {
-                #if os(macOS)
+#if os(macOS)
                 ToolbarItem(placement: .navigation) {
                     Button(action: toggleSidebar, label: {
                         Image(systemName: "sidebar.left")
                     })
                 }
-                #endif
+#endif
             }
             .listStyle(SidebarListStyle())
             .navigationTitle("Grocy")
@@ -273,7 +274,7 @@ struct AppSidebarNavigation: View {
             //                    firstAppear = false
             //                }
             //            })
-            #if os(iOS)
+#if os(iOS)
             // A quick and dirty hack for non-showing view.
             if firstAppear {
                 if UIDevice.current.orientation.isPortrait && UIDevice.current.userInterfaceIdiom == .pad {
@@ -284,7 +285,7 @@ struct AppSidebarNavigation: View {
                     }
                 }
             }
-            #endif
+#endif
         }
     }
 }

@@ -17,6 +17,7 @@ extension AppTabNavigation {
         case activities = "play.rectangle"
         case settings = "gear"
         case openFoodFacts = "barcode"
+        case recipes = "list.bullet.below.rectangle"
     }
 }
 
@@ -53,7 +54,14 @@ struct AppTabNavigation: View {
             .tag(Tab.shoppingList)
             .navigationViewStyle(StackNavigationViewStyle())
             
-//            if devMode {
+            if devMode {
+                NavigationView {
+                    RecipesView()
+                }
+                .tabItem({
+                    Label("str.nav.recipes", systemImage: Tab.recipes.rawValue)
+                })
+                .tag(Tab.recipes)
 //                NavigationView {
 //                    ActivitiesView()
 //                }
@@ -62,7 +70,7 @@ struct AppTabNavigation: View {
 //                        .accessibility(label: Text("str.nav.activities"))
 //                }
 //                .tag(Tab.activities)
-//            }
+            }
             
             NavigationView {
                 MasterDataView()
