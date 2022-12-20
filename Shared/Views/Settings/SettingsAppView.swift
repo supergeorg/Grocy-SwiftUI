@@ -44,14 +44,14 @@ struct SettingsAppView: View {
                         .foregroundColor(.primary)
                 })
 #endif
-            Toggle("DEV MODE", isOn: $devMode)
+            MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
 #if os(iOS)
             Section(header: Text(LocalizedStringKey("str.settings.app.quickScan")).font(.title)) {
-                MyToggle(isOn: $quickScanActionAfterAdd, description: "str.settings.app.quickScan.actionAfterAdd")
+                MyToggle(isOn: $quickScanActionAfterAdd, description: "str.settings.app.quickScan.actionAfterAdd", icon: MySymbols.barcodeScan)
             }
 #endif
             Section(header: Text(LocalizedStringKey("str.settings.app.update")).font(.title)) {
-                MyToggle(isOn: $autoReload, description: "str.settings.app.update.autoReload")
+                MyToggle(isOn: $autoReload, description: "str.settings.app.update.autoReload", icon: MySymbols.reload)
                 Picker(selection: $autoReloadInterval, content: {
                     Text("").tag(0)
                     ForEach(refreshIntervals, id:\.self, content: { interval in
@@ -72,49 +72,6 @@ struct SettingsAppView: View {
                 }
                 )
                 .disabled(!autoReload)
-            }
-            
-            if devMode {
-                Section(header: Text(LocalizedStringKey("REMINDER SYNC")).font(.title)) {
-                    Button(action: {
-                        Task {
-                            do {
-                                try await ReminderStore.shared.requestAccess()
-                                ReminderStore.shared.initCalendar()
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }, label: {
-                        Text("INIT CALENDAR")
-                    })
-                    Button(action: {
-                        do {
-                            for shoppingListItem in grocyVM.shoppingList {
-                                let title = "\(shoppingListItem.amount.formattedAmount) \(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "\(shoppingListItem.productID ?? 0)")"
-                                try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done == 1))
-                            }
-                        } catch {
-                            print(error)
-                        }
-                    }, label: {
-                        Text("ADD TO CALENDAR")
-                    })
-                    .disabled(!ReminderStore.shared.isAvailable_)
-                    Button(action: {
-                        Task {
-                            do {
-                                let allReminders = try await ReminderStore.shared.readAll()
-                                grocyVM.updateShoppingListFromReminders(reminders: allReminders)
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }, label: {
-                        Text("READ ALL")
-                    })
-                    .disabled(!ReminderStore.shared.isAvailable_)
-                }
             }
         }
         .navigationTitle(LocalizedStringKey("str.settings.app"))
