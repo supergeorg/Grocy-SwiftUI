@@ -19,8 +19,11 @@ struct MyToggle: View {
         HStack{
             Toggle(isOn: $isOn, label: {
                 if let icon = icon {
-                    Label(LocalizedStringKey(description), systemImage: icon)
-                        .foregroundColor(.primary)
+                    HStack {
+                        Image(systemName: icon)
+                            .foregroundColor(.primary)
+                        Text(LocalizedStringKey(description))
+                    }
                 } else {
                     Text(LocalizedStringKey(description))
                 }

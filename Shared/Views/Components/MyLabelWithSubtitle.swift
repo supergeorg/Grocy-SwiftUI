@@ -10,14 +10,16 @@ import SwiftUI
 struct MyLabelWithSubtitle: View {
     var title: String
     var subTitle: String? = nil
-    var systemImage: String
+    var systemImage: String? = nil
     var isProblem: Bool = false
     var isSubtitleProblem: Bool = false
     var hideSubtitle: Bool = false
     
     var body: some View {
         HStack{
-            Image(systemName: systemImage)
+            if let systemImage = systemImage {
+                Image(systemName: systemImage)
+            }
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey(title))
 //                    .font(.headline)
