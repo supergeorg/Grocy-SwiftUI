@@ -203,7 +203,7 @@ struct MDQuantityUnitConversionFormView: View {
                     }
                 }
                 
-                MyDoubleStepper(amount: $factor, description: "str.md.quantityUnit.conversion.factor", minAmount: 0.0001, amountStep: 1, amountName: "", errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
+                MyDoubleStepper(amount: $factor, description: "str.md.quantityUnit.conversion.factor", minAmount: 0.0001, amountStep: 1, amountName: "", systemImage: MySymbols.amount)
                     .onChange(of: factor, perform: { newFactor in
                         conversionCorrect = checkConversionCorrect()
                     })

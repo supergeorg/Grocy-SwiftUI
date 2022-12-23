@@ -49,7 +49,7 @@ struct AmountSelectionView: View {
     var body: some View {
         Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
             VStack(alignment: .leading) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, errorMessage: "str.stock.product.amount.invalid", systemImage: MySymbols.amount)
+                MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: currentQuantityUnitName, systemImage: MySymbols.amount)
                 if factoredStockAmount != amount {
                     Text(LocalizedStringKey("str.stock.product.amount.factored \(factoredStockAmount.formattedAmount) \(stockQuantityUnitName ?? "")"))
                         .font(.caption)

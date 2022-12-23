@@ -17,8 +17,7 @@ struct MyDoubleStepper: View {
     var maxAmount: Double? = nil
     var amountStep: Double? = 1.0
     var amountName: String? = nil
-    
-    var errorMessage: String? = nil
+
     var errorMessageMax: String? = nil
     
     var systemImage: String? = nil
@@ -38,6 +37,12 @@ struct MyDoubleStepper: View {
             f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
         }
         return f
+    }
+    
+    var smallestValidAmount: Double {
+        let decPlaces = Int(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)
+        let increment = 1 / pow(10, decPlaces)
+        return (minAmount ?? 0.0) + Double(truncating: increment as NSNumber)
     }
     
     var body: some View {
@@ -67,8 +72,8 @@ struct MyDoubleStepper: View {
                 )
                     .fixedSize()
             }
-            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
-                Text(LocalizedStringKey(errorMessage))
+            if let minAmount = minAmount, let amount = amount, amount < minAmount {
+                Text(LocalizedStringKey("str.double.invalid \(smallestValidAmount.formattedAmount) \(Double(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4).formattedAmount)"))
                     .font(.caption)
                     .foregroundColor(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -94,8 +99,7 @@ struct MyDoubleStepperOptional: View {
     var maxAmount: Double? = nil
     var amountStep: Double? = 1.0
     var amountName: String? = nil
-    
-    var errorMessage: String? = nil
+
     var errorMessageMax: String? = nil
     
     var systemImage: String? = nil
@@ -115,6 +119,12 @@ struct MyDoubleStepperOptional: View {
             f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
         }
         return f
+    }
+    
+    var smallestValidAmount: Double {
+        let decPlaces = Int(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)
+        let increment = 1 / pow(10, decPlaces)
+        return (minAmount ?? 0.0) + Double(truncating: increment as NSNumber)
     }
     
     var body: some View {
@@ -162,8 +172,8 @@ struct MyDoubleStepperOptional: View {
                 })
                     .fixedSize()
             }
-            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
-                Text(LocalizedStringKey(errorMessage))
+            if let minAmount = minAmount, let amount = amount, amount < minAmount {
+                Text(LocalizedStringKey("str.double.invalid \(smallestValidAmount.formattedAmount) \(Double(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4).formattedAmount)"))
                     .font(.caption)
                     .foregroundColor(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -180,7 +190,7 @@ struct MyDoubleStepperOptional: View {
 
 struct MyDoubleStepper_Previews: PreviewProvider {
     static var previews: some View {
-        MyDoubleStepper(amount: Binding.constant(0), description: "Description", descriptionInfo: "Description info Text", minAmount: 1.0, amountStep: 0.1, amountName: "QuantityUnit", errorMessage: "Error in inputsadksaklwkfleksfklmelsfmlklkmlmgkelsmkgmlemkl", systemImage: "tag")
+        MyDoubleStepper(amount: Binding.constant(0), description: "Description", descriptionInfo: "Description info Text", minAmount: 1.0, amountStep: 0.1, amountName: "QuantityUnit", systemImage: "tag")
             .padding()
     }
 }
