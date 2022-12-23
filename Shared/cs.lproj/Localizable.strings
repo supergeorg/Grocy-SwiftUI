@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Grocy-SwiftUI
 
@@ -30,6 +30,9 @@
 "str.error.other" = "Neznámá chyba.";
 "str.error.logInfo" = "Ke zjištění problému zkontrolujte log.";
 "str.time.unlimited" = "neomezené";
+
+// MARK: - Generic components
+"str.double.invalid %@ %@" = "Hodnota nesmí být menší než %@ a smí mít max. %@ desetinná místa";
 
 // MARK: - Transactions
 "tr.purchase" = "Nakoupit";
@@ -155,7 +158,6 @@
 
 "str.stock.product.amount" = "Množství";
 "str.stock.product.amount.factored %@ %@" = "Rovná se %@%@";
-"str.stock.product.amount.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.stock.product.amount.locMax" = "Toto množství není ve vybraném místě k dispozici.";
 "str.stock.product.quantityUnit" = "Měrná jednotka";
 "str.stock.product.quantityUnit.required" = "Měrná jednotka je povinný údaj";
@@ -306,8 +308,6 @@
 "str.shL.filter.info.belowMinStock %lld" = "%lld produkt je pod minimální definovanou skladovou zásobou.";
 "str.shL.filter.info.1undone" = "1 záznam je hotov";
 "str.shL.filter.info.undone %lld" = "%lld záznamy jsou hotovy";
-"str.shL.filter.info.1undone" = "1 záznam je hotov";
-"str.shL.filter.info.undone %lld" = "%lld záznamy jsou hotovy";
 
 "str.shL.entryForm.new.title" = "Nová položka nákupního seznamu";
 "str.shL.entryForm.edit.title" = "Upravit položku nákupního seznamu";
@@ -315,7 +315,6 @@
 "str.shL.entryForm.shoppingList" = "Nákupní seznam";
 "str.shL.entryForm.product" = "Produkt";
 "str.shL.entryForm.amount" = "Množství";
-"str.shL.entryForm.amount.required" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.shL.entryForm.quantityUnit" = "Měrná jednotka";
 "str.shL.entryForm.note" = "Poznámka";
 
@@ -325,6 +324,16 @@
 "str.shL.entry.delete.confirm" = "Opravdu chcete tuto položku smazat?";
 "str.shL.entry.add %@" = "Přidat %@na sklad";
 "str.shL.entry.info.amount %@" = "Množství: %@";
+
+// MARK: - Recipes
+"str.recipes" = "Recepty";
+"str.recipes.name" = "Název";
+"str.recipes.dueScore" = "Index min. trvanlivosti";
+"str.recipes.dueScore.hint" = "Čím je index vyšší, tím více ingrediencí se blíží datu min. trvanlivosti. V indexu dostává jeden bod každý produkt s blížící se dobou spotřeby, 10 bodů za každý produkt po době min. trvanlivosti a 20 bodů za každý produkt po době použitelnosti.";
+"str.recipes.fulfillment" = "Stav zásob";
+"str.recipes.fulfillment.enough" = "Dostatečná zásoba";
+"str.recipes.fulfillment.notEnough" = "Nedostatečná zásoba";
+"str.recipes.fulfillment.notEnough.shL" = "Nemá dostatečnou zásobu, ale je na nákupním seznamu";
 
 // MARK: - Master Data
 "str.md.masterData" = "Kmenová data";
@@ -362,7 +371,6 @@
 "str.md.product.productGroup" = "Skupina produktů";
 "str.md.product.calories" = "Energie (kcal)";
 "str.md.product.calories.info" = "Na jednotku množství zásob";
-"str.md.product.calories.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.dontShowOnStockOverview" = "Nikdy se nezobrazí v přehledu zásob";
 "str.md.product.dontShowOnStockOverview.info" = "Stránka Přehledu zásob zobrazuje všechny produkty, které jsou v zásobě nebo pod jejich minimálním stavem. Zaškrtnutím se v něm produkt nikdy neobjeví.";
 "str.md.product.picture" = "Obrázek produktu";
@@ -415,19 +423,15 @@
 "str.md.product.category.amount" = "Množství";
 "str.md.product.category.amount.description" = "Min. zásoba, Rychlá spotřeba, Faktor, Hmotnost táry";
 "str.md.product.minStockAmount" = "Minimální skladová zásoba";
-"str.md.product.minStockAmount.invalid" = "Nemůže být méně než 0 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.cumulateMinStockAmountOfSubProducts" = "Akumulace dílčích produktů min. množství zásob ";
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Pokud je povoleno, bude se do tohoto produktu kumulovat minimální množství zásob dílčích produktů, což znamená, že dílčí produkt nikdy nebude \"chybět\", pouze tento produkt.";
 "str.md.product.quickConsumeAmount" = "Množství pro „rychle spotřebovat“";
 "str.md.product.quickConsumeAmount.info" = "Tento počet je použit pro tlačítko „rychle spotřebovat/otevřít“ na stránce přehledu zásob. Vztaženo k početní jednotce zásoby.";
-"str.md.product.quickConsumeAmount.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.quFactorPurchaseToStock" = "Faktor nákup na skladovou jednotku množství ";
-"str.md.product.quFactorPurchaseToStock.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Znamená 1 %@ nákup bude konvertován do %@%@na skladě";
 "str.md.product.enableTareWeightHandling" = "Použít táru";
 "str.md.product.enableTareWeightHandling.info" = "Hodí se například pro produkty v nádobách, které se zváží včetně ní. Tára je tedy hmotnost nádoby, která se automaticky odečte.";
 "str.md.product.tareWeight" = "Tára";
-"str.md.product.tareWeight.invalid" = "Nemůže být méně než 0.0001 a musí být číslo s maximálně 4 desetinnými místy.";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Vypnout kontrolu stavu zásob pro tuto ingredienci";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Výchozí nastavení pro přidání tohoto produktu jako ingredience do receptu.";
 "str.md.product.treatOpenedAsOutOfStock" = "Považovat otevřené balení jako spotřebované";
@@ -631,6 +635,7 @@
 "str.settings.app" = "Nastavení aplikace";
 "str.settings.app.quickScan" = "Nastavení QuickScan";
 "str.settings.app.quickScan.actionAfterAdd" = "Proveď vybrané akce po přidělení čárového kódu.";
+"str.settings.app.update.autoReload" = "Automaticky obnovit při změně dat jiným uživatelem";
 "str.settings.stock" = "Nastavení zásob";
 "str.settings.stock.presets" = "Výchozí hodnoty pro nové produkty";
 "str.settings.stock.presets.location" = "Umístění";

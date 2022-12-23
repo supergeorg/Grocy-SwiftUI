@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Grocy-SwiftUI
 
@@ -311,8 +311,8 @@
 "str.shL.filter.undone" = "Only undone items";
 "str.shL.filter.info.1belowMinStock" = "1 product is below min. defined stock amount";
 "str.shL.filter.info.belowMinStock %lld" = "%lld products are below min. defined stock amount";
-"str.shL.filter.info.1undone" = "1 entry is done";
-"str.shL.filter.info.undone %lld" = "%lld entries are done";
+"str.shL.filter.info.1done" = "1 entry is done";
+"str.shL.filter.info.done %lld" = "%lld entries are done";
 "str.shL.filter.info.1undone" = "1 entry is undone";
 "str.shL.filter.info.undone %lld" = "%lld entries are undone";
 

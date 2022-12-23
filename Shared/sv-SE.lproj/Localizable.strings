@@ -1,3 +1,12 @@
+/*
+  Localizable.strings
+  Grocy-SwiftUI
+
+  Created by Georg Meissner on 13.11.20.
+  
+*/
+
+// MARK: - Generic
 "str.cancel" = "Avbryt";
 "str.ok" = "OK";
 "str.delete" = "Radera";
@@ -7,10 +16,16 @@
 "str.close" = "Stäng";
 "str.add" = "Lägg till";
 "str.clear" = "Töm";
+
+// MARK: - Generic components
+
+// MARK: - Transactions
 "tr.purchase" = "Inköp";
 "tr.consume" = "Förbruka";
 "tr.opened" = "Öppnad";
 "tr.inventoryCorrection" = "Lager";
+
+// MARK: - Navigation
 "str.nav.stockOverview" = "Lageröversikt";
 "str.nav.shoppingList" = "Inköpslista";
 "str.nav.recipes" = "Recept";
@@ -34,13 +49,20 @@
 "str.nav.md.batteries" = "Batterier";
 "str.nav.md.taskCategories" = "Uppgiftskategorier";
 "str.nav.settings" = "inställningar";
+
+// MARK: - Details
 "str.details.title" = "Produktöversikt";
+
 "str.details.never" = "Aldrig";
 "str.details.unknown" = "Okänd";
+
 "str.details.stockEntries" = "Lagerposter";
 "str.details.stockJournal" = "Lagerlogg";
 "str.details.edit" = "Redigera produkt";
+
+// MARK: - Stock
 "str.stock.stockOverview" = "Lageröversikt";
+// Products, Summed Value
 "str.stock.location" = "Plats";
 "str.stock.productGroup" = "Produktgrupp";
 "str.stock.all" = "Alla";
@@ -49,8 +71,11 @@
 "str.stock.status.overdue" = "Försenad";
 "str.stock.status.expired" = "Utgått";
 "str.stock.status.belowMinStock" = "Under min. lagersaldo";
+"str.stock.info.opened %@" = "%@ öppnade";
+
 "str.stock.entry.status.notOpened" = "Ej öppnad";
 "str.stock.entry.status.opened" = "Öppnad";
+
 "str.stock.tbl.product" = "Produkt";
 "str.stock.tbl.productGroup" = "Produktgrupp";
 "str.stock.tbl.amount" = "Mängd";
@@ -64,10 +89,14 @@
 "str.stock.tbl.defaultLocation" = "Standardplats";
 "str.stock.tbl.productPicture" = "Produktbild";
 "str.stock.tbl.action.all" = "Alla";
+"str.stock.tbl.action.consume.all %@" = "Förbruka alla %@ som för närvarande finns i lager";
+
 "str.stock.tbl.menu.addToShL" = "Lägg till i inköpslista";
+
 "str.stock.product.amount" = "Mängd";
 "str.stock.product.quantityUnit" = "Mängdenhet";
 "str.stock.product.quantityUnit.required" = "En mängdenhet krävs";
+
 "str.stock.buy" = "Inköp";
 "str.stock.buy.product" = "Produkt";
 "str.stock.buy.product.required" = "Du måste välja en produkt";
@@ -77,12 +106,15 @@
 "str.stock.buy.product.price" = "Pris";
 "str.stock.buy.product.price.unitPrice" = "Enhetspris";
 "str.stock.buy.product.price.totalPrice" = "Totalpris";
+"str.stock.buy.product.price.relation %@ %@" = "betyder %@per %@";
 "str.stock.buy.product.shoppingLocation" = "Affär";
 "str.stock.buy.product.location" = "Plats";
 "str.stock.buy.product.note" = "Anteckning";
+
 "str.stock.consume" = "Förbruka";
 "str.stock.consume.product" = "Produkt";
 "str.stock.consume.product.open" = "Markera som öppnat";
+"str.stock.consume.product.open.success %@" = "%@ öppnade";
 "str.stock.consume.product.required" = "Du måste välja en produkt";
 "str.stock.consume.product.location" = "Plats";
 "str.stock.consume.product.location.required" = "En plats krävs";
@@ -91,6 +123,7 @@
 "str.stock.consume.product.stockEntry" = "Lagerpost";
 "str.stock.consume.product.recipe" = "Recept";
 "str.stock.consume.product.recipe.info" = "Detta är endast för statistiska ändamål";
+
 "str.stock.transfer" = "Överför";
 "str.stock.transfer.product" = "Produkt";
 "str.stock.transfer.product.required" = "Du måste välja en produkt";
@@ -102,8 +135,11 @@
 "str.stock.transfer.product.shouldNotBeFrozen" = "Denna produkt bör ej frysas";
 "str.stock.transfer.product.useStockEntry" = "Använd ett specifikt lagerobjekt";
 "str.stock.transfer.product.stockEntry" = "Lagerpost";
+
 "str.stock.inventory" = "Lager";
 "str.stock.inventory.product" = "Produkt";
+"str.stock.inventory.product.amount.lower %@" = "Detta betyder att %@ kommer att tas bort från lager";
+"str.stock.inventory.product.amount.higher %@" = "Detta betyder att %@ kommer att läggas till i lager";
 "str.stock.inventory.product.dueDate" = "Förfallodatum";
 "str.stock.inventory.product.dueDate.info" = "Detta gäller för tillagda produkter";
 "str.stock.inventory.product.dueDate.required" = "Förfallodatum krävs";
@@ -114,6 +150,7 @@
 "str.stock.inventory.product.location" = "Plats";
 "str.stock.inventory.product.location.info" = "Detta gäller för tillagda produkter";
 "str.stock.inventory.product.location.required" = "En plats krävs";
+
 "str.stock.journal" = "Lagerlogg";
 "str.stock.journal.summary" = "";
 "str.stock.journal.undo" = "Ångra transaktion";
@@ -121,9 +158,12 @@
 "str.stock.journal.transactionType" = "Transaktionstyp";
 "str.stock.journal.location" = "Plats";
 "str.stock.journal.user" = "Användare";
+
 "str.stock.entries" = "Lagerposter";
 "str.stock.entry.consume" = "Förbruka den här lagerposten";
 "str.stock.entry.open" = "Markera den här lagerposten som öppnad";
+
+// MARK: - Shopping List
 "str.shL" = "Inköpslista";
 "str.shL.new" = "Ny inköplista";
 "str.shL.edit" = "Redigera inköpslista";
@@ -131,21 +171,25 @@
 "str.shL.print" = "Skriv ut";
 "str.shL.amount" = "Mängd";
 "str.shL.ungrouped" = "Ogrupperade";
+
 "str.shL.form.new" = "Skapa inköpslista";
 "str.shL.form.edit" = "Redigera inköpslista";
 "str.shL.form.name" = "Namn";
 "str.shL.form.name.required" = "Ett namn krävs";
 "str.shL.form.save" = "Spara";
+
 "str.shL.action.addItem" = "Lägg till vara";
 "str.shL.action.clearList" = "Töm lista";
 "str.shL.action.addListItemsToStock" = "Lägg till alla listobjekt på lager";
 "str.shL.action.addBelowMinStock" = "Lägg till produkter som är under det angivna minsta lagerantalet";
 "str.shL.action.addOverdue" = "Lägg till produkter med utgångna bäst-före-datum/sista förbrukningsdatum";
+
 "str.shL.filter.status" = "Status";
 "str.shL.filter.all" = "Alla";
 "str.shL.filter.belowMinStock" = "Under min. lagersaldo";
 "str.shL.filter.done" = "Endast klara föremål";
 "str.shL.filter.undone" = "Endast borttagna objekt";
+
 "str.shL.entryForm.new.title" = "Skapa artikel på inköpslista";
 "str.shL.entryForm.edit.title" = "Redigera artikel på inköpslista";
 "str.shL.entryForm.shoppingList" = "Inköpslista";
@@ -153,16 +197,30 @@
 "str.shL.entryForm.amount" = "Mängd";
 "str.shL.entryForm.quantityUnit" = "Mängdenhet";
 "str.shL.entryForm.note" = "Anteckning";
+
 "str.shL.entry.done" = "Markera den här posten som klar";
 "str.shL.entry.edit" = "Redigera den här posten";
 "str.shL.entry.delete" = "Radera den här posten";
+
+// MARK: - Recipes
+"str.recipes" = "Recept";
+"str.recipes.name" = "Namn";
+"str.recipes.fulfillment" = "Krav uppfyllda";
+"str.recipes.fulfillment.enough" = "Tillräckligt i lager";
+"str.recipes.fulfillment.notEnough" = "Inte tillräckligt i lager";
+"str.recipes.fulfillment.notEnough.shL" = "Inte tillräckligt i lager, men finns redan på inköpslistan";
+
+// MARK: - Master Data
 "str.md.description" = "Beskrivning";
 "str.md.search" = "Sök";
+
+// MD Product
 "str.md.products" = "Produkter";
 "str.md.product" = "Produkt";
 "str.md.product.new" = "Skapa produkt";
 "str.md.product.edit" = "Redigera produkt";
 "str.md.product.name.required" = "Ett namn krävs";
+// optional properties
 "str.md.product.active" = "Aktiv";
 "str.md.product.description" = "Beskrivning";
 "str.md.product.productGroup" = "Produktgrupp";
@@ -170,9 +228,11 @@
 "str.md.product.calories.info" = "Per mängdenhet i lager";
 "str.md.product.dontShowOnStockOverview.info" = "";
 "str.md.product.picture" = "Produktbild";
+// default locations
 "str.md.product.location" = "Standardplats";
 "str.md.product.location.required" = "En plats krävs";
 "str.md.product.shoppingLocation" = "Standardaffär";
+// due date
 "str.md.product.category.dueDate" = "Förfallodatum";
 "str.md.product.dueType" = "Typ av datummärkning";
 "str.md.product.dueType.info" = "";
@@ -186,13 +246,16 @@
 "str.md.product.defaultDueDaysAfterFreezing.info" = "";
 "str.md.product.defaultDueDaysAfterThawing" = "Standard datumstämpel efter upptining";
 "str.md.product.defaultDueDaysAfterThawing.info" = "";
+// quantity units
 "str.md.product.category.quantityUnits" = "Mängdenheter";
 "str.md.product.quStock" = "Kvantitetsenhet lager";
 "str.md.product.quStock.required" = "En mängdenhet krävs";
 "str.md.product.quPurchase.info" = "Standard kvantitetsenhet som använd när denna produkt läggs till i inköpslistan";
 "str.md.product.quPurchase.required" = "En mängdenhet krävs";
+// amount
 "str.md.product.quickConsumeAmount" = "Snabbkonsumera antal";
 "str.md.product.quickConsumeAmount.info" = "";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Detta betyder at 1 %@ köpta kommer att konverteras till %@ %@ i lager";
 "str.md.product.enableTareWeightHandling" = "Aktivera hantering av förpackningsvikt";
 "str.md.product.enableTareWeightHandling.info" = "Detta är användbart t.ex. för mjöl i burkar - vid köp/konsumtion/inventering väger du alltid hela burken, den mängd som ska läggas till beräknas sedan automatiskt baserat på vad som finns i lager och förpackningsvikten som anges nedan";
 "str.md.product.tareWeight" = "Förpackningsvikt";
@@ -200,6 +263,7 @@
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Detta kommer att användas som standardinställning när du lägger till denna produkt som receptkomponent";
 "str.md.product.treatOpenedAsOutOfStock" = "Behandla öppnad som slut i lager";
 "str.md.product.shouldNotBeFrozen" = "Bör ej frysas";
+
 "str.md.barcodes" = "Streckkoder";
 "str.md.barcode" = "Streckkod";
 "str.md.barcode.barcode" = "Streckkod";
@@ -207,13 +271,16 @@
 "str.md.barcode.quantityUnit" = "Mängdenhet";
 "str.md.barcode.shoppingLocation" = "Affär";
 "str.md.barcode.note" = "Anteckning";
+
 "str.md.locations" = "Platser";
 "str.md.location" = "Plats";
 "str.md.location.edit" = "Redigera plats";
 "str.md.location.name" = "Plats";
 "str.md.location.name.required" = "Ett namn krävs";
 "str.md.location.isFreezing" = "Är en frys";
+
 "str.md.shoppingLocation.name.required" = "Ett namn krävs";
+
 "str.md.quantityUnits" = "Mängdenheter";
 "str.md.quantityUnit" = "Mängdenhet";
 "str.md.quantityUnit.edit" = "Redigera mängdenhet";
@@ -224,17 +291,21 @@
 "str.md.quantityUnit.conversion.quFrom" = "Från mängdenhet";
 "str.md.quantityUnit.conversion.quTo" = "Till mängdenhet";
 "str.md.quantityUnit.conversion.factor" = "Faktor";
+
 "str.md.productGroups" = "Produktgrupper";
 "str.md.productGroup" = "Produktgrupp";
 "str.md.productGroup.new" = "Skapa produktgrupp";
 "str.md.productGroup.edit" = "Redigera produktgrupp";
 "str.md.productGroup.name.required" = "Ett namn krävs";
+
 "str.md.chores" = "Sysslor";
 "str.md.batteries" = "Batterier";
+
 "str.md.taskCategories" = "Uppgiftskategorier";
 "str.md.taskCategory.new" = "Skapa uppgiftskategori";
 "str.md.taskCategory.edit" = "Redigera uppgiftskategori";
 "str.md.taskCategory.name.required" = "Ett namn krävs";
+
 "str.md.userFields" = "Användarfält";
 "str.md.userField.new" = "Skapa användarfält";
 "str.md.userField.edit" = "Redigera användarfält";
@@ -251,14 +322,19 @@
 "str.md.userField.type" = "Typ";
 "str.md.userField.type.required" = "En typ krävs";
 "str.md.userField.showAsColumnInTables" = "Visa som kolumn i tabeller";
+
 "str.md.userField.type.link" = "Länk";
+
 "str.md.userEntity.name.required" = "Detta är obligatoriskt och kan bara innehålla bokstäver och siffror";
 "str.md.userEntity.caption" = "Rubrik";
 "str.md.userEntity.caption.required" = "En rubrik krävs";
 "str.md.userEntity.description" = "Beskrivning";
 "str.md.userEntity.showInSideBarMenu" = "Visa i sidofältet";
 "str.md.userEntity.iconCSSClass" = "CSS-klass för ikon";
+
+// MARK: - Settings
 "str.settings" = "inställningar";
+"str.settings.app.update.autoReload" = "Hämta om automatiskt vid externa ändringar";
 "str.settings.stock" = "Lagerinställningar";
 "str.settings.stock.presets" = "Förinställningar för nya produkter";
 "str.settings.stock.presets.location" = "Plats";
@@ -282,6 +358,9 @@
 "str.settings.shoppingList" = "Inköpslista, inställningar";
 "str.settings.shoppingList.shoppingList" = "Inköpslista";
 "str.settings.shoppingList.shLToStockWF" = "Arbetsflöde för inköpslista till lager";
+
+
+// MARK: - Admin
 "str.admin.user.tooltip.edit" = "Redigera den här posten";
 "str.admin.user.tooltip.permissions" = "Konfigurera användarrättigheter";
 "str.admin.user.tooltip.delete" = "Radera den här posten";
@@ -294,6 +373,11 @@
 "str.admin.user.new.password" = "Lösenord";
 "str.admin.user.new.password.confirm" = "Bekräfta lösenord";
 "str.admin.user.new.password.mismatch" = "Lösenorden matchar inte";
+
+// MARK: - Quick Scan
 "str.quickScan.consume" = "Förbruka";
 "str.quickScan.purchase" = "Inköp";
+
+// MARK: - Onboarding
+
 "str.login.ownServer.manual.login" = "Logga in";
