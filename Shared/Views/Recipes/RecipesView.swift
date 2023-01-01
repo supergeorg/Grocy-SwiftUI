@@ -74,6 +74,7 @@ struct RecipesView: View {
 #endif
     }
     var tableView: some View {
+#if os(macOS)
         Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
             TableColumn(LocalizedStringKey("str.recipes.name"), value: \.name)
             TableColumn(LocalizedStringKey("str.recipes.dueScore"), value: \.dueScore) { recipe in
@@ -90,6 +91,9 @@ struct RecipesView: View {
                 }
             }
         })
+#else
+        Text("Table not supported yet")
+#endif
     }
 }
 
