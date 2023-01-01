@@ -640,6 +640,7 @@
 "str.settings.stock.presets.productGroup" = "Productcategorie";
 "str.settings.stock.presets.quantityUnit" = "Hoeveelheidseenheid";
 "str.settings.stock.presets.defaultDueDays" = "Standaard houdbaarheidsdatum";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Behandel als geopend wanneer niet op voorraad";
 "str.settings.stock.stockOverview" = "Voorraadoverzicht";
 "str.settings.stock.stockOverview.dueSoonDays" = "Aantal dagen alvorens verstrijken";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Toon een pictogram als dit product al op het boodschappenlijstje staat";

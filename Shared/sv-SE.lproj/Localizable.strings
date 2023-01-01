@@ -341,6 +341,7 @@
 "str.settings.stock.presets.productGroup" = "Produktgrupp";
 "str.settings.stock.presets.quantityUnit" = "Mängdenhet";
 "str.settings.stock.presets.defaultDueDays" = "Standard datumstämpel";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Behandla öppnad som slut i lager";
 "str.settings.stock.stockOverview" = "Lageröversikt";
 "str.settings.stock.stockOverview.dueSoonDays" = "";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Visa en ikon om produkten redan finns i inköpslistan";

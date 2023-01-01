@@ -55,6 +55,11 @@ struct SettingsStockView: View {
                     description: "str.settings.stock.presets.defaultDueDays",
                     icon: MySymbols.date
                 )
+                ServerSettingsToggle(
+                    settingKey: GrocyUserSettings.CodingKeys.productPresetsTreatOpenedAsOutOfStock.rawValue,
+                    description: "str.settings.stock.presets.treatOpenedAsOutOfStock",
+                    icon: MySymbols.stockOverview
+                )
             }
             Section(header: Text(LocalizedStringKey("str.settings.stock.stockOverview")).font(.title)) {
                 ServerSettingsIntStepper(

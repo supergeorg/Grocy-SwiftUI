@@ -623,6 +623,7 @@
 "str.settings.stock.presets.productGroup" = "Grupa produku";
 "str.settings.stock.presets.quantityUnit" = "Jednostka miary";
 "str.settings.stock.presets.defaultDueDays" = "Domyślna ilość dni ważności";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Traktuj otwarte jako brak na stanie";
 "str.settings.stock.stockOverview" = "Przegląd zapasów";
 "str.settings.stock.stockOverview.dueSoonDays" = "Ilość dni do daty ważności";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Pokaż ikonę jeśli produkt znajduje się już na liście zakupów";

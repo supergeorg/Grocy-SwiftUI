@@ -183,7 +183,7 @@ struct MDProductFormView: View {
         hideOnStockOverview = product?.hideOnStockOverview == 1
         noOwnStock = product?.noOwnStock == 1
         shouldNotBeFrozen = product?.shouldNotBeFrozen == 1
-        treatOpenedAsOutOfStock = product?.treatOpenedAsOutOfStock == 1
+        treatOpenedAsOutOfStock = (product?.treatOpenedAsOutOfStock != nil ? (product?.treatOpenedAsOutOfStock == 1) : (grocyVM.userSettings?.productPresetsTreatOpenedAsOutOfStock)) ?? false
         pictureFilename = product?.pictureFileName
         
         locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID

@@ -17,6 +17,7 @@ struct GrocyUserSettings: Codable {
     let productPresetsProductGroupID: Int?
     let productPresetsQuID: Int?
     let productPresetsDefaultDueDays: Int?
+    let productPresetsTreatOpenedAsOutOfStock: Bool?
     let stockDecimalPlacesAmounts: Int?
     let stockDecimalPlacesPrices: Int?
     let stockDecimalPlacesPricesInput: Int?
@@ -65,6 +66,7 @@ struct GrocyUserSettings: Codable {
         case productPresetsProductGroupID = "product_presets_product_group_id"
         case productPresetsQuID = "product_presets_qu_id"
         case productPresetsDefaultDueDays = "product_presets_default_due_days"
+        case productPresetsTreatOpenedAsOutOfStock = "product_presets_treat_opened_as_out_of_stock"
         case stockDecimalPlacesAmounts = "stock_decimal_places_amounts"
         case stockDecimalPlacesPrices = "stock_decimal_places_prices"
         case stockDecimalPlacesPricesInput = "stock_decimal_places_prices_input"
@@ -128,6 +130,16 @@ struct GrocyUserSettings: Codable {
             do { self.productPresetsQuID = try container.decodeIfPresent(Int.self, forKey: .productPresetsQuID) } catch { self.productPresetsQuID = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsQuID) ?? "") }
             
             do { self.productPresetsDefaultDueDays = try container.decodeIfPresent(Int.self, forKey: .productPresetsDefaultDueDays) } catch { self.productPresetsDefaultDueDays = try Int(container.decodeIfPresent(String.self, forKey: .productPresetsDefaultDueDays) ?? "") }
+            
+            do {
+                self.productPresetsTreatOpenedAsOutOfStock = try container.decode(Bool.self, forKey: .productPresetsTreatOpenedAsOutOfStock)
+            } catch {
+                do {
+                    self.productPresetsTreatOpenedAsOutOfStock = try container.decodeIfPresent(Int.self, forKey: .productPresetsTreatOpenedAsOutOfStock) == 1
+                } catch {
+                    self.productPresetsTreatOpenedAsOutOfStock = ["1", "true"].contains(try container.decodeIfPresent(String.self, forKey: .productPresetsTreatOpenedAsOutOfStock))
+                }
+            }
             
             do { self.stockDecimalPlacesAmounts = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesAmounts) } catch { self.stockDecimalPlacesAmounts = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesAmounts) ?? "") }
             

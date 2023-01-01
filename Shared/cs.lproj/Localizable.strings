@@ -642,6 +642,7 @@
 "str.settings.stock.presets.productGroup" = "Skupina produktů";
 "str.settings.stock.presets.quantityUnit" = "Měrná jednotka";
 "str.settings.stock.presets.defaultDueDays" = "Výchozí počet dní min. trvanlivosti";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Považovat otevřené balení jako spotřebované";
 "str.settings.stock.stockOverview" = "Přehled zásob";
 "str.settings.stock.stockOverview.dueSoonDays" = "Počet dní ve žlutém filtru v Přehledu";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Zobrazit ikonku pokud je produkt na nákupním seznamu";

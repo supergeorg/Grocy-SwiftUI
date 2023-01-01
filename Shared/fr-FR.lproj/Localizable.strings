@@ -631,6 +631,7 @@
 "str.settings.stock.presets.productGroup" = "Groupe de produit";
 "str.settings.stock.presets.quantityUnit" = "Format";
 "str.settings.stock.presets.defaultDueDays" = "Date de péremption par défaut";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Considérer ouvert comme ne faisant plus partie du stock";
 "str.settings.stock.stockOverview" = "Aperçu du stock";
 "str.settings.stock.stockOverview.dueSoonDays" = "Date de péremption proche";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Afficher une icône si le produit est déjà dans la liste de courses";

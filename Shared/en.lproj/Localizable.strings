@@ -654,6 +654,7 @@
 "str.settings.stock.presets.productGroup" = "Product group";
 "str.settings.stock.presets.quantityUnit" = "Quantity unit";
 "str.settings.stock.presets.defaultDueDays" = "Default due days";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Treat opened as out of stock";
 "str.settings.stock.stockOverview" = "Stock overview";
 "str.settings.stock.stockOverview.dueSoonDays" = "Due soon days";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Show an icon if the product is already on the shopping list";
