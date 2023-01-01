@@ -109,8 +109,13 @@ struct SettingsStockView: View {
                     icon: MySymbols.decimalPlaces
                 )
                 ServerSettingsIntStepper(
-                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPrices.rawValue,
-                    description: "str.settings.stock.common.priceDecimalPlaces",
+                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesInput.rawValue,
+                    description: "str.settings.stock.common.priceDecimalPlacesInput",
+                    icon: MySymbols.decimalPlaces
+                )
+                ServerSettingsIntStepper(
+                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesDisplay.rawValue,
+                    description: "str.settings.stock.common.priceDecimalPlacesDisplay",
                     icon: MySymbols.decimalPlaces
                 )
                 if devMode {

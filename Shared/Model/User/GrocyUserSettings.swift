@@ -19,6 +19,8 @@ struct GrocyUserSettings: Codable {
     let productPresetsDefaultDueDays: Int?
     let stockDecimalPlacesAmounts: Int?
     let stockDecimalPlacesPrices: Int?
+    let stockDecimalPlacesPricesInput: Int?
+    let stockDecimalPlacesPricesDisplay: Int?
     let stockAutoDecimalSeparatorPrices: Bool?
     let stockDueSoonDays: Int?
     let stockDefaultPurchaseAmount: Double?
@@ -65,6 +67,8 @@ struct GrocyUserSettings: Codable {
         case productPresetsDefaultDueDays = "product_presets_default_due_days"
         case stockDecimalPlacesAmounts = "stock_decimal_places_amounts"
         case stockDecimalPlacesPrices = "stock_decimal_places_prices"
+        case stockDecimalPlacesPricesInput = "stock_decimal_places_prices_input"
+        case stockDecimalPlacesPricesDisplay = "stock_decimal_places_prices_display"
         case stockAutoDecimalSeparatorPrices = "stock_auto_decimal_separator_prices"
         case stockDueSoonDays = "stock_due_soon_days"
         case stockDefaultPurchaseAmount = "stock_default_purchase_amount"
@@ -128,6 +132,10 @@ struct GrocyUserSettings: Codable {
             do { self.stockDecimalPlacesAmounts = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesAmounts) } catch { self.stockDecimalPlacesAmounts = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesAmounts) ?? "") }
             
             do { self.stockDecimalPlacesPrices = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesPrices) } catch { self.stockDecimalPlacesPrices = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesPrices) ?? "") }
+            
+            do { self.stockDecimalPlacesPricesInput = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesPricesInput) } catch { self.stockDecimalPlacesPricesInput = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesPricesInput) ?? "") }
+            
+            do { self.stockDecimalPlacesPricesDisplay = try container.decodeIfPresent(Int.self, forKey: .stockDecimalPlacesPricesDisplay) } catch { self.stockDecimalPlacesPricesDisplay = try Int(container.decodeIfPresent(String.self, forKey: .stockDecimalPlacesPricesDisplay) ?? "") }
             
             do {
                 self.stockAutoDecimalSeparatorPrices = try container.decode(Bool.self, forKey: .stockAutoDecimalSeparatorPrices)

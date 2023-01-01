@@ -31,7 +31,7 @@ struct MyDoubleStepper: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
-            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPrices ?? 2
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPricesInput ?? 2
         } else {
             f.numberStyle = .decimal
             f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
@@ -113,7 +113,7 @@ struct MyDoubleStepperOptional: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
-            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPrices ?? 2
+            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPricesInput ?? 2
         } else {
             f.numberStyle = .decimal
             f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2

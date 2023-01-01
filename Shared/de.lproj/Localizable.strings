@@ -665,6 +665,8 @@
 "str.settings.stock.common" = "Allgemein";
 "str.settings.stock.common.amountDecimalPlaces" = "Erlaubte Nachkommastellen für Mengen";
 "str.settings.stock.common.priceDecimalPlaces" = "Erlaubte Nachkommastellen für Preise";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Erlaubte Nachkommastellen für Preise (Eingabe)";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Erlaubte Nachkommastellen für Preise (Anzeige)";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Dezimaltrennzeichen für Preis-Eingabefelder automatisch hinzufügen";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Wenn aktiviert, müssen Preiseingaben immer inkl. Nachkommastellen erfolgen, das Dezimaltrennzeichen wird automatisch entsprechend der Anzahl der erlaubten Nachkommastellen hinzugefügt";
 "str.settings.shoppingList" = "Einkaufszetteleinstellungen";

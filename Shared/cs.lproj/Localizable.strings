@@ -655,6 +655,8 @@
 "str.settings.stock.common" = "Nastavení pro všechny produkty";
 "str.settings.stock.common.amountDecimalPlaces" = "Počet desetinných míst pro množství produktu";
 "str.settings.stock.common.priceDecimalPlaces" = "Desetinná místa povolena pro cenu";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Počet desetinných míst při zapisování ceny";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Počet desetinných míst při zobrazování ceny";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Automatické vkládání desetinné čárky";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Cenu pak vždy zapíšete včetně desetinných míst. Desetinná čárka se vloží automaticky.";
 "str.settings.shoppingList" = "Nastavení nákupního seznamu";

@@ -644,6 +644,8 @@
 "str.settings.stock.common" = "Commun";
 "str.settings.stock.common.amountDecimalPlaces" = "Nombre de décimales pour les quantitées";
 "str.settings.stock.common.priceDecimalPlaces" = "Nombre de décimales pour les prix";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Nombre de décimales autorisés pour les prix (entrée utilisateur)";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Nombre de décimales autorisés pour les prix (affichage)";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Ajout automatique du séparateur de décimales pour les prix";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Lorsque activé, vous devez toujours entrer les valeurs en incluant les décimales, le séparateur de décimal sera automatiquement ajouté après le nombre requis de décimales";
 "str.settings.shoppingList" = "Paramètres de la liste de courses";
