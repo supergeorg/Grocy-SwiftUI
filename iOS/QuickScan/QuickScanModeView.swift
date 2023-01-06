@@ -36,7 +36,7 @@ struct QuickScanModeView: View {
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     
-    @State private var flashOn: Bool = false
+    @State private var isTorchOn: Bool = false
     @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
     
@@ -99,17 +99,17 @@ struct QuickScanModeView: View {
         return grocyVM.mdProductBarcodes.first(where: { $0.barcode == barcodeString })
     }
     
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+    func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         switch result {
         case .success(let barcodeString):
-            if let grocyCode = searchForGrocyCode(barcodeString: barcodeString) {
+            if let grocyCode = searchForGrocyCode(barcodeString: barcodeString.string) {
                 recognizedGrocyCode = grocyCode
                 qsActiveSheet = .grocyCode
-            } else if let barcode = searchForBarcode(barcodeString: barcodeString) {
+            } else if let barcode = searchForBarcode(barcodeString: barcodeString.string) {
                 recognizedBarcode = barcode
                 qsActiveSheet = .barcode
             } else {
-                notRecognizedBarcode = barcodeString
+                notRecognizedBarcode = barcodeString.string
                 qsActiveSheet = .selectProduct
             }
         case .failure(let error):
@@ -142,10 +142,9 @@ struct QuickScanModeView: View {
             .pickerStyle(.segmented)
             Spacer()
             Button(action: {
-                flashOn.toggle()
-                toggleTorch(on: flashOn)
+                isTorchOn.toggle()
             }, label: {
-                Image(systemName: flashOn ? "bolt.circle" : "bolt.slash.circle")
+                Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
                     .font(.title)
             })
             .disabled(!checkForTorch())
@@ -175,6 +174,7 @@ struct QuickScanModeView: View {
             codeTypes: getSavedCodeTypes().map { $0.type },
             scanMode: .continuous,
             simulatedData: showDemoGrocyCode ? "grcy:p:1:62596f7263051" : "5901234123457",
+            isTorchOn: $isTorchOn,
             isPaused: $isScanPaused,
             isFrontCamera: $isFrontCamera,
             completion: self.handleScan

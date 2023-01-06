@@ -42,12 +42,12 @@ struct OpenFoodFactsFillProductView: View {
     }
     
 #if os(iOS)
-    @State private var isScannerFlash = false
-    @State private var isScannerFrontCamera = false
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+    @State private var isTorchOn = false
+    @State private var isFrontCamera = false
+    func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         switch result {
         case .success(let code):
-            scanBarcode = code
+            scanBarcode = code.string
             offVM.updateBarcode(barcode: scanBarcode)
         case .failure(let error):
             grocyVM.postLog("Scanning open food facts barcode failed. \(error)", type: .error)
@@ -74,21 +74,26 @@ struct OpenFoodFactsFillProductView: View {
     var body: some View {
 #if os(iOS)
         if productNames.count == 0 {
-            CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: simulatedData, isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+            CodeScannerView(
+                codeTypes: getSavedCodeTypes().map{$0.type},
+                scanMode: .once,
+                simulatedData: simulatedData,
+                isFrontCamera: $isFrontCamera,
+                completion: self.handleScan
+            )
                 .overlay(
                     HStack{
                         Button(action: {
-                            isScannerFlash.toggle()
-                            toggleTorch(on: isScannerFlash)
+                            isTorchOn.toggle()
                         }, label: {
-                            Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                            Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
                                 .font(.title)
                         })
                         .disabled(!checkForTorch())
                         .padding()
                         if getFrontCameraAvailable() {
                             Button(action: {
-                                isScannerFrontCamera.toggle()
+                                isFrontCamera.toggle()
                             }, label: {
                                 Image(systemName: MySymbols.changeCamera)
                                     .font(.title)

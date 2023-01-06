@@ -13,10 +13,10 @@ struct OpenFoodFactsScannerView: View {
     @State private var scanBarcode: String = ""
     @State private var isShowingResult: Bool = false
     
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+    func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         switch result {
         case .success(let code):
-            scanBarcode = code
+            scanBarcode = code.string
             isShowingResult = true
         case .failure(let error):
             grocyVM.postLog("Scanning open food facts barcode failed. \(error)", type: .error)

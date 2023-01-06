@@ -192,11 +192,11 @@ struct LoginOwnServerView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     
     @State private var isShowingGrocyScanner: Bool = false
-    func handleGrocyScan(result: Result<String, CodeScannerView.ScanError>) {
+    func handleGrocyScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         self.isShowingGrocyScanner = false
         switch result {
         case .success(let code):
-            let grocyServerData = code.components(separatedBy: "|")
+            let grocyServerData = code.string.components(separatedBy: "|")
             guard grocyServerData.count == 2 else { return }
             
             let serverURL = grocyServerData[0]
@@ -214,11 +214,11 @@ struct LoginOwnServerView: View {
     }
     
     @State private var isShowingTokenScanner: Bool = false
-    func handleTokenScan(result: Result<String, CodeScannerView.ScanError>) {
+    func handleTokenScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         self.isShowingTokenScanner = false
         switch result {
         case .success(let scannedHassToken):
-            hassToken = scannedHassToken
+            hassToken = scannedHassToken.string
         case .failure(let error):
             print("Scanning failed")
             print(error)

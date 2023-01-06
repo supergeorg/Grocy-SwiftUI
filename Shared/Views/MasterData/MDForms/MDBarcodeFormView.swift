@@ -99,14 +99,14 @@ struct MDBarcodeFormView: View {
     }
     
 #if os(iOS)
-    @State private var isScannerFlash = false
-    @State private var isScannerFrontCamera = false
+    @State private var isTorchOn = false
+    @State private var isFrontCamera = false
     @State private var isShowingScanner = false
-    func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+    func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
         switch result {
         case .success(let code):
-            barcode = code
+            barcode = code.string
         case .failure(let error):
             grocyVM.postLog("Scanning barcode failed. \(error)", type: .error)
         }
@@ -166,21 +166,27 @@ struct MDBarcodeFormView: View {
                     Image(systemName: MySymbols.barcodeScan)
                 })
                     .sheet(isPresented: $isShowingScanner) {
-                        CodeScannerView(codeTypes: getSavedCodeTypes().map{$0.type}, scanMode: .once, simulatedData: "5901234123457", isFrontCamera: $isScannerFrontCamera, completion: self.handleScan)
+                        CodeScannerView(
+                            codeTypes: getSavedCodeTypes().map{$0.type},
+                            scanMode: .once,
+                            simulatedData: "5901234123457",
+                            isTorchOn: $isTorchOn,
+                            isFrontCamera: $isFrontCamera,
+                            completion: self.handleScan
+                        )
                             .overlay(
                                 HStack{
                                     Button(action: {
-                                        isScannerFlash.toggle()
-                                        toggleTorch(on: isScannerFlash)
+                                        isTorchOn.toggle()
                                     }, label: {
-                                        Image(systemName: isScannerFlash ? "bolt.circle" : "bolt.slash.circle")
+                                        Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
                                         .disabled(!checkForTorch())
                                         .padding()
                                     if getFrontCameraAvailable() {
                                         Button(action: {
-                                            isScannerFrontCamera.toggle()
+                                            isFrontCamera.toggle()
                                         }, label: {
                                             Image(systemName: MySymbols.changeCamera)
                                                 .font(.title)
