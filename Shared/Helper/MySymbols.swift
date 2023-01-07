@@ -67,6 +67,9 @@ struct MySymbols {
     static let clear = "clear"
     static let undo = "arrow.counterclockwise"
     static let timedRefresh = "clock.arrow.2.circlepath"
+    static let sort = "arrow.up.arrow.down.square"
+    static let sortForward = "arrow.up"
+    static let sortReverse = "arrow.down"
 
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"

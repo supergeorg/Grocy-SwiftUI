@@ -392,19 +392,35 @@ struct StockView: View {
         Menu(content: {
             Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
                 if sortOrder == .forward {
-                    Text(LocalizedStringKey("str.md.product.name")).tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
-                    Text(LocalizedStringKey("str.stock.buy.product.dueDate")).tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
-                    Text(LocalizedStringKey("str.stock.product.amount")).tag([KeyPathComparator(\StockElement.amount, order: .forward)])
+                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
+                    Label(LocalizedStringKey("str.stock.buy.product.dueDate"), systemImage: MySymbols.date)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
+                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.amount, order: .forward)])
                 } else {
-                    Text(LocalizedStringKey("str.md.product.name")).tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
-                    Text(LocalizedStringKey("str.stock.buy.product.dueDate")).tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
-                    Text(LocalizedStringKey("str.stock.product.amount")).tag([KeyPathComparator(\StockElement.amount, order: .reverse)])
+                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
+                    Label(LocalizedStringKey("str.stock.buy.product.dueDate"), systemImage: MySymbols.date)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
+                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.amount, order: .reverse)])
                 }
             })
             .pickerStyle(.inline)
             Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
-                Text(LocalizedStringKey("str.sort.order.forward")).tag(SortOrder.forward)
-                Text(LocalizedStringKey("str.sort.order.reverse")).tag(SortOrder.reverse)
+                Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
+                    .labelStyle(.titleAndIcon)
+                    .tag(SortOrder.forward)
+                Label(LocalizedStringKey("str.sort.order.reverse"), systemImage: MySymbols.sortReverse)
+                    .labelStyle(.titleAndIcon)
+                    .tag(SortOrder.reverse)
             })
             .pickerStyle(.inline)
             .onChange(of: sortOrder, perform: { newOrder in
@@ -414,7 +430,7 @@ struct StockView: View {
                 }
             })
         }, label: {
-            Label(LocalizedStringKey("str.sort"), systemImage: "arrow.up.arrow.down.square")
+            Label(LocalizedStringKey("str.sort"), systemImage: MySymbols.sort)
         })
     }
 }
