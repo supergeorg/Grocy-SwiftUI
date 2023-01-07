@@ -613,7 +613,17 @@ extension CodeScannerView {
                 AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             }
             
-            parentView.completion(.success(result))
+            // UPC-A is a subset of EAN-13, but with 12 places and a leading zero
+            // Since the US has EAN-13 country code 00 but have another system,
+            // this should not break anything (I hope)
+            if result.type == .ean13 && result.string.hasPrefix("0") {
+                var editedString = result.string
+                editedString.remove(at: result.string.startIndex)
+                let resultUPCA = ScanResult(string: editedString, type: result.type)
+                parentView.completion(.success(resultUPCA))
+            } else {
+                parentView.completion(.success(result))
+            }
         }
         
         func didFail(reason: ScanError) {
