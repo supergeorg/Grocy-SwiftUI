@@ -95,21 +95,25 @@ struct QuickScanModeView: View {
         }
     }
     
-    func searchForBarcode(barcodeString: String) -> MDProductBarcode? {
-        return grocyVM.mdProductBarcodes.first(where: { $0.barcode == barcodeString })
+    func searchForBarcode(barcode: CodeScannerView.ScanResult) -> MDProductBarcode? {
+        if barcode.type == .ean13 {
+            return grocyVM.mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.string) })
+        } else {
+            return grocyVM.mdProductBarcodes.first(where: { $0.barcode == barcode.string })
+        }
     }
     
     func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
         switch result {
-        case .success(let barcodeString):
-            if let grocyCode = searchForGrocyCode(barcodeString: barcodeString.string) {
+        case .success(let barcode):
+            if let grocyCode = searchForGrocyCode(barcodeString: barcode.string) {
                 recognizedGrocyCode = grocyCode
                 qsActiveSheet = .grocyCode
-            } else if let barcode = searchForBarcode(barcodeString: barcodeString.string) {
+            } else if let barcode = searchForBarcode(barcode: barcode) {
                 recognizedBarcode = barcode
                 qsActiveSheet = .barcode
             } else {
-                notRecognizedBarcode = barcodeString.string
+                notRecognizedBarcode = barcode.string
                 qsActiveSheet = .selectProduct
             }
         case .failure(let error):
