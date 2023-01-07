@@ -34,6 +34,7 @@ private struct ShoppingListFilterItemView: View {
             .padding(.top, 10.0)
             .padding(.bottom, 10.0)
             .background(colorScheme == .light ? lightColor : darkColor)
+            .animation(.default, value: filteredStatus)
         }
         .fixedSize()
         .cornerRadius(5.0)
@@ -56,24 +57,30 @@ struct ShoppingListFilterActionView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack{
-                // Undone items
-                ShoppingListFilterItemView(
-                    num: numUndone,
-                    filteredStatus: $filteredStatus,
-                    ownFilteredStatus: ShoppingListStatus.undone,
-                    normalColor: Color.grocyGray,
-                    lightColor: Color.grocyGrayLight,
-                    darkColor: Color.grocyGrayDark
-                )
-                // Below stock
-                ShoppingListFilterItemView(
-                    num: numBelowStock,
-                    filteredStatus: $filteredStatus,
-                    ownFilteredStatus: ShoppingListStatus.belowMinStock,
-                    normalColor: Color.grocyBlue,
-                    lightColor: Color.grocyBlueLight,
-                    darkColor: Color.grocyBlueDark
-                )
+                if numUndone > 0 {
+                    // Undone items
+                    ShoppingListFilterItemView(
+                        num: numUndone,
+                        filteredStatus: $filteredStatus,
+                        ownFilteredStatus: ShoppingListStatus.undone,
+                        normalColor: Color.grocyGray,
+                        lightColor: Color.grocyGrayLight,
+                        darkColor: Color.grocyGrayDark
+                    )
+                    .animation(.default, value: numUndone > 0)
+                }
+                if numBelowStock > 0 {
+                    // Below stock
+                    ShoppingListFilterItemView(
+                        num: numBelowStock,
+                        filteredStatus: $filteredStatus,
+                        ownFilteredStatus: ShoppingListStatus.belowMinStock,
+                        normalColor: Color.grocyBlue,
+                        lightColor: Color.grocyBlueLight,
+                        darkColor: Color.grocyBlueDark
+                    )
+                    .animation(.default, value: numUndone > 0)
+                }
             }
         }
     }
