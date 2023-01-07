@@ -19,10 +19,10 @@ struct MyLabelWithSubtitle: View {
         HStack{
             if let systemImage = systemImage {
                 Image(systemName: systemImage)
+                    .foregroundColor(.primary)
             }
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey(title))
-//                    .font(.headline)
                     .foregroundColor(isProblem ? Color.red : Color.primary)
                 if !hideSubtitle {
                     if let subTitle = subTitle {
