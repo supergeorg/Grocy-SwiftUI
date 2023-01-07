@@ -89,7 +89,7 @@ struct OpenFoodFactsFillProductView: View {
                             Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
                                 .font(.title)
                         })
-                        .disabled(!checkForTorch())
+                        .disabled(!checkForTorch() || isFrontCamera)
                         .padding()
                         if getFrontCameraAvailable() {
                             Button(action: {
@@ -98,6 +98,7 @@ struct OpenFoodFactsFillProductView: View {
                                 Image(systemName: MySymbols.changeCamera)
                                     .font(.title)
                             })
+                            .disabled(isTorchOn)
                             .padding()
                         }
                     }

@@ -118,7 +118,7 @@ struct ProductField: View {
                                         Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
                                             .font(.title)
                                     })
-                                    .disabled(!checkForTorch())
+                                    .disabled(!checkForTorch() || isFrontCamera)
                                     .padding()
                                     if getFrontCameraAvailable() {
                                         Button(action: {
@@ -127,6 +127,7 @@ struct ProductField: View {
                                             Image(systemName: MySymbols.changeCamera)
                                                 .font(.title)
                                         })
+                                        .disabled(isTorchOn)
                                         .padding()
                                     }
                                 }
