@@ -34,7 +34,6 @@ private struct ShoppingListFilterItemView: View {
             .padding(.top, 10.0)
             .padding(.bottom, 10.0)
             .background(colorScheme == .light ? lightColor : darkColor)
-            .animation(.default, value: filteredStatus)
         }
         .fixedSize()
         .cornerRadius(5.0)
@@ -45,6 +44,7 @@ private struct ShoppingListFilterItemView: View {
                 filteredStatus = ShoppingListStatus.all
             }
         }
+        .animation(.default, value: filteredStatus)
     }
 }
 
