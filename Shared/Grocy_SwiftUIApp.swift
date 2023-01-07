@@ -30,9 +30,9 @@ struct Grocy_SwiftUIApp: App {
         }
         .commands {
             SidebarCommands()
-            #if os(macOS)
-            AppCommands()
-            #endif
+//            #if os(macOS)
+//            AppCommands()
+//            #endif
         }
         #if os(macOS)
         Settings {
