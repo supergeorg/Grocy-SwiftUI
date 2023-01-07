@@ -13,7 +13,7 @@ struct ShoppingListView: View {
     @State private var selectedShoppingListID: Int = 1
     
     @State private var searchString: String = ""
-    @State private var filteredStatus: ShoppingListStatus = ShoppingListStatus.all
+    @State private var filteredStatus: ShoppingListStatus = .all
     
     @State private var showSHLDeleteAlert: Bool = false
     @State var toastType: ToastType?
@@ -28,9 +28,10 @@ struct ShoppingListView: View {
     private enum InteractionSheet: Identifiable {
         case newShoppingList, editShoppingList, newShoppingListEntry
         var id: Int {
-            self.hashValue
+            hashValue
         }
     }
+
     @State private var activeSheet: InteractionSheet?
 #endif
     
@@ -47,7 +48,7 @@ struct ShoppingListView: View {
     }
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
-        if let product = grocyVM.mdProducts.first(where: {$0.id == item.productID}) {
+        if let product = grocyVM.mdProducts.first(where: { $0.id == item.productID }) {
             if product.minStockAmount > item.amount {
                 return true
             }
@@ -57,12 +58,12 @@ struct ShoppingListView: View {
     
     var selectedShoppingList: ShoppingList {
         grocyVM.shoppingList
-            .filter{
+            .filter {
                 $0.shoppingListID == selectedShoppingListID
             }
-            .filter{ shLItem in
+            .filter { shLItem in
                 if !searchString.isEmpty {
-                    if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID}) {
+                    if let product = grocyVM.mdProducts.first(where: { $0.id == shLItem.productID }) {
                         return product.name.localizedCaseInsensitiveContains(searchString)
                     } else {
                         return false
@@ -75,7 +76,7 @@ struct ShoppingListView: View {
     
     var filteredShoppingList: ShoppingList {
         selectedShoppingList
-            .filter{ shLItem in
+            .filter { shLItem in
                 switch filteredStatus {
                 case .all:
                     return true
@@ -92,7 +93,7 @@ struct ShoppingListView: View {
     var shoppingListProductGroups: MDProductGroups {
         var groupIDs = Set<Int>()
         for shLItem in filteredShoppingList {
-            if let product = grocyVM.mdProducts.first(where: {$0.id == shLItem.productID}) {
+            if let product = grocyVM.mdProducts.first(where: { $0.id == shLItem.productID }) {
                 if let productGroupID = product.productGroupID {
                     groupIDs.insert(productGroupID)
                 }
@@ -100,20 +101,20 @@ struct ShoppingListView: View {
         }
         var groups: MDProductGroups = []
         for groupID in groupIDs {
-            if let group = grocyVM.mdProductGroups.first(where: {$0.id == groupID}) {
+            if let group = grocyVM.mdProductGroups.first(where: { $0.id == groupID }) {
                 groups.append(group)
             }
         }
-        let sortedGroups = groups.sorted(by: {$0.name < $1.name})
+        let sortedGroups = groups.sorted(by: { $0.name < $1.name })
         return sortedGroups
     }
     
-    var groupedShoppingList: [Int : ShoppingList] {
-        var dict: [Int : ShoppingList] = [:]
+    var groupedShoppingList: [Int: ShoppingList] {
+        var dict: [Int: ShoppingList] = [:]
         for listItem in filteredShoppingList {
-            let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID})
-            let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID})
-            if (dict[productGroup?.id ?? 0] == nil) {
+            let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
+            let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID })
+            if dict[productGroup?.id ?? 0] == nil {
                 dict[productGroup?.id ?? 0] = []
             }
             dict[productGroup?.id ?? 0]?.append(listItem)
@@ -123,7 +124,7 @@ struct ShoppingListView: View {
     
     var numBelowStock: Int {
         selectedShoppingList
-            .filter{ shLItem in
+            .filter { shLItem in
                 checkBelowStock(item: shLItem)
             }
             .count
@@ -131,7 +132,7 @@ struct ShoppingListView: View {
     
     var numUndone: Int {
         selectedShoppingList
-            .filter{ shLItem in
+            .filter { shLItem in
                 shLItem.done == 0
             }
             .count
@@ -164,7 +165,7 @@ struct ShoppingListView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
+        if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
             bodyContent
         } else {
             ServerProblemView()
@@ -179,8 +180,8 @@ struct ShoppingListView: View {
 #if os(iOS)
                     Menu(content: {
                         shoppingListActionContent
-                    }, label: { HStack(spacing: 2){
-                        Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "No selected list")
+                    }, label: { HStack(spacing: 2) {
+                        Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "No selected list")
                         Image(systemName: "chevron.down.square.fill")
                     }})
 #elseif os(macOS)
@@ -201,28 +202,28 @@ struct ShoppingListView: View {
                     })
                     .help(LocalizedStringKey("str.shL.action.addItem"))
 #if os(macOS)
-                    .popover(isPresented: $showAddItem, content: {
-                        ScrollView{
-                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                                .frame(width: 500, height: 400)
-                        }
-                    })
+                        .popover(isPresented: $showAddItem, content: {
+                            ScrollView {
+                                ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                                    .frame(width: 500, height: 400)
+                            }
+                        })
 #endif
                 }
             })
             .alert(LocalizedStringKey("str.shL.delete.confirm"), isPresented: $showSHLDeleteAlert, actions: {
-                Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
                     deleteShoppingList()
                 }
-            }, message: { Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Name not found") })
+            }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
 #if os(iOS)
             .sheet(item: $activeSheet, content: { item in
                 switch item {
                 case .newShoppingList:
                     ShoppingListFormView(isNewShoppingListDescription: true)
                 case .editShoppingList:
-                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID}))
+                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
                 case .newShoppingListEntry:
                     NavigationView {
                         ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
@@ -245,11 +246,11 @@ struct ShoppingListView: View {
             })
             .help(LocalizedStringKey("str.shL.new"))
 #if os(macOS)
-            .popover(isPresented: $showNewShoppingList, content: {
-                ShoppingListFormView(isNewShoppingListDescription: true)
-                    .padding()
-                    .frame(width: 250, height: 150)
-            })
+                .popover(isPresented: $showNewShoppingList, content: {
+                    ShoppingListFormView(isNewShoppingListDescription: true)
+                        .padding()
+                        .frame(width: 250, height: 150)
+                })
 #endif
             Button(action: {
 #if os(iOS)
@@ -271,7 +272,7 @@ struct ShoppingListView: View {
             shoppingListItemActionContent
             Divider()
             Picker(selection: $selectedShoppingListID, label: Text(""), content: {
-                ForEach(grocyVM.shoppingListDescriptions, id:\.id) { shoppingListDescription in
+                ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shoppingListDescription in
                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                 }
             })
@@ -330,7 +331,7 @@ struct ShoppingListView: View {
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)
-                        VStack{
+                        VStack {
                             Text(LocalizedStringKey("str.shL.filter.status"))
                             if filteredStatus != ShoppingListStatus.all {
                                 Text(LocalizedStringKey(filteredStatus.rawValue))
@@ -343,23 +344,23 @@ struct ShoppingListView: View {
                 Picker(selection: $filteredStatus,
                        label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: MySymbols.filter),
                        content: {
-                    Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
-                    Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
-                    Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
-                    Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
-                })
+                           Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
+                           Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
+                           Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
+                           Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
+                       })
 #endif
             }
-            ForEach(shoppingListProductGroups, id:\.id) {productGroup in
+            ForEach(shoppingListProductGroups, id: \.id) { productGroup in
                 Section(header: Text(productGroup.name).bold()) {
-                    ForEach(groupedShoppingList[productGroup.id] ?? [], id:\.id) { shItem in
+                    ForEach(groupedShoppingList[productGroup.id] ?? [], id: \.id) { shItem in
                         ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
                     }
                 }
             }
             if !(groupedShoppingList[0]?.isEmpty ?? true) {
                 Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
-                    ForEach(groupedShoppingList[0] ?? [], id:\.id) { shItem in
+                    ForEach(groupedShoppingList[0] ?? [], id: \.id) { shItem in
                         ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
                     }
                 }
@@ -376,23 +377,24 @@ struct ShoppingListView: View {
         }
         .animation(.default, value: groupedShoppingList.count)
         .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 slAction(.clear)
             }
-        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: {$0.id == selectedShoppingListID})?.name ?? "Name not found") })
+        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(false),
             isShown: [.shLActionFail].contains(toastType),
-            text: {item in
+            text: { item in
                 switch item {
                 case .shLActionFail:
                     return LocalizedStringKey("str.shL.action.failed")
                 default:
                     return LocalizedStringKey("str.error")
                 }
-            })
+            }
+        )
     }
 }
 

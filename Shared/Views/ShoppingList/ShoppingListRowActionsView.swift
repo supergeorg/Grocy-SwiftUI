@@ -21,33 +21,49 @@ struct ShoppingListRowActionsView: View {
     @Binding var infoString: String?
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == shoppingListItem.quID})
+        grocyVM.mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
     }
     
     private func getQUString(amount: Double) -> String {
-        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
+        amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var productName: String {
-        grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})?.name ?? "Productname error"
+        grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Productname error"
     }
     
     private func changeDoneStatus() {
-        grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: ShoppingListItem(id: shoppingListItem.id, productID: shoppingListItem.productID, note: shoppingListItem.note, amount: shoppingListItem.amount, shoppingListID: shoppingListItem.shoppingListID, done: shoppingListItem.done == 1 ? 0 : 1, quID: shoppingListItem.quID, rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp), completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
-                grocyVM.requestData(objects: [.shopping_list])
-            case let .failure(error):
-                grocyVM.postLog("Done status change failed. \(error)", type: .error)
-                toastType = .shLActionFail
+        let doneChangedShoppingListItem = ShoppingListItem(
+            id: shoppingListItem.id,
+            productID: shoppingListItem.productID,
+            note: shoppingListItem.note,
+            amount: shoppingListItem.amount,
+            shoppingListID: shoppingListItem.shoppingListID,
+            done: shoppingListItem.done == 1 ? 0 : 1,
+            quID: shoppingListItem.quID,
+            rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp
+        )
+        grocyVM.putMDObjectWithID(
+            object: .shopping_list,
+            id: shoppingListItem.id,
+            content: doneChangedShoppingListItem,
+            completion: { result in
+                switch result {
+                case let .success(message):
+                    grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
+                    grocyVM.requestData(objects: [.shopping_list])
+                case let .failure(error):
+                    grocyVM.postLog("Done status change failed. \(error)", type: .error)
+                    toastType = .shLActionFail
+                }
             }
-        })
-        
+        )
     }
+
     private func deleteItem() {
         showEntryDeleteAlert.toggle()
     }
+
     private func deleteSHLItem() {
         grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id, completion: { result in
             switch result {
@@ -62,7 +78,7 @@ struct ShoppingListRowActionsView: View {
     }
     
     var body: some View {
-        HStack(spacing: 2){
+        HStack(spacing: 2) {
             RowInteractionButton(image: "checkmark", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.shL.entry.done"))
                 .onTapGesture {
                     changeDoneStatus()
@@ -76,7 +92,7 @@ struct ShoppingListRowActionsView: View {
                 }
 #if os(macOS)
                 .popover(isPresented: $showEdit, content: {
-                    ScrollView{
+                    ScrollView {
                         ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
                             .frame(width: 500, height: 400)
                             .padding()
@@ -92,11 +108,11 @@ struct ShoppingListRowActionsView: View {
                     deleteItem()
                 }
                 .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
-                    Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                    Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                     Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                            deleteSHLItem()
+                        deleteSHLItem()
                     }
-                }, message: { Text(grocyVM.mdProducts.first(where: {$0.id == shoppingListItem.productID})?.name ?? "Name not found") })
+                }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             
             RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
                 .onTapGesture {
@@ -113,12 +129,12 @@ struct ShoppingListRowActionsView: View {
                 })
 #elseif os(iOS)
                 .sheet(isPresented: $showPurchase, content: {
-                    NavigationView{
+                    NavigationView {
                         PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType, infoString: $infoString)
                     }
                 })
                 .sheet(isPresented: $showAutoPurchase, content: {
-                    NavigationView{
+                    NavigationView {
                         PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType, infoString: $infoString)
                     }
                 })

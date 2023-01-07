@@ -19,7 +19,7 @@ struct ShoppingListFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundShoppingListDescription = grocyVM.shoppingListDescriptions.first(where: {$0.name == name})
+        let foundShoppingListDescription = grocyVM.shoppingListDescriptions.first(where: { $0.name == name })
         return isNewShoppingListDescription ? !(name.isEmpty || foundShoppingListDescription != nil) : !(name.isEmpty || (foundShoppingListDescription != nil && foundShoppingListDescription!.id != shoppingListDescription!.id))
     }
     
@@ -27,7 +27,7 @@ struct ShoppingListFormView: View {
     
     private func finishForm() {
         #if os(iOS)
-        self.dismiss()
+        dismiss()
         #elseif os(macOS)
         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
         #endif
@@ -38,35 +38,58 @@ struct ShoppingListFormView: View {
     }
     
     func saveShoppingList() {
-        if isNewShoppingListDescription{
-            grocyVM.postMDObject(object: .shopping_lists, content: ShoppingListDescription(id: grocyVM.findNextID(.shopping_lists), name: name, shoppingListDescriptionDescription: nil, rowCreatedTimestamp: Date().iso8601withFractionalSeconds), completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
-                    showFailToast = true
+        if isNewShoppingListDescription {
+            let newShoppingList = ShoppingListDescription(
+                id: grocyVM.findNextID(.shopping_lists),
+                name: name,
+                shoppingListDescriptionDescription: nil,
+                rowCreatedTimestamp: Date().iso8601withFractionalSeconds
+            )
+            grocyVM.postMDObject(
+                object: .shopping_lists,
+                content: newShoppingList,
+                completion: { result in
+                    switch result {
+                    case let .success(message):
+                        grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
+                        updateData()
+                        finishForm()
+                    case let .failure(error):
+                        grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+                        showFailToast = true
+                    }
                 }
-            })
+            )
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription!.id, content: ShoppingListDescription(id: shoppingListDescription!.id, name: name, shoppingListDescriptionDescription: shoppingListDescription!.shoppingListDescriptionDescription, rowCreatedTimestamp: shoppingListDescription!.rowCreatedTimestamp), completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
-                    showFailToast = true
-                }
-            })
+            if let shoppingListDescription = shoppingListDescription {
+                let editedShoppingList = ShoppingListDescription(
+                    id: shoppingListDescription.id,
+                    name: name,
+                    shoppingListDescriptionDescription: shoppingListDescription.shoppingListDescriptionDescription,
+                    rowCreatedTimestamp: shoppingListDescription.rowCreatedTimestamp
+                )
+                grocyVM.putMDObjectWithID(
+                    object: .shopping_lists,
+                    id: shoppingListDescription.id,
+                    content: editedShoppingList,
+                    completion: { result in
+                        switch result {
+                        case let .success(message):
+                            grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
+                            updateData()
+                            finishForm()
+                        case let .failure(error):
+                            grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+                            showFailToast = true
+                        }
+                    }
+                )
+            }
         }
     }
     
     private func resetForm() {
-        self.name = shoppingListDescription?.name ?? ""
+        name = shoppingListDescription?.name ?? ""
         isNameCorrect = checkNameCorrect()
     }
     
@@ -77,7 +100,7 @@ struct ShoppingListFormView: View {
         NavigationView {
             content
                 .navigationTitle(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit"))
-                .toolbar{
+                .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(LocalizedStringKey("str.cancel")) {
                             finishForm()
@@ -100,10 +123,17 @@ struct ShoppingListFormView: View {
             #if os(macOS)
             Text(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit")).font(.headline)
             #endif
-            MyTextField(textToEdit: $name, description: "str.shL.form.name", isCorrect: $isNameCorrect, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.shL.form.name.required", errorMessage: "str.shL.form.name.exists")
-                .onChange(of: name, perform: {newValue in isNameCorrect = checkNameCorrect()})
+            MyTextField(
+                textToEdit: $name,
+                description: "str.shL.form.name",
+                isCorrect: $isNameCorrect,
+                leadingIcon: "rectangle.and.pencil.and.ellipsis",
+                emptyMessage: "str.shL.form.name.required",
+                errorMessage: "str.shL.form.name.exists"
+            )
+            .onChange(of: name, perform: { _ in isNameCorrect = checkNameCorrect() })
             #if os(macOS)
-            HStack{
+            HStack {
                 Button(LocalizedStringKey("str.cancel")) {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }

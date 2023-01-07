@@ -15,7 +15,7 @@ private struct ShoppingListFilterItemView: View {
     var normalColor: Color
     var lightColor: Color
     var darkColor: Color
-    
+
     var body: some View {
         VStack(spacing: 0.0) {
             Divider()
@@ -53,10 +53,10 @@ struct ShoppingListFilterActionView: View {
 
     var numBelowStock: Int
     var numUndone: Int
-    
+
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false){
-            HStack{
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
                 if numUndone > 0 {
                     // Undone items
                     ShoppingListFilterItemView(
