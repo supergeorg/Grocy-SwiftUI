@@ -129,6 +129,14 @@ struct ShoppingListView: View {
             .count
     }
     
+    var numUndone: Int {
+        selectedShoppingList
+            .filter{ shLItem in
+                shLItem.done == 0
+            }
+            .count
+    }
+    
     func deleteShoppingList() {
         grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
             switch result {
@@ -305,7 +313,11 @@ struct ShoppingListView: View {
     var content: some View {
         List {
             Section {
-                ShoppingListFilterActionView(filteredStatus: $filteredStatus, numBelowStock: numBelowStock)
+                ShoppingListFilterActionView(
+                    filteredStatus: $filteredStatus,
+                    numBelowStock: numBelowStock,
+                    numUndone: numUndone
+                )
 #if os(iOS)
                 Menu {
                     Picker("", selection: $filteredStatus, content: {

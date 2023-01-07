@@ -51,11 +51,29 @@ struct ShoppingListFilterActionView: View {
     @Binding var filteredStatus: ShoppingListStatus
 
     var numBelowStock: Int
+    var numUndone: Int
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack{
-                ShoppingListFilterItemView(num: numBelowStock, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.belowMinStock, normalColor: Color.grocyBlue, lightColor: Color.grocyBlueLight, darkColor: Color.grocyBlueDark)
+                // Undone items
+                ShoppingListFilterItemView(
+                    num: numUndone,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ShoppingListStatus.undone,
+                    normalColor: Color.grocyGray,
+                    lightColor: Color.grocyGrayLight,
+                    darkColor: Color.grocyGrayDark
+                )
+                // Below stock
+                ShoppingListFilterItemView(
+                    num: numBelowStock,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ShoppingListStatus.belowMinStock,
+                    normalColor: Color.grocyBlue,
+                    lightColor: Color.grocyBlueLight,
+                    darkColor: Color.grocyBlueDark
+                )
             }
         }
     }
@@ -63,6 +81,6 @@ struct ShoppingListFilterActionView: View {
 
 struct ShoppingListFilterActionView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1)
+        ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1, numUndone: 1)
     }
 }
