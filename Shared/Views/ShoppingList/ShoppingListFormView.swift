@@ -135,13 +135,12 @@ struct ShoppingListFormView: View {
             #if os(macOS)
             HStack {
                 Button(LocalizedStringKey("str.cancel")) {
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
+                    finishForm()
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
                     saveShoppingList()
-                    NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
             }
