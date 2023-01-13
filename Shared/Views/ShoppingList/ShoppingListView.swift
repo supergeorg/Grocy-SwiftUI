@@ -262,6 +262,16 @@ struct ShoppingListView: View {
                 Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
             })
             .help(LocalizedStringKey("str.shL.edit"))
+#if os(macOS)
+                .popover(isPresented: $showEditShoppingList, content: {
+                    ShoppingListFormView(
+                        isNewShoppingListDescription: false,
+                        shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })
+                    )
+                        .padding()
+                        .frame(width: 250, height: 150)
+                })
+#endif
             Button(role: .destructive, action: {
                 showSHLDeleteAlert.toggle()
             }, label: {
