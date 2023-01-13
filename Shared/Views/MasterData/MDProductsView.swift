@@ -11,6 +11,8 @@ struct MDProductRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
 
     var product: MDProduct
+    
+    @State private var productDescription: AttributedString? = nil
 
     var body: some View {
         HStack{
@@ -37,10 +39,18 @@ struct MDProductRowView: View {
                             .font(.caption)
                     }
                 }
-                if let description = product.mdProductDescription, !description.isEmpty {
+                if let description = productDescription, !description.description.isEmpty {
                     Text(description)
                         .font(.caption)
                         .italic()
+                }
+            }
+            .task {
+                if let mdProductDescription = product.mdProductDescription {
+                    productDescription = AttributedString(mdProductDescription)
+                    Task {
+                        productDescription = await HTMLtoAttributedString(html: mdProductDescription)
+                    }
                 }
             }
         }
