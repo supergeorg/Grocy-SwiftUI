@@ -247,30 +247,42 @@ struct InventoryProductView: View {
                 }
             })
         .toolbar(content: {
+#if os(iOS)
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {
-                    if isProcessingAction {
-                        ProgressView().progressViewStyle(CircularProgressViewStyle())
-                    } else {
-                        Button(action: resetForm, label: {
-                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                                .help(LocalizedStringKey("str.clear"))
-                        })
-                        .keyboardShortcut("r", modifiers: [.command])
-                    }
-                    Button(action: {
-                        inventoryProduct()
-                        resetForm()
-                    }, label: {
-                        Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
-                            .labelStyle(.titleAndIcon)
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("s", modifiers: [.command])
+                    toolbarContent
                 }
             })
+#else
+            ToolbarItemGroup(placement: .confirmationAction, content: {
+                toolbarContent
+            })
+#endif
         })
         .navigationTitle(LocalizedStringKey("str.stock.inventory"))
+    }
+    
+    var toolbarContent: some View {
+        Group {
+            if isProcessingAction {
+                ProgressView().progressViewStyle(CircularProgressViewStyle())
+            } else {
+                Button(action: resetForm, label: {
+                    Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                        .help(LocalizedStringKey("str.clear"))
+                })
+                .keyboardShortcut("r", modifiers: [.command])
+            }
+            Button(action: {
+                inventoryProduct()
+                resetForm()
+            }, label: {
+                Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
+                    .labelStyle(.titleAndIcon)
+            })
+            .disabled(!isFormValid || isProcessingAction)
+            .keyboardShortcut("s", modifiers: [.command])
+        }
     }
 }
 

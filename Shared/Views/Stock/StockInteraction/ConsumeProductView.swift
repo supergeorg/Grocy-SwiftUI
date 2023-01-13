@@ -234,7 +234,7 @@ struct ConsumeProductView: View {
                     .padding()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
                     .toolbar(content: {
-                        ToolbarItem(placement: .confirmationAction, content: {
+                        ToolbarItemGroup(placement: .confirmationAction, content: {
                             toolbarContent
                         })
                     })
@@ -251,7 +251,9 @@ struct ConsumeProductView: View {
                             }
                         }
                         ToolbarItem(placement: .confirmationAction, content: {
-                            toolbarContent
+                            HStack {
+                                toolbarContent
+                            }
                         })
                     })
             }
@@ -415,7 +417,7 @@ struct ConsumeProductView: View {
     }
     
     var toolbarContent: some View {
-        HStack {
+        Group {
             if !quickScan {
                 if isProcessingAction {
                     ProgressView().progressViewStyle(.circular)

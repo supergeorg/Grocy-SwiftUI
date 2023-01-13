@@ -241,28 +241,17 @@ struct TransferProductView: View {
                 }
             })
         .toolbar(content: {
+#if os(iOS)
             ToolbarItem(placement: .confirmationAction, content: {
                 HStack {
-                    if isProcessingAction {
-                        ProgressView().progressViewStyle(.circular)
-                    } else {
-                        Button(action: resetForm, label: {
-                            Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                                .help(LocalizedStringKey("str.clear"))
-                        })
-                        .keyboardShortcut("r", modifiers: [.command])
-                    }
-                    Button(action: {
-                        transferProduct()
-                        resetForm()
-                    }, label: {
-                        Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
-                            .labelStyle(.titleAndIcon)
-                    })
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut("s", modifiers: [.command])
+                    toolbarContent
                 }
             })
+#else
+            ToolbarItemGroup(placement: .confirmationAction, content: {
+                toolbarContent
+            })
+#endif
         })
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
@@ -281,6 +270,29 @@ struct TransferProductView: View {
                 .tag(stockProduct.stockID as String?)
             }
         })
+    }
+    
+    var toolbarContent: some View {
+        Group {
+            if isProcessingAction {
+                ProgressView().progressViewStyle(.circular)
+            } else {
+                Button(action: resetForm, label: {
+                    Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
+                        .help(LocalizedStringKey("str.clear"))
+                })
+                .keyboardShortcut("r", modifiers: [.command])
+            }
+            Button(action: {
+                transferProduct()
+                resetForm()
+            }, label: {
+                Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
+                    .labelStyle(.titleAndIcon)
+            })
+            .disabled(!isFormValid || isProcessingAction)
+            .keyboardShortcut("s", modifiers: [.command])
+        }
     }
 }
 
