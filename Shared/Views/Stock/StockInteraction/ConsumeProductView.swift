@@ -31,6 +31,8 @@ struct ConsumeProductView: View {
     var directStockEntryID: String? = nil
     var isPopup: Bool = false
     
+    var barcode: MDProductBarcode? = nil
+    
     enum ConsumeType: Identifiable {
         case both, consume, open
         
@@ -156,7 +158,7 @@ struct ConsumeProductView: View {
     
     private func resetForm() {
         productID = firstAppear ? productToConsumeID : nil
-        amount = grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
+        amount = barcode?.amount ?? grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
         quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationID = nil
         spoiled = false

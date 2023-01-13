@@ -109,8 +109,8 @@ struct QuickScanModeView: View {
             if let grocyCode = searchForGrocyCode(barcodeString: barcode.string) {
                 recognizedGrocyCode = grocyCode
                 qsActiveSheet = .grocyCode
-            } else if let barcode = searchForBarcode(barcode: barcode) {
-                recognizedBarcode = barcode
+            } else if let foundBarcode = searchForBarcode(barcode: barcode) {
+                recognizedBarcode = foundBarcode
                 qsActiveSheet = .barcode
             } else {
                 notRecognizedBarcode = barcode.string

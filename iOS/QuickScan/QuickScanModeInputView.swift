@@ -154,6 +154,7 @@ struct QuickScanModeInputView: View {
                         ConsumeProductView(
                             directProductToConsumeID: product.id,
                             directStockEntryID: grocyCode?.stockID,
+                            barcode: productBarcode,
                             consumeType: .consume,
                             quickScan: true,
                             actionFinished: $actionFinished,
@@ -166,6 +167,7 @@ struct QuickScanModeInputView: View {
                         ConsumeProductView(
                             directProductToConsumeID: product.id,
                             directStockEntryID: grocyCode?.stockID,
+                            barcode: productBarcode,
                             consumeType: .open,
                             quickScan: true,
                             actionFinished: $actionFinished,
@@ -177,6 +179,7 @@ struct QuickScanModeInputView: View {
                     if quickScanMode == .purchase {
                         PurchaseProductView(
                             directProductToPurchaseID: product.id,
+                            barcode: productBarcode,
                             quickScan: true,
                             actionFinished: $actionFinished,
                             toastType: $toastType,

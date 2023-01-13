@@ -25,6 +25,7 @@ struct PurchaseProductView: View {
     var productToPurchaseAmount: Double?
     var isPopup: Bool = false
     var autoPurchase: Bool = false
+    var barcode: MDProductBarcode? = nil
     var quickScan: Bool = false
     var actionFinished: Binding<Bool>? = nil
     
@@ -100,14 +101,14 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         self.productID = firstAppear ? productToPurchaseID : nil
-        self.amount = firstAppear ? (productToPurchaseAmount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1)
-        self.quantityUnitID = firstAppear ? product?.quIDPurchase : nil
+        self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0)
+        self.quantityUnitID = barcode?.quID ?? (firstAppear ? product?.quIDPurchase : nil)
         let dateComponents = DateComponents(day: product?.defaultBestBeforeDays ?? 0)
         self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
         self.productDoesntSpoil = false
         self.price = nil
         self.isTotalPrice = false
-        self.shoppingLocationID = nil
+        self.shoppingLocationID = barcode?.shoppingLocationID
         self.locationID = nil
         self.note = ""
         self.searchProductTerm = ""
