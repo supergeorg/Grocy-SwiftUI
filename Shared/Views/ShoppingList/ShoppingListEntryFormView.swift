@@ -123,6 +123,7 @@ struct ShoppingListEntryFormView: View {
     var body: some View {
         content
             .navigationTitle(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title"))
+#if os(iOS)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewShoppingListEntry {
@@ -130,7 +131,6 @@ struct ShoppingListEntryFormView: View {
                             .keyboardShortcut(.cancelAction)
                     }
                 }
-#if os(iOS)
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.save")) {
                         saveShoppingListEntry()
@@ -138,8 +138,8 @@ struct ShoppingListEntryFormView: View {
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isFormValid)
                 }
-#endif
             }
+#endif
     }
     
     var content: some View {
