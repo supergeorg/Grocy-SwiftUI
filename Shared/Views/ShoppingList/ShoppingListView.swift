@@ -31,7 +31,7 @@ struct ShoppingListView: View {
             hashValue
         }
     }
-
+    
     @State private var activeSheet: InteractionSheet?
 #endif
     
@@ -175,42 +175,44 @@ struct ShoppingListView: View {
     
     var bodyContent: some View {
         content
+#if os(macOS)
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .automatic, content: {
+                    shoppingListActionContent
+                    RefreshButton(updateData: { updateData() })
+                        .help(LocalizedStringKey("str.refresh"))
+                    Button(action: {
+                        showAddItem.toggle()
+                    }, label: {
+                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
+                    })
+                    .help(LocalizedStringKey("str.shL.action.addItem"))
+                    .popover(isPresented: $showAddItem, content: {
+                        ScrollView {
+                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                                .frame(width: 500, height: 400)
+                        }
+                    })
+                })
+            })
+#else
             .toolbar(content: {
                 HStack {
-#if os(iOS)
                     Menu(content: {
                         shoppingListActionContent
                     }, label: { HStack(spacing: 2) {
                         Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "No selected list")
                         Image(systemName: "chevron.down.square.fill")
                     }})
-#elseif os(macOS)
-                    shoppingListActionContent
-#endif
-#if os(macOS)
-                    RefreshButton(updateData: { updateData() })
-                        .help(LocalizedStringKey("str.refresh"))
-#endif
                     Button(action: {
-#if os(iOS)
                         activeSheet = .newShoppingListEntry
-#elseif os(macOS)
-                        showAddItem.toggle()
-#endif
                     }, label: {
                         Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
                     })
                     .help(LocalizedStringKey("str.shL.action.addItem"))
-#if os(macOS)
-                        .popover(isPresented: $showAddItem, content: {
-                            ScrollView {
-                                ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                                    .frame(width: 500, height: 400)
-                            }
-                        })
-#endif
                 }
             })
+#endif
             .alert(LocalizedStringKey("str.shL.delete.confirm"), isPresented: $showSHLDeleteAlert, actions: {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
