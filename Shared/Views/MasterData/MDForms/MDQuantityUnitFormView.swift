@@ -125,6 +125,15 @@ struct MDQuantityUnitFormView: View {
         content
             .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveQuantityUnit, label: {
+                        Label(LocalizedStringKey("str.md.quantityUnit.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewQuantityUnit {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -132,14 +141,7 @@ struct MDQuantityUnitFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveQuantityUnit, label: {
-                        Label(LocalizedStringKey("str.md.quantityUnit.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     
@@ -184,12 +186,12 @@ struct MDQuantityUnitFormView: View {
                                 }, label: {
                                     Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
                                 })
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                        Button(role: .destructive,
-                                               action: { markDeleteQUConversion(conversion: quConversion) },
-                                               label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
-                                        )
-                                    })
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                    Button(role: .destructive,
+                                           action: { markDeleteQUConversion(conversion: quConversion) },
+                                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                    )
+                                })
                             }
                         }
                     }
@@ -201,12 +203,12 @@ struct MDQuantityUnitFormView: View {
                             }, label: {
                                 Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
                             })
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                    Button(role: .destructive,
-                                           action: { markDeleteQUConversion(conversion: quConversion) },
-                                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
-                                    )
-                                })
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                Button(role: .destructive,
+                                       action: { markDeleteQUConversion(conversion: quConversion) },
+                                       label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                )
+                            })
                         }
                     }
 #endif

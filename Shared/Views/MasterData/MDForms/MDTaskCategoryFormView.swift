@@ -98,6 +98,15 @@ struct MDTaskCategoryFormView: View {
         content
             .navigationTitle(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveTaskCategory, label: {
+                        Label(LocalizedStringKey("str.md.taskCategory.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewTaskCategory {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -105,14 +114,7 @@ struct MDTaskCategoryFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveTaskCategory, label: {
-                        Label(LocalizedStringKey("str.md.taskCategory.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     

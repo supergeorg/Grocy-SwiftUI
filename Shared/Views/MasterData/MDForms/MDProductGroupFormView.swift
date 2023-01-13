@@ -92,6 +92,15 @@ struct MDProductGroupFormView: View {
         content
             .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveProductGroup, label: {
+                        Label(LocalizedStringKey("str.md.productGroup.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewProductGroup {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -99,14 +108,7 @@ struct MDProductGroupFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveProductGroup, label: {
-                        Label(LocalizedStringKey("str.md.productGroup.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     

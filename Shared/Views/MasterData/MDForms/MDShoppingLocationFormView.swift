@@ -92,19 +92,21 @@ struct MDShoppingLocationFormView: View {
         content
             .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
             .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction) {
-                    if isNewShoppingLocation {
-                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
-                    }
-                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: saveShoppingLocation, label: {
                         Label(LocalizedStringKey("str.md.shoppingLocation.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
                 }
+#if os(iOS)
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewShoppingLocation {
+                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                    }
+                }
+#endif
             })
     }
     
@@ -116,7 +118,7 @@ struct MDShoppingLocationFormView: View {
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
-
+            
             Section(header: Text(LocalizedStringKey("str.md.shoppingLocation.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
                     .onChange(of: name, perform: { value in

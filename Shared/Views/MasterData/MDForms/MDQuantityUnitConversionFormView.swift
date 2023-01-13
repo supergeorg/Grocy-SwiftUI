@@ -147,6 +147,15 @@ struct MDQuantityUnitConversionFormView: View {
         content
             .navigationTitle(isNewQuantityUnitConversion ? LocalizedStringKey("str.md.quantityUnit.conversion.new") : LocalizedStringKey("str.md.quantityUnit.conversion.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveQuantityUnitConversion, label: {
+                        Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!conversionCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewQuantityUnitConversion {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -154,14 +163,7 @@ struct MDQuantityUnitConversionFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveQuantityUnitConversion, label: {
-                        Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!conversionCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     
@@ -180,7 +182,7 @@ struct MDQuantityUnitConversionFormView: View {
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                    .disabled(true)
+                .disabled(true)
                 
                 VStack(alignment: .leading) {
                     Picker(selection: $quIDTo, label: Label(LocalizedStringKey("str.md.quantityUnit.conversion.quTo"), systemImage: MySymbols.quantityUnit), content: {
@@ -189,9 +191,9 @@ struct MDQuantityUnitConversionFormView: View {
                             Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                         }
                     })
-                        .onChange(of: quIDTo, perform: { newQUIDTo in
-                            conversionCorrect = checkConversionCorrect()
-                        })
+                    .onChange(of: quIDTo, perform: { newQUIDTo in
+                        conversionCorrect = checkConversionCorrect()
+                    })
                     if checkConversionExists() {
                         Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
                             .font(.caption)

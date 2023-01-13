@@ -102,6 +102,15 @@ struct MDUserEntityFormView: View {
         content
             .navigationTitle(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveUserEntity, label: {
+                        Label(LocalizedStringKey("str.md.userEntity.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserEntity {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -109,14 +118,7 @@ struct MDUserEntityFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveUserEntity, label: {
-                        Label(LocalizedStringKey("str.md.userEntity.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     

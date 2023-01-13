@@ -108,6 +108,15 @@ struct MDUserFieldFormView: View {
         content
             .navigationTitle(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
             .toolbar(content: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: saveUserField, label: {
+                        Label(LocalizedStringKey("str.md.userField.save"), systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+#if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserField {
                         Button(LocalizedStringKey("str.cancel")) {
@@ -115,14 +124,7 @@ struct MDUserFieldFormView: View {
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveUserField, label: {
-                        Label(LocalizedStringKey("str.md.userField.save"), systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
-                    })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
-                }
+#endif
             })
     }
     
