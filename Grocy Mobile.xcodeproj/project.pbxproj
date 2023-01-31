@@ -517,6 +517,7 @@
 		782A7F1225838C3E0010472F /* MDUserFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldsView.swift; sourceTree = "<group>"; };
 		782A7F1925838C630010472F /* MDUserFieldModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserFieldModel.swift; sourceTree = "<group>"; };
 		782DDAEA2989C6D5009E5DE4 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		782DDAEB2989C9AC009E5DE4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78396E8B25629FE600B9878F /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
 		7839E30A25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeSelectProductView.swift; sourceTree = "<group>"; };
 		783F4FAD25629E0400CD52B7 /* MDLocationFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDLocationFormView.swift; sourceTree = "<group>"; };
@@ -1273,6 +1274,7 @@
 				"sv-SE",
 				cs,
 				it,
+				es,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1843,6 +1845,7 @@
 				788C32AA2896D0A800CB81D2 /* sv-SE */,
 				782A68F728DF6AC000BD4EB2 /* cs */,
 				782DDAEA2989C6D5009E5DE4 /* it */,
+				782DDAEB2989C9AC009E5DE4 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
