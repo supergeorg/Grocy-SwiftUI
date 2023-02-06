@@ -31,6 +31,7 @@ struct SettingsAppView: View {
                 Text("🇳🇱 Dutch").tag("nl")
                 Text("🇵🇱 Polska").tag("pl")
                 Text("🇨🇿 Czech").tag("cs")
+                Text("🇮🇹 Italian").tag("it")
             })
             MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)
                 .onChange(of: timeoutInterval, perform: { newTimeoutInterval in

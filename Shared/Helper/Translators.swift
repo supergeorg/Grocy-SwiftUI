@@ -135,6 +135,19 @@ struct Translators {
                                     "Jarda Tesar <intossh@gmail.com>, 2021",
                                     "Pavel Paseka, 2022",
                                  ])
+    static let italian = Language(name: "Italian",
+                                  flag: "🇮🇹",
+                                  maintainers: "mike9449",
+                                  contributors: [
+                                    "Bernd Bestel <bernd@berrnd.de>, 2019",
+                                    "Matteo Piotto <matteo.piotto@welaika.com>, 2019",
+                                    "42d76af3cd20bc399c7e8a413695959f, 2019",
+                                    "Matteo Piccina <altermatte@gmail.com>, 2021",
+                                    "Sergio Zampello <seriotv88@gmail.com>, 2021",
+                                    "Antonino Ursino <ninus_@libero.it>, 2022",
+                                    "Walter Palagi, 2022",
+                                    "Moltivie Denied <major2015usa@gmail.com>, 2022",
+                                  ])
     
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech]
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian]
 }
