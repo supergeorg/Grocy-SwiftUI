@@ -30,8 +30,8 @@
 "str.error.other" = "Errore sconosciuto";
 "str.error.logInfo" = "Controlla il log per determinare il problema";
 "str.time.unlimited" = "illimitato";
-"str.sort" = "Filtro";
-"str.sort.category" = "Categoria di visualizzazione";
+"str.sort" = "Filtra";
+"str.sort.category" = "Filtra categoria";
 "str.sort.order" = "Ordine di visualizzazione";
 "str.sort.order.forward" = "Crescente";
 "str.sort.order.reverse" = "Decrescente";
