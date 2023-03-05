@@ -14,6 +14,14 @@ struct ShoppingListView: View {
     
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = .all
+    private enum ShoppingListGrouping: Identifiable {
+        case none, productGroup, defaultStore
+        var id: Int {
+            hashValue
+        }
+    }
+
+    @State private var shoppingListGrouping: ShoppingListGrouping = .productGroup
     
     @State private var showSHLDeleteAlert: Bool = false
     @State var toastType: ToastType?
@@ -90,34 +98,26 @@ struct ShoppingListView: View {
             }
     }
     
-    var shoppingListProductGroups: MDProductGroups {
-        var groupIDs = Set<Int>()
-        for shLItem in filteredShoppingList {
-            if let product = grocyVM.mdProducts.first(where: { $0.id == shLItem.productID }) {
-                if let productGroupID = product.productGroupID {
-                    groupIDs.insert(productGroupID)
-                }
-            }
-        }
-        var groups: MDProductGroups = []
-        for groupID in groupIDs {
-            if let group = grocyVM.mdProductGroups.first(where: { $0.id == groupID }) {
-                groups.append(group)
-            }
-        }
-        let sortedGroups = groups.sorted(by: { $0.name < $1.name })
-        return sortedGroups
-    }
-    
-    var groupedShoppingList: [Int: ShoppingList] {
-        var dict: [Int: ShoppingList] = [:]
+    var groupedShoppingList: [String: ShoppingList] {
+        var dict: [String: ShoppingList] = [:]
         for listItem in filteredShoppingList {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
-            let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID })
-            if dict[productGroup?.id ?? 0] == nil {
-                dict[productGroup?.id ?? 0] = []
+            switch shoppingListGrouping {
+            case .productGroup:
+                let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID })
+                if dict[productGroup?.name ?? ""] == nil {
+                    dict[productGroup?.name ?? ""] = []
+                }
+                dict[productGroup?.name ?? ""]?.append(listItem)
+            case .defaultStore:
+                let store = grocyVM.mdShoppingLocations.first(where: { $0.id == product?.shoppingLocationID })
+                if dict[store?.name ?? ""] == nil {
+                    dict[store?.name ?? ""] = []
+                }
+                dict[store?.name ?? ""]?.append(listItem)
+            default:
+                dict[""] = filteredShoppingList
             }
-            dict[productGroup?.id ?? 0]?.append(listItem)
         }
         return dict
     }
@@ -176,25 +176,25 @@ struct ShoppingListView: View {
     var bodyContent: some View {
         content
 #if os(macOS)
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-                    shoppingListActionContent
-                    RefreshButton(updateData: { updateData() })
-                        .help(LocalizedStringKey("str.refresh"))
-                    Button(action: {
-                        showAddItem.toggle()
-                    }, label: {
-                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
-                    })
-                    .help(LocalizedStringKey("str.shL.action.addItem"))
-                    .popover(isPresented: $showAddItem, content: {
-                        ScrollView {
-                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                                .frame(width: 500, height: 400)
-                        }
-                    })
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .automatic, content: {
+                shoppingListActionContent
+                RefreshButton(updateData: { updateData() })
+                    .help(LocalizedStringKey("str.refresh"))
+                Button(action: {
+                    showAddItem.toggle()
+                }, label: {
+                    Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
+                })
+                .help(LocalizedStringKey("str.shL.action.addItem"))
+                .popover(isPresented: $showAddItem, content: {
+                    ScrollView {
+                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                            .frame(width: 500, height: 400)
+                    }
                 })
             })
+        })
 #else
             .toolbar(content: {
                 HStack {
@@ -270,8 +270,8 @@ struct ShoppingListView: View {
                         isNewShoppingListDescription: false,
                         shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })
                     )
-                        .padding()
-                        .frame(width: 250, height: 150)
+                    .padding()
+                    .frame(width: 250, height: 150)
                 })
 #endif
             Button(role: .destructive, action: {
@@ -363,16 +363,14 @@ struct ShoppingListView: View {
                        })
 #endif
             }
-            ForEach(shoppingListProductGroups, id: \.id) { productGroup in
-                Section(header: Text(productGroup.name).bold()) {
-                    ForEach(groupedShoppingList[productGroup.id] ?? [], id: \.id) { shItem in
-                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
-                    }
-                }
-            }
-            if !(groupedShoppingList[0]?.isEmpty ?? true) {
-                Section(header: Text(LocalizedStringKey("str.shL.ungrouped")).italic()) {
-                    ForEach(groupedShoppingList[0] ?? [], id: \.id) { shItem in
+            ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
+                Section(header:
+                    groupName.isEmpty ?
+                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        :
+                        Text(groupName).bold()
+                ) {
+                    ForEach(groupElements.sorted(by: { $0.amount < $1.amount }), id: \.productID) { shItem in
                         ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
                     }
                 }
