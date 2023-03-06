@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+struct ShoppingListItemWrapped {
+    let shoppingListItem: ShoppingListItem
+    let product: MDProduct?
+}
+
 struct ShoppingListView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
@@ -22,6 +27,8 @@ struct ShoppingListView: View {
     }
 
     @State private var shoppingListGrouping: ShoppingListGrouping = .productGroup
+    @State private var sortSetting = [KeyPathComparator(\ShoppingListItemWrapped.product?.name)]
+    @State private var sortOrder: SortOrder = .forward
     
     @State private var showSHLDeleteAlert: Bool = false
     @State var toastType: ToastType?
@@ -98,8 +105,9 @@ struct ShoppingListView: View {
             }
     }
     
-    var groupedShoppingList: [String: ShoppingList] {
-        var dict: [String: ShoppingList] = [:]
+    var groupedShoppingList: [String: [ShoppingListItemWrapped]] {
+        var dict: [String: [ShoppingListItemWrapped]] = [:]
+        print(filteredShoppingList.count)
         for listItem in filteredShoppingList {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
             switch shoppingListGrouping {
@@ -108,15 +116,24 @@ struct ShoppingListView: View {
                 if dict[productGroup?.name ?? ""] == nil {
                     dict[productGroup?.name ?? ""] = []
                 }
-                dict[productGroup?.name ?? ""]?.append(listItem)
+                dict[productGroup?.name ?? ""]?.append(
+                    ShoppingListItemWrapped(shoppingListItem: listItem, product: product)
+                )
             case .defaultStore:
                 let store = grocyVM.mdShoppingLocations.first(where: { $0.id == product?.shoppingLocationID })
                 if dict[store?.name ?? ""] == nil {
                     dict[store?.name ?? ""] = []
                 }
-                dict[store?.name ?? ""]?.append(listItem)
+                dict[store?.name ?? ""]?.append(
+                    ShoppingListItemWrapped(shoppingListItem: listItem, product: product)
+                )
             default:
-                dict[""] = filteredShoppingList
+                if dict[""] == nil {
+                    dict[""] = []
+                }
+                dict[""]?.append(
+                    ShoppingListItemWrapped(shoppingListItem: listItem, product: product)
+                )
             }
         }
         return dict
@@ -181,6 +198,7 @@ struct ShoppingListView: View {
                 shoppingListActionContent
                 RefreshButton(updateData: { updateData() })
                     .help(LocalizedStringKey("str.refresh"))
+                sortGroupMenu
                 Button(action: {
                     showAddItem.toggle()
                 }, label: {
@@ -204,6 +222,7 @@ struct ShoppingListView: View {
                         Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "No selected list")
                         Image(systemName: "chevron.down.square.fill")
                     }})
+                    sortGroupMenu
                     Button(action: {
                         activeSheet = .newShoppingListEntry
                     }, label: {
@@ -364,16 +383,44 @@ struct ShoppingListView: View {
 #endif
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
-                Section(header:
-                    groupName.isEmpty ?
-                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
-                        :
-                        Text(groupName).bold()
-                ) {
-                    ForEach(groupElements.sorted(by: { $0.amount < $1.amount }), id: \.productID) { shItem in
-                        ShoppingListEntriesView(shoppingListItem: shItem, selectedShoppingListID: $selectedShoppingListID, toastType: $toastType, infoString: $infoString)
+#if os(macOS)
+                DisclosureGroup(
+                    isExpanded: Binding.constant(true),
+                    content: {
+                        ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.productID, content: { element in
+                            ShoppingListEntriesView(
+                                shoppingListItem: element.shoppingListItem,
+                                selectedShoppingListID: $selectedShoppingListID,
+                                toastType: $toastType,
+                                infoString: $infoString
+                            )
+                        })
+                    }, label: {
+                        if shoppingListGrouping == .productGroup, groupName.isEmpty {
+                            Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        } else {
+                            Text(groupName).bold()
+                        }
                     }
-                }
+                )
+#else
+                Section(content: {
+                    ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.productID, content: { element in
+                        ShoppingListEntriesView(
+                            shoppingListItem: element.shoppingListItem,
+                            selectedShoppingListID: $selectedShoppingListID,
+                            toastType: $toastType,
+                            infoString: $infoString
+                        )
+                    })
+                }, header: {
+                    if shoppingListGrouping == .productGroup, groupName.isEmpty {
+                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                    } else {
+                        Text(groupName).bold()
+                    }
+                })
+#endif
             }
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
@@ -405,6 +452,58 @@ struct ShoppingListView: View {
                 }
             }
         )
+    }
+    
+    var sortGroupMenu: some View {
+        Menu(content: {
+            Picker(LocalizedStringKey("str.group.category"), selection: $shoppingListGrouping, content: {
+                Label(LocalizedStringKey("str.none"), systemImage: MySymbols.product)
+                    .labelStyle(.titleAndIcon)
+                    .tag(ShoppingListGrouping.none)
+                Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.amount)
+                    .labelStyle(.titleAndIcon)
+                    .tag(ShoppingListGrouping.productGroup)
+                Label(LocalizedStringKey("str.md.product.shoppingLocation"), systemImage: MySymbols.amount)
+                    .labelStyle(.titleAndIcon)
+                    .tag(ShoppingListGrouping.defaultStore)
+            })
+            .pickerStyle(.inline)
+            Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
+                if sortOrder == .forward {
+                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .forward)])
+                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .forward)])
+                } else {
+                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .reverse)])
+                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .reverse)])
+                }
+            })
+            .pickerStyle(.inline)
+            Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
+                Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
+                    .labelStyle(.titleAndIcon)
+                    .tag(SortOrder.forward)
+                Label(LocalizedStringKey("str.sort.order.reverse"), systemImage: MySymbols.sortReverse)
+                    .labelStyle(.titleAndIcon)
+                    .tag(SortOrder.reverse)
+            })
+            .pickerStyle(.inline)
+            .onChange(of: sortOrder, perform: { newOrder in
+                if var sortElement = sortSetting.first {
+                    sortElement.order = newOrder
+                    sortSetting = [sortElement]
+                }
+            })
+        }, label: {
+            Label(LocalizedStringKey("str.sort"), systemImage: MySymbols.sort)
+        })
     }
 }
 

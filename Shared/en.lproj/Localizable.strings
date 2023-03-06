@@ -25,6 +25,7 @@
 "str.back" = "Back";
 "str.retry" = "Try again";
 "str.failed" = "Failed";
+"str.none" = "None";
 "str.error.connection" = "No connection to server.";
 "str.error.api" = "API error detected.";
 "str.error.other" = "Unknown error occured.";
@@ -35,6 +36,7 @@
 "str.sort.order" = "Sort order";
 "str.sort.order.forward" = "Ascending";
 "str.sort.order.reverse" = "Descending";
+"str.group.category" = "Group by";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "This cannot be lower than %@ and needs to be a valid number with max. %@ decimal places";

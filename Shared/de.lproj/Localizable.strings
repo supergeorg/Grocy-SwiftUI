@@ -25,6 +25,7 @@
 "str.back" = "Zurück";
 "str.retry" = "Erneut versuchen";
 "str.failed" = "Fehlgeschlagen";
+"str.none" = "Keine";
 "str.error.connection" = "Keine Verbindung zum Server.";
 "str.error.api" = "API-Fehler aufgetreten.";
 "str.error.other" = "Ein unbekannter Fehler ist aufgetreten.";
@@ -35,6 +36,7 @@
 "str.sort.order" = "Sortier-Reihenfolge";
 "str.sort.order.forward" = "Aufsteigend";
 "str.sort.order.reverse" = "Absteigend";
+"str.group.category" = "Gruppieren nach";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Dies darf nicht niedriger als %@ sein und muss eine gültige Zahl mit max. %@ Nachkommastellen sein";
