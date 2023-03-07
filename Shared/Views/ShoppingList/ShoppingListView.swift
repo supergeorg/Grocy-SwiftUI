@@ -107,7 +107,6 @@ struct ShoppingListView: View {
     
     var groupedShoppingList: [String: [ShoppingListItemWrapped]] {
         var dict: [String: [ShoppingListItemWrapped]] = [:]
-        print(filteredShoppingList.count)
         for listItem in filteredShoppingList {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
             switch shoppingListGrouping {
@@ -467,7 +466,11 @@ struct ShoppingListView: View {
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.defaultStore)
             })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
             .pickerStyle(.inline)
+#endif
             Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
                 if sortOrder == .forward {
                     Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
@@ -485,7 +488,11 @@ struct ShoppingListView: View {
                         .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .reverse)])
                 }
             })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
             .pickerStyle(.inline)
+#endif
             Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
                 Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
                     .labelStyle(.titleAndIcon)
@@ -494,7 +501,11 @@ struct ShoppingListView: View {
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.reverse)
             })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
             .pickerStyle(.inline)
+#endif
             .onChange(of: sortOrder, perform: { newOrder in
                 if var sortElement = sortSetting.first {
                     sortElement.order = newOrder

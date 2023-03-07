@@ -413,7 +413,11 @@ struct StockView: View {
                         .tag([KeyPathComparator(\StockElement.amount, order: .reverse)])
                 }
             })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
             .pickerStyle(.inline)
+#endif
             Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
                 Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
                     .labelStyle(.titleAndIcon)
@@ -422,7 +426,11 @@ struct StockView: View {
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.reverse)
             })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
             .pickerStyle(.inline)
+#endif
             .onChange(of: sortOrder, perform: { newOrder in
                 if var sortElement = sortSetting.first {
                     sortElement.order = newOrder
