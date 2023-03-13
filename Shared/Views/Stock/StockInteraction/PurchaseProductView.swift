@@ -103,9 +103,14 @@ struct PurchaseProductView: View {
         self.productID = firstAppear ? productToPurchaseID : nil
         self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0)
         self.quantityUnitID = barcode?.quID ?? (firstAppear ? product?.quIDPurchase : nil)
-        let dateComponents = DateComponents(day: product?.defaultBestBeforeDays ?? 0)
-        self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
-        self.productDoesntSpoil = false
+        if product?.defaultBestBeforeDays ?? 0 == -1 {
+            self.productDoesntSpoil = true
+            self.dueDate = Calendar.current.startOfDay(for: Date())
+        } else {
+            self.productDoesntSpoil = false
+            let dateComponents = DateComponents(day: product?.defaultBestBeforeDays ?? 0)
+            self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
+        }
         self.price = nil
         self.isTotalPrice = false
         self.shoppingLocationID = barcode?.shoppingLocationID
