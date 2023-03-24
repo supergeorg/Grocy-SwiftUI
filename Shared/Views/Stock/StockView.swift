@@ -36,6 +36,14 @@ struct StockView: View {
     
     @State private var searchString: String = ""
     @State private var showFilter: Bool = false
+    
+    private enum StockGrouping: Identifiable {
+        case none, productGroup, nextDueDate, lastPurchased, minStockAmount, parentProduct, defaultLocation
+        var id: Int {
+            hashValue
+        }
+    }
+    @State private var stockGrouping: StockGrouping = .none
     @State private var sortSetting = [KeyPathComparator(\StockElement.product.name)]
     @State private var sortOrder: SortOrder = .forward
     
@@ -124,6 +132,40 @@ struct StockView: View {
                 $0.product.hideOnStockOverview == 0
             }
             .sorted(using: sortSetting)
+    }
+    
+    var groupedProducts: [String: [StockElement]] {
+        var dict: [String: [StockElement]] = [:]
+        var categoryName: String
+        for element in searchedProducts {
+            switch stockGrouping {
+            case .productGroup:
+                let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == element.product.productGroupID })
+                categoryName = productGroup?.name ?? ""
+            case .nextDueDate:
+                categoryName = element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
+            case .lastPurchased:
+                if grocyVM.stockProductDetails[element.productID] == nil {
+                    grocyVM.getStockProductDetails(productID: element.productID)
+                }
+                categoryName = grocyVM.stockProductDetails[element.productID]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+            case .minStockAmount:
+                categoryName = element.product.minStockAmount.formattedAmount
+            case .parentProduct:
+                let parentProduct = grocyVM.mdProducts.first(where: { $0.id == element.product.parentProductID })
+                categoryName = parentProduct?.name ?? ""
+            case .defaultLocation:
+                let defaultLocation = grocyVM.mdLocations.first(where: { $0.id == element.product.locationID })
+                categoryName = defaultLocation?.name ?? ""
+            default:
+                categoryName = ""
+            }
+            if dict[categoryName] == nil {
+                dict[categoryName] = []
+            }
+            dict[categoryName]?.append(element)
+        }
+        return dict
     }
     
     var summedValue: Double {
@@ -296,8 +338,32 @@ struct StockView: View {
                     if grocyVM.stock.isEmpty {
                         Text("str.stock.empty").padding()
                     }
-                    ForEach(searchedProducts, id:\.productID) { stockElement in
-                        StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                    ForEach(groupedProducts.sorted(by: {
+                        switch stockGrouping {
+                        case .minStockAmount:
+                            return $0.key.compare($1.key, options: .numeric) == .orderedAscending
+                        case .lastPurchased, .nextDueDate:
+                            return $0.key.iso8601withFractionalSeconds ?? Date() < $1.key.iso8601withFractionalSeconds ?? Date()
+                        default:
+                            return $0.key < $1.key
+                        }
+                    }), id: \.key) { groupName, groupElements in
+                        Section(content: {
+                            ForEach(groupElements, id:\.product.id) { stockElement in
+                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                            }
+                        }, header: {
+                            if stockGrouping == .productGroup, groupName.isEmpty {
+                                Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                            } else {
+                                switch stockGrouping {
+                                case .lastPurchased, .nextDueDate:
+                                    Text(groupName.iso8601withFractionalSeconds?.formatted(date: .numeric, time: .omitted) ?? "").bold()
+                                default:
+                                    Text(groupName).bold()
+                                }
+                            }
+                        })
                     }
                 }
                 .frame(minWidth: 350)
@@ -305,7 +371,7 @@ struct StockView: View {
         }
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .animation(.default, value: searchedProducts.count)
+        .animation(.default, value: groupedProducts.count)
         .animation(.default, value: sortSetting)
         .onAppear(perform: {
             if firstAppear {
@@ -347,8 +413,23 @@ struct StockView: View {
                 if grocyVM.stock.isEmpty {
                     Text("str.stock.empty").padding()
                 }
-                ForEach(searchedProducts, id:\.productID) { stockElement in
-                    StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
+                    Section(content: {
+                        ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
+                            StockTableRow(
+                                stockElement: stockElement,
+                                selectedStockElement: $selectedStockElement,
+                                activeSheet: $activeSheet,
+                                toastType: $toastType
+                            )
+                        })
+                    }, header: {
+                        if stockGrouping == .productGroup, groupName.isEmpty {
+                            Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        } else {
+                            Text(groupName).bold()
+                        }
+                    })
                 }
             }
         }
@@ -357,7 +438,7 @@ struct StockView: View {
         .refreshable {
             updateData()
         }
-        .animation(.default, value: searchedProducts.count)
+        .animation(.default, value: groupedProducts.count)
         .onAppear(perform: {
             if firstAppear {
                 grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -390,6 +471,34 @@ struct StockView: View {
     
     var sortMenu: some View {
         Menu(content: {
+            Picker(LocalizedStringKey("str.group.category"), selection: $stockGrouping, content: {
+                Label(LocalizedStringKey("str.none"), systemImage: MySymbols.product)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.none)
+                Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.amount)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.productGroup)
+                Label(LocalizedStringKey("str.stock.tbl.nextDueDate"), systemImage: MySymbols.date)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.nextDueDate)
+                Label(LocalizedStringKey("str.stock.tbl.lastPurchased"), systemImage: MySymbols.date)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.lastPurchased)
+                Label(LocalizedStringKey("str.stock.tbl.minStockAmount"), systemImage: MySymbols.amount)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.minStockAmount)
+                Label(LocalizedStringKey("str.stock.tbl.parentProduct"), systemImage: MySymbols.product)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.parentProduct)
+                Label(LocalizedStringKey("str.stock.tbl.defaultLocation"), systemImage: MySymbols.location)
+                    .labelStyle(.titleAndIcon)
+                    .tag(StockGrouping.defaultLocation)
+            })
+#if os(iOS)
+            .pickerStyle(.menu)
+#else
+            .pickerStyle(.inline)
+#endif
             Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
                 if sortOrder == .forward {
                     Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
