@@ -47,7 +47,7 @@ class GrocyViewModel: ObservableObject {
     @Published var mdProducts: MDProducts = []
     @Published var mdProductBarcodes: MDProductBarcodes = []
     @Published var mdLocations: MDLocations = []
-    @Published var mdShoppingLocations: MDShoppingLocations = []
+    @Published var mdStores: MDStores = []
     @Published var mdQuantityUnits: MDQuantityUnits = []
     @Published var mdQuantityUnitConversions: MDQuantityUnitConversions = []
     @Published var mdProductGroups: MDProductGroups = []
@@ -213,7 +213,7 @@ class GrocyViewModel: ObservableObject {
         case .locations:
             ints = self.mdLocations.map{ $0.id }
         case .shopping_locations:
-            ints = self.mdShoppingLocations.map{ $0.id }
+            ints = self.mdStores.map{ $0.id }
         case .quantity_units:
             ints = self.mdQuantityUnits.map{ $0.id }
         case .quantity_unit_conversions:
@@ -466,10 +466,10 @@ class GrocyViewModel: ObservableObject {
                 case .shopping_locations:
                     if timeStamp != self.timeStampsObjects[object] {
                         loadingObjectEntities.insert(object)
-                        getEntity(entity: object, completion: { (result: Result<MDShoppingLocations, APIError>) in
+                        getEntity(entity: object, completion: { (result: Result<MDStores, APIError>) in
                             switch result {
                             case let .success(entityResult):
-                                self.mdShoppingLocations = entityResult.sorted(by: { $0.name < $1.name })
+                                self.mdStores = entityResult.sorted(by: { $0.name < $1.name })
                                 self.failedToLoadObjects.remove(object)
                                 self.timeStampsObjects[object] = timeStamp
                             case let .failure(error):
@@ -748,7 +748,7 @@ class GrocyViewModel: ObservableObject {
         mdProducts = []
         mdProductBarcodes = []
         mdLocations = []
-        mdShoppingLocations = []
+        mdStores = []
         mdQuantityUnits = []
         mdQuantityUnitConversions = []
         mdProductGroups = []

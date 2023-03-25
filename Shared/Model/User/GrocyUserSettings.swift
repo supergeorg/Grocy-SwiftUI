@@ -48,7 +48,7 @@ struct GrocyUserSettings: Codable {
     //    let quagga2Debug: Bool
     //    let datatablesStateBarcodeTable, datatablesStateBatteriesTable, datatablesStateEquipmentTable, datatablesStateLocationsTable: String
     //    let datatablesStateProductgroupsTable, datatablesStateProductsTable, datatablesStateQuConversionsTable, datatablesStateQuConversionsTableProducts: String
-    //    let datatablesStateQuantityunitsTable, datatablesStateShoppingListPrintShadowTable, datatablesStateShoppinglistTable, datatablesStateShoppinglocationsTable: String
+    //    let datatablesStateQuantityunitsTable, datatablesStateShoppingListPrintShadowTable, datatablesStateShoppinglistTable, datatablesStateStoresTable: String
     //    let datatablesStateStockJournalTable, datatablesStateStockOverviewTable, datatablesStateStockentriesTable, datatablesStateTaskcategoriesTable: String
     //    let datatablesStateUserentitiesTable, datatablesStateUserfieldsTable, datatablesStateUsersTable, locale: String
     
@@ -106,7 +106,7 @@ struct GrocyUserSettings: Codable {
         //        case datatablesStateQuantityunitsTable = "datatables_state_quantityunits-table"
         //        case datatablesStateShoppingListPrintShadowTable = "datatables_state_shopping-list-print-shadow-table"
         //        case datatablesStateShoppinglistTable = "datatables_state_shoppinglist-table"
-        //        case datatablesStateShoppinglocationsTable = "datatables_state_shoppinglocations-table"
+        //        case datatablesStateStoresTable = "datatables_state_stores-table"
         //        case datatablesStateStockJournalTable = "datatables_state_stock-journal-table"
         //        case datatablesStateStockOverviewTable = "datatables_state_stock-overview-table"
         //        case datatablesStateStockentriesTable = "datatables_state_stockentries-table"

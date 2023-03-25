@@ -37,7 +37,7 @@ struct BuyProductView: View {
     @State private var amount: Int = 0
     @State private var price: Double = 0.0
     @State private var isSinglePrice: Bool = true
-    @State private var shoppingLocationID: String = ""
+    @State private var storeID: String = ""
     @State private var locationID: String = ""
     @State private var productDoesntSpoil: Bool = false
     
@@ -67,17 +67,17 @@ struct BuyProductView: View {
         isSinglePrice = true
         productDoesntSpoil = false
         locationID = ""
-        shoppingLocationID = ""
+        storeID = ""
     }
     
     func buyProduct() {
         let numLocationID = Int(locationID) ?? nil
-        let numShoppingLocationID = Int(shoppingLocationID) ?? nil
+        let numStoreID = Int(storeID) ?? nil
         let strPrice = price.isZero ? nil : String(format: "%.2f", price)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strSpoilDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: bestBeforeDate)
-        let productToAdd = ProductBuy(amount: amount, bestBeforeDate: strSpoilDate, transactionType: "purchase", price: strPrice, locationID: numLocationID, shoppingLocationID: numShoppingLocationID)
+        let productToAdd = ProductBuy(amount: amount, bestBeforeDate: strSpoilDate, transactionType: "purchase", price: strPrice, locationID: numLocationID, storeID: numStoreID)
         grocyVM.postStockObject(id: productID, stockModePost: .add, content: productToAdd)
     }
     
@@ -100,10 +100,10 @@ struct BuyProductView: View {
                             }
                         }
                         .onChange(of: productID) { newID in
-                            if (locationID.isEmpty || shoppingLocationID.isEmpty) {
+                            if (locationID.isEmpty || storeID.isEmpty) {
                                 if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                                     if locationID.isEmpty { locationID = selectedProduct.locationID }
-                                    if shoppingLocationID.isEmpty { if let id = selectedProduct.shoppingLocationID {shoppingLocationID = id} }
+                                    if storeID.isEmpty { if let id = selectedProduct.storeID {storeID = id} }
                                 }
                             }
                         }
@@ -152,9 +152,9 @@ struct BuyProductView: View {
                     }).pickerStyle(SegmentedPickerStyle())
                     HStack{
                         Image(systemName: "cart")
-                        Picker("Geschäft", selection: $shoppingLocationID, content: {
-                            ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                                Text(shoppingLocation.name).tag(shoppingLocation.id)
+                        Picker("Geschäft", selection: $storeID, content: {
+                            ForEach(grocyVM.mdStores, id:\.id) { store in
+                                Text(store.name).tag(store.id)
                             }
                         })
                     }
@@ -172,7 +172,7 @@ struct BuyProductView: View {
                 grocyVM.getMDProducts()
                 grocyVM.getMDQuantityUnits()
                 grocyVM.getMDLocations()
-                grocyVM.getMDShoppingLocations()
+                grocyVM.getMDStores()
                 priceFormatter.numberStyle = .currency
                 priceFormatter.locale = Locale(identifier: "de_DE")
             })

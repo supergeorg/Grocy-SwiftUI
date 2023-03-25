@@ -16,7 +16,7 @@ struct MDProduct: Codable {
     @NullCodable var productGroupID: Int?
     let active: Int?
     let locationID: Int
-    @NullCodable var shoppingLocationID: Int?
+    @NullCodable var storeID: Int?
     let quIDPurchase, quIDStock: Int
     @NullCodable var quFactorPurchaseToStock: Double?
     let minStockAmount: Double
@@ -46,7 +46,7 @@ struct MDProduct: Codable {
         case productGroupID = "product_group_id"
         case active
         case locationID = "location_id"
-        case shoppingLocationID = "shopping_location_id"
+        case storeID = "shopping_location_id"
         case quIDPurchase = "qu_id_purchase"
         case quIDStock = "qu_id_stock"
         case quFactorPurchaseToStock = "qu_factor_purchase_to_stock"
@@ -83,7 +83,7 @@ struct MDProduct: Codable {
             do { self.productGroupID = try container.decodeIfPresent(Int.self, forKey: .productGroupID) } catch { self.productGroupID = try Int(container.decodeIfPresent(String.self, forKey: .productGroupID) ?? "") }
             do { self.active = try container.decode(Int.self, forKey: .active) } catch { self.active = try Int(container.decode(String.self, forKey: .active)) ?? 0 }
             do { self.locationID = try container.decode(Int.self, forKey: .locationID) } catch { self.locationID = try Int(container.decode(String.self, forKey: .locationID))! }
-            do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
+            do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             do { self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase) } catch { self.quIDPurchase = try Int(container.decode(String.self, forKey: .quIDPurchase))! }
             do { self.quIDStock = try container.decode(Int.self, forKey: .quIDStock) } catch { self.quIDStock = try Int(container.decode(String.self, forKey: .quIDStock))! }
             do { self.quFactorPurchaseToStock = try container.decode(Double.self, forKey: .quFactorPurchaseToStock) } catch { self.quFactorPurchaseToStock = try? Double(container.decodeIfPresent(String.self, forKey: .quFactorPurchaseToStock) ?? "") }
@@ -121,7 +121,7 @@ struct MDProduct: Codable {
         productGroupID: Int? = nil,
         active: Int,
         locationID: Int,
-        shoppingLocationID: Int? = nil,
+        storeID: Int? = nil,
         quIDPurchase: Int,
         quIDStock: Int,
         quFactorPurchaseToStock: Double? = nil,
@@ -154,7 +154,7 @@ struct MDProduct: Codable {
         self.productGroupID = productGroupID
         self.active = active
         self.locationID = locationID
-        self.shoppingLocationID = shoppingLocationID
+        self.storeID = storeID
         self.quIDPurchase = quIDPurchase
         self.quIDStock = quIDStock
         self.quFactorPurchaseToStock = quFactorPurchaseToStock

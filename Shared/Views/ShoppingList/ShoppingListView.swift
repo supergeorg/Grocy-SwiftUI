@@ -25,7 +25,6 @@ struct ShoppingListView: View {
             hashValue
         }
     }
-
     @State private var shoppingListGrouping: ShoppingListGrouping = .productGroup
     @State private var sortSetting = [KeyPathComparator(\ShoppingListItemWrapped.product?.name)]
     @State private var sortOrder: SortOrder = .forward
@@ -119,7 +118,7 @@ struct ShoppingListView: View {
                     ShoppingListItemWrapped(shoppingListItem: listItem, product: product)
                 )
             case .defaultStore:
-                let store = grocyVM.mdShoppingLocations.first(where: { $0.id == product?.shoppingLocationID })
+                let store = grocyVM.mdStores.first(where: { $0.id == product?.storeID })
                 if dict[store?.name ?? ""] == nil {
                     dict[store?.name ?? ""] = []
                 }
@@ -462,7 +461,7 @@ struct ShoppingListView: View {
                 Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.productGroup)
-                Label(LocalizedStringKey("str.md.product.shoppingLocation"), systemImage: MySymbols.amount)
+                Label(LocalizedStringKey("str.md.product.store"), systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.defaultStore)
             })

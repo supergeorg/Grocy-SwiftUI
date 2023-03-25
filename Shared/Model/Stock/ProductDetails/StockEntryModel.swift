@@ -21,7 +21,7 @@ struct StockEntry: Codable, Equatable {
     let openedDate: Date?
     let rowCreatedTimestamp: String
     let locationID: Int?
-    let shoppingLocationID: Int?
+    let storeID: Int?
     let note: String?
 
     enum CodingKeys: String, CodingKey {
@@ -36,7 +36,7 @@ struct StockEntry: Codable, Equatable {
         case openedDate = "opened_date"
         case rowCreatedTimestamp = "row_created_timestamp"
         case locationID = "location_id"
-        case shoppingLocationID = "shopping_location_id"
+        case storeID = "shopping_location_id"
         case note
     }
 
@@ -69,7 +69,7 @@ struct StockEntry: Codable, Equatable {
             self.openedDate = getDateFromString(openedDateString ?? "")
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do { self.locationID = try container.decodeIfPresent(Int.self, forKey: .locationID) } catch { self.locationID = try? Int(container.decodeIfPresent(String.self, forKey: .locationID) ?? "") }
-            do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
+            do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             self.note = try container.decodeIfPresent(String.self, forKey: .note)
         } catch {
             throw APIError.decodingError(error: error)
@@ -88,7 +88,7 @@ struct StockEntry: Codable, Equatable {
         openedDate: Date?,
         rowCreatedTimestamp: String,
         locationID: Int? = nil,
-        shoppingLocationID: Int? = nil,
+        storeID: Int? = nil,
         note: String?
     ) {
         self.id = id
@@ -102,7 +102,7 @@ struct StockEntry: Codable, Equatable {
         self.openedDate = openedDate
         self.rowCreatedTimestamp = rowCreatedTimestamp
         self.locationID = locationID
-        self.shoppingLocationID = shoppingLocationID
+        self.storeID = storeID
         self.note = note
     }
 }

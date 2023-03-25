@@ -102,8 +102,8 @@ struct StockEntryRowView: View {
                     Text(LocalizedStringKey("str.stock.entries.location \(location.name)"))
                 }
                 
-                if let shoppingLocationID = stockEntry.shoppingLocationID, let shoppingLocation = grocyVM.mdShoppingLocations.first(where: { $0.id == shoppingLocationID }) {
-                    Text(LocalizedStringKey("str.stock.entries.shoppingLocation \(shoppingLocation.name)"))
+                if let storeID = stockEntry.storeID, let store = grocyVM.mdStores.first(where: { $0.id == storeID }) {
+                    Text(LocalizedStringKey("str.stock.entries.store \(store.name)"))
                 }
                 
                 if let price = stockEntry.price, price > 0 {

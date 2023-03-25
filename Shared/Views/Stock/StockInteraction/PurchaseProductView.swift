@@ -36,7 +36,7 @@ struct PurchaseProductView: View {
     @State private var productDoesntSpoil: Bool = false
     @State private var price: Double?
     @State private var isTotalPrice: Bool = false
-    @State private var shoppingLocationID: Int?
+    @State private var storeID: Int?
     @State private var locationID: Int?
     @State private var note: String = ""
     @State private var selfProduction: Bool = false
@@ -113,7 +113,7 @@ struct PurchaseProductView: View {
         }
         self.price = nil
         self.isTotalPrice = false
-        self.shoppingLocationID = barcode?.shoppingLocationID
+        self.storeID = barcode?.storeID
         self.locationID = nil
         self.note = ""
         self.searchProductTerm = ""
@@ -129,8 +129,8 @@ struct PurchaseProductView: View {
         let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let noteText = note.isEmpty ? nil : note
         let purchasePrice = selfProduction ? nil : unitPrice
-        let purchaseShoppingLocationID = selfProduction ? nil : shoppingLocationID
-        let purchaseInfo = ProductBuy(amount: factoredStockAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, shoppingLocationID: purchaseShoppingLocationID, note: noteText)
+        let purchaseStoreID = selfProduction ? nil : storeID
+        let purchaseInfo = ProductBuy(amount: factoredStockAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, storeID: purchaseStoreID, note: noteText)
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
@@ -225,7 +225,7 @@ struct PurchaseProductView: View {
                     .onChange(of: productID) { _ in
                         if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
                             if locationID == nil { locationID = selectedProduct.locationID }
-                            if shoppingLocationID == nil { shoppingLocationID = selectedProduct.shoppingLocationID }
+                            if storeID == nil { storeID = selectedProduct.storeID }
                             quantityUnitID = selectedProduct.quIDPurchase
                             if product?.defaultBestBeforeDays == -1 {
                                 productDoesntSpoil = true
@@ -281,12 +281,12 @@ struct PurchaseProductView: View {
             
             Section(header: Text(LocalizedStringKey("str.stock.buy.product.location")).font(.headline)) {
                 if !selfProduction {
-                    Picker(selection: $shoppingLocationID,
-                           label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
+                    Picker(selection: $storeID,
+                           label: Label(LocalizedStringKey("str.stock.buy.product.store"), systemImage: MySymbols.store).foregroundColor(.primary),
                            content: {
                         Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdShoppingLocations, id: \.id) { shoppingLocation in
-                            Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
+                        ForEach(grocyVM.mdStores, id: \.id) { store in
+                            Text(store.name).tag(store.id as Int?)
                         }
                     })
                 }

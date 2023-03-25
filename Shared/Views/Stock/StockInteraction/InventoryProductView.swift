@@ -27,7 +27,7 @@ struct InventoryProductView: View {
     @State private var dueDate: Date = Date()
     @State private var productNeverOverdue: Bool = false
     @State private var price: Double?
-    @State private var shoppingLocationID: Int?
+    @State private var storeID: Int?
     @State private var locationID: Int?
     @State private var note: String = ""
     
@@ -105,7 +105,7 @@ struct InventoryProductView: View {
         dueDate = Date()
         productNeverOverdue = false
         price = nil
-        shoppingLocationID = nil
+        storeID = nil
         locationID = nil
         note = ""
         searchProductTerm = ""
@@ -117,7 +117,7 @@ struct InventoryProductView: View {
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
         let noteText = note.isEmpty ? nil : note
         if let productID = productID {
-            let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, shoppingLocationID: shoppingLocationID, locationID: locationID, price: price, note: noteText)
+            let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, storeID: storeID, locationID: locationID, price: price, note: noteText)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
@@ -170,7 +170,7 @@ struct InventoryProductView: View {
                         grocyVM.getStockProductEntries(productID: productID)
                     }
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                        shoppingLocationID = selectedProduct.shoppingLocationID
+                        storeID = selectedProduct.storeID
                         locationID = selectedProduct.locationID
                         quantityUnitID = selectedProduct.quIDStock
                     }
@@ -203,10 +203,10 @@ struct InventoryProductView: View {
             MyDoubleStepperOptional(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
-                Picker(selection: $shoppingLocationID, label: Label(LocalizedStringKey("str.stock.inventory.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary), content: {
+                Picker(selection: $storeID, label: Label(LocalizedStringKey("str.stock.inventory.product.store"), systemImage: MySymbols.store).foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                        Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
+                    ForEach(grocyVM.mdStores, id:\.id) { store in
+                        Text(store.name).tag(store.id as Int?)
                     }
                 })
                 

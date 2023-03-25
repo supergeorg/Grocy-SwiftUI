@@ -21,7 +21,7 @@ struct MySymbols {
     static let product = "tag"
     static let quantityUnit = "scalemass"
     static let location = "location"
-    static let shoppingLocation = "house"
+    static let store = "house"
     static let productGroup = "square.on.circle"
     static let recipe = "list.bullet.below.rectangle"
     static let picture = "photo"

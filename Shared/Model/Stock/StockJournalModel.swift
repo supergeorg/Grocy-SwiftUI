@@ -27,7 +27,7 @@ struct StockJournalEntry: Codable {
     let correlationID: Int?
     let transactionID: String
     let stockRowID: Int?
-    let shoppingLocationID: Int?
+    let storeID: Int?
     let userID: Int
     let note: String?
 
@@ -51,7 +51,7 @@ struct StockJournalEntry: Codable {
         case correlationID = "correlation_id"
         case transactionID = "transaction_id"
         case stockRowID = "stock_row_id"
-        case shoppingLocationID = "shopping_location_id"
+        case storeID = "shopping_location_id"
         case userID = "user_id"
         case note
     }
@@ -78,7 +78,7 @@ struct StockJournalEntry: Codable {
             do { self.correlationID = try container.decodeIfPresent(Int.self, forKey: .correlationID) } catch { self.correlationID = try? Int(container.decodeIfPresent(String.self, forKey: .correlationID) ?? "") }
             do { self.transactionID = try container.decode(String.self, forKey: .transactionID) } catch { self.transactionID = try String(container.decode(Int.self, forKey: .transactionID)) }
             do { self.stockRowID = try container.decodeIfPresent(Int.self, forKey: .stockRowID) } catch { self.stockRowID = try? Int(container.decodeIfPresent(String.self, forKey: .stockRowID) ?? "") }
-            do { self.shoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .shoppingLocationID) } catch { self.shoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .shoppingLocationID) ?? "") }
+            do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             do { self.userID = try container.decode(Int.self, forKey: .userID) } catch { self.userID = try Int(container.decode(String.self, forKey: .userID))! }
             self.note = try? container.decodeIfPresent(String.self, forKey: .note)
         } catch {

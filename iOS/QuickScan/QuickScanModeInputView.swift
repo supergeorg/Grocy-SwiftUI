@@ -112,8 +112,8 @@ struct QuickScanModeInputView: View {
     @State private var purchaseQuantityUnitID: Int?
     @State private var purchasePrice: Double?
     @State private var purchaseIsTotalPrice: Bool = false
-    @State private var purchaseShoppingLocationID: Int?
-    @Binding var lastPurchaseShoppingLocationID: Int?
+    @State private var purchaseStoreID: Int?
+    @Binding var lastPurchaseStoreID: Int?
     @State private var purchaseLocationID: Int?
     @Binding var lastPurchaseLocationID: Int?
     @State private var note: String = ""
@@ -238,37 +238,37 @@ struct QuickScanModeInputView_Previews: PreviewProvider {
         Group {
             QuickScanModeInputView(
                 quickScanMode: Binding.constant(QuickScanMode.consume),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
                 toastType: Binding.constant(ToastType.successConsume),
                 infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseShoppingLocationID: Binding.constant(nil),
+                lastPurchaseStoreID: Binding.constant(nil),
                 lastPurchaseLocationID: Binding.constant(nil)
             )
             
             QuickScanModeInputView(
                 quickScanMode: Binding.constant(QuickScanMode.markAsOpened),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
                 toastType: Binding.constant(ToastType.successOpen),
                 infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseShoppingLocationID: Binding.constant(nil),
+                lastPurchaseStoreID: Binding.constant(nil),
                 lastPurchaseLocationID: Binding.constant(nil)
             )
             
             QuickScanModeInputView(
                 quickScanMode: Binding.constant(QuickScanMode.purchase),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, shoppingLocationID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
                 toastType: Binding.constant(ToastType.successPurchase),
                 infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseShoppingLocationID: Binding.constant(nil),
+                lastPurchaseStoreID: Binding.constant(nil),
                 lastPurchaseLocationID: Binding.constant(nil)
             )
         }

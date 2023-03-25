@@ -16,6 +16,8 @@
 "str.close" = "Cerrar";
 "str.add" = "Añadir";
 "str.clear" = "Borrar";
+"str.none" = "Ninguno";
+"str.group.category" = "Agrupar por";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Esto no puede ser menor que %@ y tiene que ser un número válido con un máximo de %@ cifras decimales";
@@ -44,11 +46,14 @@
 "str.nav.batteryTracking" = "Registro de baterías";
 "str.nav.md.products" = "Productos";
 "str.nav.md.locations" = "Ubicaciones";
+"str.nav.md.stores" = "Tiendas";
 "str.nav.md.quantityUnits" = "Unidades";
 "str.nav.md.productGroups" = "Grupos de producto";
 "str.nav.md.chores" = "Tareas del hogar";
 "str.nav.md.batteries" = "Baterías";
 "str.nav.md.taskCategories" = "Categorías de tareas";
+"str.nav.md.userFields" = "Campos personalizados";
+"str.nav.md.userEntities" = "Entidades personalizadas";
 "str.nav.settings" = "Configuración";
 
 // MARK: - Details
@@ -82,6 +87,7 @@
 "str.stock.tbl.productGroup" = "Grupo de productos";
 "str.stock.tbl.amount" = "Cantidad";
 "str.stock.tbl.value" = "Valor";
+"str.stock.tbl.nextDueDate" = "Próxima fecha límite";
 "str.stock.tbl.calories" = "Calorías";
 "str.stock.tbl.lastPurchased" = "Última compra";
 "str.stock.tbl.lastPrice" = "Último precio";
@@ -110,7 +116,7 @@
 "str.stock.buy.product.price.unitPrice" = "Precio unitario";
 "str.stock.buy.product.price.totalPrice" = "Precio total";
 "str.stock.buy.product.price.relation %@ %@" = "significa %@ por %@";
-"str.stock.buy.product.shoppingLocation" = "Tienda";
+"str.stock.buy.product.store" = "Tienda";
 "str.stock.buy.product.location" = "Ubicación";
 "str.stock.buy.product.note" = "Nota";
 
@@ -149,7 +155,7 @@
 "str.stock.inventory.product.neverOverdue" = "Sin fecha límite";
 "str.stock.inventory.product.price" = "Precio";
 "str.stock.inventory.product.price.info" = "Por unidad por inventario";
-"str.stock.inventory.product.shoppingLocation" = "Tienda";
+"str.stock.inventory.product.store" = "Tienda";
 "str.stock.inventory.product.location" = "Ubicación";
 "str.stock.inventory.product.location.info" = "Esto se aplicará a los productos añadidos";
 "str.stock.inventory.product.location.required" = "Es necesaria una ubicación";
@@ -208,6 +214,8 @@
 // MARK: - Recipes
 "str.recipes" = "Recetas";
 "str.recipes.name" = "Nombre";
+"str.recipes.dueScore" = "Puntuación";
+"str.recipes.dueScore.hint" = "Cuanto más alto sea este número, más ingredientes en stock habrá pronto, estarán pendientes o ya habrán caducado.";
 "str.recipes.fulfillment" = "Requisitos satisfechos";
 "str.recipes.fulfillment.enough" = "Existencias suficientes";
 "str.recipes.fulfillment.notEnough" = "No hay existencias suficientes";
@@ -234,7 +242,11 @@
 // default locations
 "str.md.product.location" = "Ubicación predeterminada";
 "str.md.product.location.required" = "Es necesaria una ubicación";
-"str.md.product.shoppingLocation" = "Tienda predeterminada";
+"str.md.product.location.consume" = "Ubicación de consumo predeterminada";
+"str.md.product.location.consume.info" = "Las entradas de stock en esta ubicación se consumirán primero";
+"str.md.product.location.consume.moveOnOpen" = "Mover al abrir";
+"str.md.product.location.consume.moveOnOpen.info" = "Cuando está habilitado, al marcar este producto como abierto, la cantidad correspondiente se moverá a la ubicación de consumo predeterminada";
+"str.md.product.store" = "Tienda predeterminada";
 // due date
 "str.md.product.category.dueDate" = "Fecha límite";
 "str.md.product.dueType" = "Tipo de fecha límite";
@@ -264,15 +276,19 @@
 "str.md.product.tareWeight" = "Peso de contenedor";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "Desactivar comprobación de existencias para este ingrediente";
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Esto se usará como configuración predeterminada cuando añadas este producto como ingrediente de una receta";
+"str.md.product.treatOpenedAsOutOfStock" = "Tratar apertura como fuera de stock";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Si esta opción está activada, los artículos abiertos se contarán como no existentes para calcular si este producto está por debajo de su cantidad mínima de stock.";
 "str.md.product.shouldNotBeFrozen" = "No debe congelarse";
 "str.md.product.shouldNotBeFrozen.hint" = "Cuando esté activado, al mover este producto a una ubicación de congelador (o sea, al congelarlo), se mostrará una advertencia";
+"str.md.product.noOwnStock" = "Desactivar stock propio";
+"str.md.product.noOwnStock.hint" = "Cuando está activado, este producto no puede tener stock propio, lo que significa que no será seleccionable en la compra (útil para los productos primarios que solo se utilizan como un resumen / vista total de los subproductos)";
 
 "str.md.barcodes" = "Códigos de barra";
 "str.md.barcode" = "Código de barra";
 "str.md.barcode.barcode" = "Código de barra";
 "str.md.barcode.amount" = "Cantidad";
 "str.md.barcode.quantityUnit" = "Unidad";
-"str.md.barcode.shoppingLocation" = "Tienda";
+"str.md.barcode.store" = "Tienda";
 "str.md.barcode.note" = "Nota";
 
 "str.md.locations" = "Ubicaciones";
@@ -282,7 +298,7 @@
 "str.md.location.name.required" = "Es necesario un nombre";
 "str.md.location.isFreezing" = "Es congelador";
 
-"str.md.shoppingLocation.name.required" = "Es necesario un nombre";
+"str.md.store.name.required" = "Es necesario un nombre";
 
 "str.md.quantityUnits" = "Unidades";
 "str.md.quantityUnit" = "Unidad";
@@ -328,6 +344,8 @@
 
 "str.md.userField.type.link" = "Enlace";
 
+"str.md.userEntities" = "Entidades personalizadas";
+"str.md.userEntity.edit" = "Modificar entidad personalizada";
 "str.md.userEntity.name.required" = "Es necesario y sólo puede contener letras y números";
 "str.md.userEntity.caption" = "Leyenda";
 "str.md.userEntity.caption.required" = "Es necesaria una leyenda";
@@ -344,6 +362,7 @@
 "str.settings.stock.presets.productGroup" = "Grupo de productos";
 "str.settings.stock.presets.quantityUnit" = "Unidad";
 "str.settings.stock.presets.defaultDueDays" = "Número predeterminado de días hasta la fecha límite";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Tratar apertura como fuera de stock";
 "str.settings.stock.stockOverview" = "Resumen de existencias";
 "str.settings.stock.stockOverview.dueSoonDays" = "Días para próximo a fecha límite";
 "str.settings.stock.stockOverview.showIconShoppingList" = "Mostrar un icono si el producto ya está en la lista de la compra";
@@ -356,10 +375,13 @@
 "str.settings.stock.consume.useQuickConsume" = "Usar los productos 'Cantidad de consumo rápido'";
 "str.settings.stock.common" = "Común";
 "str.settings.stock.common.amountDecimalPlaces" = "Cifras decimales permitidas para cantidades";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Cifras decimales permitidas para precios (entrada)";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Cifras decimales permitidas para precios(muestra)";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Añadir separador de decimales automáticamente para entradas de precio";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Cuando esté activado, siempre tiene que introducir el valor incluyendo posiciones decimales, el separador decimal se añadirá automáticamente según la cantidad de posiciones decimales permitidas.";
 "str.settings.shoppingList" = "Configuración de lista de la compra";
 "str.settings.shoppingList.shoppingList" = "Lista de la compra";
+"str.settings.shoppingList.autoAddToShL" = "Agrega automáticamente productos que están por debajo de su mínimo definido. Cantidad de stock a la lista de la compra";
 "str.settings.shoppingList.shLToStockWF" = "Lista de la compra para el proceso de inventario";
 "str.settings.shoppingList.autoAddToStock" = "Registrar automáticamente usando el último precio y la cantidad del artículo de la lista de la compra, si el producto tiene definido 'Número predeterminado de días hasta la fecha límite'";
 

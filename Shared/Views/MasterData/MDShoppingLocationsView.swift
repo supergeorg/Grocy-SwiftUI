@@ -1,5 +1,5 @@
 //
-//  MDShoppingLocationsView.swift
+//  MDStoresView.swift
 //  Grocy-SwiftUI
 //
 //  Created by Georg Meissner on 17.11.20.
@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct MDShoppingLocationRowView: View {
-    var shoppingLocation: MDShoppingLocation
+struct MDStoreRowView: View {
+    var store: MDStore
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(shoppingLocation.name)
+            Text(store.name)
                 .font(.title)
-            if let description = shoppingLocation.mdShoppingLocationDescription, !description.isEmpty {
+            if let description = store.mdStoreDescription, !description.isEmpty {
                 Text(description)
                     .font(.caption)
             }
@@ -23,13 +23,13 @@ struct MDShoppingLocationRowView: View {
     }
 }
 
-struct MDShoppingLocationsView: View {
+struct MDStoresView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @State private var searchString: String = ""
     
-    @State private var showAddShoppingLocation: Bool = false
-    @State private var shoppingLocationToDelete: MDShoppingLocation? = nil
+    @State private var showAddStore: Bool = false
+    @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteAlert: Bool = false
     @State private var toastType: ToastType?
     
@@ -38,27 +38,27 @@ struct MDShoppingLocationsView: View {
         grocyVM.requestData(objects: dataToUpdate)
     }
     
-    private var filteredShoppingLocations: MDShoppingLocations {
-        grocyVM.mdShoppingLocations
+    private var filteredStores: MDStores {
+        grocyVM.mdStores
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
     }
     
-    private func deleteItem(itemToDelete: MDShoppingLocation) {
-        shoppingLocationToDelete = itemToDelete
+    private func deleteItem(itemToDelete: MDStore) {
+        storeToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteShoppingLocation(toDelID: Int) {
+    private func deleteStore(toDelID: Int) {
         grocyVM.deleteMDObject(object: .shopping_locations,
                                id: toDelID,
                                completion: { result in
             switch result {
             case let .success(message):
-                grocyVM.postLog("Deleting shopping location was successful. \(message)", type: .info)
+                grocyVM.postLog("Deleting store was successful. \(message)", type: .info)
                 updateData()
             case let .failure(error):
-                grocyVM.postLog("Deleting shopping location failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting store failed. \(error)", type: .error)
                 toastType = .failDelete
             }
         })
@@ -77,7 +77,7 @@ struct MDShoppingLocationsView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
+                .navigationTitle(LocalizedStringKey("str.md.stores"))
         }
     }
     
@@ -89,17 +89,17 @@ struct MDShoppingLocationsView: View {
                     RefreshButton(updateData: { updateData() })
 #endif
                     Button(action: {
-                        showAddShoppingLocation.toggle()
+                        showAddStore.toggle()
                     }, label: {
                         Image(systemName: MySymbols.new)
                     })
                 })
             })
-            .navigationTitle(LocalizedStringKey("str.md.shoppingLocations"))
+            .navigationTitle(LocalizedStringKey("str.md.stores"))
 #if os(iOS)
-            .sheet(isPresented: self.$showAddShoppingLocation, content: {
+            .sheet(isPresented: self.$showAddStore, content: {
                 NavigationView {
-                    MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: $showAddShoppingLocation, toastType: $toastType)
+                    MDStoreFormView(isNewStore: true, showAddStore: $showAddStore, toastType: $toastType)
                 }
             })
 #endif
@@ -107,25 +107,25 @@ struct MDShoppingLocationsView: View {
     
     var content: some View {
         List{
-            if grocyVM.mdShoppingLocations.isEmpty {
-                Text(LocalizedStringKey("str.md.shoppingLocations.empty"))
-            } else if filteredShoppingLocations.isEmpty {
+            if grocyVM.mdStores.isEmpty {
+                Text(LocalizedStringKey("str.md.stores.empty"))
+            } else if filteredStores.isEmpty {
                 Text(LocalizedStringKey("str.noSearchResult"))
             }
 #if os(macOS)
-            if showAddShoppingLocation {
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: $showAddShoppingLocation, toastType: $toastType), isActive: $showAddShoppingLocation, label: {
-                    NewMDRowLabel(title: "str.md.shoppingLocation.new")
+            if showAddStore {
+                NavigationLink(destination: MDStoreFormView(isNewStore: true, showAddStore: $showAddStore, toastType: $toastType), isActive: $showAddStore, label: {
+                    NewMDRowLabel(title: "str.md.store.new")
                 })
             }
 #endif
-            ForEach(filteredShoppingLocations, id:\.id) { shoppingLocation in
-                NavigationLink(destination: MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: shoppingLocation, showAddShoppingLocation: Binding.constant(false), toastType: $toastType)) {
-                    MDShoppingLocationRowView(shoppingLocation: shoppingLocation)
+            ForEach(filteredStores, id:\.id) { store in
+                NavigationLink(destination: MDStoreFormView(isNewStore: false, store: store, showAddStore: Binding.constant(false), toastType: $toastType)) {
+                    MDStoreRowView(store: store)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
-                           action: { deleteItem(itemToDelete: shoppingLocation) },
+                           action: { deleteItem(itemToDelete: store) },
                            label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
                     )
                 })
@@ -137,7 +137,7 @@ struct MDShoppingLocationsView: View {
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }
         .animation(.default,
-                   value: filteredShoppingLocations.count)
+                   value: filteredStores.count)
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
@@ -158,28 +158,28 @@ struct MDShoppingLocationsView: View {
                     return LocalizedStringKey("str.error")
                 }
             })
-        .alert(LocalizedStringKey("str.md.shoppingLocation.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert(LocalizedStringKey("str.md.store.delete.confirm"), isPresented: $showDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                if let toDelID = shoppingLocationToDelete?.id {
-                    deleteShoppingLocation(toDelID: toDelID)
+                if let toDelID = storeToDelete?.id {
+                    deleteStore(toDelID: toDelID)
                 }
             }
-        }, message: { Text(shoppingLocationToDelete?.name ?? "Name not found") })
+        }, message: { Text(storeToDelete?.name ?? "Name not found") })
     }
 }
 
-struct MDShoppingLocationsView_Previews: PreviewProvider {
+struct MDStoresView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             List {
-                MDShoppingLocationRowView(shoppingLocation: MDShoppingLocation(id: 0, name: "Location", mdShoppingLocationDescription: "Description", rowCreatedTimestamp: ""))
+                MDStoreRowView(store: MDStore(id: 0, name: "Location", mdStoreDescription: "Description", rowCreatedTimestamp: ""))
             }
 #if os(macOS)
-            MDShoppingLocationsView()
+            MDStoresView()
 #else
             NavigationView() {
-                MDShoppingLocationsView()
+                MDStoresView()
             }
 #endif
         }

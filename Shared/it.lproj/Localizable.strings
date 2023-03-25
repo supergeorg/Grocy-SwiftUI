@@ -25,6 +25,7 @@
 "str.back" = "Indietro";
 "str.retry" = "Prova ancora";
 "str.failed" = "Fallito";
+"str.none" = "Nessuno";
 "str.error.connection" = "Nessuna connessione al server";
 "str.error.api" = "Errore API rilevato";
 "str.error.other" = "Errore sconosciuto";
@@ -35,6 +36,7 @@
 "str.sort.order" = "Ordine di visualizzazione";
 "str.sort.order.forward" = "Crescente";
 "str.sort.order.reverse" = "Decrescente";
+"str.group.category" = "Raggruppato per";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Questo non può essere inferiore di %@ e deve essere un numero valido con massimo %@ posti decimali";
@@ -70,7 +72,7 @@
 "str.nav.md" = "Anagrafica";
 "str.nav.md.products" = "Prodotti";
 "str.nav.md.locations" = "Posizioni";
-"str.nav.md.shoppingLocations" = "Posizioni di acquisto";
+"str.nav.md.stores" = "Posizioni di acquisto";
 "str.nav.md.quantityUnits" = "Unità di misura";
 "str.nav.md.productGroups" = "Gruppi di prodotti";
 "str.nav.md.chores" = "Faccende";
@@ -136,7 +138,7 @@
 "str.stock.tbl.productGroup" = "Gruppo di prodotti";
 "str.stock.tbl.amount" = "Quantità";
 "str.stock.tbl.value" = "Valore";
-"str.stock.tbl.nextBestBefore" = "Prossima data di scadenza";
+"str.stock.tbl.nextDueDate" = "Prossima data di scadenza";
 "str.stock.tbl.caloriesPerStockQU" = "Calorie (per unità a magazzino)";
 "str.stock.tbl.calories" = "Calorie";
 "str.stock.tbl.lastPurchased" = "Ultimo acquisto";
@@ -182,7 +184,7 @@
 "str.stock.buy.product.price.unitPrice" = "Prezzo unitario";
 "str.stock.buy.product.price.totalPrice" = "Prezzo totale";
 "str.stock.buy.product.price.relation %@ %@" = "significa %@ per %@";
-"str.stock.buy.product.shoppingLocation" = "Negozio";
+"str.stock.buy.product.store" = "Negozio";
 "str.stock.buy.product.location" = "Posizione";
 "str.stock.buy.product.location.default %@" = "%@ (Posizione predefinita)";
 "str.stock.buy.product.note" = "Nota";
@@ -239,7 +241,7 @@
 "str.stock.inventory.product.price" = "Prezzo";
 "str.stock.inventory.product.price.info" = "Unità quantitativa per dispensa";
 "str.stock.inventory.product.price.invalid" = "Questo non può essere inferiore di 0.01 e deve essere un numero valido con massimo 2 cifre decimali";
-"str.stock.inventory.product.shoppingLocation" = "Negozio";
+"str.stock.inventory.product.store" = "Negozio";
 "str.stock.inventory.product.location" = "Posizione";
 "str.stock.inventory.product.location.info" = "Verrà applicato ai prodotti aggiunti";
 "str.stock.inventory.product.location.required" = "Inserisci la posizione";
@@ -267,7 +269,7 @@
 "str.stock.entries.amount %@" = "Quantità: %@";
 "str.stock.entries.dueDate %@" = "Data scadenza: %@";
 "str.stock.entries.location %@" = "Posizione: %@";
-"str.stock.entries.shoppingLocation %@" = "Negozio: %@";
+"str.stock.entries.store %@" = "Negozio: %@";
 "str.stock.entries.price %@" = "Prezzo: %@";
 "str.stock.entries.purchasedDate %@" = "Data di acquisto: %@";
 "str.stock.entries.note %@" = "Nota: %@";
@@ -400,7 +402,7 @@
 "str.md.product.location.consume.info" = "Le voci a magazzino in questa posizione saranno consumate per prime";
 "str.md.product.location.consume.moveOnOpen" = "Muovi all’apertura";
 "str.md.product.location.consume.moveOnOpen.info" = "Se abilitato, segnando questo prodotto come aperto, la quantità corrispondente verrà spostata nella posizione di consumo predefinita";
-"str.md.product.shoppingLocation" = "Negozio predefinito";
+"str.md.product.store" = "Negozio predefinito";
 // due date
 "str.md.product.category.dueDate" = "Data di scadenza";
 "str.md.product.category.dueDate.description" = "Tipo, Giorni predefiniti; post-apertura, congelamento, scongelamento";
@@ -463,7 +465,7 @@
 "str.md.barcode.barcode.invalid" = "Il codice a barre non é valido o é già in uso";
 "str.md.barcode.amount" = "Quantità";
 "str.md.barcode.quantityUnit" = "Unità di quantità";
-"str.md.barcode.shoppingLocation" = "Negozio";
+"str.md.barcode.store" = "Negozio";
 "str.md.barcode.note" = "Nota";
 "str.md.barcode.info.amount %@" = "Quantità: %@";
 "str.md.barcode.info.store %@" = "Immagazzina: %@";
@@ -486,18 +488,18 @@
 "str.md.location.delete" = "Elimina questa posizione";
 "str.md.location.delete.confirm" = "Vuoi davvero eliminare questa posizione?";
 
-"str.md.shoppingLocations" = "Posizioni di acquisto";
-"str.md.shoppingLocation" = "Posizione di acquisto";
-"str.md.shoppingLocations.empty" = "Nessuna posizione di acquisto trovata.";
-"str.md.shoppingLocation.new" = "Nuova posizione di acquisto";
-"str.md.shoppingLocation.edit" = "Modifica posizione di acquisto";
-"str.md.shoppingLocation.save" = "Salva posizione di acquisto";
-"str.md.shoppingLocation.info" = "Info posizione di acquisto";
-"str.md.shoppingLocation.name" = "Posizione di acquisto";
-"str.md.shoppingLocation.name.required" = "Inserisci un nome";
-"str.md.shoppingLocation.name.exists" = "Nome già esistente";
-"str.md.shoppingLocation.delete" = "Elimina questa posizione di acquisto";
-"str.md.shoppingLocation.delete.confirm" = "Vuoi davvero eliminare questa posizione di acquisto?";
+"str.md.stores" = "Posizioni di acquisto";
+"str.md.store" = "Posizione di acquisto";
+"str.md.stores.empty" = "Nessuna posizione di acquisto trovata.";
+"str.md.store.new" = "Nuova posizione di acquisto";
+"str.md.store.edit" = "Modifica posizione di acquisto";
+"str.md.store.save" = "Salva posizione di acquisto";
+"str.md.store.info" = "Info posizione di acquisto";
+"str.md.store.name" = "Posizione di acquisto";
+"str.md.store.name.required" = "Inserisci un nome";
+"str.md.store.name.exists" = "Nome già esistente";
+"str.md.store.delete" = "Elimina questa posizione di acquisto";
+"str.md.store.delete.confirm" = "Vuoi davvero eliminare questa posizione di acquisto?";
 
 "str.md.quantityUnits" = "Unità di misura";
 "str.md.quantityUnit" = "Unità di quantità";

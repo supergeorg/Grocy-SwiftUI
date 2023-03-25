@@ -22,7 +22,7 @@ struct StockEntryFormView: View {
     @State private var productDoesntSpoil: Bool = false
     @State private var amount: Double = 1.0
     @State private var price: Double?
-    @State private var shoppingLocationID: Int?
+    @State private var storeID: Int?
     @State private var locationID: Int?
     @State private var purchasedDate: Date?
     @State private var stockEntryOpen: Bool = false
@@ -61,7 +61,7 @@ struct StockEntryFormView: View {
             openedDate: stockEntry.openedDate,
             rowCreatedTimestamp: stockEntry.rowCreatedTimestamp,
             locationID: locationID,
-            shoppingLocationID: shoppingLocationID,
+            storeID: storeID,
             note: noteText
         )
         isProcessing = true
@@ -87,7 +87,7 @@ struct StockEntryFormView: View {
         price = stockEntry.price
         stockEntryOpen = stockEntry.stockEntryOpen
         locationID = stockEntry.locationID
-        shoppingLocationID = stockEntry.shoppingLocationID
+        storeID = stockEntry.storeID
         note = stockEntry.note ?? ""
     }
     
@@ -121,12 +121,12 @@ struct StockEntryFormView: View {
             
             MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
-            Picker(selection: $shoppingLocationID,
-                   label: Label(LocalizedStringKey("str.stock.buy.product.shoppingLocation"), systemImage: MySymbols.shoppingLocation).foregroundColor(.primary),
+            Picker(selection: $storeID,
+                   label: Label(LocalizedStringKey("str.stock.buy.product.store"), systemImage: MySymbols.store).foregroundColor(.primary),
                    content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdShoppingLocations, id:\.id) { shoppingLocation in
-                    Text(shoppingLocation.name).tag(shoppingLocation.id as Int?)
+                ForEach(grocyVM.mdStores, id:\.id) { store in
+                    Text(store.name).tag(store.id as Int?)
                 }
             })
             

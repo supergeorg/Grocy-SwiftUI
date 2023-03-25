@@ -47,7 +47,7 @@ struct QuickScanModeSelectProductView: View {
                     barcode: barcode,
                     quID: nil,
                     amount: nil,
-                    shoppingLocationID: nil,
+                    storeID: nil,
                     lastPrice: nil,
                     rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
                     note: nil

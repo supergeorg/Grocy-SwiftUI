@@ -12,8 +12,8 @@ struct MDBarcodeRowView: View {
     
     var barcode: MDProductBarcode
     
-    var shoppingLocationName: String? {
-        grocyVM.mdShoppingLocations.first(where: {$0.id == barcode.shoppingLocationID})?.name
+    var storeName: String? {
+        grocyVM.mdStores.first(where: {$0.id == barcode.storeID})?.name
     }
     var quIDName: String? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name
@@ -27,7 +27,7 @@ struct MDBarcodeRowView: View {
                 if let amount = barcode.amount {
                     Text(LocalizedStringKey("str.md.barcode.info.amount \("\(amount.formattedAmount) \(quIDName ?? String(barcode.quID ?? 0))")"))
                 }
-                if let storeName = shoppingLocationName {
+                if let storeName = storeName {
                     Text(LocalizedStringKey("str.md.barcode.info.store \(storeName)"))
                 }
             }.font(.caption)

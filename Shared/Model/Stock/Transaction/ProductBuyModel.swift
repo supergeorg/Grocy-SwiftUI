@@ -31,7 +31,7 @@ struct ProductBuy: Codable {
     let transactionType: TransactionType
     let price: Double?
     let locationID: Int?
-    let shoppingLocationID: Int?
+    let storeID: Int?
     let note: String?
 
     enum CodingKeys: String, CodingKey {
@@ -40,7 +40,7 @@ struct ProductBuy: Codable {
         case transactionType = "transaction_type"
         case price
         case locationID = "location_id"
-        case shoppingLocationID = "shopping_location_id"
+        case storeID = "shopping_location_id"
         case note
     }
 }

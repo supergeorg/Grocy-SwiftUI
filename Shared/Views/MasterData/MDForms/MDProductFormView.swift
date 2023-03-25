@@ -114,7 +114,7 @@ struct MDProductFormView: View {
     @State private var locationID: Int? // REQUIRED
     @State private var defaultConsumeLocationID: Int?
     @State private var moveOnOpen: Bool = false
-    @State private var shoppingLocationID: Int?
+    @State private var storeID: Int?
     @State private var minStockAmount: Double = 0.0
     @State private var cumulateMinStockAmountOfSubProducts: Bool = false
     @State private var dueType: DueType = DueType.bestBefore
@@ -189,7 +189,7 @@ struct MDProductFormView: View {
         locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID
         defaultConsumeLocationID = product?.defaultConsumeLocationID
         moveOnOpen = (product?.moveOnOpen ?? 0) == 1
-        shoppingLocationID = product?.shoppingLocationID
+        storeID = product?.storeID
         
         dueType = (product?.dueType == DueType.bestBefore.rawValue) ? DueType.bestBefore : DueType.expires
         defaultDueDays = product?.defaultBestBeforeDays ?? grocyVM.userSettings?.productPresetsDefaultDueDays ?? 0
@@ -241,7 +241,7 @@ struct MDProductFormView: View {
                 productGroupID: productGroupID,
                 active: active ? 1 : 0,
                 locationID: locationID,
-                shoppingLocationID: shoppingLocationID,
+                storeID: storeID,
                 quIDPurchase: quIDPurchase,
                 quIDStock: quIDStock,
                 quFactorPurchaseToStock: quFactorPurchaseToStock,
@@ -567,11 +567,11 @@ struct MDProductFormView: View {
                 }
             }
             
-            // Default Shopping Location
-            Picker(selection: $shoppingLocationID, label: MyLabelWithSubtitle(title: "str.md.product.shoppingLocation", systemImage: MySymbols.shoppingLocation, hideSubtitle: true), content: {
+            // Default Store
+            Picker(selection: $storeID, label: MyLabelWithSubtitle(title: "str.md.product.store", systemImage: MySymbols.store, hideSubtitle: true), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdShoppingLocations, id:\.id) { grocyShoppingLocation in
-                    Text(grocyShoppingLocation.name).tag(grocyShoppingLocation.id as Int?)
+                ForEach(grocyVM.mdStores, id:\.id) { grocyStore in
+                    Text(grocyStore.name).tag(grocyStore.id as Int?)
                 }
             })
         }

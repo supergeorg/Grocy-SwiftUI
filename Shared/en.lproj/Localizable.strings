@@ -72,14 +72,14 @@
 "str.nav.md" = "Master data";
 "str.nav.md.products" = "Products";
 "str.nav.md.locations" = "Locations";
-"str.nav.md.shoppingLocations" = "Shopping locations";
+"str.nav.md.stores" = "Stores";
 "str.nav.md.quantityUnits" = "Quantity units";
 "str.nav.md.productGroups" = "Product groups";
 "str.nav.md.chores" = "Chores";
 "str.nav.md.batteries" = "Batteries";
 "str.nav.md.taskCategories" = "Task categories";
-"str.nav.md.userFields" = "User fields";
-"str.nav.md.userEntities" = "User entities";
+"str.nav.md.userFields" = "Userfields";
+"str.nav.md.userEntities" = "Userentities";
 "str.nav.settings" = "Settings";
 "str.nav.userManagement" = "User management";
 "str.nav.quickScan" = "Quick-Scan";
@@ -138,7 +138,7 @@
 "str.stock.tbl.productGroup" = "Product group";
 "str.stock.tbl.amount" = "Amount";
 "str.stock.tbl.value" = "Value";
-"str.stock.tbl.nextBestBefore" = "Next best before date";
+"str.stock.tbl.nextDueDate" = "Next due date";
 "str.stock.tbl.caloriesPerStockQU" = "Calories (Per stock quantity unit)";
 "str.stock.tbl.calories" = "Calories";
 "str.stock.tbl.lastPurchased" = "Last purchased";
@@ -184,7 +184,7 @@
 "str.stock.buy.product.price.unitPrice" = "Unit price";
 "str.stock.buy.product.price.totalPrice" = "Total price";
 "str.stock.buy.product.price.relation %@ %@" = "means %@ per %@";
-"str.stock.buy.product.shoppingLocation" = "Store";
+"str.stock.buy.product.store" = "Store";
 "str.stock.buy.product.location" = "Location";
 "str.stock.buy.product.location.default %@" = "%@ (Default location)";
 "str.stock.buy.product.note" = "Note";
@@ -241,7 +241,7 @@
 "str.stock.inventory.product.price" = "Price";
 "str.stock.inventory.product.price.info" = "Per stock quantity unit";
 "str.stock.inventory.product.price.invalid" = "This cannot be lower than 0.01 and needs to be a valid number with max. 2 decimal places";
-"str.stock.inventory.product.shoppingLocation" = "Store";
+"str.stock.inventory.product.store" = "Store";
 "str.stock.inventory.product.location" = "Location";
 "str.stock.inventory.product.location.info" = "This will apply to added products";
 "str.stock.inventory.product.location.required" = "A location is required";
@@ -269,7 +269,7 @@
 "str.stock.entries.amount %@" = "Amount: %@";
 "str.stock.entries.dueDate %@" = "Due date: %@";
 "str.stock.entries.location %@" = "Location: %@";
-"str.stock.entries.shoppingLocation %@" = "Store: %@";
+"str.stock.entries.store %@" = "Store: %@";
 "str.stock.entries.price %@" = "Price: %@";
 "str.stock.entries.purchasedDate %@" = "Purchased date: %@";
 "str.stock.entries.note %@" = "Note: %@";
@@ -402,7 +402,7 @@
 "str.md.product.location.consume.info" = "Stock entries at this location will be consumed first";
 "str.md.product.location.consume.moveOnOpen" = "Move on open";
 "str.md.product.location.consume.moveOnOpen.info" = "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location";
-"str.md.product.shoppingLocation" = "Default store";
+"str.md.product.store" = "Default store";
 // due date
 "str.md.product.category.dueDate" = "Due date";
 "str.md.product.category.dueDate.description" = "Type, Default days; after opening, freezing, thawing";
@@ -465,7 +465,7 @@
 "str.md.barcode.barcode.invalid" = "The barcode is invalid or already in use.";
 "str.md.barcode.amount" = "Amount";
 "str.md.barcode.quantityUnit" = "Quantity unit";
-"str.md.barcode.shoppingLocation" = "Store";
+"str.md.barcode.store" = "Store";
 "str.md.barcode.note" = "Note";
 "str.md.barcode.info.amount %@" = "Amount: %@";
 "str.md.barcode.info.store %@" = "Store: %@";
@@ -488,18 +488,18 @@
 "str.md.location.delete" = "Delete this location";
 "str.md.location.delete.confirm" = "Do you really want to delete this location?";
 
-"str.md.shoppingLocations" = "Shopping locations";
-"str.md.shoppingLocation" = "Shopping location";
-"str.md.shoppingLocations.empty" = "No shopping locations found.";
-"str.md.shoppingLocation.new" = "New shopping location";
-"str.md.shoppingLocation.edit" = "Edit shopping location";
-"str.md.shoppingLocation.save" = "Save shopping location";
-"str.md.shoppingLocation.info" = "Shopping location info";
-"str.md.shoppingLocation.name" = "Shopping location";
-"str.md.shoppingLocation.name.required" = "A name is required";
-"str.md.shoppingLocation.name.exists" = "Name already exists";
-"str.md.shoppingLocation.delete" = "Delete this shopping location";
-"str.md.shoppingLocation.delete.confirm" = "Do you really want to delete this shopping location?";
+"str.md.stores" = "Stores";
+"str.md.store" = "Stores";
+"str.md.stores.empty" = "No stores found.";
+"str.md.store.new" = "New store";
+"str.md.store.edit" = "Edit store";
+"str.md.store.save" = "Save store";
+"str.md.store.info" = "Store info";
+"str.md.store.name" = "Store";
+"str.md.store.name.required" = "A name is required";
+"str.md.store.name.exists" = "Name already exists";
+"str.md.store.delete" = "Delete this store";
+"str.md.store.delete.confirm" = "Do you really want to delete this store?";
 
 "str.md.quantityUnits" = "Quantity units";
 "str.md.quantityUnit" = "Quantity unit";
@@ -595,14 +595,14 @@
 "str.md.userField.type.file" = "File";
 "str.md.userField.type.image" = "Image";
 
-"str.md.userEntities" = "User entities";
-"str.md.userEntity" = "User entity";
-"str.md.userEntities.empty" = "No user entities found.";
-"str.md.userEntity.new" = "New user entity";
-"str.md.userEntity.edit" = "Edit user entity";
-"str.md.userEntity.save" = "Save user entity";
-"str.md.userEntity.info" = "User entity info";
-"str.md.userEntity.name" = "Name of the user entity";
+"str.md.userEntities" = "Userentities";
+"str.md.userEntity" = "Userentity";
+"str.md.userEntities.empty" = "No userentities found.";
+"str.md.userEntity.new" = "New userentity";
+"str.md.userEntity.edit" = "Edit userentity";
+"str.md.userEntity.save" = "Save userentity";
+"str.md.userEntity.info" = "Userentity info";
+"str.md.userEntity.name" = "Name of the userentity";
 "str.md.userEntity.name.required" = "This is required and can only contain letters and numbers";
 "str.md.userEntity.name.exists" = "Name already exists";
 "str.md.userEntity.caption" = "Caption";

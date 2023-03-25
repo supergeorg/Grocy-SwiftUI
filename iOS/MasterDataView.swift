@@ -20,8 +20,8 @@ struct MasterDataView: View {
                 Label(LocalizedStringKey("str.md.locations"), systemImage: MySymbols.location)
             }
             
-            NavigationLink(destination: MDShoppingLocationsView()) {
-                Label(LocalizedStringKey("str.md.shoppingLocations"), systemImage: MySymbols.shoppingLocation)
+            NavigationLink(destination: MDStoresView()) {
+                Label(LocalizedStringKey("str.md.stores"), systemImage: MySymbols.store)
             }
             
             NavigationLink(destination: MDQuantityUnitsView()) {

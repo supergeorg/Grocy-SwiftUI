@@ -16,6 +16,8 @@
 "str.close" = "Stäng";
 "str.add" = "Lägg till";
 "str.clear" = "Töm";
+"str.none" = "Ingen";
+"str.group.category" = "Gruppera efter";
 
 // MARK: - Generic components
 
@@ -43,11 +45,14 @@
 "str.nav.batteryTracking" = "Spårning av batterier";
 "str.nav.md.products" = "Produkter";
 "str.nav.md.locations" = "Platser";
+"str.nav.md.stores" = "Affärer";
 "str.nav.md.quantityUnits" = "Mängdenheter";
 "str.nav.md.productGroups" = "Produktgrupper";
 "str.nav.md.chores" = "Sysslor";
 "str.nav.md.batteries" = "Batterier";
 "str.nav.md.taskCategories" = "Uppgiftskategorier";
+"str.nav.md.userFields" = "Användarfält";
+"str.nav.md.userEntities" = "Användarposter";
 "str.nav.settings" = "inställningar";
 
 // MARK: - Details
@@ -80,6 +85,7 @@
 "str.stock.tbl.productGroup" = "Produktgrupp";
 "str.stock.tbl.amount" = "Mängd";
 "str.stock.tbl.value" = "Värde";
+"str.stock.tbl.nextDueDate" = "Nästa förfallodatum";
 "str.stock.tbl.calories" = "Kalorier";
 "str.stock.tbl.lastPurchased" = "Senast köpt";
 "str.stock.tbl.lastPrice" = "Sista priset";
@@ -107,7 +113,7 @@
 "str.stock.buy.product.price.unitPrice" = "Enhetspris";
 "str.stock.buy.product.price.totalPrice" = "Totalpris";
 "str.stock.buy.product.price.relation %@ %@" = "betyder %@per %@";
-"str.stock.buy.product.shoppingLocation" = "Affär";
+"str.stock.buy.product.store" = "Affär";
 "str.stock.buy.product.location" = "Plats";
 "str.stock.buy.product.note" = "Anteckning";
 
@@ -146,7 +152,7 @@
 "str.stock.inventory.product.neverOverdue" = "Går aldrig ut";
 "str.stock.inventory.product.price" = "Pris";
 "str.stock.inventory.product.price.info" = "Per mängdenhet i lager";
-"str.stock.inventory.product.shoppingLocation" = "Affär";
+"str.stock.inventory.product.store" = "Affär";
 "str.stock.inventory.product.location" = "Plats";
 "str.stock.inventory.product.location.info" = "Detta gäller för tillagda produkter";
 "str.stock.inventory.product.location.required" = "En plats krävs";
@@ -231,7 +237,7 @@
 // default locations
 "str.md.product.location" = "Standardplats";
 "str.md.product.location.required" = "En plats krävs";
-"str.md.product.shoppingLocation" = "Standardaffär";
+"str.md.product.store" = "Standardaffär";
 // due date
 "str.md.product.category.dueDate" = "Förfallodatum";
 "str.md.product.dueType" = "Typ av datummärkning";
@@ -269,7 +275,7 @@
 "str.md.barcode.barcode" = "Streckkod";
 "str.md.barcode.amount" = "Mängd";
 "str.md.barcode.quantityUnit" = "Mängdenhet";
-"str.md.barcode.shoppingLocation" = "Affär";
+"str.md.barcode.store" = "Affär";
 "str.md.barcode.note" = "Anteckning";
 
 "str.md.locations" = "Platser";
@@ -279,7 +285,7 @@
 "str.md.location.name.required" = "Ett namn krävs";
 "str.md.location.isFreezing" = "Är en frys";
 
-"str.md.shoppingLocation.name.required" = "Ett namn krävs";
+"str.md.store.name.required" = "Ett namn krävs";
 
 "str.md.quantityUnits" = "Mängdenheter";
 "str.md.quantityUnit" = "Mängdenhet";
@@ -325,6 +331,8 @@
 
 "str.md.userField.type.link" = "Länk";
 
+"str.md.userEntities" = "Användarposter";
+"str.md.userEntity.edit" = "Redigera användarpost";
 "str.md.userEntity.name.required" = "Detta är obligatoriskt och kan bara innehålla bokstäver och siffror";
 "str.md.userEntity.caption" = "Rubrik";
 "str.md.userEntity.caption.required" = "En rubrik krävs";

@@ -21,8 +21,8 @@ struct StockProductDetails: Codable {
     let defaultQuantityUnitPurchase: MDQuantityUnit
     let quantityUnitStock: MDQuantityUnit
     let lastPrice, avgPrice, oldestPrice: Double?
-    let lastShoppingLocationID: Int?
-    let defaultShoppingLocationID: Int?
+    let lastStoreID: Int?
+    let defaultStoreID: Int?
     let nextDueDate: String
     let location: MDLocation
     let averageShelfLifeDays: Int
@@ -45,8 +45,8 @@ struct StockProductDetails: Codable {
         case lastPrice = "last_price"
         case avgPrice = "avg_price"
         case oldestPrice = "oldest_price"
-        case lastShoppingLocationID = "last_shopping_location_id"
-        case defaultShoppingLocationID = "default_shopping_location_id"
+        case lastStoreID = "last_shopping_location_id"
+        case defaultStoreID = "default_shopping_location_id"
         case nextDueDate = "next_due_date"
         case location
         case averageShelfLifeDays = "average_shelf_life_days"
@@ -76,8 +76,8 @@ struct StockProductDetails: Codable {
             do { self.lastPrice = try container.decodeIfPresent(Double.self, forKey: .lastPrice) } catch { self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "") }
             do { self.avgPrice = try container.decodeIfPresent(Double.self, forKey: .avgPrice) } catch { self.avgPrice = try? Double(container.decodeIfPresent(String.self, forKey: .avgPrice) ?? "") }
             do { self.oldestPrice = try container.decodeIfPresent(Double.self, forKey: .oldestPrice) } catch { self.oldestPrice = try? Double(container.decodeIfPresent(String.self, forKey: .oldestPrice) ?? "") }
-            do { self.lastShoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .lastShoppingLocationID) } catch { self.lastShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .lastShoppingLocationID) ?? "") }
-            do { self.defaultShoppingLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultShoppingLocationID) } catch { self.defaultShoppingLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultShoppingLocationID) ?? "") }
+            do { self.lastStoreID = try container.decodeIfPresent(Int.self, forKey: .lastStoreID) } catch { self.lastStoreID = try? Int(container.decodeIfPresent(String.self, forKey: .lastStoreID) ?? "") }
+            do { self.defaultStoreID = try container.decodeIfPresent(Int.self, forKey: .defaultStoreID) } catch { self.defaultStoreID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultStoreID) ?? "") }
             self.nextDueDate = try container.decode(String.self, forKey: .nextDueDate)
             self.location = try container.decode(MDLocation.self, forKey: .location)
             do { self.averageShelfLifeDays = try container.decode(Int.self, forKey: .averageShelfLifeDays) } catch { self.averageShelfLifeDays = try Int(container.decode(String.self, forKey: .averageShelfLifeDays))! }

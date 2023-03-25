@@ -116,7 +116,7 @@
 "str.stock.buy.product.price.unitPrice" = "Egységár";
 "str.stock.buy.product.price.totalPrice" = "Teljes ár";
 "str.stock.buy.product.price.relation %@ %@" = "%@ minden %@-ben";
-"str.stock.buy.product.shoppingLocation" = "Áruház";
+"str.stock.buy.product.store" = "Áruház";
 "str.stock.buy.product.location" = "Hely";
 "str.stock.buy.product.note" = "Jegyzet";
 
@@ -155,7 +155,7 @@
 "str.stock.inventory.product.neverOverdue" = "Soha nem jár le";
 "str.stock.inventory.product.price" = "Ár";
 "str.stock.inventory.product.price.info" = "Készletegységenként";
-"str.stock.inventory.product.shoppingLocation" = "Áruház";
+"str.stock.inventory.product.store" = "Áruház";
 "str.stock.inventory.product.location" = "Hely";
 "str.stock.inventory.product.location.info" = "Ez érvényesülni fog a hozzáadott termékekre";
 "str.stock.inventory.product.location.required" = "A hely megadása kötelező";
@@ -246,7 +246,7 @@
 "str.md.product.location.consume.info" = "Az ezen a helyen elérhető termékek kerülnek először felhasználásra";
 "str.md.product.location.consume.moveOnOpen" = "Felbontáskor áthelyezés";
 "str.md.product.location.consume.moveOnOpen.info" = "Bekapcsolva áthelyezi az épp felbontott készletet az alapértelmezett felhasználási helyre";
-"str.md.product.shoppingLocation" = "Alapértelmezett áruház";
+"str.md.product.store" = "Alapértelmezett áruház";
 // due date
 "str.md.product.category.dueDate" = "Lejárati idő";
 "str.md.product.dueType" = "Lejárati idő típusa";
@@ -287,7 +287,7 @@
 "str.md.barcode.barcode" = "Vonalkód";
 "str.md.barcode.amount" = "Mennyiség";
 "str.md.barcode.quantityUnit" = "Mennyiségi egység";
-"str.md.barcode.shoppingLocation" = "Áruház";
+"str.md.barcode.store" = "Áruház";
 "str.md.barcode.note" = "Jegyzet";
 
 "str.md.locations" = "Helyek";
@@ -297,7 +297,7 @@
 "str.md.location.name.required" = "A név megadása kötelező";
 "str.md.location.isFreezing" = "Fagyasztószekrény";
 
-"str.md.shoppingLocation.name.required" = "A név megadása kötelező";
+"str.md.store.name.required" = "A név megadása kötelező";
 
 "str.md.quantityUnits" = "Mennyiségi egységek";
 "str.md.quantityUnit" = "Mennyiségi egység";

@@ -12,11 +12,11 @@ import Foundation
 struct ProductPriceHistory: Codable {
     let date: String
     let price: Double
-    let shoppingLocation: MDShoppingLocation
+    let store: MDStore
 
     enum CodingKeys: String, CodingKey {
         case date, price
-        case shoppingLocation = "shopping_location"
+        case store = "shopping_location"
     }
 }
 

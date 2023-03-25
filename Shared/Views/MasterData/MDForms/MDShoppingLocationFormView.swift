@@ -1,5 +1,5 @@
 //
-//  MDShoppingLocationFormView.swift
+//  MDStoreFormView.swift
 //  Grocy-SwiftUI
 //
 //  Created by Georg Meissner on 17.11.20.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MDShoppingLocationFormView: View {
+struct MDStoreFormView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
@@ -16,23 +16,23 @@ struct MDShoppingLocationFormView: View {
     @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
-    @State private var mdShoppingLocationDescription: String = ""
+    @State private var mdStoreDescription: String = ""
     
-    var isNewShoppingLocation: Bool
-    var shoppingLocation: MDShoppingLocation?
+    var isNewStore: Bool
+    var store: MDStore?
     
-    @Binding var showAddShoppingLocation: Bool
+    @Binding var showAddStore: Bool
     @Binding var toastType: ToastType?
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
-        let foundShoppingLocation = grocyVM.mdShoppingLocations.first(where: {$0.name == name})
-        return isNewShoppingLocation ? !(name.isEmpty || foundShoppingLocation != nil) : !(name.isEmpty || (foundShoppingLocation != nil && foundShoppingLocation!.id != shoppingLocation!.id))
+        let foundStore = grocyVM.mdStores.first(where: {$0.name == name})
+        return isNewStore ? !(name.isEmpty || foundStore != nil) : !(name.isEmpty || (foundStore != nil && foundStore!.id != store!.id))
     }
     
     private func resetForm() {
-        self.name = shoppingLocation?.name ?? ""
-        self.mdShoppingLocationDescription = shoppingLocation?.mdShoppingLocationDescription ?? ""
+        self.name = store?.name ?? ""
+        self.mdStoreDescription = store?.mdStoreDescription ?? ""
         isNameCorrect = checkNameCorrect()
     }
     
@@ -45,41 +45,41 @@ struct MDShoppingLocationFormView: View {
 #if os(iOS)
         self.dismiss()
 #elseif os(macOS)
-        if isNewShoppingLocation {
-            showAddShoppingLocation = false
+        if isNewStore {
+            showAddStore = false
         }
 #endif
     }
     
-    private func saveShoppingLocation() {
-        let id = isNewShoppingLocation ? grocyVM.findNextID(.shopping_locations) : shoppingLocation!.id
-        let timeStamp = isNewShoppingLocation ? Date().iso8601withFractionalSeconds : shoppingLocation!.rowCreatedTimestamp
-        let shoppingLocationPOST = MDShoppingLocation(id: id, name: name, mdShoppingLocationDescription: mdShoppingLocationDescription, rowCreatedTimestamp: timeStamp)
+    private func saveStore() {
+        let id = isNewStore ? grocyVM.findNextID(.shopping_locations) : store!.id
+        let timeStamp = isNewStore ? Date().iso8601withFractionalSeconds : store!.rowCreatedTimestamp
+        let storePOST = MDStore(id: id, name: name, mdStoreDescription: mdStoreDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
-        if isNewShoppingLocation {
-            grocyVM.postMDObject(object: .shopping_locations, content: shoppingLocationPOST, completion: { result in
+        if isNewStore {
+            grocyVM.postMDObject(object: .shopping_locations, content: storePOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog("Shopping location add successful. \(message)", type: .info)
+                    grocyVM.postLog("Store add successful. \(message)", type: .info)
                     toastType = .successAdd
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog("Shopping location add failed. \(error)", type: .error)
+                    grocyVM.postLog("Store add failed. \(error)", type: .error)
                     toastType = .failAdd
                 }
                 isProcessing = false
             })
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: shoppingLocationPOST, completion: { result in
+            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST, completion: { result in
                 switch result {
                 case let .success(message):
-                    grocyVM.postLog("Shopping location edit successful. \(message)", type: .info)
+                    grocyVM.postLog("Store edit successful. \(message)", type: .info)
                     toastType = .successEdit
                     updateData()
                     finishForm()
                 case let .failure(error):
-                    grocyVM.postLog("Shopping location add failed. \(error)", type: .error)
+                    grocyVM.postLog("Store add failed. \(error)", type: .error)
                     toastType = .failEdit
                 }
                 isProcessing = false
@@ -90,11 +90,11 @@ struct MDShoppingLocationFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
+            .navigationTitle(isNewStore ? LocalizedStringKey("str.md.store.new") : LocalizedStringKey("str.md.store.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveShoppingLocation, label: {
-                        Label(LocalizedStringKey("str.md.shoppingLocation.save"), systemImage: MySymbols.save)
+                    Button(action: saveStore, label: {
+                        Label(LocalizedStringKey("str.md.store.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -102,7 +102,7 @@ struct MDShoppingLocationFormView: View {
                 }
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
-                    if isNewShoppingLocation {
+                    if isNewStore {
                         Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
                     }
                 }
@@ -113,18 +113,18 @@ struct MDShoppingLocationFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewShoppingLocation ? LocalizedStringKey("str.md.shoppingLocation.new") : LocalizedStringKey("str.md.shoppingLocation.edit"))
+            Text(isNewStore ? LocalizedStringKey("str.md.store.new") : LocalizedStringKey("str.md.store.edit"))
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
             
-            Section(header: Text(LocalizedStringKey("str.md.shoppingLocation.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.shoppingLocation.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.shoppingLocation.name.required", errorMessage: "str.md.shoppingLocation.name.exists")
+            Section(header: Text(LocalizedStringKey("str.md.store.info"))){
+                MyTextField(textToEdit: $name, description: "str.md.store.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.store.name.required", errorMessage: "str.md.store.name.exists")
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
-                MyTextField(textToEdit: $mdShoppingLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
         .onAppear(perform: {
@@ -137,20 +137,20 @@ struct MDShoppingLocationFormView: View {
     }
 }
 
-struct MDShoppingLocationFormView_Previews: PreviewProvider {
+struct MDStoreFormView_Previews: PreviewProvider {
     static var previews: some View {
 #if os(macOS)
         Group {
-            MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
-            MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: 0, name: "Shoppingloc", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: ""), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+            MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
+            MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Shoppingloc", mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
         }
 #else
         Group {
             NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: true, showAddShoppingLocation: Binding.constant(true), toastType: Binding.constant(nil))
+                MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDShoppingLocationFormView(isNewShoppingLocation: false, shoppingLocation: MDShoppingLocation(id: 0, name: "Shoppinglocation", mdShoppingLocationDescription: "Descr", rowCreatedTimestamp: ""), showAddShoppingLocation: Binding.constant(false), toastType: Binding.constant(nil))
+                MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Store", mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
 #endif

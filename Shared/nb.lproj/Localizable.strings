@@ -116,7 +116,7 @@
 "str.stock.buy.product.price.unitPrice" = "Enhetspris";
 "str.stock.buy.product.price.totalPrice" = "Totalpris";
 "str.stock.buy.product.price.relation %@ %@" = "betyr %@ per %@";
-"str.stock.buy.product.shoppingLocation" = "Butikk";
+"str.stock.buy.product.store" = "Butikk";
 "str.stock.buy.product.location" = "Lokasjon";
 "str.stock.buy.product.note" = "Info";
 
@@ -155,7 +155,7 @@
 "str.stock.inventory.product.neverOverdue" = "Forfaller aldri";
 "str.stock.inventory.product.price" = "Pris";
 "str.stock.inventory.product.price.info" = "Beholdnings forpakningstype";
-"str.stock.inventory.product.shoppingLocation" = "Butikk";
+"str.stock.inventory.product.store" = "Butikk";
 "str.stock.inventory.product.location" = "Lokasjon";
 "str.stock.inventory.product.location.info" = "Dette vil gjelde for produkt som blir lagt til";
 "str.stock.inventory.product.location.required" = "En lokasjon kreves";
@@ -246,7 +246,7 @@
 "str.md.product.location.consume.info" = "Beholdningen på denne lokasjonen blir brukt først";
 "str.md.product.location.consume.moveOnOpen" = "Flytt ved åpning";
 "str.md.product.location.consume.moveOnOpen.info" = "Når denne er aktivert vil produktet bli flytte til standard lokasjonen automatisk når det blir markert som åpnet.";
-"str.md.product.shoppingLocation" = "Standard butikk";
+"str.md.product.store" = "Standard butikk";
 // due date
 "str.md.product.category.dueDate" = "Forfallsdato";
 "str.md.product.dueType" = "Forfallsdatotype";
@@ -287,7 +287,7 @@
 "str.md.barcode.barcode" = "Strekkode";
 "str.md.barcode.amount" = "Mengde";
 "str.md.barcode.quantityUnit" = "Forpakning";
-"str.md.barcode.shoppingLocation" = "Butikk";
+"str.md.barcode.store" = "Butikk";
 "str.md.barcode.note" = "Info";
 
 "str.md.locations" = "Lokasjoner";
@@ -297,7 +297,7 @@
 "str.md.location.name.required" = "Vennligst fyll inn et navn";
 "str.md.location.isFreezing" = "Er fryser";
 
-"str.md.shoppingLocation.name.required" = "Vennligst fyll inn et navn";
+"str.md.store.name.required" = "Vennligst fyll inn et navn";
 
 "str.md.quantityUnits" = "Forpakning";
 "str.md.quantityUnit" = "Forpakning";

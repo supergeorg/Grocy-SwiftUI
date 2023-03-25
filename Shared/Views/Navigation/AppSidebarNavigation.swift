@@ -30,7 +30,7 @@ extension AppSidebarNavigation {
         case masterData = "tablecells"
         case mdProducts = "p.circle.fill"
         case mdLocations = "mappin"
-        case mdShoppingLocations = "cart.fill"
+        case mdStores = "cart.fill"
         case mdQuantityUnits = "scalemass.fill"
         case mdProductGroups = "square.stack.fill"
         case mdChores = "house.fill"
@@ -198,10 +198,10 @@ struct AppSidebarNavigation: View {
                         }
                         .tag(NavigationItem.mdLocations)
                         
-                        NavigationLink(destination: MDShoppingLocationsView(), tag: NavigationItem.mdShoppingLocations, selection: $selection) {
-                            Label(LocalizedStringKey("str.nav.md.shoppingLocations"), systemImage: NavigationItem.mdShoppingLocations.rawValue)
+                        NavigationLink(destination: MDStoresView(), tag: NavigationItem.mdStores, selection: $selection) {
+                            Label(LocalizedStringKey("str.nav.md.stores"), systemImage: NavigationItem.mdStores.rawValue)
                         }
-                        .tag(NavigationItem.mdShoppingLocations)
+                        .tag(NavigationItem.mdStores)
                         
                         NavigationLink(destination: MDQuantityUnitsView(), tag: NavigationItem.mdQuantityUnits, selection: $selection) {
                             Label(LocalizedStringKey("str.nav.md.quantityUnits"), systemImage: NavigationItem.mdQuantityUnits.rawValue)

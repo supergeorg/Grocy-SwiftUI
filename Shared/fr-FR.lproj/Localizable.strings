@@ -25,11 +25,13 @@
 "str.back" = "Retour";
 "str.retry" = "Essayez à nouveau";
 "str.failed" = "Echoué";
+"str.none" = "Aucun";
 "str.error.connection" = "Aucune connexion au serveur";
 "str.error.api" = "Erreur d'API détectée.";
 "str.error.other" = "Une erreur inconnue s'est produite";
 "str.error.logInfo" = "Veuillez vérifier le journal pour déterminer le problème.";
 "str.time.unlimited" = "Illimité";
+"str.group.category" = "Grouper par";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Ce nombre ne peut être plus petit que %@ et peut contenir au maximum %@ décimaux";
@@ -65,7 +67,7 @@
 "str.nav.md" = "Données de base";
 "str.nav.md.products" = "Produits";
 "str.nav.md.locations" = "Emplacements";
-"str.nav.md.shoppingLocations" = "Lieux d'achat";
+"str.nav.md.stores" = "Lieux d'achat";
 "str.nav.md.quantityUnits" = "Unités";
 "str.nav.md.productGroups" = "Groupes de produit";
 "str.nav.md.chores" = "Corvées";
@@ -131,7 +133,7 @@
 "str.stock.tbl.productGroup" = "Groupe de produit";
 "str.stock.tbl.amount" = "Quantité";
 "str.stock.tbl.value" = "Valeur";
-"str.stock.tbl.nextBestBefore" = "Date de péremption suivante";
+"str.stock.tbl.nextDueDate" = "Date de péremption suivante";
 "str.stock.tbl.caloriesPerStockQU" = "Calories (par unité de quantité de stock)";
 "str.stock.tbl.calories" = "Calories";
 "str.stock.tbl.lastPurchased" = "Dernier achat";
@@ -177,7 +179,7 @@
 "str.stock.buy.product.price.unitPrice" = "Prix unitaire";
 "str.stock.buy.product.price.totalPrice" = "Prix total";
 "str.stock.buy.product.price.relation %@ %@" = "signifie %@ par %@";
-"str.stock.buy.product.shoppingLocation" = "Magasin";
+"str.stock.buy.product.store" = "Magasin";
 "str.stock.buy.product.location" = "Emplacement";
 "str.stock.buy.product.location.default %@" = "%@ (Emplacement par défaut)";
 "str.stock.buy.product.note" = "Remarque";
@@ -233,7 +235,7 @@
 "str.stock.inventory.product.price" = "Prix";
 "str.stock.inventory.product.price.info" = "Unité de quantité par stock";
 "str.stock.inventory.product.price.invalid" = "Pour être valide, le nombre doit avoir au plus 2 décimales, et ne peut pas être inférieur à 0.01.";
-"str.stock.inventory.product.shoppingLocation" = "Magasin";
+"str.stock.inventory.product.store" = "Magasin";
 "str.stock.inventory.product.location" = "Emplacement";
 "str.stock.inventory.product.location.info" = "Sera appliqué aux produits ajoutés";
 "str.stock.inventory.product.location.required" = "Un emplacement est requis";
@@ -261,7 +263,7 @@
 "str.stock.entries.amount %@" = "Quantité : %@";
 "str.stock.entries.dueDate %@" = "Date de péremption : %@";
 "str.stock.entries.location %@" = "Emplacement: %@";
-"str.stock.entries.shoppingLocation %@" = "Magasin : %@";
+"str.stock.entries.store %@" = "Magasin : %@";
 "str.stock.entries.price %@" = "Prix : %@";
 "str.stock.entries.purchasedDate %@" = "Date d'achat : %@";
 "str.stock.entry.edit" = "Modifier l’entrée";
@@ -388,7 +390,7 @@
 "str.md.product.location.consume.info" = "Les entrées de stock à cet emplacement seront consommées en premier";
 "str.md.product.location.consume.moveOnOpen" = "Déplacer à l'ouverture";
 "str.md.product.location.consume.moveOnOpen.info" = "Lorsque activé, en marquant ce produit comme ouvert, le montant correspondant sera déplacé vers l'emplacement de consommation par défaut";
-"str.md.product.shoppingLocation" = "Magasin par défaut";
+"str.md.product.store" = "Magasin par défaut";
 // due date
 "str.md.product.category.dueDate" = "Date de péremption";
 "str.md.product.category.dueDate.description" = "Type, Jours par défaut ; après ouverture, congélation, décongélation ";
@@ -451,7 +453,7 @@
 "str.md.barcode.barcode.invalid" = "Le code-barre est invalide ou déjà utilisé";
 "str.md.barcode.amount" = "Quantité";
 "str.md.barcode.quantityUnit" = "Format";
-"str.md.barcode.shoppingLocation" = "Magasin";
+"str.md.barcode.store" = "Magasin";
 "str.md.barcode.note" = "Remarque";
 "str.md.barcode.info.amount %@" = "Quantité : %@";
 "str.md.barcode.info.store %@" = "Magasin : %@";
@@ -474,18 +476,18 @@
 "str.md.location.delete" = "Supprimer cette localisation";
 "str.md.location.delete.confirm" = "Voulez-vous supprimer cette localisation ?";
 
-"str.md.shoppingLocations" = "Localisations du magasin";
-"str.md.shoppingLocation" = "Localisation du magasin";
-"str.md.shoppingLocations.empty" = "Aucune localisation de magasin trouvée";
-"str.md.shoppingLocation.new" = "Nouvelle localisation de magasin";
-"str.md.shoppingLocation.edit" = "Modifier la localisation du magasin";
-"str.md.shoppingLocation.save" = "Enregistrer la localisation du magasin";
-"str.md.shoppingLocation.info" = "Information sur la localisation du magasin";
-"str.md.shoppingLocation.name" = "Localisation du magasin";
-"str.md.shoppingLocation.name.required" = "Un nom est requis";
-"str.md.shoppingLocation.name.exists" = "Ce nom existe déjà";
-"str.md.shoppingLocation.delete" = "Supprimer la localisation de ce magasin";
-"str.md.shoppingLocation.delete.confirm" = "Voulez-vous supprimer cette localisation pour le magasin ?";
+"str.md.stores" = "Localisations du magasin";
+"str.md.store" = "Localisation du magasin";
+"str.md.stores.empty" = "Aucune localisation de magasin trouvée";
+"str.md.store.new" = "Nouvelle localisation de magasin";
+"str.md.store.edit" = "Modifier la localisation du magasin";
+"str.md.store.save" = "Enregistrer la localisation du magasin";
+"str.md.store.info" = "Information sur la localisation du magasin";
+"str.md.store.name" = "Localisation du magasin";
+"str.md.store.name.required" = "Un nom est requis";
+"str.md.store.name.exists" = "Ce nom existe déjà";
+"str.md.store.delete" = "Supprimer la localisation de ce magasin";
+"str.md.store.delete.confirm" = "Voulez-vous supprimer cette localisation pour le magasin ?";
 
 "str.md.quantityUnits" = "Unités";
 "str.md.quantityUnit" = "Format";

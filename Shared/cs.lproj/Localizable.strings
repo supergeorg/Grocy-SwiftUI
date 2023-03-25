@@ -25,11 +25,13 @@
 "str.back" = "Zpět";
 "str.retry" = "Obnovit";
 "str.failed" = "Neúspěšné";
+"str.none" = "Žádného";
 "str.error.connection" = "Žádné připojení k serveru.";
 "str.error.api" = "Zjištěna chyba API.";
 "str.error.other" = "Neznámá chyba.";
 "str.error.logInfo" = "Ke zjištění problému zkontrolujte log.";
 "str.time.unlimited" = "neomezené";
+"str.group.category" = "Seskupovat podle sloupce";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Hodnota nesmí být menší než %@ a smí mít max. %@ desetinná místa";
@@ -65,7 +67,7 @@
 "str.nav.md" = "Master data";
 "str.nav.md.products" = "Produkty";
 "str.nav.md.locations" = "Umístění produktů";
-"str.nav.md.shoppingLocations" = "Nákupní místa";
+"str.nav.md.stores" = "Nákupní místa";
 "str.nav.md.quantityUnits" = "Měrné jednotky";
 "str.nav.md.productGroups" = "Skupiny produktů";
 "str.nav.md.chores" = "Povinnosti";
@@ -131,7 +133,7 @@
 "str.stock.tbl.productGroup" = "Skupina produktů";
 "str.stock.tbl.amount" = "Množství";
 "str.stock.tbl.value" = "Cena";
-"str.stock.tbl.nextBestBefore" = "Doporučené datum spotřeby";
+"str.stock.tbl.nextDueDate" = "Doporučené datum spotřeby";
 "str.stock.tbl.caloriesPerStockQU" = "Kalorie (na skladovou jednotku)";
 "str.stock.tbl.calories" = "Kalorie";
 "str.stock.tbl.lastPurchased" = "Naposledy nakoupeno";
@@ -177,7 +179,7 @@
 "str.stock.buy.product.price.unitPrice" = "Cena za jednotku";
 "str.stock.buy.product.price.totalPrice" = "Celková cena";
 "str.stock.buy.product.price.relation %@ %@" = "znamená %@za%@";
-"str.stock.buy.product.shoppingLocation" = "Obchod";
+"str.stock.buy.product.store" = "Obchod";
 "str.stock.buy.product.location" = "Umístění";
 "str.stock.buy.product.location.default %@" = "%@ (Výchozí umístění)";
 "str.stock.buy.product.note" = "Poznámka";
@@ -234,7 +236,7 @@
 "str.stock.inventory.product.price" = "Cena";
 "str.stock.inventory.product.price.info" = "Na jednotku množství zásob";
 "str.stock.inventory.product.price.invalid" = "Nemůže být méně než 0.01 a musí být číslo s maximálně 2 desetinnými místy.";
-"str.stock.inventory.product.shoppingLocation" = "Obchod";
+"str.stock.inventory.product.store" = "Obchod";
 "str.stock.inventory.product.location" = "Umístění";
 "str.stock.inventory.product.location.info" = "Určuje, jak se změna množství balení produktu zapíše do Seznamu zásob a zda se k této změně vytisknou nálepky na produkt";
 "str.stock.inventory.product.location.required" = "Umístění je povinný údaj";
@@ -262,7 +264,7 @@
 "str.stock.entries.amount %@" = "Množství: %@";
 "str.stock.entries.dueDate %@" = "Expirace: %@";
 "str.stock.entries.location %@" = "Umístění: %@";
-"str.stock.entries.shoppingLocation %@" = "Obchod: %@";
+"str.stock.entries.store %@" = "Obchod: %@";
 "str.stock.entries.price %@" = "Cena: %@";
 "str.stock.entries.purchasedDate %@" = "Datum nákupu: %@";
 "str.stock.entries.note %@" = "Poznámka: %@";
@@ -390,7 +392,7 @@
 "str.md.product.location.consume.info" = "Produkty budou spotřebovávány nejprve z tohoto umístění, (nebude-li při spotřebě zadáno jiné umístění)";
 "str.md.product.location.consume.moveOnOpen" = "Přesunout „otevřený” produkt";
 "str.md.product.location.consume.moveOnOpen.info" = "Označíte-li produkt jako otevřený, automaticky se přesune z Obvyklého umístění do Spotřebovávat z umístění. Abyste mohli funkci použít, musíte pro obě umístění vybrat různá místa.";
-"str.md.product.shoppingLocation" = "Obvyklý obchod";
+"str.md.product.store" = "Obvyklý obchod";
 // due date
 "str.md.product.category.dueDate" = "Datum min. trvanlivosti";
 "str.md.product.category.dueDate.description" = "Typ, výchozí dny; po otevření, zmrazení, rozmrazení";
@@ -453,7 +455,7 @@
 "str.md.barcode.barcode.invalid" = "Čárový kód je neplatný, nebo již používaný.";
 "str.md.barcode.amount" = "Množství";
 "str.md.barcode.quantityUnit" = "Měrná jednotka";
-"str.md.barcode.shoppingLocation" = "Obchod";
+"str.md.barcode.store" = "Obchod";
 "str.md.barcode.note" = "Poznámka";
 "str.md.barcode.info.amount %@" = "Množství: %@";
 "str.md.barcode.info.store %@" = "Obchod: %@";
@@ -476,18 +478,18 @@
 "str.md.location.delete" = "Smazat umístění";
 "str.md.location.delete.confirm" = "Opravdu chcete umístění smazat?";
 
-"str.md.shoppingLocations" = "Nákupní místa";
-"str.md.shoppingLocation" = "Nákupní místo";
-"str.md.shoppingLocations.empty" = "Nenalezeno umístění obchodu.";
-"str.md.shoppingLocation.new" = "Nové nákupní místo";
-"str.md.shoppingLocation.edit" = "Editovat nákupní místo";
-"str.md.shoppingLocation.save" = "Uložit nákupní místo";
-"str.md.shoppingLocation.info" = "Informace o nákupním místě";
-"str.md.shoppingLocation.name" = "Nákupní místo";
-"str.md.shoppingLocation.name.required" = "Jméno je povinný údaj";
-"str.md.shoppingLocation.name.exists" = "Jméno již existuje";
-"str.md.shoppingLocation.delete" = "Smazat nákupní místo";
-"str.md.shoppingLocation.delete.confirm" = "Opravdu chcete smazat nákupní místo?";
+"str.md.stores" = "Nákupní místa";
+"str.md.store" = "Nákupní místo";
+"str.md.stores.empty" = "Nenalezeno umístění obchodu.";
+"str.md.store.new" = "Nové nákupní místo";
+"str.md.store.edit" = "Editovat nákupní místo";
+"str.md.store.save" = "Uložit nákupní místo";
+"str.md.store.info" = "Informace o nákupním místě";
+"str.md.store.name" = "Nákupní místo";
+"str.md.store.name.required" = "Jméno je povinný údaj";
+"str.md.store.name.exists" = "Jméno již existuje";
+"str.md.store.delete" = "Smazat nákupní místo";
+"str.md.store.delete.confirm" = "Opravdu chcete smazat nákupní místo?";
 
 "str.md.quantityUnits" = "Měrné jednotky";
 "str.md.quantityUnit" = "Měrná jednotka";

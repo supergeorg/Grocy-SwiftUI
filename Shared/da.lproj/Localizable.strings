@@ -115,7 +115,7 @@
 "str.stock.buy.product.price.unitPrice" = "Enhedspris";
 "str.stock.buy.product.price.totalPrice" = "Totalpris";
 "str.stock.buy.product.price.relation %@ %@" = "betyder %1$ per %2$";
-"str.stock.buy.product.shoppingLocation" = "Butik";
+"str.stock.buy.product.store" = "Butik";
 "str.stock.buy.product.location" = "Placering";
 "str.stock.buy.product.note" = "Note";
 
@@ -154,7 +154,7 @@
 "str.stock.inventory.product.neverOverdue" = "Udløber aldrig";
 "str.stock.inventory.product.price" = "Pris";
 "str.stock.inventory.product.price.info" = "Per lagerenhed";
-"str.stock.inventory.product.shoppingLocation" = "Butik";
+"str.stock.inventory.product.store" = "Butik";
 "str.stock.inventory.product.location" = "Placering";
 "str.stock.inventory.product.location.info" = "Dette vil gælde for tilføjede varer";
 "str.stock.inventory.product.location.required" = "En placering er påkrævet";
@@ -242,7 +242,7 @@
 "str.md.product.location.consume" = "Standard forbrugsplacering";
 "str.md.product.location.consume.info" = "Vareposteringer på denne placering vil bliver forbrugt først";
 "str.md.product.location.consume.moveOnOpen" = "Flyt ved åbning";
-"str.md.product.shoppingLocation" = "Standard-butik";
+"str.md.product.store" = "Standard-butik";
 // due date
 "str.md.product.category.dueDate" = "Forfaldsdato";
 "str.md.product.dueType" = "Type af udløbs-dato";
@@ -281,7 +281,7 @@
 "str.md.barcode.barcode" = "Stregkode";
 "str.md.barcode.amount" = "Mængde";
 "str.md.barcode.quantityUnit" = "Mængdeenhed";
-"str.md.barcode.shoppingLocation" = "Butik";
+"str.md.barcode.store" = "Butik";
 "str.md.barcode.note" = "Note";
 
 "str.md.locations" = "Placeringer";
@@ -291,7 +291,7 @@
 "str.md.location.name.required" = "Et navn er påkrævet";
 "str.md.location.isFreezing" = "Er en fryser";
 
-"str.md.shoppingLocation.name.required" = "Et navn er påkrævet";
+"str.md.store.name.required" = "Et navn er påkrævet";
 
 "str.md.quantityUnits" = "Mængdeenheder";
 "str.md.quantityUnit" = "Mængdeenhed";

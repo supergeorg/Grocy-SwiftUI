@@ -25,11 +25,13 @@
 "str.back" = "Powrót";
 "str.retry" = "Spróbuj ponownie";
 "str.failed" = "Nie powiodło się";
+"str.none" = "Brak";
 "str.error.connection" = "Brak połączenia z serwerem.";
 "str.error.api" = "Wystąpił błąd w API.";
 "str.error.other" = "Wystąpił nieznany błąd.";
 "str.error.logInfo" = "Sprawdź logi aby określić problem.";
 "str.time.unlimited" = "bez ograniczeń";
+"str.group.category" = "Grupuj po";
 
 // MARK: - Generic components
 "str.double.invalid %@ %@" = "Nie może być niższe niż %@ i musi być poprawną liczbą z maksymalnie %@miejscami dziesiętnymi";
@@ -65,7 +67,7 @@
 "str.nav.md" = "Dane";
 "str.nav.md.products" = "Produkty";
 "str.nav.md.locations" = "Miejsca";
-"str.nav.md.shoppingLocations" = "Miejsca zakupów";
+"str.nav.md.stores" = "Miejsca zakupów";
 "str.nav.md.quantityUnits" = "Jednostki miary";
 "str.nav.md.productGroups" = "Grupy produktów";
 "str.nav.md.chores" = "Obowiązki domowe";
@@ -131,7 +133,7 @@
 "str.stock.tbl.productGroup" = "Grupa produktu";
 "str.stock.tbl.amount" = "Ilość";
 "str.stock.tbl.value" = "Wartość";
-"str.stock.tbl.nextBestBefore" = "Następna data najlepszego spożycia przed";
+"str.stock.tbl.nextDueDate" = "Następna data najlepszego spożycia przed";
 "str.stock.tbl.caloriesPerStockQU" = "Kalorie (na jednostkę miary)";
 "str.stock.tbl.calories" = "Kalorie";
 "str.stock.tbl.lastPurchased" = "Ostatni zakup";
@@ -177,7 +179,7 @@
 "str.stock.buy.product.price.unitPrice" = "Cena jednostkowa";
 "str.stock.buy.product.price.totalPrice" = "Cena całkowita";
 "str.stock.buy.product.price.relation %@ %@" = "oznacza %@ na %@";
-"str.stock.buy.product.shoppingLocation" = "Sklep";
+"str.stock.buy.product.store" = "Sklep";
 "str.stock.buy.product.location" = "Miejsce";
 "str.stock.buy.product.location.default %@" = "%@ (Domyślne miejsce)";
 "str.stock.buy.product.note" = "Notatka";
@@ -233,7 +235,7 @@
 "str.stock.inventory.product.price" = "Cena";
 "str.stock.inventory.product.price.info" = "Za jednostkę miary";
 "str.stock.inventory.product.price.invalid" = "Ilość nie może być mniejsza niż 0.01 oraz może mieć maksymalnie 2 cyfry po przecinku";
-"str.stock.inventory.product.shoppingLocation" = "Sklep";
+"str.stock.inventory.product.store" = "Sklep";
 "str.stock.inventory.product.location" = "Miejsce";
 "str.stock.inventory.product.location.info" = "Będie użyte do dodanych produktów";
 "str.stock.inventory.product.location.required" = "Miejsce jest wymagane";
@@ -261,7 +263,7 @@
 "str.stock.entries.amount %@" = "Ilość: %@";
 "str.stock.entries.dueDate %@" = "Data ważności: %@";
 "str.stock.entries.location %@" = "Miejsce: %@";
-"str.stock.entries.shoppingLocation %@" = "Sklep: %@";
+"str.stock.entries.store %@" = "Sklep: %@";
 "str.stock.entries.price %@" = "Cena: %@";
 "str.stock.entries.purchasedDate %@" = "Data zakupu: %@";
 "str.stock.entry.edit" = "Edytuj pozycję";
@@ -326,6 +328,8 @@
 // MARK: - Recipes
 "str.recipes" = "Przepisy";
 "str.recipes.name" = "Nazwa";
+"str.recipes.dueScore" = "Wynik końcowy";
+"str.recipes.dueScore.hint" = "Im wyższa jest ta liczba, tym więcej składników znajdujących się obecnie w magazynie zbliża się do terminu ważności lub jest przeterminowane.";
 "str.recipes.fulfillment" = "Wymagania spełnione";
 "str.recipes.fulfillment.enough" = "Dość na stanie";
 "str.recipes.fulfillment.notEnough" = "Za mało zapasów";
@@ -382,7 +386,10 @@
 "str.md.product.category.defaultLocations.description" = "Miejsce, Sklep";
 "str.md.product.location" = "Domyślne miejsce";
 "str.md.product.location.required" = "Miejsce jest wymagane";
-"str.md.product.shoppingLocation" = "Domyślny sklep";
+"str.md.product.location.consume" = "Domyślna lokalizacja pobierania zasobu";
+"str.md.product.location.consume.moveOnOpen" = "Przenieś po otwarciu";
+"str.md.product.location.consume.moveOnOpen.info" = "Po włączeniu tej opcji, w momencie oznaczenia produktu jako otwarty, odpowiednia ilość zostanie przeniesiona do domyślnego miejsca przechowywania w czasie zużywania.";
+"str.md.product.store" = "Domyślny sklep";
 // due date
 "str.md.product.category.dueDate" = "Data ważności";
 "str.md.product.category.dueDate.description" = "Typ, Domyślna ilość dni po; otwarciu; zamrożeniu; rozmrożeniu";
@@ -430,6 +437,7 @@
 "str.md.product.treatOpenedAsOutOfStock.hint" = "Gdy włączone, otwarte przedmioty będą liczone jako brakujące do obliczeń, czy minimalna ilość artykułu jest dostępna";
 "str.md.product.shouldNotBeFrozen" = "Nie powinien być mrożony";
 "str.md.product.shouldNotBeFrozen.hint" = "Gdy włączone, podczas przenoszenia tego produktu do zamrażarki (a więc podczas zamrażania), zostanie pokazane ostrzeżenie";
+"str.md.product.noOwnStock.hint" = "Gdy włączone, ten produkt nie może mieć własnych zapasów, oznacza to, że nie będzie można go wybrać przy zakupie (przydatne dla produktów nadrzędnych, które są używane jako podsumowanie/łączna liczba produktów podrzędnych)";
 
 "str.md.barcodes" = "Kody kreskowe";
 "str.md.barcode" = "Kod kreskowy";
@@ -443,7 +451,7 @@
 "str.md.barcode.barcode.invalid" = "Kod kreskowy musi być w formacie EAN-8 lub EAN-13";
 "str.md.barcode.amount" = "Ilość";
 "str.md.barcode.quantityUnit" = "Jednostka miary";
-"str.md.barcode.shoppingLocation" = "Sklep";
+"str.md.barcode.store" = "Sklep";
 "str.md.barcode.note" = "Notka";
 "str.md.barcode.info.amount %@" = "Ilość: %@";
 "str.md.barcode.info.store %@" = "Sklep: %@";
@@ -466,18 +474,18 @@
 "str.md.location.delete" = "Usuń miejsce";
 "str.md.location.delete.confirm" = "Na pewno chcesz usunąć to miejsce?";
 
-"str.md.shoppingLocations" = "Miejsca zakupów";
-"str.md.shoppingLocation" = "Miejsce zakupów";
-"str.md.shoppingLocations.empty" = "Nie znaleziono miejsc zakupów";
-"str.md.shoppingLocation.new" = "Nowe miejsce zakupów";
-"str.md.shoppingLocation.edit" = "Edytuj miejsce zakupów";
-"str.md.shoppingLocation.save" = "Zapisz miejsce zakupów";
-"str.md.shoppingLocation.info" = "Informacje o miejscu zakupów";
-"str.md.shoppingLocation.name" = "Miejsce zakupów";
-"str.md.shoppingLocation.name.required" = "Nazwa jest wymagana";
-"str.md.shoppingLocation.name.exists" = "Nazwa jest już zajęta";
-"str.md.shoppingLocation.delete" = "Usuń to miejsce zakupów";
-"str.md.shoppingLocation.delete.confirm" = "Na pewno chcesz usunąć to miejsce zakupów?";
+"str.md.stores" = "Miejsca zakupów";
+"str.md.store" = "Miejsce zakupów";
+"str.md.stores.empty" = "Nie znaleziono miejsc zakupów";
+"str.md.store.new" = "Nowe miejsce zakupów";
+"str.md.store.edit" = "Edytuj miejsce zakupów";
+"str.md.store.save" = "Zapisz miejsce zakupów";
+"str.md.store.info" = "Informacje o miejscu zakupów";
+"str.md.store.name" = "Miejsce zakupów";
+"str.md.store.name.required" = "Nazwa jest wymagana";
+"str.md.store.name.exists" = "Nazwa jest już zajęta";
+"str.md.store.delete" = "Usuń to miejsce zakupów";
+"str.md.store.delete.confirm" = "Na pewno chcesz usunąć to miejsce zakupów?";
 
 "str.md.quantityUnits" = "Jednostki miary";
 "str.md.quantityUnit" = "Jednostka miary";
@@ -637,10 +645,13 @@
 "str.settings.stock.common" = "Ogólne";
 "str.settings.stock.common.amountDecimalPlaces" = "Wartości po przecinku dla sztuk";
 "str.settings.stock.common.priceDecimalPlaces" = "Wartości po przecinku dla ceny";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Liczba miejsc po przecinku dla cen (w polach tekstowych)";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Liczba miejsc po przecinku dla cen (wyświetlanych)";
 "str.settings.stock.common.priceAddSeparatorAuto" = "Dodaj separator do liczb przy wprowadzeniu ceny";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Kiedy włączone, zawsze musisz wpisać wartość włączając liczby po przecinku, przecinek zostanie automatycznie dodany na podstawie ilości miejsc po przecinku";
 "str.settings.shoppingList" = "Ustawienia listy zakupów";
 "str.settings.shoppingList.shoppingList" = "Lista zakupów";
+"str.settings.shoppingList.autoAddToShL" = "Automatyczne dodawanie do listy zakupów produktów, których stan magazynowy jest niższy od zdefiniowanego minimum.";
 "str.settings.shoppingList.shLToStockWF" = "Lista zakupów do przepływu pracy zapasów";
 "str.settings.shoppingList.autoAddToStock" = "Automatycznie dokonaj rezerwacji przy użyciu ostatniej ceny i kwoty pozycji listy zakupów, jeśli produkt ma ustawioną opcję „Domyślna ilość dni minimalnej trwałości”";
 

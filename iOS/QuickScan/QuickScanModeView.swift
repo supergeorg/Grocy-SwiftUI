@@ -56,7 +56,7 @@ struct QuickScanModeView: View {
     
     @State private var lastConsumeLocationID: Int?
     @State private var lastPurchaseDueDate: Date = .init()
-    @State private var lastPurchaseShoppingLocationID: Int?
+    @State private var lastPurchaseStoreID: Int?
     @State private var lastPurchaseLocationID: Int?
     
     @State private var isScanPaused: Bool = false
@@ -196,7 +196,7 @@ struct QuickScanModeView: View {
                     infoString: $infoString,
                     lastConsumeLocationID: $lastConsumeLocationID,
                     lastPurchaseDueDate: $lastPurchaseDueDate,
-                    lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                    lastPurchaseStoreID: $lastPurchaseStoreID,
                     lastPurchaseLocationID: $lastPurchaseLocationID
                 )
             case .barcode:
@@ -207,7 +207,7 @@ struct QuickScanModeView: View {
                     infoString: $infoString,
                     lastConsumeLocationID: $lastConsumeLocationID,
                     lastPurchaseDueDate: $lastPurchaseDueDate,
-                    lastPurchaseShoppingLocationID: $lastPurchaseShoppingLocationID,
+                    lastPurchaseStoreID: $lastPurchaseStoreID,
                     lastPurchaseLocationID: $lastPurchaseLocationID
                 )
             case .selectProduct:
