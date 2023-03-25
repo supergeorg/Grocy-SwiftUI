@@ -1,0 +1,408 @@
+/*
+  Localizable.strings
+  Grocy-SwiftUI
+
+  Created by Georg Meissner on 13.11.20.
+  
+*/
+
+// MARK: - Generic
+"str.cancel" = "Mégse";
+"str.ok" = "OK";
+"str.delete" = "Törlés";
+"str.save" = "Mentés";
+"str.search" = "Keresés";
+"str.day" = "Nap";
+"str.close" = "Bezár";
+"str.add" = "Hozzáadás";
+"str.clear" = "Törlés";
+"str.none" = "Nincs";
+"str.group.category" = "Csoportosítás";
+
+// MARK: - Generic components
+"str.double.invalid %@ %@" = "Nem lehet kevesebb, mint %@ és érvényes számnak kell lennie max. %@ tizedesjegyel";
+
+// MARK: - Transactions
+"tr.purchase" = "Vásárlás";
+"tr.consume" = "Felhasználás";
+"tr.opened" = "Felbontott";
+"tr.inventoryCorrection" = "Leltár";
+
+// MARK: - Navigation
+"str.nav.stockOverview" = "Készlet áttekintése";
+"str.nav.shoppingList" = "Bevásárlólista";
+"str.nav.recipes" = "Receptek";
+"str.nav.mealPlan" = "Menü terv";
+"str.nav.choresOverview" = "Házimunkák áttekintése";
+"str.nav.tasks" = "Feladatok";
+"str.nav.batteriesOverview" = "Elemek áttekintése";
+"str.nav.equipment" = "Eszközök";
+"str.nav.calendar" = "Naptár";
+"str.nav.purchase" = "Vásárlás";
+"str.nav.consume" = "Felhasználás";
+"str.nav.transfer" = "Áthelyezés";
+"str.nav.inventory" = "Leltár";
+"str.nav.choreTracking" = "Házimunka követése";
+"str.nav.batteryTracking" = "Elemek követése";
+"str.nav.md.products" = "Termékek";
+"str.nav.md.locations" = "Helyek";
+"str.nav.md.stores" = "Áruházak";
+"str.nav.md.quantityUnits" = "Mennyiségi egységek";
+"str.nav.md.productGroups" = "Termékcsoportok";
+"str.nav.md.chores" = "Házimunkák";
+"str.nav.md.batteries" = "Elemek";
+"str.nav.md.taskCategories" = "Feladat kategóriák";
+"str.nav.md.userFields" = "Egyéni mezők";
+"str.nav.md.userEntities" = "Egyéni objektumok";
+"str.nav.settings" = "Beállítások";
+
+// MARK: - Details
+"str.details.title" = "Termék áttekintése";
+"str.details.relation %@ %@" = "%@ / %@";
+
+"str.details.never" = "Soha";
+"str.details.unknown" = "Ismeretlen";
+
+"str.details.stockEntries" = "Készlet bejegyzések";
+"str.details.stockJournal" = "Készlet napló";
+"str.details.edit" = "Termék szerkesztése";
+
+// MARK: - Stock
+"str.stock.stockOverview" = "Készlet áttekintése";
+// Products, Summed Value
+"str.stock.location" = "Hely";
+"str.stock.productGroup" = "Termékcsoport";
+"str.stock.all" = "Összes";
+"str.stock.status" = "Állapot";
+"str.stock.status.expiringSoon" = "Hamarosan esedékes";
+"str.stock.status.overdue" = "Lejárt";
+"str.stock.status.expired" = "Megromlott";
+"str.stock.status.belowMinStock" = "Min. készlet mennyiség alatt";
+"str.stock.info.opened %@" = "%@ felbontva";
+
+"str.stock.entry.status.notOpened" = "Felbontatlan";
+"str.stock.entry.status.opened" = "Felbontott";
+
+"str.stock.tbl.product" = "Termék";
+"str.stock.tbl.productGroup" = "Termékcsoport";
+"str.stock.tbl.amount" = "Mennyiség";
+"str.stock.tbl.value" = "Érték";
+"str.stock.tbl.nextDueDate" = "Következő lejárati dátum";
+"str.stock.tbl.calories" = "Kalória";
+"str.stock.tbl.lastPurchased" = "Legutóbb vásárolva";
+"str.stock.tbl.lastPrice" = "Legutóbbi ár";
+"str.stock.tbl.minStockAmount" = "Min. készlet mennyiség";
+"str.stock.tbl.productDescription" = "Termékleírás";
+"str.stock.tbl.parentProduct" = "Szülő termék";
+"str.stock.tbl.defaultLocation" = "Alapértelmezett hely";
+"str.stock.tbl.productPicture" = "Termék kép";
+"str.stock.tbl.action.all" = "Összes";
+"str.stock.tbl.action.consume.all %@" = "Összes készleten lévő %@ felhasználása";
+
+"str.stock.tbl.menu.addToShL" = "Hozzáadás bevásárlólistához";
+
+"str.stock.product.amount" = "Mennyiség";
+"str.stock.product.amount.factored %@ %@" = "Egyenlő ezzel: %@ %@";
+"str.stock.product.quantityUnit" = "Mennyiségi egység";
+"str.stock.product.quantityUnit.required" = "A mennyiségi egység megadása kötelező";
+
+"str.stock.buy" = "Vásárlás";
+"str.stock.buy.product" = "Termék";
+"str.stock.buy.product.required" = "Ki kell választanod egy terméket";
+"str.stock.buy.product.dueDate" = "Lejárati idő";
+"str.stock.buy.product.dueDate.required" = "Lejárati idő megadása kötelező";
+"str.stock.buy.product.doesntSpoil" = "Soha nem jár le";
+"str.stock.buy.product.price" = "Ár";
+"str.stock.buy.product.price.unitPrice" = "Egységár";
+"str.stock.buy.product.price.totalPrice" = "Teljes ár";
+"str.stock.buy.product.price.relation %@ %@" = "%@ minden %@-ben";
+"str.stock.buy.product.shoppingLocation" = "Áruház";
+"str.stock.buy.product.location" = "Hely";
+"str.stock.buy.product.note" = "Jegyzet";
+
+"str.stock.consume" = "Felhasználás";
+"str.stock.consume.product" = "Termék";
+"str.stock.consume.product.open" = "Megjelölés felbontottként";
+"str.stock.consume.product.open.success %@" = "%@ felbontva";
+"str.stock.consume.product.required" = "Ki kell választanod egy terméket";
+"str.stock.consume.product.location" = "Hely";
+"str.stock.consume.product.location.required" = "A hely megadása kötelező";
+"str.stock.consume.product.spoiled" = "Megromlott";
+"str.stock.consume.product.useStockEntry" = "Megadott készletelem használata";
+"str.stock.consume.product.stockEntry" = "Készletbejegyzés";
+"str.stock.consume.product.recipe" = "Recept";
+"str.stock.consume.product.recipe.info" = "Csak statisztikai céllal";
+
+"str.stock.transfer" = "Áthelyezés";
+"str.stock.transfer.product" = "Termék";
+"str.stock.transfer.product.required" = "Ki kell választanod egy terméket";
+"str.stock.transfer.product.locationFrom" = "Forráshely";
+"str.stock.transfer.product.locationFrom.required" = "A hely megadása kötelező";
+"str.stock.transfer.product.locationTo" = "Célhely";
+"str.stock.transfer.product.locationTo.required" = "A hely megadása kötelező";
+"str.stock.transfer.product.locationTo.same" = "Nem lehet azonos a 'Forrás' hellyel";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Ezt a terméket nem szabad lefagyasztani";
+"str.stock.transfer.product.useStockEntry" = "Megadott készletelem használata";
+"str.stock.transfer.product.stockEntry" = "Készletbejegyzés";
+
+"str.stock.inventory" = "Leltár";
+"str.stock.inventory.product" = "Termék";
+"str.stock.inventory.product.amount.lower %@" = "Ez azt jelenti, %@ el lesz távolítva a készletből";
+"str.stock.inventory.product.amount.higher %@" = "Ez azt jelenti, %@ hozzá lesz adva a készlethez";
+"str.stock.inventory.product.dueDate" = "Lejárati idő";
+"str.stock.inventory.product.dueDate.info" = "Ez érvényesülni fog a hozzáadott termékekre";
+"str.stock.inventory.product.dueDate.required" = "Lejárati idő megadása kötelező";
+"str.stock.inventory.product.neverOverdue" = "Soha nem jár le";
+"str.stock.inventory.product.price" = "Ár";
+"str.stock.inventory.product.price.info" = "Készletegységenként";
+"str.stock.inventory.product.shoppingLocation" = "Áruház";
+"str.stock.inventory.product.location" = "Hely";
+"str.stock.inventory.product.location.info" = "Ez érvényesülni fog a hozzáadott termékekre";
+"str.stock.inventory.product.location.required" = "A hely megadása kötelező";
+
+"str.stock.journal" = "Készlet napló";
+"str.stock.journal.summary" = "Készlet napló összefoglaló";
+"str.stock.journal.undo" = "Művelet visszavonása";
+"str.stock.journal.product" = "Termék";
+"str.stock.journal.transactionType" = "Művelet típusa";
+"str.stock.journal.location" = "Hely";
+"str.stock.journal.user" = "Felhasználó";
+
+"str.stock.entries" = "Készlet bejegyzések";
+"str.stock.entry.consume" = "Készlet bejegyzés felhasználása";
+"str.stock.entry.open" = "Készlet bejegyzés megjelölése felbontottként";
+
+// MARK: - Shopping List
+"str.shL" = "Bevásárlólista";
+"str.shL.new" = "Új bevásárló lista";
+"str.shL.edit" = "Bevásárlólista szerkesztése";
+"str.shL.delete" = "Bevásárló lista törlése";
+"str.shL.print" = "Nyomtatás";
+"str.shL.amount" = "Mennyiség";
+"str.shL.ungrouped" = "Nem csoportosított";
+
+"str.shL.form.new" = "Bevásárlólista létrehozása";
+"str.shL.form.edit" = "Bevásárlólista szerkesztése";
+"str.shL.form.name" = "Név";
+"str.shL.form.name.required" = "A név megadása kötelező";
+"str.shL.form.save" = "Mentés";
+
+"str.shL.action.addItem" = "Hozzáadás";
+"str.shL.action.clearList" = "Lista törlése";
+"str.shL.action.addListItemsToStock" = "Összes tétel készletre vétele";
+"str.shL.action.addBelowMinStock" = "A megadott min. készlet alatti termékek hozzáadása";
+"str.shL.action.addOverdue" = "Lejárt/megromlott termékek hozzáadása";
+
+"str.shL.filter.status" = "Állapot";
+"str.shL.filter.all" = "Összes";
+"str.shL.filter.belowMinStock" = "Min. készlet mennyiség alatt";
+"str.shL.filter.done" = "Csak elvégzett tételek";
+"str.shL.filter.undone" = "Nem elvégzett tételek";
+
+"str.shL.entryForm.new.title" = "Bevásárlólista tétel létrehozása";
+"str.shL.entryForm.edit.title" = "Bevásárlólista tétel szerkesztése";
+"str.shL.entryForm.shoppingList" = "Bevásárlólista";
+"str.shL.entryForm.product" = "Termék";
+"str.shL.entryForm.amount" = "Mennyiség";
+"str.shL.entryForm.quantityUnit" = "Mennyiségi egység";
+"str.shL.entryForm.note" = "Jegyzet";
+
+"str.shL.entry.done" = "Tétel megjelölése elvégzettként";
+"str.shL.entry.edit" = "Tétel szerkesztése";
+"str.shL.entry.delete" = "Tétel törlése";
+
+// MARK: - Recipes
+"str.recipes" = "Receptek";
+"str.recipes.name" = "Név";
+"str.recipes.dueScore" = "Lejárati pontszám";
+"str.recipes.dueScore.hint" = "Minél magasabb ez a szám, annál több hozzávaló fog lejárni a közeljövőben";
+"str.recipes.fulfillment" = "Teljesült követelmények";
+"str.recipes.fulfillment.enough" = "Elegendő mennyiség készleten";
+"str.recipes.fulfillment.notEnough" = "Nincs elegendő készleten";
+"str.recipes.fulfillment.notEnough.shL" = "Nincs elegendő készleten, de már szerepel a bevásárlólistán";
+
+// MARK: - Master Data
+"str.md.description" = "Leírás";
+"str.md.search" = "Keresés";
+
+// MD Product
+"str.md.products" = "Termékek";
+"str.md.product" = "Termék";
+"str.md.product.new" = "Termék létrehozása";
+"str.md.product.edit" = "Termék szerkesztése";
+"str.md.product.name.required" = "A név megadása kötelező";
+// optional properties
+"str.md.product.active" = "Aktív";
+"str.md.product.description" = "Leírás";
+"str.md.product.productGroup" = "Termékcsoport";
+"str.md.product.calories" = "Energia (kcal)";
+"str.md.product.calories.info" = "Készletegységenként";
+"str.md.product.dontShowOnStockOverview.info" = "A készlet áttekintés oldal az összes készleten vagy min. készlet mennyiség alatt lévő terméket mutatja - kapcsold ezt be, hogy a termék soha ne jelenjen meg ott";
+"str.md.product.picture" = "Termék kép";
+// default locations
+"str.md.product.location" = "Alapértelmezett hely";
+"str.md.product.location.required" = "A hely megadása kötelező";
+"str.md.product.location.consume" = "Alapértelmezett felhasználási hely";
+"str.md.product.location.consume.info" = "Az ezen a helyen elérhető termékek kerülnek először felhasználásra";
+"str.md.product.location.consume.moveOnOpen" = "Felbontáskor áthelyezés";
+"str.md.product.location.consume.moveOnOpen.info" = "Bekapcsolva áthelyezi az épp felbontott készletet az alapértelmezett felhasználási helyre";
+"str.md.product.shoppingLocation" = "Alapértelmezett áruház";
+// due date
+"str.md.product.category.dueDate" = "Lejárati idő";
+"str.md.product.dueType" = "Lejárati idő típusa";
+"str.md.product.dueType.info" = "A választástól függő kiemelést kap a készlet áttekintő képernyőn";
+"str.md.product.dueType.bestBefore" = "Minőségmegőrzési dátum";
+"str.md.product.dueType.bestBefore.info" = "Azt jelenti, hogy a termék még talán biztonságosan fogyasztható a lejárati dátum után";
+"str.md.product.dueType.expires" = "Fogyaszthatósági dátum";
+"str.md.product.dueType.expires.info" = "Azt jelenti, hogy a termék már nem fogyasztható biztonságosan a lejárati dátum után";
+"str.md.product.defaultDueDays" = "Alapértelmezett lejárati idő";
+"str.md.product.defaultDueDaysAfterOpen" = "Alapértelmezett fogyaszthatósági idő felbontás után";
+"str.md.product.defaultDueDaysAfterFreezing" = "Alapértelmezett lejárati idő fagyasztás után";
+"str.md.product.defaultDueDaysAfterFreezing.info" = "A termék fagyasztóba való mozgatása után (azaz fagyasztás után) a lejárati időt a mai nap + az itt beállított napok összegére cseréljük";
+"str.md.product.defaultDueDaysAfterThawing" = "Alapértelmezett lejárati idő kiolvasztás után";
+"str.md.product.defaultDueDaysAfterThawing.info" = "A termék fagyasztóból való kivétele után (azaz kiolvasztás után) a lejárati időt a mai nap + az itt beállított napok összegére cseréljük";
+// quantity units
+"str.md.product.category.quantityUnits" = "Mennyiségi egységek";
+"str.md.product.quStock" = "Készletegység";
+"str.md.product.quStock.required" = "A mennyiségi egység megadása kötelező";
+"str.md.product.quPurchase.info" = "Ez az alapértelmezett mennyiségi egység, amivel a termék a bevásárlólistára kerül";
+"str.md.product.quPurchase.required" = "A mennyiségi egység megadása kötelező";
+// amount
+"str.md.product.quickConsumeAmount" = "Gyors felhasználási mennyiség";
+"str.md.product.quickConsumeAmount.info" = "A készlet áttekintésnél lévő 'felhasználás/felbontottként jelölés' gombok ennyi mennyiséget használnak el (készletegységben)";
+"str.md.product.enableTareWeightHandling" = "Tára súly kezelés engedélyezése";
+"str.md.product.enableTareWeightHandling.info" = "Ez akkor hasznos pl. lisztnél - ha vásárláskor/felhasználáskor/leltárazáskor mindig az egész tárolót méred meg. Ilyenkor a helyes mennyiség automatán számolódik a leltár és a lentebb definiált tára mennyiség alapján.";
+"str.md.product.tareWeight" = "Tára súly";
+"str.md.product.notCheckStockFulfillmentForRecipes" = "Készlet rendelkezésre állás ellenőrzés kikapcsolása ehhez a hozzávalóhoz";
+"str.md.product.notCheckStockFulfillmentForRecipes.info" = "Ezt használja alapértelmezettként, ha a terméket hozzávalóként recepthez adjuk";
+"str.md.product.treatOpenedAsOutOfStock" = "Felbontott termékeket hiányzóként kezeli";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Bekapcsolva a felbontott termékek nem számítanak bele az elérhető készlet mennyiségbe a minimum készlet meghatározásánál";
+"str.md.product.shouldNotBeFrozen" = "Nem szabad lefagyasztani";
+"str.md.product.shouldNotBeFrozen.hint" = "Megjelenít egy figyelmeztetést, amikor ez a termék fagyasztóba (fagyasztóként megjelölt helyre) kerül";
+"str.md.product.noOwnStock" = "Saját készlet kikapcsolása";
+"str.md.product.noOwnStock.hint" = "Bekapcsolva a terméknek nem lehet saját készlete, így vásárolni se lehet (akkor hasznos, ha az adott terméket csak az al-termékek összesítésére használjuk)";
+
+"str.md.barcodes" = "Vonalkódok";
+"str.md.barcode" = "Vonalkód";
+"str.md.barcode.barcode" = "Vonalkód";
+"str.md.barcode.amount" = "Mennyiség";
+"str.md.barcode.quantityUnit" = "Mennyiségi egység";
+"str.md.barcode.shoppingLocation" = "Áruház";
+"str.md.barcode.note" = "Jegyzet";
+
+"str.md.locations" = "Helyek";
+"str.md.location" = "Hely";
+"str.md.location.edit" = "Hely szerkesztése";
+"str.md.location.name" = "Hely";
+"str.md.location.name.required" = "A név megadása kötelező";
+"str.md.location.isFreezing" = "Fagyasztószekrény";
+
+"str.md.shoppingLocation.name.required" = "A név megadása kötelező";
+
+"str.md.quantityUnits" = "Mennyiségi egységek";
+"str.md.quantityUnit" = "Mennyiségi egység";
+"str.md.quantityUnit.edit" = "Mennyiségi egység szerkesztése";
+"str.md.quantityUnit.name.required" = "A név megadása kötelező";
+"str.md.quantityUnit.conversions" = "Alapértelmezett átváltások";
+"str.md.quantityUnit.conversion.new" = "Mennyiségi egység átváltás létrehozása";
+"str.md.quantityUnit.conversion.edit" = "Mennyiségi egység átváltás szerkesztése";
+"str.md.quantityUnit.conversion.quFrom" = "Mennyiségi egységből";
+"str.md.quantityUnit.conversion.quTo" = "Mennyiségi egységbe";
+"str.md.quantityUnit.conversion.factor" = "Szorzó";
+
+"str.md.productGroups" = "Termékcsoportok";
+"str.md.productGroup" = "Termékcsoport";
+"str.md.productGroup.new" = "Termékcsoport létrehozása";
+"str.md.productGroup.edit" = "Termékcsoport szerkesztése";
+"str.md.productGroup.name.required" = "A név megadása kötelező";
+
+"str.md.chores" = "Házimunkák";
+"str.md.batteries" = "Elemek";
+
+"str.md.taskCategories" = "Feladat kategóriák";
+"str.md.taskCategory.new" = "Feladat kategória létrehozása";
+"str.md.taskCategory.edit" = "Feladat kategória szerkesztése";
+"str.md.taskCategory.name.required" = "A név megadása kötelező";
+
+"str.md.userFields" = "Egyéni mezők";
+"str.md.userField.new" = "Egyéni mező létrehozása";
+"str.md.userField.edit" = "Egyéni mező szerkesztése";
+"str.md.userField.entity" = "Objektum";
+"str.md.userField.name" = "Név";
+"str.md.userField.name.info" = "Ez a mező belső neve, pl: API-hoz";
+"str.md.userField.name.required" = "Ez kötelező és csak betűket és számokat tartalmazhat";
+"str.md.userField.name.invalid" = "Ez kötelező és csak betűket és számokat tartalmazhat";
+"str.md.userField.caption" = "Felirat";
+"str.md.userField.caption.info" = "Ez a felirat látszódik a frontenden/böngészőben";
+"str.md.userField.caption.required" = "A felirat megadása kötelező";
+"str.md.userField.sortNumber" = "Rendezési sorrend";
+"str.md.userField.sortNumber.info" = "Az egyéni mezők ez alapján lesznek sorba rendezve a beviteli űrlapon";
+"str.md.userField.type" = "Típus";
+"str.md.userField.type.required" = "A típus megadása kötelező";
+"str.md.userField.showAsColumnInTables" = "Megjelenítés oszlopként a táblázatokban";
+
+"str.md.userField.type.link" = "Hivatkozás";
+
+"str.md.userEntities" = "Egyéni objektumok";
+"str.md.userEntity.edit" = "Egyéni objektum szerkesztése";
+"str.md.userEntity.name.required" = "Ez kötelező és csak betűket és számokat tartalmazhat";
+"str.md.userEntity.caption" = "Felirat";
+"str.md.userEntity.caption.required" = "A felirat megadása kötelező";
+"str.md.userEntity.description" = "Leírás";
+"str.md.userEntity.showInSideBarMenu" = "Megjelenítés oldalsávon";
+"str.md.userEntity.iconCSSClass" = "Ikon CSS osztály";
+
+// MARK: - Settings
+"str.settings" = "Beállítások";
+"str.settings.app.update.autoReload" = "Automatikus újratöltés külső változásoknál";
+"str.settings.stock" = "Készlet beállítások";
+"str.settings.stock.presets" = "Új termék alapértelmezett tulajdonságok";
+"str.settings.stock.presets.location" = "Hely";
+"str.settings.stock.presets.productGroup" = "Termékcsoport";
+"str.settings.stock.presets.quantityUnit" = "Mennyiségi egység";
+"str.settings.stock.presets.defaultDueDays" = "Alapértelmezett lejárati idő";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Felbontott termékeket hiányzóként kezeli";
+"str.settings.stock.stockOverview" = "Készlet áttekintése";
+"str.settings.stock.stockOverview.dueSoonDays" = "Esedékesség előrejelzés napban";
+"str.settings.stock.stockOverview.showIconShoppingList" = "Jelenítsen meg egy ikont, ha a termék már a bevásárlólistán van";
+"str.settings.stock.purchase" = "Vásárlás";
+"str.settings.stock.purchase.defaultAmount" = "Alapértelmezett vásárlási mennyiség";
+"str.settings.stock.purchase.showPurchasedDate" = "Vásárlási dátum mutatása a vásárlás és készlet áttekintés oldalakon (enélkül a vásárlási dátum a mai napra áll be)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "Figyelmeztessen, ha a vásárolt termék előbb jár le, mint ami készleten van";
+"str.settings.stock.consume" = "Felhasználás";
+"str.settings.stock.consume.defaultAmount" = "Alapértelmezett felhasználási mennyiség";
+"str.settings.stock.consume.useQuickConsume" = "Használja a termékek 'gyors felhasználási mennyiségét'";
+"str.settings.stock.common" = "Általános";
+"str.settings.stock.common.amountDecimalPlaces" = "Mennyiségek tizedesjegyei";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Engedélyezett tizedesjegyek az árbevitelhez";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Engedélyezett tizedesjegyek az ár megjelenítéshez";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Tizedesvessző automatikus hozzáadása az árbeviteli mezőkhöz";
+"str.settings.stock.common.priceAddSeparatorAuto.hint" = "Bekapcsolva mindig tizedesjegyekkel együtt kell megadni az értéket, a tizedesvessző automatikusan hozzáadódik a beállított tizedeshelyek száma alapján";
+"str.settings.shoppingList" = "Bevásárlólista beállítások";
+"str.settings.shoppingList.shoppingList" = "Bevásárlólista";
+"str.settings.shoppingList.autoAddToShL" = "Automatikusan adja hozzá a minimum készlet mennyiség alatti termékeket az alábbi bevásárlólistához";
+"str.settings.shoppingList.shLToStockWF" = "Bevásárlólistából készletbe munkafolyamat";
+"str.settings.shoppingList.autoAddToStock" = "Automatán készletezze a termékeket az utolsó ismert ár és bevásárlólistán szereplő mennyiség alapján, ha a termék 'Alapértelmezett lejárati ideje' be van állítva";
+
+
+// MARK: - Admin
+"str.admin.user.tooltip.edit" = "Tétel szerkesztése";
+"str.admin.user.tooltip.permissions" = "Felhasználói jogosultságok kezelése";
+"str.admin.user.tooltip.delete" = "Tétel törlése";
+"str.admin.user.new.create" = "Felhasználó létrehozása";
+"str.admin.user.new.edit" = "Felhasználó szerkesztése";
+"str.admin.user.new.userName" = "Felhasználóinév";
+"str.admin.user.new.userName.required" = "A felhasználóinév megadása kötelező";
+"str.admin.user.new.firstName" = "Keresztnév";
+"str.admin.user.new.lastName" = "Vezetéknév";
+"str.admin.user.new.password" = "Jelszó";
+"str.admin.user.new.password.confirm" = "Jelszó megerősítése";
+"str.admin.user.new.password.mismatch" = "Jelszavak nem egyeznek";
+
+// MARK: - Quick Scan
+"str.quickScan.consume" = "Felhasználás";
+"str.quickScan.purchase" = "Vásárlás";
+
+// MARK: - Onboarding
+
+"str.login.ownServer.manual.login" = "Bejelentkezés";

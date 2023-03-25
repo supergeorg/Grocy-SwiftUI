@@ -1,0 +1,406 @@
+/*
+  Localizable.strings
+  Grocy-SwiftUI
+
+  Created by Georg Meissner on 13.11.20.
+  
+*/
+
+// MARK: - Generic
+"str.cancel" = "Avbryt";
+"str.ok" = "OK";
+"str.delete" = "Slett";
+"str.save" = "Lagre";
+"str.search" = "Søk";
+"str.day" = "Dag";
+"str.close" = "Lukk";
+"str.add" = "Legg til";
+"str.clear" = "Slett";
+"str.none" = "Ingen";
+"str.group.category" = "Grupperes etter";
+
+// MARK: - Generic components
+"str.double.invalid %@ %@" = "Dette kan ikke være lavere enn %@ og må være et gyldig tall med maks %@ desimaler";
+
+// MARK: - Transactions
+"tr.purchase" = "Innkjøp";
+"tr.consume" = "Forbruk produkt";
+"tr.opened" = "Åpnet";
+"tr.inventoryCorrection" = "Beholdning";
+
+// MARK: - Navigation
+"str.nav.stockOverview" = "Beholdningsoversikt";
+"str.nav.shoppingList" = "Handleliste";
+"str.nav.recipes" = "Oppskrifter";
+"str.nav.mealPlan" = "Middagsplanlegger";
+"str.nav.choresOverview" = "Husarbeidsoversikt";
+"str.nav.tasks" = "Oppgaver";
+"str.nav.batteriesOverview" = "Batterioversikt";
+"str.nav.equipment" = "Instruksjonsmanualer";
+"str.nav.calendar" = "Kalender";
+"str.nav.purchase" = "Innkjøp";
+"str.nav.consume" = "Forbruk produkt";
+"str.nav.transfer" = "Flytte produkt";
+"str.nav.inventory" = "Beholdning";
+"str.nav.choreTracking" = "Husarbeidsregistrering";
+"str.nav.batteryTracking" = "Batteriregistrering";
+"str.nav.md.products" = "Produkter";
+"str.nav.md.locations" = "Lokasjoner";
+"str.nav.md.stores" = "Butikker";
+"str.nav.md.quantityUnits" = "Forpakning";
+"str.nav.md.productGroups" = "Produktgrupper";
+"str.nav.md.chores" = "Husarbeid";
+"str.nav.md.batteries" = "Batterier";
+"str.nav.md.taskCategories" = "Oppgavekategorier";
+"str.nav.md.userFields" = "Kolonner";
+"str.nav.md.userEntities" = "Egendefinerte linjer";
+"str.nav.settings" = "Innstillinger";
+
+// MARK: - Details
+"str.details.title" = "Produktoversikt";
+"str.details.relation %@ %@" = "%@ per %@";
+
+"str.details.never" = "Aldri";
+"str.details.unknown" = "Ukjent";
+
+"str.details.stockEntries" = "Beholdningsoppføringer";
+"str.details.stockJournal" = "Beholdningslogg";
+"str.details.edit" = "Endre produkt";
+
+// MARK: - Stock
+"str.stock.stockOverview" = "Beholdningsoversikt";
+// Products, Summed Value
+"str.stock.location" = "Lokasjon";
+"str.stock.productGroup" = "Produktgruppe";
+"str.stock.all" = "Alle";
+"str.stock.status" = "Status";
+"str.stock.status.expiringSoon" = "Forfaller snart";
+"str.stock.status.overdue" = "Forfalt";
+"str.stock.status.expired" = "Utgått";
+"str.stock.status.belowMinStock" = "Under under min. beholdningsmengde";
+"str.stock.info.opened %@" = "%@ åpnet";
+
+"str.stock.entry.status.notOpened" = "Ikke åpnet";
+"str.stock.entry.status.opened" = "Åpnet";
+
+"str.stock.tbl.product" = "Produkt";
+"str.stock.tbl.productGroup" = "Produktgruppe";
+"str.stock.tbl.amount" = "Mengde";
+"str.stock.tbl.value" = "Verdi";
+"str.stock.tbl.nextDueDate" = "Neste forfallsdato";
+"str.stock.tbl.calories" = "Kalorier";
+"str.stock.tbl.lastPurchased" = "Sist kjøpt";
+"str.stock.tbl.lastPrice" = "Siste pris";
+"str.stock.tbl.minStockAmount" = "Min. beholdning";
+"str.stock.tbl.productDescription" = "Produktbeskrivelse";
+"str.stock.tbl.parentProduct" = "Hovedprodukt";
+"str.stock.tbl.defaultLocation" = "Standard lokasjon";
+"str.stock.tbl.productPicture" = "Produktbilde";
+"str.stock.tbl.action.all" = "Alle";
+"str.stock.tbl.action.consume.all %@" = "Forbruk alle %@ i beholdningen";
+
+"str.stock.tbl.menu.addToShL" = "Legg til i handlelisten";
+
+"str.stock.product.amount" = "Mengde";
+"str.stock.product.amount.factored %@ %@" = "Dette er lik %@%@";
+"str.stock.product.quantityUnit" = "Forpakning";
+"str.stock.product.quantityUnit.required" = "Forpakning mengde/størrelse kreves";
+
+"str.stock.buy" = "Innkjøp";
+"str.stock.buy.product" = "Produkt";
+"str.stock.buy.product.required" = "Du må velge et produkt";
+"str.stock.buy.product.dueDate" = "Forfallsdato";
+"str.stock.buy.product.dueDate.required" = "En forfallsdato kreves";
+"str.stock.buy.product.doesntSpoil" = "Forfaller aldri";
+"str.stock.buy.product.price" = "Pris";
+"str.stock.buy.product.price.unitPrice" = "Enhetspris";
+"str.stock.buy.product.price.totalPrice" = "Totalpris";
+"str.stock.buy.product.price.relation %@ %@" = "betyr %@ per %@";
+"str.stock.buy.product.shoppingLocation" = "Butikk";
+"str.stock.buy.product.location" = "Lokasjon";
+"str.stock.buy.product.note" = "Info";
+
+"str.stock.consume" = "Forbruk produkt";
+"str.stock.consume.product" = "Produkt";
+"str.stock.consume.product.open" = "Merk som åpnet";
+"str.stock.consume.product.open.success %@" = "%@ åpnet";
+"str.stock.consume.product.required" = "Du må velge et produkt";
+"str.stock.consume.product.location" = "Lokasjon";
+"str.stock.consume.product.location.required" = "En lokasjon kreves";
+"str.stock.consume.product.spoiled" = "Produkt har gått ut på dato";
+"str.stock.consume.product.useStockEntry" = "Velg et bestemt produkt";
+"str.stock.consume.product.stockEntry" = "Lageroppføring";
+"str.stock.consume.product.recipe" = "Oppskrift";
+"str.stock.consume.product.recipe.info" = "Dette er kun for statistikk";
+
+"str.stock.transfer" = "Flytte produkt";
+"str.stock.transfer.product" = "Produkt";
+"str.stock.transfer.product.required" = "Du må velge et produkt";
+"str.stock.transfer.product.locationFrom" = "Fra lokasjon";
+"str.stock.transfer.product.locationFrom.required" = "En lokasjon kreves";
+"str.stock.transfer.product.locationTo" = "Til lokasjon";
+"str.stock.transfer.product.locationTo.required" = "En lokasjon kreves";
+"str.stock.transfer.product.locationTo.same" = "Dette kan ikke være det som 'Fra' lokasjonen";
+"str.stock.transfer.product.shouldNotBeFrozen" = "Dette produktet bør ikke fryses";
+"str.stock.transfer.product.useStockEntry" = "Velg et bestemt produkt";
+"str.stock.transfer.product.stockEntry" = "Lageroppføring";
+
+"str.stock.inventory" = "Beholdning";
+"str.stock.inventory.product" = "Produkt";
+"str.stock.inventory.product.amount.lower %@" = "Dette betyr at %@ vil bli fjernet fra beholdningen";
+"str.stock.inventory.product.amount.higher %@" = "Dette betyr at %@ vil bli lagt til i beholdningen";
+"str.stock.inventory.product.dueDate" = "Forfallsdato";
+"str.stock.inventory.product.dueDate.info" = "Dette vil gjelde for produkt som blir lagt til";
+"str.stock.inventory.product.dueDate.required" = "En forfallsdato kreves";
+"str.stock.inventory.product.neverOverdue" = "Forfaller aldri";
+"str.stock.inventory.product.price" = "Pris";
+"str.stock.inventory.product.price.info" = "Beholdnings forpakningstype";
+"str.stock.inventory.product.shoppingLocation" = "Butikk";
+"str.stock.inventory.product.location" = "Lokasjon";
+"str.stock.inventory.product.location.info" = "Dette vil gjelde for produkt som blir lagt til";
+"str.stock.inventory.product.location.required" = "En lokasjon kreves";
+
+"str.stock.journal" = "Beholdningslogg";
+"str.stock.journal.summary" = "Beholdningslogg sammendrag";
+"str.stock.journal.undo" = "Angre transaksjonen";
+"str.stock.journal.product" = "Produkt";
+"str.stock.journal.transactionType" = "Transaksjonstype";
+"str.stock.journal.location" = "Lokasjon";
+"str.stock.journal.user" = "Bruker";
+
+"str.stock.entries" = "Beholdningsoppføringer";
+"str.stock.entry.consume" = "Bruk denne lagerbeholdningen";
+"str.stock.entry.open" = "Marker denne som åpen";
+
+// MARK: - Shopping List
+"str.shL" = "Handleliste";
+"str.shL.new" = "Ny handleliste";
+"str.shL.edit" = "Endre handleliste";
+"str.shL.delete" = "Slett handleliste";
+"str.shL.print" = "Skriv ut";
+"str.shL.amount" = "Mengde";
+"str.shL.ungrouped" = "Mangler gruppe";
+
+"str.shL.form.new" = "Lag handleliste";
+"str.shL.form.edit" = "Endre handleliste";
+"str.shL.form.name" = "Navn";
+"str.shL.form.name.required" = "Vennligst fyll inn et navn";
+"str.shL.form.save" = "Lagre";
+
+"str.shL.action.addItem" = "Legg til produkt";
+"str.shL.action.clearList" = "Slett handleliste";
+"str.shL.action.addListItemsToStock" = "Legg alle produktene i listen til beholdningen";
+"str.shL.action.addBelowMinStock" = "Legg til produkt som er under minimumsbeholdningen";
+"str.shL.action.addOverdue" = "Legg til forfalte produkter";
+
+"str.shL.filter.status" = "Status";
+"str.shL.filter.all" = "Alle";
+"str.shL.filter.belowMinStock" = "Under under min. beholdningsmengde";
+"str.shL.filter.done" = "Bare ferdige elementer";
+"str.shL.filter.undone" = "Kun angrede enheter";
+
+"str.shL.entryForm.new.title" = "Opprett punkt i handeliste";
+"str.shL.entryForm.edit.title" = "Endre punkt i handleliste";
+"str.shL.entryForm.shoppingList" = "Handleliste";
+"str.shL.entryForm.product" = "Produkt";
+"str.shL.entryForm.amount" = "Mengde";
+"str.shL.entryForm.quantityUnit" = "Forpakning";
+"str.shL.entryForm.note" = "Info";
+
+"str.shL.entry.done" = "Marker denne som utført";
+"str.shL.entry.edit" = "Rediger denne oppføringen";
+"str.shL.entry.delete" = "Slett denne varen";
+
+// MARK: - Recipes
+"str.recipes" = "Oppskrifter";
+"str.recipes.name" = "Navn";
+"str.recipes.dueScore" = "Utløps score";
+"str.recipes.dueScore.hint" = "Dette nummeret viser hvor mange av ingrediensene som er i beholdning som snart går ut på dato, eller er allerede utgått.";
+"str.recipes.fulfillment" = "Har jeg alt jeg trenger for denne oppskriften?";
+"str.recipes.fulfillment.enough" = "Nok i beholdningen";
+"str.recipes.fulfillment.notEnough" = "Ikke nok i beholdningen";
+"str.recipes.fulfillment.notEnough.shL" = "Ikke nok i beholdningen, men er på handelisten";
+
+// MARK: - Master Data
+"str.md.description" = "Beskrivelse";
+"str.md.search" = "Søk";
+
+// MD Product
+"str.md.products" = "Produkter";
+"str.md.product" = "Produkt";
+"str.md.product.new" = "Opprett produkt";
+"str.md.product.edit" = "Endre produkt";
+"str.md.product.name.required" = "Vennligst fyll inn et navn";
+// optional properties
+"str.md.product.active" = "Aktiv";
+"str.md.product.description" = "Beskrivelse";
+"str.md.product.productGroup" = "Produktgruppe";
+"str.md.product.calories" = "Energi (kcal)";
+"str.md.product.calories.info" = "Beholdnings forpakningstype";
+"str.md.product.dontShowOnStockOverview.info" = "Beholdningsoversikten viser alle produkter som er i beholdningen eller under min. beholdningsantall - aktiver dette for å alltid skjule dette produktet";
+"str.md.product.picture" = "Produktbilde";
+// default locations
+"str.md.product.location" = "Standard lokasjon";
+"str.md.product.location.required" = "En lokasjon kreves";
+"str.md.product.location.consume" = "Bruk først fra";
+"str.md.product.location.consume.info" = "Beholdningen på denne lokasjonen blir brukt først";
+"str.md.product.location.consume.moveOnOpen" = "Flytt ved åpning";
+"str.md.product.location.consume.moveOnOpen.info" = "Når denne er aktivert vil produktet bli flytte til standard lokasjonen automatisk når det blir markert som åpnet.";
+"str.md.product.shoppingLocation" = "Standard butikk";
+// due date
+"str.md.product.category.dueDate" = "Forfallsdato";
+"str.md.product.dueType" = "Forfallsdatotype";
+"str.md.product.dueType.info" = "Basert på valgt type vil uthevingen på beholdningsoversikten være annerledes";
+"str.md.product.dueType.bestBefore" = "Best før dato";
+"str.md.product.dueType.bestBefore.info" = "Betyr at produktet fremdeles er trygt å konsumere etter at forfallsdato";
+"str.md.product.dueType.expires" = "Utløpsdato";
+"str.md.product.dueType.expires.info" = "Betyr at produktet ikke er trygt å konsumere etter at utløpsdato";
+"str.md.product.defaultDueDays" = "Standard forfallsdager";
+"str.md.product.defaultDueDaysAfterOpen" = "Standard forfallsdager etter åpning";
+"str.md.product.defaultDueDaysAfterFreezing" = "Standard forfallsdager etter frysing";
+"str.md.product.defaultDueDaysAfterFreezing.info" = "Når du flytter dette produktet til en fryser (når du fryser det), vil forfallsdatoen erstattes av i dag + dette antall dager";
+"str.md.product.defaultDueDaysAfterThawing" = "Standard forfallsdager etter tining";
+"str.md.product.defaultDueDaysAfterThawing.info" = "Når du flytter dette produktet fra en fryser (når du tiner det), vil forfallsdatoen erstattes med i dag + dette antall dager";
+// quantity units
+"str.md.product.category.quantityUnits" = "Forpakning";
+"str.md.product.quStock" = "Forpakning beholdning";
+"str.md.product.quStock.required" = "Forpakning mengde/størrelse kreves";
+"str.md.product.quPurchase.info" = "Dette er standard forpakningstørrelse som brukes når du legger dette produktet til handlelisten";
+"str.md.product.quPurchase.required" = "Forpakning mengde/størrelse kreves";
+// amount
+"str.md.product.quickConsumeAmount" = "Hurtigkonsumer";
+"str.md.product.quickConsumeAmount.info" = "Dette beløpet brukes til 'hurtigkonsumere / åpne-knappene' på beholdningsoversikten (relatert til forpakninger lager)";
+"str.md.product.enableTareWeightHandling" = "Aktiver tara vekt funksjon";
+"str.md.product.enableTareWeightHandling.info" = "Dette er nyttig f.eks med mel i en beholder. Ved innkjøp/ forbruk/ endring av beholdning veier du alltid hele beholderen. Gjenværende mengde vil så bli kalkulert i forhold til hva som er i beholdningen og tara vekten definert under";
+"str.md.product.tareWeight" = "Tara vekt";
+"str.md.product.notCheckStockFulfillmentForRecipes" = "Ikke bruk beholdningsjekk for denne ingrediensen ";
+"str.md.product.notCheckStockFulfillmentForRecipes.info" = "Dette vil bli brukt som forhåndsinnstilling når dette produktet blir brukt som ingrediens i en oppskrift";
+"str.md.product.treatOpenedAsOutOfStock" = "Åpnet pakning telles ikke med beholdning";
+"str.md.product.treatOpenedAsOutOfStock.hint" = "Åpnede pakninger blir ikke telt med i beholdningen når det blir kalkulert om produktet er under minimum beholdning.";
+"str.md.product.shouldNotBeFrozen" = "Bør ikke fryses";
+"str.md.product.shouldNotBeFrozen.hint" = "Når aktivert, vises en advarsel når du flytter dette produktet til en fryserlokasjon (når du fryser det)";
+"str.md.product.noOwnStock" = "Deaktiver egen beholdning";
+"str.md.product.noOwnStock.hint" = "Når dette er aktivert vil ikke produktet ha sin egen beholdning, som igjen betyr at det ikke kan kjøpes (nyttig for mor-produkter som bare er brukt for å summere under-produkter)";
+
+"str.md.barcodes" = "Strekkoder";
+"str.md.barcode" = "Strekkode";
+"str.md.barcode.barcode" = "Strekkode";
+"str.md.barcode.amount" = "Mengde";
+"str.md.barcode.quantityUnit" = "Forpakning";
+"str.md.barcode.shoppingLocation" = "Butikk";
+"str.md.barcode.note" = "Info";
+
+"str.md.locations" = "Lokasjoner";
+"str.md.location" = "Lokasjon";
+"str.md.location.edit" = "Endre lokasjon";
+"str.md.location.name" = "Lokasjon";
+"str.md.location.name.required" = "Vennligst fyll inn et navn";
+"str.md.location.isFreezing" = "Er fryser";
+
+"str.md.shoppingLocation.name.required" = "Vennligst fyll inn et navn";
+
+"str.md.quantityUnits" = "Forpakning";
+"str.md.quantityUnit" = "Forpakning";
+"str.md.quantityUnit.edit" = "Endre forpakning";
+"str.md.quantityUnit.name.required" = "Vennligst fyll inn et navn";
+"str.md.quantityUnit.conversions" = "Standard konvertering";
+"str.md.quantityUnit.conversion.new" = "Opprett konvertering";
+"str.md.quantityUnit.conversion.edit" = "Endre forpakningskonvertering";
+"str.md.quantityUnit.conversion.quFrom" = "Konvertere fra";
+"str.md.quantityUnit.conversion.quTo" = "Konvertere til";
+"str.md.quantityUnit.conversion.factor" = "Faktor";
+
+"str.md.productGroups" = "Produktgrupper";
+"str.md.productGroup" = "Produktgruppe";
+"str.md.productGroup.new" = "Opprett produktgruppe";
+"str.md.productGroup.edit" = "Endre produktgruppe";
+"str.md.productGroup.name.required" = "Vennligst fyll inn et navn";
+
+"str.md.chores" = "Husarbeid";
+"str.md.batteries" = "Batterier";
+
+"str.md.taskCategories" = "Oppgavekategorier";
+"str.md.taskCategory.new" = "Opprett oppgavekategori";
+"str.md.taskCategory.edit" = "Endre oppgavekategori";
+"str.md.taskCategory.name.required" = "Vennligst fyll inn et navn";
+
+"str.md.userFields" = "Kolonner";
+"str.md.userField.new" = "Lag egendefinert kolonne";
+"str.md.userField.edit" = "Endre egendefinert kolonne";
+"str.md.userField.entity" = "Enhet";
+"str.md.userField.name" = "Navn";
+"str.md.userField.name.info" = "Dette er det interne feltnavnet, f.eks. g. for API";
+"str.md.userField.name.required" = "Dette kreves og kan kun inneholde bokstaver og tall";
+"str.md.userField.name.invalid" = "Dette kreves og kan kun inneholde bokstaver og tall";
+"str.md.userField.caption" = "Kolonne navn";
+"str.md.userField.caption.info" = "Dette brukes til å vise feltet på framsiden";
+"str.md.userField.caption.required" = "Et kolonne navn kreves";
+"str.md.userField.sortNumber" = "Sorteringsnummer";
+"str.md.userField.sortNumber.info" = "Flere brukerfelt vil bli sortert etter nummeret på inndata feltet";
+"str.md.userField.type" = "Type";
+"str.md.userField.type.required" = "En type kreves";
+"str.md.userField.showAsColumnInTables" = "Vis som kolonner på alle sider";
+
+"str.md.userField.type.link" = "Link";
+
+"str.md.userEntities" = "Egendefinerte linjer";
+"str.md.userEntity.edit" = "Endre egendefinerte linjer";
+"str.md.userEntity.name.required" = "Dette kreves og kan kun inneholde bokstaver og tall";
+"str.md.userEntity.caption" = "Kolonne navn";
+"str.md.userEntity.caption.required" = "Et kolonne navn kreves";
+"str.md.userEntity.description" = "Beskrivelse";
+"str.md.userEntity.showInSideBarMenu" = "Vis sidemeny";
+"str.md.userEntity.iconCSSClass" = "Icon CSS class";
+
+// MARK: - Settings
+"str.settings" = "Innstillinger";
+"str.settings.app.update.autoReload" = "Automatisk fornying ved ekstern endring";
+"str.settings.stock" = "Beholdning - innstillinger";
+"str.settings.stock.presets" = "Forhåndsatt for nye produkter";
+"str.settings.stock.presets.location" = "Lokasjon";
+"str.settings.stock.presets.productGroup" = "Produktgruppe";
+"str.settings.stock.presets.quantityUnit" = "Forpakning";
+"str.settings.stock.presets.defaultDueDays" = "Standard forfallsdager";
+"str.settings.stock.presets.treatOpenedAsOutOfStock" = "Åpnet pakning telles ikke med beholdning";
+"str.settings.stock.stockOverview" = "Beholdningsoversikt";
+"str.settings.stock.stockOverview.dueSoonDays" = "Forfaller snart dager";
+"str.settings.stock.stockOverview.showIconShoppingList" = "Vis ett ikon dersom produktet allerede er på handlelisten";
+"str.settings.stock.purchase" = "Innkjøp";
+"str.settings.stock.purchase.defaultAmount" = "Standard mengde for innkjøp";
+"str.settings.stock.purchase.showPurchasedDate" = "Vis innkjøpsdato på innkjøp og beholdningssidene (ellers vil innkjøpsdato settes til i dag)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "Vis en advarsel når forfallsdatoen for det kjøpte produktet er tidligere enn neste forfallsdato i beholdningen";
+"str.settings.stock.consume" = "Forbruk produkt";
+"str.settings.stock.consume.defaultAmount" = "Standard mengde for forbruk";
+"str.settings.stock.consume.useQuickConsume" = "Bruk produktets 'Hurtigkonsumer'";
+"str.settings.stock.common" = "Felles";
+"str.settings.stock.common.amountDecimalPlaces" = "Desimaler kan brukes på antall";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Legg til desimalseparator automatisk for prisinntasting";
+"str.settings.stock.common.priceAddSeparatorAuto.hint" = "Når aktivert, må du alltid angi verdien inkludert desimaler, desimalseparatoren legges til automatisk basert på mengden tillatte desimaler";
+"str.settings.shoppingList" = "Handleliste - innstillinger";
+"str.settings.shoppingList.shoppingList" = "Handleliste";
+"str.settings.shoppingList.autoAddToShL" = "Automatisk legg produkter som er under minimums beholdning til handlelisten";
+"str.settings.shoppingList.shLToStockWF" = "Arbeidsflyt fra handleliste til beholding";
+"str.settings.shoppingList.autoAddToStock" = "Gjør gjennomføringen automatisk med den siste prisen og beløpet på handlelistpunktet, hvis produktet er satt til 'Standard forfallsdato'";
+
+
+// MARK: - Admin
+"str.admin.user.tooltip.edit" = "Rediger denne oppføringen";
+"str.admin.user.tooltip.permissions" = "Konfigurer brukerrettigheter";
+"str.admin.user.tooltip.delete" = "Slett denne varen";
+"str.admin.user.new.create" = "Legg til bruker";
+"str.admin.user.new.edit" = "Endre på bruker";
+"str.admin.user.new.userName" = "Brukernavn";
+"str.admin.user.new.userName.required" = "Et brukernavn er nødvendig";
+"str.admin.user.new.firstName" = "Fornavn";
+"str.admin.user.new.lastName" = "Etternavn";
+"str.admin.user.new.password" = "Passord";
+"str.admin.user.new.password.confirm" = "Bekreft passord";
+"str.admin.user.new.password.mismatch" = "Passordene er ikke like";
+
+// MARK: - Quick Scan
+"str.quickScan.consume" = "Forbruk produkt";
+"str.quickScan.purchase" = "Innkjøp";
+
+// MARK: - Onboarding
+
+"str.login.ownServer.manual.login" = "Logg inn";
