@@ -396,6 +396,8 @@ struct ShoppingListView: View {
                     }, label: {
                         if shoppingListGrouping == .productGroup, groupName.isEmpty {
                             Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        } else if shoppingListGrouping == .none {
+                            EmptyView()
                         } else {
                             Text(groupName).bold()
                         }
@@ -414,6 +416,8 @@ struct ShoppingListView: View {
                 }, header: {
                     if shoppingListGrouping == .productGroup, groupName.isEmpty {
                         Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                    } else if shoppingListGrouping == .none {
+                        EmptyView()
                     } else {
                         Text(groupName).bold()
                     }
