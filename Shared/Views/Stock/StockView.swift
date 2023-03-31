@@ -348,6 +348,11 @@ struct StockView: View {
                             return $0.key < $1.key
                         }
                     }), id: \.key) { groupName, groupElements in
+                        if stockGrouping == .none {
+                            ForEach(groupElements, id:\.product.id) { stockElement in
+                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                            }
+                        }
                         Section(content: {
                             ForEach(groupElements, id:\.product.id) { stockElement in
                                 StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
@@ -409,28 +414,30 @@ struct StockView: View {
                 StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
                 StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
             }
-            Section {
-                if grocyVM.stock.isEmpty {
+            if grocyVM.stock.isEmpty {
+                Section {
                     Text("str.stock.empty").padding()
                 }
-                ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
-                    Section(content: {
-                        ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
-                            StockTableRow(
-                                stockElement: stockElement,
-                                selectedStockElement: $selectedStockElement,
-                                activeSheet: $activeSheet,
-                                toastType: $toastType
-                            )
-                        })
-                    }, header: {
-                        if stockGrouping == .productGroup, groupName.isEmpty {
-                            Text(LocalizedStringKey("str.shL.ungrouped")).italic()
-                        } else {
-                            Text(groupName).bold()
-                        }
+            }
+            ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
+                Section(content: {
+                    ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
+                        StockTableRow(
+                            stockElement: stockElement,
+                            selectedStockElement: $selectedStockElement,
+                            activeSheet: $activeSheet,
+                            toastType: $toastType
+                        )
                     })
-                }
+                }, header: {
+                    if stockGrouping == .productGroup, groupName.isEmpty {
+                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                    } else if stockGrouping == .none {
+                        EmptyView()
+                    } else {
+                        Text(groupName).bold()
+                    }
+                })
             }
         }
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
