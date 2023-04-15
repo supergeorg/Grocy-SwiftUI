@@ -40,7 +40,7 @@ struct MyIntStepper: View {
                 Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: ((minAmount ?? 0)...(Int.max - 1)), step: 1)
                     .fixedSize()
             }
-            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+            if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
                     .font(.caption)
                     .foregroundColor(.red)

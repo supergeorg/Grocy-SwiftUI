@@ -127,8 +127,10 @@ struct QuickScanModeInputView: View {
                             if let pictureFileName = product.pictureFileName,
                                !pictureFileName.isEmpty,
                                let utf8str = pictureFileName.data(using: .utf8),
-                               let base64Encoded = utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
-                               let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded),
+                               let pictureURL = grocyVM.getPictureURL(
+                                groupName: "productpictures",
+                                fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                               ),
                                let url = URL(string: pictureURL)
                             {
                                 AsyncImage(url: url, content: { image in

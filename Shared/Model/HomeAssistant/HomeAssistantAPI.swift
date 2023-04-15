@@ -120,7 +120,7 @@ class HomeAssistantAuthenticator {
             }
             
             // Scenario 2: There is no session Token, create a new one
-            if hassIngressToken == nil {
+            if self?.hassIngressToken == nil {
                 let publisher = session.publisher(for: request(renewCookie: false))
                     .share()
                     .handleEvents(receiveOutput: { token in
@@ -137,8 +137,8 @@ class HomeAssistantAuthenticator {
             }
             
             // Scenario 3: The session Token is valid and will be returned
-            if hassIngressTokenDate?.distance(to: Date()) ?? 100 < 60, !forceRefresh {
-                return Just(HomeAssistantSessionCookieReturn(result: "ok", data: HomeAssistantSessionCookie(session: hassIngressToken!)))
+            if self?.hassIngressTokenDate?.distance(to: Date()) ?? 100 < 60, !forceRefresh {
+                return Just(HomeAssistantSessionCookieReturn(result: "ok", data: HomeAssistantSessionCookie(session: (self?.hassIngressToken)!)))
                     .setFailureType(to: APIError.self)
                     .eraseToAnyPublisher()
             }

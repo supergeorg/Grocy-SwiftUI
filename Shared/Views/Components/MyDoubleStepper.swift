@@ -72,13 +72,13 @@ struct MyDoubleStepper: View {
                 )
                     .fixedSize()
             }
-            if let minAmount = minAmount, let amount = amount, amount < minAmount {
+            if let minAmount = minAmount, amount < minAmount {
                 Text(LocalizedStringKey("str.double.invalid \(smallestValidAmount.formattedAmount) \(Double(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4).formattedAmount)"))
                     .font(.caption)
                     .foregroundColor(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
+            if let maxAmount = maxAmount, amount > maxAmount, let errorMessageMax = errorMessageMax {
                 Text(LocalizedStringKey(errorMessageMax))
                     .font(.caption)
                     .foregroundColor(.red)

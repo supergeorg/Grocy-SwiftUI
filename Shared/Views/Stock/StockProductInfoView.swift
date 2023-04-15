@@ -90,8 +90,10 @@ struct StockProductInfoView: View {
                 if let pictureFileName = productDetails.product.pictureFileName,
                    !pictureFileName.isEmpty,
                    let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
-                   let base64Encoded = pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
-                   let pictureURLString = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded),
+                   let pictureURLString = grocyVM.getPictureURL(
+                    groupName: "productpictures",
+                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                   ),
                    let pictureURL = URL(string: pictureURLString) {
                     AsyncImage(url: pictureURL, content: { image in
                         image

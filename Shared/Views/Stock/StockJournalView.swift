@@ -86,7 +86,7 @@ struct StockJournalFilterBar: View {
                         Image(systemName: MySymbols.filter)
                         VStack{
                             Text(LocalizedStringKey("str.stock.journal.product"))
-                            if let filteredProductID = filteredProductID, let filteredProductName = grocyVM.mdProducts.first{ $0.id == filteredProductID }?.name {
+                            if let filteredProductID = filteredProductID, let filteredProductName = grocyVM.mdProducts.first(where: { $0.id == filteredProductID })?.name {
                                 Text(filteredProductName)
                                     .font(.caption)
                             }
@@ -125,7 +125,7 @@ struct StockJournalFilterBar: View {
                         Image(systemName: MySymbols.filter)
                         VStack{
                             Text(LocalizedStringKey("str.stock.journal.location"))
-                            if let filteredLocationID = filteredLocationID, let filteredLocationName = grocyVM.mdLocations.first{ $0.id == filteredLocationID }?.name {
+                            if let filteredLocationID = filteredLocationID, let filteredLocationName = grocyVM.mdLocations.first(where: { $0.id == filteredLocationID })?.name {
                                 Text(filteredLocationName)
                                     .font(.caption)
                             }
@@ -144,7 +144,7 @@ struct StockJournalFilterBar: View {
                         Image(systemName: MySymbols.filter)
                         VStack{
                             Text(LocalizedStringKey("str.stock.journal.user"))
-                            if let filteredUserID = filteredUserID, let filteredUserName = grocyVM.users.first{ $0.id == filteredUserID }?.displayName {
+                            if let filteredUserID = filteredUserID, let filteredUserName = grocyVM.users.first(where: { $0.id == filteredUserID })?.displayName {
                                 Text(filteredUserName)
                                     .font(.caption)
                             }

@@ -16,8 +16,10 @@ struct GrocyUserInfoView: View {
         HStack{
             if let pictureFileName = grocyUser.pictureFileName,
                let utf8str = pictureFileName.data(using: .utf8),
-               let base64Encoded = utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
-               let pictureURL = grocyVM.getPictureURL(groupName: "userpictures", fileName: "\(base64Encoded)_\(base64Encoded)"),
+               let pictureURL = grocyVM.getPictureURL(
+                groupName: "userpictures",
+                fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+               ),
                let url = URL(string: pictureURL) {
                 AsyncImage(url: url, content: { image in
                     image
@@ -27,7 +29,7 @@ struct GrocyUserInfoView: View {
                 }, placeholder: {
                     ProgressView()
                 })
-                    .frame(width: 100, height: 100)
+                .frame(width: 100, height: 100)
             }
             VStack(alignment: .leading){
                 Text(grocyUser.username)
