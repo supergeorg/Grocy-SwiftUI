@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1244,8 +1244,9 @@
 		78CB748E255E9EF600319108 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					78CB7499255E9EF800319108 = {
 						CreatedOnToolsVersion = 12.2;
@@ -2045,7 +2046,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2074,7 +2075,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2285,7 +2286,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5F87Z29RSW;
 				ENABLE_HARDENED_RUNTIME = YES;
