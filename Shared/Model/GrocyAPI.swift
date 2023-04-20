@@ -92,7 +92,7 @@ protocol GrocyAPI {
     func undoBookingWithID(id: Int) async throws
     func getPictureURL(groupName: String, fileName: String)async throws -> String?
     // MARK: - Shopping List
-    func shoppingListAddItem(content: Data) async throws -> SuccessfulCreationMessage
+    func shoppingListAddItem(content: Data) async throws
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) async throws -> T
@@ -506,11 +506,10 @@ extension GrocyApi {
         }
     }
     
-    // SHOPPING LIST
+    // MARK: - SHOPPING LIST
     
-    func shoppingListAddItem(content: Data) async throws -> SuccessfulCreationMessage {
-//        return callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
-        return try await call(.objectsEntity, method: .POST, object: .shopping_list, content: content)
+    func shoppingListAddItem(content: Data) async throws {
+        try await callEmptyResponse(.objectsEntity, method: .POST, object: .shopping_list, content: content)
     }
     
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws {

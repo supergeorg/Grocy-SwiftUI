@@ -222,24 +222,6 @@ class GrocyViewModel: ObservableObject {
         while ints.contains(startvar) { startvar += 1 }
         return startvar
     }
-
-    //    func getRecipeFulfillments(completion: @escaping ((Result<RecipeFulfilments, APIError>) -> ())) {
-    //        grocyApi.getRecipeFulfillments()
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //
-    //            }) { (recipeFulfillments: RecipeFulfilments) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(recipeFulfillments))
-    //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
     
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
         do {
@@ -480,62 +462,19 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - USER MANAGEMENT
+    func postUser(user: GrocyUserPOST) async throws {
+        let jsonUser = try! jsonEncoder.encode(user)
+        try await grocyApi.postUser(user: jsonUser)
+    }
     
-    //    func postUser(user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulCreationMessage, APIError>) -> ())) {
-    //        let jsonUser = try! jsonEncoder.encode(user)
-    //        grocyApi.postUser(user: jsonUser)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Post users failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (response: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(SuccessfulCreationMessage(createdObjectID: user.id)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func putUser(id: Int, user: GrocyUserPOST, completion: @escaping ((Result<SuccessfulPutMessage, APIError>) -> ())) {
-    //        let jsonUser = try! jsonEncoder.encode(user)
-    //        grocyApi.putUserWithID(id: id, user: jsonUser)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Put User failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (response: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(SuccessfulPutMessage(changedObjectID: id)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func deleteUser(id: Int, completion: @escaping ((Result<DeleteMessage, APIError>) -> ())) {
-    //        grocyApi.deleteUserWithID(id: id)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Delete User failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (responseCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(DeleteMessage(deletedObjectID: id)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
+    func putUser(id: Int, user: GrocyUserPOST) async throws {
+        let jsonUser = try! jsonEncoder.encode(user)
+        try await grocyApi.putUserWithID(id: id, user: jsonUser)
+    }
+    
+    func deleteUser(id: Int) async throws {
+        try await grocyApi.deleteUserWithID(id: id)
+    }
     
     func getNewUserID() -> Int {
         let ints = self.users.map{ $0.id }
@@ -545,192 +484,71 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Current user
-    //    func getUserSettings(completion: @escaping ((Result<GrocyUserSettings, APIError>) -> ())) {
-    //        grocyApi.getUserSettings()
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Getting user settings failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (userSettingsOut) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(userSettingsOut))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-
-    //
-    //    func putUserSettingsEntry<T: Codable>(settingKey: String, content: T, completion: @escaping ((Result<Int, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        grocyApi.putUserSettingKey(settingKey: settingKey, content: jsonContent)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Put user settings key failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }) { (returnCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(returnCode))
-    //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
+    func putUserSettingsEntry<T: Codable>(settingKey: String, content: T) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        try await grocyApi.putUserSettingKey(settingKey: settingKey, content: jsonContent)
+    }
     
     // MARK: - Stock management
-    //    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil, completion: @escaping ((Result<T, Error>) -> ())) {
-    //        grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Get stock product info failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //
-    //            }) { (getStockProductInfoReturn: T) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(getStockProductInfoReturn))
-    //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) {
-    //        if let stockModeGet = stockModeGet {
-    //            for mode in stockModeGet {
-    //                switch mode {
-    //                case .details:
-    //                    if stockProductDetails.isEmpty || ignoreCached {
-    //                        getStockProductInfo(mode: mode, productID: productID, completion: { (result: Result<StockProductDetails, Error>) in
-    //                            switch result {
-    //                            case let .success(productDetailResult):
-    //                                self.stockProductDetails[productID] = productDetailResult
-    //                            case let .failure(error):
-    //                                self.postLog("Data request failed for \(mode.rawValue). Message: \("\(error)")", type: .error)
-    //                            }
-    //                        })
-    //                    }
-    //                case .locations:
-    //                    print("not implemented")
-    //                case .entries:
-    //                    if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
-    //                        getStockProductInfo(mode: mode, productID: productID, completion: { (result: Result<StockEntries, Error>) in
-    //                            switch result {
-    //                            case let .success(productEntriesResult):
-    //                                self.stockProductEntries[productID] = productEntriesResult
-    //                            case let .failure(error):
-    //                                self.postLog("Data request failed for \(mode.rawValue). Message: \("\(error)")", type: .error)
-    //                            }
-    //                        })
-    //                    }
-    //                case .priceHistory:
-    //                    print("not implemented")
-    //                }
-    //            }
-    //        }
-    //    }
-    //
-    //    func getStockProductLocations(productID: Int) {
-    //        grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, query: nil)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Get stock product locations failed. \("\(error)")", type: .error)
-    //                    break
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (stockLocationsOut: StockLocations) in
-    //                DispatchQueue.main.async {
-    //                    self.stockProductLocations[productID] = stockLocationsOut
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-        func getStockProductDetails(productID: Int) async throws {
-            self.stockProductDetails[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, query: nil)
+        func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil) async throws -> T {
+            return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
         }
     
-        func getStockProductEntries(productID: Int) async throws {
-            self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
-        }
-    //
-    //    func putStockProductEntry(id: Int, content: StockEntry, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        print(String(data: jsonContent, encoding: String.Encoding.utf8) ?? "")
-    //        grocyApi.putStockEntry(entryID: id, content: jsonContent)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Put stock object failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }) { (stockJournalReturn: StockJournal) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(stockJournalReturn))
-    //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func postStockObject<T: Codable>(id: Int, stockModePost: StockProductPost, content: T, completion: @escaping ((Result<StockJournal, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        //        print(String(data: jsonContent, encoding: String.Encoding.utf8))
-    //        grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Post stock object failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //
-    //            }) { (stockJournalReturn: StockJournal) in
-    //                DispatchQueue.main.async {
-    //                    self.lastStockActions.append(contentsOf: stockJournalReturn)
-    //                    completion(.success(stockJournalReturn))
-    //                }
-    //            }
-    //            .store(in: &cancellables)
-    //    }
-    //
-        func undoBookingWithID(id: Int) async throws {
-            return try await grocyApi.undoBookingWithID(id: id)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Undo booking failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (responseCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success())
-    //                }
-    //            })
-    //            .store(in: &cancellables)
+        func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) async throws {
+            if let stockModeGet = stockModeGet {
+                for mode in stockModeGet {
+                    switch mode {
+                    case .details:
+                        if stockProductDetails.isEmpty || ignoreCached {
+                            self.stockProductDetails[productID] = try await getStockProductInfo(mode: mode, productID: productID)
+                        }
+                    case .locations:
+                        print("not implemented")
+                    case .entries:
+                        if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
+                            self.stockProductEntries[productID] = try await getStockProductInfo(mode: mode, productID: productID)
+                        }
+                    case .priceHistory:
+                        print("not implemented")
+                    }
+                }
+            }
         }
     
-        func getPictureURL(groupName: String, fileName: String) async throws -> String? {
-            try await grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
-        }
-    //
-    //    func uploadFile(fileURL: URL, groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-    //        grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
-    //    }
+    func getStockProductLocations(productID: Int) async throws {
+        self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, query: nil)
+    }
+    
+    func getStockProductDetails(productID: Int) async throws {
+        self.stockProductDetails[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, query: nil)
+    }
+    
+    func getStockProductEntries(productID: Int) async throws {
+        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
+    }
+    
+    func putStockProductEntry(id: Int, content: StockEntry) async throws -> StockJournal {
+        let jsonContent = try! jsonEncoder.encode(content)
+        return try await grocyApi.putStockEntry(entryID: id, content: jsonContent)
+    }
+    
+    func postStockObject<T: Codable>(id: Int, stockModePost: StockProductPost, content: T) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        let stockJournalReturn: StockJournal = try await grocyApi.postStock(id: id, content: jsonContent, stockModePost: stockModePost)
+        self.lastStockActions.append(contentsOf: stockJournalReturn)
+    }
+    
+    func undoBookingWithID(id: Int) async throws {
+        return try await grocyApi.undoBookingWithID(id: id)
+    }
+    
+    func getPictureURL(groupName: String, fileName: String) async throws -> String? {
+        try await grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
+    }
+    
+    func uploadFile(fileURL: URL, groupName: String, fileName: String) async throws {
+        //            grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+    }
     //
     //    func uploadFileData(fileData: Data, groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
     //        grocyApi.putFileData(fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
@@ -756,99 +574,28 @@ class GrocyViewModel: ObservableObject {
     
     // MARK: -Shopping Lists
     
-    //    func addShoppingListItem(content: ShoppingListItemAdd, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        grocyApi.shoppingListAddItem(content: jsonContent)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Add product to shopping list failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (creationMessage: SuccessfulCreationMessage) in
-    //                completion(.success(creationMessage))
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType, completion: @escaping ((Result<SuccessfulActionMessage, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Shopping list action failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (responseCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(SuccessfulActionMessage(responseCode: responseCode)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    // MARK: -Master Data
-    //
-    //    // Generic POST and DELETE and PUT
-    //
-    //    func postMDObject<T: Codable>(object: ObjectEntities, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        grocyApi.postObject(object: object, content: jsonContent)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Post MD Object failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (successfulMessage: SuccessfulCreationMessage) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(successfulMessage))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func deleteMDObject(object: ObjectEntities, id: Int, completion: @escaping ((Result<DeleteMessage, Error>) -> ())) {
-    //        grocyApi.deleteObjectWithID(object: object, id: id)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Delete MD Object failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (responseCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(DeleteMessage(deletedObjectID: id)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
-    //
-    //    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: Int, content: T, completion: @escaping ((Result<SuccessfulCreationMessage, Error>) -> ())) {
-    //        let jsonContent = try! jsonEncoder.encode(content)
-    //        grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Put MD Object failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (response: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(SuccessfulCreationMessage(createdObjectID: id)))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
+    func addShoppingListItem(content: ShoppingListItemAdd) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        try await grocyApi.shoppingListAddItem(content: jsonContent)
+    }
+    
+    func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        try await grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
+    }
+    
+    // MARK: - Master Data
+    func postMDObject<T: Codable>(object: ObjectEntities, content: T) async throws -> T {
+        let jsonContent = try! jsonEncoder.encode(content)
+        return try await grocyApi.postObject(object: object, content: jsonContent)
+    }
+    
+    func deleteMDObject(object: ObjectEntities, id: Int) async throws {
+        try await grocyApi.deleteObjectWithID(object: object, id: id)
+    }
+    
+    func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: Int, content: T) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        try await grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
+    }
 }
