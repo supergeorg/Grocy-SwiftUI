@@ -95,7 +95,10 @@ struct SettingsView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(additionalObjects: [.system_info, .current_user])
+            Task {
+                await grocyVM.requestDataAsync(additionalObjects: [.system_info])
+            }
+//            grocyVM.requestData(additionalObjects: [.system_info, .current_user])
         })
     }
 }

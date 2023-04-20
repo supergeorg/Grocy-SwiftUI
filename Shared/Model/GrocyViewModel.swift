@@ -86,25 +86,6 @@ class GrocyViewModel: ObservableObject {
     
     init() {
         self.grocyApi = GrocyApi()
-        if isLoggedIn {
-            grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
-            checkServer(
-                baseURL: !isDemoModus ? grocyServerURL : demoServerURL,
-                apiKey: !isDemoModus ? grocyAPIKey : "",
-                isDemoMode: isDemoModus,
-                completion: { result in
-                    switch result {
-                    case .success(let success):
-                        print(success)
-                        self.setUpdateTimer()
-                    case .failure(let failure):
-                        self.postLog("Login failed: \(failure)", type: .error)
-                    }
-                    
-                })
-        } else {
-            self.postLog("Not logged in", type: .info)
-        }
         //        jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
@@ -114,7 +95,18 @@ class GrocyViewModel: ObservableObject {
             try container.encode(dateString)
         })
         jsonEncoder.outputFormatting = .prettyPrinted
-        
+    }
+    
+    func initializeStartServerCheck() async {
+        if isLoggedIn {
+            grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
+//            await checkServer(
+//                baseURL: !isDemoModus ? grocyServerURL : demoServerURL,
+//                apiKey: !isDemoModus ? grocyAPIKey : "",
+//                isDemoMode: isDemoModus)
+        } else {
+            self.postLog("Not logged in", type: .info)
+        }
     }
     
     func setDemoModus() {
@@ -126,9 +118,9 @@ class GrocyViewModel: ObservableObject {
         self.postLog("Switched to demo modus", type: .info)
     }
     
-    func setLoginModus() {
+    func setLoginModus() async {
         if useHassIngress, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
-            grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+            await grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: grocyServerURL, apiKey: grocyAPIKey)
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
@@ -173,36 +165,22 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    func checkServer(baseURL: String, apiKey: String?, isDemoMode: Bool, completion: @escaping ((Result<String, Error>) -> ())) {
+    func checkServer(baseURL: String, apiKey: String?, isDemoMode: Bool) async throws {
         self.grocyApi = GrocyApi()
         if useHassIngress && !isDemoMode, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: grocyServerURL) {
-            grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+            await grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
         grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "")
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
-        grocyApi.getSystemInfo()
-            .sink(receiveCompletion: { result in
-                switch result {
-                case .failure(let error):
-                    self.postLog("Error at checkLoginInfo: \("\(error)")", type: .error)
-                    completion(.failure(error))
-                case .finished:
-                    break
-                }
-            }, receiveValue: { (systemInfo: SystemInfo) in
-                DispatchQueue.main.async {
-                    if !systemInfo.grocyVersion.version.isEmpty {
-                        self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").", type: .info)
-                        self.systemInfo = systemInfo
-                        completion(.success(systemInfo.grocyVersion.version))
-                    } else {
-                        self.postLog("Selected server doesn't respond.", type: .error)
-                        self.isLoggedIn = false
-                        completion(.failure(APIError.invalidResponse))
-                    }
-                }
-            })
-            .store(in: &cancellables)
+        let systemInfo = try await grocyApi.getSystemInfoAsync()
+        if !systemInfo.grocyVersion.version.isEmpty {
+            self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").", type: .info)
+            self.systemInfo = systemInfo
+            return
+        } else {
+            self.postLog("Selected server doesn't respond.", type: .error)
+            throw APIError.invalidResponse
+        }
     }
     
     func findNextID(_ object: ObjectEntities) -> Int {
@@ -259,6 +237,10 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func getEntityAsync<T: Codable>(entity: ObjectEntities) async throws -> T {
+        return try await grocyApi.getObjectAsync(object: entity)
+    }
+    
     // Gets the data of a selected additional entity
     func getRecipeFulfillments(completion: @escaping ((Result<RecipeFulfilments, APIError>) -> ())) {
         grocyApi.getRecipeFulfillments()
@@ -278,6 +260,18 @@ class GrocyViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func requestDataAsync(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
+//        getSystemDBChangedTime(completion: { result in
+//            switch result {
+//            case .success(let timestamp):
+        let timestamp = SystemDBChangedTime(changedTime: "")
+        try await self.requestDataWithTimeStampAsync(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
+//            case .failure(let error):
+//                self.postLog("Getting timestamp failed. Message: \("\(error)")", type: .error)
+//            }
+//        })
+    }
+    
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) {
         getSystemDBChangedTime(completion: { result in
             switch result {
@@ -287,6 +281,43 @@ class GrocyViewModel: ObservableObject {
                 self.postLog("Getting timestamp failed. Message: \("\(error)")", type: .error)
             }
         })
+    }
+    
+    func requestDataWithTimeStampAsync(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) async {
+        do {
+            if let objects = objects {
+                
+            }
+            if let additionalObjects = additionalObjects {
+                for additionalObject in additionalObjects {
+                    switch additionalObject {
+                    case .system_info:
+                        if timeStamp != self.timeStampsAdditionalObjects[additionalObject] {
+                            loadingAdditionalEntities.insert(additionalObject)
+                            let systemInfo = try await getSystemInfoAsync()
+                            self.systemInfo = systemInfo
+                            //                        getSystemInfoAsync(completion: { result in
+                            //                            switch result {
+                            //                            case let .success(sysinfo):
+                            //                                self.systemInfo = sysinfo
+                            //                                self.failedToLoadAdditionalObjects.remove(additionalObject)
+                            //                                self.timeStampsAdditionalObjects[additionalObject] = timeStamp
+                            //                            case let .failure(error):
+                            //                                self.postLog("Data request failed for SystemInfo. Message: \("\(error)")", type: .error)
+                            //                                self.failedToLoadAdditionalObjects.insert(additionalObject)
+                            //                                self.failedToLoadErrors.append(error)
+                            //                            }
+                            //                            self.loadingAdditionalEntities.remove(additionalObject)
+                            //                        })
+                        }
+                    default:
+                        print("NOP")
+                    }
+                }
+            }
+        } catch {
+            print(error)
+        }
     }
     
     func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) {
@@ -848,6 +879,24 @@ class GrocyViewModel: ObservableObject {
     }
     
     //MARK: - SYSTEM
+    func getSystemInfoAsync() async throws -> SystemInfo {
+        return try await grocyApi.getSystemInfoAsync()
+//        grocyApi.getSystemInfo()
+//            .sink(receiveCompletion: { result in
+//                switch result {
+//                case .failure(let error):
+//                    self.postLog("Get system info failed. \("\(error)")", type: .error)
+//                    completion(.failure(error))
+//                case .finished:
+//                    break
+//                }
+//            }, receiveValue: { (sysinfo) in
+//                DispatchQueue.main.async {
+//                    completion(.success(sysinfo))
+//                }
+//            })
+//            .store(in: &cancellables)
+    }
     
     func getSystemInfo(completion: @escaping ((Result<SystemInfo, APIError>) -> ())) {
         grocyApi.getSystemInfo()

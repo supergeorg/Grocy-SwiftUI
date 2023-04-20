@@ -62,11 +62,12 @@ struct EmptyResponse: Codable {
 
 protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
-    func setHassData(hassURL: String, hassToken: String)
+    func setHassData(hassURL: String, hassToken: String) async
     func clearHassData()
     func setTimeoutInterval(timeoutInterval: Double)
     // MARK: - System
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
+    func getSystemInfoAsync() async throws -> SystemInfo
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
     func getSystemConfig() -> AnyPublisher<SystemConfig, APIError>
     // MARK: - User management
@@ -96,6 +97,7 @@ protocol GrocyAPI {
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError>
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
+    func getObjectAsync<T: Codable>(object: ObjectEntities) async throws -> T
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) -> AnyPublisher<T, APIError>
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) -> AnyPublisher<Int, APIError>
@@ -119,8 +121,8 @@ public class GrocyApi: GrocyAPI {
         self.apiKey = apiKey
     }
     
-    func setHassData(hassURL: String, hassToken: String) {
-        self.hassAuthenticator = HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
+    func setHassData(hassURL: String, hassToken: String) async {
+        self.hassAuthenticator = await HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
     }
     
     func clearHassData() {
@@ -172,25 +174,67 @@ public class GrocyApi: GrocyAPI {
         uploadTask.resume()
     }
     
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
+    private func callEmptyResponseAsync(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) async throws {
         if let hassAuthenticator = hassAuthenticator {
-            return hassAuthenticator.validToken()
-                .flatMap({ token in
-                    // we can now use this token to authenticate the request
-                    self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
-                })
-                .tryCatch({ error -> AnyPublisher<Int, APIError> in
-                    return hassAuthenticator.validToken(forceRefresh: true)
-                        .flatMap({ token in
-                            // we can now use this new token to authenticate the second attempt at making this request
-                            self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
-                        })
-                        .eraseToAnyPublisher()
-                })
-                .mapError { error in return APIError.hassError(error: error) }
-                .eraseToAnyPublisher()
+            let hassToken = try await hassAuthenticator.validTokenAsync()
+            try await self.callAPIEmptyResponseAsync(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
         } else {
+            try await self.callAPIEmptyResponseAsync(endPoint, method: method, object: object, id: id, content: content, query: query)
+        }
+    }
+    
+    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
+//        if let hassAuthenticator = hassAuthenticator {
+//            return hassAuthenticator.validToken()
+//                .flatMap({ token in
+//                    // we can now use this token to authenticate the request
+//                    self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
+//                })
+//                .tryCatch({ error -> AnyPublisher<Int, APIError> in
+//                    return hassAuthenticator.validToken(forceRefresh: true)
+//                        .flatMap({ token in
+//                            // we can now use this new token to authenticate the second attempt at making this request
+//                            self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
+//                        })
+//                        .eraseToAnyPublisher()
+//                })
+//                .mapError { error in return APIError.hassError(error: error) }
+//                .eraseToAnyPublisher()
+//        } else {
             return self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+//        }
+    }
+    
+    private func callAPIEmptyResponseAsync(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
+        let urlRequest = request(
+            for: endPoint,
+            method: method,
+            object: object,
+            id: id,
+            content: content,
+            query: query,
+            hassIngressToken: hassIngressToken
+        )
+        let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = result.1 as? HTTPURLResponse {
+            if !((200...299).contains(httpResponse.statusCode)) {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
+            }
+        } else {
+            throw APIError.internalError
         }
     }
     
@@ -222,26 +266,35 @@ public class GrocyApi: GrocyAPI {
             .eraseToAnyPublisher()
     }
     
-    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
+    private func callAsync<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) async throws -> T {
         if let hassAuthenticator = hassAuthenticator {
-            return hassAuthenticator.validToken()
-                .flatMap({ token in
-                    // we can now use this token to authenticate the request
-                    self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session)
-                })
-                .tryCatch({ error -> AnyPublisher<T, APIError> in
-                    return hassAuthenticator.validToken(forceRefresh: true)
-                        .flatMap({ token in
-                            // we can now use this new token to authenticate the second attempt at making this request
-                            token.data != nil ? self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session) : self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassAuthenticator.getToken())
-                        })
-                        .eraseToAnyPublisher()
-                })
-                .mapError { error in return APIError.hassError(error: error) }
-                .eraseToAnyPublisher()
+            let hassToken = try await hassAuthenticator.validTokenAsync()
+            return try await self.callAPIAsync(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
         } else {
-            return self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
+            return try await self.callAPIAsync(endPoint, method: method, object: object, id: id, content: content, query: query)
         }
+    }
+    
+    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
+//        if let hassAuthenticator = hassAuthenticator {
+//            return hassAuthenticator.validToken()
+//                .flatMap({ token in
+//                    // we can now use this token to authenticate the request
+//                    self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session)
+//                })
+//                .tryCatch({ error -> AnyPublisher<T, APIError> in
+//                    return hassAuthenticator.validToken(forceRefresh: true)
+//                        .flatMap({ token in
+//                            // we can now use this new token to authenticate the second attempt at making this request
+//                            token.data != nil ? self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session) : self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassAuthenticator.getToken())
+//                        })
+//                        .eraseToAnyPublisher()
+//                })
+//                .mapError { error in return APIError.hassError(error: error) }
+//                .eraseToAnyPublisher()
+//        } else {
+            return self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
+//        }
     }
     
     private func callAPI<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<T, APIError> {
@@ -269,6 +322,45 @@ public class GrocyApi: GrocyAPI {
             })
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
+    }
+    
+    private func callAPIAsync<T: Codable>(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws -> T {
+        let urlRequest = request(
+            for: endPoint,
+            method: method,
+            object: object,
+            id: id,
+            content: content,
+            query: query,
+            hassIngressToken: hassIngressToken
+        )
+        let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = result.1 as? HTTPURLResponse {
+            if (200...299).contains(httpResponse.statusCode) {
+                do {
+                    let responseDataDecoded = try JSONDecoder().decode(T.self, from: result.0)
+                    return responseDataDecoded
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
+            } else {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
+            }
+        }
+        throw APIError.internalError
     }
     
     private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
@@ -402,6 +494,9 @@ extension GrocyApi {
     
     func getSystemInfo() -> AnyPublisher<SystemInfo, APIError> {
         return call(.systemInfo, method: .GET)
+    }
+    func getSystemInfoAsync() async throws -> SystemInfo {
+        return try await callAsync(.systemInfo, method: .GET)
     }
     
     func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError> {
@@ -540,6 +635,9 @@ extension GrocyApi {
     
     func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError> {
         return call(.objectsEntity, method: .GET, object: object)
+    }
+    func getObjectAsync<T: Codable>(object: ObjectEntities) async throws -> T {
+        return try await callAsync(.objectsEntity, method: .GET, object: object)
     }
     
     func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError> {
