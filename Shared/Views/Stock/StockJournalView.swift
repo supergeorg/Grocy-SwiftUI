@@ -199,16 +199,16 @@ struct StockJournalRowView: View {
     }
     
     private func undoTransaction() {
-//        grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Undo transaction successful. \(message)", type: .info)
-//                grocyVM.requestData(objects: [.stock_log])
-//            case let .failure(error):
-//                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
-//                showToastUndoFailed = true
-//            }
-//        })
+        Task {
+            do {
+                try await grocyVM.undoBookingWithID(id: journalEntry.id)
+                grocyVM.postLog("Undo transaction \(journalEntry.id) successful.", type: .info)
+                await grocyVM.requestData(objects: [.stock_log])
+            } catch {
+                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+                showToastUndoFailed = true
+            }
+        }
     }
     
     var body: some View {

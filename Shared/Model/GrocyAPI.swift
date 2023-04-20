@@ -90,7 +90,7 @@ protocol GrocyAPI {
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
     func getBookingWithID(id: Int) async throws -> StockJournalEntry
     func undoBookingWithID(id: Int) async throws
-    func getPictureURL(groupName: String, fileName: String) -> String?
+    func getPictureURL(groupName: String, fileName: String)async throws -> String?
     // MARK: - Shopping List
     func shoppingListAddItem(content: Data) async throws -> SuccessfulCreationMessage
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws
