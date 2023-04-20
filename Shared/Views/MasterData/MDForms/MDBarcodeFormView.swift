@@ -51,7 +51,9 @@ struct MDBarcodeFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -67,33 +69,33 @@ struct MDBarcodeFormView: View {
     private func saveBarcode() {
         let saveBarcode = MDProductBarcode(id: isNewBarcode ? grocyVM.findNextID(.product_barcodes) : editBarcode!.id, productID: productID, barcode: barcode, quID: quantityUnitID, amount: amount, storeID: storeID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note)
         if isNewBarcode{
-            grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Barcode add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Barcode add failed. \(error)", type: .info)
-                    toastType = .failAdd
-                }
-            })
+//            grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Barcode add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    resetForm()
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Barcode add failed. \(error)", type: .info)
+//                    toastType = .failAdd
+//                }
+//            })
         } else {
             if let id = editBarcode?.id {
-                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Barcode edit successful. \(message)", type: .info)
-                        toastType = .successEdit
-                        updateData()
-                        finishForm()
-                    case let .failure(error):
-                        grocyVM.postLog("Barcode edit failed. \(error)", type: .info)
-                        toastType = .failEdit
-                    }
-                })
+//                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Barcode edit successful. \(message)", type: .info)
+//                        toastType = .successEdit
+//                        updateData()
+//                        finishForm()
+//                    case let .failure(error):
+//                        grocyVM.postLog("Barcode edit failed. \(error)", type: .info)
+//                        toastType = .failEdit
+//                    }
+//                })
             }
         }
     }
@@ -238,7 +240,7 @@ struct MDBarcodeFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

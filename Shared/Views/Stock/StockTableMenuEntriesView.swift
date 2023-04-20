@@ -27,16 +27,16 @@ struct StockTableMenuEntriesView: View {
     }
     
     func consumeAsSpoiled() {
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successConsumeAllSpoiled
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        }
+//        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                toastType = .successConsumeAllSpoiled
+//                grocyVM.requestData(additionalObjects: [.stock])
+//            case let .failure(error):
+//                grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        }
     }
     
     var body: some View {

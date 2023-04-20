@@ -42,7 +42,9 @@ struct MDQuantityUnitsView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var filteredQuantityUnits: MDQuantityUnits {
@@ -57,16 +59,16 @@ struct MDQuantityUnitsView: View {
         showDeleteAlert.toggle()
     }
     private func deleteQuantityUnit(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting quantity unit was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting quantity unit was successful. \(message)", type: .info)
+//                updateData()
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {
@@ -132,7 +134,7 @@ struct MDQuantityUnitsView: View {
                 })
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .onAppear(perform: { updateData() })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }
         .animation(.default, value: filteredQuantityUnits.count)

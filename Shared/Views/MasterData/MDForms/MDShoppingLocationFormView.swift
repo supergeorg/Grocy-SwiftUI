@@ -38,7 +38,9 @@ struct MDStoreFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -57,33 +59,33 @@ struct MDStoreFormView: View {
         let storePOST = MDStore(id: id, name: name, mdStoreDescription: mdStoreDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewStore {
-            grocyVM.postMDObject(object: .shopping_locations, content: storePOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Store add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Store add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .shopping_locations, content: storePOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Store add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Store add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Store edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Store add failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Store edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Store add failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
         
     }
@@ -129,7 +131,7 @@ struct MDStoreFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

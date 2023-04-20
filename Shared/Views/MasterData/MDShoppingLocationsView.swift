@@ -35,7 +35,9 @@ struct MDStoresView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var filteredStores: MDStores {
@@ -50,18 +52,18 @@ struct MDStoresView: View {
         showDeleteAlert.toggle()
     }
     private func deleteStore(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .shopping_locations,
-                               id: toDelID,
-                               completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting store was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting store failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .shopping_locations,
+//                               id: toDelID,
+//                               completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting store was successful. \(message)", type: .info)
+//                updateData()
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting store failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {
@@ -132,7 +134,7 @@ struct MDStoresView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
+            updateData()
         })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }

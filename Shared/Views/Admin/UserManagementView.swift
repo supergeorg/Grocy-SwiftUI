@@ -21,7 +21,9 @@ struct UserManagementView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
     
     private func updateData() {
-        grocyVM.requestData(additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(additionalObjects: additionalDataToUpdate)
+        }
     }
     
     var filteredUsers: GrocyUsers {

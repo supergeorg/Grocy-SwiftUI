@@ -101,21 +101,21 @@ struct ShoppingListEntriesView: View {
             quID: shoppingListItem.quID,
             rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp
         )
-        grocyVM.putMDObjectWithID(
-            object: .shopping_list,
-            id: shoppingListItem.id,
-            content: doneChangedShoppingListItem,
-            completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
-                    grocyVM.requestData(objects: [.shopping_list])
-                case let .failure(error):
-                    grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
-                    toastType = .shLActionFail
-                }
-            }
-        )
+//        grocyVM.putMDObjectWithID(
+//            object: .shopping_list,
+//            id: shoppingListItem.id,
+//            content: doneChangedShoppingListItem,
+//            completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
+//                    grocyVM.requestData(objects: [.shopping_list])
+//                case let .failure(error):
+//                    grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
+//                    toastType = .shLActionFail
+//                }
+//            }
+//        )
     }
     
     private func deleteItem(itemToDelete: ShoppingListItem) {
@@ -124,16 +124,16 @@ struct ShoppingListEntriesView: View {
     }
 
     private func deleteSHLItem(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Shopping list item delete successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.shopping_list])
-            case let .failure(error):
-                grocyVM.postLog("Shopping list item delete failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        })
+//        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Shopping list item delete successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.shopping_list])
+//            case let .failure(error):
+//                grocyVM.postLog("Shopping list item delete failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        })
     }
     
     var body: some View {

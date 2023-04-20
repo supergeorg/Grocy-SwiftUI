@@ -31,7 +31,9 @@ struct QuickScanModeSelectProductView: View {
     }
     
     private func updateData() {
-        grocyVM.requestData(objects: [.product_barcodes])
+        Task {
+            await grocyVM.requestData(objects: [.product_barcodes])
+        }
     }
     
     private func finishForm() {
@@ -52,19 +54,19 @@ struct QuickScanModeSelectProductView: View {
                     rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
                     note: nil
                 )
-                grocyVM.postMDObject(object: .product_barcodes, content: newBarcode, completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Add barcode successful. \(message)", type: .info)
-                        grocyVM.requestData(objects: [.product_barcodes])
-                        newRecognizedBarcode = newBarcode
-                        toastType = .successAdd
-                        finishForm()
-                    case let .failure(error):
-                        grocyVM.postLog("Add barcode failed. \(error)", type: .error)
-                        toastType = .failAdd
-                    }
-                })
+//                grocyVM.postMDObject(object: .product_barcodes, content: newBarcode, completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Add barcode successful. \(message)", type: .info)
+//                        grocyVM.requestData(objects: [.product_barcodes])
+//                        newRecognizedBarcode = newBarcode
+//                        toastType = .successAdd
+//                        finishForm()
+//                    case let .failure(error):
+//                        grocyVM.postLog("Add barcode failed. \(error)", type: .error)
+//                        toastType = .failAdd
+//                    }
+//                })
             }
         }
     }

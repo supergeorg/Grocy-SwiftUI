@@ -48,7 +48,9 @@ struct MDUserEntityFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -67,34 +69,34 @@ struct MDUserEntityFormView: View {
         let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? 1 : 0, iconCSSClass: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewUserEntity {
-            grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("User entity add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("User entity add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("User entity add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    resetForm()
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("User entity add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("User entity edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("User entity edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("User entity edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("User entity edit failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
     }
     
@@ -145,7 +147,7 @@ struct MDUserEntityFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

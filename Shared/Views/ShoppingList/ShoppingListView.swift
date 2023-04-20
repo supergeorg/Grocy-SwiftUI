@@ -58,7 +58,9 @@ struct ShoppingListView: View {
         .shopping_list,
     ]
     func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
@@ -154,29 +156,29 @@ struct ShoppingListView: View {
     }
     
     func deleteShoppingList() {
-        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Shopping list delete successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.shopping_lists])
-            case let .failure(error):
-                grocyVM.postLog("Shopping list delete failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        })
+//        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Shopping list delete successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.shopping_lists])
+//            case let .failure(error):
+//                grocyVM.postLog("Shopping list delete failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        })
     }
     
     private func slAction(_ actionType: ShoppingListActionType) {
-        grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.shopping_list])
-            case let .failure(error):
-                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        })
+//        grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.shopping_list])
+//            case let .failure(error):
+//                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        })
     }
     
     var body: some View {
@@ -427,7 +429,7 @@ struct ShoppingListView: View {
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
+            updateData()
         })
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))

@@ -22,27 +22,27 @@ struct ServerSettingsToggle: View {
     var toggleFeedback: Binding<Bool>? = nil
     
     func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsBool, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.isOn = userSettingsResult.value
-                toggleFeedback?.wrappedValue = userSettingsResult.value
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
-        }
+//        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsBool, APIError>) in
+//            switch result {
+//            case let .success(userSettingsResult):
+//                self.isOn = userSettingsResult.value
+//                toggleFeedback?.wrappedValue = userSettingsResult.value
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+//            }
+//            self.isFirstShown = false
+//        }
     }
     
     func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsBool(value: isOn)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                getSetting()
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
-        }
+//        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsBool(value: isOn)) { (result: Result<Int, Error>) in
+//            switch result {
+//            case .success:
+//                getSetting()
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+//            }
+//        }
     }
     
     var body: some View {
@@ -74,26 +74,26 @@ struct ServerSettingsIntStepper: View {
     var icon: String? = nil
     
     func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.value = userSettingsResult.value ?? 0
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
-        }
+//        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
+//            switch result {
+//            case let .success(userSettingsResult):
+//                self.value = userSettingsResult.value ?? 0
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+//            }
+//            self.isFirstShown = false
+//        }
     }
     
     func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
-        }
+//        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value)) { (result: Result<Int, Error>) in
+//            switch result {
+//            case .success:
+//                break
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+//            }
+//        }
     }
     
     var body: some View {
@@ -125,26 +125,26 @@ struct ServerSettingsDoubleStepper: View {
     var icon: String? = nil
     
     func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsDouble, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.value = userSettingsResult.value ?? 0.0
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
-        }
+//        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsDouble, APIError>) in
+//            switch result {
+//            case let .success(userSettingsResult):
+//                self.value = userSettingsResult.value ?? 0.0
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+//            }
+//            self.isFirstShown = false
+//        }
     }
     
     func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsDouble(value: value)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
-        }
+//        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsDouble(value: value)) { (result: Result<Int, Error>) in
+//            switch result {
+//            case .success:
+//                break
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+//            }
+//        }
     }
     
     var body: some View {
@@ -181,30 +181,30 @@ struct ServerSettingsObjectPicker: View {
     let objects: Objects
     
     func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                if userSettingsResult.value == 0 {
-                    self.objectID = nil
-                } else {
-                    self.objectID = userSettingsResult.value
-                }
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
-        }
+//        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
+//            switch result {
+//            case let .success(userSettingsResult):
+//                if userSettingsResult.value == 0 {
+//                    self.objectID = nil
+//                } else {
+//                    self.objectID = userSettingsResult.value
+//                }
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+//            }
+//            self.isFirstShown = false
+//        }
     }
     
     func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
-        }
+//        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID)) { (result: Result<Int, Error>) in
+//            switch result {
+//            case .success:
+//                break
+//            case let .failure(error):
+//                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+//            }
+//        }
     }
     
     var body: some View {

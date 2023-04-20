@@ -122,35 +122,35 @@ struct QuickScanModeInputView: View {
         NavigationView {
             Form {
                 if let product = product {
-                    Section {
-                        HStack {
-                            if let pictureFileName = product.pictureFileName,
-                               !pictureFileName.isEmpty,
-                               let utf8str = pictureFileName.data(using: .utf8),
-                               let pictureURL = grocyVM.getPictureURL(
-                                groupName: "productpictures",
-                                fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-                               ),
-                               let url = URL(string: pictureURL)
-                            {
-                                AsyncImage(url: url, content: { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .background(Color.white)
-                                }, placeholder: {
-                                    ProgressView()
-                                })
-                                .frame(width: 50, height: 50)
-                            }
-                            VStack(alignment: .leading) {
-                                Text(product.name).font(.title)
-                                if let amount = stockElement?.amount {
-                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
-                                }
-                            }
-                        }
-                    }
+//                    Section {
+//                        HStack {
+//                            if let pictureFileName = product.pictureFileName,
+//                               !pictureFileName.isEmpty,
+//                               let utf8str = pictureFileName.data(using: .utf8),
+//                               let pictureURL = grocyVM.getPictureURL(
+//                                groupName: "productpictures",
+//                                fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+//                               ),
+//                               let url = URL(string: pictureURL)
+//                            {
+//                                AsyncImage(url: url, content: { image in
+//                                    image
+//                                        .resizable()
+//                                        .aspectRatio(contentMode: .fit)
+//                                        .background(Color.white)
+//                                }, placeholder: {
+//                                    ProgressView()
+//                                })
+//                                .frame(width: 50, height: 50)
+//                            }
+//                            VStack(alignment: .leading) {
+//                                Text(product.name).font(.title)
+//                                if let amount = stockElement?.amount {
+//                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
+//                                }
+//                            }
+//                        }
+//                    }
                     
                     if quickScanMode == .consume {
                         ConsumeProductView(
@@ -227,7 +227,7 @@ struct QuickScanModeInputView: View {
         .onAppear(perform: {
             if firstOpen {
                 if let productID = product?.id {
-                    grocyVM.getStockProductEntries(productID: productID)
+//                    grocyVM.getStockProductEntries(productID: productID)
                 }
                 firstOpen = false
             }

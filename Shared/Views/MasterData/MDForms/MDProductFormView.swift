@@ -213,7 +213,9 @@ struct MDProductFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -269,52 +271,52 @@ struct MDProductFormView: View {
             )
             isProcessing = true
             if isNewProduct {
-                grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Product add successful. \(message)", type: .info)
-                        toastType = .successAdd
-                        grocyVM.requestData(objects: [.products])
-                        if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
-                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
-                            grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
-                                switch result {
-                                case let .success(barcodeMessage):
-                                    grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
-                                    grocyVM.requestData(objects: [.product_barcodes])
-                                    mdBarcodeReturn?.wrappedValue = barcodePOST
-                                    toastType = .successAdd
-                                    finishForm()
-                                case let .failure(barcodeError):
-                                    grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)
-                                    toastType = .failAdd
-                                }
-                                isProcessing = false
-                            })
-                        } else {
-                            isProcessing = false
-                            finishForm()
-                        }
-                    case let .failure(error):
-                        grocyVM.postLog("Product add failed. \(error)", type: .error)
-                        toastType = .failAdd
-                    }
-                    isProcessing = false
-                })
+//                grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Product add successful. \(message)", type: .info)
+//                        toastType = .successAdd
+//                        grocyVM.requestData(objects: [.products])
+//                        if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
+//                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+//                            grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
+//                                switch result {
+//                                case let .success(barcodeMessage):
+//                                    grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
+//                                    grocyVM.requestData(objects: [.product_barcodes])
+//                                    mdBarcodeReturn?.wrappedValue = barcodePOST
+//                                    toastType = .successAdd
+//                                    finishForm()
+//                                case let .failure(barcodeError):
+//                                    grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)
+//                                    toastType = .failAdd
+//                                }
+//                                isProcessing = false
+//                            })
+//                        } else {
+//                            isProcessing = false
+//                            finishForm()
+//                        }
+//                    case let .failure(error):
+//                        grocyVM.postLog("Product add failed. \(error)", type: .error)
+//                        toastType = .failAdd
+//                    }
+//                    isProcessing = false
+//                })
             } else {
-                grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST, completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Product edit successful. \(message)", type: .info)
-                        toastType = .successEdit
-                        grocyVM.requestData(objects: [.products])
-                        finishForm()
-                    case let .failure(error):
-                        grocyVM.postLog("Product edit failed. \(error)", type: .error)
-                        toastType = .failEdit
-                    }
-                    isProcessing = false
-                })
+//                grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST, completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Product edit successful. \(message)", type: .info)
+//                        toastType = .successEdit
+//                        grocyVM.requestData(objects: [.products])
+//                        finishForm()
+//                    case let .failure(error):
+//                        grocyVM.postLog("Product edit failed. \(error)", type: .error)
+//                        toastType = .failEdit
+//                    }
+//                    isProcessing = false
+//                })
             }
         }
     }
@@ -482,7 +484,9 @@ struct MDProductFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info])
+                Task {
+                    await grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info])
+                }
                 resetForm()
                 firstAppear = false
             }

@@ -40,9 +40,11 @@ struct MDTaskCategoriesView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
-    }
+//    private func updateData() {
+//        Task {
+//            await grocyVM.requestData(objects: dataToUpdate)
+//        }
+//    }
     
     private var filteredTaskCategories: MDTaskCategories {
         grocyVM.mdTaskCategories
@@ -56,16 +58,16 @@ struct MDTaskCategoriesView: View {
         showDeleteAlert.toggle()
     }
     private func deleteTaskCategory(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .task_categories, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting task category was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .task_categories, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting task category was successful. \(message)", type: .info)
+//                updateData()
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {
@@ -89,7 +91,7 @@ struct MDTaskCategoriesView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+//                    RefreshButton(updateData: { updateData() })
 #endif
                     Button(action: {
                         showAddTaskCategory.toggle()
@@ -132,9 +134,12 @@ struct MDTaskCategoriesView: View {
                 })
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+//        .onAppear(perform: {
+//            Task {
+//                grocyVM.requestData(objects: dataToUpdate)
+//            } })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+//        .refreshable { updateData() }
         .animation(.default, value: filteredTaskCategories.count)
         .toast(
             item: $toastType,

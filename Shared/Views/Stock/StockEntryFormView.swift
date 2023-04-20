@@ -65,18 +65,18 @@ struct StockEntryFormView: View {
             note: noteText
         )
         isProcessing = true
-        grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Stock entry edit successful. \(message)", type: .info)
-                //                toastType = .successEdit
-                finishForm()
-            case let .failure(error):
-                grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
-                //                toastType = .failEdit
-            }
-            isProcessing = false
-        })
+//        grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Stock entry edit successful. \(message)", type: .info)
+//                //                toastType = .successEdit
+//                finishForm()
+//            case let .failure(error):
+//                grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
+//                //                toastType = .failEdit
+//            }
+//            isProcessing = false
+//        })
     }
     
     private func resetForm() {
@@ -155,7 +155,9 @@ struct StockEntryFormView: View {
         .onAppear(perform: {
             if firstAppear {
                 resetForm()
-                grocyVM.requestData(additionalObjects: [.system_info])
+                Task {
+                    await grocyVM.requestData(additionalObjects: [.system_info])
+                }
                 firstAppear = false
             }
         })

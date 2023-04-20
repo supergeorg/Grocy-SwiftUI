@@ -41,7 +41,9 @@ struct MDProductGroupsView: View {
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var filteredProductGroups: MDProductGroups {
@@ -57,16 +59,16 @@ struct MDProductGroupsView: View {
     }
     private func deleteProductGroup(toDelID: Int?) {
         if let toDelID = toDelID {
-            grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Deleting product group was successful. \(message)", type: .info)
-                    updateData()
-                case let .failure(error):
-                    grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
-                    toastType = .failDelete
-                }
-            })
+//            grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Deleting product group was successful. \(message)", type: .info)
+//                    updateData()
+//                case let .failure(error):
+//                    grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
+//                    toastType = .failDelete
+//                }
+//            })
         }
     }
     
@@ -134,7 +136,7 @@ struct MDProductGroupsView: View {
                 })
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .onAppear(perform: { updateData() })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }
         .animation(.default, value: filteredProductGroups.count)

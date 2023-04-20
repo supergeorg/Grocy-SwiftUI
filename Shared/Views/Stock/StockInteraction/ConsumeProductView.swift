@@ -65,7 +65,9 @@ struct ConsumeProductView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.user_settings]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     private var product: MDProduct? {
@@ -173,22 +175,22 @@ struct ConsumeProductView: View {
             let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Opening successful. \(prod)", type: .info)
-                    toastType = .successOpen
-                    grocyVM.requestData(additionalObjects: [.stock])
-                    resetForm()
-                    if self.actionFinished != nil {
-                        self.actionFinished?.wrappedValue = true
-                    }
-                case let .failure(error):
-                    grocyVM.postLog("Opening failed: \(error)", type: .error)
-                    toastType = .failOpen
-                }
-                isProcessingAction = false
-            }
+//            grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo) { result in
+//                switch result {
+//                case let .success(prod):
+//                    grocyVM.postLog("Opening successful. \(prod)", type: .info)
+//                    toastType = .successOpen
+//                    grocyVM.requestData(additionalObjects: [.stock])
+//                    resetForm()
+//                    if self.actionFinished != nil {
+//                        self.actionFinished?.wrappedValue = true
+//                    }
+//                case let .failure(error):
+//                    grocyVM.postLog("Opening failed: \(error)", type: .error)
+//                    toastType = .failOpen
+//                }
+//                isProcessingAction = false
+//            }
         }
     }
     
@@ -197,32 +199,32 @@ struct ConsumeProductView: View {
             let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Consume successful. \(prod)", type: .info)
-                    if let autoAddBelowMinStock = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
-                        grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing, completion: { result in
-                            switch result {
-                            case let .success(message):
-                                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
-                                grocyVM.requestData(objects: [.shopping_list])
-                            case let .failure(error):
-                                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
-                            }
-                        })
-                    }
-                    toastType = .successConsume
-                    resetForm()
-                    if self.actionFinished != nil {
-                        self.actionFinished?.wrappedValue = true
-                    }
-                case let .failure(error):
-                    grocyVM.postLog("Consume failed: \(error)", type: .error)
-                    toastType = .failConsume
-                }
-                isProcessingAction = false
-            }
+//            grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo) { result in
+//                switch result {
+//                case let .success(prod):
+//                    grocyVM.postLog("Consume successful. \(prod)", type: .info)
+//                    if let autoAddBelowMinStock = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+//                        grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing, completion: { result in
+//                            switch result {
+//                            case let .success(message):
+//                                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
+//                                grocyVM.requestData(objects: [.shopping_list])
+//                            case let .failure(error):
+//                                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+//                            }
+//                        })
+//                    }
+//                    toastType = .successConsume
+//                    resetForm()
+//                    if self.actionFinished != nil {
+//                        self.actionFinished?.wrappedValue = true
+//                    }
+//                case let .failure(error):
+//                    grocyVM.postLog("Consume failed: \(error)", type: .error)
+//                    toastType = .failConsume
+//                }
+//                isProcessingAction = false
+//            }
         }
     }
     
@@ -298,7 +300,7 @@ struct ConsumeProductView: View {
                 ProductField(productID: $productID, description: "str.stock.consume.product")
                     .onChange(of: productID) { newProduct in
                         if let productID = productID {
-                            grocyVM.getStockProductEntries(productID: productID)
+//                            grocyVM.getStockProductEntries(productID: productID)
                             if let product = product {
                                 locationID = product.locationID
                                 quantityUnitID = product.quIDStock
@@ -382,18 +384,18 @@ struct ConsumeProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                updateData()
                 resetForm()
                 if let productID = productID {
-                    grocyVM.getStockProductEntries(productID: productID)
-                    if let product = product {
-                        locationID = product.locationID
-                        quantityUnitID = product.quIDStock
-                        if let directStockEntryID = directStockEntryID {
-                            useSpecificStockEntry = true
-                            stockEntryID = directStockEntryID
-                        }
-                    }
+//                    grocyVM.getStockProductEntries(productID: productID)
+//                    if let product = product {
+//                        locationID = product.locationID
+//                        quantityUnitID = product.quIDStock
+//                        if let directStockEntryID = directStockEntryID {
+//                            useSpecificStockEntry = true
+//                            stockEntryID = directStockEntryID
+//                        }
+//                    }
                 }
                 firstAppear = false
             }

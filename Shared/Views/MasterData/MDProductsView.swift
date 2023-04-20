@@ -16,17 +16,17 @@ struct MDProductRowView: View {
 
     var body: some View {
         HStack{
-            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-                AsyncImage(url: url, content: { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(Color.white)
-                }, placeholder: {
-                    ProgressView()
-                })
-                    .frame(width: 75, height: 75)
-            }
+//            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
+//                AsyncImage(url: url, content: { image in
+//                    image
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .background(Color.white)
+//                }, placeholder: {
+//                    ProgressView()
+//                })
+//                    .frame(width: 75, height: 75)
+//            }
             VStack(alignment: .leading) {
                 Text(product.name).font(.title)
                 HStack(alignment: .top){
@@ -69,7 +69,9 @@ struct MDProductsView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func deleteItem(itemToDelete: MDProduct) {
@@ -77,16 +79,16 @@ struct MDProductsView: View {
         showDeleteAlert.toggle()
     }
     private func deleteProduct(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting product was successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.products, .product_barcodes])
-            case let .failure(error):
-                grocyVM.postLog("Deleting product failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting product was successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.products, .product_barcodes])
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting product failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     private var filteredProducts: MDProducts {
@@ -163,7 +165,7 @@ struct MDProductsView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
+            updateData()
         })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }

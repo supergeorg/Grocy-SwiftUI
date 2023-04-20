@@ -14,7 +14,7 @@ struct StockProductInfoView: View {
     
     var productDetails: StockProductDetails? {
         if let productID = stockElement?.productID {
-            grocyVM.getStockProductDetails(productID: productID)
+//            grocyVM.getStockProductDetails(productID: productID)
             return grocyVM.stockProductDetails[productID]
         } else { return nil }
     }
@@ -87,24 +87,24 @@ struct StockProductInfoView: View {
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
                 
-                if let pictureFileName = productDetails.product.pictureFileName,
-                   !pictureFileName.isEmpty,
-                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
-                   let pictureURLString = grocyVM.getPictureURL(
-                    groupName: "productpictures",
-                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-                   ),
-                   let pictureURL = URL(string: pictureURLString) {
-                    AsyncImage(url: pictureURL, content: { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(Color.white)
-                    }, placeholder: {
-                        ProgressView()
-                    })
-                        .frame(width: 200)
-                }
+//                if let pictureFileName = productDetails.product.pictureFileName,
+//                   !pictureFileName.isEmpty,
+//                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
+//                   let pictureURLString = grocyVM.getPictureURL(
+//                    groupName: "productpictures",
+//                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+//                   ),
+//                   let pictureURL = URL(string: pictureURLString) {
+//                    AsyncImage(url: pictureURL, content: { image in
+//                        image
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .background(Color.white)
+//                    }, placeholder: {
+//                        ProgressView()
+//                    })
+//                        .frame(width: 200)
+//                }
             } else { Text("Retrieving Details Failed. Please open another window first.") }
         }
         .navigationTitle(LocalizedStringKey("str.details.title"))

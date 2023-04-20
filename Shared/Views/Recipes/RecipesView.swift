@@ -24,7 +24,9 @@ struct RecipesView: View {
     @State private var selection: Recipe.ID?
     
     func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     var recipes: Recipes {

@@ -65,7 +65,9 @@ struct StockView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     var numExpiringSoon: Int? {
@@ -146,7 +148,7 @@ struct StockView: View {
                 categoryName = element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
             case .lastPurchased:
                 if grocyVM.stockProductDetails[element.productID] == nil {
-                    grocyVM.getStockProductDetails(productID: element.productID)
+//                    grocyVM.getStockProductDetails(productID: element.productID)
                 }
                 categoryName = grocyVM.stockProductDetails[element.productID]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
             case .minStockAmount:
@@ -380,7 +382,7 @@ struct StockView: View {
         .animation(.default, value: sortSetting)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                updateData()
                 firstAppear = false
             }
         })
@@ -448,7 +450,7 @@ struct StockView: View {
         .animation(.default, value: groupedProducts.count)
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                updateData()
                 firstAppear = false
             }
         })

@@ -38,7 +38,9 @@ struct MDUserEntitiesView: View {
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var filteredUserEntities: MDUserEntities {
@@ -53,16 +55,16 @@ struct MDUserEntitiesView: View {
         showDeleteAlert.toggle()
     }
     private func deleteUserEntity(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting user entity was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting user entity was successful. \(message)", type: .info)
+//                updateData()
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {
@@ -129,7 +131,7 @@ struct MDUserEntitiesView: View {
             }
         }
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
+            updateData()
         })
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable { updateData() }

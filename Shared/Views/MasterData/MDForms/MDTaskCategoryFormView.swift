@@ -44,7 +44,9 @@ struct MDTaskCategoryFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -63,34 +65,34 @@ struct MDTaskCategoryFormView: View {
         let taskCategoryPOST = MDTaskCategory(id: id, name: name, mdTaskCategoryDescription: mdTaskCategoryDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewTaskCategory {
-            grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Task category add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Task category add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Task category add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    resetForm()
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Task category add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Task category edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Task category edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Task category edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Task category edit failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
     }
     
@@ -136,7 +138,7 @@ struct MDTaskCategoryFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

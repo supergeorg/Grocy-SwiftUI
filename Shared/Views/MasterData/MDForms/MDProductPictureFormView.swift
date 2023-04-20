@@ -28,36 +28,36 @@ struct MDProductPictureFormView: View {
     let groupName = "productpictures"
     
     private func deletePicture(savedPictureFileNameData: Data) {
-        isProcessing = true
-        grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Picture successfully deleted. \(message)", type: .info)
-                changeProductPicture(newPictureFilename: nil)
-            case let .failure(error):
-                grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
-                isProcessing = false
-            }
-        })
+        //        isProcessing = true
+        //        grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), completion: { result in
+        //            switch result {
+        //            case let .success(message):
+        //                grocyVM.postLog("Picture successfully deleted. \(message)", type: .info)
+        //                changeProductPicture(newPictureFilename: nil)
+        //            case let .failure(error):
+        //                grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
+        //                isProcessing = false
+        //            }
+        //        })
     }
     
 #if os(iOS)
     private func uploadPicture(imagePicture: UIImage, newPictureFilename: String) {
-        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegData = imagePicture.jpegData(compressionQuality: 0.8) {
-            let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-            
-            isProcessing = true
-            grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
-                switch result {
-                case let .success(response):
-                    grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
-                    changeProductPicture(newPictureFilename: newPictureFilename)
-                case let .failure(error):
-                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
-                    isProcessing = false
-                }
-            })
-        }
+        //        if let pictureFileNameData = newPictureFilename.data(using: .utf8), let jpegData = imagePicture.jpegData(compressionQuality: 0.8) {
+        //            let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+        //
+        //            isProcessing = true
+        //            grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
+        //                switch result {
+        //                case let .success(response):
+        //                    grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
+        //                    changeProductPicture(newPictureFilename: newPictureFilename)
+        //                case let .failure(error):
+        //                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+        //                    isProcessing = false
+        //                }
+        //            })
+        //        }
     }
 #elseif os(macOS)
     private func uploadPicture(imagePicture: NSImage, newPictureFilename: String) {
@@ -66,145 +66,145 @@ struct MDProductPictureFormView: View {
             let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
             if let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:]) {
                 isProcessing = true
-                grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
-                    switch result {
-                    case let .success(response):
-                        grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
-                        changeProductPicture(newPictureFilename: newPictureFilename)
-                    case let .failure(error):
-                        grocyVM.postLog("Picture upload failed. \(error)", type: .error)
-                        isProcessing = false
-                    }
-                })
+//                grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded, completion: { result in
+//                    switch result {
+//                    case let .success(response):
+//                        grocyVM.postLog("Picture successfully uploaded. \(response)", type: .info)
+//                        changeProductPicture(newPictureFilename: newPictureFilename)
+//                    case let .failure(error):
+//                        grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+//                        isProcessing = false
+//                    }
+//                })
             }
         }
     }
 #endif
     
     private func changeProductPicture(newPictureFilename: String?){
-        if let product = product {
-            var productPOST = product
-            productPOST.pictureFileName = newPictureFilename
-            grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Picture successfully changed in product. \(message)", type: .info)
-                    grocyVM.requestData(objects: [.products])
-                    pictureFilename = selectedPictureFileName
-                    picture = nil
-                    selectedPictureFileName = nil
-                case let .failure(error):
-                    grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
-                }
-                isProcessing = false
-            })
-        }
+        //        if let product = product {
+        //            var productPOST = product
+        //            productPOST.pictureFileName = newPictureFilename
+        //            grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST, completion: { result in
+        //                switch result {
+        //                case let .success(message):
+        //                    grocyVM.postLog("Picture successfully changed in product. \(message)", type: .info)
+        //                    grocyVM.requestData(objects: [.products])
+        //                    pictureFilename = selectedPictureFileName
+        //                    picture = nil
+        //                    selectedPictureFileName = nil
+        //                case let .failure(error):
+        //                    grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
+        //                }
+        //                isProcessing = false
+        //            })
+        //        }
     }
     
     var body: some View {
         Form {
-            Section {
-                if let pictureFilename = pictureFilename, !pictureFilename.isEmpty {
-                    if let base64Encoded = pictureFilename.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-                        AsyncImage(url: url, content: { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .background(Color.white)
-                        }, placeholder: {
-                            ProgressView()
-                        })
-                        .frame(maxHeight: 100)
-                    }
-                    Text(pictureFilename)
-                        .font(.caption)
-                    if let pictureFilenameData = pictureFilename.data(using: .utf8) {
-                        Button(action: {
-                            deletePicture(savedPictureFileNameData: pictureFilenameData)
-                        }, label: {
-                            Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
-                                .foregroundColor(.red)
-                        })
-                        .disabled(isProcessing)
-                    }
-                }
-            }
-            Section {
-#if os(macOS)
-                Button(LocalizedStringKey("str.md.product.picture.add.file")) {
-                    let openPanel = NSOpenPanel()
-                    openPanel.prompt = "Select File"
-                    openPanel.allowsMultipleSelection = false
-                    openPanel.canChooseDirectories = false
-                    openPanel.canCreateDirectories = false
-                    openPanel.canChooseFiles = true
-                    openPanel.allowedContentTypes = [.image]
-                    openPanel.begin { (result) -> Void in
-                        if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
-                            do {
-                                let imageData = try Data(contentsOf: openPanel.url!)
-                                picture = NSImage(data: imageData)
-                                selectedPictureFileName = openPanel.url?.lastPathComponent
-                            } catch {
-                                print("Error loading image : \(error)")
-                            }
-                        }
-                    }
-                }
-#elseif os(iOS)
-                Button(action: {
-                    showImagePicker.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
-                })
-                .sheet(isPresented: $showImagePicker, onDismiss: {
-                    if let product = product {
-                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
-                    } else {
-                        selectedPictureFileName = "\(UUID())_.jpg"
-                    }
-                }, content: {
-                    ImageLibraryPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name)
-                })
-                Button(action: {
-                    showCamera.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
-                })
-                .sheet(isPresented: $showCamera, onDismiss: {
-                    if let product = product {
-                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
-                    } else {
-                        selectedPictureFileName = "\(UUID())_.jpg"
-                    }
-                }, content: {
-                    CameraPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name, showCamera: $showCamera)
-                })
-#endif
-                if let picture = picture {
-#if os(iOS)
-                    Image(uiImage: picture)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 150)
-#elseif os(macOS)
-                    Image(nsImage: picture)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 150)
-#endif
-                    if let selectedPictureFileName = selectedPictureFileName {
-                        Text(selectedPictureFileName)
-                            .font(.caption)
-                        Button(action: {
-                            uploadPicture(imagePicture: picture, newPictureFilename: selectedPictureFileName)
-                        }, label: {
-                            Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
-                        })
-                        .disabled(isProcessing)
-                    }
-                }
-            }
+//            Section {
+//                if let pictureFilename = pictureFilename, !pictureFilename.isEmpty {
+//                    if let base64Encoded = pictureFilename.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
+//                        AsyncImage(url: url, content: { image in
+//                            image
+//                                .resizable()
+//                                .aspectRatio(contentMode: .fit)
+//                                .background(Color.white)
+//                        }, placeholder: {
+//                            ProgressView()
+//                        })
+//                        .frame(maxHeight: 100)
+//                    }
+//                    Text(pictureFilename)
+//                        .font(.caption)
+//                    if let pictureFilenameData = pictureFilename.data(using: .utf8) {
+//                        Button(action: {
+//                            deletePicture(savedPictureFileNameData: pictureFilenameData)
+//                        }, label: {
+//                            Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
+//                                .foregroundColor(.red)
+//                        })
+//                        .disabled(isProcessing)
+//                    }
+//                }
+//            }
+//            Section {
+//#if os(macOS)
+//                Button(LocalizedStringKey("str.md.product.picture.add.file")) {
+//                    let openPanel = NSOpenPanel()
+//                    openPanel.prompt = "Select File"
+//                    openPanel.allowsMultipleSelection = false
+//                    openPanel.canChooseDirectories = false
+//                    openPanel.canCreateDirectories = false
+//                    openPanel.canChooseFiles = true
+//                    openPanel.allowedContentTypes = [.image]
+//                    openPanel.begin { (result) -> Void in
+//                        if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
+//                            do {
+//                                let imageData = try Data(contentsOf: openPanel.url!)
+//                                picture = NSImage(data: imageData)
+//                                selectedPictureFileName = openPanel.url?.lastPathComponent
+//                            } catch {
+//                                print("Error loading image : \(error)")
+//                            }
+//                        }
+//                    }
+//                }
+//#elseif os(iOS)
+//                Button(action: {
+//                    showImagePicker.toggle()
+//                }, label: {
+//                    Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
+//                })
+//                .sheet(isPresented: $showImagePicker, onDismiss: {
+//                    if let product = product {
+//                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
+//                    } else {
+//                        selectedPictureFileName = "\(UUID())_.jpg"
+//                    }
+//                }, content: {
+//                    ImageLibraryPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name)
+//                })
+//                Button(action: {
+//                    showCamera.toggle()
+//                }, label: {
+//                    Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
+//                })
+//                .sheet(isPresented: $showCamera, onDismiss: {
+//                    if let product = product {
+//                        selectedPictureFileName = "\(UUID())_\(product.name.cleanedFileName).jpg"
+//                    } else {
+//                        selectedPictureFileName = "\(UUID())_.jpg"
+//                    }
+//                }, content: {
+//                    CameraPicker(image: $picture, selectedPictureFileName: $selectedPictureFileName, productName: product?.name, showCamera: $showCamera)
+//                })
+//#endif
+//                if let picture = picture {
+//#if os(iOS)
+//                    Image(uiImage: picture)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(maxHeight: 150)
+//#elseif os(macOS)
+//                    Image(nsImage: picture)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(maxHeight: 150)
+//#endif
+//                    if let selectedPictureFileName = selectedPictureFileName {
+//                        Text(selectedPictureFileName)
+//                            .font(.caption)
+//                        Button(action: {
+//                            uploadPicture(imagePicture: picture, newPictureFilename: selectedPictureFileName)
+//                        }, label: {
+//                            Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
+//                        })
+//                        .disabled(isProcessing)
+//                    }
+//                }
+//            }
         }
 #if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.picture"))

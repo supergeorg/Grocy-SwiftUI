@@ -40,31 +40,31 @@ struct StockEntryRowView: View {
     }
     
     private func consumeEntry() {
-        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                //                toastType = .successConsumeEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                fetchData
-            case let .failure(error):
-                grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
-                toastType = .failConsume
-            }
-        }
+//        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                //                toastType = .successConsumeEntry
+//                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+//                fetchData
+//            case let .failure(error):
+//                grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
+//                toastType = .failConsume
+//            }
+//        }
     }
     
     private func openEntry() {
-        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                //                toastType = .successOpenEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                fetchData
-            case let .failure(error):
-                grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
-                toastType = .failOpen
-            }
-        }
+//        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                //                toastType = .successOpenEntry
+//                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+//                fetchData
+//            case let .failure(error):
+//                grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
+//                toastType = .failOpen
+//            }
+//        }
     }
     
     var body: some View {
@@ -179,15 +179,15 @@ struct StockEntriesView: View {
     func fetchData(ignoreCachedStock: Bool = true) {
         // This local management is needed due to the SwiftUI Views not updating correctly.
         if stockEntries.isEmpty || ignoreCachedStock {
-            grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID, completion: { (result: Result<StockEntries, Error>) in
-                switch result {
-                case let .success(productEntriesResult):
-                    grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
-                    self.stockEntries = productEntriesResult
-                case let .failure(error):
-                    grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
-                }
-            })
+//            grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID, completion: { (result: Result<StockEntries, Error>) in
+//                switch result {
+//                case let .success(productEntriesResult):
+//                    grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
+//                    self.stockEntries = productEntriesResult
+//                case let .failure(error):
+//                    grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
+//                }
+//            })
         }
     }
     

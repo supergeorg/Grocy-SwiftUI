@@ -142,7 +142,8 @@ struct StockTable: View {
             //            })
             ////            TableColumn(LocalizedStringKey("str.stock.tbl.productPicture"), content: { stockElement in })
         })
-            .onAppear(perform: { grocyVM.requestData(objects: [.product_groups, .shopping_list, .quantity_units, .products, .locations], additionalObjects: [.stock, .system_config]) })
+        .onAppear(perform: { Task {
+            await grocyVM.requestData(objects: [.product_groups, .shopping_list, .quantity_units, .products, .locations], additionalObjects: [.stock, .system_config])} })
             .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
             .animation(.default, value: searchedStock.count)
         //            .onChange(of: sortOrder, perform: { srt in

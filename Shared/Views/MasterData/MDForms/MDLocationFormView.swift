@@ -40,7 +40,9 @@ struct MDLocationFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func finishForm() {
@@ -59,33 +61,33 @@ struct MDLocationFormView: View {
         let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer)
         isProcessing = true
         if isNewLocation {
-            grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Location add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Location add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Location add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Location add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Location edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Location edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Location edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Location edit failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
     }
     
@@ -141,7 +143,7 @@ struct MDLocationFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

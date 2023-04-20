@@ -47,7 +47,9 @@ struct InventoryProductView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .system_info]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     private var product: MDProduct? {
@@ -120,19 +122,19 @@ struct InventoryProductView: View {
             let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, storeID: storeID, locationID: locationID, price: price, note: noteText)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Inventory successful. \(prod)", type: .info)
-                    toastType = .successInventory
-                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                    resetForm()
-                case let .failure(error):
-                    grocyVM.postLog("Inventory failed: \(error)", type: .error)
-                    toastType = .failInventory
-                }
-                isProcessingAction = false
-            }
+//            grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
+//                switch result {
+//                case let .success(prod):
+//                    grocyVM.postLog("Inventory successful. \(prod)", type: .info)
+//                    toastType = .successInventory
+//                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+//                    resetForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Inventory failed: \(error)", type: .error)
+//                    toastType = .failInventory
+//                }
+//                isProcessingAction = false
+//            }
         }
     }
     
@@ -167,7 +169,7 @@ struct InventoryProductView: View {
                 .onChange(of: productID) { newProduct in
                     // TODO Edit
                     if let productID = productID {
-                        grocyVM.getStockProductEntries(productID: productID)
+//                        grocyVM.getStockProductEntries(productID: productID)
                     }
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                         storeID = selectedProduct.storeID
@@ -229,7 +231,7 @@ struct InventoryProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

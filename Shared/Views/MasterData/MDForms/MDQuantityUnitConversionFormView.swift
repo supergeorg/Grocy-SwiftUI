@@ -64,7 +64,9 @@ struct MDQuantityUnitConversionFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_unit_conversions]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private func getQUString(amount: Double, qu: MDQuantityUnit?) -> String {
@@ -91,55 +93,55 @@ struct MDQuantityUnitConversionFormView: View {
         let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDFrom!, toQuID: quIDTo!, factor: factor, productID: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewQuantityUnitConversion {
-            grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Quantity unit conversion add successful. \(message)", type: .info)
-                    if createInverseConversion {
-                        let id = isNewQuantityUnitConversion ? (grocyVM.findNextID(.quantity_unit_conversions) + 1) : quantityUnitConversion!.id
-                        let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
-                        let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDTo!, toQuID: quIDFrom!, factor: (1 / factor), productID: nil, rowCreatedTimestamp: timeStamp)
-                        grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
-                            switch result {
-                            case let .success(message):
-                                grocyVM.postLog("Inverse quantity unit conversion add successful. \(message)", type: .info)
-                                toastType = .successAdd
-                                resetForm()
-                                updateData()
-                                finishForm()
-                            case let .failure(error):
-                                grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
-                                toastType = .failAdd
-                            }
-                            isProcessing = false
-                        })
-                    } else {
-                        toastType = .successAdd
-                        resetForm()
-                        updateData()
-                        finishForm()
-                        isProcessing = false
-                    }
-                case let .failure(error):
-                    grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Quantity unit conversion add successful. \(message)", type: .info)
+//                    if createInverseConversion {
+//                        let id = isNewQuantityUnitConversion ? (grocyVM.findNextID(.quantity_unit_conversions) + 1) : quantityUnitConversion!.id
+//                        let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
+//                        let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDTo!, toQuID: quIDFrom!, factor: (1 / factor), productID: nil, rowCreatedTimestamp: timeStamp)
+//                        grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
+//                            switch result {
+//                            case let .success(message):
+//                                grocyVM.postLog("Inverse quantity unit conversion add successful. \(message)", type: .info)
+//                                toastType = .successAdd
+//                                resetForm()
+//                                updateData()
+//                                finishForm()
+//                            case let .failure(error):
+//                                grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
+//                                toastType = .failAdd
+//                            }
+//                            isProcessing = false
+//                        })
+//                    } else {
+//                        toastType = .successAdd
+//                        resetForm()
+//                        updateData()
+//                        finishForm()
+//                        isProcessing = false
+//                    }
+//                case let .failure(error):
+//                    grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Quantity unit conversion edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Quantity unit conversion edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
     }
     
@@ -237,7 +239,9 @@ struct MDQuantityUnitConversionFormView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                Task {
+                    await grocyVM.requestData(objects: dataToUpdate)
+                }
                 resetForm()
                 firstAppear = false
             }

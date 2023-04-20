@@ -21,17 +21,17 @@ struct UserRowActionsView: View {
     @State private var showDeleteAction: Bool = false
     
     private func deleteUser() {
-        grocyVM.deleteUser(id: user.id, completion: { result in
-            switch result {
-            case let .success(message):
-                print(message)
-                toastType = .successAdd
-                grocyVM.requestData(additionalObjects: [.users])
-            case let .failure(error):
-                print("\(error)")
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteUser(id: user.id, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                print(message)
+//                toastType = .successAdd
+//                grocyVM.requestData(additionalObjects: [.users])
+//            case let .failure(error):
+//                print("\(error)")
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {

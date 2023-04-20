@@ -40,44 +40,44 @@ struct StockTableRowActionsView: View {
     
     private func consumeQuickConsumeAmount() {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successConsumeOne
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        }
+//        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                toastType = .successConsumeOne
+//                grocyVM.requestData(additionalObjects: [.stock])
+//            case let .failure(error):
+//                grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        }
     }
     
     private func consumeAll() {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successConsumeAll
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Consume all items failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        }
+//        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                toastType = .successConsumeAll
+//                grocyVM.requestData(additionalObjects: [.stock])
+//            case let .failure(error):
+//                grocyVM.postLog("Consume all items failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        }
     }
     
     private func openQuickConsumeAmount() {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successOpenOne
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        }
+//        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
+//            switch result {
+//            case .success(_):
+//                toastType = .successOpenOne
+//                grocyVM.requestData(additionalObjects: [.stock])
+//            case let .failure(error):
+//                grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+//                toastType = .shLActionFail
+//            }
+//        }
     }
     
     var body: some View {

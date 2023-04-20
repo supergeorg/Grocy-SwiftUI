@@ -34,7 +34,9 @@ struct ShoppingListFormView: View {
     }
     
     private func updateData() {
-        grocyVM.requestData(objects: [.shopping_lists])
+        Task {
+            await grocyVM.requestData(objects: [.shopping_lists])
+        }
     }
     
     func saveShoppingList() {
@@ -45,21 +47,21 @@ struct ShoppingListFormView: View {
                 shoppingListDescriptionDescription: nil,
                 rowCreatedTimestamp: Date().iso8601withFractionalSeconds
             )
-            grocyVM.postMDObject(
-                object: .shopping_lists,
-                content: newShoppingList,
-                completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
-                        updateData()
-                        finishForm()
-                    case let .failure(error):
-                        grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
-                        showFailToast = true
-                    }
-                }
-            )
+//            grocyVM.postMDObject(
+//                object: .shopping_lists,
+//                content: newShoppingList,
+//                completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
+//                        updateData()
+//                        finishForm()
+//                    case let .failure(error):
+//                        grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+//                        showFailToast = true
+//                    }
+//                }
+//            )
         } else {
             if let shoppingListDescription = shoppingListDescription {
                 let editedShoppingList = ShoppingListDescription(
@@ -68,22 +70,22 @@ struct ShoppingListFormView: View {
                     shoppingListDescriptionDescription: shoppingListDescription.shoppingListDescriptionDescription,
                     rowCreatedTimestamp: shoppingListDescription.rowCreatedTimestamp
                 )
-                grocyVM.putMDObjectWithID(
-                    object: .shopping_lists,
-                    id: shoppingListDescription.id,
-                    content: editedShoppingList,
-                    completion: { result in
-                        switch result {
-                        case let .success(message):
-                            grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
-                            updateData()
-                            finishForm()
-                        case let .failure(error):
-                            grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
-                            showFailToast = true
-                        }
-                    }
-                )
+//                grocyVM.putMDObjectWithID(
+//                    object: .shopping_lists,
+//                    id: shoppingListDescription.id,
+//                    content: editedShoppingList,
+//                    completion: { result in
+//                        switch result {
+//                        case let .success(message):
+//                            grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
+//                            updateData()
+//                            finishForm()
+//                        case let .failure(error):
+//                            grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+//                            showFailToast = true
+//                        }
+//                    }
+//                )
             }
         }
     }

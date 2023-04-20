@@ -39,7 +39,9 @@ struct TransferProductView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var product: MDProduct? {
@@ -97,19 +99,19 @@ struct TransferProductView: View {
             let transferInfo = ProductTransfer(amount: factoredAmount, locationIDFrom: locationIDFrom, locationIDTo: locationIDTo, stockEntryID: stockEntryID)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Transfer successful. \(prod)", type: .info)
-                    toastType = .successTransfer
-                    grocyVM.requestData(additionalObjects: [.stock])
-                    resetForm()
-                case let .failure(error):
-                    grocyVM.postLog("Transfer failed: \(error)", type: .error)
-                    toastType = .failTransfer
-                }
-                isProcessingAction = false
-            }
+//            grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
+//                switch result {
+//                case let .success(prod):
+//                    grocyVM.postLog("Transfer successful. \(prod)", type: .info)
+//                    toastType = .successTransfer
+//                    grocyVM.requestData(additionalObjects: [.stock])
+//                    resetForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Transfer failed: \(error)", type: .error)
+//                    toastType = .failTransfer
+//                }
+//                isProcessingAction = false
+//            }
         }
     }
     
@@ -142,11 +144,11 @@ struct TransferProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.transfer.product")
                 .onChange(of: productID) { newProduct in
-                    grocyVM.getStockProductEntries(productID: productID ?? 0)
-                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-                        locationIDFrom = selectedProduct.locationID
-                        quantityUnitID = selectedProduct.quIDStock
-                    }
+//                    grocyVM.getStockProductEntries(productID: productID ?? 0)
+//                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+//                        locationIDFrom = selectedProduct.locationID
+//                        quantityUnitID = selectedProduct.quIDStock
+//                    }
                 }
             
             VStack(alignment: .leading) {
@@ -221,7 +223,7 @@ struct TransferProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

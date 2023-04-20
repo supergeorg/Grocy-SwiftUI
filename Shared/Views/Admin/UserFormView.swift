@@ -39,7 +39,9 @@ struct UserFormView: View {
     }
     
     private func updateData() {
-        grocyVM.requestData(additionalObjects: [.users])
+        Task {
+            await grocyVM.requestData(additionalObjects: [.users])
+        }
     }
     
     private func finishForm() {
@@ -55,33 +57,33 @@ struct UserFormView: View {
     private func saveUser() {
         if isNewUser {
             let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
-            grocyVM.postUser(user: userPost, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Successfully created object with id \(message.createdObjectID).", type: .info)
-                    toastType = .successAdd
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Saving user failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-            })
+//            grocyVM.postUser(user: userPost, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Successfully created object with id \(message.createdObjectID).", type: .info)
+//                    toastType = .successAdd
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Saving user failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//            })
         } else {
             if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
-                grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
-                    switch result {
-                    case let .success(message):
-                        grocyVM.postLog("Successfully edited object with id \(message.changedObjectID).", type: .info)
-                        toastType = .successEdit
-                        updateData()
-                        finishForm()
-                    case let .failure(error):
-                        grocyVM.postLog("Editing user failed. \(error)", type: .error)
-                        toastType = .failAdd
-                    }
-                })
+//                grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
+//                    switch result {
+//                    case let .success(message):
+//                        grocyVM.postLog("Successfully edited object with id \(message.changedObjectID).", type: .info)
+//                        toastType = .successEdit
+//                        updateData()
+//                        finishForm()
+//                    case let .failure(error):
+//                        grocyVM.postLog("Editing user failed. \(error)", type: .error)
+//                        toastType = .failAdd
+//                    }
+//                })
             }
         }
     }

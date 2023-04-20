@@ -136,12 +136,16 @@ struct SettingsStockView: View {
         .navigationTitle(LocalizedStringKey("str.settings.stock"))
         .onAppear(perform: {
             if isFirst {
-                grocyVM.requestData(objects: dataToUpdate)
+                Task {
+                    await grocyVM.requestData(objects: dataToUpdate)
+                }
                 isFirst = false
             }
         })
         .onDisappear(perform: {
-            grocyVM.requestData(additionalObjects: [.user_settings])
+            Task {
+                await grocyVM.requestData(additionalObjects: [.user_settings])
+            }
         })
     }
 }

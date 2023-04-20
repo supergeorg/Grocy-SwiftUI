@@ -45,7 +45,9 @@ struct MDQuantityUnitFormView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions]
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     private var quConversions: MDQuantityUnitConversions? {
@@ -71,17 +73,17 @@ struct MDQuantityUnitFormView: View {
         showConversionDeleteAlert.toggle()
     }
     private func deleteQUConversion(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .quantity_unit_conversions, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("QU conversion delete successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.quantity_unit_conversions])
-                toastType = .successEdit
-            case let .failure(error):
-                grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
-                toastType = .failEdit
-            }
-        })
+//        grocyVM.deleteMDObject(object: .quantity_unit_conversions, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("QU conversion delete successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.quantity_unit_conversions])
+//                toastType = .successEdit
+//            case let .failure(error):
+//                grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
+//                toastType = .failEdit
+//            }
+//        })
     }
     
     private func saveQuantityUnit() {
@@ -90,34 +92,34 @@ struct MDQuantityUnitFormView: View {
         let quantityUnitPOST = MDQuantityUnit(id: id, name: name, namePlural: namePlural, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewQuantityUnit {
-            grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Quantity unit add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+//            grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Quantity unit add successful. \(message)", type: .info)
+//                    toastType = .successAdd
+//                    resetForm()
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
+//                    toastType = .failAdd
+//                }
+//                isProcessing = false
+//            })
         } else {
-            grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Quantity unit edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+//            grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST, completion: { result in
+//                switch result {
+//                case let .success(message):
+//                    grocyVM.postLog("Quantity unit edit successful. \(message)", type: .info)
+//                    toastType = .successEdit
+//                    updateData()
+//                    finishForm()
+//                case let .failure(error):
+//                    grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
+//                    toastType = .failEdit
+//                }
+//                isProcessing = false
+//            })
         }
     }
     
@@ -239,11 +241,13 @@ struct MDQuantityUnitFormView: View {
             }
         }
         .refreshable {
-            grocyVM.requestData(objects: [.quantity_unit_conversions])
+            Task {
+                await grocyVM.requestData(objects: [.quantity_unit_conversions])
+            }
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

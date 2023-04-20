@@ -50,7 +50,9 @@ struct PurchaseProductView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     private var product: MDProduct? {
@@ -134,25 +136,25 @@ struct PurchaseProductView: View {
         if let productID = productID {
             infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Purchase successful. \(prod)", type: .info)
-                    toastType = .successPurchase
-                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                    resetForm()
-                    if autoPurchase {
-                        self.dismiss()
-                    }
-                    if self.actionFinished != nil {
-                        self.actionFinished?.wrappedValue = true
-                    }
-                case let .failure(error):
-                    grocyVM.postLog("Purchase failed: \(error)", type: .error)
-                    toastType = .failPurchase
-                }
-                isProcessingAction = false
-            }
+//            grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo) { result in
+//                switch result {
+//                case let .success(prod):
+//                    grocyVM.postLog("Purchase successful. \(prod)", type: .info)
+//                    toastType = .successPurchase
+//                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+//                    resetForm()
+//                    if autoPurchase {
+//                        self.dismiss()
+//                    }
+//                    if self.actionFinished != nil {
+//                        self.actionFinished?.wrappedValue = true
+//                    }
+//                case let .failure(error):
+//                    grocyVM.postLog("Purchase failed: \(error)", type: .error)
+//                    toastType = .failPurchase
+//                }
+//                isProcessingAction = false
+//            }
         }
     }
     
@@ -324,7 +326,7 @@ struct PurchaseProductView: View {
         }
         .onAppear(perform: {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                updateData()
                 resetForm()
                 firstAppear = false
             }

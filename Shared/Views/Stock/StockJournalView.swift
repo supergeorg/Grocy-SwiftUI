@@ -67,7 +67,9 @@ struct StockJournalFilterBar: View {
             HStack {
                 SearchField(text: $searchString)
                 RefreshButton(updateData: {
-                    grocyVM.requestData(objects: [.stock_log])
+                    Task {
+                        await grocyVM.requestData(objects: [.stock_log])
+                    }
                 })
             }
 #endif
@@ -197,16 +199,16 @@ struct StockJournalRowView: View {
     }
     
     private func undoTransaction() {
-        grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Undo transaction successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.stock_log])
-            case let .failure(error):
-                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
-                showToastUndoFailed = true
-            }
-        })
+//        grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Undo transaction successful. \(message)", type: .info)
+//                grocyVM.requestData(objects: [.stock_log])
+//            case let .failure(error):
+//                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+//                showToastUndoFailed = true
+//            }
+//        })
     }
     
     var body: some View {
@@ -270,7 +272,9 @@ struct StockJournalView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.users]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+        }
     }
     
     var stockElement: Binding<StockElement?>? = nil
@@ -343,13 +347,14 @@ struct StockJournalView: View {
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))
-        .refreshable {
+        .refreshable(action: {
             updateData()
-        }
+        })
         .animation(.default,
-                   value: filteredJournal.count)
+                   value: filteredJournal.count
+        )
         .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+            updateData()
             filteredProductID = selectedProductID
         })
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))

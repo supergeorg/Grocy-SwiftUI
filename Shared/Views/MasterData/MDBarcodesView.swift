@@ -50,7 +50,9 @@ struct MDBarcodesView: View {
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     
     private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+        Task {
+            await grocyVM.requestData(objects: dataToUpdate)
+        }
     }
     
     var filteredBarcodes: MDProductBarcodes {
@@ -65,16 +67,16 @@ struct MDBarcodesView: View {
         showDeleteAlert.toggle()
     }
     private func deleteProductBarcode(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting barcode was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+//        grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID, completion: { result in
+//            switch result {
+//            case let .success(message):
+//                grocyVM.postLog("Deleting barcode was successful. \(message)", type: .info)
+//                updateData()
+//            case let .failure(error):
+//                grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
+//                toastType = .failDelete
+//            }
+//        })
     }
     
     var body: some View {
@@ -121,7 +123,7 @@ struct MDBarcodesView: View {
                 .frame(minWidth: 200, minHeight: 400)
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .onAppear(perform: { updateData() })
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
@@ -173,7 +175,7 @@ struct MDBarcodesView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.md.barcodes"))
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .onAppear(perform: { updateData() })
         .refreshable { updateData() }
         .animation(.default, value: filteredBarcodes.count)
         .toast(

@@ -94,7 +94,7 @@ struct SettingsShoppingListView: View {
                         Task {
                             do {
                                 let allReminders = try await ReminderStore.shared.readAll()
-                                grocyVM.updateShoppingListFromReminders(reminders: allReminders)
+//                                grocyVM.updateShoppingListFromReminders(reminders: allReminders)
                             } catch {
                                 print(error)
                             }
@@ -109,12 +109,16 @@ struct SettingsShoppingListView: View {
         .navigationTitle(LocalizedStringKey("str.settings.shoppingList"))
         .onAppear(perform: {
             if isFirst {
-                grocyVM.requestData(objects: dataToUpdate)
+                Task {
+                    await grocyVM.requestData(objects: dataToUpdate)
+                }
                 isFirst = false
             }
         })
         .onDisappear(perform: {
-            grocyVM.requestData(additionalObjects: [.user_settings])
+            Task {
+                await grocyVM.requestData(additionalObjects: [.user_settings])
+            }
         })
     }
 }

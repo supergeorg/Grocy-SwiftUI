@@ -99,8 +99,6 @@ class WebSocket: NSObject, URLSessionWebSocketDelegate {
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         print("Web Socket did disconnect")
-        print(closeCode)
-        print(reason)
     }
 }
 
