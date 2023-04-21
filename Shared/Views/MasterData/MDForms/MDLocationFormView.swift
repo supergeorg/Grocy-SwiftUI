@@ -62,8 +62,8 @@ struct MDLocationFormView: View {
         isProcessing = true
         if isNewLocation {
             do {
-                let locationReturn = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
-                grocyVM.postLog("Location \(locationReturn.name) added successfully.", type: .info)
+                _ = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
+                grocyVM.postLog("Location added successfully.", type: .info)
                 toastType = .successAdd
                 updateData()
                 finishForm()
@@ -71,7 +71,6 @@ struct MDLocationFormView: View {
                 grocyVM.postLog("Location add failed. \(error)", type: .error)
                 toastType = .failAdd
             }
-            isProcessing = false
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST)
@@ -83,8 +82,8 @@ struct MDLocationFormView: View {
                 grocyVM.postLog("Location edit failed. \(error)", type: .error)
                 toastType = .failEdit
             }
-            isProcessing = false
         }
+        isProcessing = false
     }
     
     var body: some View {

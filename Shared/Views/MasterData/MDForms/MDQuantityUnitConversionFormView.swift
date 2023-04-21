@@ -87,70 +87,57 @@ struct MDQuantityUnitConversionFormView: View {
 #endif
     }
     
-    private func saveQuantityUnitConversion() {
+    private func saveQuantityUnitConversion() async {
         let id = isNewQuantityUnitConversion ? grocyVM.findNextID(.quantity_unit_conversions) : quantityUnitConversion!.id
         let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
         let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDFrom!, toQuID: quIDTo!, factor: factor, productID: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewQuantityUnitConversion {
-//            grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Quantity unit conversion add successful. \(message)", type: .info)
-//                    if createInverseConversion {
-//                        let id = isNewQuantityUnitConversion ? (grocyVM.findNextID(.quantity_unit_conversions) + 1) : quantityUnitConversion!.id
-//                        let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
-//                        let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDTo!, toQuID: quIDFrom!, factor: (1 / factor), productID: nil, rowCreatedTimestamp: timeStamp)
-//                        grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST, completion: { result in
-//                            switch result {
-//                            case let .success(message):
-//                                grocyVM.postLog("Inverse quantity unit conversion add successful. \(message)", type: .info)
-//                                toastType = .successAdd
-//                                resetForm()
-//                                updateData()
-//                                finishForm()
-//                            case let .failure(error):
-//                                grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
-//                                toastType = .failAdd
-//                            }
-//                            isProcessing = false
-//                        })
-//                    } else {
-//                        toastType = .successAdd
-//                        resetForm()
-//                        updateData()
-//                        finishForm()
-//                        isProcessing = false
-//                    }
-//                case let .failure(error):
-//                    grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
-//                    toastType = .failAdd
-//                }
-//                isProcessing = false
-//            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST)
+                
+                if createInverseConversion {
+                    do {
+                        let id = isNewQuantityUnitConversion ? (grocyVM.findNextID(.quantity_unit_conversions) + 1) : quantityUnitConversion!.id
+                        let timeStamp = isNewQuantityUnitConversion ? Date().iso8601withFractionalSeconds : quantityUnit.rowCreatedTimestamp
+                        let quantityUnitConversionPOST = MDQuantityUnitConversion(id: id, fromQuID: quIDTo!, toQuID: quIDFrom!, factor: (1 / factor), productID: nil, rowCreatedTimestamp: timeStamp)
+                        _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversionPOST)
+                        grocyVM.postLog("Inverse quantity unit conversion add successful.", type: .info)
+                    } catch {
+                        grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
+                        toastType = .failAdd
+                    }
+                } else {
+                    grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
+                    toastType = .successAdd
+                }
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-//            grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Quantity unit conversion edit successful. \(message)", type: .info)
-//                    toastType = .successEdit
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)
-//                    toastType = .failEdit
-//                }
-//                isProcessing = false
-//            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST)
+                grocyVM.postLog("Quantity unit conversion edited successfully.", type: .info)
+                toastType = .successAdd
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         }
-    }
+        isProcessing = false
+        }
     
     var body: some View {
         content
             .navigationTitle(isNewQuantityUnitConversion ? LocalizedStringKey("str.md.quantityUnit.conversion.new") : LocalizedStringKey("str.md.quantityUnit.conversion.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveQuantityUnitConversion, label: {
+                    Button(action: { Task { await saveQuantityUnitConversion() } }, label: {
                         Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })

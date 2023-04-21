@@ -585,7 +585,7 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Master Data
-    func postMDObject<T: Codable>(object: ObjectEntities, content: T) async throws -> T {
+    func postMDObject<T: Codable>(object: ObjectEntities, content: T) async throws -> SuccessfulCreationMessage {
         let jsonContent = try! jsonEncoder.encode(content)
         return try await grocyApi.postObject(object: object, content: jsonContent)
     }
