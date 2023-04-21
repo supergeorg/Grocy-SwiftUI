@@ -66,38 +66,34 @@ struct MDBarcodeFormView: View {
 #endif
     }
     
-    private func saveBarcode() {
+    private func saveBarcode() async {
         let saveBarcode = MDProductBarcode(id: isNewBarcode ? grocyVM.findNextID(.product_barcodes) : editBarcode!.id, productID: productID, barcode: barcode, quID: quantityUnitID, amount: amount, storeID: storeID, lastPrice: nil, rowCreatedTimestamp: isNewBarcode ? Date().iso8601withFractionalSeconds : editBarcode?.rowCreatedTimestamp ?? "", note: note)
         if isNewBarcode{
-//            grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Barcode add successful. \(message)", type: .info)
-//                    toastType = .successAdd
-//                    resetForm()
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Barcode add failed. \(error)", type: .info)
-//                    toastType = .failAdd
-//                }
-//            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
+                grocyVM.postLog("Barcode added successfully.", type: .info)
+                toastType = .successAdd
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Barcode add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
             if let id = editBarcode?.id {
-//                grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Barcode edit successful. \(message)", type: .info)
-//                        toastType = .successEdit
-//                        updateData()
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Barcode edit failed. \(error)", type: .info)
-//                        toastType = .failEdit
-//                    }
-//                })
+                do {
+                    try await grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode)
+                    grocyVM.postLog("Barcode edit successful.", type: .info)
+                    toastType = .successEdit
+                    updateData()
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Barcode edit failed. \(error)", type: .error)
+                    toastType = .failEdit
+                }
             }
         }
+        isProcessing = false
     }
     
 #if os(iOS)
@@ -129,8 +125,10 @@ struct MDBarcodeFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: {
-                        saveBarcode()
-                        finishForm()
+                        Task {
+                            await saveBarcode()
+                        }
+//                        finishForm()
                     }, label: {
                         Label(LocalizedStringKey("str.md.barcode.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)

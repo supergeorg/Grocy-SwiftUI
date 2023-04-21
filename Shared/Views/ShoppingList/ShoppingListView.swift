@@ -155,30 +155,26 @@ struct ShoppingListView: View {
             .count
     }
     
-    func deleteShoppingList() {
-//        grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Shopping list delete successful. \(message)", type: .info)
-//                grocyVM.requestData(objects: [.shopping_lists])
-//            case let .failure(error):
-//                grocyVM.postLog("Shopping list delete failed. \(error)", type: .error)
-//                toastType = .shLActionFail
-//            }
-//        })
+    func deleteShoppingList() async {
+        do {
+            try await grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
+            grocyVM.postLog("Deleting shopping list was successful.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_lists])
+        } catch {
+            grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
-    private func slAction(_ actionType: ShoppingListActionType) {
-//        grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("SHLAction successful. \(message)", type: .info)
-//                grocyVM.requestData(objects: [.shopping_list])
-//            case let .failure(error):
-//                grocyVM.postLog("SHLAction failed. \(error)", type: .error)
-//                toastType = .shLActionFail
-//            }
-//        })
+    private func slAction(_ actionType: ShoppingListActionType) async {
+        do {
+            try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
+            grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_list])
+        } catch {
+            grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
     var body: some View {
@@ -193,26 +189,26 @@ struct ShoppingListView: View {
     var bodyContent: some View {
         content
 #if os(macOS)
-        .toolbar(content: {
-            ToolbarItemGroup(placement: .automatic, content: {
-                shoppingListActionContent
-                RefreshButton(updateData: { updateData() })
-                    .help(LocalizedStringKey("str.refresh"))
-                sortGroupMenu
-                Button(action: {
-                    showAddItem.toggle()
-                }, label: {
-                    Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
-                })
-                .help(LocalizedStringKey("str.shL.action.addItem"))
-                .popover(isPresented: $showAddItem, content: {
-                    ScrollView {
-                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                            .frame(width: 500, height: 400)
-                    }
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .automatic, content: {
+                    shoppingListActionContent
+                    RefreshButton(updateData: { updateData() })
+                        .help(LocalizedStringKey("str.refresh"))
+                    sortGroupMenu
+                    Button(action: {
+                        showAddItem.toggle()
+                    }, label: {
+                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
+                    })
+                    .help(LocalizedStringKey("str.shL.action.addItem"))
+                    .popover(isPresented: $showAddItem, content: {
+                        ScrollView {
+                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                                .frame(width: 500, height: 400)
+                        }
+                    })
                 })
             })
-        })
 #else
             .toolbar(content: {
                 HStack {
@@ -235,7 +231,9 @@ struct ShoppingListView: View {
             .alert(LocalizedStringKey("str.shL.delete.confirm"), isPresented: $showSHLDeleteAlert, actions: {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                    deleteShoppingList()
+                    Task {
+                        await deleteShoppingList()
+                    }
                 }
             }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
 #if os(iOS)
@@ -267,11 +265,11 @@ struct ShoppingListView: View {
             })
             .help(LocalizedStringKey("str.shL.new"))
 #if os(macOS)
-                .popover(isPresented: $showNewShoppingList, content: {
-                    ShoppingListFormView(isNewShoppingListDescription: true)
-                        .padding()
-                        .frame(width: 250, height: 150)
-                })
+            .popover(isPresented: $showNewShoppingList, content: {
+                ShoppingListFormView(isNewShoppingListDescription: true)
+                    .padding()
+                    .frame(width: 250, height: 150)
+            })
 #endif
             Button(action: {
 #if os(iOS)
@@ -284,14 +282,14 @@ struct ShoppingListView: View {
             })
             .help(LocalizedStringKey("str.shL.edit"))
 #if os(macOS)
-                .popover(isPresented: $showEditShoppingList, content: {
-                    ShoppingListFormView(
-                        isNewShoppingListDescription: false,
-                        shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })
-                    )
-                    .padding()
-                    .frame(width: 250, height: 150)
-                })
+            .popover(isPresented: $showEditShoppingList, content: {
+                ShoppingListFormView(
+                    isNewShoppingListDescription: false,
+                    shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })
+                )
+                .padding()
+                .frame(width: 250, height: 150)
+            })
 #endif
             Button(role: .destructive, action: {
                 showSHLDeleteAlert.toggle()
@@ -327,14 +325,18 @@ struct ShoppingListView: View {
             //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
             //                .disabled(true)
             Button(action: {
-                slAction(.addMissing)
+                Task {
+                    await slAction(.addMissing)
+                }
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addBelowMinStock"), systemImage: MySymbols.addToShoppingList)
             })
             .help(LocalizedStringKey("str.shL.action.addBelowMinStock"))
             Button(action: {
-                slAction(.addExpired)
-                slAction(.addOverdue)
+                Task {
+                    await slAction(.addExpired)
+                    await slAction(.addOverdue)
+                }
             }, label: {
                 Label(LocalizedStringKey("str.shL.action.addOverdue"), systemImage: MySymbols.addToShoppingList)
             })
@@ -375,11 +377,11 @@ struct ShoppingListView: View {
                 Picker(selection: $filteredStatus,
                        label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: MySymbols.filter),
                        content: {
-                           Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
-                           Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
-                           Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
-                           Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
-                       })
+                    Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
+                    Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
+                    Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
+                    Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
+                })
 #endif
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
@@ -440,7 +442,9 @@ struct ShoppingListView: View {
         .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                slAction(.clear)
+                Task {
+                    await slAction(.clear)
+                }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
         .toast(

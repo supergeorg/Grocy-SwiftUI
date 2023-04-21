@@ -64,17 +64,15 @@ struct ShoppingListRowActionsView: View {
         showEntryDeleteAlert.toggle()
     }
 
-    private func deleteSHLItem() {
-//        grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Shopping list item delete successful. \(message)", type: .info)
-//                grocyVM.requestData(objects: [.shopping_list])
-//            case let .failure(error):
-//                grocyVM.postLog("Shopping list item delete failed. \(error)", type: .error)
-//                toastType = .shLActionFail
-//            }
-//        })
+    private func deleteSHLItem() async {
+        do {
+            try await grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id)
+            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_list])
+        } catch {
+            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
     var body: some View {
@@ -110,7 +108,9 @@ struct ShoppingListRowActionsView: View {
                 .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
                     Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                     Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                        deleteSHLItem()
+                        Task {
+                            await deleteSHLItem()
+                        }
                     }
                 }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             

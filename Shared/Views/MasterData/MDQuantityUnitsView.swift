@@ -58,17 +58,15 @@ struct MDQuantityUnitsView: View {
         quantityUnitToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteQuantityUnit(toDelID: Int) {
-//        grocyVM.deleteMDObject(object: .quantity_units, id: toDelID, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Deleting quantity unit was successful. \(message)", type: .info)
-//                updateData()
-//            case let .failure(error):
-//                grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
-//                toastType = .failDelete
-//            }
-//        })
+    private func deleteQuantityUnit(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .quantity_units, id: toDelID)
+            grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
+            updateData()
+        } catch {
+            grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -162,7 +160,9 @@ struct MDQuantityUnitsView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = quantityUnitToDelete?.id {
-                    deleteQuantityUnit(toDelID: toDelID)
+                    Task {
+                        await deleteQuantityUnit(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(quantityUnitToDelete?.name ?? "Name not found") })

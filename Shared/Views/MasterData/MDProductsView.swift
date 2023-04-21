@@ -9,24 +9,24 @@ import SwiftUI
 
 struct MDProductRowView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-
+    
     var product: MDProduct
     
     @State private var productDescription: AttributedString? = nil
-
+    
     var body: some View {
         HStack{
-//            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-//                AsyncImage(url: url, content: { image in
-//                    image
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-//                        .background(Color.white)
-//                }, placeholder: {
-//                    ProgressView()
-//                })
-//                    .frame(width: 75, height: 75)
-//            }
+            //            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
+            //                AsyncImage(url: url, content: { image in
+            //                    image
+            //                        .resizable()
+            //                        .aspectRatio(contentMode: .fit)
+            //                        .background(Color.white)
+            //                }, placeholder: {
+            //                    ProgressView()
+            //                })
+            //                    .frame(width: 75, height: 75)
+            //            }
             VStack(alignment: .leading) {
                 Text(product.name).font(.title)
                 HStack(alignment: .top){
@@ -78,17 +78,15 @@ struct MDProductsView: View {
         productToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteProduct(toDelID: Int) {
-//        grocyVM.deleteMDObject(object: .products, id: toDelID, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Deleting product was successful. \(message)", type: .info)
-//                grocyVM.requestData(objects: [.products, .product_barcodes])
-//            case let .failure(error):
-//                grocyVM.postLog("Deleting product failed. \(error)", type: .error)
-//                toastType = .failDelete
-//            }
-//        })
+    private func deleteProduct(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .products, id: toDelID)
+            grocyVM.postLog("Deleting product was successful.", type: .info)
+            await grocyVM.requestData(objects: [.products, .product_barcodes])
+        } catch {
+            grocyVM.postLog("Deleting product failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     private var filteredProducts: MDProducts {
@@ -175,26 +173,28 @@ struct MDProductsView: View {
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
             isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
             text: { item in
-            switch item {
-            case .successAdd:
-                return LocalizedStringKey("str.md.new.success")
-            case .failAdd:
-                return LocalizedStringKey("str.md.new.fail")
-            case .successEdit:
-                return LocalizedStringKey("str.md.edit.success")
-            case .failEdit:
-                return LocalizedStringKey("str.md.edit.fail")
-            case .failDelete:
-                return LocalizedStringKey("str.md.delete.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+                switch item {
+                case .successAdd:
+                    return LocalizedStringKey("str.md.new.success")
+                case .failAdd:
+                    return LocalizedStringKey("str.md.new.fail")
+                case .successEdit:
+                    return LocalizedStringKey("str.md.edit.success")
+                case .failEdit:
+                    return LocalizedStringKey("str.md.edit.fail")
+                case .failDelete:
+                    return LocalizedStringKey("str.md.delete.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
         .alert(LocalizedStringKey("str.md.product.delete.confirm"), isPresented: $showDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productToDelete?.id {
-                    deleteProduct(toDelID: toDelID)
+                    Task {
+                        await deleteProduct(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(productToDelete?.name ?? "Name not found") })

@@ -53,41 +53,35 @@ struct MDProductGroupFormView: View {
 #endif
     }
     
-    private func saveProductGroup() {
+    private func saveProductGroup() async {
         let id = isNewProductGroup ? grocyVM.findNextID(.product_groups) : productGroup!.id
         let timeStamp = isNewProductGroup ? Date().iso8601withFractionalSeconds : productGroup!.rowCreatedTimestamp
         let productGroupPOST = MDProductGroup(id: id, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewProductGroup {
-//            grocyVM.postMDObject(object: .product_groups, content: productGroupPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Product group add successful. \(message)", type: .info)
-//                    toastType = .successAdd
-//                    resetForm()
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Product group add failed. \(error)", type: .error)
-//                    toastType = .failAdd
-//                }
-//                isProcessing = false
-//            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .product_groups, content: productGroupPOST)
+                grocyVM.postLog("Product group added successfully.", type: .info)
+                toastType = .successAdd
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Product group add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-//            grocyVM.putMDObjectWithID(object: .product_groups, id: id, content: productGroupPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Product group edit successful. \(message)", type: .info)
-//                    toastType = .successEdit
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Product group edit failed. \(error)", type: .error)
-//                    toastType = .failEdit
-//                }
-//                isProcessing = false
-//            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: productGroupPOST)
+                grocyVM.postLog("Product group edited successfully.", type: .info)
+                toastType = .successAdd
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Product group edit failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         }
+        isProcessing = false
     }
     
     var body: some View {
@@ -95,7 +89,7 @@ struct MDProductGroupFormView: View {
             .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveProductGroup, label: {
+                    Button(action: { Task { await saveProductGroup() } }, label: {
                         Label(LocalizedStringKey("str.md.productGroup.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })

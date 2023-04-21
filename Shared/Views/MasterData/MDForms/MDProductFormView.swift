@@ -232,7 +232,7 @@ struct MDProductFormView: View {
         !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil) &&  isBarcodeCorrect
     }
     
-    private func saveProduct() {
+    private func saveProduct() async {
         if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
             let id = isNewProduct ? grocyVM.findNextID(.products) : product!.id
             let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
@@ -271,54 +271,38 @@ struct MDProductFormView: View {
             )
             isProcessing = true
             if isNewProduct {
-//                grocyVM.postMDObject(object: .products, content: productPOST, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Product add successful. \(message)", type: .info)
-//                        toastType = .successAdd
-//                        grocyVM.requestData(objects: [.products])
-//                        if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
-//                            let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
-//                            grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST, completion: { barcodeResult in
-//                                switch result {
-//                                case let .success(barcodeMessage):
-//                                    grocyVM.postLog("Barcode add successful. \(barcodeMessage)", type: .info)
-//                                    grocyVM.requestData(objects: [.product_barcodes])
-//                                    mdBarcodeReturn?.wrappedValue = barcodePOST
-//                                    toastType = .successAdd
-//                                    finishForm()
-//                                case let .failure(barcodeError):
-//                                    grocyVM.postLog("Barcode add failed. \(barcodeError)", type: .error)
-//                                    toastType = .failAdd
-//                                }
-//                                isProcessing = false
-//                            })
-//                        } else {
-//                            isProcessing = false
-//                            finishForm()
-//                        }
-//                    case let .failure(error):
-//                        grocyVM.postLog("Product add failed. \(error)", type: .error)
-//                        toastType = .failAdd
-//                    }
-//                    isProcessing = false
-//                })
+                do {
+                    _ = try await grocyVM.postMDObject(object: .products, content: productPOST)
+                    grocyVM.postLog("Product added successfully.", type: .info)
+                    toastType = .successAdd
+                    await grocyVM.requestData(objects: [.products])
+                    if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
+                        let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+                        let _ = try await grocyVM.postMDObject(object: .product_barcodes, content: barcodePOST)
+                        grocyVM.postLog("Barcode add successful.", type: .info)
+                        await grocyVM.requestData(objects: [.product_barcodes])
+                        mdBarcodeReturn?.wrappedValue = barcodePOST
+                        toastType = .successAdd
+                    }
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Product add failed. \(error)", type: .error)
+                    toastType = .failAdd
+                }
             } else {
-//                grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Product edit successful. \(message)", type: .info)
-//                        toastType = .successEdit
-//                        grocyVM.requestData(objects: [.products])
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Product edit failed. \(error)", type: .error)
-//                        toastType = .failEdit
-//                    }
-//                    isProcessing = false
-//                })
+                do {
+                    try await grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST)
+                    grocyVM.postLog("Product edit successful.", type: .info)
+                    toastType = .successEdit
+                    updateData()
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Product edit failed. \(error)", type: .error)
+                    toastType = .failEdit
+                }
             }
         }
+        isProcessing = false
     }
     
     var body: some View {
@@ -326,7 +310,7 @@ struct MDProductFormView: View {
             .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveProduct, label: {
+                    Button(action: { Task { await saveProduct() } }, label: {
                         Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })

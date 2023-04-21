@@ -59,17 +59,15 @@ struct MDLocationsView: View {
         locationToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteLocation(toDelID: Int) {
-//        grocyVM.deleteMDObject(object: .locations, id: toDelID, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Deleting location was successful. \(message)", type: .info)
-//                updateData()
-//            case let .failure(error):
-//                grocyVM.postLog("Deleting location failed. \(error)", type: .error)
-//                toastType = .failDelete
-//            }
-//        })
+    private func deleteLocation(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .locations, id: toDelID)
+            grocyVM.postLog("Deleting location was successful.", type: .info)
+            updateData()
+        } catch {
+            grocyVM.postLog("Deleting location failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -170,7 +168,9 @@ struct MDLocationsView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = locationToDelete?.id {
-                    deleteLocation(toDelID: toDelID)
+                    Task {
+                        await deleteLocation(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(locationToDelete?.name ?? "Name not found") })
