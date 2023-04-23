@@ -38,10 +38,8 @@ struct TransferProductView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -221,13 +219,13 @@ struct TransferProductView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successTransfer),

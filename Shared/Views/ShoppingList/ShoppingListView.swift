@@ -57,10 +57,8 @@ struct ShoppingListView: View {
         .shopping_lists,
         .shopping_list,
     ]
-    func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
@@ -192,7 +190,7 @@ struct ShoppingListView: View {
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     shoppingListActionContent
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
                         .help(LocalizedStringKey("str.refresh"))
                     sortGroupMenu
                     Button(action: {
@@ -430,13 +428,13 @@ struct ShoppingListView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
-        .onAppear(perform: {
-            updateData()
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))
         .refreshable {
-            updateData()
+            await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
         .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {

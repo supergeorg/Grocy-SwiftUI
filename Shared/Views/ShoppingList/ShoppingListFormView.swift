@@ -33,10 +33,8 @@ struct ShoppingListFormView: View {
 #endif
     }
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: [.shopping_lists])
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: [.shopping_lists])
     }
     
     func saveShoppingList() async {
@@ -53,7 +51,7 @@ struct ShoppingListFormView: View {
                     content: newShoppingList
                 )
                 grocyVM.postLog("Shopping list save successful.", type: .info)
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
@@ -74,7 +72,7 @@ struct ShoppingListFormView: View {
                         content: editedShoppingList
                     )
                     grocyVM.postLog("Shopping list edit successful.", type: .info)
-                    updateData()
+                    await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)

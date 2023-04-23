@@ -64,10 +64,8 @@ struct StockView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     var numExpiringSoon: Int? {
@@ -194,7 +192,7 @@ struct StockView: View {
         //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { updateData() } })
                     sortMenu
                     Text("")
                         .popover(item: $activeSheet, content: { item in
@@ -380,12 +378,12 @@ struct StockView: View {
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .animation(.default, value: groupedProducts.count)
         .animation(.default, value: sortSetting)
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 firstAppear = false
             }
-        })
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),
@@ -445,15 +443,15 @@ struct StockView: View {
         .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable {
-            updateData()
+            await updateData()
         }
         .animation(.default, value: groupedProducts.count)
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 firstAppear = false
             }
-        })
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),

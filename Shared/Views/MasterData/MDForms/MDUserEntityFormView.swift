@@ -47,10 +47,8 @@ struct MDUserEntityFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -74,7 +72,7 @@ struct MDUserEntityFormView: View {
                 grocyVM.postLog("User entity add successful.", type: .info)
                 toastType = .successAdd
                 resetForm()
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("User entity add failed. \(error)", type: .error)
@@ -85,7 +83,7 @@ struct MDUserEntityFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
                 grocyVM.postLog("User entity edit successful.", type: .info)
                 toastType = .successEdit
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("User entity edit failed. \(error)", type: .error)
@@ -140,13 +138,13 @@ struct MDUserEntityFormView: View {
             
             MyToggle(isOn: $showInSidebarMenu, description: "str.md.userEntity.showInSideBarMenu", icon: "tablecells")
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

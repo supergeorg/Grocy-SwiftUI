@@ -271,10 +271,8 @@ struct StockJournalView: View {
     private let dataToUpdate: [ObjectEntities] = [.stock_log]
     private let additionalDataToUpdate: [AdditionalEntities] = [.users]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     var stockElement: Binding<StockElement?>? = nil
@@ -348,15 +346,15 @@ struct StockJournalView: View {
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))
         .refreshable(action: {
-            updateData()
+            await updateData()
         })
         .animation(.default,
                    value: filteredJournal.count
         )
-        .onAppear(perform: {
-            updateData()
+        .task {
+            await updateData()
             filteredProductID = selectedProductID
-        })
+        }
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))
     }
 }

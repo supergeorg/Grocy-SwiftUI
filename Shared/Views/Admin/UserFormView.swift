@@ -38,10 +38,8 @@ struct UserFormView: View {
         }
     }
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(additionalObjects: [.users])
-        }
+    private func updateData() async {
+        await grocyVM.requestData(additionalObjects: [.users])
     }
     
     private func finishForm() {
@@ -61,7 +59,7 @@ struct UserFormView: View {
                 try await grocyVM.postUser(user: userPost)
                 grocyVM.postLog("Successfully saved user.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Saving user failed. \(error)", type: .error)
@@ -74,7 +72,7 @@ struct UserFormView: View {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
                     grocyVM.postLog("Successfully edited user.", type: .info)
                     toastType = .successEdit
-                    updateData()
+                    await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Editing user failed. \(error)", type: .error)
@@ -137,7 +135,7 @@ struct UserFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    Task {
+                    async {
                         await saveUser()
                     }
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)

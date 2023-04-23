@@ -227,7 +227,7 @@ struct QuickScanModeInputView: View {
         .onAppear(perform: {
             if firstOpen {
                 if let productID = product?.id {
-                    Task {
+                    Task.init {
                         try await grocyVM.getStockProductEntries(productID: productID)
                     }
                 }

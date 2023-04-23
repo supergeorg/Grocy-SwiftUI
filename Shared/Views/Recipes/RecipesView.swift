@@ -23,10 +23,8 @@ struct RecipesView: View {
     @State private var sortOrder = [KeyPathComparator(\Recipe.name)]
     @State private var selection: Recipe.ID?
     
-    func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     var recipes: Recipes {
@@ -44,15 +42,17 @@ struct RecipesView: View {
         bodyContent
             .navigationTitle(LocalizedStringKey("str.nav.recipes"))
             .refreshable(action: {
-                updateData()
+                await updateData()
             })
-            .onAppear(perform: updateData)
+            .task {
+                await updateData()
+            }
             .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
             .animation(.default, value: recipes.count)
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                 })
             })

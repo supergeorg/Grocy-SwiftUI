@@ -10,7 +10,9 @@ import Combine
 import SwiftUI
 import OSLog
 
-class GrocyViewModel: ObservableObject {
+final class GrocyViewModel: ObservableObject {
+    static let shared = GrocyViewModel()
+
     var grocyApi: GrocyAPI
     
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
@@ -24,8 +26,6 @@ class GrocyViewModel: ObservableObject {
     @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
     @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
     @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
-    
-    static let shared = GrocyViewModel()
     
     let grocyLog = Logger(subsystem: "Grocy-Mobile", category: "APIAccess")
     

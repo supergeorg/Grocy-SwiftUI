@@ -46,10 +46,8 @@ struct InventoryProductView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .quantity_units, .quantity_unit_conversions]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .system_info]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -228,13 +226,13 @@ struct InventoryProductView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successInventory),

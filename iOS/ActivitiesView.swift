@@ -26,11 +26,9 @@ struct ActivitiesView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.nav.activities"))
-        .onAppear(perform: {
-            Task {
-                await grocyVM.requestData(objects: [.userentities])
-            }
-        })
+        .task {
+            await grocyVM.requestData(objects: [.userentities])
+        }
     }
 }
 

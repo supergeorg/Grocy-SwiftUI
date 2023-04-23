@@ -92,13 +92,10 @@ class WebSocket: NSObject, URLSessionWebSocketDelegate {
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         print("Web Socket did connect")
-        //        ping()
-        //        send()
-        //        receive()
     }
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        print("Web Socket did disconnect")
+        print("Web Socket did disconnect with code \(closeCode)")
     }
 }
 
@@ -107,6 +104,7 @@ class HomeAssistantWebSocket {
     private var requestID: Int = 1
     private var timeoutInterval: Double
     private var hassToken: String
+    private var socketAuthenticated: Bool = false
     
     // MARK: - HomeAssistantSocketAuthState
     struct HomeAssistantSocketAuthState: Codable {
@@ -201,29 +199,33 @@ class HomeAssistantWebSocket {
         }
         print("GET AUTH_REQ")
         
-//        // 2. Build auth request
-//        let authMessage = HomeAssistantSocketAuthRequest(type: "auth", accessToken: hassToken)
-//        let jsonAuthMessage = try! JSONEncoder().encode(authMessage)
-//        try await self.sendDataAsync(data: jsonAuthMessage)
-//        print("SEND AUTH")
-//
-//        // 3. Get authentication return
-//        let authStateMessageAuthorized: HomeAssistantSocketAuthState = try await self.receiveDataAsync()
-//        guard authStateMessageAuthorized.type == "auth_ok" else {
-//            throw APIError.hassError(error: APIError.serverError(errorMessage: "Home Assistant not authorized, state is \(authStateMessageAuthorized.type)"))
-//        }
-//        print("GET AUTH_OK")
+        // 2. Build auth request
+        let authMessage = HomeAssistantSocketAuthRequest(type: "auth", accessToken: hassToken)
+        let jsonAuthMessage = try! JSONEncoder().encode(authMessage)
+        try await self.sendDataAsync(data: jsonAuthMessage)
+        print("SEND AUTH")
+
+        // 3. Get authentication return
+        let authStateMessageAuthorized: HomeAssistantSocketAuthState = try await self.receiveDataAsync()
+        guard authStateMessageAuthorized.type == "auth_ok" else {
+            throw APIError.hassError(error: APIError.serverError(errorMessage: "Home Assistant not authorized, state is \(authStateMessageAuthorized.type)"))
+        }
+        print("GET AUTH_OK")
+        socketAuthenticated = true
     }
     
     func getToken() async throws -> String {
-//        let tokenRequest = HomeAssistantSocketTokenRequest(id: self.requestID, type: "supervisor/api", endpoint: "/ingress/session", method: "post")
-//        self.requestID = self.requestID + 1
-//        let tokenRequestJSON = try JSONEncoder().encode(tokenRequest)
-//        try await self.sendDataAsync(data: tokenRequestJSON)
-//        let tokenReturn: HomeAssistantSocketTokenReturn = try await self.receiveDataAsync()
+        guard socketAuthenticated == true else {
+            throw APIError.internalError
+        }
+        let tokenRequest = HomeAssistantSocketTokenRequest(id: self.requestID, type: "supervisor/api", endpoint: "/ingress/session", method: "post")
+        self.requestID = self.requestID + 1
+        let tokenRequestJSON = try JSONEncoder().encode(tokenRequest)
+        try await self.sendDataAsync(data: tokenRequestJSON)
+        let tokenReturn: HomeAssistantSocketTokenReturn = try await self.receiveDataAsync()
         print("TOKEN REQUESTED")
-        return "8cae7765bf06d8b516d70177e2455b0f520dc9156e954065e101c43412852ff8cf68527edbbd6484309e1a23c00b7299b5f31f9546745dc33503b3a1f510f553"
-//        return tokenReturn.result.session
+//        return "8cae7765bf06d8b516d70177e2455b0f520dc9156e954065e101c43412852ff8cf68527edbbd6484309e1a23c00b7299b5f31f9546745dc33503b3a1f510f553"
+        return tokenReturn.result.session
     }
     
     func receiveDataAsync<T: Codable>() async throws -> T {

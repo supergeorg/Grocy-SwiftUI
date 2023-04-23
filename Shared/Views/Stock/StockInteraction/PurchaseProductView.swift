@@ -50,10 +50,8 @@ struct PurchaseProductView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
 
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -325,13 +323,13 @@ struct PurchaseProductView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
     
     var toolbarContent: some View {

@@ -64,10 +64,8 @@ struct ConsumeProductView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations]
     private let additionalDataToUpdate: [AdditionalEntities] = [.user_settings]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -378,12 +376,12 @@ struct ConsumeProductView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 if let productID = productID {
-                    Task {
+                    do {
                         try await grocyVM.getStockProductEntries(productID: productID)
                         if let product = product {
                             locationID = product.locationID
@@ -393,11 +391,13 @@ struct ConsumeProductView: View {
                                 stockEntryID = directStockEntryID
                             }
                         }
+                    } catch {
+                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
                     }
                 }
                 firstAppear = false
             }
-        })
+        }
     }
     
     var stockEntryPicker: some View {

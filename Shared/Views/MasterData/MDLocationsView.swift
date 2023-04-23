@@ -42,10 +42,8 @@ struct MDLocationsView: View {
     @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredLocations: MDLocations {
@@ -63,7 +61,7 @@ struct MDLocationsView: View {
         do {
             try await grocyVM.deleteMDObject(object: .locations, id: toDelID)
             grocyVM.postLog("Deleting location was successful.", type: .info)
-            updateData()
+            await updateData()
         } catch {
             grocyVM.postLog("Deleting location failed. \(error)", type: .error)
             toastType = .failDelete
@@ -91,7 +89,7 @@ struct MDLocationsView: View {
             .toolbar(content: {
                 ToolbarItemGroup(placement: .primaryAction, content: {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddLocation = true
@@ -137,11 +135,13 @@ struct MDLocationsView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            updateData()
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default,
                    value: filteredLocations.count)
         .toast(

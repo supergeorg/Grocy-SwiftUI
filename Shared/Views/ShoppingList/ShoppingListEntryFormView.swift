@@ -47,10 +47,8 @@ struct ShoppingListEntryFormView: View {
         return grocyVM.mdQuantityUnits.first(where: { $0.id == quIDP })
     }
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: [.shopping_list])
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: [.shopping_list])
     }
     
     private func finishForm() {
@@ -74,7 +72,7 @@ struct ShoppingListEntryFormView: View {
             do {
                 try await grocyVM.addShoppingListItem(content: newShoppingListEntry)
                 grocyVM.postLog("Shopping list entry saved successfully.", type: .info)
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
@@ -99,7 +97,7 @@ struct ShoppingListEntryFormView: View {
                         content: editedShoppingListEntry
                     )
                     grocyVM.postLog("Shopping entry edited successfully.", type: .info)
-                    updateData()
+                    await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
@@ -184,13 +182,13 @@ struct ShoppingListEntryFormView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
         .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.entryForm.save.failed"))
     }
 }

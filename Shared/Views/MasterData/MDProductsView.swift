@@ -68,10 +68,8 @@ struct MDProductsView: View {
     @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func deleteItem(itemToDelete: MDProduct) {
@@ -117,7 +115,7 @@ struct MDProductsView: View {
             .toolbar (content: {
                 ToolbarItemGroup(placement: .primaryAction, content: {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddProduct.toggle()
@@ -162,11 +160,13 @@ struct MDProductsView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            updateData()
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredProducts.count)
         .toast(
             item: $toastType,

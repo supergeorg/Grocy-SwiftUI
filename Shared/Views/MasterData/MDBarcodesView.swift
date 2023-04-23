@@ -49,10 +49,8 @@ struct MDBarcodesView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     var filteredBarcodes: MDProductBarcodes {
@@ -70,7 +68,7 @@ struct MDBarcodesView: View {
         do {
             try await grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID)
             grocyVM.postLog("Deleting barcode was successful.", type: .info)
-            updateData()
+            await updateData()
         } catch {
             grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
             toastType = .failDelete
@@ -121,7 +119,9 @@ struct MDBarcodesView: View {
                 .frame(minWidth: 200, minHeight: 400)
             }
         }
-        .onAppear(perform: { updateData() })
+        .task {
+            await updateData()
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
@@ -175,8 +175,12 @@ struct MDBarcodesView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.md.barcodes"))
-        .onAppear(perform: { updateData() })
-        .refreshable { updateData() }
+        .task {
+            await updateData()
+        }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredBarcodes.count)
         .toast(
             item: $toastType,
