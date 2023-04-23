@@ -116,13 +116,13 @@ struct StockEntryRowView: View {
                     Text("str.stock.entries.note \(note)")
                 }
 #if os(macOS)
-                Button(action: openEntry, label: {
+                Button(action: { Task { await openEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
                 })
                 .tint(Color.grocyBlue)
                 .help(LocalizedStringKey("str.stock.entry.open"))
                 .disabled(stockEntry.stockEntryOpen)
-                Button(action: consumeEntry, label: {
+                Button(action: { Task { await consumeEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
                 })
                 .tint(Color.grocyDelete)

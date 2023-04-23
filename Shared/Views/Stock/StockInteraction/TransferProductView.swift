@@ -94,24 +94,22 @@ struct TransferProductView: View {
         searchProductTerm = ""
     }
     
-    private func transferProduct() {
+    private func transferProduct() async {
         if let productID = productID, let locationIDFrom = locationIDFrom, let locationIDTo = locationIDTo {
             let transferInfo = ProductTransfer(amount: factoredAmount, locationIDFrom: locationIDFrom, locationIDTo: locationIDTo, stockEntryID: stockEntryID)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-//            grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo) { result in
-//                switch result {
-//                case let .success(prod):
-//                    grocyVM.postLog("Transfer successful. \(prod)", type: .info)
-//                    toastType = .successTransfer
-//                    grocyVM.requestData(additionalObjects: [.stock])
-//                    resetForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Transfer failed: \(error)", type: .error)
-//                    toastType = .failTransfer
-//                }
-//                isProcessingAction = false
-//            }
+            do {
+                try await grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
+                grocyVM.postLog("Transfer successful.", type: .info)
+                toastType = .successTransfer
+                await grocyVM.requestData(additionalObjects: [.stock])
+                resetForm()
+            } catch {
+                grocyVM.postLog("Transfer failed: \(error)", type: .error)
+                toastType = .failTransfer
+            }
+            isProcessingAction = false
         }
     }
     
@@ -144,11 +142,13 @@ struct TransferProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.transfer.product")
                 .onChange(of: productID) { newProduct in
-//                    grocyVM.getStockProductEntries(productID: productID ?? 0)
-//                    if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
-//                        locationIDFrom = selectedProduct.locationID
-//                        quantityUnitID = selectedProduct.quIDStock
-//                    }
+                    Task {
+                        try await grocyVM.getStockProductEntries(productID: productID ?? 0)
+                        if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                            locationIDFrom = selectedProduct.locationID
+                            quantityUnitID = selectedProduct.quIDStock
+                        }
+                    }
                 }
             
             VStack(alignment: .leading) {
@@ -215,7 +215,7 @@ struct TransferProductView: View {
             }
 #if os(macOS)
             if isPopup {
-                Button(action: transferProduct, label: {Text(LocalizedStringKey("str.stock.transfer.product.transfer"))})
+                Button(action: { Task { await transferProduct() } }, label: {Text(LocalizedStringKey("str.stock.transfer.product.transfer"))})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }
@@ -286,8 +286,9 @@ struct TransferProductView: View {
                 .keyboardShortcut("r", modifiers: [.command])
             }
             Button(action: {
-                transferProduct()
-                resetForm()
+                Task {
+                    await transferProduct()
+                }
             }, label: {
                 Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
                     .labelStyle(.titleAndIcon)
