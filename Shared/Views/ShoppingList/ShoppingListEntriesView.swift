@@ -187,7 +187,7 @@ struct ShoppingListEntriesView: View {
                        label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) })
             })
             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
+                Button(action: { Task { await changeDoneStatus(shoppingListItem: shoppingListItem) } },
                        label: { Image(systemName: MySymbols.done) })
                 .tint(.green)
             })
@@ -195,7 +195,9 @@ struct ShoppingListEntriesView: View {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
                     if let deleteID = shlItemToDelete?.id {
-                        deleteSHLItem(toDelID: deleteID)
+                        Task {
+                            await deleteSHLItem(toDelID: deleteID)
+                        }
                     }
                 }
             }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })

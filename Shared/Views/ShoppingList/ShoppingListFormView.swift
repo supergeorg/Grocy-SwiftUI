@@ -26,11 +26,11 @@ struct ShoppingListFormView: View {
     @State private var showFailToast: Bool = false
     
     private func finishForm() {
-        #if os(iOS)
+#if os(iOS)
         dismiss()
-        #elseif os(macOS)
+#elseif os(macOS)
         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-        #endif
+#endif
     }
     
     private func updateData() {
@@ -39,7 +39,7 @@ struct ShoppingListFormView: View {
         }
     }
     
-    func saveShoppingList() {
+    func saveShoppingList() async {
         if isNewShoppingListDescription {
             let newShoppingList = ShoppingListDescription(
                 id: grocyVM.findNextID(.shopping_lists),
@@ -47,21 +47,18 @@ struct ShoppingListFormView: View {
                 shoppingListDescriptionDescription: nil,
                 rowCreatedTimestamp: Date().iso8601withFractionalSeconds
             )
-//            grocyVM.postMDObject(
-//                object: .shopping_lists,
-//                content: newShoppingList,
-//                completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Shopping list save successful. \(message)", type: .info)
-//                        updateData()
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
-//                        showFailToast = true
-//                    }
-//                }
-//            )
+            do {
+                _ = try await grocyVM.postMDObject(
+                    object: .shopping_lists,
+                    content: newShoppingList
+                )
+                grocyVM.postLog("Shopping list save successful.", type: .info)
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+                showFailToast = true
+            }
         } else {
             if let shoppingListDescription = shoppingListDescription {
                 let editedShoppingList = ShoppingListDescription(
@@ -70,22 +67,19 @@ struct ShoppingListFormView: View {
                     shoppingListDescriptionDescription: shoppingListDescription.shoppingListDescriptionDescription,
                     rowCreatedTimestamp: shoppingListDescription.rowCreatedTimestamp
                 )
-//                grocyVM.putMDObjectWithID(
-//                    object: .shopping_lists,
-//                    id: shoppingListDescription.id,
-//                    content: editedShoppingList,
-//                    completion: { result in
-//                        switch result {
-//                        case let .success(message):
-//                            grocyVM.postLog("Shopping list edit successful. \(message)", type: .info)
-//                            updateData()
-//                            finishForm()
-//                        case let .failure(error):
-//                            grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
-//                            showFailToast = true
-//                        }
-//                    }
-//                )
+                do {
+                    try await grocyVM.putMDObjectWithID(
+                        object: .shopping_lists,
+                        id: shoppingListDescription.id,
+                        content: editedShoppingList
+                    )
+                    grocyVM.postLog("Shopping list edit successful.", type: .info)
+                    updateData()
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+                    showFailToast = true
+                }
             }
         }
     }
@@ -96,9 +90,9 @@ struct ShoppingListFormView: View {
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         content
-        #elseif os(iOS)
+#elseif os(iOS)
         NavigationView {
             content
                 .navigationTitle(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit"))
@@ -111,20 +105,22 @@ struct ShoppingListFormView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button(LocalizedStringKey("str.save")) {
-                            saveShoppingList()
+                            Task {
+                                await saveShoppingList()
+                            }
                         }
                         .keyboardShortcut(.defaultAction)
                     }
                 }
         }
-        #endif
+#endif
     }
     
     var content: some View {
         Form {
-            #if os(macOS)
+#if os(macOS)
             Text(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit")).font(.headline)
-            #endif
+#endif
             MyTextField(
                 textToEdit: $name,
                 description: "str.shL.form.name",
@@ -134,7 +130,7 @@ struct ShoppingListFormView: View {
                 errorMessage: "str.shL.form.name.exists"
             )
             .onChange(of: name, perform: { _ in isNameCorrect = checkNameCorrect() })
-            #if os(macOS)
+#if os(macOS)
             HStack {
                 Button(LocalizedStringKey("str.cancel")) {
                     finishForm()
@@ -146,7 +142,7 @@ struct ShoppingListFormView: View {
                 }
                 .keyboardShortcut(.defaultAction)
             }
-            #endif
+#endif
         }
         .onAppear(perform: resetForm)
         .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.form.save.failed"))

@@ -32,7 +32,7 @@ struct ShoppingListRowActionsView: View {
         grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Productname error"
     }
     
-    private func changeDoneStatus() {
+    private func changeDoneStatus() async {
         let doneChangedShoppingListItem = ShoppingListItem(
             id: shoppingListItem.id,
             productID: shoppingListItem.productID,
@@ -43,27 +43,24 @@ struct ShoppingListRowActionsView: View {
             quID: shoppingListItem.quID,
             rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp
         )
-//        grocyVM.putMDObjectWithID(
-//            object: .shopping_list,
-//            id: shoppingListItem.id,
-//            content: doneChangedShoppingListItem,
-//            completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
-//                    grocyVM.requestData(objects: [.shopping_list])
-//                case let .failure(error):
-//                    grocyVM.postLog("Done status change failed. \(error)", type: .error)
-//                    toastType = .shLActionFail
-//                }
-//            }
-//        )
+        do {
+            try await grocyVM.putMDObjectWithID(
+                object: .shopping_list,
+                id: shoppingListItem.id,
+                content: doneChangedShoppingListItem
+            )
+            grocyVM.postLog("Done status changed successfully.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_list])
+        } catch {
+            grocyVM.postLog("Done status change failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
-
+    
     private func deleteItem() {
         showEntryDeleteAlert.toggle()
     }
-
+    
     private func deleteSHLItem() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id)
@@ -79,7 +76,9 @@ struct ShoppingListRowActionsView: View {
         HStack(spacing: 2) {
             RowInteractionButton(image: "checkmark", backgroundColor: Color.grocyGreen, helpString: LocalizedStringKey("str.shL.entry.done"))
                 .onTapGesture {
-                    changeDoneStatus()
+                    Task {
+                        await changeDoneStatus()
+                    }
                     if shoppingListItem.done != 1, grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true {
                         showAutoPurchase.toggle()
                     }
