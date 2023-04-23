@@ -46,7 +46,7 @@ struct StockEntryFormView: View {
 #endif
     }
     
-    private func editEntryForm() {
+    private func editEntryForm() async {
         let noteText = note.isEmpty ? nil : note
         let realBestBeforeDate = productDoesntSpoil ? getNeverOverdueDate() : bestBeforeDate
         let entryFormPOST = StockEntry(
@@ -65,18 +65,14 @@ struct StockEntryFormView: View {
             note: noteText
         )
         isProcessing = true
-//        grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Stock entry edit successful. \(message)", type: .info)
-//                //                toastType = .successEdit
-//                finishForm()
-//            case let .failure(error):
-//                grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
-//                //                toastType = .failEdit
-//            }
-//            isProcessing = false
-//        })
+        do {
+            _ = try await grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST)
+            grocyVM.postLog("Stock entry edit successful.", type: .info)
+            finishForm()
+        } catch {
+            grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
+        }
+        isProcessing = false
     }
     
     private func resetForm() {
@@ -143,7 +139,7 @@ struct StockEntryFormView: View {
         }
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
-                Button(action: editEntryForm, label: {
+                Button(action: { Task { await editEntryForm() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.save"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })

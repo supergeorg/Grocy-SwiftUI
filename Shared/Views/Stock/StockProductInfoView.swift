@@ -14,7 +14,9 @@ struct StockProductInfoView: View {
     
     var productDetails: StockProductDetails? {
         if let productID = stockElement?.productID {
-//            grocyVM.getStockProductDetails(productID: productID)
+            Task {
+                try await grocyVM.getStockProductDetails(productID: productID)
+            }
             return grocyVM.stockProductDetails[productID]
         } else { return nil }
     }

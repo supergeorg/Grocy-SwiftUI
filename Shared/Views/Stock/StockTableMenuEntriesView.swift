@@ -26,17 +26,15 @@ struct StockTableMenuEntriesView: View {
         return stockElement.product.quickConsumeAmount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
-    func consumeAsSpoiled() {
-//        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-//            switch result {
-//            case .success(_):
-//                toastType = .successConsumeAllSpoiled
-//                grocyVM.requestData(additionalObjects: [.stock])
-//            case let .failure(error):
-//                grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
-//                toastType = .shLActionFail
-//            }
-//        }
+    func consumeAsSpoiled() async {
+        do {
+            try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            toastType = .successConsumeAllSpoiled
+            await grocyVM.requestData(additionalObjects: [.stock])
+        } catch {
+            grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
     var body: some View {
@@ -82,7 +80,9 @@ struct StockTableMenuEntriesView: View {
         Group{
             Button(role: .destructive, action: {
                 selectedStockElement = stockElement
-                consumeAsSpoiled()
+                Task {
+                    await consumeAsSpoiled()
+                }
             }, label: {
                 Label(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount.formattedAmount) \(quString)")"), systemImage: MySymbols.clear)
             })
