@@ -41,10 +41,8 @@ struct MDUserFieldsView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.userfields]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredUserFields: MDUserFields {
@@ -63,7 +61,7 @@ struct MDUserFieldsView: View {
 //            switch result {
 //            case let .success(message):
 //                grocyVM.postLog("Deleting userfield was successful. \(message)", type: .info)
-//                updateData()
+//                await updateData()
 //            case let .failure(error):
 //                grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
 //                toastType = .failDelete
@@ -92,7 +90,7 @@ struct MDUserFieldsView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddUserField.toggle()
@@ -134,11 +132,13 @@ struct MDUserFieldsView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            updateData()
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredUserFields.count)
         .toast(
             item: $toastType,

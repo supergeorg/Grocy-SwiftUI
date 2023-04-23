@@ -51,10 +51,8 @@ struct MDUserFieldFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.userfields]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -79,7 +77,7 @@ struct MDUserFieldFormView: View {
                                             grocyVM.postLog("Userfield add successful.", type: .info)
                                             toastType = .successAdd
                                             resetForm()
-                                            updateData()
+                                            await updateData()
                                             finishForm()
                 } catch {
                                             grocyVM.postLog("Userfield add failed. \(error)", type: .error)
@@ -90,7 +88,7 @@ struct MDUserFieldFormView: View {
                     _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
                                             grocyVM.postLog("Userfield edit successful.", type: .info)
                                             toastType = .successEdit
-                                            updateData()
+                                            await updateData()
                                             finishForm()
                 } catch {
                                             grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
@@ -164,13 +162,13 @@ struct MDUserFieldFormView: View {
             
             MyToggle(isOn: $showAsColumnInTables, description: "str.md.userField.showAsColumnInTables", icon: "tablecells")
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

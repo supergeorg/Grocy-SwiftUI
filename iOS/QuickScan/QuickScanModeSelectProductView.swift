@@ -30,10 +30,8 @@ struct QuickScanModeSelectProductView: View {
         productID = nil
     }
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: [.product_barcodes])
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: [.product_barcodes])
     }
     
     private func finishForm() {

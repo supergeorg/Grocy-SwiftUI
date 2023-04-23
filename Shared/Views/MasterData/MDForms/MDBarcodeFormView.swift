@@ -50,10 +50,8 @@ struct MDBarcodeFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
-    private func updateData() {
-        Task {
+    private func updateData() async {
             await grocyVM.requestData(objects: dataToUpdate)
-        }
     }
     
     private func finishForm() {
@@ -73,7 +71,7 @@ struct MDBarcodeFormView: View {
                 _ = try await grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
                 grocyVM.postLog("Barcode added successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Barcode add failed. \(error)", type: .error)
@@ -85,7 +83,7 @@ struct MDBarcodeFormView: View {
                     try await grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode)
                     grocyVM.postLog("Barcode edit successful.", type: .info)
                     toastType = .successEdit
-                    updateData()
+                    await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Barcode edit failed. \(error)", type: .error)
@@ -237,13 +235,13 @@ struct MDBarcodeFormView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

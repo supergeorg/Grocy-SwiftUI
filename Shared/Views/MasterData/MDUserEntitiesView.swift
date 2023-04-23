@@ -37,10 +37,8 @@ struct MDUserEntitiesView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredUserEntities: MDUserEntities {
@@ -88,7 +86,7 @@ struct MDUserEntitiesView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddUserEntity.toggle()
@@ -130,11 +128,13 @@ struct MDUserEntitiesView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            updateData()
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredUserEntities.count)
         .toast(
             item: $toastType,

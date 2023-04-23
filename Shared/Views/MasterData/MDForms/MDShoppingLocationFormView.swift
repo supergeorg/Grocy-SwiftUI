@@ -37,10 +37,8 @@ struct MDStoreFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -63,7 +61,7 @@ struct MDStoreFormView: View {
                 _ = try await grocyVM.postMDObject(object: .shopping_locations, content: storePOST)
                 grocyVM.postLog("Store added successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Store add failed. \(error)", type: .error)
@@ -74,7 +72,7 @@ struct MDStoreFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST)
                 grocyVM.postLog("Store \(storePOST.name) edited successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Store edit failed. \(error)", type: .error)
@@ -124,13 +122,13 @@ struct MDStoreFormView: View {
                 MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

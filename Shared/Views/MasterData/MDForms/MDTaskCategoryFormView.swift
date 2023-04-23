@@ -43,10 +43,8 @@ struct MDTaskCategoryFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -70,7 +68,7 @@ struct MDTaskCategoryFormView: View {
                 grocyVM.postLog("Task category add successful.", type: .info)
                 toastType = .successAdd
                 resetForm()
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Task category add failed. \(error)", type: .error)
@@ -81,7 +79,7 @@ struct MDTaskCategoryFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST)
                 grocyVM.postLog("Task category edit successful.", type: .info)
                 toastType = .successEdit
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Task category edit failed. \(error)", type: .error)
@@ -131,13 +129,13 @@ struct MDTaskCategoryFormView: View {
                 MyTextField(textToEdit: $mdTaskCategoryDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

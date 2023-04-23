@@ -37,10 +37,8 @@ struct MDProductGroupFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -63,7 +61,7 @@ struct MDProductGroupFormView: View {
                 _ = try await grocyVM.postMDObject(object: .product_groups, content: productGroupPOST)
                 grocyVM.postLog("Product group added successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Product group add failed. \(error)", type: .error)
@@ -74,7 +72,7 @@ struct MDProductGroupFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: productGroupPOST)
                 grocyVM.postLog("Product group edited successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Product group edit failed. \(error)", type: .error)
@@ -124,13 +122,13 @@ struct MDProductGroupFormView: View {
                 MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

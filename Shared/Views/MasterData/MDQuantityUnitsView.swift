@@ -41,10 +41,8 @@ struct MDQuantityUnitsView: View {
     @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredQuantityUnits: MDQuantityUnits {
@@ -62,7 +60,7 @@ struct MDQuantityUnitsView: View {
         do {
             try await grocyVM.deleteMDObject(object: .quantity_units, id: toDelID)
             grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
-            updateData()
+            await updateData()
         } catch {
             grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
             toastType = .failDelete
@@ -90,7 +88,7 @@ struct MDQuantityUnitsView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddQuantityUnit.toggle()
@@ -132,9 +130,13 @@ struct MDQuantityUnitsView: View {
                 })
             }
         }
-        .onAppear(perform: { updateData() })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredQuantityUnits.count)
         .toast(
             item: $toastType,

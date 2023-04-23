@@ -212,10 +212,8 @@ struct MDProductFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -294,7 +292,7 @@ struct MDProductFormView: View {
                     try await grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST)
                     grocyVM.postLog("Product edit successful.", type: .info)
                     toastType = .successEdit
-                    updateData()
+                    await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Product edit failed. \(error)", type: .error)

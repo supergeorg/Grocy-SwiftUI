@@ -39,10 +39,8 @@ struct MDLocationFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -65,7 +63,7 @@ struct MDLocationFormView: View {
                 _ = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
                 grocyVM.postLog("Location added successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Location add failed. \(error)", type: .error)
@@ -76,7 +74,7 @@ struct MDLocationFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST)
                 grocyVM.postLog("Location edit successful.", type: .info)
                 toastType = .successEdit
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Location edit failed. \(error)", type: .error)
@@ -138,13 +136,13 @@ struct MDLocationFormView: View {
                 MyToggle(isOn: $isFreezer, description: "str.md.location.isFreezing", descriptionInfo: "str.md.location.isFreezing.description", icon: "thermometer.snowflake")
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

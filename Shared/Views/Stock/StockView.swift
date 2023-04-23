@@ -192,7 +192,7 @@ struct StockView: View {
         //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
-                    RefreshButton(updateData: { Task { updateData() } })
+                    RefreshButton(updateData: { Task { await updateData() } })
                     sortMenu
                     Text("")
                         .popover(item: $activeSheet, content: { item in

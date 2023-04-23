@@ -63,10 +63,8 @@ struct MDQuantityUnitConversionFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_unit_conversions]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func getQUString(amount: Double, qu: MDQuantityUnit?) -> String {
@@ -111,7 +109,7 @@ struct MDQuantityUnitConversionFormView: View {
                     grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
                     toastType = .successAdd
                 }
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
@@ -122,7 +120,7 @@ struct MDQuantityUnitConversionFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST)
                 grocyVM.postLog("Quantity unit conversion edited successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)

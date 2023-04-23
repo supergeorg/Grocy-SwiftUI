@@ -44,10 +44,8 @@ struct MDQuantityUnitFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions]
-    private func updateData() {
-        Task {
-            await grocyVM.requestData(objects: dataToUpdate)
-        }
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var quConversions: MDQuantityUnitConversions? {
@@ -94,7 +92,7 @@ struct MDQuantityUnitFormView: View {
                 _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST)
                 grocyVM.postLog("Quantity unit added successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
@@ -105,7 +103,7 @@ struct MDQuantityUnitFormView: View {
                 try await grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST)
                 grocyVM.postLog("Quantity unit \(quantityUnitPOST.name) edited successfully.", type: .info)
                 toastType = .successAdd
-                updateData()
+                await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
@@ -239,13 +237,13 @@ struct MDQuantityUnitFormView: View {
                 await grocyVM.requestData(objects: [.quantity_unit_conversions])
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                updateData()
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 
