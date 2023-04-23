@@ -146,7 +146,9 @@ struct MDBarcodesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
-                    deleteProductBarcode(toDelID: toDelID)
+                    Task {
+                        await deleteProductBarcode(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") })

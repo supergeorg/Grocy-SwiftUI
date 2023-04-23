@@ -319,7 +319,7 @@ struct PurchaseProductView: View {
             
 #if os(macOS)
             if isPopup {
-                Button(action: purchaseProduct, label: { Text(LocalizedStringKey("str.stock.buy.product.buy")) })
+                Button(action: { Task { await purchaseProduct() } }, label: { Text(LocalizedStringKey("str.stock.buy.product.buy")) })
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }

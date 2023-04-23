@@ -101,9 +101,9 @@ protocol GrocyAPI {
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
 //    // MARK: - Files
-//    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
-//    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
-//    func deleteFile(fileName: String, groupName: String) async throws
+    func putFile(fileURL: URL, fileName: String, groupName: String) async throws
+    func putFileData(fileData: Data, fileName: String, groupName: String) async throws
+    func deleteFile(fileName: String, groupName: String) async throws
 }
 
 public class GrocyApi: GrocyAPI {
@@ -138,46 +138,69 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callUploadFileData(_ endPoint: Endpoint, fileData: Data, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUploadFileData(
+        _ endPoint: Endpoint,
+        fileData: Data,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, from: fileData) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
+        if let httpResponse = resultCode as? HTTPURLResponse {
+            if httpResponse.statusCode != 204 {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
             }
-            guard let response = response as? HTTPURLResponse,
-                  response.statusCode == 204 else {
-                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
-                return
-            }
-            completion(.success(204))
+        } else {
+            throw APIError.internalError
         }
-        uploadTask.resume()
     }
     
-    private func callUploadFile(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUploadFile(
+        _ endPoint: Endpoint,
+        fileURL: URL,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
+        if let httpResponse = resultCode as? HTTPURLResponse {
+            if httpResponse.statusCode != 204 {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
             }
-            guard let response = response as? HTTPURLResponse,
-                  response.statusCode == 204 else {
-                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
-                return
-            }
-            completion(.success(204))
+        } else {
+            throw APIError.internalError
         }
-        uploadTask.resume()
     }
     
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) async throws {
+    private func callEmptyResponse(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        content: Data? = nil,
+        query: String? = nil
+    ) async throws {
         if let hassAuthenticator = hassAuthenticator {
             let hassToken = try await hassAuthenticator.validTokenAsync()
-            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
+            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassToken)
         } else {
-            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, content: content, query: query)
+            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
         }
     }
     
@@ -186,6 +209,8 @@ public class GrocyApi: GrocyAPI {
         method: Method,
         object: ObjectEntities? = nil,
         id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
         content: Data? = nil,
         query: String? = nil,
         hassIngressToken: String? = nil
@@ -214,7 +239,14 @@ public class GrocyApi: GrocyAPI {
         }
     }
     
-    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) async throws -> T {
+    private func call<T: Codable>(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        content: Data? = nil,
+        query: String? = nil
+    ) async throws -> T {
         if let hassAuthenticator = hassAuthenticator {
             let hassToken = try await hassAuthenticator.validTokenAsync()
             return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
@@ -262,7 +294,18 @@ public class GrocyApi: GrocyAPI {
         throw APIError.internalError
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
+    private func request(
+        for endpoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        isOctet: Bool = false,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) -> URLRequest {
         if self.baseURL.hasSuffix("/") { self.baseURL = String(self.baseURL.dropLast()) }
         var path = "\(self.baseURL)\(self.baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
@@ -549,15 +592,15 @@ extension GrocyApi {
     }
     
 //    // MARK: - Files
-//    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-//        return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
-//    }
-//
-//    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-//        return try await callUploadFileData(.filesGroupFilename, fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
-//    }
-//
-//    func deleteFile(fileName: String, groupName: String) async throws -> Int {
-//        return try await callEmptyResponse(.filesGroupFilename, method: .DELETE, fileName: fileName, groupName: groupName)
-//    }
+    func putFile(fileURL: URL, fileName: String, groupName: String) async throws {
+        return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName)
+    }
+
+    func putFileData(fileData: Data, fileName: String, groupName: String) async throws {
+        return try await callUploadFileData(.filesGroupFilename, fileData: fileData, fileName: fileName, groupName: groupName)
+    }
+
+    func deleteFile(fileName: String, groupName: String) async throws {
+        return try await callEmptyResponse(.filesGroupFilename, method: .DELETE, fileName: fileName, groupName: groupName)
+    }
 }

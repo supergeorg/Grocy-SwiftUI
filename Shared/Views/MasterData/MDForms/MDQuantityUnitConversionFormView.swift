@@ -217,7 +217,7 @@ struct MDQuantityUnitConversionFormView: View {
                     }
                 }
 #if os(macOS)
-                Button(action: saveQuantityUnitConversion, label: {
+                Button(action: { Task { await saveQuantityUnitConversion() } }, label: {
                     Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })

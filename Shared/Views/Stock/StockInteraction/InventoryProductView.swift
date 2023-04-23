@@ -165,9 +165,10 @@ struct InventoryProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.inventory.product")
                 .onChange(of: productID) { newProduct in
-                    // TODO Edit
                     if let productID = productID {
-                        //                        grocyVM.getStockProductEntries(productID: productID)
+                        Task {
+                            try await grocyVM.getStockProductEntries(productID: productID)
+                        }
                     }
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                         storeID = selectedProduct.storeID

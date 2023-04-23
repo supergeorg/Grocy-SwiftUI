@@ -225,7 +225,7 @@ struct ConsumeProductView: View {
     var body: some View {
         Group {
 #if os(macOS)
-            ScrollView{
+            ScrollView() {
                 content
                     .padding()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
@@ -372,7 +372,7 @@ struct ConsumeProductView: View {
             }
 #if os(macOS)
             if isPopup {
-                Button(action: consumeProduct, label: {Text(LocalizedStringKey("str.stock.consume.product.consume"))})
+                Button(action: { Task { await consumeProduct() } }, label: {Text(LocalizedStringKey("str.stock.consume.product.consume"))})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }

@@ -63,41 +63,36 @@ struct MDUserEntityFormView: View {
 #endif
     }
     
-    private func saveUserEntity() {
+    private func saveUserEntity() async {
         let id: Int = isNewUserEntity ? grocyVM.findNextID(.userentities) : userEntity!.id
         let timeStamp = isNewUserEntity ? Date().iso8601withFractionalSeconds : userEntity!.rowCreatedTimestamp
         let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? 1 : 0, iconCSSClass: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewUserEntity {
-//            grocyVM.postMDObject(object: .userentities, content: userEntityPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("User entity add successful. \(message)", type: .info)
-//                    toastType = .successAdd
-//                    resetForm()
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("User entity add failed. \(error)", type: .error)
-//                    toastType = .failAdd
-//                }
-//                isProcessing = false
-//            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .userentities, content: userEntityPOST)
+                grocyVM.postLog("User entity add successful.", type: .info)
+                toastType = .successAdd
+                resetForm()
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("User entity add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-//            grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("User entity edit successful. \(message)", type: .info)
-//                    toastType = .successEdit
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("User entity edit failed. \(error)", type: .error)
-//                    toastType = .failEdit
-//                }
-//                isProcessing = false
-//            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
+                grocyVM.postLog("User entity edit successful.", type: .info)
+                toastType = .successEdit
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("User entity edit failed. \(error)", type: .error)
+                toastType = .failEdit
+            }
         }
+        isProcessing = false
     }
     
     var body: some View {
@@ -105,7 +100,7 @@ struct MDUserEntityFormView: View {
             .navigationTitle(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveUserEntity, label: {
+                    Button(action: { Task { await saveUserEntity() } }, label: {
                         Label(LocalizedStringKey("str.md.userEntity.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })

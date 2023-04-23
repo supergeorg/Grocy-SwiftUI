@@ -128,7 +128,6 @@ struct MDBarcodeFormView: View {
                         Task {
                             await saveBarcode()
                         }
-//                        finishForm()
                     }, label: {
                         Label(LocalizedStringKey("str.md.barcode.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
@@ -230,7 +229,9 @@ struct MDBarcodeFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    saveBarcode()
+                    Task {
+                        await saveBarcode()
+                    }
                 }
                 .keyboardShortcut(.defaultAction)
             }

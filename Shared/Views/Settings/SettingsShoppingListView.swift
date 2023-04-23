@@ -94,7 +94,7 @@ struct SettingsShoppingListView: View {
                         Task {
                             do {
                                 let allReminders = try await ReminderStore.shared.readAll()
-//                                grocyVM.updateShoppingListFromReminders(reminders: allReminders)
+                                await grocyVM.updateShoppingListFromReminders(reminders: allReminders)
                             } catch {
                                 print(error)
                             }

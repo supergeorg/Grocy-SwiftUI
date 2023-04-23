@@ -67,42 +67,37 @@ struct MDUserFieldFormView: View {
 #endif
     }
     
-    private func saveUserField() {
+    private func saveUserField() async {
         if let entity = entity {
             let id = isNewUserField ? grocyVM.findNextID(.userfields) : userField!.id
             let timeStamp = isNewUserField ? Date().iso8601withFractionalSeconds : userField!.rowCreatedTimestamp
             let userFieldPOST = MDUserField(id: id, name: name, entity: entity.rawValue, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? 1 : 0, config: nil, sortNumber: sortNumber, rowCreatedTimestamp: timeStamp)
             isProcessing = true
             if isNewUserField {
-//                grocyVM.postMDObject(object: .userfields, content: userFieldPOST, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Userfield add successful. \(message)", type: .info)
-//                        toastType = .successAdd
-//                        resetForm()
-//                        updateData()
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Userfield add failed. \(error)", type: .error)
-//                        toastType = .failAdd
-//                    }
-//                    isProcessing = true
-//                })
+                do {
+                    _ = try await grocyVM.postMDObject(object: .userfields, content: userFieldPOST)
+                                            grocyVM.postLog("Userfield add successful.", type: .info)
+                                            toastType = .successAdd
+                                            resetForm()
+                                            updateData()
+                                            finishForm()
+                } catch {
+                                            grocyVM.postLog("Userfield add failed. \(error)", type: .error)
+                                            toastType = .failAdd
+                }
             } else {
-//                grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Userfield edit successful. \(message)", type: .info)
-//                        toastType = .successEdit
-//                        updateData()
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
-//                        toastType = .failEdit
-//                    }
-//                    isProcessing = true
-//                })
+                do {
+                    _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
+                                            grocyVM.postLog("Userfield edit successful.", type: .info)
+                                            toastType = .successEdit
+                                            updateData()
+                                            finishForm()
+                } catch {
+                                            grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
+                                            toastType = .failEdit
+                }
             }
+            isProcessing = true
         }
     }
     
@@ -111,7 +106,7 @@ struct MDUserFieldFormView: View {
             .navigationTitle(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveUserField, label: {
+                    Button(action: { Task { await saveUserField() } }, label: {
                         Label(LocalizedStringKey("str.md.userField.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })

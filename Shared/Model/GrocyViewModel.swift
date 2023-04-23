@@ -223,6 +223,7 @@ class GrocyViewModel: ObservableObject {
         return startvar
     }
     
+    @MainActor
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
@@ -405,41 +406,42 @@ class GrocyViewModel: ObservableObject {
         }
     }
     
-    //    func updateShoppingListFromReminders(reminders: [Reminder]) {
-    //        for reminder in reminders {
-    //            var nameComponents = reminder.title.components(separatedBy: " ")
-    //            let amount = Double(nameComponents.removeFirst())
-    //            let name = nameComponents.joined(separator: " ")
-    //
-    //            if let product = self.mdProducts.first(where: { $0.name == name }), let entry = self.shoppingList.first(where: { $0.productID == product.id } ) {
-    //                let shoppingListEntryNew = ShoppingListItem(
-    //                    id: entry.id,
-    //                    productID: entry.productID,
-    //                    note: reminder.notes,
-    //                    amount: amount ?? entry.amount,
-    //                    shoppingListID: entry.shoppingListID,
-    //                    done: reminder.isComplete ? 1 : 0,
-    //                    quID: entry.quID,
-    //                    rowCreatedTimestamp: entry.rowCreatedTimestamp
-    //                )
-    //                if shoppingListEntryNew.note != entry.note, shoppingListEntryNew.amount != entry.amount, shoppingListEntryNew.done != entry.done {
-    //                    self.putMDObjectWithID(
-    //                        object: .shopping_list,
-    //                        id: entry.id,
-    //                        content: shoppingListEntryNew, completion: { result in
-    //                            switch result {
-    //                            case let .success(message):
-    //                                self.postLog("Shopping entry edited successfully. \(message)", type: .info)
-    //                            case let .failure(error):
-    //                                self.postLog("Shopping entry edit failed. \(error)", type: .error)
-    //                            }
-    //                        })
-    //                }
-    //            } else {
-    //                self.postLog("Found no matching product for the shopping list entry \(name).", type: .info)
-    //            }
-    //        }
-    //    }
+    func updateShoppingListFromReminders(reminders: [Reminder]) async {
+        for reminder in reminders {
+            var nameComponents = reminder.title.components(separatedBy: " ")
+            let amount = Double(nameComponents.removeFirst())
+            let name = nameComponents.joined(separator: " ")
+            if
+                let product = self.mdProducts.first(where: { $0.name == name }),
+                let entry = self.shoppingList.first(where: { $0.productID == product.id } )
+            {
+                let shoppingListEntryNew = ShoppingListItem(
+                    id: entry.id,
+                    productID: entry.productID,
+                    note: reminder.notes,
+                    amount: amount ?? entry.amount,
+                    shoppingListID: entry.shoppingListID,
+                    done: reminder.isComplete ? 1 : 0,
+                    quID: entry.quID,
+                    rowCreatedTimestamp: entry.rowCreatedTimestamp
+                )
+                if shoppingListEntryNew.note != entry.note, shoppingListEntryNew.amount != entry.amount, shoppingListEntryNew.done != entry.done {
+                    do {
+                        try await self.putMDObjectWithID(
+                            object: .shopping_list,
+                            id: entry.id,
+                            content: shoppingListEntryNew
+                        )
+                        self.postLog("Shopping entry edited successfully.", type: .info)
+                    } catch {
+                        self.postLog("Shopping entry edit failed. \(error)", type: .error)
+                    }
+                }
+            } else {
+                self.postLog("Found no matching product for the shopping list entry \(name).", type: .info)
+            }
+        }
+    }
     
     //MARK: - SYSTEM
     func getSystemInfo() async throws -> SystemInfo {
@@ -490,30 +492,30 @@ class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Stock management
-        func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil) async throws -> T {
-            return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
-        }
+    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil) async throws -> T {
+        return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
+    }
     
-        func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) async throws {
-            if let stockModeGet = stockModeGet {
-                for mode in stockModeGet {
-                    switch mode {
-                    case .details:
-                        if stockProductDetails.isEmpty || ignoreCached {
-                            self.stockProductDetails[productID] = try await getStockProductInfo(mode: mode, productID: productID)
-                        }
-                    case .locations:
-                        print("not implemented")
-                    case .entries:
-                        if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
-                            self.stockProductEntries[productID] = try await getStockProductInfo(mode: mode, productID: productID)
-                        }
-                    case .priceHistory:
-                        print("not implemented")
+    func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) async throws {
+        if let stockModeGet = stockModeGet {
+            for mode in stockModeGet {
+                switch mode {
+                case .details:
+                    if stockProductDetails.isEmpty || ignoreCached {
+                        self.stockProductDetails[productID] = try await getStockProductInfo(mode: mode, productID: productID)
                     }
+                case .locations:
+                    print("not implemented")
+                case .entries:
+                    if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
+                        self.stockProductEntries[productID] = try await getStockProductInfo(mode: mode, productID: productID)
+                    }
+                case .priceHistory:
+                    print("not implemented")
                 }
             }
         }
+    }
     
     func getStockProductLocations(productID: Int) async throws {
         self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, query: nil)
@@ -547,30 +549,16 @@ class GrocyViewModel: ObservableObject {
     }
     
     func uploadFile(fileURL: URL, groupName: String, fileName: String) async throws {
-        //            grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+        try await grocyApi.putFile(fileURL: fileURL, fileName: fileName, groupName: groupName)
     }
-    //
-    //    func uploadFileData(fileData: Data, groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-    //        grocyApi.putFileData(fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
-    //    }
-    //
-    //    func deleteFile(groupName: String, fileName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-    //        grocyApi.deleteFile(fileName: fileName, groupName: groupName)
-    //            .sink(receiveCompletion: { result in
-    //                switch result {
-    //                case .failure(let error):
-    //                    self.postLog("Delete file failed. \("\(error)")", type: .error)
-    //                    completion(.failure(error))
-    //                case .finished:
-    //                    break
-    //                }
-    //            }, receiveValue: { (responseCode: Int) in
-    //                DispatchQueue.main.async {
-    //                    completion(.success(responseCode))
-    //                }
-    //            })
-    //            .store(in: &cancellables)
-    //    }
+    
+    func uploadFileData(fileData: Data, groupName: String, fileName: String) async throws {
+        try await grocyApi.putFileData(fileData: fileData, fileName: fileName, groupName: groupName)
+    }
+    
+    func deleteFile(groupName: String, fileName: String) async throws {
+        try await grocyApi.deleteFile(fileName: fileName, groupName: groupName)
+    }
     
     // MARK: -Shopping Lists
     

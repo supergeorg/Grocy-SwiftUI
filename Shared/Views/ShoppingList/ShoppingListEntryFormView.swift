@@ -93,12 +93,12 @@ struct ShoppingListEntryFormView: View {
                     rowCreatedTimestamp: entry.rowCreatedTimestamp
                 )
                 do {
-                    grocyVM.putMDObjectWithID(
+                    try await grocyVM.putMDObjectWithID(
                         object: .shopping_list,
                         id: entry.id,
                         content: editedShoppingListEntry
                     )
-                    grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
+                    grocyVM.postLog("Shopping entry edited successfully.", type: .info)
                     updateData()
                     finishForm()
                 } catch {
@@ -175,7 +175,9 @@ struct ShoppingListEntryFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    saveShoppingListEntry()
+                    Task {
+                        await saveShoppingListEntry()
+                    }
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isFormValid)

@@ -45,53 +45,49 @@ struct UserFormView: View {
     }
     
     private func finishForm() {
-        #if os(iOS)
+#if os(iOS)
         self.dismiss()
-        #elseif os(macOS)
+#elseif os(macOS)
         if isNewUser {
             NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
         }
-        #endif
+#endif
     }
     
-    private func saveUser() {
+    private func saveUser() async {
         if isNewUser {
             let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
-//            grocyVM.postUser(user: userPost, completion: { result in
-//                switch result {
-//                case let .success(message):
-//                    grocyVM.postLog("Successfully created object with id \(message.createdObjectID).", type: .info)
-//                    toastType = .successAdd
-//                    updateData()
-//                    finishForm()
-//                case let .failure(error):
-//                    grocyVM.postLog("Saving user failed. \(error)", type: .error)
-//                    toastType = .failAdd
-//                }
-//            })
+            do {
+                try await grocyVM.postUser(user: userPost)
+                grocyVM.postLog("Successfully saved user.", type: .info)
+                toastType = .successAdd
+                updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Saving user failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
             if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
-//                grocyVM.putUser(id: user!.id, user: userPost, completion: { result in
-//                    switch result {
-//                    case let .success(message):
-//                        grocyVM.postLog("Successfully edited object with id \(message.changedObjectID).", type: .info)
-//                        toastType = .successEdit
-//                        updateData()
-//                        finishForm()
-//                    case let .failure(error):
-//                        grocyVM.postLog("Editing user failed. \(error)", type: .error)
-//                        toastType = .failAdd
-//                    }
-//                })
+                do {
+                    try await grocyVM.putUser(id: user!.id, user: userPost)
+                    grocyVM.postLog("Successfully edited user.", type: .info)
+                    toastType = .successEdit
+                    updateData()
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Editing user failed. \(error)", type: .error)
+                    toastType = .failAdd
+                }
             }
         }
     }
     
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         content
-        #elseif os(iOS)
+#elseif os(iOS)
         content
             .navigationTitle(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
             .toolbar(content: {
@@ -103,22 +99,23 @@ struct UserFormView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button(LocalizedStringKey("str.save")) {
-                        saveUser()
-                        finishForm()
+                        Task {
+                            await saveUser()
+                        }
                     }
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)
                 }
             })
-        #endif
+#endif
     }
     
     var content: some View {
         Form {
-            #if os(macOS)
+#if os(macOS)
             Text(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
                 .font(.headline)
-            #endif
+#endif
             Section(header: Text(LocalizedStringKey("str.admin.user.new.userName")).font(.title)){
                 MyTextField(textToEdit: $username, description: "str.admin.user.new.userName", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.admin.user.new.userName.required", errorMessage: "str.admin.user.new.userName.exists")
                     .onChange(of: username) { newValue in
@@ -131,7 +128,7 @@ struct UserFormView: View {
                 MyTextField(textToEdit: $password, description: "str.admin.user.new.password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
                 MyTextField(textToEdit: $passwordConfirm, description: "str.admin.user.new.password.confirm", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "str.admin.user.new.password.mismatch")
             }
-            #if os(macOS)
+#if os(macOS)
             Divider()
             HStack{
                 Button(LocalizedStringKey("str.cancel")) {
@@ -140,13 +137,15 @@ struct UserFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    saveUser()
+                    Task {
+                        await saveUser()
+                    }
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)
             }
-            #endif
+#endif
         }
         .onChange(of: password) { newValue in
             checkPWParity()
@@ -159,15 +158,15 @@ struct UserFormView: View {
             isSuccess: Binding.constant(false),
             isShown: [.failAdd, .failEdit].contains(toastType),
             text: { item in
-            switch item {
-            case .failAdd:
-                return LocalizedStringKey("str.md.new.fail")
-            case .failEdit:
-                return LocalizedStringKey("str.md.edit.fail")
-            default:
-                return LocalizedStringKey("")
-            }
-        })
+                switch item {
+                case .failAdd:
+                    return LocalizedStringKey("str.md.new.fail")
+                case .failEdit:
+                    return LocalizedStringKey("str.md.edit.fail")
+                default:
+                    return LocalizedStringKey("")
+                }
+            })
     }
 }
 

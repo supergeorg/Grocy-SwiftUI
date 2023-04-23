@@ -138,7 +138,9 @@ struct ShoppingListFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    saveShoppingList()
+                    Task {
+                        await saveShoppingList()
+                    }
                 }
                 .keyboardShortcut(.defaultAction)
             }
