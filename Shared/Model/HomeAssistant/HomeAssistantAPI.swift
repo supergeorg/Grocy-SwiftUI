@@ -64,12 +64,12 @@ class HomeAssistantWebSocket {
         guard authStateMessageNonAuthorized.type == "auth_required" else {
             throw APIError.hassError(error: APIError.invalidResponse)
         }
-
+        
         // 2. Build auth request
         let authMessage = HomeAssistantSocketAuthRequest(type: "auth", accessToken: hassToken)
         let jsonAuthMessage = try! JSONEncoder().encode(authMessage)
         try await self.sendDataAsString(data: jsonAuthMessage)
-
+        
         // 3. Get authentication return
         let authStateMessageAuthorized: HomeAssistantSocketAuthState = try await self.receiveData()
         guard authStateMessageAuthorized.type == "auth_ok" else {
@@ -149,27 +149,18 @@ class HomeAssistantAuthenticator {
     }
     
     func validTokenAsync(forceRefresh: Bool = false) async throws -> String {
+        // Create new websocket and authenticate if it doesn't exist yet
         if self.homeAssistantWebSocket == nil {
             self.homeAssistantWebSocket = HomeAssistantWebSocket(hassURL: hassURL, hassToken: self.hassToken, timeoutInterval: self.timeoutInterval)
             try await self.homeAssistantWebSocket?.authenticateSocket()
         }
-        // Scenario 2: There is no session Token, create a new one
-        if self.hassIngressToken == nil {
-            if let hassToken = try await self.homeAssistantWebSocket?.getToken() {
-                self.hassIngressToken = hassToken
-                self.hassIngressTokenDate = Date()
-                return hassToken
-            } else {
-                // TODO: handle error encoding
-                throw APIError.hassError(error: APIError.invalidResponse)
-            }
-        }
-        
-        // Scenario 3: The session Token is valid and will be returned
+
+        // Scenario 1: The session Token is valid and will be returned
         if let hassIngressToken = self.hassIngressToken, self.hassIngressTokenDate?.distance(to: Date()) ?? 100 < 60, !forceRefresh {
             return hassIngressToken
         }
         
+        // Scenario 2: There is no session Token, create a new one
         if let hassToken = try await self.homeAssistantWebSocket?.getToken() {
             self.hassIngressToken = hassToken
             self.hassIngressTokenDate = Date()
