@@ -13,7 +13,7 @@ import OSLog
 @MainActor
 final class GrocyViewModel: ObservableObject {
     static let shared = GrocyViewModel()
-
+    
     var grocyApi: GrocyAPI
     
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
@@ -223,7 +223,7 @@ final class GrocyViewModel: ObservableObject {
         while ints.contains(startvar) { startvar += 1 }
         return startvar
     }
-
+    
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
@@ -440,6 +440,15 @@ final class GrocyViewModel: ObservableObject {
             } else {
                 self.postLog("Found no matching product for the shopping list entry \(name).", type: .info)
             }
+        }
+    }
+    
+    func getAttributedStringFromHTML(htmlString: String) async -> AttributedString {
+        do {
+            let attributedString = try await NSAttributedString.fromHTML(htmlString)
+            return AttributedString(attributedString.0)
+        } catch {
+            return AttributedString(htmlString)
         }
     }
     

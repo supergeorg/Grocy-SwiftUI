@@ -245,10 +245,6 @@
 		78A33CBB257528B900C450D4 /* StockProductInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CB9257528B900C450D4 /* StockProductInfoView.swift */; };
 		78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
 		78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A33CC025752DC100C450D4 /* AmountFormatter.swift */; };
-		78AB33692971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */; };
-		78AB336A2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */; };
-		78AB336B2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */; };
-		78AB336C2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */; };
 		78ADA1DC26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
 		78ADA1DD26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
 		78ADA1DE26D1446100946E1B /* HomeAssistantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */; };
@@ -593,7 +589,6 @@
 		78A33CB9257528B900C450D4 /* StockProductInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductInfoView.swift; sourceTree = "<group>"; };
 		78A33CC025752DC100C450D4 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
 		78AB1BAA27E148F800C7F380 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLtoAttributedString.swift; sourceTree = "<group>"; };
 		78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssistantAPI.swift; sourceTree = "<group>"; };
 		78ADA1E026D1506800946E1B /* TranslatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorsView.swift; sourceTree = "<group>"; };
 		78ADA1E526D1509100946E1B /* Translators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translators.swift; sourceTree = "<group>"; };
@@ -1026,7 +1021,6 @@
 				78DB1BD0268CEE9F005448F3 /* Barcodes.swift */,
 				78ADA1E526D1509100946E1B /* Translators.swift */,
 				784AB2D5292D6EFF009B346C /* ReminderStore.swift */,
-				78AB33682971E2AA00664822 /* HTMLtoAttributedString.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1487,7 +1481,6 @@
 				788C6293293A7B300081A5BD /* RecipeModel.swift in Sources */,
 				78DD0DA5286F5ED300BD8AC2 /* StringFormatter.swift in Sources */,
 				78CB7644255EBA6C00319108 /* Colors.swift in Sources */,
-				78AB33692971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */,
 				78D2CAD427EA5403009E5C4D /* OpenFoodFactsFillProductView.swift in Sources */,
 				78CB759D255EA56D00319108 /* SettingsView.swift in Sources */,
 				7817658F25F7B40B00978483 /* NullCodable.swift in Sources */,
@@ -1621,7 +1614,6 @@
 				78ADA1E726D1509100946E1B /* Translators.swift in Sources */,
 				781A25D42566BB9100560026 /* MyToggle.swift in Sources */,
 				7891C656257E45DC0014C59E /* StockTableMenuEntriesView.swift in Sources */,
-				78AB336A2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */,
 				78EAB74B27AD9B9400154CDD /* MDQuantityUnitConversionFormView.swift in Sources */,
 				7891C64F257E43460014C59E /* ShoppingListRowActionsView.swift in Sources */,
 				78AF64E42719F38400C439AF /* StockEntryFormView.swift in Sources */,
@@ -1735,7 +1727,6 @@
 				780B8B3E26FA5C12009ACFB7 /* MyTextField.swift in Sources */,
 				788C6295293A7B300081A5BD /* RecipeModel.swift in Sources */,
 				780B8B4426FA5C18009ACFB7 /* MyLabelWithSubtitle.swift in Sources */,
-				78AB336B2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */,
 				780B8B4526FA5C18009ACFB7 /* FieldDescription.swift in Sources */,
 				78FDCDC925BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */,
 				780B8B2926FA5BAB009ACFB7 /* Constants.swift in Sources */,
@@ -1772,7 +1763,6 @@
 				786618D52718ACEE001552FA /* AmountSelectionView.swift in Sources */,
 				781E97E327834C43004E9798 /* GrocyUserSettings.swift in Sources */,
 				78FDCDB425BAD2D50089CB5E /* SystemConfigModel.swift in Sources */,
-				78AB336C2971E2AA00664822 /* HTMLtoAttributedString.swift in Sources */,
 				786A13AE2943B7E80011BCAF /* Recipe+FulfillmentModel.swift in Sources */,
 				780B8B3F26FA5C13009ACFB7 /* MyTextField.swift in Sources */,
 				788C629B293A7D960081A5BD /* RecipeRowView.swift in Sources */,

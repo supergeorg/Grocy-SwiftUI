@@ -13,21 +13,21 @@ struct MDProductRowView: View {
     var product: MDProduct
     
     @State private var productDescription: AttributedString? = nil
+    @State private var productPictureURL: URL? = nil
     
     var body: some View {
         HStack{
-            // TODO: HERE
-            //            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-            //                AsyncImage(url: url, content: { image in
-            //                    image
-            //                        .resizable()
-            //                        .aspectRatio(contentMode: .fit)
-            //                        .background(Color.white)
-            //                }, placeholder: {
-            //                    ProgressView()
-            //                })
-            //                    .frame(width: 75, height: 75)
-            //            }
+            if let productPictureURL = productPictureURL {
+                AsyncImage(url: productPictureURL, content: { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .background(Color.white)
+                }, placeholder: {
+                    ProgressView()
+                })
+                .frame(width: 75, height: 75)
+            }
             VStack(alignment: .leading) {
                 Text(product.name).font(.title)
                 HStack(alignment: .top){
@@ -48,8 +48,18 @@ struct MDProductRowView: View {
             }
             .task {
                 if let mdProductDescription = product.mdProductDescription {
-                    productDescription = AttributedString(mdProductDescription)
-                    productDescription = await HTMLtoAttributedString(html: mdProductDescription)
+                    productDescription = await grocyVM.getAttributedStringFromHTML(htmlString: mdProductDescription)
+                }
+                do {
+                    if let pictureFileName = product.pictureFileName,
+                       !pictureFileName.isEmpty,
+                       let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
+                       let pictureURL = try await grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded)
+                    {
+                        self.productPictureURL = URL(string: pictureURL)
+                    }
+                } catch {
+                    grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
                 }
             }
         }
