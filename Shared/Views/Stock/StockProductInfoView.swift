@@ -9,8 +9,15 @@ import SwiftUI
 
 struct StockProductInfoView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
-
+    
+    @Environment(\.dismiss) var dismiss
+    
+    @AppStorage("localizationKey") var localizationKey: String = "en"
+    
     @Binding var stockElement: StockElement?
+    @State private var firstOpen: Bool = true
+    @State private var productPictureURL: URL? = nil
+    
     
     var productDetails: StockProductDetails? {
         if let productID = stockElement?.productID {
@@ -20,12 +27,6 @@ struct StockProductInfoView: View {
             return grocyVM.stockProductDetails[productID]
         } else { return nil }
     }
-    
-    @State private var firstOpen: Bool = true
-    
-    @AppStorage("localizationKey") var localizationKey: String = "en"
-    
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         List {
@@ -89,25 +90,17 @@ struct StockProductInfoView: View {
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
                 
-                // TODO: HERE
-//                if let pictureFileName = productDetails.product.pictureFileName,
-//                   !pictureFileName.isEmpty,
-//                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
-//                   let pictureURLString = grocyVM.getPictureURL(
-//                    groupName: "productpictures",
-//                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-//                   ),
-//                   let pictureURL = URL(string: pictureURLString) {
-//                    AsyncImage(url: pictureURL, content: { image in
-//                        image
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .background(Color.white)
-//                    }, placeholder: {
-//                        ProgressView()
-//                    })
-//                        .frame(width: 200)
-//                }
+                if let productPictureURL = productPictureURL {
+                    AsyncImage(url: productPictureURL, content: { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                    .frame(width: 200)
+                }
             } else { Text("Retrieving Details Failed. Please open another window first.") }
         }
         .navigationTitle(LocalizedStringKey("str.details.title"))
@@ -118,6 +111,21 @@ struct StockProductInfoView: View {
                 }
             }
         })
+        .task {
+            do {
+                if let pictureFileName = productDetails?.product.pictureFileName,
+                   !pictureFileName.isEmpty,
+                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
+                   let pictureURLString = try await grocyVM.getPictureURL(
+                    groupName: "productpictures",
+                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                   ) {
+                    self.productPictureURL = URL(string: pictureURLString)
+                }
+            } catch {
+                grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
+            }
+        }
     }
 }
 

@@ -118,40 +118,33 @@ struct QuickScanModeInputView: View {
     @Binding var lastPurchaseLocationID: Int?
     @State private var note: String = ""
     
+    @State private var productPictureURL: URL? = nil
+    
     var body: some View {
         NavigationView {
             Form {
                 if let product = product {
-                    // TODO: Picture
-//                    Section {
-//                        HStack {
-//                            if let pictureFileName = product.pictureFileName,
-//                               !pictureFileName.isEmpty,
-//                               let utf8str = pictureFileName.data(using: .utf8),
-//                               let pictureURL = grocyVM.getPictureURL(
-//                                groupName: "productpictures",
-//                                fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-//                               ),
-//                               let url = URL(string: pictureURL)
-//                            {
-//                                AsyncImage(url: url, content: { image in
-//                                    image
-//                                        .resizable()
-//                                        .aspectRatio(contentMode: .fit)
-//                                        .background(Color.white)
-//                                }, placeholder: {
-//                                    ProgressView()
-//                                })
-//                                .frame(width: 50, height: 50)
-//                            }
-//                            VStack(alignment: .leading) {
-//                                Text(product.name).font(.title)
-//                                if let amount = stockElement?.amount {
-//                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
-//                                }
-//                            }
-//                        }
-//                    }
+                    Section {
+                        HStack {
+                            if let productPictureURL = productPictureURL {
+                                AsyncImage(url: productPictureURL, content: { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .background(Color.white)
+                                }, placeholder: {
+                                    ProgressView()
+                                })
+                                .frame(width: 50, height: 50)
+                            }
+                            VStack(alignment: .leading) {
+                                Text(product.name).font(.title)
+                                if let amount = stockElement?.amount {
+                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
+                                }
+                            }
+                        }
+                    }
                     
                     if quickScanMode == .consume {
                         ConsumeProductView(
@@ -225,16 +218,31 @@ struct QuickScanModeInputView: View {
                     return LocalizedStringKey("")
                 }
             })
-        .onAppear(perform: {
+        .task {
             if firstOpen {
                 if let productID = product?.id {
-                    Task.init {
+                    do {
                         try await grocyVM.getStockProductEntries(productID: productID)
+                    } catch {
+                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
                     }
                 }
                 firstOpen = false
             }
-        })
+            do {
+                if let pictureFileName = product?.pictureFileName,
+                   !pictureFileName.isEmpty,
+                   let utf8str = pictureFileName.data(using: .utf8),
+                   let pictureURL = try await grocyVM.getPictureURL(
+                    groupName: "productpictures",
+                    fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                   ) {
+                    self.productPictureURL = URL(string: pictureURL)
+                }
+            } catch {
+                grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
+            }
+        }
     }
 }
 

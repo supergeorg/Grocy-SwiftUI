@@ -24,6 +24,7 @@ struct MDProductPictureFormView: View {
 #elseif os(macOS)
     @State private var picture: NSImage? = nil
 #endif
+    @State private var productPictureURL: URL? = nil
     
     let groupName = "productpictures"
     
@@ -96,20 +97,17 @@ struct MDProductPictureFormView: View {
         Form {
             Section {
                 if let pictureFilename = pictureFilename, !pictureFilename.isEmpty {
-                    // TODO: HERE
-                    //                    if
-                    //                        let base64Encoded = pictureFilename.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
-                    //                        let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
-                    //                        AsyncImage(url: url, content: { image in
-                    //                            image
-                    //                                .resizable()
-                    //                                .aspectRatio(contentMode: .fit)
-                    //                                .background(Color.white)
-                    //                        }, placeholder: {
-                    //                            ProgressView()
-                    //                        })
-                    //                        .frame(maxHeight: 100)
-                    //                    }
+                    if let productPictureURL = productPictureURL {
+                        AsyncImage(url: productPictureURL, content: { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .background(Color.white)
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                        .frame(maxHeight: 100)
+                    }
                     Text(pictureFilename)
                         .font(.caption)
                     if let pictureFilenameData = pictureFilename.data(using: .utf8) {
@@ -207,6 +205,18 @@ struct MDProductPictureFormView: View {
 #if os(iOS)
         .navigationTitle(LocalizedStringKey("str.md.product.picture"))
 #endif
+        .task {
+            do {
+                if
+                    let base64Encoded = pictureFilename?.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
+                    let pictureURL = try await grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded)
+                {
+                    self.productPictureURL = URL(string: pictureURL)
+                }
+            } catch {
+                grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
+            }
+        }
     }
 }
 
