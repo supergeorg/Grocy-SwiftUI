@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockEntryRowView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @Environment(\.colorScheme) var colorScheme
@@ -170,7 +170,7 @@ struct StockEntryRowView: View {
 }
 
 struct StockEntriesView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     var stockElement: StockElement
     

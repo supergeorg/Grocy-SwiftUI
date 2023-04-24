@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import OSLog
 
+@MainActor
 final class GrocyViewModel: ObservableObject {
     static let shared = GrocyViewModel()
 

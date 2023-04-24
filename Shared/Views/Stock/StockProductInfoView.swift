@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockProductInfoView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
 
     @Binding var stockElement: StockElement?
     

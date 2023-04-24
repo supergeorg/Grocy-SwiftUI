@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockEntryFormView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
