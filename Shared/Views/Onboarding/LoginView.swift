@@ -246,7 +246,6 @@ struct LoginOwnServerView: View {
                     VStack(spacing: 20) {
                         MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
                         if useHassIngress {
-                            Text("WARNING: Home Assistant Integration seems to be broken due to a server change.")
                             HStack {
                                 MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.hassIngress.token.help")
 #if os(iOS)
