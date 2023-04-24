@@ -233,9 +233,7 @@ struct MDQuantityUnitFormView: View {
             }
         }
         .refreshable {
-            Task {
-                await grocyVM.requestData(objects: [.quantity_unit_conversions])
-            }
+            await updateData()
         }
         .task {
             if firstAppear {

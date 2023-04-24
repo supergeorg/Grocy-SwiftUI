@@ -148,15 +148,13 @@ struct StockEntryFormView: View {
             })
         })
         .navigationTitle(LocalizedStringKey("str.stock.entry.edit"))
-        .onAppear(perform: {
+        .task {
             if firstAppear {
                 resetForm()
-                Task {
-                    await grocyVM.requestData(additionalObjects: [.system_info])
-                }
+                await grocyVM.requestData(additionalObjects: [.system_info])
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

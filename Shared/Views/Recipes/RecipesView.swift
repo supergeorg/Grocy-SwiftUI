@@ -23,7 +23,7 @@ struct RecipesView: View {
     @State private var sortOrder = [KeyPathComparator(\Recipe.name)]
     @State private var selection: Recipe.ID?
     
-    func updateData() async {
+    private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     

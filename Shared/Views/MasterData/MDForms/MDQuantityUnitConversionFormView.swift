@@ -128,7 +128,7 @@ struct MDQuantityUnitConversionFormView: View {
             }
         }
         isProcessing = false
-        }
+    }
     
     var body: some View {
         content
@@ -222,15 +222,13 @@ struct MDQuantityUnitConversionFormView: View {
 #endif
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                Task {
-                    await grocyVM.requestData(objects: dataToUpdate)
-                }
+                await grocyVM.requestData(objects: dataToUpdate)
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

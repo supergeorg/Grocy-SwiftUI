@@ -464,15 +464,13 @@ struct MDProductFormView: View {
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                Task {
-                    await grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info])
-                }
+                await grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.system_info])
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
     
     var optionalPropertiesView: some View {

@@ -15,8 +15,9 @@ struct StockEntryRowView: View {
     
     var stockEntry: StockEntry
     var dueType: Int
-    var fetchData: ()
+    var productID: Int
     
+    @Binding var stockEntries: StockEntries
     @Binding var toastType: ToastType?
     
     var backgroundColor: Color {
@@ -39,11 +40,24 @@ struct StockEntryRowView: View {
         grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
+    func fetchData(ignoreCachedStock: Bool = true) async {
+        // This local management is needed due to the SwiftUI Views not updating correctly.
+        if stockEntries.isEmpty || ignoreCachedStock {
+            do {
+                let productEntriesResult: StockEntries = try await grocyVM.getStockProductInfo(mode: .entries, productID: productID)
+                grocyVM.stockProductEntries[productID] = productEntriesResult
+                self.stockEntries = productEntriesResult
+            } catch {
+                grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
+            }
+        }
+    }
+    
     private func consumeEntry() async {
         do {
             try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-            fetchData
+            await fetchData()
         } catch {
             grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
             toastType = .failConsume
@@ -54,7 +68,7 @@ struct StockEntryRowView: View {
         do {
             try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-            fetchData
+            await fetchData()
         } catch {
             grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
             toastType = .failOpen
@@ -170,17 +184,15 @@ struct StockEntriesView: View {
     @State private var stockEntries: StockEntries = []
     @State private var toastType: ToastType?
     
-    func fetchData(ignoreCachedStock: Bool = true) {
-        Task {
-            // This local management is needed due to the SwiftUI Views not updating correctly.
-            if stockEntries.isEmpty || ignoreCachedStock {
-                do {
-                    let productEntriesResult: StockEntries = try await grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID)
-                    grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
-                    self.stockEntries = productEntriesResult
-                } catch {
-                    grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
-                }
+    func fetchData(ignoreCachedStock: Bool = true) async {
+        // This local management is needed due to the SwiftUI Views not updating correctly.
+        if stockEntries.isEmpty || ignoreCachedStock {
+            do {
+                let productEntriesResult: StockEntries = try await grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID)
+                grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
+                self.stockEntries = productEntriesResult
+            } catch {
+                grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
             }
         }
     }
@@ -191,7 +203,7 @@ struct StockEntriesView: View {
                 Text(LocalizedStringKey("str.stock.entries.empty"))
             }
             ForEach(stockEntries, id:\.id) { entry in
-                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, fetchData: fetchData(ignoreCachedStock: true), toastType: $toastType)
+                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, productID: stockElement.productID, stockEntries: $stockEntries, toastType: $toastType)
             }
         }
 #if os(macOS)
@@ -199,16 +211,12 @@ struct StockEntriesView: View {
 #endif
         .navigationTitle(LocalizedStringKey("str.stock.entries"))
         .refreshable {
-            Task {
-                fetchData(ignoreCachedStock: true)
-            }
+            await fetchData(ignoreCachedStock: true)
         }
         .animation(.default, value: stockEntries.count)
-        .onAppear(perform: {
-            Task {
-                fetchData(ignoreCachedStock: false)
-            }
-        })
+        .task {
+            await fetchData(ignoreCachedStock: false)
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType != ToastType.failEdit),

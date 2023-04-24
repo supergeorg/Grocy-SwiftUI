@@ -82,7 +82,7 @@ struct StockJournalFilterBar: View {
                             Text(product.name).tag(product.id as Int?)
                         }
                     })
-                        .labelsHidden()
+                    .labelsHidden()
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)
@@ -102,7 +102,7 @@ struct StockJournalFilterBar: View {
                             Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
                         }
                     })
-                        .labelsHidden()
+                    .labelsHidden()
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)
@@ -198,16 +198,14 @@ struct StockJournalRowView: View {
         return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
     }
     
-    private func undoTransaction() {
-        Task {
-            do {
-                try await grocyVM.undoBookingWithID(id: journalEntry.id)
-                grocyVM.postLog("Undo transaction \(journalEntry.id) successful.", type: .info)
-                await grocyVM.requestData(objects: [.stock_log])
-            } catch {
-                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
-                showToastUndoFailed = true
-            }
+    private func undoTransaction() async {
+        do {
+            try await grocyVM.undoBookingWithID(id: journalEntry.id)
+            grocyVM.postLog("Undo transaction \(journalEntry.id) successful.", type: .info)
+            await grocyVM.requestData(objects: [.stock_log])
+        } catch {
+            grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+            showToastUndoFailed = true
         }
     }
     
@@ -246,10 +244,10 @@ struct StockJournalRowView: View {
             .font(.caption)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-            Button(action: undoTransaction, label: {
+            Button(action: { Task { await undoTransaction() } }, label: {
                 Label(LocalizedStringKey("str.stock.journal.undo"), systemImage: MySymbols.undo)
             })
-                .disabled(journalEntry.undone == 1)
+            .disabled(journalEntry.undone == 1)
         })
     }
 }

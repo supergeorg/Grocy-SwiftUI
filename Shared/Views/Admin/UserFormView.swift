@@ -135,7 +135,7 @@ struct UserFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    async {
+                    Task {
                         await saveUser()
                     }
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)

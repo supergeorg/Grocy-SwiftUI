@@ -48,9 +48,7 @@ struct MDProductRowView: View {
             .task {
                 if let mdProductDescription = product.mdProductDescription {
                     productDescription = AttributedString(mdProductDescription)
-                    Task {
-                        productDescription = await HTMLtoAttributedString(html: mdProductDescription)
-                    }
+                    productDescription = await HTMLtoAttributedString(html: mdProductDescription)
                 }
             }
         }

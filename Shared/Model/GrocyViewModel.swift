@@ -222,8 +222,7 @@ final class GrocyViewModel: ObservableObject {
         while ints.contains(startvar) { startvar += 1 }
         return startvar
     }
-    
-    @MainActor
+
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()

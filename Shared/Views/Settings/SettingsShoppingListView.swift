@@ -46,7 +46,7 @@ struct SettingsShoppingListView: View {
                     icon: MySymbols.shoppingList,
                     objects: .shoppingLists
                 )
-                    .disabled(!useAutoAddBelowMinStockAmount)
+                .disabled(!useAutoAddBelowMinStockAmount)
             }
             Section(header: Text(LocalizedStringKey("str.settings.shoppingList.shLToStockWF")).font(.title)) {
                 ServerSettingsToggle(
@@ -107,14 +107,12 @@ struct SettingsShoppingListView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.settings.shoppingList"))
-        .onAppear(perform: {
+        .task {
             if isFirst {
-                Task {
-                    await grocyVM.requestData(objects: dataToUpdate)
-                }
+                await grocyVM.requestData(objects: dataToUpdate)
                 isFirst = false
             }
-        })
+        }
         .onDisappear(perform: {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])

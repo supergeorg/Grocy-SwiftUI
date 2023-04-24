@@ -387,12 +387,10 @@ struct LoginStatusView: View {
                         })
                         .buttonStyle(BorderButtonStyle())
                         Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
-                            if isDemoMode ?? false {
-                                Task {
+                            Task {
+                                if isDemoMode ?? false {
                                     grocyVM.setDemoModus()
-                                }
-                            } else {
-                                Task {
+                                } else {
                                     await grocyVM.setLoginModus()
                                 }
                             }

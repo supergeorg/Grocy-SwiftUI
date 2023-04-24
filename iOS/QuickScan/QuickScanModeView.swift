@@ -77,7 +77,7 @@ struct QuickScanModeView: View {
         .system_config,
     ]
     
-    func updateData() async {
+    private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
