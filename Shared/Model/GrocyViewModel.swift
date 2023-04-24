@@ -486,6 +486,10 @@ final class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Current user
+    func getUserSettingsEntry<T: Codable>(settingKey: String) async throws -> T {
+        return try await grocyApi.getUserSettingKey(settingKey: settingKey)
+    }
+    
     func putUserSettingsEntry<T: Codable>(settingKey: String, content: T) async throws {
         let jsonContent = try! jsonEncoder.encode(content)
         try await grocyApi.putUserSettingKey(settingKey: settingKey, content: jsonContent)
