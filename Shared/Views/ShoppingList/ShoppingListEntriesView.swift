@@ -81,7 +81,7 @@ struct ShoppingListEntriesView: View {
         }
         return false
     }
-
+    
     var backgroundColor: Color {
         if isBelowStock {
             return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
@@ -90,7 +90,7 @@ struct ShoppingListEntriesView: View {
         }
     }
     
-    private func changeDoneStatus(shoppingListItem: ShoppingListItem) {
+    private func changeDoneStatus(shoppingListItem: ShoppingListItem) async {
         let doneChangedShoppingListItem = ShoppingListItem(
             id: shoppingListItem.id,
             productID: shoppingListItem.productID,
@@ -101,39 +101,30 @@ struct ShoppingListEntriesView: View {
             quID: shoppingListItem.quID,
             rowCreatedTimestamp: shoppingListItem.rowCreatedTimestamp
         )
-        grocyVM.putMDObjectWithID(
-            object: .shopping_list,
-            id: shoppingListItem.id,
-            content: doneChangedShoppingListItem,
-            completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Done status changed successfully. \(message)", type: .info)
-                    grocyVM.requestData(objects: [.shopping_list])
-                case let .failure(error):
-                    grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
-                    toastType = .shLActionFail
-                }
-            }
-        )
+        do {
+            try await grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: doneChangedShoppingListItem)
+            grocyVM.postLog("Done status changed successfully.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_list])
+        } catch {
+            grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
     private func deleteItem(itemToDelete: ShoppingListItem) {
         shlItemToDelete = itemToDelete
         showEntryDeleteAlert.toggle()
     }
-
-    private func deleteSHLItem(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .shopping_list, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Shopping list item delete successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.shopping_list])
-            case let .failure(error):
-                grocyVM.postLog("Shopping list item delete failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
-        })
+    
+    private func deleteSHLItem(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
+            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            await grocyVM.requestData(objects: [.shopping_list])
+        } catch {
+            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            toastType = .shLActionFail
+        }
     }
     
     var body: some View {
@@ -146,23 +137,25 @@ struct ShoppingListEntriesView: View {
             Button(role: .destructive,
                    action: { deleteItem(itemToDelete: shoppingListItem) },
                    label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) })
-            })
+        })
         .swipeActions(edge: .leading, allowsFullSwipe: shoppingListItem.done != 1, content: {
             Group {
                 Button(action: {
-                           changeDoneStatus(shoppingListItem: shoppingListItem)
-                           if shoppingListItem.done != 1,
-                              grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
-                           {
-                               showAutoPurchase.toggle()
-                           }
-                       },
+                    Task {
+                        await changeDoneStatus(shoppingListItem: shoppingListItem)
+                    }
+                    if shoppingListItem.done != 1,
+                       grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
+                    {
+                        showAutoPurchase.toggle()
+                    }
+                },
                        label: { Image(systemName: MySymbols.done) })
-                    .tint(.green)
+                .tint(.green)
                 Button(action: {
                     showPurchase.toggle()
                 }, label: { Image(systemName: "shippingbox") })
-                    .tint(.blue)
+                .tint(.blue)
             }
         })
         .sheet(isPresented: $showPurchase, content: {
@@ -179,7 +172,9 @@ struct ShoppingListEntriesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let deleteID = shlItemToDelete?.id {
-                    deleteSHLItem(toDelID: deleteID)
+                    Task {
+                        await deleteSHLItem(toDelID: deleteID)
+                    }
                 }
             }
         }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
@@ -190,17 +185,19 @@ struct ShoppingListEntriesView: View {
                 Button(role: .destructive,
                        action: { deleteItem(itemToDelete: shoppingListItem) },
                        label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) })
-                })
+            })
             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                Button(action: { changeDoneStatus(shoppingListItem: shoppingListItem) },
+                Button(action: { Task { await changeDoneStatus(shoppingListItem: shoppingListItem) } },
                        label: { Image(systemName: MySymbols.done) })
-                    .tint(.green)
-                })
+                .tint(.green)
+            })
             .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
                 Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
                     if let deleteID = shlItemToDelete?.id {
-                        deleteSHLItem(toDelID: deleteID)
+                        Task {
+                            await deleteSHLItem(toDelID: deleteID)
+                        }
                     }
                 }
             }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })

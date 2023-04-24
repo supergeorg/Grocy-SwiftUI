@@ -15,7 +15,8 @@ extension Recipe {
     }
     
     var fulfillment: RecipeFulfilment? {
-        GrocyViewModel.shared.recipeFulfillments.first(where: { $0.recipeID == self.id })
+        nil
+//        GrocyViewModel.shared.recipeFulfillments.first(where: { $0.recipeID == self.id })
     }
     
     var dueScore: Int {

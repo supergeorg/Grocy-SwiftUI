@@ -46,8 +46,8 @@ struct InventoryProductView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .quantity_units, .quantity_unit_conversions]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .system_info]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     private var product: MDProduct? {
@@ -111,7 +111,7 @@ struct InventoryProductView: View {
         searchProductTerm = ""
     }
     
-    private func inventoryProduct() {
+    private func inventoryProduct() async {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let strDueDate = productNeverOverdue ? "2999-12-31" : dateFormatter.string(from: dueDate)
@@ -120,19 +120,17 @@ struct InventoryProductView: View {
             let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, storeID: storeID, locationID: locationID, price: price, note: noteText)
             infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
-            grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo) { result in
-                switch result {
-                case let .success(prod):
-                    grocyVM.postLog("Inventory successful. \(prod)", type: .info)
-                    toastType = .successInventory
-                    grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                    resetForm()
-                case let .failure(error):
-                    grocyVM.postLog("Inventory failed: \(error)", type: .error)
-                    toastType = .failInventory
-                }
-                isProcessingAction = false
+            do {
+                try await grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo)
+                grocyVM.postLog("Inventory successful.", type: .info)
+                toastType = .successInventory
+                await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+                resetForm()
+            } catch {
+                grocyVM.postLog("Inventory failed: \(error)", type: .error)
+                toastType = .failInventory
             }
+            isProcessingAction = false
         }
     }
     
@@ -165,9 +163,10 @@ struct InventoryProductView: View {
             
             ProductField(productID: $productID, description: "str.stock.inventory.product")
                 .onChange(of: productID) { newProduct in
-                    // TODO Edit
                     if let productID = productID {
-                        grocyVM.getStockProductEntries(productID: productID)
+                        Task {
+                            try await grocyVM.getStockProductEntries(productID: productID)
+                        }
                     }
                     if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
                         storeID = selectedProduct.storeID
@@ -221,19 +220,19 @@ struct InventoryProductView: View {
             
 #if os(macOS)
             if isPopup {
-                Button(action: inventoryProduct, label: {Text(LocalizedStringKey("str.stock.inventory.product.inventory"))})
+                Button(action: { Task { await inventoryProduct() } }, label: {Text(LocalizedStringKey("str.stock.inventory.product.inventory"))})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successInventory),
@@ -274,8 +273,9 @@ struct InventoryProductView: View {
                 .keyboardShortcut("r", modifiers: [.command])
             }
             Button(action: {
-                inventoryProduct()
-                resetForm()
+                Task {
+                    await inventoryProduct()
+                }
             }, label: {
                 Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
                     .labelStyle(.titleAndIcon)

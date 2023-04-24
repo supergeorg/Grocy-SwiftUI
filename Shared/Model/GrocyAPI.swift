@@ -62,48 +62,48 @@ struct EmptyResponse: Codable {
 
 protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
-    func setHassData(hassURL: String, hassToken: String)
+    func setHassData(hassURL: String, hassToken: String) async
     func clearHassData()
     func setTimeoutInterval(timeoutInterval: Double)
     // MARK: - System
-    func getSystemInfo() -> AnyPublisher<SystemInfo, APIError>
-    func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError>
-    func getSystemConfig() -> AnyPublisher<SystemConfig, APIError>
+    func getSystemInfo() async throws -> SystemInfo
+    func getSystemDBChangedTime() async throws -> SystemDBChangedTime
+    func getSystemConfig() async throws -> SystemConfig
     // MARK: - User management
-    func getUsers() -> AnyPublisher<GrocyUsers, APIError>
-    func postUser(user: Data) -> AnyPublisher<Int, APIError>
-    func putUserWithID(id: Int, user: Data) -> AnyPublisher<Int, APIError>
-    func deleteUserWithID(id: Int) -> AnyPublisher<Int, APIError>
+    func getUsers() async throws -> GrocyUsers
+    func postUser(user: Data) async throws
+    func putUserWithID(id: Int, user: Data) async throws
+    func deleteUserWithID(id: Int) async throws
     // MARK: - Recipes
-    func getRecipeFulfillments() -> AnyPublisher<RecipeFulfilments, APIError>
+    func getRecipeFulfillments() async throws -> RecipeFulfilments
     // MARK: - Current user
-    func getUser() -> AnyPublisher<GrocyUsers, APIError>
-    func getUserSettings() -> AnyPublisher<GrocyUserSettings, APIError>
-    func getUserSettingKey<T: Codable>(settingKey: String) -> AnyPublisher<T, APIError>
-    func putUserSettingKey(settingKey: String, content: Data) -> AnyPublisher<Int, APIError>
+    func getUser() async throws -> GrocyUsers
+    func getUserSettings() async throws -> GrocyUserSettings
+    func getUserSettingKey<T: Codable>(settingKey: String) async throws -> T
+    func putUserSettingKey(settingKey: String, content: Data) async throws
     // MARK: - Stock
-    func getStock() -> AnyPublisher<Stock, APIError>
-    func getStockJournal() -> AnyPublisher<StockJournal, APIError>
-    func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError>
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) -> AnyPublisher<T, APIError>
-    func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError>
-    func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError>
-    func getBookingWithID(id: Int) -> AnyPublisher<StockJournalEntry, APIError>
-    func undoBookingWithID(id: Int) -> AnyPublisher<Int, APIError>
-    func getPictureURL(groupName: String, fileName: String) -> String?
+    func getStock() async throws -> Stock
+    func getStockJournal() async throws -> StockJournal
+    func getVolatileStock(expiringDays: Int) async throws -> VolatileStock
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) async throws -> T
+    func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal
+    func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
+    func getBookingWithID(id: Int) async throws -> StockJournalEntry
+    func undoBookingWithID(id: Int) async throws
+    func getPictureURL(groupName: String, fileName: String)async throws -> String?
     // MARK: - Shopping List
-    func shoppingListAddItem(content: Data) -> AnyPublisher<SuccessfulCreationMessage, APIError>
-    func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError>
+    func shoppingListAddItem(content: Data) async throws
+    func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws
     // MARK: - Master Data
-    func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError>
-    func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError>
-    func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) -> AnyPublisher<T, APIError>
-    func putObjectWithID(object: ObjectEntities, id: Int, content: Data) -> AnyPublisher<Int, APIError>
-    func deleteObjectWithID(object: ObjectEntities, id: Int) -> AnyPublisher<Int, APIError>
+    func getObject<T: Codable>(object: ObjectEntities) async throws -> T
+    func postObject<T: Codable>(object: ObjectEntities, content: Data) async throws -> T
+    func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) async throws -> T
+    func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws
+    func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
     // MARK: - Files
-    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
-    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ()))
-    func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError>
+    func putFile(fileURL: URL, fileName: String, groupName: String) async throws
+    func putFileData(fileData: Data, fileName: String, groupName: String) async throws
+    func deleteFile(fileName: String, groupName: String) async throws
 }
 
 public class GrocyApi: GrocyAPI {
@@ -138,142 +138,176 @@ public class GrocyApi: GrocyAPI {
         case PUT
     }
     
-    private func callUploadFileData(_ endPoint: Endpoint, fileData: Data, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUploadFileData(
+        _ endPoint: Endpoint,
+        fileData: Data,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, from: fileData) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
+        if let httpResponse = resultCode as? HTTPURLResponse {
+            if httpResponse.statusCode != 204 {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
             }
-            guard let response = response as? HTTPURLResponse,
-                  response.statusCode == 204 else {
-                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
-                return
-            }
-            completion(.success(204))
+        } else {
+            throw APIError.internalError
         }
-        uploadTask.resume()
     }
     
-    private func callUploadFile(_ endPoint: Endpoint, fileURL: URL, id: String? = nil, fileName: String? = nil, groupName: String? = nil, hassIngressToken: String? = nil, completion: @escaping ((Result<Int, Error>) -> ())){
+    private func callUploadFile(
+        _ endPoint: Endpoint,
+        fileURL: URL,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let uploadTask = URLSession.shared.uploadTask(with: urlRequest, fromFile: fileURL) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
+        if let httpResponse = resultCode as? HTTPURLResponse {
+            if httpResponse.statusCode != 204 {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
             }
-            guard let response = response as? HTTPURLResponse,
-                  response.statusCode == 204 else {
-                completion(.failure(APIError.unsuccessful(error: error ?? APIError.errorString(description: "Generic Error"))))
-                return
+        } else {
+            throw APIError.internalError
+        }
+    }
+    
+    private func callEmptyResponse(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        content: Data? = nil,
+        query: String? = nil
+    ) async throws {
+        if let hassAuthenticator = hassAuthenticator {
+            let hassToken = try await hassAuthenticator.validTokenAsync()
+            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassToken)
+        } else {
+            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+        }
+    }
+    
+    private func callAPIEmptyResponse(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws {
+        let urlRequest = request(
+            for: endPoint,
+            method: method,
+            object: object,
+            id: id,
+            content: content,
+            query: query,
+            hassIngressToken: hassIngressToken
+        )
+        let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = result.1 as? HTTPURLResponse {
+            if !((200...299).contains(httpResponse.statusCode)) {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
             }
-            completion(.success(204))
-        }
-        uploadTask.resume()
-    }
-    
-    private func callEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<Int, APIError> {
-        if let hassAuthenticator = hassAuthenticator {
-            return hassAuthenticator.validToken()
-                .flatMap({ token in
-                    // we can now use this token to authenticate the request
-                    self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
-                })
-                .tryCatch({ error -> AnyPublisher<Int, APIError> in
-                    return hassAuthenticator.validToken(forceRefresh: true)
-                        .flatMap({ token in
-                            // we can now use this new token to authenticate the second attempt at making this request
-                            self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: token.data?.session)
-                        })
-                        .eraseToAnyPublisher()
-                })
-                .mapError { error in return APIError.hassError(error: error) }
-                .eraseToAnyPublisher()
         } else {
-            return self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+            throw APIError.internalError
         }
     }
     
-    private func callAPIEmptyResponse(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<Int, APIError> {
-        let urlRequest = request(for: endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassIngressToken)
-        return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .mapError{ error in
-                APIError.serverError(error: error) }
-            .flatMap({ result -> AnyPublisher<Int, APIError> in
-                guard let urlResponse = result.response as? HTTPURLResponse else {
-                    return Just(0)
-                        .setFailureType(to: APIError.self)
-                        .eraseToAnyPublisher()
-                }
-                if urlResponse.statusCode != 204 {
-                    if let error = try? JSONDecoder().decode(ErrorMessage.self, from: result.data) {
-                        return Fail(error: APIError.serverError(errorMessage: error.errorMessage))
-                            .eraseToAnyPublisher()
-                    }
-                    return Fail(error: APIError.internalError)
-                        .eraseToAnyPublisher()
-                }
-                return Just(urlResponse.statusCode)
-                    .setFailureType(to: APIError.self)
-                    .eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    }
-    
-    private func call<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil) -> AnyPublisher<T, APIError> {
+    private func call<T: Codable>(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        content: Data? = nil,
+        query: String? = nil
+    ) async throws -> T {
         if let hassAuthenticator = hassAuthenticator {
-            return hassAuthenticator.validToken()
-                .flatMap({ token in
-                    // we can now use this token to authenticate the request
-                    self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session)
-                })
-                .tryCatch({ error -> AnyPublisher<T, APIError> in
-                    return hassAuthenticator.validToken(forceRefresh: true)
-                        .flatMap({ token in
-                            // we can now use this new token to authenticate the second attempt at making this request
-                            token.data != nil ? self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: token.data?.session) : self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassAuthenticator.getToken())
-                        })
-                        .eraseToAnyPublisher()
-                })
-                .mapError { error in return APIError.hassError(error: error) }
-                .eraseToAnyPublisher()
+            let hassToken = try await hassAuthenticator.validTokenAsync()
+            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
         } else {
-            return self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
+            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
         }
     }
     
-    private func callAPI<T: Codable>(_ endPoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> AnyPublisher<T, APIError> {
-        let urlRequest = request(for: endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassIngressToken)
-        return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .mapError{ error in
-                APIError.serverError(error: error) }
-            .flatMap({ result -> AnyPublisher<T, APIError> in
-                if let urlResponse = result.response as? HTTPURLResponse, (200...299).contains(urlResponse.statusCode) {
-                    return Just(result.data)
-                        .decode(type: T.self, decoder: JSONDecoder())
-                        .mapError{ error in APIError.decodingError(error: error) }
-                        .eraseToAnyPublisher()
-                } else {
-                    return Just(result.data)
-                        // decode if it is an error message
-                        .decode(type: ErrorMessage.self, decoder: JSONDecoder())
-                        // neither valid response nor error message
-                        .mapError { error in (result.response as? HTTPURLResponse)?.statusCode == 401 ? APIError.notLoggedIn(error: error) : APIError.decodingError(error: error) }
-                        // display error message
-                        .tryMap { throw APIError.errorString(description: $0.errorMessage) }
-                        .mapError { $0 as! APIError }
-                        .eraseToAnyPublisher()
+    private func callAPI<T: Codable>(
+        _ endPoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) async throws -> T {
+        let urlRequest = request(
+            for: endPoint,
+            method: method,
+            object: object,
+            id: id,
+            content: content,
+            query: query,
+            hassIngressToken: hassIngressToken
+        )
+        let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = result.1 as? HTTPURLResponse {
+            if (200...299).contains(httpResponse.statusCode) {
+                do {
+                    let responseDataDecoded = try JSONDecoder().decode(T.self, from: result.0)
+                    return responseDataDecoded
+                } catch {
+                    throw APIError.decodingError(error: error)
                 }
-            })
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+            } else {
+                do {
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
+            }
+        }
+        throw APIError.internalError
     }
     
-    private func request(for endpoint: Endpoint, method: Method, object: ObjectEntities? = nil, id: String? = nil, fileName: String? = nil, groupName: String? = nil, isOctet: Bool = false, content: Data? = nil, query: String? = nil, hassIngressToken: String? = nil) -> URLRequest {
-        if baseURL.hasSuffix("/") { baseURL = String(baseURL.dropLast()) }
-        var path = "\(baseURL)\(baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
+    private func request(
+        for endpoint: Endpoint,
+        method: Method,
+        object: ObjectEntities? = nil,
+        id: String? = nil,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        isOctet: Bool = false,
+        content: Data? = nil,
+        query: String? = nil,
+        hassIngressToken: String? = nil
+    ) -> URLRequest {
+        if self.baseURL.hasSuffix("/") { self.baseURL = String(self.baseURL.dropLast()) }
+        var path = "\(self.baseURL)\(self.baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: id!) }
         if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: id!) }
@@ -301,7 +335,7 @@ public class GrocyApi: GrocyAPI {
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = ["Content-Type": isOctet ? "application/octet-stream" : "application/json",
                                        "Accept": "application/json",
-                                       "GROCY-API-KEY": apiKey]
+                                       "GROCY-API-KEY": self.apiKey]
         
         if let hassIngressToken = hassIngressToken {
             request.addValue("ingress_session=\(hassIngressToken)", forHTTPHeaderField: "Cookie")
@@ -400,110 +434,110 @@ extension GrocyApi {
 extension GrocyApi {
     // MARK: - System
     
-    func getSystemInfo() -> AnyPublisher<SystemInfo, APIError> {
-        return call(.systemInfo, method: .GET)
+    func getSystemInfo() async throws -> SystemInfo {
+        return try await call(.systemInfo, method: .GET)
+    }
+
+    func getSystemDBChangedTime() async throws -> SystemDBChangedTime {
+        return try await call(.systemDBChangedTime, method: .GET)
     }
     
-    func getSystemDBChangedTime() -> AnyPublisher<SystemDBChangedTime, APIError> {
-        return call(.systemDBChangedTime, method: .GET)
-    }
-    
-    func getSystemConfig() -> AnyPublisher<SystemConfig, APIError> {
-        return call(.systemConfig, method: .GET)
+    func getSystemConfig() async throws -> SystemConfig {
+        return try await call(.systemConfig, method: .GET)
     }
     
     // MARK: - User management
     
-    func getUsers() -> AnyPublisher<GrocyUsers, APIError> {
-        return call(.users, method: .GET)
+    func getUsers() async throws -> GrocyUsers {
+        return try await call(.users, method: .GET)
     }
     
-    func getUserSettings() -> AnyPublisher<GrocyUserSettings, APIError> {
-        return call(.userSettings, method: .GET)
+    func getUserSettings() async throws -> GrocyUserSettings {
+        return try await call(.userSettings, method: .GET)
     }
     
-    func getUserSettingKey<T: Codable>(settingKey: String) -> AnyPublisher<T, APIError> {
-        return call(.userSettingsWithKey, method: .GET, id: settingKey)
+    func getUserSettingKey<T: Codable>(settingKey: String) async throws -> T {
+        return try await call(.userSettingsWithKey, method: .GET, id: settingKey)
     }
     
-    func putUserSettingKey(settingKey: String, content: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.userSettingsWithKey, method: .PUT, id: settingKey, content: content)
+    func putUserSettingKey(settingKey: String, content: Data) async throws {
+        return try await callEmptyResponse(.userSettingsWithKey, method: .PUT, id: settingKey, content: content)
     }
     
-    func postUser(user: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.users, method: .POST, content: user)
+    func postUser(user: Data) async throws {
+        return try await callEmptyResponse(.users, method: .POST, content: user)
     }
     
-    func putUserWithID(id: Int, user: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.usersWithID, method: .PUT, id: String(id), content: user)
+    func putUserWithID(id: Int, user: Data) async throws {
+        return try await callEmptyResponse(.usersWithID, method: .PUT, id: String(id), content: user)
     }
     
-    func deleteUserWithID(id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.usersWithID, method: .DELETE, id: String(id))
+    func deleteUserWithID(id: Int) async throws {
+        return try await callEmptyResponse(.usersWithID, method: .DELETE, id: String(id))
     }
     
     // MARK: - Recipes
-    func getRecipeFulfillments() -> AnyPublisher<RecipeFulfilments, APIError> {
-        return call(.recipesFulfillment, method: .GET)
+    func getRecipeFulfillments() async throws -> RecipeFulfilments {
+        return try await call(.recipesFulfillment, method: .GET)
     }
     
     // MARK: - Current user
-    func getUser() -> AnyPublisher<GrocyUsers, APIError> {
-        return call(.user, method: .GET)
+    func getUser() async throws -> GrocyUsers {
+        return try await call(.user, method: .GET)
     }
     
     // MARK: - Stock
     
-    func getStock() -> AnyPublisher<[StockElement], APIError> {
-        return call(.stock, method: .GET)
+    func getStock() async throws -> [StockElement] {
+        return try await call(.stock, method: .GET)
     }
     
-    func getStockJournal() -> AnyPublisher<StockJournal, APIError> {
-        return call(.objectsEntity, method: .GET, object: .stock_log)
+    func getStockJournal() async throws -> StockJournal {
+        return try await call(.objectsEntity, method: .GET, object: .stock_log)
     }
     
-    func getVolatileStock(expiringDays: Int) -> AnyPublisher<VolatileStock, APIError> {
-        return call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
+    func getVolatileStock(expiringDays: Int) async throws -> VolatileStock {
+        return try await call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
     }
     
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) -> AnyPublisher<T, APIError> {
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) async throws -> T {
         switch stockModeGet {
         case .details:
-            return call(.stockProductWithId, method: .GET, id: String(id))
+            return try await call(.stockProductWithId, method: .GET, id: String(id))
         case .entries:
-            return call(.stockProductWithIdEntries, method: .GET, id: String(id), query: query)
+            return try await call(.stockProductWithIdEntries, method: .GET, id: String(id), query: query)
         case .locations:
-            return call(.stockProductWithIdLocations, method: .GET, id: String(id))
+            return try await call(.stockProductWithIdLocations, method: .GET, id: String(id))
         case .priceHistory:
-            return call(.stockProductWithIdPriceHistory, method: .GET, id: String(id))
+            return try await call(.stockProductWithIdPriceHistory, method: .GET, id: String(id))
         }
     }
     
-    func putStockEntry(entryID: Int, content: Data) -> AnyPublisher<StockJournal, APIError> {
-        return call(.stockEntryWithID, method: .PUT, id: String(entryID), content: content)
+    func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal {
+        return try await call(.stockEntryWithID, method: .PUT, id: String(entryID), content: content)
     }
     
-    func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) -> AnyPublisher<T, APIError> {
+    func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T {
         switch stockModePost {
         case .add:
-            return call(.stockProductWithIDAdd, method: .POST, id: String(id), content: content)
+            return try await call(.stockProductWithIDAdd, method: .POST, id: String(id), content: content)
         case .consume:
-            return call(.stockProductWithIDConsume, method: .POST, id: String(id), content: content)
+            return try await call(.stockProductWithIDConsume, method: .POST, id: String(id), content: content)
         case .inventory:
-            return call(.stockProductWithIDInventory, method: .POST, id: String(id), content: content)
+            return try await call(.stockProductWithIDInventory, method: .POST, id: String(id), content: content)
         case .open:
-            return call(.stockProductWithIDOpen, method: .POST, id: String(id), content: content)
+            return try await call(.stockProductWithIDOpen, method: .POST, id: String(id), content: content)
         case .transfer:
-            return call(.stockProductWithIDTransfer, method: .POST, id: String(id), content: content)
+            return try await call(.stockProductWithIDTransfer, method: .POST, id: String(id), content: content)
         }
     }
     
-    func getBookingWithID(id: Int) -> AnyPublisher<StockJournalEntry, APIError> {
-        return call(.stockBookingWithId, method: .GET)
+    func getBookingWithID(id: Int) async throws -> StockJournalEntry {
+        return try await call(.stockBookingWithId, method: .GET)
     }
     
-    func undoBookingWithID(id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: String(id))
+    func undoBookingWithID(id: Int) async throws {
+        return try await callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: String(id))
     }
     
     func getPictureURL(groupName: String, fileName: String) -> String? {
@@ -515,59 +549,58 @@ extension GrocyApi {
         }
     }
     
-    // SHOPPING LIST
+    // MARK: - SHOPPING LIST
     
-    func shoppingListAddItem(content: Data) -> AnyPublisher<SuccessfulCreationMessage, APIError> {
-//        return callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
-        return call(.objectsEntity, method: .POST, object: .shopping_list, content: content)
+    func shoppingListAddItem(content: Data) async throws {
+        try await callEmptyResponse(.objectsEntity, method: .POST, object: .shopping_list, content: content)
     }
     
-    func shoppingListAction(content: Data, actionType: ShoppingListActionType) -> AnyPublisher<Int, APIError> {
+    func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws {
         switch actionType {
         case .clear:
-            return callEmptyResponse(.stockShoppingListClear, method: .POST, content: content)
+            return try await callEmptyResponse(.stockShoppingListClear, method: .POST, content: content)
         case .addExpired:
-            return callEmptyResponse(.stockShoppingListAddExpired, method: .POST, content: content)
+            return try await callEmptyResponse(.stockShoppingListAddExpired, method: .POST, content: content)
         case .addMissing:
-            return callEmptyResponse(.stockShoppingListAddMissing, method: .POST, content: content)
+            return try await callEmptyResponse(.stockShoppingListAddMissing, method: .POST, content: content)
         case .addOverdue:
-            return callEmptyResponse(.stockShoppingListAddOverdue, method: .POST, content: content)
+            return try await callEmptyResponse(.stockShoppingListAddOverdue, method: .POST, content: content)
         }
         
     }
     
     // MARK: - Master Data
     
-    func getObject<T: Codable>(object: ObjectEntities) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntity, method: .GET, object: object)
+    func getObject<T: Codable>(object: ObjectEntities) async throws -> T {
+        return try await call(.objectsEntity, method: .GET, object: object)
     }
     
-    func postObject<T: Codable>(object: ObjectEntities, content: Data) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntity, method: .POST, object: object, content: content)
+    func postObject<T: Codable>(object: ObjectEntities, content: Data) async throws -> T {
+        return try await call(.objectsEntity, method: .POST, object: object, content: content)
     }
     
-    func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) -> AnyPublisher<T, APIError> {
-        return call(.objectsEntityWithID, method: .GET, object: object, id: String(id))
+    func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) async throws -> T {
+        return try await call(.objectsEntityWithID, method: .GET, object: object, id: String(id))
     }
     
-    func putObjectWithID(object: ObjectEntities, id: Int, content: Data) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: String(id), content: content)
+    func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws {
+        return try await callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: String(id), content: content)
     }
     
-    func deleteObjectWithID(object: ObjectEntities, id: Int) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
+    func deleteObjectWithID(object: ObjectEntities, id: Int) async throws {
+        return try await callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
     }
     
     // MARK: - Files
-    func putFile(fileURL: URL, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-        return callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName, completion: completion)
+    func putFile(fileURL: URL, fileName: String, groupName: String) async throws {
+        return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName)
     }
-    
-    func putFileData(fileData: Data, fileName: String, groupName: String, completion: @escaping ((Result<Int, Error>) -> ())) {
-        return callUploadFileData(.filesGroupFilename, fileData: fileData, fileName: fileName, groupName: groupName, completion: completion)
+
+    func putFileData(fileData: Data, fileName: String, groupName: String) async throws {
+        return try await callUploadFileData(.filesGroupFilename, fileData: fileData, fileName: fileName, groupName: groupName)
     }
-    
-    func deleteFile(fileName: String, groupName: String) -> AnyPublisher<Int, APIError> {
-        return callEmptyResponse(.filesGroupFilename, method: .DELETE, fileName: fileName, groupName: groupName)
+
+    func deleteFile(fileName: String, groupName: String) async throws {
+        return try await callEmptyResponse(.filesGroupFilename, method: .DELETE, fileName: fileName, groupName: groupName)
     }
 }

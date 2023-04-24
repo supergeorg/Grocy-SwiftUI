@@ -37,8 +37,8 @@ struct MDUserEntitiesView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredUserEntities: MDUserEntities {
@@ -52,17 +52,15 @@ struct MDUserEntitiesView: View {
         userEntityToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteUserEntity(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .userentities, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting user entity was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+    private func deleteUserEntity(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .userentities, id: toDelID)
+            grocyVM.postLog("Deleting user entity was successful.", type: .info)
+            await updateData()
+        } catch {
+            grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -86,7 +84,7 @@ struct MDUserEntitiesView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddUserEntity.toggle()
@@ -128,11 +126,13 @@ struct MDUserEntitiesView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredUserEntities.count)
         .toast(
             item: $toastType,
@@ -158,7 +158,9 @@ struct MDUserEntitiesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = userEntityToDelete?.id {
-                    deleteUserEntity(toDelID: toDelID)
+                    Task {
+                        await deleteUserEntity(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(userEntityToDelete?.name ?? "Name not found") })

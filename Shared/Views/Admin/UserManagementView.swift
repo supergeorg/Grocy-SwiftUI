@@ -20,8 +20,8 @@ struct UserManagementView: View {
     
     private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
     
-    private func updateData() {
-        grocyVM.requestData(additionalObjects: additionalDataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(additionalObjects: additionalDataToUpdate)
     }
     
     var filteredUsers: GrocyUsers {
@@ -49,7 +49,9 @@ struct UserManagementView: View {
                         withAnimation {
                             self.reloadRotationDeg += 360
                         }
-                        updateData()
+                        Task {
+                            await updateData()
+                        }
                     }, label: {
                         Image(systemName: MySymbols.reload)
                             .rotationEffect(Angle.degrees(reloadRotationDeg))
@@ -106,9 +108,11 @@ struct UserManagementView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
-        .onAppear(perform: updateData)
+        .task {
+            await updateData()
+        }
         .refreshable {
-            updateData()
+            await updateData()
         }
         .toast(
             item: $toastType,

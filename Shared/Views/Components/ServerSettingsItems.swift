@@ -21,41 +21,39 @@ struct ServerSettingsToggle: View {
     
     var toggleFeedback: Binding<Bool>? = nil
     
-    func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsBool, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.isOn = userSettingsResult.value
-                toggleFeedback?.wrappedValue = userSettingsResult.value
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
+    func getSetting() async {
+        do {
+            let userSettingsResult: GrocyUserSettingsBool = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
+            self.isOn = userSettingsResult.value
+            toggleFeedback?.wrappedValue = userSettingsResult.value
+        } catch {
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
+        self.isFirstShown = false
     }
     
-    func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsBool(value: isOn)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                getSetting()
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
+    func putSetting() async {
+        do {
+            try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsBool(value: isOn))
+            await getSetting()
+        } catch {
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
     var body: some View {
         MyToggle(isOn: $isOn, description: description, descriptionInfo: descriptionInfo, icon: icon)
-            .onAppear(perform: {
+            .task {
                 if isFirstShown {
-                    getSetting()
+                    await getSetting()
                 }
-            })
+            }
             .disabled(isFirstShown)
             .onChange(of: isOn, perform: { value in
                 if !self.isFirstShown {
-                    putSetting()
+                    Task {
+                        await putSetting()
+                    }
                 }
             })
     }
@@ -73,40 +71,37 @@ struct ServerSettingsIntStepper: View {
     var descriptionInfo: String? = nil
     var icon: String? = nil
     
-    func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.value = userSettingsResult.value ?? 0
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
+    func getSetting() async {
+        do {
+            let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
+            self.value = userSettingsResult.value ?? 0
+        } catch {
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
+        self.isFirstShown = false
     }
     
-    func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
+    func putSetting() async {
+        do {
+            try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value))
+        } catch {
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
     var body: some View {
         MyIntStepper(amount: $value, description: description, helpText: descriptionInfo, systemImage: icon)
-            .onAppear(perform: {
+            .task {
                 if isFirstShown {
-                    getSetting()
+                    await getSetting()
                 }
-            })
+            }
             .disabled(isFirstShown)
             .onChange(of: value, perform: { value in
                 if !self.isFirstShown {
-                    putSetting()
+                    Task {
+                        await putSetting()
+                    }
                 }
             })
     }
@@ -124,40 +119,37 @@ struct ServerSettingsDoubleStepper: View {
     var descriptionInfo: String? = nil
     var icon: String? = nil
     
-    func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsDouble, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                self.value = userSettingsResult.value ?? 0.0
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
-            }
-            self.isFirstShown = false
+    func getSetting() async {
+        do {
+            let userSettingsResult: GrocyUserSettingsDouble = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
+            self.value = userSettingsResult.value ?? 0.0
+        } catch {
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
+        self.isFirstShown = false
     }
     
-    func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsDouble(value: value)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
+    func putSetting() async {
+        do {
+            try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsDouble(value: value))
+        } catch {
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
     var body: some View {
         MyDoubleStepper(amount: $value, description: description, descriptionInfo: descriptionInfo, systemImage: icon)
-            .onAppear(perform: {
+            .task {
                 if isFirstShown {
-                    getSetting()
+                    await getSetting()
                 }
-            })
+            }
             .disabled(isFirstShown)
             .onChange(of: value, perform: { value in
                 if !self.isFirstShown {
-                    putSetting()
+                    Task {
+                        await putSetting()
+                    }
                 }
             })
     }
@@ -180,30 +172,25 @@ struct ServerSettingsObjectPicker: View {
     var icon: String? = nil
     let objects: Objects
     
-    func getSetting() {
-        grocyVM.getUserSettingsEntry(settingKey: settingKey) { (result: Result<GrocyUserSettingsInt, APIError>) in
-            switch result {
-            case let .success(userSettingsResult):
-                if userSettingsResult.value == 0 {
-                    self.objectID = nil
-                } else {
-                    self.objectID = userSettingsResult.value
-                }
-            case let .failure(error):
-                grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+    func getSetting() async {
+        do {
+            let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
+            if userSettingsResult.value == 0 {
+                self.objectID = nil
+            } else {
+                self.objectID = userSettingsResult.value
             }
-            self.isFirstShown = false
+        } catch {
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
+        self.isFirstShown = false
     }
     
-    func putSetting() {
-        grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID)) { (result: Result<Int, Error>) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
-            }
+    func putSetting() async {
+        do {
+            try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID))
+        } catch {
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
@@ -233,15 +220,17 @@ struct ServerSettingsObjectPicker: View {
         }, label: {
             MyLabelWithSubtitle(title: description, subTitle: descriptionInfo, systemImage: icon, isProblem: false, isSubtitleProblem: false, hideSubtitle: false)
         })
-        .onAppear(perform: {
+        .task {
             if isFirstShown {
-                getSetting()
+                await getSetting()
             }
-        })
+        }
         .disabled(isFirstShown)
         .onChange(of: objectID, perform: { value in
             if !self.isFirstShown {
-                putSetting()
+                Task {
+                    await putSetting()
+                }
             }
         })
     }

@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct StockEntryRowView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @Environment(\.colorScheme) var colorScheme
     
     var stockEntry: StockEntry
     var dueType: Int
-    var fetchData: ()
+    var productID: Int
     
+    @Binding var stockEntries: StockEntries
     @Binding var toastType: ToastType?
     
     var backgroundColor: Color {
@@ -39,31 +40,38 @@ struct StockEntryRowView: View {
         grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
-    private func consumeEntry() {
-        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                //                toastType = .successConsumeEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                fetchData
-            case let .failure(error):
-                grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
-                toastType = .failConsume
+    func fetchData(ignoreCachedStock: Bool = true) async {
+        // This local management is needed due to the SwiftUI Views not updating correctly.
+        if stockEntries.isEmpty || ignoreCachedStock {
+            do {
+                let productEntriesResult: StockEntries = try await grocyVM.getStockProductInfo(mode: .entries, productID: productID)
+                grocyVM.stockProductEntries[productID] = productEntriesResult
+                self.stockEntries = productEntriesResult
+            } catch {
+                grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
             }
         }
     }
     
-    private func openEntry() {
-        grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                //                toastType = .successOpenEntry
-                grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-                fetchData
-            case let .failure(error):
-                grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
-                toastType = .failOpen
-            }
+    private func consumeEntry() async {
+        do {
+            try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+            await fetchData()
+        } catch {
+            grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
+            toastType = .failConsume
+        }
+    }
+    
+    private func openEntry() async {
+        do {
+            try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil))
+            await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+            await fetchData()
+        } catch {
+            grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
+            toastType = .failOpen
         }
     }
     
@@ -122,47 +130,47 @@ struct StockEntryRowView: View {
                     Text("str.stock.entries.note \(note)")
                 }
 #if os(macOS)
-                Button(action: openEntry, label: {
+                Button(action: { Task { await openEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
                 })
-                    .tint(Color.grocyBlue)
-                    .help(LocalizedStringKey("str.stock.entry.open"))
-                    .disabled(stockEntry.stockEntryOpen)
-                Button(action: consumeEntry, label: {
+                .tint(Color.grocyBlue)
+                .help(LocalizedStringKey("str.stock.entry.open"))
+                .disabled(stockEntry.stockEntryOpen)
+                Button(action: { Task { await consumeEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
                 })
-                    .tint(Color.grocyDelete)
-                    .help(LocalizedStringKey("str.stock.entry.consume"))
+                .tint(Color.grocyDelete)
+                .help(LocalizedStringKey("str.stock.entry.consume"))
 #endif
             }
         })
-            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                Button(action: openEntry, label: {
-                    Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
-                })
-                    .tint(Color.grocyBlue)
-                    .help(LocalizedStringKey("str.stock.entry.open"))
-                    .disabled(stockEntry.stockEntryOpen)
+        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+            Button(action: { Task { await openEntry() } }, label: {
+                Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
             })
-            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                Button(action: consumeEntry, label: {
-                    Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
-                })
-                    .tint(Color.grocyDelete)
-                    .help(LocalizedStringKey("str.stock.entry.consume"))
+            .tint(Color.grocyBlue)
+            .help(LocalizedStringKey("str.stock.entry.open"))
+            .disabled(stockEntry.stockEntryOpen)
+        })
+        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+            Button(action: { Task { await consumeEntry() } }, label: {
+                Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
             })
+            .tint(Color.grocyDelete)
+            .help(LocalizedStringKey("str.stock.entry.consume"))
+        })
 #if os(macOS)
-            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-            .foregroundColor(colorScheme == .light ? Color.black : Color.white)
-            .padding(.horizontal)
+        .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+        .foregroundColor(colorScheme == .light ? Color.black : Color.white)
+        .padding(.horizontal)
 #else
-            .listRowBackground(backgroundColor)
+        .listRowBackground(backgroundColor)
 #endif
     }
 }
 
 struct StockEntriesView: View {
-    let grocyVM: GrocyViewModel = .shared
+    @StateObject var grocyVM: GrocyViewModel = .shared
     
     var stockElement: StockElement
     
@@ -176,18 +184,16 @@ struct StockEntriesView: View {
     @State private var stockEntries: StockEntries = []
     @State private var toastType: ToastType?
     
-    func fetchData(ignoreCachedStock: Bool = true) {
+    func fetchData(ignoreCachedStock: Bool = true) async {
         // This local management is needed due to the SwiftUI Views not updating correctly.
         if stockEntries.isEmpty || ignoreCachedStock {
-            grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID, completion: { (result: Result<StockEntries, Error>) in
-                switch result {
-                case let .success(productEntriesResult):
-                    grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
-                    self.stockEntries = productEntriesResult
-                case let .failure(error):
-                    grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
-                }
-            })
+            do {
+                let productEntriesResult: StockEntries = try await grocyVM.getStockProductInfo(mode: .entries, productID: stockElement.productID)
+                grocyVM.stockProductEntries[stockElement.productID] = productEntriesResult
+                self.stockEntries = productEntriesResult
+            } catch {
+                grocyVM.grocyLog.error("Data request failed for getting the stock entries. Message: \("\(error)")")
+            }
         }
     }
     
@@ -197,7 +203,7 @@ struct StockEntriesView: View {
                 Text(LocalizedStringKey("str.stock.entries.empty"))
             }
             ForEach(stockEntries, id:\.id) { entry in
-                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, fetchData: fetchData(ignoreCachedStock: true), toastType: $toastType)
+                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, productID: stockElement.productID, stockEntries: $stockEntries, toastType: $toastType)
             }
         }
 #if os(macOS)
@@ -205,24 +211,24 @@ struct StockEntriesView: View {
 #endif
         .navigationTitle(LocalizedStringKey("str.stock.entries"))
         .refreshable {
-            fetchData(ignoreCachedStock: true)
+            await fetchData(ignoreCachedStock: true)
         }
         .animation(.default, value: stockEntries.count)
-        .onAppear(perform: {
-            fetchData(ignoreCachedStock: false)
-        })
+        .task {
+            await fetchData(ignoreCachedStock: false)
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType != ToastType.failEdit),
             isShown: [.failEdit].contains(toastType),
             text: { item in
-            switch item {
-            case .failEdit:
-                return LocalizedStringKey("str.failed")
-            default:
-                return LocalizedStringKey("")
-            }
-        })
+                switch item {
+                case .failEdit:
+                    return LocalizedStringKey("str.failed")
+                default:
+                    return LocalizedStringKey("")
+                }
+            })
     }
 }
 

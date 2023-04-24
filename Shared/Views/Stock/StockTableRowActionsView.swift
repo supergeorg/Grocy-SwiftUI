@@ -18,7 +18,7 @@ struct StockTableRowActionsView: View {
 #elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
 #endif
-
+    
     var shownActions: [ShownAction] = []
     
     enum ShownAction: Identifiable {
@@ -38,69 +38,63 @@ struct StockTableRowActionsView: View {
         return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? quantityUnit?.name ?? ""
     }
     
-    private func consumeQuickConsumeAmount() {
+    private func consumeQuickConsumeAmount() async {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successConsumeOne
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
+        do {
+            try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            toastType = .successConsumeOne
+            await grocyVM.requestData(additionalObjects: [.stock])
+        } catch {
+            grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            toastType = .shLActionFail
         }
     }
     
-    private func consumeAll() {
+    private func consumeAll() async {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successConsumeAll
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Consume all items failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
+        do {
+            try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            toastType = .successConsumeAll
+            await grocyVM.requestData(additionalObjects: [.stock])
+        } catch {
+            grocyVM.postLog("Consume all items failed. \(error)", type: .error)
+            toastType = .shLActionFail
         }
     }
     
-    private func openQuickConsumeAmount() {
+    private func openQuickConsumeAmount() async {
         selectedStockElement = stockElement
-        grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)) { result in
-            switch result {
-            case .success(_):
-                toastType = .successOpenOne
-                grocyVM.requestData(additionalObjects: [.stock])
-            case let .failure(error):
-                grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-                toastType = .shLActionFail
-            }
+        do {
+            try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            toastType = .successOpenOne
+            await grocyVM.requestData(additionalObjects: [.stock])
+        } catch {
+            grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            toastType = .shLActionFail
         }
     }
     
     var body: some View {
         if shownActions.contains(.consumeQA) {
-            Button(action: consumeQuickConsumeAmount, label: {
+            Button(action: { Task { await consumeQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.consume)
             })
-                .tint(Color.grocyGreen)
-                .help(LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .tint(Color.grocyGreen)
+            .help(LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
         if shownActions.contains(.consumeAll) {
-            Button(action: consumeAll, label: {
+            Button(action: { Task { await consumeAll() } }, label: {
                 Label(LocalizedStringKey("str.stock.tbl.action.all"), systemImage: MySymbols.consume)
             })
-                .tint(Color.grocyDelete)
-                .help(LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
+            .tint(Color.grocyDelete)
+            .help(LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
         }
         if shownActions.contains(.openQA) {
-            Button(action: openQuickConsumeAmount, label: {
+            Button(action: { Task { await openQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.open)
             })
-                .tint(Color.grocyBlue)
-                .help(LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .tint(Color.grocyBlue)
+            .help(LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
     }
 }

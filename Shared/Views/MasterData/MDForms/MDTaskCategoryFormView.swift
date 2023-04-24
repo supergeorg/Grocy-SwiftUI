@@ -43,8 +43,8 @@ struct MDTaskCategoryFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -57,41 +57,36 @@ struct MDTaskCategoryFormView: View {
 #endif
     }
     
-    private func saveTaskCategory() {
+    private func saveTaskCategory() async {
         let id = isNewTaskCategory ? grocyVM.findNextID(.task_categories) : taskCategory!.id
         let timeStamp = isNewTaskCategory ? Date().iso8601withFractionalSeconds : taskCategory!.rowCreatedTimestamp
         let taskCategoryPOST = MDTaskCategory(id: id, name: name, mdTaskCategoryDescription: mdTaskCategoryDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewTaskCategory {
-            grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Task category add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    resetForm()
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Task category add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST)
+                grocyVM.postLog("Task category add successful.", type: .info)
+                toastType = .successAdd
+                resetForm()
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Task category add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-            grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Task category edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Task category edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST)
+                grocyVM.postLog("Task category edit successful.", type: .info)
+                toastType = .successEdit
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Task category edit failed. \(error)", type: .error)
+                toastType = .failEdit
+            }
         }
+        isProcessing = false
     }
     
     var body: some View {
@@ -99,7 +94,7 @@ struct MDTaskCategoryFormView: View {
             .navigationTitle(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveTaskCategory, label: {
+                    Button(action: { Task { await saveTaskCategory() } }, label: {
                         Label(LocalizedStringKey("str.md.taskCategory.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
@@ -134,13 +129,13 @@ struct MDTaskCategoryFormView: View {
                 MyTextField(textToEdit: $mdTaskCategoryDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

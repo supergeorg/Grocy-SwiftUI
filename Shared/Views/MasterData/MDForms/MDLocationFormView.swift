@@ -39,8 +39,8 @@ struct MDLocationFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -53,40 +53,35 @@ struct MDLocationFormView: View {
 #endif
     }
     
-    private func saveLocation() {
+    private func saveLocation() async {
         let id = isNewLocation ? grocyVM.findNextID(.locations) : location!.id
         let timeStamp = isNewLocation ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
         let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer)
         isProcessing = true
         if isNewLocation {
-            grocyVM.postMDObject(object: .locations, content: locationPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Location add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Location add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
+                grocyVM.postLog("Location added successfully.", type: .info)
+                toastType = .successAdd
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Location add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-            grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Location edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Location edit failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST)
+                grocyVM.postLog("Location edit successful.", type: .info)
+                toastType = .successEdit
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Location edit failed. \(error)", type: .error)
+                toastType = .failEdit
+            }
         }
+        isProcessing = false
     }
     
     var body: some View {
@@ -109,12 +104,14 @@ struct MDLocationFormView: View {
                 }
 #endif
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveLocation, label: {
+                    Button(action: { Task {
+                        await saveLocation()
+                    } }, label: {
                         Label(LocalizedStringKey("str.md.location.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
-                        .disabled(!isNameCorrect || isProcessing)
-                        .keyboardShortcut(.defaultAction)
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
                 }
             })
     }
@@ -139,13 +136,13 @@ struct MDLocationFormView: View {
                 MyToggle(isOn: $isFreezer, description: "str.md.location.isFreezing", descriptionInfo: "str.md.location.isFreezing.description", icon: "thermometer.snowflake")
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

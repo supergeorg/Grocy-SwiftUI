@@ -25,15 +25,9 @@ struct ServerProblemView: View {
         }
         for error in grocyVM.failedToLoadErrors {
             switch error {
-            case .decodingError:
+            case APIError.decodingError:
                 return .api
-            default:
-                break
-            }
-        }
-        for error in grocyVM.failedToLoadErrors {
-            switch error {
-            case .serverError:
+            case APIError.serverError:
                 return .connection
             default:
                 break
@@ -80,7 +74,9 @@ struct ServerProblemView: View {
                 }
             }
             Button(action: {
-                grocyVM.retryFailedRequests()
+                Task {
+                    await grocyVM.retryFailedRequests()
+                }
             }, label: {
                 Label(LocalizedStringKey("str.retry"), systemImage: MySymbols.reload)
             })
@@ -102,7 +98,9 @@ struct ServerProblemView: View {
             }
             Spacer()
             Button(action: {
-                grocyVM.retryFailedRequests()
+                Task {
+                    await grocyVM.retryFailedRequests()
+                }
             }, label: {
                 Label(LocalizedStringKey("str.retry"), systemImage: MySymbols.reload)
             })

@@ -77,8 +77,8 @@ struct QuickScanModeView: View {
         .system_config,
     ]
     
-    func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     func searchForGrocyCode(barcodeString: String) -> GrocyCode? {
@@ -237,9 +237,9 @@ struct QuickScanModeView: View {
                     return LocalizedStringKey("str.error")
                 }
             })
-        .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-        })
+        .task {
+            await updateData()
+        }
         .onChange(of: newRecognizedBarcode?.id, perform: { _ in
             DispatchQueue.main.async {
                 if quickScanActionAfterAdd {

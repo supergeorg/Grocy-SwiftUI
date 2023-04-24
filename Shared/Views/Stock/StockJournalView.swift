@@ -67,7 +67,9 @@ struct StockJournalFilterBar: View {
             HStack {
                 SearchField(text: $searchString)
                 RefreshButton(updateData: {
-                    grocyVM.requestData(objects: [.stock_log])
+                    Task {
+                        await grocyVM.requestData(objects: [.stock_log])
+                    }
                 })
             }
 #endif
@@ -80,7 +82,7 @@ struct StockJournalFilterBar: View {
                             Text(product.name).tag(product.id as Int?)
                         }
                     })
-                        .labelsHidden()
+                    .labelsHidden()
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)
@@ -100,7 +102,7 @@ struct StockJournalFilterBar: View {
                             Text(transactionType.formatTransactionType()).tag(transactionType as TransactionType?)
                         }
                     })
-                        .labelsHidden()
+                    .labelsHidden()
                 } label: {
                     HStack {
                         Image(systemName: MySymbols.filter)
@@ -196,17 +198,15 @@ struct StockJournalRowView: View {
         return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
     }
     
-    private func undoTransaction() {
-        grocyVM.undoBookingWithID(id: journalEntry.id, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Undo transaction successful. \(message)", type: .info)
-                grocyVM.requestData(objects: [.stock_log])
-            case let .failure(error):
-                grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
-                showToastUndoFailed = true
-            }
-        })
+    private func undoTransaction() async {
+        do {
+            try await grocyVM.undoBookingWithID(id: journalEntry.id)
+            grocyVM.postLog("Undo transaction \(journalEntry.id) successful.", type: .info)
+            await grocyVM.requestData(objects: [.stock_log])
+        } catch {
+            grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+            showToastUndoFailed = true
+        }
     }
     
     var body: some View {
@@ -244,10 +244,10 @@ struct StockJournalRowView: View {
             .font(.caption)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-            Button(action: undoTransaction, label: {
+            Button(action: { Task { await undoTransaction() } }, label: {
                 Label(LocalizedStringKey("str.stock.journal.undo"), systemImage: MySymbols.undo)
             })
-                .disabled(journalEntry.undone == 1)
+            .disabled(journalEntry.undone == 1)
         })
     }
 }
@@ -269,8 +269,8 @@ struct StockJournalView: View {
     private let dataToUpdate: [ObjectEntities] = [.stock_log]
     private let additionalDataToUpdate: [AdditionalEntities] = [.users]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
     var stockElement: Binding<StockElement?>? = nil
@@ -343,15 +343,16 @@ struct StockJournalView: View {
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))
-        .refreshable {
-            updateData()
-        }
-        .animation(.default,
-                   value: filteredJournal.count)
-        .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-            filteredProductID = selectedProductID
+        .refreshable(action: {
+            await updateData()
         })
+        .animation(.default,
+                   value: filteredJournal.count
+        )
+        .task {
+            await updateData()
+            filteredProductID = selectedProductID
+        }
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))
     }
 }

@@ -49,8 +49,8 @@ struct MDBarcodesView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     var filteredBarcodes: MDProductBarcodes {
@@ -64,17 +64,15 @@ struct MDBarcodesView: View {
         productBarcodeToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteProductBarcode(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting barcode was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+    private func deleteProductBarcode(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID)
+            grocyVM.postLog("Deleting barcode was successful.", type: .info)
+            await updateData()
+        } catch {
+            grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -121,7 +119,9 @@ struct MDBarcodesView: View {
                 .frame(minWidth: 200, minHeight: 400)
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .task {
+            await updateData()
+        }
         .toast(
             item: $toastType,
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
@@ -146,7 +146,9 @@ struct MDBarcodesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
-                    deleteProductBarcode(toDelID: toDelID)
+                    Task {
+                        await deleteProductBarcode(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") })
@@ -173,8 +175,12 @@ struct MDBarcodesView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.md.barcodes"))
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
-        .refreshable { updateData() }
+        .task {
+            await updateData()
+        }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredBarcodes.count)
         .toast(
             item: $toastType,
@@ -213,7 +219,9 @@ struct MDBarcodesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
-                    deleteProductBarcode(toDelID: toDelID)
+                    Task {
+                        await deleteProductBarcode(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") })

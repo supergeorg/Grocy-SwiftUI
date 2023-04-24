@@ -37,8 +37,8 @@ struct MDStoreFormView: View {
     }
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private func finishForm() {
@@ -51,41 +51,35 @@ struct MDStoreFormView: View {
 #endif
     }
     
-    private func saveStore() {
+    private func saveStore() async {
         let id = isNewStore ? grocyVM.findNextID(.shopping_locations) : store!.id
         let timeStamp = isNewStore ? Date().iso8601withFractionalSeconds : store!.rowCreatedTimestamp
         let storePOST = MDStore(id: id, name: name, mdStoreDescription: mdStoreDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewStore {
-            grocyVM.postMDObject(object: .shopping_locations, content: storePOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Store add successful. \(message)", type: .info)
-                    toastType = .successAdd
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Store add failed. \(error)", type: .error)
-                    toastType = .failAdd
-                }
-                isProcessing = false
-            })
+            do {
+                _ = try await grocyVM.postMDObject(object: .shopping_locations, content: storePOST)
+                grocyVM.postLog("Store added successfully.", type: .info)
+                toastType = .successAdd
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Store add failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         } else {
-            grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Store edit successful. \(message)", type: .info)
-                    toastType = .successEdit
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Store add failed. \(error)", type: .error)
-                    toastType = .failEdit
-                }
-                isProcessing = false
-            })
+            do {
+                try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST)
+                grocyVM.postLog("Store \(storePOST.name) edited successfully.", type: .info)
+                toastType = .successAdd
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Store edit failed. \(error)", type: .error)
+                toastType = .failAdd
+            }
         }
-        
+        isProcessing = false
     }
     
     var body: some View {
@@ -93,7 +87,8 @@ struct MDStoreFormView: View {
             .navigationTitle(isNewStore ? LocalizedStringKey("str.md.store.new") : LocalizedStringKey("str.md.store.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: saveStore, label: {
+                    Button(action: { Task { await saveStore() } },
+                           label: {
                         Label(LocalizedStringKey("str.md.store.save"), systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
@@ -127,13 +122,13 @@ struct MDStoreFormView: View {
                 MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                grocyVM.requestData(objects: dataToUpdate)
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
     }
 }
 

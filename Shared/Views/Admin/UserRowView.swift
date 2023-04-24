@@ -20,18 +20,16 @@ struct UserRowActionsView: View {
     
     @State private var showDeleteAction: Bool = false
     
-    private func deleteUser() {
-        grocyVM.deleteUser(id: user.id, completion: { result in
-            switch result {
-            case let .success(message):
-                print(message)
-                toastType = .successAdd
-                grocyVM.requestData(additionalObjects: [.users])
-            case let .failure(error):
-                print("\(error)")
-                toastType = .failDelete
-            }
-        })
+    private func deleteUser() async {
+        do {
+            try await grocyVM.deleteUser(id: user.id)
+            grocyVM.postLog("Delete user successful.", type: .info)
+            toastType = .successAdd
+            await grocyVM.requestData(additionalObjects: [.users])
+        } catch {
+            grocyVM.postLog("Delete user failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -52,7 +50,9 @@ struct UserRowActionsView: View {
                 }
                 .alert(isPresented:$showDeleteAction) {
                     Alert(title: Text(LocalizedStringKey("str.admin.user.delete.question")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
-                        deleteUser()
+                        Task {
+                            await deleteUser()
+                        }
                     }, secondaryButton: .cancel())
                 }
                 .disabled(isCurrentUser)

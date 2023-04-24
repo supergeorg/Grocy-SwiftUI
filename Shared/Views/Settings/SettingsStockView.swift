@@ -98,7 +98,7 @@ struct SettingsStockView: View {
                     description: "str.settings.stock.consume.defaultAmount",
                     icon: MySymbols.amount
                 )
-                    .disabled(useQuickConsume)
+                .disabled(useQuickConsume)
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue,
                     description: "str.settings.stock.consume.useQuickConsume",
@@ -134,14 +134,16 @@ struct SettingsStockView: View {
             }
         }
         .navigationTitle(LocalizedStringKey("str.settings.stock"))
-        .onAppear(perform: {
+        .task {
             if isFirst {
-                grocyVM.requestData(objects: dataToUpdate)
+                await grocyVM.requestData(objects: dataToUpdate)
                 isFirst = false
             }
-        })
+        }
         .onDisappear(perform: {
-            grocyVM.requestData(additionalObjects: [.user_settings])
+            Task {
+                await grocyVM.requestData(additionalObjects: [.user_settings])
+            }
         })
     }
 }

@@ -42,8 +42,8 @@ struct MDLocationsView: View {
     @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredLocations: MDLocations {
@@ -57,17 +57,15 @@ struct MDLocationsView: View {
         locationToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteLocation(toDelID: Int) {
-        grocyVM.deleteMDObject(object: .locations, id: toDelID, completion: { result in
-            switch result {
-            case let .success(message):
-                grocyVM.postLog("Deleting location was successful. \(message)", type: .info)
-                updateData()
-            case let .failure(error):
-                grocyVM.postLog("Deleting location failed. \(error)", type: .error)
-                toastType = .failDelete
-            }
-        })
+    private func deleteLocation(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .locations, id: toDelID)
+            grocyVM.postLog("Deleting location was successful.", type: .info)
+            await updateData()
+        } catch {
+            grocyVM.postLog("Deleting location failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -91,7 +89,7 @@ struct MDLocationsView: View {
             .toolbar(content: {
                 ToolbarItemGroup(placement: .primaryAction, content: {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddLocation = true
@@ -137,11 +135,13 @@ struct MDLocationsView: View {
                 })
             }
         }
-        .onAppear(perform: {
-            grocyVM.requestData(objects: dataToUpdate)
-        })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default,
                    value: filteredLocations.count)
         .toast(
@@ -168,7 +168,9 @@ struct MDLocationsView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = locationToDelete?.id {
-                    deleteLocation(toDelID: toDelID)
+                    Task {
+                        await deleteLocation(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(locationToDelete?.name ?? "Name not found") })

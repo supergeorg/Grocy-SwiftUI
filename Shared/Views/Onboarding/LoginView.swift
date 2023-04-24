@@ -96,14 +96,14 @@ struct LoginStartView: View {
                     Button(LocalizedStringKey("str.login.demoServer"), action: {
                         loginViewState = .demoServer
                     })
-                        .buttonStyle(BorderButtonStyle())
-                        .matchedGeometryEffect(id: "demoServer", in: animation)
+                    .buttonStyle(BorderButtonStyle())
+                    .matchedGeometryEffect(id: "demoServer", in: animation)
                     
                     Button(LocalizedStringKey("str.login.ownServer"), action: {
                         loginViewState = .ownServer
                     })
-                        .buttonStyle(FilledButtonStyle())
-                        .matchedGeometryEffect(id: "ownServer", in: animation)
+                    .buttonStyle(FilledButtonStyle())
+                    .matchedGeometryEffect(id: "ownServer", in: animation)
                 }
             }
         }
@@ -136,7 +136,7 @@ struct LoginDemoServerView: View {
                                 Text(demoServer.description).tag(demoServer.rawValue)
                             })
                         })
-                            .labelsHidden()
+                        .labelsHidden()
                     } label: {
                         HStack(alignment: .center){
                             Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
@@ -157,13 +157,13 @@ struct LoginDemoServerView: View {
                         Button(LocalizedStringKey("str.back"), action: {
                             loginViewState = .start
                         })
-                            .buttonStyle(BorderButtonStyle())
+                        .buttonStyle(BorderButtonStyle())
                         Button(LocalizedStringKey("str.login.demoServer.use"), action: {
                             passDemoMode = true
                             loginViewState = .logginIn
                         })
-                            .buttonStyle(FilledButtonStyle())
-                            .matchedGeometryEffect(id: "login", in: animation)
+                        .buttonStyle(FilledButtonStyle())
+                        .matchedGeometryEffect(id: "login", in: animation)
                     }
                 }
             }
@@ -237,16 +237,15 @@ struct LoginOwnServerView: View {
                 }, label: {
                     Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
                 })
-                    .buttonStyle(FilledButtonStyle())
-                    .sheet(isPresented: $isShowingGrocyScanner, content: {
-                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
-                    })
+                .buttonStyle(FilledButtonStyle())
+                .sheet(isPresented: $isShowingGrocyScanner, content: {
+                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p", completion: self.handleGrocyScan)
+                })
 #endif
                 CardView {
                     VStack(spacing: 20) {
                         MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
                         if useHassIngress {
-                            Text("WARNING: Home Assistant Integration seems to be broken due to a server change.")
                             HStack {
                                 MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.hassIngress.token.help")
 #if os(iOS)
@@ -255,9 +254,9 @@ struct LoginOwnServerView: View {
                                 }, label: {
                                     Image(systemName: MySymbols.qrScan)
                                 })
-                                    .sheet(isPresented: $isShowingTokenScanner, content: {
-                                        CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
-                                    })
+                                .sheet(isPresented: $isShowingTokenScanner, content: {
+                                    CodeScannerView(codeTypes: [.qr], scanMode: .once, simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d", completion: self.handleTokenScan)
+                                })
 #endif
                             }
                         }
@@ -273,21 +272,21 @@ struct LoginOwnServerView: View {
                             Button(LocalizedStringKey("str.back"), action: {
                                 loginViewState = .start
                             })
-                                .buttonStyle(BorderButtonStyle())
+                            .buttonStyle(BorderButtonStyle())
                             if let manageKeysURL = URL(string: "\(grocyServerURL)/manageapikeys") {
                                 Link(destination: manageKeysURL, label: {
                                     Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
                                 })
-                                    .buttonStyle(BorderButtonStyle())
+                                .buttonStyle(BorderButtonStyle())
                             }
                         }
                         Button(LocalizedStringKey("str.login.ownServer.manual.login"), action: {
                             passDemoMode = false
                             loginViewState = .logginIn
                         })
-                            .buttonStyle(FilledButtonStyle())
-                            .frame(maxWidth: .infinity)
-                            .matchedGeometryEffect(id: "login", in: animation)
+                        .buttonStyle(FilledButtonStyle())
+                        .frame(maxWidth: .infinity)
+                        .matchedGeometryEffect(id: "login", in: animation)
                     }
                 }
             }
@@ -316,23 +315,20 @@ struct LoginStatusView: View {
     @State private var errorMessage: String?
     @State private var unsupportedVersion: String?
     
-    private func tryLogin() {
+    private func tryLogin() async {
         if let isDemoMode = isDemoMode {
-            grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoMode: isDemoMode, completion: {result in
-                switch result {
-                case let .success(message):
-                    if GrocyAPP.supportedVersions.contains(message) {
-                        loginState = .success
-                        isDemoMode ? grocyVM.setDemoModus() : grocyVM.setLoginModus()
-                    } else {
-                        unsupportedVersion = message
-                        loginState = .unsupportedVersion
-                    }
-                case let .failure(error):
-                    errorMessage = "\(error)"
-                    loginState = .fail
+            do {
+                try await grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoMode: isDemoMode)
+                if GrocyAPP.supportedVersions.contains(grocyVM.systemInfo?.grocyVersion.version ?? "") {
+                    loginState = .success
+                    isDemoMode ? grocyVM.setDemoModus() : await grocyVM.setLoginModus()
+                } else {
+                    loginState = .unsupportedVersion
                 }
-            })
+            } catch {
+                loginState = .fail
+                errorMessage = error.localizedDescription
+            }
         }
     }
     
@@ -344,11 +340,13 @@ struct LoginStatusView: View {
                     ProgressView()
                         .scaleEffect(1.5, anchor: .center)
                         .progressViewStyle(CircularProgressViewStyle(tint: .primary))
-                        .onAppear(perform: tryLogin)
+                        .task({
+                            await tryLogin()
+                        })
                     Button(LocalizedStringKey("str.cancel"), action: {
                         grocyVM.cancelAllURLSessionTasks()
                     })
-                        .buttonStyle(BorderButtonStyle())
+                    .buttonStyle(BorderButtonStyle())
                 }
             case .success:
                 Text("success")
@@ -367,32 +365,36 @@ struct LoginStatusView: View {
                             Button(LocalizedStringKey("str.back"), action: {
                                 loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                             })
-                                .buttonStyle(BorderButtonStyle())
+                            .buttonStyle(BorderButtonStyle())
                             Button(LocalizedStringKey("str.retry"), action: {
-                                tryLogin()
+                                Task {
+                                    await tryLogin()
+                                }
                             })
-                                .buttonStyle(FilledButtonStyle())
+                            .buttonStyle(FilledButtonStyle())
                         }
                     }
                 }
             case .unsupportedVersion:
                 VStack{
                     CardView{
-                        Text(LocalizedStringKey("str.login.connect.unsupportedVersion \(unsupportedVersion ?? "?")"))
+                        Text(LocalizedStringKey("str.login.connect.unsupportedVersion \(grocyVM.systemInfo?.grocyVersion.version ?? "?")"))
                     }
                     HStack{
                         Button(LocalizedStringKey("str.back"), action: {
                             loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                         })
-                            .buttonStyle(BorderButtonStyle())
+                        .buttonStyle(BorderButtonStyle())
                         Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
-                            if isDemoMode ?? false {
-                                grocyVM.setDemoModus()
-                            } else {
-                                grocyVM.setLoginModus()
+                            Task {
+                                if isDemoMode ?? false {
+                                    grocyVM.setDemoModus()
+                                } else {
+                                    await grocyVM.setLoginModus()
+                                }
                             }
                         })
-                            .buttonStyle(FilledButtonStyle())
+                        .buttonStyle(FilledButtonStyle())
                     }
                 }
             }

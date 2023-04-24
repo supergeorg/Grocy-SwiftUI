@@ -41,14 +41,14 @@ struct ShoppingListEntryFormView: View {
         let qu = grocyVM.mdQuantityUnits.first(where: { $0.id == quIDP })
         return qu
     }
-
+    
     private var currentQuantityUnit: MDQuantityUnit? {
         let quIDP = grocyVM.mdProducts.first(where: { $0.id == productID })?.quIDPurchase
         return grocyVM.mdQuantityUnits.first(where: { $0.id == quIDP })
     }
     
-    private func updateData() {
-        grocyVM.requestData(objects: [.shopping_list])
+    private func updateData() async {
+        await grocyVM.requestData(objects: [.shopping_list])
     }
     
     private func finishForm() {
@@ -59,7 +59,7 @@ struct ShoppingListEntryFormView: View {
 #endif
     }
     
-    func saveShoppingListEntry() {
+    func saveShoppingListEntry() async {
         let factoredAmount = amount * (product?.quFactorPurchaseToStock ?? 1.0)
         if isNewShoppingListEntry {
             let newShoppingListEntry = ShoppingListItemAdd(
@@ -69,17 +69,15 @@ struct ShoppingListEntryFormView: View {
                 quID: quantityUnitID,
                 shoppingListID: shoppingListID
             )
-            grocyVM.addShoppingListItem(content: newShoppingListEntry, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Shopping list entry saved successfully. \(message)", type: .info)
-                    updateData()
-                    finishForm()
-                case let .failure(error):
-                    grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
-                    showFailToast = true
-                }
-            })
+            do {
+                try await grocyVM.addShoppingListItem(content: newShoppingListEntry)
+                grocyVM.postLog("Shopping list entry saved successfully.", type: .info)
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
+                showFailToast = true
+            }
         } else {
             if let entry = shoppingListEntry {
                 let editedShoppingListEntry = ShoppingListItem(
@@ -92,22 +90,19 @@ struct ShoppingListEntryFormView: View {
                     quID: quantityUnitID,
                     rowCreatedTimestamp: entry.rowCreatedTimestamp
                 )
-                grocyVM.putMDObjectWithID(
-                    object: .shopping_list,
-                    id: entry.id,
-                    content: editedShoppingListEntry,
-                    completion: { result in
-                        switch result {
-                        case let .success(message):
-                            grocyVM.postLog("Shopping entry edited successfully. \(message)", type: .info)
-                            updateData()
-                            finishForm()
-                        case let .failure(error):
-                            grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
-                            showFailToast = true
-                        }
-                    }
-                )
+                do {
+                    try await grocyVM.putMDObjectWithID(
+                        object: .shopping_list,
+                        id: entry.id,
+                        content: editedShoppingListEntry
+                    )
+                    grocyVM.postLog("Shopping entry edited successfully.", type: .info)
+                    await updateData()
+                    finishForm()
+                } catch {
+                    grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
+                    showFailToast = true
+                }
             }
         }
     }
@@ -133,7 +128,9 @@ struct ShoppingListEntryFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(LocalizedStringKey("str.save")) {
-                        saveShoppingListEntry()
+                        Task {
+                            await saveShoppingListEntry()
+                        }
                     }
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isFormValid)
@@ -176,20 +173,22 @@ struct ShoppingListEntryFormView: View {
                 .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button(LocalizedStringKey("str.save")) {
-                    saveShoppingListEntry()
+                    Task {
+                        await saveShoppingListEntry()
+                    }
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isFormValid)
             }
 #endif
         }
-        .onAppear(perform: {
+        .task {
             if firstAppear {
-                grocyVM.requestData(objects: [.shopping_list])
+                await updateData()
                 resetForm()
                 firstAppear = false
             }
-        })
+        }
         .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.entryForm.save.failed"))
     }
 }

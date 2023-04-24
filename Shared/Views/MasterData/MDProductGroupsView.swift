@@ -40,8 +40,8 @@ struct MDProductGroupsView: View {
     
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
     
-    private func updateData() {
-        grocyVM.requestData(objects: dataToUpdate)
+    private func updateData() async {
+        await grocyVM.requestData(objects: dataToUpdate)
     }
     
     private var filteredProductGroups: MDProductGroups {
@@ -55,18 +55,16 @@ struct MDProductGroupsView: View {
         productGroupToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteProductGroup(toDelID: Int?) {
+    private func deleteProductGroup(toDelID: Int?) async {
         if let toDelID = toDelID {
-            grocyVM.deleteMDObject(object: .product_groups, id: toDelID, completion: { result in
-                switch result {
-                case let .success(message):
-                    grocyVM.postLog("Deleting product group was successful. \(message)", type: .info)
-                    updateData()
-                case let .failure(error):
-                    grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
-                    toastType = .failDelete
-                }
-            })
+            do {
+                try await grocyVM.deleteMDObject(object: .product_groups, id: toDelID)
+                grocyVM.postLog("Deleting product group was successful.", type: .info)
+                await updateData()
+            } catch {
+                grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
+                toastType = .failDelete
+            }
         }
     }
     
@@ -91,7 +89,7 @@ struct MDProductGroupsView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
-                    RefreshButton(updateData: { updateData() })
+                    RefreshButton(updateData: { Task { await updateData() } })
 #endif
                     Button(action: {
                         showAddProductGroup.toggle()
@@ -134,9 +132,13 @@ struct MDProductGroupsView: View {
                 })
             }
         }
-        .onAppear(perform: { grocyVM.requestData(objects: dataToUpdate) })
+        .task {
+            await updateData()
+        }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .refreshable { updateData() }
+        .refreshable {
+            await updateData()
+        }
         .animation(.default, value: filteredProductGroups.count)
         .toast(
             item: $toastType,
@@ -162,7 +164,9 @@ struct MDProductGroupsView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productGroupToDelete?.id {
-                    deleteProductGroup(toDelID: toDelID)
+                    Task {
+                        await deleteProductGroup(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(productGroupToDelete?.name ?? "Name not found") })

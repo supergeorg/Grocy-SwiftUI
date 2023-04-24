@@ -56,7 +56,7 @@ struct StockTable: View {
                     }, label: {
                         Image(systemName: "ellipsis")
                     })
-                        .frame(width: 45)
+                    .frame(width: 45)
                 }
             })
             TableColumn(LocalizedStringKey("str.stock.tbl.product"), value: \.product.name)
@@ -142,9 +142,10 @@ struct StockTable: View {
             //            })
             ////            TableColumn(LocalizedStringKey("str.stock.tbl.productPicture"), content: { stockElement in })
         })
-            .onAppear(perform: { grocyVM.requestData(objects: [.product_groups, .shopping_list, .quantity_units, .products, .locations], additionalObjects: [.stock, .system_config]) })
-            .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-            .animation(.default, value: searchedStock.count)
+        .task {
+            await grocyVM.requestData(objects: [.product_groups, .shopping_list, .quantity_units, .products, .locations], additionalObjects: [.stock, .system_config])}
+        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .animation(.default, value: searchedStock.count)
         //            .onChange(of: sortOrder, perform: { srt in
         //                filteredStock.sorted(by: { $0.product.name > $1.product.name })
         //            })
