@@ -119,8 +119,8 @@ public class GrocyApi: GrocyAPI {
         self.apiKey = apiKey
     }
     
-    func setHassData(hassURL: String, hassToken: String) async {
-        self.hassAuthenticator = await HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
+    func setHassData(hassURL: String, hassToken: String) {
+        self.hassAuthenticator = HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
     }
     
     func clearHassData() {

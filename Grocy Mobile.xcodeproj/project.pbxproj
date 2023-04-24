@@ -126,6 +126,10 @@
 		785427B625D29C3000AFE726 /* MySymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785427B425D29C3000AFE726 /* MySymbols.swift */; };
 		78559CC2278347EA00680600 /* SettingsStockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78559CC1278347EA00680600 /* SettingsStockView.swift */; };
 		78559CC3278347EA00680600 /* SettingsStockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78559CC1278347EA00680600 /* SettingsStockView.swift */; };
+		785814DF29F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
+		785814E029F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
+		785814E129F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
+		785814E229F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
 		785D7C5025F65FE0009DCA88 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */; };
 		785D7C5B25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */; };
 		785D7C5C25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */; };
@@ -538,6 +542,7 @@
 		7853A4CE25DBE74300AF9986 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		785427B425D29C3000AFE726 /* MySymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySymbols.swift; sourceTree = "<group>"; };
 		78559CC1278347EA00680600 /* SettingsStockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStockView.swift; sourceTree = "<group>"; };
+		785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssistantSocketMessages.swift; sourceTree = "<group>"; };
 		785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductPictureFormView.swift; sourceTree = "<group>"; };
 		78644EC02791E6E0007110CF /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -836,6 +841,7 @@
 			isa = PBXGroup;
 			children = (
 				78ADA1DB26D1446100946E1B /* HomeAssistantAPI.swift */,
+				785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */,
 			);
 			path = HomeAssistant;
 			sourceTree = "<group>";
@@ -1423,6 +1429,7 @@
 				787E7DC3281C53A900E4D269 /* ServerSettingsItems.swift in Sources */,
 				78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
 				78D7975B25B6FB4800550C58 /* OnboardingView.swift in Sources */,
+				785814DF29F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */,
 				789D166625DE6C9B006FC33F /* LoginView.swift in Sources */,
 				78CB7600255EB9A000319108 /* StockModel.swift in Sources */,
 				78EB2915275B98510074A2C2 /* GrocyCode.swift in Sources */,
@@ -1571,6 +1578,7 @@
 				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,
 				789D166725DE6C9B006FC33F /* LoginView.swift in Sources */,
 				788C6289293A7AA40081A5BD /* RecipesView.swift in Sources */,
+				785814E029F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */,
 				7848A0CE256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
 				789C2DC7258A118E00D3A3B9 /* MDUserFieldFormView.swift in Sources */,
 				789D167225DE73C5006FC33F /* ButtonStyles.swift in Sources */,
@@ -1680,6 +1688,7 @@
 				78FDCDFA25BAD2F00089CB5E /* ProductBuyModel.swift in Sources */,
 				78FDCE0C25BAD2F40089CB5E /* ShoppingListActionModel.swift in Sources */,
 				78FDCE3625BAEF190089CB5E /* FA2SFSymbols.swift in Sources */,
+				785814E129F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */,
 				78F47E8725BF10CE00579B69 /* MDBatteriesModel.swift in Sources */,
 				780B8B2A26FA5BAB009ACFB7 /* ToastTypes.swift in Sources */,
 				78FDCDA825BAD2D50089CB5E /* SystemInfoModel.swift in Sources */,
@@ -1815,6 +1824,7 @@
 				782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */,
 				78855F7225FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				780B8B5626FA5C50009ACFB7 /* MyDoubleStepper.swift in Sources */,
+				785814E229F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */,
 				78FDCDC025BAD2DA0089CB5E /* SharedModel.swift in Sources */,
 				78ADA1E926D1509100946E1B /* Translators.swift in Sources */,
 				78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */,
