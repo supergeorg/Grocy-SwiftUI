@@ -100,7 +100,7 @@ protocol GrocyAPI {
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) async throws -> T
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
-//    // MARK: - Files
+    // MARK: - Files
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws
     func putFileData(fileData: Data, fileName: String, groupName: String) async throws
     func deleteFile(fileName: String, groupName: String) async throws
@@ -591,7 +591,7 @@ extension GrocyApi {
         return try await callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
     }
     
-//    // MARK: - Files
+    // MARK: - Files
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws {
         return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName)
     }

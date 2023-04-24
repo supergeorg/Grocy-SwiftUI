@@ -415,14 +415,6 @@ struct MDProductFormView: View {
                 MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
             })
             .disabled(isNewProduct)
-            
-            //            if isPopup {
-            //                Button(LocalizedStringKey("str.save")) {
-            //                    saveProduct()
-            //                }
-            //                .disabled(!isFormValid || isProcessing)
-            //                .keyboardShortcut(.defaultAction)
-            //            }
 #else
             Section {
                 NavigationLink(

@@ -89,6 +89,7 @@ struct StockProductInfoView: View {
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
                 
+                // TODO: HERE
 //                if let pictureFileName = productDetails.product.pictureFileName,
 //                   !pictureFileName.isEmpty,
 //                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),

@@ -96,6 +96,7 @@ struct MDProductPictureFormView: View {
         Form {
             Section {
                 if let pictureFilename = pictureFilename, !pictureFilename.isEmpty {
+                    // TODO: HERE
                     //                    if
                     //                        let base64Encoded = pictureFilename.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
                     //                        let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {

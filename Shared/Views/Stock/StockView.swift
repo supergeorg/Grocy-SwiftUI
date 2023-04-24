@@ -146,7 +146,9 @@ struct StockView: View {
                 categoryName = element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
             case .lastPurchased:
                 if grocyVM.stockProductDetails[element.productID] == nil {
-//                    grocyVM.getStockProductDetails(productID: element.productID)
+                    Task {
+                        try await grocyVM.getStockProductDetails(productID: element.productID)
+                    }
                 }
                 categoryName = grocyVM.stockProductDetails[element.productID]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
             case .minStockAmount:

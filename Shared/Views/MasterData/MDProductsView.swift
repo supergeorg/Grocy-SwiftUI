@@ -16,6 +16,7 @@ struct MDProductRowView: View {
     
     var body: some View {
         HStack{
+            // TODO: HERE
             //            if let pictureFileName = product.pictureFileName, !pictureFileName.isEmpty, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)), let pictureURL = grocyVM.getPictureURL(groupName: "productpictures", fileName: base64Encoded), let url = URL(string: pictureURL) {
             //                AsyncImage(url: url, content: { image in
             //                    image

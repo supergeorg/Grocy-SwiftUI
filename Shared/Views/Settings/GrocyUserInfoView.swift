@@ -14,6 +14,7 @@ struct GrocyUserInfoView: View {
     
     var body: some View {
         HStack{
+            // TODO: Pictures
 //            if let pictureFileName = grocyUser.pictureFileName,
 //               let utf8str = pictureFileName.data(using: .utf8),
 //               let pictureURL = grocyVM.getPictureURL(

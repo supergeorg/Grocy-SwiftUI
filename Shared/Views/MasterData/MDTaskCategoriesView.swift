@@ -55,17 +55,15 @@ struct MDTaskCategoriesView: View {
         taskCategoryToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteTaskCategory(toDelID: Int) {
-        //        grocyVM.deleteMDObject(object: .task_categories, id: toDelID, completion: { result in
-        //            switch result {
-        //            case let .success(message):
-        //                grocyVM.postLog("Deleting task category was successful. \(message)", type: .info)
-        //                updateData()
-        //            case let .failure(error):
-        //                grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
-        //                toastType = .failDelete
-        //            }
-        //        })
+    private func deleteTaskCategory(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .task_categories, id: toDelID)
+            grocyVM.postLog("Deleting task category was successful.", type: .info)
+            await updateData()
+        } catch {
+            grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -164,7 +162,9 @@ struct MDTaskCategoriesView: View {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = taskCategoryToDelete?.id {
-                    deleteTaskCategory(toDelID: toDelID)
+                    Task {
+                        await deleteTaskCategory(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(taskCategoryToDelete?.name ?? "Name not found") })

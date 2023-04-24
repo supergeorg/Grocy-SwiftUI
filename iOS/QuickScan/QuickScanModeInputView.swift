@@ -122,6 +122,7 @@ struct QuickScanModeInputView: View {
         NavigationView {
             Form {
                 if let product = product {
+                    // TODO: Picture
 //                    Section {
 //                        HStack {
 //                            if let pictureFileName = product.pictureFileName,

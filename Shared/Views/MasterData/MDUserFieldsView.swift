@@ -56,17 +56,15 @@ struct MDUserFieldsView: View {
         userFieldToDelete = itemToDelete
         showDeleteAlert.toggle()
     }
-    private func deleteUserField(toDelID: Int) {
-//        grocyVM.deleteMDObject(object: .userfields, id: toDelID, completion: { result in
-//            switch result {
-//            case let .success(message):
-//                grocyVM.postLog("Deleting userfield was successful. \(message)", type: .info)
-//                await updateData()
-//            case let .failure(error):
-//                grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
-//                toastType = .failDelete
-//            }
-//        })
+    private func deleteUserField(toDelID: Int) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .userfields, id: toDelID)
+            grocyVM.postLog("Deleting userfield was successful.", type: .info)
+            await updateData()
+        } catch {
+            grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
+            toastType = .failDelete
+        }
     }
     
     var body: some View {
@@ -145,26 +143,28 @@ struct MDUserFieldsView: View {
             isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
             isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
             text: { item in
-            switch item {
-            case .successAdd:
-                return LocalizedStringKey("str.md.new.success")
-            case .failAdd:
-                return LocalizedStringKey("str.md.new.fail")
-            case .successEdit:
-                return LocalizedStringKey("str.md.edit.success")
-            case .failEdit:
-                return LocalizedStringKey("str.md.edit.fail")
-            case .failDelete:
-                return LocalizedStringKey("str.md.delete.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
+                switch item {
+                case .successAdd:
+                    return LocalizedStringKey("str.md.new.success")
+                case .failAdd:
+                    return LocalizedStringKey("str.md.new.fail")
+                case .successEdit:
+                    return LocalizedStringKey("str.md.edit.success")
+                case .failEdit:
+                    return LocalizedStringKey("str.md.edit.fail")
+                case .failDelete:
+                    return LocalizedStringKey("str.md.delete.fail")
+                default:
+                    return LocalizedStringKey("str.error")
+                }
+            })
         .alert(LocalizedStringKey("str.md.userField.delete.confirm"), isPresented: $showDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = userFieldToDelete?.id {
-                    deleteUserField(toDelID: toDelID)
+                    Task {
+                        await deleteUserField(toDelID: toDelID)
+                    }
                 }
             }
         }, message: { Text(userFieldToDelete?.name ?? "Name not found") })
