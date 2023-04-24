@@ -147,11 +147,11 @@ public class GrocyApi: GrocyAPI {
         hassIngressToken: String? = nil
     ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
-        if let httpResponse = resultCode as? HTTPURLResponse {
+        async let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
+        if let httpResponse = try await resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
                 do {
-                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: await resultData)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
                 } catch {
                     throw APIError.decodingError(error: error)
@@ -171,11 +171,11 @@ public class GrocyApi: GrocyAPI {
         hassIngressToken: String? = nil
     ) async throws {
         let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
-        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
-        if let httpResponse = resultCode as? HTTPURLResponse {
+        async let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
+        if let httpResponse = try await resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
                 do {
-                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: await resultData)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
                 } catch {
                     throw APIError.decodingError(error: error)
@@ -224,11 +224,11 @@ public class GrocyApi: GrocyAPI {
             query: query,
             hassIngressToken: hassIngressToken
         )
-        let result = try await URLSession.shared.data(for: urlRequest)
-        if let httpResponse = result.1 as? HTTPURLResponse {
+        async let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = try await result.1 as? HTTPURLResponse {
             if !((200...299).contains(httpResponse.statusCode)) {
                 do {
-                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: await result.0)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
                 } catch {
                     throw APIError.decodingError(error: error)
@@ -273,18 +273,18 @@ public class GrocyApi: GrocyAPI {
             query: query,
             hassIngressToken: hassIngressToken
         )
-        let result = try await URLSession.shared.data(for: urlRequest)
-        if let httpResponse = result.1 as? HTTPURLResponse {
+        async let result = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = try await result.1 as? HTTPURLResponse {
             if (200...299).contains(httpResponse.statusCode) {
                 do {
-                    let responseDataDecoded = try JSONDecoder().decode(T.self, from: result.0)
+                    let responseDataDecoded = try JSONDecoder().decode(T.self, from: await result.0)
                     return responseDataDecoded
                 } catch {
                     throw APIError.decodingError(error: error)
                 }
             } else {
                 do {
-                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: await result.0)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
                 } catch {
                     throw APIError.decodingError(error: error)
