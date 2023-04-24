@@ -95,36 +95,32 @@ class HomeAssistantWebSocket {
     }
     
     func receiveData<T: Codable>() async throws -> T {
-        do {
-            guard self.webSocketTask.state == .running else {
-                throw APIError.internalError
-            }
-            let webSocketResult = try await self.webSocketTask.receive()
-            switch webSocketResult {
-            case .data(let data):
-                let decoded = try JSONDecoder().decode(T.self, from: data)
+        guard self.webSocketTask.state == .running else {
+            throw APIError.internalError
+        }
+        let webSocketResult = try await self.webSocketTask.receive()
+        switch webSocketResult {
+        case .data(let data):
+            let decoded = try JSONDecoder().decode(T.self, from: data)
+            return decoded
+        case .string(let text):
+            let jsonData = text.data(using: .utf8)!
+            do {
+                let decoded = try JSONDecoder().decode(T.self, from: jsonData)
                 return decoded
-            case .string(let text):
-                let jsonData = text.data(using: .utf8)!
-                do {
-                    let decoded = try JSONDecoder().decode(T.self, from: jsonData)
-                    return decoded
-                } catch {
-                    let decodedError = try JSONDecoder().decode(HomeAssistantSocketAuthReturn.self, from: jsonData)
-                    throw APIError.serverError(errorMessage: "Socket authentication failed. \(decodedError.type): \(decodedError.message)")
-                }
-            @unknown default:
-                throw APIError.internalError
+            } catch {
+                let decodedError = try JSONDecoder().decode(HomeAssistantSocketAuthReturn.self, from: jsonData)
+                throw APIError.serverError(errorMessage: "Socket authentication failed. \(decodedError.type): \(decodedError.message)")
             }
-        } catch {
-            throw APIError.hassError(error: error)
+        @unknown default:
+            throw APIError.internalError
         }
     }
     
     func sendDataAsString(data: Data) async throws {
         // Sending the data as data doesn't work, so it gets sent as string.
         guard self.webSocketTask.state == .running else {
-            throw APIError.internalError
+            throw APIError.hassError(error: APIError.errorString(description: "Web Socket not running."))
         }
         let str = String(decoding: data, as: UTF8.self)
         try await self.webSocketTask.send(.string(str))
@@ -154,20 +150,20 @@ class HomeAssistantAuthenticator {
             self.homeAssistantWebSocket = HomeAssistantWebSocket(hassURL: hassURL, hassToken: self.hassToken, timeoutInterval: self.timeoutInterval)
             try await self.homeAssistantWebSocket?.authenticateSocket()
         }
-
+        
         // Scenario 1: The session Token is valid and will be returned
         if let hassIngressToken = self.hassIngressToken, self.hassIngressTokenDate?.distance(to: Date()) ?? 100 < 60, !forceRefresh {
             return hassIngressToken
         }
         
         // Scenario 2: There is no session Token, create a new one
-        if let hassToken = try await self.homeAssistantWebSocket?.getToken() {
+        if self.homeAssistantWebSocket != nil {
+            let hassToken = try await self.homeAssistantWebSocket!.getToken()
             self.hassIngressToken = hassToken
             self.hassIngressTokenDate = Date()
             return hassToken
         } else {
-            // TODO: handle error encoding
-            throw APIError.hassError(error: APIError.invalidResponse)
+            throw APIError.hassError(error: APIError.errorString(description: "Web Socket not existing"))
         }
     }
 }
