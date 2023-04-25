@@ -23,14 +23,21 @@ struct MyToggle: View {
                         Image(systemName: icon)
                             .foregroundColor(.primary)
                         Text(LocalizedStringKey(description))
+                        #if os(macOS)
+                        if let descriptionInfoU = descriptionInfo {
+                            FieldDescription(description: descriptionInfoU)
+                        }
+                        #endif
                     }
                 } else {
                     Text(LocalizedStringKey(description))
                 }
             })
+            #if os(iOS)
             if let descriptionInfoU = descriptionInfo {
                 FieldDescription(description: descriptionInfoU)
             }
+            #endif
         }
     }
 }
