@@ -136,10 +136,15 @@ struct InventoryProductView: View {
     
     var body: some View {
 #if os(macOS)
-        ScrollView{
+        if #available(macOS 13.0, *) {
             content
-                .padding()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .formStyle(.grouped)
+        } else {
+            ScrollView{
+                content
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            }
         }
 #else
         content
@@ -246,23 +251,6 @@ struct InventoryProductView: View {
                 }
             })
         .toolbar(content: {
-#if os(iOS)
-            ToolbarItem(placement: .confirmationAction, content: {
-                HStack {
-                    toolbarContent
-                }
-            })
-#else
-            ToolbarItemGroup(placement: .confirmationAction, content: {
-                toolbarContent
-            })
-#endif
-        })
-        .navigationTitle(LocalizedStringKey("str.stock.inventory"))
-    }
-    
-    var toolbarContent: some View {
-        Group {
             if isProcessingAction {
                 ProgressView().progressViewStyle(CircularProgressViewStyle())
             } else {
@@ -282,7 +270,8 @@ struct InventoryProductView: View {
             })
             .disabled(!isFormValid || isProcessingAction)
             .keyboardShortcut("s", modifiers: [.command])
-        }
+        })
+        .navigationTitle(LocalizedStringKey("str.stock.inventory"))
     }
 }
 

@@ -160,15 +160,23 @@ struct PurchaseProductView: View {
     var body: some View {
         Group {
 #if os(macOS)
-            ScrollView {
+            if #available(macOS 13.0, *) {
                 content
-                    .padding()
-                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    .formStyle(.grouped)
                     .toolbar(content: {
-                        ToolbarItemGroup(placement: .confirmationAction, content: {
-                            toolbarContent
-                        })
+                        toolbarContent
                     })
+            } else {
+                ScrollView {
+                    content
+                        .padding()
+                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                        .toolbar(content: {
+                            ToolbarItemGroup(placement: .confirmationAction, content: {
+                                toolbarContent
+                            })
+                        })
+                }
             }
 #else
             if quickScan {

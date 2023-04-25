@@ -113,10 +113,18 @@ struct TransferProductView: View {
     
     var body: some View {
 #if os(macOS)
-        ScrollView{
+        if #available(macOS 13.0, *) {
             content
-                .padding()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                .formStyle(.grouped)
+                .toolbar(content: {
+                    toolbarContent
+                })
+        } else {
+            ScrollView{
+                content
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            }
         }
 #else
         content

@@ -20,9 +20,14 @@ struct SettingsStockView: View {
     
     var body: some View {
 #if os(macOS)
-        ScrollView {
+        if #available(macOS 13.0, *) {
             content
-                .padding()
+                .formStyle(.grouped)
+        } else {
+            ScrollView {
+                content
+                    .padding()
+            }
         }
 #else
         content

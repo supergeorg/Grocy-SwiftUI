@@ -23,6 +23,15 @@ struct SettingsAppView: View {
     let refreshIntervals: [Int] = [3, 5, 10, 30, 60, 300]
     
     var body: some View {
+        if #available(macOS 13.0, *) {
+            content
+                .formStyle(.grouped)
+        } else {
+            content
+        }
+    }
+    
+    var content: some View {
         Form {
             Picker(selection: $localizationKey, label: Label(LocalizedStringKey("str.settings.appLanguage"), systemImage: "flag").foregroundColor(.primary), content: {
                 Text("🇬🇧 English").tag("en")
