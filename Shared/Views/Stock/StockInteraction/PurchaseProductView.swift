@@ -266,6 +266,16 @@ struct PurchaseProductView: View {
                 MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
+            if quickScan {
+                // This is a workaround for a bug which shows the toolbar multiple times
+                Text("")
+                    .toolbar(content: {
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
+                    })
+            }
+            
             if !selfProduction {
                 Section(header: Text(LocalizedStringKey("str.stock.buy.product.price")).font(.headline)) {
                     VStack(alignment: .leading) {
@@ -310,16 +320,6 @@ struct PurchaseProductView: View {
                 })
             }
             MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
-            
-            if quickScan {
-                // This is a workaround for a bug which shows the toolbar multiple times
-                Text("")
-                    .toolbar(content: {
-                        ToolbarItem(placement: .confirmationAction, content: {
-                            toolbarContent
-                        })
-                    })
-            }
             
             MyToggle(isOn: $selfProduction, description: "str.stock.buy.product.selfProduction", icon: MySymbols.selfProduction)
             
