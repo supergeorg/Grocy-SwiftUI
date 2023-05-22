@@ -33,6 +33,7 @@ struct ShoppingListView: View {
     @State var toastType: ToastType?
     @State var infoString: String?
     @State private var showClearListAlert: Bool = false
+    @State private var showClearDoneAlert: Bool = false
     
 #if os(macOS)
     @State private var showNewShoppingList: Bool = false
@@ -166,7 +167,13 @@ struct ShoppingListView: View {
     
     private func slAction(_ actionType: ShoppingListActionType) async {
         do {
-            try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
+            if actionType == .clearDone {
+                // this is not clean, but was the fastest way to work around the different data types
+                let jsonContent = try! JSONEncoder().encode(ShoppingListClearAction(listID: selectedShoppingListID, doneOnly: true))
+                try await grocyVM.grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
+            } else {
+                try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
+            }
             grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
@@ -322,6 +329,12 @@ struct ShoppingListView: View {
             //            })
             //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
             //                .disabled(true)
+            Button(role: .destructive, action: {
+                showClearDoneAlert.toggle()
+            }, label: {
+                Label(LocalizedStringKey("str.shL.action.clearDone"), systemImage: MySymbols.done)
+            })
+            .help(LocalizedStringKey("str.shL.action.clearDone"))
             Button(action: {
                 Task {
                     await slAction(.addMissing)
@@ -439,9 +452,17 @@ struct ShoppingListView: View {
         .animation(.default, value: groupedShoppingList.count)
         .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button(LocalizedStringKey("str.confirm"), role: .destructive) {
                 Task {
                     await slAction(.clear)
+                }
+            }
+        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        .alert(LocalizedStringKey("str.shL.action.clearDone"), isPresented: $showClearDoneAlert, actions: {
+            Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
+            Button(LocalizedStringKey("str.confirm"), role: .destructive) {
+                Task {
+                    await slAction(.clearDone)
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })

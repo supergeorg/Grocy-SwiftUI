@@ -189,6 +189,7 @@
 
 "str.shL.action.addItem" = "Hozzáadás";
 "str.shL.action.clearList" = "Lista törlése";
+"str.shL.action.clearDone" = "Elkészült elemek törlése";
 "str.shL.action.addListItemsToStock" = "Összes tétel készletre vétele";
 "str.shL.action.addBelowMinStock" = "A megadott min. készlet alatti termékek hozzáadása";
 "str.shL.action.addOverdue" = "Lejárt/megromlott termékek hozzáadása";
@@ -297,6 +298,10 @@
 "str.md.location.name.required" = "A név megadása kötelező";
 "str.md.location.isFreezing" = "Fagyasztószekrény";
 
+"str.md.stores" = "Áruházak";
+"str.md.store" = "Áruházak";
+"str.md.store.edit" = "Áruház szerkesztése";
+"str.md.store.name" = "Áruház";
 "str.md.store.name.required" = "A név megadása kötelező";
 
 "str.md.quantityUnits" = "Mennyiségi egységek";

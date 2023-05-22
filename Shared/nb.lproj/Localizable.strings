@@ -297,6 +297,10 @@
 "str.md.location.name.required" = "Vennligst fyll inn et navn";
 "str.md.location.isFreezing" = "Er fryser";
 
+"str.md.stores" = "Butikker";
+"str.md.store" = "Butikker";
+"str.md.store.edit" = "Rediger butikk";
+"str.md.store.name" = "Butikk";
 "str.md.store.name.required" = "Vennligst fyll inn et navn";
 
 "str.md.quantityUnits" = "Forpakning";

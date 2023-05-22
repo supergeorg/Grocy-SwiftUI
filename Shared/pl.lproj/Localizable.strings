@@ -293,6 +293,7 @@
 "str.shL.action.addItem" = "Dodaj wpis";
 "str.shL.action.clearList" = "Wyczyść listę";
 "str.shL.action.clearList.confirm" = "Na pewno chcesz wyczyścić tę listę zakupów?";
+"str.shL.action.clearDone" = "Usuń wykonane pozycje";
 "str.shL.action.addListItemsToStock" = "Dodaj wszystkie elementy do zapasów";
 "str.shL.action.addBelowMinStock" = "Dodaj produkty które są poniżej min. ilości zapasów";
 "str.shL.action.addOverdue" = "Dodaj produkty przeterminowane/po terminie";

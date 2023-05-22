@@ -58,6 +58,7 @@
 
 // MARK: - Details
 "str.details.title" = "Vareoversigt";
+"str.details.relation %@ %@" = "%@pr %@";
 
 "str.details.never" = "Aldrig";
 "str.details.unknown" = "Ukendt";
@@ -188,6 +189,7 @@
 
 "str.shL.action.addItem" = "Tilføj vare";
 "str.shL.action.clearList" = "Ryd indkøbslisten";
+"str.shL.action.clearDone" = "Ryd udførte punkter";
 "str.shL.action.addListItemsToStock" = "Tilføj alle viste varer til lagerbeholdningen";
 "str.shL.action.addBelowMinStock" = "Tilføj varer der er under minimumsbeholdningen";
 "str.shL.action.addOverdue" = "Tilføj varer der er udløbet, for gamle";
@@ -213,6 +215,8 @@
 // MARK: - Recipes
 "str.recipes" = "Opskrifter";
 "str.recipes.name" = "Navn";
+"str.recipes.dueScore" = "Udløbs score";
+"str.recipes.dueScore.hint" = "Des højere denne værdi at sat, des flere ingredienser pt på lager, vil blive markeret som skal bruges snart, skal bruges nu, eller udløbet";
 "str.recipes.fulfillment" = "Skal udfyldes";
 "str.recipes.fulfillment.enough" = "Der er nok i beholdningen";
 "str.recipes.fulfillment.notEnough" = "Ikke nok på lager";
@@ -291,6 +295,10 @@
 "str.md.location.name.required" = "Et navn er påkrævet";
 "str.md.location.isFreezing" = "Er en fryser";
 
+"str.md.stores" = "Butikker";
+"str.md.store" = "Butikker";
+"str.md.store.edit" = "Rediger butik";
+"str.md.store.name" = "Butik";
 "str.md.store.name.required" = "Et navn er påkrævet";
 
 "str.md.quantityUnits" = "Mængdeenheder";
@@ -367,6 +375,9 @@
 "str.settings.stock.consume.useQuickConsume" = "Brug varens værdi for ‘hurtig nedskrivning’";
 "str.settings.stock.common" = "Fælles";
 "str.settings.stock.common.amountDecimalPlaces" = "Antal decimaler for mængder";
+"str.settings.stock.common.priceDecimalPlacesInput" = "Decimaler tilladt for priser (indtastning)";
+"str.settings.stock.common.priceDecimalPlacesDisplay" = "Decimaler tilladt for priser (visning)";
+"str.settings.stock.common.priceAddSeparatorAuto" = "Tilføj automatisk decimalseparator ved pris indtastning";
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "Når aktiveret, skal du altid angive værdien med decimaler, decimalseparatoren sættes automatisk ud fra det tilladte antal decimaler";
 "str.settings.shoppingList" = "Indkøbsliste, opsætning";
 "str.settings.shoppingList.shoppingList" = "Indkøbsliste";

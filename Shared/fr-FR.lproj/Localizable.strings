@@ -293,6 +293,7 @@
 "str.shL.action.addItem" = "Ajouter un produit";
 "str.shL.action.clearList" = "Vider la liste";
 "str.shL.action.clearList.confirm" = "Voulez-vous vraiment vider cette liste de courses ?";
+"str.shL.action.clearDone" = "Effacer les éléments terminés";
 "str.shL.action.addListItemsToStock" = "Ajouter toute la liste dans le stock";
 "str.shL.action.addBelowMinStock" = "Ajouter des produits qui ont un stock inférieur à la quantité minimum définie";
 "str.shL.action.addOverdue" = "Ajouter les produits dépassés/périmés";

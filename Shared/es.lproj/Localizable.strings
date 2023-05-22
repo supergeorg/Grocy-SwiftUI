@@ -189,6 +189,7 @@
 
 "str.shL.action.addItem" = "Añadir artículo";
 "str.shL.action.clearList" = "Vaciar lista";
+"str.shL.action.clearDone" = "Limpiar elementos completados";
 "str.shL.action.addListItemsToStock" = "Añadir todos los artículos de la lista al inventario";
 "str.shL.action.addBelowMinStock" = "Añadir productos que están por debajo del mínimo de existencias definido";
 "str.shL.action.addOverdue" = "Añadir productos caducados o que han superado su fecha de consumo preferente";
@@ -298,6 +299,10 @@
 "str.md.location.name.required" = "Es necesario un nombre";
 "str.md.location.isFreezing" = "Es congelador";
 
+"str.md.stores" = "Tiendas";
+"str.md.store" = "Tiendas";
+"str.md.store.edit" = "Modificar tienda";
+"str.md.store.name" = "Tienda";
 "str.md.store.name.required" = "Es necesario un nombre";
 
 "str.md.quantityUnits" = "Unidades";

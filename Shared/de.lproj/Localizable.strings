@@ -300,6 +300,7 @@
 "str.shL.action.addItem" = "Eintrag hinzufügen";
 "str.shL.action.clearList" = "Liste leeren";
 "str.shL.action.clearList.confirm" = "Möchtest du wirklich diese Einkaufsliste leeren?";
+"str.shL.action.clearDone" = "Erledigte Einträge löschen";
 "str.shL.action.addListItemsToStock" = "Alle Einträge zum Bestand hinzufügen";
 "str.shL.action.addBelowMinStock" = "Produkte unter Mindestbestand hinzufügen";
 "str.shL.action.addOverdue" = "Überfällige/Abgelaufene Produkte hinzufügen";

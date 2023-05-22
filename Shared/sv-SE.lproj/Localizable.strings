@@ -285,6 +285,10 @@
 "str.md.location.name.required" = "Ett namn krävs";
 "str.md.location.isFreezing" = "Är en frys";
 
+"str.md.stores" = "Affärer";
+"str.md.store" = "Affärer";
+"str.md.store.edit" = "Redigera affär";
+"str.md.store.name" = "Affär";
 "str.md.store.name.required" = "Ett namn krävs";
 
 "str.md.quantityUnits" = "Mängdenheter";

@@ -46,7 +46,7 @@ public enum StockProductGet: String {
 }
 
 public enum ShoppingListActionType: String {
-    case clear, addExpired, addOverdue, addMissing
+    case clear, clearDone, addExpired, addOverdue, addMissing
 }
 
 public enum ResponseCodes: Int {
@@ -559,6 +559,8 @@ extension GrocyApi {
         switch actionType {
         case .clear:
             return try await callEmptyResponse(.stockShoppingListClear, method: .POST, content: content)
+        case .clearDone:
+            return try await callEmptyResponse(.stockShoppingListClear, method: .POST, content: content)
         case .addExpired:
             return try await callEmptyResponse(.stockShoppingListAddExpired, method: .POST, content: content)
         case .addMissing:
@@ -566,7 +568,6 @@ extension GrocyApi {
         case .addOverdue:
             return try await callEmptyResponse(.stockShoppingListAddOverdue, method: .POST, content: content)
         }
-        
     }
     
     // MARK: - Master Data

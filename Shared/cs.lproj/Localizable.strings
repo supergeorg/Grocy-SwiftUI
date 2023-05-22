@@ -295,6 +295,7 @@
 "str.shL.action.addItem" = "Přidat produkt";
 "str.shL.action.clearList" = "Vyprázdnit seznam";
 "str.shL.action.clearList.confirm" = "Opravdu chcete tento nákupní seznam vyprázdnit?";
+"str.shL.action.clearDone" = "Zrušit všechna zaškrtnutí";
 "str.shL.action.addListItemsToStock" = "Přidat všechny položky seznamu do zásob";
 "str.shL.action.addBelowMinStock" = "Přidat produkty se stavem pod minimální zásobou";
 "str.shL.action.addOverdue" = "Přidat min. trvanlivost/expiraci produktu";

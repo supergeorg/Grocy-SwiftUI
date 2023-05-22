@@ -19,3 +19,13 @@ struct ShoppingListAction: Codable {
         case listID = "list_id"
     }
 }
+
+struct ShoppingListClearAction: Codable {
+    let listID: Int
+    let doneOnly: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case listID = "list_id"
+        case doneOnly = "done_only"
+    }
+}
