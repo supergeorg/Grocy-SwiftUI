@@ -112,30 +112,45 @@ struct TransferProductView: View {
     }
     
     var body: some View {
-#if os(macOS)
-        if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
             content
                 .formStyle(.grouped)
                 .toolbar(content: {
-                    toolbarContent
+#if os(iOS)
+                    ToolbarItem(placement: .cancellationAction, content: {
+                        Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
+                    })
+#endif
+                    ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
                 })
         } else {
-            ScrollView{
+#if os(iOS)
+            content
+                .toolbar(content: {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(LocalizedStringKey("str.cancel")) {
+                            self.dismiss()
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction, content: {
+                        HStack {
+                            toolbarContent
+                        }
+                    })
+                })
+#elseif os(macOS)
+            ScrollView {
                 content
                     .padding()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    .toolbar(content: {
+                        ToolbarItemGroup(placement: .confirmationAction, content: {
+                            toolbarContent
+                        })
+                    })
             }
-        }
-#else
-        content
-            .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("str.cancel") {
-                        self.dismiss()
-                    }
-                }
-            })
 #endif
+        }
     }
     
     var content: some View {
@@ -248,19 +263,6 @@ struct TransferProductView: View {
                     return LocalizedStringKey("str.error")
                 }
             })
-        .toolbar(content: {
-#if os(iOS)
-            ToolbarItem(placement: .confirmationAction, content: {
-                HStack {
-                    toolbarContent
-                }
-            })
-#else
-            ToolbarItemGroup(placement: .confirmationAction, content: {
-                toolbarContent
-            })
-#endif
-        })
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
     

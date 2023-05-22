@@ -21,19 +21,19 @@ struct SettingsShoppingListView: View {
     private let dataToUpdate: [ObjectEntities] = [.shopping_lists]
     
     var body: some View {
-#if os(macOS)
-        if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
             content
                 .formStyle(.grouped)
         } else {
+#if os(macOS)
             ScrollView {
                 content
                     .padding()
             }
-        }
 #else
-        content
+            content
 #endif
+        }
     }
     
     var content: some View {

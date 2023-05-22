@@ -49,7 +49,7 @@ struct PurchaseProductView: View {
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations, .shopping_locations, .product_barcodes]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
-
+    
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
@@ -158,27 +158,23 @@ struct PurchaseProductView: View {
     }
     
     var body: some View {
-        Group {
-#if os(macOS)
-            if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
+            if quickScan {
+                purchaseForm
+            } else {
                 content
                     .formStyle(.grouped)
                     .toolbar(content: {
-                        toolbarContent
-                    })
-            } else {
-                ScrollView {
-                    content
-                        .padding()
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                        .toolbar(content: {
-                            ToolbarItemGroup(placement: .confirmationAction, content: {
-                                toolbarContent
-                            })
+#if os(iOS)
+                        ToolbarItem(placement: .cancellationAction, content: {
+                            Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
                         })
-                }
+#endif
+                        ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
+                    })
             }
-#else
+        } else {
+#if os(iOS)
             if quickScan {
                 purchaseForm
             } else {
@@ -193,6 +189,17 @@ struct PurchaseProductView: View {
                             HStack {
                                 toolbarContent
                             }
+                        })
+                    })
+            }
+#elseif os(macOS)
+            ScrollView {
+                content
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    .toolbar(content: {
+                        ToolbarItemGroup(placement: .confirmationAction, content: {
+                            toolbarContent
                         })
                     })
             }
