@@ -12,6 +12,8 @@ struct ServerProblemView: View {
     
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     private enum ServerErrorState: Identifiable {
         case connection, api, other, none
         
@@ -82,6 +84,18 @@ struct ServerProblemView: View {
             })
                 .buttonStyle(FilledButtonStyle())
                 .controlSize(.large)
+            if devMode {
+                List() {
+                    ForEach(grocyVM.failedToLoadObjects.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { object in
+                        Text(object.rawValue)
+                    }
+                }
+                List() {
+                    ForEach(grocyVM.failedToLoadAdditionalObjects.sorted(by:  { $0.rawValue < $1.rawValue }), id: \.self) { additionalObject in
+                        Text(additionalObject.rawValue)
+                    }
+                }
+            }
         }
         .padding()
         .background(.regularMaterial)
