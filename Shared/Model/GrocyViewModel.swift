@@ -268,9 +268,10 @@ final class GrocyViewModel: ObservableObject {
                         default:
                             self.postLog("Object not implemented", type: .error)
                         }
+                        self.timeStampsObjects[object] = timeStamp
+                        self.loadingObjectEntities.remove(object)
+                        self.failedToLoadObjects.remove(object)
                     }
-                    self.timeStampsObjects[object] = timeStamp
-                    self.loadingObjectEntities.remove(object)
                 } catch {
                     self.postLog("Data request failed for \(object). Message: \("\(error)")", type: .error)
                     self.failedToLoadObjects.insert(object)
@@ -303,9 +304,10 @@ final class GrocyViewModel: ObservableObject {
                         case .volatileStock:
                             self.volatileStock = try await grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
                         }
+                        self.timeStampsAdditionalObjects[additionalObject] = timeStamp
+                        self.loadingAdditionalEntities.remove(additionalObject)
+                        self.failedToLoadAdditionalObjects.remove(additionalObject)
                     }
-                    self.timeStampsAdditionalObjects[additionalObject] = timeStamp
-                    self.loadingAdditionalEntities.remove(additionalObject)
                 } catch {
                     self.postLog("Data request failed for \(additionalObject). Message: \("\(error)")", type: .error)
                     self.failedToLoadAdditionalObjects.insert(additionalObject)
