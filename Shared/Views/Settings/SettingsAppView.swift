@@ -45,6 +45,8 @@ struct SettingsAppView: View {
                     Text("🇩🇰 Danish").tag("da")
                     Text("🇳🇴 Norwegian Bokmål").tag("nb")
                     Text("🇭🇺 Hungarian").tag("hu")
+                    Text("🇨🇳 Chinese (Simplified)").tag("zh_Hans")
+                    Text("🇹🇼 Chinese (Traditional)").tag("zh_Hant")
                 }
             })
             MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)

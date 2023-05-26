@@ -20,6 +20,11 @@ struct GrocyAPP {
         case polish = "https://pl.demo.grocy.info"
         case czech = "https://cs.demo.grocy.info"
         case italian = "https://it.demo.grocy.info"
+        case danish = "https://da.demo.grocy.info"
+        case norwegian = "https://no.demo.grocy.info"
+        case hungarian = "https://hu.demo.grocy.info"
+        case chinese_hans = "https://zh-cn.demo.grocy.info"
+        case chinese_hant = "https://zh-tw.demo.grocy.info"
         case develop = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
         var id: Int {
@@ -29,21 +34,31 @@ struct GrocyAPP {
         var description: String {
             switch self {
             case .noLanguage:
-                return "Default Grocy server (english)"
+                return "🏳️ Default Grocy server (english)"
             case .english:
-                return "English Grocy server"
+                return "🇬🇧 English Grocy server"
             case .german:
-                return "German Grocy server"
+                return "🇩🇪 German Grocy server"
             case .french:
-                return "French Grocy server"
+                return "🇫🇷 French Grocy server"
             case .dutch:
-                return "Dutch Grocy server"
+                return "🇳🇱 Dutch Grocy server"
             case .polish:
-                return "Polish Grocy server"
+                return "🇵🇱 Polish Grocy server"
             case .czech:
-                return "Czech Grocy server"
+                return "🇨🇿 Czech Grocy server"
             case .italian:
-                return "Italian Grocy server"
+                return "🇮🇹 Italian Grocy server"
+            case .danish:
+                return "🇩🇰 Danish Grocy server"
+            case .norwegian:
+                return "🇳🇴 Norwegian Grocy server"
+            case .hungarian:
+                return "🇭🇺 Hungarian Grocy server"
+            case .chinese_hans:
+                return "🇨🇳 Chinese (Simplified) Grocy server"
+            case .chinese_hant:
+                return "🇹🇼 Chinese (Traditional) Grocy server"
             case .develop:
                 return "Private demo instance used for development"
             }

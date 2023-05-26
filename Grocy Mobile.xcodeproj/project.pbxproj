@@ -498,6 +498,8 @@
 		780CFC6229CF0DAF009E60AA /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7812FFA625BB0B6900377773 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		78138F4825AEF95800B9A50A /* ProductField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductField.swift; sourceTree = "<group>"; };
+		7816A8542A1FCE74006FF076 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7816A8552A1FCF37006FF076 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7817658E25F7B40B00978483 /* NullCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullCodable.swift; sourceTree = "<group>"; };
 		781A25552566838C00560026 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		781A25A2256690C200560026 /* MDProductGroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductGroupFormView.swift; sourceTree = "<group>"; };
@@ -1282,6 +1284,8 @@
 				da,
 				nb,
 				hu,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1856,6 +1860,8 @@
 				780CFC6229CF0DAF009E60AA /* da */,
 				782BE71129CF0FC900885594 /* nb */,
 				782BE71229CF0FCF00885594 /* hu */,
+				7816A8542A1FCE74006FF076 /* zh-Hans */,
+				7816A8552A1FCF37006FF076 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
