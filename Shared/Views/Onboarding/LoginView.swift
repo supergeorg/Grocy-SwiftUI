@@ -306,7 +306,7 @@ struct LoginStatusView: View {
     @State var loginState: LoginState
     var animation: Namespace.ID
     
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""

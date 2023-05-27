@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDBatteriesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     var body: some View {
         VStack{

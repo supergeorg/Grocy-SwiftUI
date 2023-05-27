@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsAppView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("devMode") private var devMode: Bool = false
     

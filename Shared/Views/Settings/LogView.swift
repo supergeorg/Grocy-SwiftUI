@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import OSLog
 
 struct LogView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     

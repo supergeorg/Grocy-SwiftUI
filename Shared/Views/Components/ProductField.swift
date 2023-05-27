@@ -48,7 +48,7 @@ struct ProductField: View {
 #endif
     
     
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var productID: Int?
     var description: String

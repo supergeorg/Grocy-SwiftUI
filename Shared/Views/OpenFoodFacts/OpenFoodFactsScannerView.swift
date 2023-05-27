@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OpenFoodFactsScannerView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @State private var scanBarcode: String = ""
     @State private var isShowingResult: Bool = false

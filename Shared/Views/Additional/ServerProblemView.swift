@@ -10,7 +10,7 @@ import SwiftUI
 struct ServerProblemView: View {
     var isCompact: Bool = false
     
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("devMode") private var devMode: Bool = false
     
