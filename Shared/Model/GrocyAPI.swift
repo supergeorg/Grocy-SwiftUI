@@ -262,19 +262,22 @@ public class GrocyApi: GrocyAPI {
         completion: @escaping (T?, Error?) -> Void
     ) throws {
         let dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+            guard let safeData = data else {
+                completion(nil, APIError.invalidResponse)
+                return
+            }
+            
             if let httpResponse = response as? HTTPURLResponse {
                 if (200...299).contains(httpResponse.statusCode) {
                     do {
-                        // TODO: remove force cast
-                        let responseDataDecoded = try JSONDecoder().decode(T.self, from: data!)
+                        let responseDataDecoded = try JSONDecoder().decode(T.self, from: safeData)
                         completion(responseDataDecoded, nil)
                     } catch {
                          completion(nil, APIError.decodingError(error: error))
                     }
                 } else {
                     do {
-                        // TODO: remove force cast
-                        let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: data!)
+                        let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: safeData)
                         completion(nil, APIError.errorString(description: responseErrorDecoded.errorMessage))
                     } catch {
                         completion(nil, APIError.decodingError(error: error))
