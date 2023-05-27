@@ -255,6 +255,38 @@ public class GrocyApi: GrocyAPI {
         }
     }
     
+    
+    private func executeUrlRequestSync<T: Codable>(
+        _ urlRequest: URLRequest,
+        _ type: T.Type,
+        completion: @escaping (T?, Error?) -> Void
+    ) throws {
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if (200...299).contains(httpResponse.statusCode) {
+                    do {
+                        // TODO: remove force cast
+                        let responseDataDecoded = try JSONDecoder().decode(T.self, from: data!)
+                        completion(responseDataDecoded, nil)
+                    } catch {
+                         completion(nil, APIError.decodingError(error: error))
+                    }
+                } else {
+                    do {
+                        // TODO: remove force cast
+                        let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: data!)
+                        completion(nil, APIError.errorString(description: responseErrorDecoded.errorMessage))
+                    } catch {
+                        completion(nil, APIError.decodingError(error: error))
+                    }
+                }
+            }
+        }
+        
+        dataTask.resume()
+    }
+    
+    
     private func callAPI<T: Codable>(
         _ endPoint: Endpoint,
         method: Method,
@@ -273,25 +305,25 @@ public class GrocyApi: GrocyAPI {
             query: query,
             hassIngressToken: hassIngressToken
         )
-        let result = try await URLSession.shared.data(for: urlRequest)
-        if let httpResponse = result.1 as? HTTPURLResponse {
-            if (200...299).contains(httpResponse.statusCode) {
-                do {
-                    let responseDataDecoded = try JSONDecoder().decode(T.self, from: result.0)
-                    return responseDataDecoded
-                } catch {
-                    throw APIError.decodingError(error: error)
+        
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T, Error>) in
+            do {
+                try executeUrlRequestSync(urlRequest, T.self) { result, error in
+                    if result == nil {
+                        guard let safeError = error else {
+                            continuation.resume(throwing: APIError.internalError)
+                            return
+                        }
+                        
+                        continuation.resume(throwing: safeError)
+                    } else {
+                        continuation.resume(returning: result!)
+                    }
                 }
-            } else {
-                do {
-                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
-                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
-                } catch {
-                    throw APIError.decodingError(error: error)
-                }
+            } catch {
+                continuation.resume(throwing: error)
             }
         }
-        throw APIError.internalError
     }
     
     private func request(
