@@ -42,7 +42,7 @@
 "str.double.invalid %@ %@" = "不小于%@并且小数位数要小于%@位";
 
 // MARK: - Transactions
-"tr.purchase" = "购买";
+"tr.purchase" = "采购";
 "tr.consume" = "消耗";
 "tr.opened" = "已拆封";
 "tr.inventoryCorrection" = "库存";
@@ -63,14 +63,14 @@
 "str.nav.equipment" = "设备";
 "str.nav.calendar" = "日历";
 "str.nav.activities" = "活动";
-"str.nav.purchase" = "购买";
+"str.nav.purchase" = "采购";
 "str.nav.consume" = "消耗";
 "str.nav.transfer" = "转移";
 "str.nav.inventory" = "库存";
 "str.nav.choreTracking" = "家务追踪";
 "str.nav.batteryTracking" = "电量追踪";
-"str.nav.md" = "所有数据";
-"str.nav.md.products" = "商品";
+"str.nav.md" = "主数据";
+"str.nav.md.products" = "物品";
 "str.nav.md.locations" = "存放位置";
 "str.nav.md.stores" = "商店";
 "str.nav.md.quantityUnits" = "数量单位";
@@ -89,12 +89,12 @@
 "str.details.amount" = "库存数量：";
 "str.details.stockValue" = "库存价格：";
 "str.details.defaultLocation" = "默认储藏位置：";
-"str.details.lastPurchaseDate" = "上次购买时间：";
+"str.details.lastPurchaseDate" = "上次采购时间：";
 "str.details.lastUseDate" = "上次使用时间：";
 "str.details.lastPrice" = "上次购买价格：";
 "str.details.averagePrice" = "平均价格：";
 "str.details.averageShelfLife" = "平均保质期：";
-"str.details.spoilRate" = "过期率";
+"str.details.spoilRate" = "变质率：";
 "str.details.relation %@ %@" = "%@每%@";
 
 "str.details.never" = "从未";
@@ -102,7 +102,7 @@
 
 "str.details.stockEntries" = "库存条目";
 "str.details.stockJournal" = "库存日志";
-"str.details.edit" = "修改商品";
+"str.details.edit" = "修改物品";
 
 // MARK: - Stock
 "str.stock.stockOverview" = "库存总览";
@@ -110,7 +110,7 @@
 "str.stock.stockOverviewInfo %lld %@" = "%lld 项物品，总价 %@";
 "str.stock.search" = "查询库存";
 "str.stock.empty" = "没有库存。";
-"str.stock.location" = "位置";
+"str.stock.location" = "存放位置";
 "str.stock.productGroup" = "物品组";
 "str.stock.all" = "全部";
 "str.stock.status" = "状态";
@@ -135,19 +135,19 @@
 "str.stock.entry.status.opened" = "已拆封";
 
 "str.stock.tbl.product" = "产品";
-"str.stock.tbl.productGroup" = "产品组";
+"str.stock.tbl.productGroup" = "物品组";
 "str.stock.tbl.amount" = "总量";
 "str.stock.tbl.value" = "值";
 "str.stock.tbl.nextDueDate" = "下次到期日";
 "str.stock.tbl.caloriesPerStockQU" = "卡路里（每库存量单位）";
 "str.stock.tbl.calories" = "卡路里";
-"str.stock.tbl.lastPurchased" = "上次购买";
+"str.stock.tbl.lastPurchased" = "上次采购";
 "str.stock.tbl.lastPrice" = "最后的价格";
 "str.stock.tbl.minStockAmount" = "最小库存数量";
 "str.stock.tbl.productDescription" = "物品说明";
-"str.stock.tbl.parentProduct" = "主产品";
+"str.stock.tbl.parentProduct" = "主物品";
 "str.stock.tbl.defaultLocation" = "默认位置";
-"str.stock.tbl.productPicture" = "产品图片";
+"str.stock.tbl.productPicture" = "物品图片";
 "str.stock.tbl.action.all" = "全部";
 "str.stock.tbl.action.consume %@" = "消耗 %@";
 "str.stock.tbl.action.consume.all %@" = "消耗%@当前的所有库存";
@@ -156,7 +156,7 @@
 "str.stock.tbl.action.successConsumeOne %@" = "1个%@被消耗";
 "str.stock.tbl.action.successConsumeAll %@" = "所有的%@被消耗";
 "str.stock.tbl.action.successOpenOne %@" = "1个%@已拆封";
-"str.stock.tbl.action.successConsumeAllSpoiled %@" = "所有的%@被破坏";
+"str.stock.tbl.action.successConsumeAllSpoiled %@" = "所有的%@都已经变质";
 "str.stock.tbl.action.fail" = "操作失败";
 
 "str.stock.tbl.menu.addToShL" = "加入购物清单";
@@ -169,12 +169,12 @@
 "str.stock.product.quantityUnit" = "数量单位";
 "str.stock.product.quantityUnit.required" = "请填写数量单位";
 
-"str.stock.buy" = "购买";
-"str.stock.buy.product" = "产品";
-"str.stock.buy.product.buy" = "新增物品";
-"str.stock.buy.product.buy.success %@" = "%@被购买";
-"str.stock.buy.product.buy.fail" = "购买失败";
-"str.stock.buy.product.required" = "请选择一个产品";
+"str.stock.buy" = "采购";
+"str.stock.buy.product" = "物品";
+"str.stock.buy.product.buy" = "采购物品";
+"str.stock.buy.product.buy.success %@" = "%@被采购";
+"str.stock.buy.product.buy.fail" = "采购失败";
+"str.stock.buy.product.required" = "请选择一个物品";
 "str.stock.buy.product.dueDate" = "截止日期";
 "str.stock.buy.product.dueDate.required" = "请填写截止日期";
 "str.stock.buy.product.doesntSpoil" = "永不逾期";
@@ -191,19 +191,19 @@
 "str.stock.buy.product.selfProduction" = "自产";
 
 "str.stock.consume" = "消耗";
-"str.stock.consume.product" = "产品";
+"str.stock.consume.product" = "物品";
 "str.stock.consume.product.consume" = "消耗物品";
 "str.stock.consume.product.consume.success %@" = "%@被消耗";
-"str.stock.consume.product.consume.fail" = "消费失败";
+"str.stock.consume.product.consume.fail" = "消耗失败";
 "str.stock.consume.product.open" = "标记为已拆封";
 "str.stock.consume.product.open.success %@" = "%@ 已拆封";
 "str.stock.consume.product.open.fail" = "拆封失败";
-"str.stock.consume.product.required" = "请选择一个产品";
+"str.stock.consume.product.required" = "请选择一个物品";
 "str.stock.consume.product.location" = "地址";
 "str.stock.consume.product.location.required" = "请填写位置";
 "str.stock.consume.product.location.default %@" = "%@（默认位置）";
 "str.stock.consume.product.details" = "详细说明";
-"str.stock.consume.product.spoiled" = "腐败的";
+"str.stock.consume.product.spoiled" = "变质的";
 "str.stock.consume.product.useStockEntry" = "使用特定的库存项目";
 "str.stock.consume.product.useStockEntry.description" = "列表中的第一项将按照默认规则进行选择，即“先打开，然后先到期，然后先进先出”";
 "str.stock.consume.product.stockEntry" = "库存条目";
@@ -211,11 +211,11 @@
 "str.stock.consume.product.recipe.info" = "这只是为了统计目的";
 
 "str.stock.transfer" = "迁移";
-"str.stock.transfer.product" = "产品";
+"str.stock.transfer.product" = "物品";
 "str.stock.transfer.product.transfer" = "转移物品";
 "str.stock.transfer.product.transfer.success %@" = "%@被转移";
 "str.stock.transfer.product.transfer.fail" = "转移失败";
-"str.stock.transfer.product.required" = "请选择一个产品";
+"str.stock.transfer.product.required" = "请选择一个物品";
 "str.stock.transfer.product.locationFrom" = "起点位置";
 "str.stock.transfer.product.locationFrom.required" = "请填写位置";
 "str.stock.transfer.product.locationTo" = "终点位置";
@@ -227,7 +227,7 @@
 "str.stock.transfer.product.stockEntry" = "库存条目";
 
 "str.stock.inventory" = "库存";
-"str.stock.inventory.product" = "产品";
+"str.stock.inventory.product" = "物品";
 "str.stock.inventory.product.inventory" = "执行库存";
 "str.stock.inventory.product.inventory.success %@" = "%@列清单";
 "str.stock.inventory.product.inventory.fail" = "列清单失败";
@@ -235,7 +235,7 @@
 "str.stock.inventory.product.amount.higher %@" = "这意味着%@将添加到库存中";
 "str.stock.inventory.product.amount.equal" = "所选金额等于库存金额。";
 "str.stock.inventory.product.dueDate" = "截止日期";
-"str.stock.inventory.product.dueDate.info" = "这将应用于新增商品";
+"str.stock.inventory.product.dueDate.info" = "这将应用于新增物品";
 "str.stock.inventory.product.dueDate.required" = "请填写截止日期";
 "str.stock.inventory.product.neverOverdue" = "永不逾期";
 "str.stock.inventory.product.price" = "价格";
@@ -243,7 +243,7 @@
 "str.stock.inventory.product.price.invalid" = "此须为最多 2 位小数的有效数字且不能小于 0.01";
 "str.stock.inventory.product.store" = "商店";
 "str.stock.inventory.product.location" = "地址";
-"str.stock.inventory.product.location.info" = "这将应用于新增商品";
+"str.stock.inventory.product.location.info" = "这将应用于新增物品";
 "str.stock.inventory.product.location.required" = "请填写位置";
 
 "str.stock.journal" = "库存日志";
@@ -252,7 +252,7 @@
 "str.stock.journal.undo" = "撤消交易";
 "str.stock.journal.undo.failed" = "撤销交易记录失败";
 "str.stock.journal.undo.date %@" = "撤销%@";
-"str.stock.journal.product" = "产品";
+"str.stock.journal.product" = "物品";
 "str.stock.journal.product.info %@" = "物品：%@";
 "str.stock.journal.amount.info %@" = "数量：%@";
 "str.stock.journal.transactionTime.info %@" = "处理时间：%@";
@@ -271,7 +271,7 @@
 "str.stock.entries.location %@" = "位置：%@";
 "str.stock.entries.store %@" = "商店：%@";
 "str.stock.entries.price %@" = "价格：%@";
-"str.stock.entries.purchasedDate %@" = "购买日期：%@";
+"str.stock.entries.purchasedDate %@" = "采购日期：%@";
 "str.stock.entries.note %@" = "备注：%@";
 "str.stock.entry.edit" = "编辑条目";
 "str.stock.entry.save" = "保存条目";
@@ -302,8 +302,8 @@
 "str.shL.action.clearList.confirm" = "确定要清空此购物清单吗？";
 "str.shL.action.clearDone" = "清除已完成的项目";
 "str.shL.action.addListItemsToStock" = "将所有列表项添加到库存";
-"str.shL.action.addBelowMinStock" = "添加低于最低库存数量的商品";
-"str.shL.action.addOverdue" = "添加过期/过期的产品";
+"str.shL.action.addBelowMinStock" = "添加低于最低库存数量的物品";
+"str.shL.action.addOverdue" = "添加过期/过期的物品";
 "str.shL.action.failed" = "操作失败";
 
 "str.shL.filter.status" = "状态";
@@ -323,7 +323,7 @@
 "str.shL.entryForm.edit.title" = "修改购物清单条目";
 "str.shL.entryForm.save.failed" = "保存失败";
 "str.shL.entryForm.shoppingList" = "购物清单";
-"str.shL.entryForm.product" = "产品";
+"str.shL.entryForm.product" = "物品";
 "str.shL.entryForm.amount" = "总量";
 "str.shL.entryForm.quantityUnit" = "数量单位";
 "str.shL.entryForm.note" = "便签";
@@ -349,7 +349,7 @@
 "str.recipes.fulfillment.notEnough.shLSome %lld %lld" = "库存不足，缺少 %lld ，已经在购物清单 %lld";
 
 // MARK: - Master Data
-"str.md.masterData" = "所有数据";
+"str.md.masterData" = "主数据";
 "str.md.description" = "描述";
 "str.md.search" = "搜索";
 "str.md.new.success" = "已添加条目";
@@ -360,13 +360,13 @@
 "str.md.delete.fail" = "删除失败";
 
 // MD Product
-"str.md.products" = "产品";
-"str.md.product" = "产品";
+"str.md.products" = "物品";
+"str.md.product" = "物品";
 "str.md.products.empty" = "物品未找到";
 "str.md.product.rowLocation %@" = "位置：%@";
 "str.md.product.rowProductGroup %@" = "物品分类：%@";
-"str.md.product.new" = "创建产品";
-"str.md.product.edit" = "修改产品";
+"str.md.product.new" = "创建物品";
+"str.md.product.edit" = "修改物品";
 "str.md.product.save" = "保存物品";
 "str.md.product.info" = "物品信息";
 "str.md.product.notOnServer" = "物品不在服务器上";
@@ -377,20 +377,20 @@
 "str.md.product.name.exists" = "名称已存在";
 // optional properties
 "str.md.product.category.optionalProperties" = "可选属性";
-"str.md.product.category.optionalProperties.description" = "状态，父产品，说明，物品分类，能量，图片";
+"str.md.product.category.optionalProperties.description" = "状态，主物品，说明，物品分类，能量，图片";
 "str.md.product.active" = "有效的";
-"str.md.product.parentProduct" = "父物品";
+"str.md.product.parentProduct" = "主物品";
 "str.md.product.description" = "描述";
-"str.md.product.productGroup" = "产品组";
+"str.md.product.productGroup" = "物品组";
 "str.md.product.calories" = "能量(千卡)";
 "str.md.product.calories.info" = "每库存数量单位";
 "str.md.product.dontShowOnStockOverview" = "永不显示在库存总览";
-"str.md.product.dontShowOnStockOverview.info" = "库存总览页面列出了当前有库存或低于其最低库存的所有产品。库存量-启用此功能可将其始终隐藏在此处";
-"str.md.product.picture" = "产品图片";
+"str.md.product.dontShowOnStockOverview.info" = "库存总览页面列出了当前有库存或低于其最低库存的所有物品。库存量-启用此功能可将其始终隐藏在此处";
+"str.md.product.picture" = "物品图片";
 "str.md.product.picture.saved" = "找到物品图片";
 "str.md.product.picture.none" = "无物品图片";
-"str.md.product.picture.add.file" = "从文件中选择产品图片";
-"str.md.product.picture.add.gallery" = "从gallery中选择产品图片";
+"str.md.product.picture.add.file" = "从文件中选择物品图片";
+"str.md.product.picture.add.gallery" = "从gallery中选择物品图片";
 "str.md.product.picture.add.camera" = "从相机添加物品图片";
 "str.md.product.picture.upload" = "上传物品图片";
 "str.md.product.picture.delete" = "删除物品图片";
@@ -399,7 +399,7 @@
 "str.md.product.category.defaultLocations.description" = "位置，商店";
 "str.md.product.location" = "默认位置";
 "str.md.product.location.required" = "请填写位置";
-"str.md.product.location.consume" = "默认消费位置";
+"str.md.product.location.consume" = "默认消耗位置";
 "str.md.product.location.consume.info" = "在以下位置的库存将会先被消耗";
 "str.md.product.location.consume.moveOnOpen" = "开封时移动";
 "str.md.product.location.consume.moveOnOpen.info" = "启用后，当此物品被标记为已开封，对应数量的物品将被移动到预设消耗位置";
@@ -410,49 +410,49 @@
 "str.md.product.dueType" = "到期日期类型";
 "str.md.product.dueType.info" = "根据所选择的类型，库存总览页面上的高亮显示将有所不同";
 "str.md.product.dueType.bestBefore" = "保质期";
-"str.md.product.dueType.bestBefore.info" = "意味着产品在过期后仍然可以安全食用";
+"str.md.product.dueType.bestBefore.info" = "意味着物品在过期后仍然可以安全食用";
 "str.md.product.dueType.expires" = "截止日期";
-"str.md.product.dueType.expires.info" = "指产品过期后食用不安全";
+"str.md.product.dueType.expires.info" = "指物品过期后食用不安全";
 "str.md.product.defaultDueDays" = "默认到期日";
-"str.md.product.defaultDueDays.info" = "所购买物品的建议到期日期为今天的日期加上此天数（-1表示此物品永不逾期）";
+"str.md.product.defaultDueDays.info" = "所采购物品的建议到期日期为今天的日期加上此天数（-1表示此物品永不逾期）";
 "str.md.product.defaultDueDaysAfterOpen" = "开封后默认到期日";
-"str.md.product.defaultDueDaysAfterOpen.info" = "当此产品标记为已打开时，到期日期将替换为今天+该天数（值0会禁用此日期）";
+"str.md.product.defaultDueDaysAfterOpen.info" = "当此物品标记为已打开时，到期日期将替换为今天+该天数（值0会禁用此日期）";
 "str.md.product.defaultDueDaysAfterFreezing" = "冻结后默认到期日";
-"str.md.product.defaultDueDaysAfterFreezing.info" = "将本产品移至冷藏室时（因此将其冷冻时），到期日将替换为今天+该天数";
+"str.md.product.defaultDueDaysAfterFreezing.info" = "将本物品移至冷藏室时（因此将其冷冻时），到期日将替换为今天+该天数";
 "str.md.product.defaultDueDaysAfterFreezing.invalid" = "必须为整数且不能小于-1";
 "str.md.product.defaultDueDaysAfterThawing" = "解冻后默认到期日";
-"str.md.product.defaultDueDaysAfterThawing.info" = "当将产品从冷冻室移出时(解冻时)，到期日将改为今天+这个天数";
+"str.md.product.defaultDueDaysAfterThawing.info" = "当将物品从冷冻室移出时(解冻时)，到期日将改为今天+这个天数";
 "str.md.product.defaultDueDaysAfterThawing.invalid" = "必须为整数且不能小于0";
 // quantity units
 "str.md.product.category.quantityUnits" = "数量单位";
 "str.md.product.category.quantityUnits.description" = "库存，采购";
 "str.md.product.quStock" = "库存数量单位";
-"str.md.product.quStock.info" = "首次购买后不能更改数量单位库存";
+"str.md.product.quStock.info" = "首次采购后不能更改数量单位库存";
 "str.md.product.quStock.required" = "请填写数量单位";
-"str.md.product.quPurchase" = "默认购买数量单位";
-"str.md.product.quPurchase.info" = "这是将此产品添加到购物清单时使用的默认数量单位";
+"str.md.product.quPurchase" = "默认采购数量单位";
+"str.md.product.quPurchase.info" = "这是将此物品添加到购物清单时使用的默认数量单位";
 "str.md.product.quPurchase.required" = "请填写数量单位";
 // amount
 "str.md.product.category.amount" = "数量";
 "str.md.product.category.amount.description" = "最小库存数量、快速消耗数量、系数、皮重处理";
 "str.md.product.minStockAmount" = "最小库存数量";
 "str.md.product.cumulateMinStockAmountOfSubProducts" = "累计子物品的最小库存数量";
-"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "如果启用，子产品的最小库存数量将累计到此产品中，意味着子产品将永远不会“丢失”，只有此产品";
-"str.md.product.quickConsumeAmount" = "快速消费的金额";
+"str.md.product.cumulateMinStockAmountOfSubProducts.info" = "如果启用，子物品的最小库存数量将累计到此产品中，意味着子物品将永远不会“丢失”，只有此物品";
+"str.md.product.quickConsumeAmount" = "快速消耗的数量";
 "str.md.product.quickConsumeAmount.info" = "此金额用于库存概览页面上的“快速消费/打开按钮”(与单位库存数量相关)";
-"str.md.product.quFactorPurchaseToStock" = "拆分购买数量单位为库存数量单位";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "这代表购买 1 %@ 会转换为 %@ %@ 的库存";
+"str.md.product.quFactorPurchaseToStock" = "拆分采购数量单位为库存数量单位";
+"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "这代表采购 1 %@ 会转换为 %@ %@ 的库存";
 "str.md.product.enableTareWeightHandling" = "启用皮重处理";
-"str.md.product.enableTareWeightHandling.info" = "这对装在罐子里的面粉很有用——在购买/消耗/库存时，你总是要称量整个罐子，然后根据库存和下面定义的皮重自动计算出过账的数量";
+"str.md.product.enableTareWeightHandling.info" = "这对装在罐子里的面粉很有用——在采购/消耗/库存时，你总是要称量整个罐子，然后根据库存和下面定义的皮重自动计算出过账的数量";
 "str.md.product.tareWeight" = "皮重";
 "str.md.product.notCheckStockFulfillmentForRecipes" = "禁用此成分的库存履行检查";
-"str.md.product.notCheckStockFulfillmentForRecipes.info" = "当添加此产品作为食谱成分时，这将用作默认设置";
+"str.md.product.notCheckStockFulfillmentForRecipes.info" = "当添加此物品作为食谱成分时，这将用作默认设置";
 "str.md.product.treatOpenedAsOutOfStock" = "一开封即从库存中扣除";
 "str.md.product.treatOpenedAsOutOfStock.hint" = "启用后，已开封的物品将在计算库存数量时被排除";
 "str.md.product.shouldNotBeFrozen" = "不可冷冻";
 "str.md.product.shouldNotBeFrozen.hint" = "启用后，将此物品移至冷冻库时（将其冷冻时），将显示警告";
 "str.md.product.noOwnStock" = "禁用独立库存";
-"str.md.product.noOwnStock.hint" = "启用后，此物品将不会有独立的库存，在购买时也无法被提取（适用于仅作为子物品概览的母物品）";
+"str.md.product.noOwnStock.hint" = "启用后，此物品将不会有独立的库存，在采购时也无法被提取（适用于仅作为子物品概览的母物品）";
 
 "str.md.barcodes" = "条形码";
 "str.md.barcode" = "条形码";
@@ -460,7 +460,7 @@
 "str.md.barcode.new" = "添加条形码";
 "str.md.barcode.edit" = "编辑条形码";
 "str.md.barcode.save" = "保存条形码";
-"str.md.barcode.for %@" = "%@产品的条形码";
+"str.md.barcode.for %@" = "%@物品的条形码";
 "str.md.barcode.barcode" = "条形码";
 "str.md.barcode.barcode.required" = "需要条形码";
 "str.md.barcode.barcode.invalid" = "此条形码无效或已在使用";
@@ -473,7 +473,7 @@
 "str.md.barcode.delete" = "产出条形码";
 "str.md.barcode.delete.confirm" = "是否确实要删除此条形码？";
 
-"str.md.locations" = "地理位置";
+"str.md.locations" = "存放位置";
 "str.md.location" = "地址";
 "str.md.locations.empty" = "位置未找到";
 "str.md.location.new" = "新增位置";
@@ -527,11 +527,11 @@
 "str.md.quantityUnit.conversion.means %@ %@" = "这意味着%@与%@相同";
 "str.md.quantityUnit.conversion.createInverse" = "创建反向数量单位（QU）转换";
 
-"str.md.productGroups" = "产品组";
-"str.md.productGroup" = "产品组";
-"str.md.productGroups.empty" = "产品分类未找到";
-"str.md.productGroup.new" = "创建产品组";
-"str.md.productGroup.edit" = "编辑产品组";
+"str.md.productGroups" = "物品组";
+"str.md.productGroup" = "物品组";
+"str.md.productGroups.empty" = "物品分类未找到";
+"str.md.productGroup.new" = "创建物品组";
+"str.md.productGroup.edit" = "编辑物品组";
 "str.md.productGroup.save" = "保存物品分类";
 "str.md.productGroup.info" = "物品分类信息";
 "str.md.productGroup.name" = "物品分类名称";
@@ -652,22 +652,22 @@
 "str.settings.app.update.autoReload" = "外部更改时自动重新加载";
 "str.settings.app.update.autoReload.interval" = "重新加载间隔";
 "str.settings.stock" = "库存设置";
-"str.settings.stock.presets" = "新产品预设";
+"str.settings.stock.presets" = "新增物品预设";
 "str.settings.stock.presets.location" = "地址";
-"str.settings.stock.presets.productGroup" = "产品组";
+"str.settings.stock.presets.productGroup" = "物品组";
 "str.settings.stock.presets.quantityUnit" = "数量单位";
 "str.settings.stock.presets.defaultDueDays" = "默认到期日";
 "str.settings.stock.presets.treatOpenedAsOutOfStock" = "一开封即从库存中扣除";
 "str.settings.stock.stockOverview" = "库存总览";
 "str.settings.stock.stockOverview.dueSoonDays" = "即将到期";
-"str.settings.stock.stockOverview.showIconShoppingList" = "如果产品已经在购物清单上，则显示一个图标";
-"str.settings.stock.purchase" = "购买";
-"str.settings.stock.purchase.defaultAmount" = "默认购买金额";
-"str.settings.stock.purchase.showPurchasedDate" = "在购买和库存页面显示购买日期(否则购买日期默认为今天)";
-"str.settings.stock.purchase.showWarningWhenEarlier" = "当所购买产品的到期日早于库存中的下一个到期日时，显示警告";
+"str.settings.stock.stockOverview.showIconShoppingList" = "如果物品已经在购物清单上，则显示一个图标";
+"str.settings.stock.purchase" = "采购";
+"str.settings.stock.purchase.defaultAmount" = "默认采购数量";
+"str.settings.stock.purchase.showPurchasedDate" = "在采购和库存页面显示购买日期(否则购买日期默认为今天)";
+"str.settings.stock.purchase.showWarningWhenEarlier" = "当所采购物品的到期日早于库存中的下一个到期日时，显示警告";
 "str.settings.stock.consume" = "消耗";
-"str.settings.stock.consume.defaultAmount" = "默认消费金额";
-"str.settings.stock.consume.useQuickConsume" = "使用产品“快速消费量”";
+"str.settings.stock.consume.defaultAmount" = "默认消耗数量";
+"str.settings.stock.consume.useQuickConsume" = "使用物品的 “快速消耗数量”";
 "str.settings.stock.common" = "通用";
 "str.settings.stock.common.amountDecimalPlaces" = "允许小数点后位-数量";
 "str.settings.stock.common.priceDecimalPlaces" = "允许小数点后位-价格";
@@ -704,14 +704,14 @@
 // MARK: - Quick Scan
 "str.quickScan.consume" = "消耗";
 "str.quickScan.markAsOpened" = "拆封";
-"str.quickScan.purchase" = "购买";
-"str.quickScan.input.consume.amount" = "消费金额";
+"str.quickScan.purchase" = "采购";
+"str.quickScan.input.consume.amount" = "消耗数量";
 "str.quickScan.input.consume.default %@" = "默认(%@)";
 /* "str.quickScan.input.consume.barcodeAmount %@" = "Quick (%@)"; */
 "str.quickScan.input.consume.custom" = "习惯";
 "str.quickScan.input.consume.all %@" = "所有(%@)";
 "str.quickScan.input.info.stockAmount %@" = "库存数量：%@";
-"str.quickScan.add.product" = "此条形码的产品";
+"str.quickScan.add.product" = "此条形码的物品";
 "str.quickScan.add.product.add" = "添加条形码";
 "str.quickScan.add.product.add.success" = "条形码已添加";
 "str.quickScan.add.product.add.fail" = "添加条形码失败";
