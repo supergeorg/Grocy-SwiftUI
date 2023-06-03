@@ -109,7 +109,9 @@ struct UserManagementView: View {
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .refreshable {
             await updateData()

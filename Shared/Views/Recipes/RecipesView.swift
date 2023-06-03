@@ -45,7 +45,9 @@ struct RecipesView: View {
                 await updateData()
             })
             .task {
-                await updateData()
+                Task {
+                    await updateData()
+                }
             }
             .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
             .animation(.default, value: recipes.count)

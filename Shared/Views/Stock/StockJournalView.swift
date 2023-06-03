@@ -350,8 +350,10 @@ struct StockJournalView: View {
                    value: filteredJournal.count
         )
         .task {
-            await updateData()
-            filteredProductID = selectedProductID
+            Task {
+                await updateData()
+                filteredProductID = selectedProductID
+            }
         }
         .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))
     }

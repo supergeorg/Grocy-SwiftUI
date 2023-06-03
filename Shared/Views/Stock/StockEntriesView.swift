@@ -215,7 +215,9 @@ struct StockEntriesView: View {
         }
         .animation(.default, value: stockEntries.count)
         .task {
-            await fetchData(ignoreCachedStock: false)
+            Task {
+                await fetchData(ignoreCachedStock: false)
+            }
         }
         .toast(
             item: $toastType,

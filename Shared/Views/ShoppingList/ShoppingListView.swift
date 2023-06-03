@@ -442,7 +442,9 @@ struct ShoppingListView: View {
         }
         .navigationTitle(LocalizedStringKey("str.shL"))
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .searchable(text: $searchString,
                     prompt: LocalizedStringKey("str.search"))

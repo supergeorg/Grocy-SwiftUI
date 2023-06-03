@@ -382,8 +382,10 @@ struct StockView: View {
         .animation(.default, value: sortSetting)
         .task {
             if firstAppear {
-                await updateData()
-                firstAppear = false
+                Task {
+                    await updateData()
+                    firstAppear = false
+                }
             }
         }
         .toast(
@@ -450,8 +452,10 @@ struct StockView: View {
         .animation(.default, value: groupedProducts.count)
         .task {
             if firstAppear {
-                await updateData()
-                firstAppear = false
+                Task {
+                    await updateData()
+                    firstAppear = false
+                }
             }
         }
         .toast(

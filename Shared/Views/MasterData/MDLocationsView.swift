@@ -136,7 +136,9 @@ struct MDLocationsView: View {
             }
         }
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable {

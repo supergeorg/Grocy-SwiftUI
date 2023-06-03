@@ -238,7 +238,9 @@ struct QuickScanModeView: View {
                 }
             })
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .onChange(of: newRecognizedBarcode?.id, perform: { _ in
             DispatchQueue.main.async {

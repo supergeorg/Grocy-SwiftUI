@@ -114,8 +114,10 @@ struct SettingsShoppingListView: View {
         .navigationTitle(LocalizedStringKey("str.settings.shoppingList"))
         .task {
             if isFirst {
-                await grocyVM.requestData(objects: dataToUpdate)
-                isFirst = false
+                Task {
+                    await grocyVM.requestData(objects: dataToUpdate)
+                    isFirst = false
+                }
             }
         }
         .onDisappear(perform: {

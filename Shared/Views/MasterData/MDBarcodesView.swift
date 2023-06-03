@@ -120,7 +120,9 @@ struct MDBarcodesView: View {
             }
         }
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .toast(
             item: $toastType,
@@ -176,7 +178,9 @@ struct MDBarcodesView: View {
         }
         .navigationTitle(LocalizedStringKey("str.md.barcodes"))
         .task {
-            await updateData()
+            Task {
+                await updateData()
+            }
         }
         .refreshable {
             await updateData()
