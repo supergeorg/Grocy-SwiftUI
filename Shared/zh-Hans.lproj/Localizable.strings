@@ -707,7 +707,7 @@
 "str.quickScan.purchase" = "采购";
 "str.quickScan.input.consume.amount" = "消耗数量";
 "str.quickScan.input.consume.default %@" = "默认(%@)";
-/* "str.quickScan.input.consume.barcodeAmount %@" = "Quick (%@)"; */
+"str.quickScan.input.consume.barcodeAmount %@" = "快速 (%@)";
 "str.quickScan.input.consume.custom" = "习惯";
 "str.quickScan.input.consume.all %@" = "所有(%@)";
 "str.quickScan.input.info.stockAmount %@" = "库存数量：%@";
@@ -720,9 +720,9 @@
 
 // MARK: - Onboarding
 "str.onboard.start" = "让我们开始吧！";
-/* "str.onboard.grocy.title" = "grocy - ERP beyond your fridge"; */
+"str.onboard.grocy.title" = "grocy - ERP超越你的冰箱";
 "str.onboard.grocy.subtitle" = "grocy是一款基于网络的自助杂货和家庭管理解决方案";
-"str.onboard.app.title" = "Grocy 适用于 IOS/macOS";
+"str.onboard.app.title" = "Grocy 适用于 iOS/macOS";
 "str.onboard.app.subtitle" = "一款原生设计的应用程序，可在家中和外出时舒适地使用Grocy。";
 
 "str.login.info" = "欢迎使用Grocy Mobile！\n这是一个配套应用程序，意味着您需要访问正在运行的Grocy实例（例如，在您的服务器上）。\n如果你只想试用这个应用程序，你可以使用Grocy开发人员Bernd Bestel提供的演示服务器之一。但不要将演示服务器用于您的数据，因为它不是持久的。";
