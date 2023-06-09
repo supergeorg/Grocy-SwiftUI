@@ -77,10 +77,14 @@ struct StockTableRow: View {
                 StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
             })
             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA], toastType: $toastType)
+                if stockElement.amount > 0 {
+                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA], toastType: $toastType)
+                }
             })
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
+                if stockElement.amount > 0 {
+                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll], toastType: $toastType)
+                }
             })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
