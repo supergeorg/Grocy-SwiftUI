@@ -400,7 +400,7 @@ struct ShoppingListView: View {
                 DisclosureGroup(
                     isExpanded: Binding.constant(true),
                     content: {
-                        ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.productID, content: { element in
+                        ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
                             ShoppingListEntriesView(
                                 shoppingListItem: element.shoppingListItem,
                                 selectedShoppingListID: $selectedShoppingListID,
@@ -420,7 +420,7 @@ struct ShoppingListView: View {
                 )
 #else
                 Section(content: {
-                    ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.productID, content: { element in
+                    ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
                         ShoppingListEntriesView(
                             shoppingListItem: element.shoppingListItem,
                             selectedShoppingListID: $selectedShoppingListID,
