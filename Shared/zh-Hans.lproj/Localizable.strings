@@ -33,7 +33,7 @@
 "str.time.unlimited" = "无限";
 "str.sort" = "分类";
 "str.sort.category" = "任务分类";
-"str.sort.order" = "排序编号";
+"str.sort.order" = "排序方式";
 "str.sort.order.forward" = "升序";
 "str.sort.order.reverse" = "降序";
 "str.group.category" = "分组由";
@@ -183,7 +183,7 @@
 "str.stock.buy.product.price.unitPrice %@" = "%@价格";
 "str.stock.buy.product.price.unitPrice" = "单价";
 "str.stock.buy.product.price.totalPrice" = "总价";
-"str.stock.buy.product.price.relation %@ %@" = "意味着%@包含%@";
+"str.stock.buy.product.price.relation %@ %@" = "意味着%@每%@";
 "str.stock.buy.product.store" = "商店";
 "str.stock.buy.product.location" = "地址";
 "str.stock.buy.product.location.default %@" = "%@（默认位置）";
@@ -628,13 +628,13 @@
 "str.settings.info.openInBrowser" = "在浏览器中打开（用来迁移数据库）";
 "str.settings.codeTypes" = "条码设定";
 "str.settings.about" = "关于此应用";
-"str.settings.about.thanks" = "我要感谢Bernd Bestel对Grocy的发展。如果没有他，这个应用是不可能完成的。";
+"str.settings.about.thanks" = "我要感谢Bernd Bestel对Grocy的开发贡献。如果没有他，这个应用是不可能完成的。";
 "str.settings.about.version" = "版本";
 "str.settings.about.version.supported" = "支持";
 "str.settings.about.version.notSupported" = "不支持";
 "str.settings.about.developer" = "开发人员";
 "str.settings.about.translators" = "翻译人员";
-"str.settings.about.showOnboarding" = "重播应用onboarding";
+"str.settings.about.showOnboarding" = "重播使用引导";
 "str.settings.loginQRcode.scan" = "扫描二维码快速登录";
 "str.settings.simplifiedStockView" = "简化库存视图";
 "str.settings.appLanguage" = "语言";
