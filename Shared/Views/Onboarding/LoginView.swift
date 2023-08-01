@@ -426,9 +426,13 @@ struct LoginView: View {
 #if os(iOS)
             if horizontalSizeClass == .regular || verticalSizeClass == .regular {
                 Image("grocy-logo")
+                    .resizable()
+                    .scaledToFit()
             }
 #else
             Image("grocy-logo")
+                .resizable()
+                .scaledToFit()
 #endif
             switch loginViewState {
             case .start:

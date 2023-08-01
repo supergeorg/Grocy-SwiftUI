@@ -72,7 +72,7 @@ struct AppSidebarNavigation: View {
 #if os(macOS)
                 Image("grocy-logo")
                     .resizable()
-                    .frame(width: 240/2.5, height: 92/2.5)
+                    .scaledToFit()
                 Divider()
 #endif
                 Group {
