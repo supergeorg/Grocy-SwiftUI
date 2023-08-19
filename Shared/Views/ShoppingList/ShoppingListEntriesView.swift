@@ -30,7 +30,7 @@ struct ShoppingListRowView: View {
     }
     
     private var factoredAmount: Double {
-        shoppingListItem.amount * (quantityUnitConversions.first(where: { $0.fromQuID == shoppingListItem.quID })?.factor ?? 1) / (product?.quFactorPurchaseToStock ?? 1)
+        shoppingListItem.amount * (quantityUnitConversions.first(where: { $0.fromQuID == shoppingListItem.quID })?.factor ?? 1)
     }
     
     var amountString: String {

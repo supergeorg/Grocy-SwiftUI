@@ -439,8 +439,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Se abilitato, la quantità minima di magazzino dei sottoprodotti sarà accumulata all’interno di questo prodotto, significa che il sottoprodotto non sarà mai “mancante”, solo questo prodotto";
 "str.md.product.quickConsumeAmount" = "Quantità di consumo rapida";
 "str.md.product.quickConsumeAmount.info" = "Questa quantità è utilizzata per i 'pulsanti di consumo rapido/apertura' nella pagina di panoramica della dispensa (correlato alla unità quantitativa della dispensa)";
-"str.md.product.quFactorPurchaseToStock" = "Fattore di acquisto per unità di quantità di magazzino";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Questo significa che 1 %@ acquistato sarà convertito in %@  %@ a magazzino";
 "str.md.product.enableTareWeightHandling" = "Abilita la gestione della tara";
 "str.md.product.enableTareWeightHandling.info" = "Questo è utile ad es. per la farina in barattoli: all'acquisto / consumo / inventario si pesa sempre l'intero barattolo, la quantità da registrare viene quindi calcolata automaticamente in base a ciò che è in dispensa ed al peso della tara definito di seguito";
 "str.md.product.tareWeight" = "Peso tara";

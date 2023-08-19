@@ -440,8 +440,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "啟用後，子物品的最小庫存數量將累計到該物品中，這代表子物品將永遠不會「不足」";
 "str.md.product.quickConsumeAmount" = "快速消耗數量";
 "str.md.product.quickConsumeAmount.info" = "此數量用於庫存總覽的「快速消耗/開封按鈕」(使用庫存數量單位)";
-"str.md.product.quFactorPurchaseToStock" = "拆分購買數量單位為庫存數量單位";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "這代表購買 1 %@ 會轉換為 %@ %@ 的庫存";
 "str.md.product.enableTareWeightHandling" = "啟用皮重處理";
 "str.md.product.enableTareWeightHandling.info" = "這很有用。例如：罐中的麵粉在購買/消耗/調整庫存時可整罐秤重，該差值將按庫存及空罐重自動算出。";
 "str.md.product.tareWeight" = "皮重";

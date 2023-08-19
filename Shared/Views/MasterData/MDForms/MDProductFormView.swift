@@ -123,7 +123,6 @@ struct MDProductFormView: View {
     @State private var productGroupID: Int?
     @State private var quIDStock: Int? // REQUIRED
     @State private var quIDPurchase: Int? // REQUIRED
-    @State private var quFactorPurchaseToStock: Double = 1.0
     @State private var enableTareWeightHandling: Bool = false
     @State private var tareWeight: Double = 0.0
     @State private var notCheckStockFulfillmentForRecipes: Bool = false
@@ -203,7 +202,6 @@ struct MDProductFormView: View {
         minStockAmount = product?.minStockAmount ?? 0.0
         cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts == 1
         quickConsumeAmount = product?.quickConsumeAmount ?? 1.0
-        quFactorPurchaseToStock = product?.quFactorPurchaseToStock ?? 1.0
         enableTareWeightHandling = product?.enableTareWeightHandling == 1
         tareWeight = product?.tareWeight ?? 0.0
         notCheckStockFulfillmentForRecipes = product?.notCheckStockFulfillmentForRecipes == 1
@@ -244,7 +242,6 @@ struct MDProductFormView: View {
                 storeID: storeID,
                 quIDPurchase: quIDPurchase,
                 quIDStock: quIDStock,
-                quFactorPurchaseToStock: quFactorPurchaseToStock,
                 minStockAmount: minStockAmount,
                 defaultBestBeforeDays: defaultDueDays,
                 defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen,
@@ -629,21 +626,6 @@ struct MDProductFormView: View {
             
             // Quick consume amount
             MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
-            
-            // QU Factor to stock
-            VStack(alignment: .leading) {
-                MyDoubleStepper(amount: $quFactorPurchaseToStock, description: "str.md.product.quFactorPurchaseToStock", minAmount: 0.0001, amountStep: 1.0, amountName: "", systemImage: MySymbols.amount)
-                if quFactorPurchaseToStock != 1 {
-#if os(macOS)
-                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
-                        .frame(maxWidth: 200)
-#else
-                    Text(LocalizedStringKey("str.md.product.quFactorPurchaseToStock.description \(currentQUPurchase?.name ?? "QU ERROR") \(String(format: "%.f", quFactorPurchaseToStock)) \(currentQUStock?.namePlural ?? "QU ERROR")"))
-                        .font(.caption)
-                        .fixedSize(horizontal: false, vertical: true)
-#endif
-                }
-            }
             
             // Tare weight
             Group {

@@ -261,7 +261,6 @@
 // amount
 "str.md.product.quickConsumeAmount" = "Snabbkonsumera antal";
 "str.md.product.quickConsumeAmount.info" = "";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Detta betyder at 1 %@ köpta kommer att konverteras till %@ %@ i lager";
 "str.md.product.enableTareWeightHandling" = "Aktivera hantering av förpackningsvikt";
 "str.md.product.enableTareWeightHandling.info" = "Detta är användbart t.ex. för mjöl i burkar - vid köp/konsumtion/inventering väger du alltid hela burken, den mängd som ska läggas till beräknas sedan automatiskt baserat på vad som finns i lager och förpackningsvikten som anges nedan";
 "str.md.product.tareWeight" = "Förpackningsvikt";

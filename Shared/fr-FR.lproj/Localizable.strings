@@ -428,8 +428,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Si activé, la quantité minimum de stock de sous-produits sera accumulée dans ce produit, ce qui signifie que le sous-produit ne sera jamais \"manquant\", seul ce produit";
 "str.md.product.quickConsumeAmount" = "Quantité de consommation rapide";
 "str.md.product.quickConsumeAmount.info" = "Cette quantité est utilisée pour la \"consommation rapide\" et le \"marquer comme ouvert\" sur la vue d'ensemble du stock";
-"str.md.product.quFactorPurchaseToStock" = "Facteur d'achat à l'unité de quantité en stock ";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Ceci signifie que 1 %@ acheté correspondra à %@ %@ en stock";
 "str.md.product.enableTareWeightHandling" = "Activer la pesée";
 "str.md.product.enableTareWeightHandling.info" = "Lors de l'utilisation d'un récipient hermétique, vous pouvez définir ici la 'tare' ou 'poids à vide'. Le calcul du 'poids net' s'effectuera automatiquement à partir du 'poids brut' que vous aurez constaté.";
 "str.md.product.tareWeight" = "Tare";

@@ -35,9 +35,6 @@ struct AmountSelectionView: View {
     private var factoredAmount: Double {
         return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID})?.factor ?? 1)
     }
-    private var factoredStockAmount: Double {
-        return factoredAmount * (product?.quFactorPurchaseToStock ?? 1.0)
-    }
     private var stockQuantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
@@ -50,11 +47,6 @@ struct AmountSelectionView: View {
         Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
             VStack(alignment: .leading) {
                 MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", amountStep: 1.0, amountName: currentQuantityUnitName, systemImage: MySymbols.amount)
-                if factoredStockAmount != amount {
-                    Text(LocalizedStringKey("str.stock.product.amount.factored \(factoredStockAmount.formattedAmount) \(stockQuantityUnitName ?? "")"))
-                        .font(.caption)
-                        .foregroundColor(Color.grocyTurquoise)
-                }
             }
             
             VStack(alignment: .leading) {

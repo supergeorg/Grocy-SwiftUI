@@ -440,8 +440,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "如果启用，子物品的最小库存数量将累计到此产品中，意味着子物品将永远不会“丢失”，只有此物品";
 "str.md.product.quickConsumeAmount" = "快速消耗的数量";
 "str.md.product.quickConsumeAmount.info" = "此金额用于库存概览页面上的“快速消费/打开按钮”(与单位库存数量相关)";
-"str.md.product.quFactorPurchaseToStock" = "拆分采购数量单位为库存数量单位";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "这代表采购 1 %@ 会转换为 %@ %@ 的库存";
 "str.md.product.enableTareWeightHandling" = "启用皮重处理";
 "str.md.product.enableTareWeightHandling.info" = "这对装在罐子里的面粉很有用——在采购/消耗/库存时，你总是要称量整个罐子，然后根据库存和下面定义的皮重自动计算出过账的数量";
 "str.md.product.tareWeight" = "皮重";

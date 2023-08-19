@@ -440,8 +440,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product";
 "str.md.product.quickConsumeAmount" = "Quick consume amount";
 "str.md.product.quickConsumeAmount.info" = "This amount is used for the \"quick consume/open buttons\" on the stock overview page (related to quantity unit stock)";
-"str.md.product.quFactorPurchaseToStock" = "Factor purchase to stock quantity unit ";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "This means 1 %@ purchased will be converted into %@ %@ in stock";
 "str.md.product.enableTareWeightHandling" = "Enable tare weight handling";
 "str.md.product.enableTareWeightHandling.info" = "This is useful e.g. for flour in jars - on purchase/consume/inventory you always weigh the whole jar, the amount to be posted is then automatically calculated based on what is in stock and the tare weight defined below";
 "str.md.product.tareWeight" = "Tare weight";

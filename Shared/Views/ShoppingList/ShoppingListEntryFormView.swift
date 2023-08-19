@@ -60,10 +60,9 @@ struct ShoppingListEntryFormView: View {
     }
     
     func saveShoppingListEntry() async {
-        let factoredAmount = amount * (product?.quFactorPurchaseToStock ?? 1.0)
         if isNewShoppingListEntry {
             let newShoppingListEntry = ShoppingListItemAdd(
-                amount: factoredAmount,
+                amount: amount,
                 note: note,
                 productID: productID,
                 quID: quantityUnitID,
@@ -84,7 +83,7 @@ struct ShoppingListEntryFormView: View {
                     id: entry.id,
                     productID: productID,
                     note: note,
-                    amount: factoredAmount,
+                    amount: amount,
                     shoppingListID: shoppingListID,
                     done: entry.done,
                     quID: quantityUnitID,
@@ -110,7 +109,7 @@ struct ShoppingListEntryFormView: View {
     private func resetForm() {
         shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? 1
         productID = shoppingListEntry?.productID ?? product?.id
-        amount = (shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)) / (product?.quFactorPurchaseToStock ?? 1.0)
+        amount = shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)
         quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase
         note = shoppingListEntry?.note ?? ""
     }

@@ -18,7 +18,6 @@ struct MDProduct: Codable {
     let locationID: Int
     @NullCodable var storeID: Int?
     let quIDPurchase, quIDStock: Int
-    @NullCodable var quFactorPurchaseToStock: Double?
     let minStockAmount: Double
     let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
     @NullCodable var pictureFileName: String?
@@ -49,7 +48,6 @@ struct MDProduct: Codable {
         case storeID = "shopping_location_id"
         case quIDPurchase = "qu_id_purchase"
         case quIDStock = "qu_id_stock"
-        case quFactorPurchaseToStock = "qu_factor_purchase_to_stock"
         case minStockAmount = "min_stock_amount"
         case defaultBestBeforeDays = "default_best_before_days"
         case defaultBestBeforeDaysAfterOpen = "default_best_before_days_after_open"
@@ -86,7 +84,6 @@ struct MDProduct: Codable {
             do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             do { self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase) } catch { self.quIDPurchase = try Int(container.decode(String.self, forKey: .quIDPurchase))! }
             do { self.quIDStock = try container.decode(Int.self, forKey: .quIDStock) } catch { self.quIDStock = try Int(container.decode(String.self, forKey: .quIDStock))! }
-            do { self.quFactorPurchaseToStock = try container.decode(Double.self, forKey: .quFactorPurchaseToStock) } catch { self.quFactorPurchaseToStock = try? Double(container.decodeIfPresent(String.self, forKey: .quFactorPurchaseToStock) ?? "") }
             do { self.minStockAmount = try container.decode(Double.self, forKey: .minStockAmount) } catch { self.minStockAmount = try Double(container.decode(String.self, forKey: .minStockAmount))! }
             do { self.defaultBestBeforeDays = try container.decode(Int.self, forKey: .defaultBestBeforeDays) } catch { self.defaultBestBeforeDays = try Int(container.decode(String.self, forKey: .defaultBestBeforeDays))! }
             do { self.defaultBestBeforeDaysAfterOpen = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterOpen) } catch { self.defaultBestBeforeDaysAfterOpen = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterOpen))! }
@@ -124,7 +121,6 @@ struct MDProduct: Codable {
         storeID: Int? = nil,
         quIDPurchase: Int,
         quIDStock: Int,
-        quFactorPurchaseToStock: Double? = nil,
         minStockAmount: Double,
         defaultBestBeforeDays: Int,
         defaultBestBeforeDaysAfterOpen: Int,
@@ -157,7 +153,6 @@ struct MDProduct: Codable {
         self.storeID = storeID
         self.quIDPurchase = quIDPurchase
         self.quIDStock = quIDStock
-        self.quFactorPurchaseToStock = quFactorPurchaseToStock
         self.minStockAmount = minStockAmount
         self.defaultBestBeforeDays = defaultBestBeforeDays
         self.defaultBestBeforeDaysAfterOpen = defaultBestBeforeDaysAfterOpen

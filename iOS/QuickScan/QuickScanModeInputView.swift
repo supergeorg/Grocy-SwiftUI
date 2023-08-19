@@ -63,10 +63,6 @@ struct QuickScanModeInputView: View {
         return purchaseAmount * (quantityUnitConversions.first(where: { $0.fromQuID == purchaseQuantityUnitID })?.factor ?? 1)
     }
     
-    private var purchaseStockAmountFactored: Double {
-        return purchaseAmountFactored * (product?.quFactorPurchaseToStock ?? 1.0)
-    }
-    
     private var purchaseUnitPrice: Double? {
         if purchaseIsTotalPrice {
             return ((purchasePrice ?? 0.0) / purchaseAmountFactored)

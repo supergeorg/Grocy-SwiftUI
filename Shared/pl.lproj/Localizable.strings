@@ -427,8 +427,6 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Jeżeli włączone, minimalna ilość zapasu półproduktów będzie akumulowana do tego produktu. Oznacza to, że półproduktu nigdy nie będzie brakować, a jedynie tego produktu.";
 "str.md.product.quickConsumeAmount" = "Ilość dla szybkiego spożycia";
 "str.md.product.quickConsumeAmount.info" = "Ta ilość będzie użyta podczas korzystania z przycisków \"Szybkie spożycie/otwarcie\" na przeglądzie zapasów";
-"str.md.product.quFactorPurchaseToStock" = "Konwersja ilości zakupu do zapasów";
-"str.md.product.quFactorPurchaseToStock.description %@ %@ %@" = "Oznacza, że jeden %@ z zakupu będzie przeliczony na %@ %@ do zapasów";
 "str.md.product.enableTareWeightHandling" = "Włącz obsługę masy tara";
 "str.md.product.enableTareWeightHandling.info" = "Jest to przydatne np. w przypadku mąki w słoikach - przy zakupie/spożyciu/zapasie zawsze waży się cały słoik, kwota jest następnie automatycznie obliczana na podstawie tego, co znajduje się w magazynie i masy tary zdefiniowanej poniżej";
 "str.md.product.tareWeight" = "Waga tara";
