@@ -300,6 +300,7 @@
 "str.shL.action.addItem" = "Aggiungi elemento";
 "str.shL.action.clearList" = "Pulisci lista";
 "str.shL.action.clearList.confirm" = "Vuoi davvero pulire questa lista della spesa?";
+"str.shL.action.clearDone" = "Pulisci oggetti completati";
 "str.shL.action.addListItemsToStock" = "Aggiungi tutti gli oggetti della lista alla dispensa";
 "str.shL.action.addBelowMinStock" = "Aggiungi prodotti sotto il limite minimo di dispensa definito";
 "str.shL.action.addOverdue" = "Aggiungi prodotti scaduti";
@@ -431,6 +432,10 @@
 "str.md.product.quPurchase" = "Acquisto unità quantità predefinita";
 "str.md.product.quPurchase.info" = "Questa è l'unità di quantità predefinita utilizzata quando si aggiunge questo prodotto alla lista della spesa";
 "str.md.product.quPurchase.required" = "Inserisci un'unità di misura";
+"str.md.product.quConsume" = "Quantità di unità di acquisto predefinita";
+"str.md.product.quConsume.required" = "Inserisci un'unità di misura";
+"str.md.product.quPrice" = "Unità di quantità per i prezzi";
+"str.md.product.quPrice.required" = "Inserisci un'unità di misura";
 // amount
 "str.md.product.category.amount" = "Quantitá";
 "str.md.product.category.amount.description" = "Min. magazzino, Consumo rapido, Coefficiente, Peso tara";
@@ -439,6 +444,7 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Se abilitato, la quantità minima di magazzino dei sottoprodotti sarà accumulata all’interno di questo prodotto, significa che il sottoprodotto non sarà mai “mancante”, solo questo prodotto";
 "str.md.product.quickConsumeAmount" = "Quantità di consumo rapida";
 "str.md.product.quickConsumeAmount.info" = "Questa quantità è utilizzata per i 'pulsanti di consumo rapido/apertura' nella pagina di panoramica della dispensa (correlato alla unità quantitativa della dispensa)";
+"str.md.product.quickOpenAmount.info" = "Questa quantità è utilizzata per i 'pulsanti di consumo rapido/apertura' nella pagina di panoramica della dispensa (correlato all'unità quantitativa della dispensa)";
 "str.md.product.enableTareWeightHandling" = "Abilita la gestione della tara";
 "str.md.product.enableTareWeightHandling.info" = "Questo è utile ad es. per la farina in barattoli: all'acquisto / consumo / inventario si pesa sempre l'intero barattolo, la quantità da registrare viene quindi calcolata automaticamente in base a ciò che è in dispensa ed al peso della tara definito di seguito";
 "str.md.product.tareWeight" = "Peso tara";

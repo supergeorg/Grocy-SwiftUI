@@ -265,8 +265,11 @@
 "str.md.product.category.quantityUnits" = "Mængdeenheder";
 "str.md.product.quStock" = "Lager-enhed";
 "str.md.product.quStock.required" = "Enhed for mængden er påkrævet";
+"str.md.product.quPurchase" = "Standard købsenhed";
 "str.md.product.quPurchase.info" = "Dette er standard indkøbs enheden når en vare tilføjes indkøbslisten.";
 "str.md.product.quPurchase.required" = "Enhed for mængden er påkrævet";
+"str.md.product.quConsume.required" = "Enhed for mængden er påkrævet";
+"str.md.product.quPrice.required" = "Enhed for mængden er påkrævet";
 // amount
 "str.md.product.quickConsumeAmount" = "Hurtig nedskrivning af mængde";
 "str.md.product.quickConsumeAmount.info" = "Denne mængde anvendes af ‘hurtig’ nedskrivningknapperne i lageroversigten, (bruger lager enheden).";

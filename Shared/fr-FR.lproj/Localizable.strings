@@ -420,6 +420,12 @@
 "str.md.product.quPurchase" = "Unité de quantité par défaut";
 "str.md.product.quPurchase.info" = "C'est la quantité par défaut lors de l'ajout de ce produit à la liste d'achats";
 "str.md.product.quPurchase.required" = "Un format est requis";
+"str.md.product.quConsume" = "Quantité consommée par défaut";
+"str.md.product.quConsume.info" = "Il s'agit de la quantité par défaut utilisée lors de la consommation de ce produit";
+"str.md.product.quConsume.required" = "Une unité est requise";
+"str.md.product.quPrice" = "Unité de quantité pour les prix";
+"str.md.product.quPrice.info" = "Lors de l'affichage des prix de ce produit, ils seront liés à cette unité de quantité";
+"str.md.product.quPrice.required" = "Une unité est requise";
 // amount
 "str.md.product.category.amount" = "Quantités";
 "str.md.product.category.amount.description" = "Stock minimum, Consommation rapide, Facteur, Tare";
@@ -428,6 +434,8 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "Si activé, la quantité minimum de stock de sous-produits sera accumulée dans ce produit, ce qui signifie que le sous-produit ne sera jamais \"manquant\", seul ce produit";
 "str.md.product.quickConsumeAmount" = "Quantité de consommation rapide";
 "str.md.product.quickConsumeAmount.info" = "Cette quantité est utilisée pour la \"consommation rapide\" et le \"marquer comme ouvert\" sur la vue d'ensemble du stock";
+"str.md.product.quickOpenAmount" = "Quantité ouverture rapide";
+"str.md.product.quickOpenAmount.info" = "Cette quantité est utilisée pour le 'bouton d'ouverture rapide' sur la page d'aperçu du stock (lié à l'unité de quantité du stock)";
 "str.md.product.enableTareWeightHandling" = "Activer la pesée";
 "str.md.product.enableTareWeightHandling.info" = "Lors de l'utilisation d'un récipient hermétique, vous pouvez définir ici la 'tare' ou 'poids à vide'. Le calcul du 'poids net' s'effectuera automatiquement à partir du 'poids brut' que vous aurez constaté.";
 "str.md.product.tareWeight" = "Tare";

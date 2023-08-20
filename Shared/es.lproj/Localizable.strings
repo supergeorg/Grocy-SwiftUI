@@ -266,8 +266,13 @@
 "str.md.product.category.quantityUnits" = "Unidades";
 "str.md.product.quStock" = "Unidad de inventario";
 "str.md.product.quStock.required" = "Es necesaria una unidad";
+"str.md.product.quPurchase" = "Unidad de compra predeterminada";
 "str.md.product.quPurchase.info" = "Esta es la unidad de cantidad predeterminada al añadir este producto a la lista de la compra";
 "str.md.product.quPurchase.required" = "Es necesaria una unidad";
+"str.md.product.quConsume" = "Cantidad de unidades de consumo por defecto";
+"str.md.product.quConsume.info" = "Esta es la unidad de cantidad por defecto utilizada al consumir este producto";
+"str.md.product.quConsume.required" = "Es necesaria una unidad";
+"str.md.product.quPrice.required" = "Es necesaria una unidad";
 // amount
 "str.md.product.quickConsumeAmount" = "Cantidad de consumo rápido";
 "str.md.product.quickConsumeAmount.info" = "Esta cantidad se usa para los botones de 'consumo rápido/abrir' en la página de resumen de inventario (medido en unidades de inventario)";

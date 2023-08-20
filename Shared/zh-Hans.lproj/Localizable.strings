@@ -432,6 +432,11 @@
 "str.md.product.quPurchase" = "默认采购数量单位";
 "str.md.product.quPurchase.info" = "这是将此物品添加到购物清单时使用的默认数量单位";
 "str.md.product.quPurchase.required" = "请填写数量单位";
+"str.md.product.quConsume" = "默认消耗数量单位";
+"str.md.product.quConsume.info" = "这是消耗此产品时使用的默认数量单位";
+"str.md.product.quConsume.required" = "请填写数量单位";
+"str.md.product.quPrice.info" = "当展示产品价格时，将此数量单位做为产品价格的计算单位";
+"str.md.product.quPrice.required" = "请填写数量单位";
 // amount
 "str.md.product.category.amount" = "数量";
 "str.md.product.category.amount.description" = "最小库存数量、快速消耗数量、系数、皮重处理";
@@ -440,6 +445,8 @@
 "str.md.product.cumulateMinStockAmountOfSubProducts.info" = "如果启用，子物品的最小库存数量将累计到此产品中，意味着子物品将永远不会“丢失”，只有此物品";
 "str.md.product.quickConsumeAmount" = "快速消耗的数量";
 "str.md.product.quickConsumeAmount.info" = "此金额用于库存概览页面上的“快速消费/打开按钮”(与单位库存数量相关)";
+"str.md.product.quickOpenAmount" = "快速开启数量";
+"str.md.product.quickOpenAmount.info" = "此数量用于库存概览页面上的“快速打开”按钮（与单位库存数量相关）";
 "str.md.product.enableTareWeightHandling" = "启用皮重处理";
 "str.md.product.enableTareWeightHandling.info" = "这对装在罐子里的面粉很有用——在采购/消耗/库存时，你总是要称量整个罐子，然后根据库存和下面定义的皮重自动计算出过账的数量";
 "str.md.product.tareWeight" = "皮重";

@@ -266,8 +266,13 @@
 "str.md.product.category.quantityUnits" = "Mennyiségi egységek";
 "str.md.product.quStock" = "Készletegység";
 "str.md.product.quStock.required" = "A mennyiségi egység megadása kötelező";
+"str.md.product.quPurchase" = "Alapértelmezett vásárlási mennyiségi egység";
 "str.md.product.quPurchase.info" = "Ez az alapértelmezett mennyiségi egység, amivel a termék a bevásárlólistára kerül";
 "str.md.product.quPurchase.required" = "A mennyiségi egység megadása kötelező";
+"str.md.product.quConsume" = "Alapértelmezett felhasználási mennyiségi egység";
+"str.md.product.quConsume.info" = "Ez az alapértelmezett mennyiségi egység, amivel a terméket felhasználjuk";
+"str.md.product.quConsume.required" = "A mennyiségi egység megadása kötelező";
+"str.md.product.quPrice.required" = "A mennyiségi egység megadása kötelező";
 // amount
 "str.md.product.quickConsumeAmount" = "Gyors felhasználási mennyiség";
 "str.md.product.quickConsumeAmount.info" = "A készlet áttekintésnél lévő 'felhasználás/felbontottként jelölés' gombok ennyi mennyiséget használnak el (készletegységben)";

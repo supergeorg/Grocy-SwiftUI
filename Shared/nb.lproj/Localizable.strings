@@ -265,8 +265,11 @@
 "str.md.product.category.quantityUnits" = "Forpakning";
 "str.md.product.quStock" = "Forpakning beholdning";
 "str.md.product.quStock.required" = "Forpakning mengde/størrelse kreves";
+"str.md.product.quPurchase" = "Standard forpakning kjøpt";
 "str.md.product.quPurchase.info" = "Dette er standard forpakningstørrelse som brukes når du legger dette produktet til handlelisten";
 "str.md.product.quPurchase.required" = "Forpakning mengde/størrelse kreves";
+"str.md.product.quConsume.required" = "Forpakning mengde/størrelse kreves";
+"str.md.product.quPrice.required" = "Forpakning mengde/størrelse kreves";
 // amount
 "str.md.product.quickConsumeAmount" = "Hurtigkonsumer";
 "str.md.product.quickConsumeAmount.info" = "Dette beløpet brukes til 'hurtigkonsumere / åpne-knappene' på beholdningsoversikten (relatert til forpakninger lager)";

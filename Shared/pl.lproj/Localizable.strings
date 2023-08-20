@@ -419,6 +419,10 @@
 "str.md.product.quPurchase" = "Domyślna jednostka zakupu";
 "str.md.product.quPurchase.info" = "Jednostka zakupu nie może być zmieniona po pierwszym zakupie";
 "str.md.product.quPurchase.required" = "Jednostka zakupu jest wymagana";
+"str.md.product.quConsume" = "Domyślnie zużywana ilość";
+"str.md.product.quConsume.info" = "Domyślna ilość zużywana podczas wykorzystywania tego produktu";
+"str.md.product.quConsume.required" = "Jednostka ilości jest wymagana";
+"str.md.product.quPrice.required" = "Jednostka ilości jest wymagana";
 // amount
 "str.md.product.category.amount" = "Ilość";
 "str.md.product.category.amount.description" = "Min. zapasów, Szybkie spożycie, Przelicznik, Waga tara";

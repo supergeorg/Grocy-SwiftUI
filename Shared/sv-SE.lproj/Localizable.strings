@@ -100,6 +100,7 @@
 "str.stock.tbl.menu.addToShL" = "Lägg till i inköpslista";
 
 "str.stock.product.amount" = "Mängd";
+"str.stock.product.amount.factored %@ %@" = "Det motsvarar %@ %@";
 "str.stock.product.quantityUnit" = "Mängdenhet";
 "str.stock.product.quantityUnit.required" = "En mängdenhet krävs";
 
@@ -256,8 +257,13 @@
 "str.md.product.category.quantityUnits" = "Mängdenheter";
 "str.md.product.quStock" = "Kvantitetsenhet lager";
 "str.md.product.quStock.required" = "En mängdenhet krävs";
+"str.md.product.quPurchase" = "Standard inköpsmängd";
 "str.md.product.quPurchase.info" = "Standard kvantitetsenhet som använd när denna produkt läggs till i inköpslistan";
 "str.md.product.quPurchase.required" = "En mängdenhet krävs";
+"str.md.product.quConsume.info" = "Standard kvantitetsenhet som använd när denna produkt konsumeras";
+"str.md.product.quConsume.required" = "En mängdenhet krävs";
+"str.md.product.quPrice.info" = "När priser visas för denna produkt kommer de att relateras till denna kvantitetsenhet";
+"str.md.product.quPrice.required" = "En mängdenhet krävs";
 // amount
 "str.md.product.quickConsumeAmount" = "Snabbkonsumera antal";
 "str.md.product.quickConsumeAmount.info" = "";
@@ -268,6 +274,7 @@
 "str.md.product.notCheckStockFulfillmentForRecipes.info" = "Detta kommer att användas som standardinställning när du lägger till denna produkt som receptkomponent";
 "str.md.product.treatOpenedAsOutOfStock" = "Behandla öppnad som slut i lager";
 "str.md.product.shouldNotBeFrozen" = "Bör ej frysas";
+"str.md.product.noOwnStock.hint" = "När aktiverad kan denna produkt inte ha eget lager, vilket innebär att den inte kommer att kunna väljas vid inköp (användbart för huvudprodukter som endast används som en summering/totalvy av underprodukterna)";
 
 "str.md.barcodes" = "Streckkoder";
 "str.md.barcode" = "Streckkod";
@@ -369,6 +376,7 @@
 "str.settings.stock.common.priceAddSeparatorAuto.hint" = "";
 "str.settings.shoppingList" = "Inköpslista, inställningar";
 "str.settings.shoppingList.shoppingList" = "Inköpslista";
+"str.settings.shoppingList.autoAddToShL" = "Lägg automatiskt till produkter som ligger under deras definierade minsta lagermängd i inköpslistan";
 "str.settings.shoppingList.shLToStockWF" = "Arbetsflöde för inköpslista till lager";
 
 
