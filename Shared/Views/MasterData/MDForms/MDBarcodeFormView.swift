@@ -200,7 +200,7 @@ struct MDBarcodeFormView: View {
                 MyDoubleStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { pickerQU in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
                         Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
                     }
                 }).disabled(true)
@@ -208,7 +208,7 @@ struct MDBarcodeFormView: View {
             
             Picker(selection: $storeID, label: Label(LocalizedStringKey("str.md.barcode.store"), systemImage: MySymbols.store).foregroundColor(.primary), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdStores, id:\.id) { grocyStore in
+                ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
                 }
             })

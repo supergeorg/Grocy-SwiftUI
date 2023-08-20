@@ -485,7 +485,7 @@ struct MDProductFormView: View {
             // Product group
             Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdProductGroups, id:\.id) { grocyProductGroup in
+                ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { grocyProductGroup in
                     Text(grocyProductGroup.name).tag(grocyProductGroup.id as Int?)
                 }
             })
@@ -526,7 +526,7 @@ struct MDProductFormView: View {
         Form {
             // Default Location - REQUIRED
             Picker(selection: $locationID, label: MyLabelWithSubtitle(title: "str.md.product.location", subTitle: "str.md.product.location.required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: locationID != nil), content: {
-                ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                     Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                 }
             })
@@ -534,7 +534,7 @@ struct MDProductFormView: View {
             HStack {
                 Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                         Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                     }
                 })
@@ -549,7 +549,7 @@ struct MDProductFormView: View {
             // Default Store
             Picker(selection: $storeID, label: MyLabelWithSubtitle(title: "str.md.product.store", systemImage: MySymbols.store, hideSubtitle: true), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdStores, id:\.id) { grocyStore in
+                ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
                 }
             })
@@ -593,7 +593,7 @@ struct MDProductFormView: View {
             HStack{
                 Picker(selection: $quIDStock, label: MyLabelWithSubtitle(title: "str.md.product.quStock", subTitle: "str.md.product.quStock.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDStock != nil), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
@@ -612,7 +612,7 @@ struct MDProductFormView: View {
             HStack{
                 Picker(selection: $quIDPurchase, label: MyLabelWithSubtitle(title: "str.md.product.quPurchase", subTitle: "str.md.product.quPurchase.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPurchase != nil), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
@@ -623,7 +623,7 @@ struct MDProductFormView: View {
             HStack{
                 Picker(selection: $quIDConsume, label: MyLabelWithSubtitle(title: "str.md.product.quConsume", subTitle: "str.md.product.quConsume.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDConsume != nil), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
@@ -634,7 +634,7 @@ struct MDProductFormView: View {
             HStack{
                 Picker(selection: $quIDPrice, label: MyLabelWithSubtitle(title: "str.md.product.quPrice", subTitle: "str.md.product.quPrice.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPrice != nil), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })

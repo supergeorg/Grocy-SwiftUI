@@ -216,14 +216,14 @@ struct InventoryProductView: View {
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
                 Picker(selection: $storeID, label: Label(LocalizedStringKey("str.stock.inventory.product.store"), systemImage: MySymbols.store).foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdStores, id:\.id) { store in
+                    ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
                         Text(store.name).tag(store.id as Int?)
                     }
                 })
                 
                 Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: MySymbols.location).foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })

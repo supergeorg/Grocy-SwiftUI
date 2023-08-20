@@ -21,7 +21,7 @@ struct StockFilterBar: View {
             Menu {
                 Picker("", selection: $filteredLocation, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })
@@ -43,7 +43,7 @@ struct StockFilterBar: View {
                    label: Label(LocalizedStringKey("str.stock.location"), systemImage: MySymbols.filter),
                    content: {
                 Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
-                ForEach(grocyVM.mdLocations, id:\.id) { location in
+                ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                     Text(location.name).tag(location.id as Int?)
                 }
             })
@@ -53,7 +53,7 @@ struct StockFilterBar: View {
             Menu {
                 Picker("", selection: $filteredProductGroup, content: {
                     Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
-                    ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
+                    ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 })
@@ -75,7 +75,7 @@ struct StockFilterBar: View {
                    label: Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.filter),
                    content: {
                 Text(LocalizedStringKey("str.stock.all")).tag(nil as Int?)
-                ForEach(grocyVM.mdProductGroups, id:\.id) { productGroup in
+                ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { productGroup in
                     Text(productGroup.name).tag(productGroup.id as Int?)
                 }
             })

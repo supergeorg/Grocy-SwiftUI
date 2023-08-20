@@ -175,7 +175,7 @@ struct TransferProductView: View {
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up").foregroundColor(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { locationFrom in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationFrom in
                         Text(locationFrom.name).tag(locationFrom.id as Int?)
                     }
                 })
@@ -195,7 +195,7 @@ struct TransferProductView: View {
                     label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary),
                     content: {
                         Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations, id:\.id) { locationTo in
+                        ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationTo in
                             Text(locationTo.name).tag(locationTo.id as Int?)
                         }
                     })

@@ -118,7 +118,7 @@ struct StockJournalFilterBar: View {
                 Menu {
                     Picker("", selection: $filteredLocationID, content: {
                         Text("str.stock.all").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations, id:\.id) { location in
+                        ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                             Text(location.name).tag(location.id as Int?)
                         }
                     })               .labelsHidden()
@@ -156,7 +156,7 @@ struct StockJournalFilterBar: View {
 #else
                 Picker(selection: $filteredProductID, label: Label(LocalizedStringKey("str.stock.journal.product"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as Int?)
-                    ForEach(grocyVM.mdProducts, id:\.id) { product in
+                    ForEach(grocyVM.mdProducts.filter({$0.active}), id:\.id) { product in
                         Text(product.name).tag(product.id as Int?)
                     }
                 })
@@ -168,7 +168,7 @@ struct StockJournalFilterBar: View {
                 })
                 Picker(selection: $filteredLocationID, label: Label(LocalizedStringKey("str.stock.journal.location"), systemImage: MySymbols.filter), content: {
                     Text("str.stock.all").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations, id:\.id) { location in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })

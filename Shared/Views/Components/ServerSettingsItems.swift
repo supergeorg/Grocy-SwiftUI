@@ -200,15 +200,15 @@ struct ServerSettingsObjectPicker: View {
             Group {
                 switch objects {
                 case .location:
-                    ForEach(grocyVM.mdLocations, id: \.id) { location in
+                    ForEach(grocyVM.mdLocations.filter({$0.active}), id: \.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 case .productGroup:
-                    ForEach(grocyVM.mdProductGroups, id: \.id) { productGroup in
+                    ForEach(grocyVM.mdProductGroups.filter({$0.active}), id: \.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 case .quantityUnit:
-                    ForEach(grocyVM.mdQuantityUnits, id: \.id) { quantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id: \.id) { quantityUnit in
                         Text(quantityUnit.name).tag(quantityUnit.id as Int?)
                     }
                 case .shoppingLists:

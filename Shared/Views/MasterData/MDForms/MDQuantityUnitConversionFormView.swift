@@ -165,7 +165,7 @@ struct MDQuantityUnitConversionFormView: View {
             Section(){
                 Picker(selection: $quIDFrom, label: Label(LocalizedStringKey("str.md.quantityUnit.conversion.quFrom"), systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
