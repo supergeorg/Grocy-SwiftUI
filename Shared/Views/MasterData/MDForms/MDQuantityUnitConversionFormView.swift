@@ -234,6 +234,6 @@ struct MDQuantityUnitConversionFormView: View {
 
 struct MDQuantityUnitConversionFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: MDQuantityUnit(id: 1, name: "Test QU", namePlural: "NAME PLURAL", mdQuantityUnitDescription: "DESCRIPTION", rowCreatedTimestamp: "ts"), showAddQuantityUnitConversion: Binding.constant(true), toastType: Binding.constant(nil))
+        MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: MDQuantityUnit(id: 1, name: "Test QU", namePlural: "NAME PLURAL", active: true, mdQuantityUnitDescription: "DESCRIPTION", rowCreatedTimestamp: "ts"), showAddQuantityUnitConversion: Binding.constant(true), toastType: Binding.constant(nil))
     }
 }

@@ -17,6 +17,7 @@ struct MDQuantityUnitFormView: View {
     
     @State private var name: String = ""
     @State private var namePlural: String = ""
+    @State private var isActive: Bool = true
     @State private var mdQuantityUnitDescription: String = ""
     
     var isNewQuantityUnit: Bool
@@ -39,6 +40,7 @@ struct MDQuantityUnitFormView: View {
     private func resetForm() {
         self.name = quantityUnit?.name ?? ""
         self.namePlural = quantityUnit?.namePlural ?? ""
+        self.isActive = quantityUnit?.active ?? true
         self.mdQuantityUnitDescription = quantityUnit?.mdQuantityUnitDescription ?? ""
         isNameCorrect = checkNameCorrect()
     }
@@ -85,7 +87,14 @@ struct MDQuantityUnitFormView: View {
     private func saveQuantityUnit() async {
         let id = isNewQuantityUnit ? grocyVM.findNextID(.quantity_units) : quantityUnit!.id
         let timeStamp = isNewQuantityUnit ? Date().iso8601withFractionalSeconds : quantityUnit!.rowCreatedTimestamp
-        let quantityUnitPOST = MDQuantityUnit(id: id, name: name, namePlural: namePlural, mdQuantityUnitDescription: mdQuantityUnitDescription, rowCreatedTimestamp: timeStamp)
+        let quantityUnitPOST = MDQuantityUnit(
+            id: id,
+            name: name,
+            namePlural: namePlural,
+            active: isActive,
+            mdQuantityUnitDescription: mdQuantityUnitDescription,
+            rowCreatedTimestamp: timeStamp
+        )
         isProcessing = true
         if isNewQuantityUnit {
             do {
@@ -151,6 +160,7 @@ struct MDQuantityUnitFormView: View {
                         isNameCorrect = checkNameCorrect()
                     })
                 MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
+                MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
             if !isNewQuantityUnit, let quantityUnit = quantityUnit {
@@ -258,7 +268,7 @@ struct MDQuantityUnitFormView_Previews: PreviewProvider {
                 MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
             }
             NavigationView {
-                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+                MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", active: true, mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
             }
         }
 #endif

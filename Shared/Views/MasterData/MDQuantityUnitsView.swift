@@ -18,6 +18,7 @@ struct MDQuantityUnitRowView: View {
                 Text("(\(quantityUnit.namePlural))")
                     .font(.title3)
             }
+            .foregroundColor(quantityUnit.active ? .primary : .gray)
             if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
                 Text(description)
                     .font(.caption)
@@ -176,7 +177,7 @@ struct MDQuantityUnitsView: View {
 struct MDQuantityUnitsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", namePlural: "QU NAME PLURAL", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""))
+            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", namePlural: "QU NAME PLURAL", active: true, mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""))
 #if os(macOS)
             MDQuantityUnitsView()
 #else
