@@ -146,7 +146,7 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
 #if os(macOS)
         Group {
             MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
-            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
+            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
         }
 #else
         Group {

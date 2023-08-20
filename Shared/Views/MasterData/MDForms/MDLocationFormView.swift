@@ -161,7 +161,7 @@ struct MDLocationFormView_Previews: PreviewProvider {
 #if os(macOS)
         Group {
             MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: bool, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: true, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
         }
 #else
         Group {

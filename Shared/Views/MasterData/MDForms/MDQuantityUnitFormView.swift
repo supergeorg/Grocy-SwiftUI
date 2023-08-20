@@ -260,7 +260,7 @@ struct MDQuantityUnitFormView_Previews: PreviewProvider {
 #if os(macOS)
         Group {
             MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
+            MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: MDQuantityUnit(id: 0, name: "Quantity unit", namePlural: "QU Plural", active: true, mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""), showAddQuantityUnit: Binding.constant(false), toastType: Binding.constant(.successAdd))
         }
 #else
         Group {
