@@ -41,12 +41,13 @@ struct SettingsAppView: View {
                 Text("🇵🇱 Polska (Polish)").tag("pl")
                 Text("🇨🇿 Česky (Czech)").tag("cs")
                 Text("🇮🇹 Italiano (Italian)").tag("it")
-                Text("🇨🇳 汉文 (Chinese Simplified)").tag("zh_Hans")
+                Text("🇨🇳 汉文 (Chinese Simplified)").tag("zh-Hans")
+                Text("🇵🇹 Português (Portuguese Portugal)").tag("pt-PT")
                 if devMode {
                     Text("🇩🇰 Dansk (Danish)").tag("da")
                     Text("🇳🇴 Norsk (Norwegian Bokmål)").tag("nb")
                     Text("🇭🇺 Magyar (Hungarian)").tag("hu")
-                    Text("🇹🇼 漢文 (Chinese Traditional)").tag("zh_Hant")
+                    Text("🇹🇼 漢文 (Chinese Traditional)").tag("zh-Hant")
                 }
             })
             MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)
