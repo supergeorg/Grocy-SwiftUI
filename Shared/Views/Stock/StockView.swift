@@ -129,7 +129,7 @@ struct StockView: View {
                 !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
             }
             .filter {
-                $0.product.hideOnStockOverview == 0
+                $0.product.hideOnStockOverview == false
             }
             .sorted(using: sortSetting)
     }

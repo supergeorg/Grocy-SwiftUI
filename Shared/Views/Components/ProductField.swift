@@ -78,7 +78,7 @@ struct ProductField: View {
             searchTerm.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchTerm) || getBarcodes(pID: $0.id).contains(searchTerm))
         }
         .filter {
-            $0.noOwnStock != 1
+            $0.noOwnStock != true
         }
         .sorted(by: {
             $0.name.lowercased() < $1.name.lowercased()

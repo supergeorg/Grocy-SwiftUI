@@ -209,7 +209,7 @@ struct TransferProductView: View {
                         .font(.caption)
                         .foregroundColor(.red)
                 }
-                if product?.shouldNotBeFrozen == 1,
+                if product?.shouldNotBeFrozen == true,
                    locationTo?.isFreezer == true
                 {
                     Text(LocalizedStringKey("str.stock.transfer.product.shouldNotBeFrozen"))

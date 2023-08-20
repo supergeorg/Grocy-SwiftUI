@@ -174,20 +174,20 @@ struct MDProductFormView: View {
     private func resetForm() {
         name = product?.name ?? ""
         
-        active = (product?.active ?? 1) == 1
+        active = product?.active ?? true
         parentProductID = product?.parentProductID
         mdProductDescription = product?.mdProductDescription ?? ""
         productGroupID = product?.productGroupID ?? grocyVM.userSettings?.productPresetsProductGroupID
         calories = product?.calories ?? 0.0
-        hideOnStockOverview = product?.hideOnStockOverview == 1
-        noOwnStock = product?.noOwnStock == 1
-        shouldNotBeFrozen = product?.shouldNotBeFrozen == 1
-        treatOpenedAsOutOfStock = (product?.treatOpenedAsOutOfStock != nil ? (product?.treatOpenedAsOutOfStock == 1) : (grocyVM.userSettings?.productPresetsTreatOpenedAsOutOfStock)) ?? false
+        hideOnStockOverview = product?.hideOnStockOverview ?? false
+        noOwnStock = product?.noOwnStock ?? false
+        shouldNotBeFrozen = product?.shouldNotBeFrozen ?? false
+        treatOpenedAsOutOfStock = (product?.treatOpenedAsOutOfStock != nil ? (product?.treatOpenedAsOutOfStock ?? false) : (grocyVM.userSettings?.productPresetsTreatOpenedAsOutOfStock)) ?? false
         pictureFilename = product?.pictureFileName
         
         locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID
         defaultConsumeLocationID = product?.defaultConsumeLocationID
-        moveOnOpen = (product?.moveOnOpen ?? 0) == 1
+        moveOnOpen = product?.moveOnOpen ?? false
         storeID = product?.storeID
         
         dueType = (product?.dueType == DueType.bestBefore.rawValue) ? DueType.bestBefore : DueType.expires
@@ -200,11 +200,11 @@ struct MDProductFormView: View {
         quIDPurchase = product?.quIDPurchase ?? grocyVM.userSettings?.productPresetsQuID
         
         minStockAmount = product?.minStockAmount ?? 0.0
-        cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts == 1
+        cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts ?? false
         quickConsumeAmount = product?.quickConsumeAmount ?? 1.0
-        enableTareWeightHandling = product?.enableTareWeightHandling == 1
+        enableTareWeightHandling = product?.enableTareWeightHandling ?? false
         tareWeight = product?.tareWeight ?? 0.0
-        notCheckStockFulfillmentForRecipes = product?.notCheckStockFulfillmentForRecipes == 1
+        notCheckStockFulfillmentForRecipes = product?.notCheckStockFulfillmentForRecipes ?? false
         
         isNameCorrect = checkNameCorrect()
     }
@@ -237,7 +237,7 @@ struct MDProductFormView: View {
                 name: name,
                 mdProductDescription: mdProductDescription,
                 productGroupID: productGroupID,
-                active: active ? 1 : 0,
+                active: active,
                 locationID: locationID,
                 storeID: storeID,
                 quIDPurchase: quIDPurchase,
@@ -248,20 +248,20 @@ struct MDProductFormView: View {
                 defaultBestBeforeDaysAfterFreezing: defaultDueDaysAfterFreezing,
                 defaultBestBeforeDaysAfterThawing: defaultDueDaysAfterThawing,
                 pictureFileName: product?.pictureFileName,
-                enableTareWeightHandling: enableTareWeightHandling ? 1 : 0,
+                enableTareWeightHandling: enableTareWeightHandling,
                 tareWeight: tareWeight,
-                notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes ? 1 : 0,
+                notCheckStockFulfillmentForRecipes: notCheckStockFulfillmentForRecipes,
                 parentProductID: parentProductID,
                 calories: calories,
-                cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts ? 1 : 0,
+                cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts,
                 dueType: dueType.rawValue,
                 quickConsumeAmount: quickConsumeAmount,
-                hideOnStockOverview: hideOnStockOverview ? 1 : 0,
-                shouldNotBeFrozen: shouldNotBeFrozen ? 1 : 0,
-                treatOpenedAsOutOfStock: treatOpenedAsOutOfStock ? 1 : 0,
-                noOwnStock: noOwnStock ? 1 : 0,
-                defaultConsumeLocationID: (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") ? defaultConsumeLocationID : nil,
-                moveOnOpen: (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") ? (defaultConsumeLocationID != nil ? (moveOnOpen ? 1 : 0) : 0) : nil,
+                hideOnStockOverview: hideOnStockOverview,
+                shouldNotBeFrozen: shouldNotBeFrozen,
+                treatOpenedAsOutOfStock: treatOpenedAsOutOfStock,
+                noOwnStock: noOwnStock,
+                defaultConsumeLocationID: defaultConsumeLocationID,
+                moveOnOpen: defaultConsumeLocationID != nil ? moveOnOpen : nil,
                 rowCreatedTimestamp: timeStamp
             )
             isProcessing = true
@@ -521,23 +521,20 @@ struct MDProductFormView: View {
                     Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                 }
             })
+            // Default consume location
+            HStack {
+                Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
+                        Text(grocyLocation.name).tag(grocyLocation.id as Int?)
+                    }
+                })
+                FieldDescription(description: "str.md.product.location.consume.info")
+            }
             
-            if (grocyVM.systemInfo?.grocyVersion.version ?? "").starts(with: "3.3.1") {
-                // Default consume location
-                HStack {
-                    Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
-                        Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations, id:\.id) { grocyLocation in
-                            Text(grocyLocation.name).tag(grocyLocation.id as Int?)
-                        }
-                    })
-                    FieldDescription(description: "str.md.product.location.consume.info")
-                }
-                
-                // Move on open
-                if defaultConsumeLocationID != nil {
-                    MyToggle(isOn: $moveOnOpen, description: "str.md.product.location.consume.moveOnOpen", descriptionInfo: "str.md.product.location.consume.moveOnOpen.info", icon: MySymbols.transfer)
-                }
+            // Move on open
+            if defaultConsumeLocationID != nil {
+                MyToggle(isOn: $moveOnOpen, description: "str.md.product.location.consume.moveOnOpen", descriptionInfo: "str.md.product.location.consume.moveOnOpen.info", icon: MySymbols.transfer)
             }
             
             // Default Store

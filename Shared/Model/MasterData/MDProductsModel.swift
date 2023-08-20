@@ -14,28 +14,28 @@ struct MDProduct: Codable {
     let name: String
     @NullCodable var mdProductDescription: String?
     @NullCodable var productGroupID: Int?
-    let active: Int?
+    let active: Bool?
     let locationID: Int
     @NullCodable var storeID: Int?
     let quIDPurchase, quIDStock: Int
     let minStockAmount: Double
     let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
     @NullCodable var pictureFileName: String?
-    let enableTareWeightHandling: Int?
+    let enableTareWeightHandling: Bool?
     @NullCodable var tareWeight: Double?
-    let notCheckStockFulfillmentForRecipes: Int?
+    let notCheckStockFulfillmentForRecipes: Bool?
     @NullCodable var parentProductID: Int?
     @NullCodable var calories: Double?
-    let cumulateMinStockAmountOfSubProducts: Int?
+    let cumulateMinStockAmountOfSubProducts: Bool?
     let dueType: Int
     @NullCodable var quickConsumeAmount: Double?
-    @NullCodable var hideOnStockOverview: Int?
+    @NullCodable var hideOnStockOverview: Bool?
     let defaultStockLabelType: Int?
-    let shouldNotBeFrozen: Int?
-    let treatOpenedAsOutOfStock: Int?
-    let noOwnStock: Int?
+    let shouldNotBeFrozen: Bool?
+    let treatOpenedAsOutOfStock: Bool?
+    let noOwnStock: Bool?
     @NullCodable var defaultConsumeLocationID: Int?
-    let moveOnOpen: Int?
+    let moveOnOpen: Bool?
     let quIDConsume: Int?
     let autoReprintStockLabel: Bool?
     let quickOpenAmount: Int?
@@ -87,7 +87,15 @@ struct MDProduct: Codable {
             self.name = try container.decode(String.self, forKey: .name)
             self.mdProductDescription = try? container.decodeIfPresent(String.self, forKey: .mdProductDescription) ?? nil
             do { self.productGroupID = try container.decodeIfPresent(Int.self, forKey: .productGroupID) } catch { self.productGroupID = try Int(container.decodeIfPresent(String.self, forKey: .productGroupID) ?? "") }
-            do { self.active = try container.decode(Int.self, forKey: .active) } catch { self.active = try Int(container.decode(String.self, forKey: .active)) ?? 0 }
+            do {
+                self.active = try container.decode(Bool.self, forKey: .active)
+            } catch {
+                do {
+                    self.active = try container.decode(Int.self, forKey: .active) == 1
+                } catch {
+                    self.active = ["1", "true"].contains(try? container.decode(String.self, forKey: .active))
+                }
+            }
             do { self.locationID = try container.decode(Int.self, forKey: .locationID) } catch { self.locationID = try Int(container.decode(String.self, forKey: .locationID))! }
             do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             do { self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase) } catch { self.quIDPurchase = try Int(container.decode(String.self, forKey: .quIDPurchase))! }
@@ -98,21 +106,85 @@ struct MDProduct: Codable {
             do { self.defaultBestBeforeDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterFreezing) } catch { self.defaultBestBeforeDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterFreezing))! }
             do { self.defaultBestBeforeDaysAfterThawing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterThawing) } catch { self.defaultBestBeforeDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterThawing))! }
             self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
-            do { self.enableTareWeightHandling = try container.decode(Int.self, forKey: .enableTareWeightHandling) } catch { self.enableTareWeightHandling = try? Int(container.decodeIfPresent(String.self, forKey: .enableTareWeightHandling) ?? "") }
+            do {
+                self.enableTareWeightHandling = try container.decode(Bool.self, forKey: .enableTareWeightHandling)
+            } catch {
+                do {
+                    self.enableTareWeightHandling = try container.decode(Int.self, forKey: .enableTareWeightHandling) == 1
+                } catch {
+                    self.enableTareWeightHandling = ["1", "true"].contains(try? container.decode(String.self, forKey: .enableTareWeightHandling))
+                }
+            }
             do { self.tareWeight = try container.decode(Double.self, forKey: .tareWeight) } catch { self.tareWeight = try? Double(container.decodeIfPresent(String.self, forKey: .tareWeight) ?? "") }
-            do { self.notCheckStockFulfillmentForRecipes = try container.decode(Int.self, forKey: .notCheckStockFulfillmentForRecipes) } catch { self.notCheckStockFulfillmentForRecipes = try? Int(container.decodeIfPresent(String.self, forKey: .notCheckStockFulfillmentForRecipes) ?? "") }
+            do {
+                self.notCheckStockFulfillmentForRecipes = try container.decode(Bool.self, forKey: .notCheckStockFulfillmentForRecipes)
+            } catch {
+                do {
+                    self.notCheckStockFulfillmentForRecipes = try container.decode(Int.self, forKey: .notCheckStockFulfillmentForRecipes) == 1
+                } catch {
+                    self.notCheckStockFulfillmentForRecipes = ["1", "true"].contains(try? container.decode(String.self, forKey: .notCheckStockFulfillmentForRecipes))
+                }
+            }
             do { self.parentProductID = try container.decode(Int.self, forKey: .parentProductID) } catch { self.parentProductID = try? Int(container.decodeIfPresent(String.self, forKey: .parentProductID) ?? "") }
             do { self.calories = try container.decodeIfPresent(Double.self, forKey: .calories) } catch { self.calories = try? Double(container.decodeIfPresent(String.self, forKey: .calories) ?? "") }
-            do { self.cumulateMinStockAmountOfSubProducts = try container.decodeIfPresent(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) } catch { self.cumulateMinStockAmountOfSubProducts = try? Int(container.decodeIfPresent(String.self, forKey: .cumulateMinStockAmountOfSubProducts) ?? "") }
+            do {
+                self.cumulateMinStockAmountOfSubProducts = try container.decode(Bool.self, forKey: .cumulateMinStockAmountOfSubProducts)
+            } catch {
+                do {
+                    self.cumulateMinStockAmountOfSubProducts = try container.decode(Int.self, forKey: .cumulateMinStockAmountOfSubProducts) == 1
+                } catch {
+                    self.cumulateMinStockAmountOfSubProducts = ["1", "true"].contains(try? container.decode(String.self, forKey: .cumulateMinStockAmountOfSubProducts))
+                }
+            }
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
-            do { self.hideOnStockOverview = try container.decodeIfPresent(Int.self, forKey: .hideOnStockOverview) } catch { self.hideOnStockOverview = try? Int(container.decodeIfPresent(String.self, forKey: .hideOnStockOverview) ?? "") }
+            do {
+                self.hideOnStockOverview = try container.decode(Bool.self, forKey: .hideOnStockOverview)
+            } catch {
+                do {
+                    self.hideOnStockOverview = try container.decode(Int.self, forKey: .hideOnStockOverview) == 1
+                } catch {
+                    self.hideOnStockOverview = ["1", "true"].contains(try? container.decode(String.self, forKey: .hideOnStockOverview))
+                }
+            }
             do { self.defaultStockLabelType = try container.decodeIfPresent(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try? Int(container.decodeIfPresent(String.self, forKey: .defaultStockLabelType) ?? "") }
-            do { self.shouldNotBeFrozen = try container.decodeIfPresent(Int.self, forKey: .shouldNotBeFrozen) } catch { self.shouldNotBeFrozen = try? Int(container.decodeIfPresent(String.self, forKey: .shouldNotBeFrozen) ?? "") }
-            do { self.treatOpenedAsOutOfStock = try container.decodeIfPresent(Int.self, forKey: .treatOpenedAsOutOfStock) } catch { self.treatOpenedAsOutOfStock = try? Int(container.decodeIfPresent(String.self, forKey: .treatOpenedAsOutOfStock) ?? "") }
-            do { self.noOwnStock = try container.decodeIfPresent(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try? Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
+            do {
+                self.shouldNotBeFrozen = try container.decode(Bool.self, forKey: .shouldNotBeFrozen)
+            } catch {
+                do {
+                    self.shouldNotBeFrozen = try container.decode(Int.self, forKey: .shouldNotBeFrozen) == 1
+                } catch {
+                    self.shouldNotBeFrozen = ["1", "true"].contains(try? container.decode(String.self, forKey: .shouldNotBeFrozen))
+                }
+            }
+            do {
+                self.treatOpenedAsOutOfStock = try container.decode(Bool.self, forKey: .treatOpenedAsOutOfStock)
+            } catch {
+                do {
+                    self.treatOpenedAsOutOfStock = try container.decode(Int.self, forKey: .treatOpenedAsOutOfStock) == 1
+                } catch {
+                    self.treatOpenedAsOutOfStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .treatOpenedAsOutOfStock))
+                }
+            }
+            do {
+                self.noOwnStock = try container.decode(Bool.self, forKey: .noOwnStock)
+            } catch {
+                do {
+                    self.noOwnStock = try container.decode(Int.self, forKey: .noOwnStock) == 1
+                } catch {
+                    self.noOwnStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .noOwnStock))
+                }
+            }
             do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
-            do { self.moveOnOpen = try container.decodeIfPresent(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try? Int(container.decodeIfPresent(String.self, forKey: .moveOnOpen) ?? "") }
+            do {
+                self.moveOnOpen = try container.decode(Bool.self, forKey: .moveOnOpen)
+            } catch {
+                do {
+                    self.moveOnOpen = try container.decode(Int.self, forKey: .moveOnOpen) == 1
+                } catch {
+                    self.moveOnOpen = ["1", "true"].contains(try? container.decode(String.self, forKey: .moveOnOpen))
+                }
+            }
             do { self.quIDConsume = try container.decodeIfPresent(Int.self, forKey: .quIDConsume) } catch { self.quIDConsume = try? Int(container.decodeIfPresent(String.self, forKey: .quIDConsume) ?? "") }
             do {
                 self.autoReprintStockLabel = try container.decode(Bool.self, forKey: .autoReprintStockLabel)
@@ -136,7 +208,7 @@ struct MDProduct: Codable {
         name: String,
         mdProductDescription: String? = nil,
         productGroupID: Int? = nil,
-        active: Int,
+        active: Bool,
         locationID: Int,
         storeID: Int? = nil,
         quIDPurchase: Int,
@@ -147,21 +219,21 @@ struct MDProduct: Codable {
         defaultBestBeforeDaysAfterFreezing: Int,
         defaultBestBeforeDaysAfterThawing: Int,
         pictureFileName: String? = nil,
-        enableTareWeightHandling: Int? = nil,
+        enableTareWeightHandling: Bool? = nil,
         tareWeight: Double? = nil,
-        notCheckStockFulfillmentForRecipes: Int? = nil,
+        notCheckStockFulfillmentForRecipes: Bool? = nil,
         parentProductID: Int? = nil,
         calories: Double? = nil,
-        cumulateMinStockAmountOfSubProducts: Int,
+        cumulateMinStockAmountOfSubProducts: Bool,
         dueType: Int,
         quickConsumeAmount: Double? = nil,
-        hideOnStockOverview: Int? = nil,
+        hideOnStockOverview: Bool? = nil,
         defaultStockLabelType: Int? = nil,
-        shouldNotBeFrozen: Int? = nil,
-        treatOpenedAsOutOfStock: Int? = nil,
-        noOwnStock: Int? = nil,
+        shouldNotBeFrozen: Bool? = nil,
+        treatOpenedAsOutOfStock: Bool? = nil,
+        noOwnStock: Bool? = nil,
         defaultConsumeLocationID: Int? = nil,
-        moveOnOpen: Int? = nil,
+        moveOnOpen: Bool? = nil,
         quIDConsume: Int? = nil,
         autoReprintStockLabel: Bool? = nil,
         quickOpenAmount: Int? = nil,
