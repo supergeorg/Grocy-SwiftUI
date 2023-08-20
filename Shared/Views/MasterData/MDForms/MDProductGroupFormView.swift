@@ -77,7 +77,7 @@ struct MDProductGroupFormView: View {
             }
         } else {
             do {
-                try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: productGroupPOST)
+                try await grocyVM.putMDObjectWithID(object: .product_groups, id: id, content: productGroupPOST)
                 grocyVM.postLog("Product group edited successfully.", type: .info)
                 toastType = .successAdd
                 await updateData()
