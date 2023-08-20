@@ -429,9 +429,15 @@
 "str.md.product.quStock" = "Quantity unit stock";
 "str.md.product.quStock.info" = "Quantity unit stock cannot be changed after first purchase";
 "str.md.product.quStock.required" = "A quantity unit is required";
-"str.md.product.quPurchase" = "Default quantity unit purchase ";
+"str.md.product.quPurchase" = "Default quantity unit purchase";
 "str.md.product.quPurchase.info" = "This is the default quantity unit used when adding this product to the shopping list";
 "str.md.product.quPurchase.required" = "A quantity unit is required";
+"str.md.product.quConsume" = "Default quantity unit consume";
+"str.md.product.quConsume.info" = "This is the default quantity unit used when consuming this product";
+"str.md.product.quConsume.required" = "A quantity unit is required";
+"str.md.product.quPrice" = "Quantity unit for prices";
+"str.md.product.quPrice.info" = "When displaying prices for this product, they will be related to this quantity unit";
+"str.md.product.quPrice.required" = "A quantity unit is required";
 // amount
 "str.md.product.category.amount" = "Amounts";
 "str.md.product.category.amount.description" = "Min. stock, Quick consume, Factor, Tare weight";

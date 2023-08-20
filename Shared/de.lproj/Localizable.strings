@@ -430,6 +430,12 @@
 "str.md.product.quPurchase" = "Standard Mengeneinheit Einkauf";
 "str.md.product.quPurchase.info" = "Dies ist die Standardmengeneinheit, die beim Hinzufügen dieses Produkts zum Einkaufszettel verwendet wird";
 "str.md.product.quPurchase.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.md.product.quConsume" = "Standardverbrauchsmengeneinheit";
+"str.md.product.quConsume.info" = "Dies ist die Standardmengeneinheit, die bei Verbrauch dieses Produkts verwendet wird";
+"str.md.product.quConsume.required" = "Eine Mengeneinheit muss ausgewählt werden";
+"str.md.product.quPrice" = "Mengeneinheit für Preise";
+"str.md.product.quPrice.info" = "Wenn Preise für dieses Produkt angezeigt werden, beziehen sie sich auf diese Mengeneinheit";
+"str.md.product.quPrice.required" = "Eine Mengeneinheit muss ausgewählt werden";
 // amount
 "str.md.product.category.amount" = "Mengen";
 "str.md.product.category.amount.description" = "Mindestbestand, Schnellverbrauch, Faktoren, Taragewicht";

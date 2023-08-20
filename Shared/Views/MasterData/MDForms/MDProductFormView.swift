@@ -123,6 +123,8 @@ struct MDProductFormView: View {
     @State private var productGroupID: Int?
     @State private var quIDStock: Int? // REQUIRED
     @State private var quIDPurchase: Int? // REQUIRED
+    @State private var quIDConsume: Int? // REQUIRED
+    @State private var quIDPrice: Int? // REQUIRED
     @State private var enableTareWeightHandling: Bool = false
     @State private var tareWeight: Double = 0.0
     @State private var notCheckStockFulfillmentForRecipes: Bool = false
@@ -198,6 +200,8 @@ struct MDProductFormView: View {
         
         quIDStock = product?.quIDStock ?? grocyVM.userSettings?.productPresetsQuID
         quIDPurchase = product?.quIDPurchase ?? grocyVM.userSettings?.productPresetsQuID
+        quIDConsume = product?.quIDConsume ?? grocyVM.userSettings?.productPresetsQuID
+        quIDPrice = product?.quIDPrice ?? grocyVM.userSettings?.productPresetsQuID
         
         minStockAmount = product?.minStockAmount ?? 0.0
         cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts ?? false
@@ -225,11 +229,11 @@ struct MDProductFormView: View {
     }
     
     private var isFormValid: Bool {
-        !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil) &&  isBarcodeCorrect
+        !(name.isEmpty) && isNameCorrect && (locationID != nil) && (quIDStock != nil) && (quIDPurchase != nil) && (quIDConsume != nil) && (quIDPrice != nil) && isBarcodeCorrect
     }
     
     private func saveProduct() async {
-        if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock {
+        if let locationID = locationID, let quIDPurchase = quIDPurchase, let quIDStock = quIDStock, let quIDConsume = quIDConsume, let quIDPrice = quIDPrice {
             let id = isNewProduct ? grocyVM.findNextID(.products) : product!.id
             let timeStamp = isNewProduct ? Date().iso8601withFractionalSeconds : product!.rowCreatedTimestamp
             let productPOST = MDProduct(
@@ -242,6 +246,8 @@ struct MDProductFormView: View {
                 storeID: storeID,
                 quIDPurchase: quIDPurchase,
                 quIDStock: quIDStock,
+                quIDConsume: quIDConsume,
+                quIDPrice: quIDPrice,
                 minStockAmount: minStockAmount,
                 defaultBestBeforeDays: defaultDueDays,
                 defaultBestBeforeDaysAfterOpen: defaultDueDaysAfterOpen,
@@ -397,7 +403,7 @@ struct MDProductFormView: View {
             DisclosureGroup(content: {
                 quantityUnitPropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil))
+                MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
             })
             
             DisclosureGroup(content: {
@@ -435,7 +441,7 @@ struct MDProductFormView: View {
                 NavigationLink(
                     destination: quantityUnitPropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil))
+                        MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
                     })
                 
                 NavigationLink(
@@ -580,7 +586,7 @@ struct MDProductFormView: View {
     }
     var quantityUnitPropertiesView: some View {
         Form {
-            // QU Stock - REQUIRED
+            // Default Quantity Unit Stock - REQUIRED
             HStack{
                 Picker(selection: $quIDStock, label: MyLabelWithSubtitle(title: "str.md.product.quStock", subTitle: "str.md.product.quStock.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDStock != nil), content: {
                     Text("").tag(nil as Int?)
@@ -589,13 +595,17 @@ struct MDProductFormView: View {
                     }
                 })
                 .onChange(of: quIDStock, perform: { newValue in
-                    if quIDPurchase == nil { quIDPurchase = quIDStock }
+                    if quIDPurchase == nil {
+                        quIDPurchase = quIDStock
+                        quIDConsume = quIDStock
+                        quIDPrice = quIDPrice
+                    }
                 })
                 
                 FieldDescription(description: "str.md.product.quStock.info")
             }
             
-            // QU Purchase - REQUIRED
+            // Default Quantity Unit Purchase - REQUIRED
             HStack{
                 Picker(selection: $quIDPurchase, label: MyLabelWithSubtitle(title: "str.md.product.quPurchase", subTitle: "str.md.product.quPurchase.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPurchase != nil), content: {
                     Text("").tag(nil as Int?)
@@ -604,6 +614,28 @@ struct MDProductFormView: View {
                     }
                 })
                 FieldDescription(description: "str.md.product.quPurchase.info")
+            }
+            
+            // Default Quantity Unit Consume - REQUIRED
+            HStack{
+                Picker(selection: $quIDConsume, label: MyLabelWithSubtitle(title: "str.md.product.quConsume", subTitle: "str.md.product.quConsume.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDConsume != nil), content: {
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                        Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
+                    }
+                })
+                FieldDescription(description: "str.md.product.quConsume.info")
+            }
+            
+            // Default Quantity Unit Price - REQUIRED
+            HStack{
+                Picker(selection: $quIDPrice, label: MyLabelWithSubtitle(title: "str.md.product.quPrice", subTitle: "str.md.product.quPrice.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPrice != nil), content: {
+                    Text("").tag(nil as Int?)
+                    ForEach(grocyVM.mdQuantityUnits, id:\.id) { grocyQuantityUnit in
+                        Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
+                    }
+                })
+                FieldDescription(description: "str.md.product.quPrice.info")
             }
         }
 #if os(iOS)
