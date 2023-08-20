@@ -166,7 +166,7 @@ struct Translators {
     static let chinese_simplified = Language(
         name: "Chinese (Simplified)",
         flag: "🇨🇳",
-        maintainers: "otshug/Ricardo.O",
+        maintainers: "3L/404alex/WeydonDing",
         contributors: [
             "a a <akv40402@zzrgg.com>, 2020",
             "文春鹏 <wcp1231@gmail.com>, 2020",
