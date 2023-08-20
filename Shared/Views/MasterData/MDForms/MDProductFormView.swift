@@ -132,6 +132,7 @@ struct MDProductFormView: View {
     @State private var defaultDueDaysAfterFreezing: Int = 0
     @State private var defaultDueDaysAfterThawing: Int = 0
     @State private var quickConsumeAmount: Double = 1.0
+    @State private var quickOpenAmount: Double = 1.0
     @State private var hideOnStockOverview: Bool = false
     @State private var noOwnStock: Bool = false
     @State private var treatOpenedAsOutOfStock: Bool = false
@@ -206,6 +207,7 @@ struct MDProductFormView: View {
         minStockAmount = product?.minStockAmount ?? 0.0
         cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts ?? false
         quickConsumeAmount = product?.quickConsumeAmount ?? 1.0
+        quickOpenAmount = product?.quickOpenAmount ?? 1.0
         enableTareWeightHandling = product?.enableTareWeightHandling ?? false
         tareWeight = product?.tareWeight ?? 0.0
         notCheckStockFulfillmentForRecipes = product?.notCheckStockFulfillmentForRecipes ?? false
@@ -262,6 +264,7 @@ struct MDProductFormView: View {
                 cumulateMinStockAmountOfSubProducts: cumulateMinStockAmountOfSubProducts,
                 dueType: dueType.rawValue,
                 quickConsumeAmount: quickConsumeAmount,
+                quickOpenAmount: quickOpenAmount,
                 hideOnStockOverview: hideOnStockOverview,
                 shouldNotBeFrozen: shouldNotBeFrozen,
                 treatOpenedAsOutOfStock: treatOpenedAsOutOfStock,
@@ -655,6 +658,9 @@ struct MDProductFormView: View {
             
             // Quick consume amount
             MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
+            
+            // Quick open amount
+            MyDoubleStepper(amount: $quickOpenAmount, description: "str.md.product.quickOpenAmount", descriptionInfo: "str.md.product.quickOpenAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.open)
             
             // Tare weight
             Group {

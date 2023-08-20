@@ -29,6 +29,7 @@ struct MDProduct: Codable {
     let cumulateMinStockAmountOfSubProducts: Bool?
     let dueType: Int
     @NullCodable var quickConsumeAmount: Double?
+    @NullCodable var quickOpenAmount: Double?
     @NullCodable var hideOnStockOverview: Bool?
     let defaultStockLabelType: Int?
     let shouldNotBeFrozen: Bool?
@@ -37,7 +38,6 @@ struct MDProduct: Codable {
     @NullCodable var defaultConsumeLocationID: Int?
     let moveOnOpen: Bool?
     let autoReprintStockLabel: Bool?
-    let quickOpenAmount: Int?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
@@ -66,6 +66,7 @@ struct MDProduct: Codable {
         case cumulateMinStockAmountOfSubProducts = "cumulate_min_stock_amount_of_sub_products"
         case dueType = "due_type"
         case quickConsumeAmount = "quick_consume_amount"
+        case quickOpenAmount = "quick_open_amount"
         case hideOnStockOverview = "hide_on_stock_overview"
         case defaultStockLabelType = "default_stock_label_type"
         case shouldNotBeFrozen = "should_not_be_frozen"
@@ -74,7 +75,6 @@ struct MDProduct: Codable {
         case defaultConsumeLocationID = "default_consume_location_id"
         case moveOnOpen = "move_on_open"
         case autoReprintStockLabel = "auto_reprint_stock_label"
-        case quickOpenAmount = "quick_open_amount"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
@@ -136,6 +136,7 @@ struct MDProduct: Codable {
             }
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.quickConsumeAmount = try container.decodeIfPresent(Double.self, forKey: .quickConsumeAmount) } catch { self.quickConsumeAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickConsumeAmount) ?? "") }
+            do { self.quickOpenAmount = try container.decodeIfPresent(Double.self, forKey: .quickOpenAmount) } catch { self.quickOpenAmount = try? Double(container.decodeIfPresent(String.self, forKey: .quickOpenAmount) ?? "") }
             do {
                 self.hideOnStockOverview = try container.decode(Bool.self, forKey: .hideOnStockOverview)
             } catch {
@@ -193,7 +194,6 @@ struct MDProduct: Codable {
                     self.autoReprintStockLabel = ["1", "true"].contains(try? container.decode(String.self, forKey: .autoReprintStockLabel))
                 }
             }
-            do { self.quickOpenAmount = try container.decodeIfPresent(Int.self, forKey: .quickOpenAmount) } catch { self.quickOpenAmount = try? Int(container.decodeIfPresent(String.self, forKey: .quickOpenAmount) ?? "") }
             do { self.quIDPrice = try container.decode(Int.self, forKey: .quIDPrice) } catch { self.quIDPrice = try Int(container.decode(String.self, forKey: .quIDPrice))! }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
@@ -227,6 +227,7 @@ struct MDProduct: Codable {
         cumulateMinStockAmountOfSubProducts: Bool,
         dueType: Int,
         quickConsumeAmount: Double? = nil,
+        quickOpenAmount: Double? = nil,
         hideOnStockOverview: Bool? = nil,
         defaultStockLabelType: Int? = nil,
         shouldNotBeFrozen: Bool? = nil,
@@ -235,7 +236,6 @@ struct MDProduct: Codable {
         defaultConsumeLocationID: Int? = nil,
         moveOnOpen: Bool? = nil,
         autoReprintStockLabel: Bool? = nil,
-        quickOpenAmount: Int? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
@@ -261,6 +261,7 @@ struct MDProduct: Codable {
         self.cumulateMinStockAmountOfSubProducts = cumulateMinStockAmountOfSubProducts
         self.dueType = dueType
         self.quickConsumeAmount = quickConsumeAmount
+        self.quickOpenAmount = quickOpenAmount
         self.hideOnStockOverview = hideOnStockOverview
         self.defaultStockLabelType = defaultStockLabelType
         self.shouldNotBeFrozen = shouldNotBeFrozen
@@ -270,7 +271,6 @@ struct MDProduct: Codable {
         self.moveOnOpen = moveOnOpen
         self.quIDConsume = quIDConsume
         self.autoReprintStockLabel = autoReprintStockLabel
-        self.quickOpenAmount = quickOpenAmount
         self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
