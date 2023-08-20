@@ -17,7 +17,7 @@ struct MDProduct: Codable {
     let active: Bool?
     let locationID: Int
     @NullCodable var storeID: Int?
-    let quIDPurchase, quIDStock: Int
+    let quIDPurchase, quIDStock, quIDConsume, quIDPrice: Int
     let minStockAmount: Double
     let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
     @NullCodable var pictureFileName: String?
@@ -36,10 +36,8 @@ struct MDProduct: Codable {
     let noOwnStock: Bool?
     @NullCodable var defaultConsumeLocationID: Int?
     let moveOnOpen: Bool?
-    let quIDConsume: Int?
     let autoReprintStockLabel: Bool?
     let quickOpenAmount: Int?
-    let quIDPrice: Int?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
@@ -52,6 +50,8 @@ struct MDProduct: Codable {
         case storeID = "shopping_location_id"
         case quIDPurchase = "qu_id_purchase"
         case quIDStock = "qu_id_stock"
+        case quIDConsume = "qu_id_consume"
+        case quIDPrice = "qu_id_price"
         case minStockAmount = "min_stock_amount"
         case defaultBestBeforeDays = "default_best_before_days"
         case defaultBestBeforeDaysAfterOpen = "default_best_before_days_after_open"
@@ -73,10 +73,8 @@ struct MDProduct: Codable {
         case noOwnStock = "no_own_stock"
         case defaultConsumeLocationID = "default_consume_location_id"
         case moveOnOpen = "move_on_open"
-        case quIDConsume = "qu_id_consume"
         case autoReprintStockLabel = "auto_reprint_stock_label"
         case quickOpenAmount = "quick_open_amount"
-        case quIDPrice = "qu_id_price"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
@@ -185,7 +183,7 @@ struct MDProduct: Codable {
                     self.moveOnOpen = ["1", "true"].contains(try? container.decode(String.self, forKey: .moveOnOpen))
                 }
             }
-            do { self.quIDConsume = try container.decodeIfPresent(Int.self, forKey: .quIDConsume) } catch { self.quIDConsume = try? Int(container.decodeIfPresent(String.self, forKey: .quIDConsume) ?? "") }
+            do { self.quIDConsume = try container.decode(Int.self, forKey: .quIDConsume) } catch { self.quIDConsume = try Int(container.decode(String.self, forKey: .quIDConsume))! }
             do {
                 self.autoReprintStockLabel = try container.decode(Bool.self, forKey: .autoReprintStockLabel)
             } catch {
@@ -196,7 +194,7 @@ struct MDProduct: Codable {
                 }
             }
             do { self.quickOpenAmount = try container.decodeIfPresent(Int.self, forKey: .quickOpenAmount) } catch { self.quickOpenAmount = try? Int(container.decodeIfPresent(String.self, forKey: .quickOpenAmount) ?? "") }
-            do { self.quIDPrice = try container.decodeIfPresent(Int.self, forKey: .quIDPrice) } catch { self.quIDPrice = try? Int(container.decodeIfPresent(String.self, forKey: .quIDPrice) ?? "") }
+            do { self.quIDPrice = try container.decode(Int.self, forKey: .quIDPrice) } catch { self.quIDPrice = try Int(container.decode(String.self, forKey: .quIDPrice))! }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -213,6 +211,8 @@ struct MDProduct: Codable {
         storeID: Int? = nil,
         quIDPurchase: Int,
         quIDStock: Int,
+        quIDConsume: Int,
+        quIDPrice: Int,
         minStockAmount: Double,
         defaultBestBeforeDays: Int,
         defaultBestBeforeDaysAfterOpen: Int,
@@ -234,10 +234,8 @@ struct MDProduct: Codable {
         noOwnStock: Bool? = nil,
         defaultConsumeLocationID: Int? = nil,
         moveOnOpen: Bool? = nil,
-        quIDConsume: Int? = nil,
         autoReprintStockLabel: Bool? = nil,
         quickOpenAmount: Int? = nil,
-        quIDPrice: Int? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
