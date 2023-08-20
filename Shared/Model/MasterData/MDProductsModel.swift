@@ -36,6 +36,10 @@ struct MDProduct: Codable {
     let noOwnStock: Int?
     @NullCodable var defaultConsumeLocationID: Int?
     let moveOnOpen: Int?
+    let quIDConsume: Int?
+    let autoReprintStockLabel: Bool?
+    let quickOpenAmount: Int?
+    let quIDPrice: Int?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
@@ -69,6 +73,10 @@ struct MDProduct: Codable {
         case noOwnStock = "no_own_stock"
         case defaultConsumeLocationID = "default_consume_location_id"
         case moveOnOpen = "move_on_open"
+        case quIDConsume = "qu_id_consume"
+        case autoReprintStockLabel = "auto_reprint_stock_label"
+        case quickOpenAmount = "quick_open_amount"
+        case quIDPrice = "qu_id_price"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
@@ -105,6 +113,18 @@ struct MDProduct: Codable {
             do { self.noOwnStock = try container.decodeIfPresent(Int.self, forKey: .noOwnStock) } catch { self.noOwnStock = try? Int(container.decodeIfPresent(String.self, forKey: .noOwnStock) ?? "") }
             do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
             do { self.moveOnOpen = try container.decodeIfPresent(Int.self, forKey: .moveOnOpen) } catch { self.moveOnOpen = try? Int(container.decodeIfPresent(String.self, forKey: .moveOnOpen) ?? "") }
+            do { self.quIDConsume = try container.decodeIfPresent(Int.self, forKey: .quIDConsume) } catch { self.quIDConsume = try? Int(container.decodeIfPresent(String.self, forKey: .quIDConsume) ?? "") }
+            do {
+                self.autoReprintStockLabel = try container.decode(Bool.self, forKey: .autoReprintStockLabel)
+            } catch {
+                do {
+                    self.autoReprintStockLabel = try container.decode(Int.self, forKey: .autoReprintStockLabel) == 1
+                } catch {
+                    self.autoReprintStockLabel = ["1", "true"].contains(try? container.decode(String.self, forKey: .autoReprintStockLabel))
+                }
+            }
+            do { self.quickOpenAmount = try container.decodeIfPresent(Int.self, forKey: .quickOpenAmount) } catch { self.quickOpenAmount = try? Int(container.decodeIfPresent(String.self, forKey: .quickOpenAmount) ?? "") }
+            do { self.quIDPrice = try container.decodeIfPresent(Int.self, forKey: .quIDPrice) } catch { self.quIDPrice = try? Int(container.decodeIfPresent(String.self, forKey: .quIDPrice) ?? "") }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -142,6 +162,10 @@ struct MDProduct: Codable {
         noOwnStock: Int? = nil,
         defaultConsumeLocationID: Int? = nil,
         moveOnOpen: Int? = nil,
+        quIDConsume: Int? = nil,
+        autoReprintStockLabel: Bool? = nil,
+        quickOpenAmount: Int? = nil,
+        quIDPrice: Int? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
@@ -174,6 +198,10 @@ struct MDProduct: Codable {
         self.noOwnStock = noOwnStock
         self.defaultConsumeLocationID = defaultConsumeLocationID
         self.moveOnOpen = moveOnOpen
+        self.quIDConsume = quIDConsume
+        self.autoReprintStockLabel = autoReprintStockLabel
+        self.quickOpenAmount = quickOpenAmount
+        self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
