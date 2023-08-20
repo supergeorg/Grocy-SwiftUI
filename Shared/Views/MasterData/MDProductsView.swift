@@ -31,7 +31,7 @@ struct MDProductRowView: View {
             VStack(alignment: .leading) {
                 Text(product.name)
                     .font(.title)
-                    .foregroundColor(product.active ?? true ? .primary : .gray)
+                    .foregroundColor(product.active ? .primary : .gray)
                 HStack(alignment: .top){
                     if let locationID = GrocyViewModel.shared.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
                         Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))

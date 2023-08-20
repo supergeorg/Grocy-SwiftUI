@@ -80,6 +80,9 @@ struct ProductField: View {
         .filter {
             $0.noOwnStock != true
         }
+        .filter({
+            $0.active
+        })
         .sorted(by: {
             $0.name.lowercased() < $1.name.lowercased()
         })

@@ -14,7 +14,7 @@ struct MDProduct: Codable {
     let name: String
     @NullCodable var mdProductDescription: String?
     @NullCodable var productGroupID: Int?
-    let active: Bool?
+    let active: Bool
     let locationID: Int
     @NullCodable var storeID: Int?
     let quIDPurchase, quIDStock, quIDConsume, quIDPrice: Int

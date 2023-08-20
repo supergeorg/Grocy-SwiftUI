@@ -78,7 +78,7 @@ struct StockJournalFilterBar: View {
                 Menu {
                     Picker("", selection: $filteredProductID, content: {
                         Text("str.stock.all").tag(nil as Int?)
-                        ForEach(grocyVM.mdProducts, id:\.id) { product in
+                        ForEach(grocyVM.mdProducts.filter({$0.active}), id:\.id) { product in
                             Text(product.name).tag(product.id as Int?)
                         }
                     })
