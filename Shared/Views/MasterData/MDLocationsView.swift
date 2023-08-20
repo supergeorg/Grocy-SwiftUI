@@ -17,6 +17,7 @@ struct MDLocationRowView: View {
             HStack{
                 Text(location.name)
                     .font(.title)
+                    .foregroundColor(location.active ? .primary : .gray)
                 if location.isFreezer {
                     Image(systemName: "thermometer.snowflake")
                         .font(.title)
@@ -182,7 +183,7 @@ struct MDLocationsView: View {
 struct MDLocationsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDLocationRowView(location: MDLocation(id: 0, name: "Location", mdLocationDescription: "Location description", rowCreatedTimestamp: "", isFreezer: true))
+            MDLocationRowView(location: MDLocation(id: 0, name: "Location", active: true, mdLocationDescription: "Location description", isFreezer: true, rowCreatedTimestamp: ""))
 #if os(macOS)
             MDLocationsView()
 #else

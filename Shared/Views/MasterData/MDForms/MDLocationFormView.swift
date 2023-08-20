@@ -16,6 +16,7 @@ struct MDLocationFormView: View {
     @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
+    @State private var isActive: Bool = true
     @State private var mdLocationDescription: String = ""
     @State private var isFreezer: Bool = false
     
@@ -33,6 +34,7 @@ struct MDLocationFormView: View {
     
     private func resetForm() {
         self.name = location?.name ?? ""
+        self.isActive = location?.active ?? true
         self.mdLocationDescription = location?.mdLocationDescription ?? ""
         self.isFreezer = location?.isFreezer ?? false
         isNameCorrect = checkNameCorrect()
@@ -56,7 +58,14 @@ struct MDLocationFormView: View {
     private func saveLocation() async {
         let id = isNewLocation ? grocyVM.findNextID(.locations) : location!.id
         let timeStamp = isNewLocation ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
-        let locationPOST = MDLocation(id: id, name: name, mdLocationDescription: mdLocationDescription, rowCreatedTimestamp: timeStamp, isFreezer: isFreezer)
+        let locationPOST = MDLocation(
+            id: id,
+            name: name,
+            active: isActive,
+            mdLocationDescription: mdLocationDescription,
+            isFreezer: isFreezer,
+            rowCreatedTimestamp: timeStamp
+        )
         isProcessing = true
         if isNewLocation {
             do {
@@ -129,6 +138,7 @@ struct MDLocationFormView: View {
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
+                MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             })
             
@@ -151,7 +161,7 @@ struct MDLocationFormView_Previews: PreviewProvider {
 #if os(macOS)
         Group {
             MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", mdLocationDescription: "descr", rowCreatedTimestamp: "", isFreezer: true), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: bool, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
         }
 #else
         Group {
@@ -159,7 +169,7 @@ struct MDLocationFormView_Previews: PreviewProvider {
                 MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
             }
             NavigationView {
-                MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Location", mdLocationDescription: "Location Description", rowCreatedTimestamp: "", isFreezer: true), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+                MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Location", active: true, mdLocationDescription: "Location Description", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
             }
         }
 #endif

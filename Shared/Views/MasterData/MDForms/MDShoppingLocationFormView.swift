@@ -16,6 +16,7 @@ struct MDStoreFormView: View {
     @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
+    @State private var isActive: Bool = true
     @State private var mdStoreDescription: String = ""
     
     var isNewStore: Bool
@@ -32,6 +33,7 @@ struct MDStoreFormView: View {
     
     private func resetForm() {
         self.name = store?.name ?? ""
+        self.isActive = store?.active ?? true
         self.mdStoreDescription = store?.mdStoreDescription ?? ""
         isNameCorrect = checkNameCorrect()
     }
@@ -54,7 +56,7 @@ struct MDStoreFormView: View {
     private func saveStore() async {
         let id = isNewStore ? grocyVM.findNextID(.shopping_locations) : store!.id
         let timeStamp = isNewStore ? Date().iso8601withFractionalSeconds : store!.rowCreatedTimestamp
-        let storePOST = MDStore(id: id, name: name, mdStoreDescription: mdStoreDescription, rowCreatedTimestamp: timeStamp)
+        let storePOST = MDStore(id: id, name: name, active: isActive, mdStoreDescription: mdStoreDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewStore {
             do {
@@ -119,6 +121,7 @@ struct MDStoreFormView: View {
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
+                MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
@@ -137,7 +140,7 @@ struct MDStoreFormView_Previews: PreviewProvider {
 #if os(macOS)
         Group {
             MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
-            MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Shoppingloc", mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
+            MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Shoppingloc", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
         }
 #else
         Group {
@@ -145,7 +148,7 @@ struct MDStoreFormView_Previews: PreviewProvider {
                 MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Store", mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
+                MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Store", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
 #endif

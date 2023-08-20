@@ -14,6 +14,7 @@ struct MDStoreRowView: View {
         VStack(alignment: .leading) {
             Text(store.name)
                 .font(.title)
+                .foregroundColor(store.active ? .primary : .gray)
             if let description = store.mdStoreDescription, !description.isEmpty {
                 Text(description)
                     .font(.caption)
@@ -175,7 +176,7 @@ struct MDStoresView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             List {
-                MDStoreRowView(store: MDStore(id: 0, name: "Location", mdStoreDescription: "Description", rowCreatedTimestamp: ""))
+                MDStoreRowView(store: MDStore(id: 0, name: "Location", active: true, mdStoreDescription: "Description", rowCreatedTimestamp: ""))
             }
 #if os(macOS)
             MDStoresView()

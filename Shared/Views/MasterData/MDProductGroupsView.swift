@@ -14,6 +14,7 @@ struct MDProductGroupRowView: View {
         VStack(alignment: .leading) {
             Text(productGroup.name)
                 .font(.title)
+                .foregroundColor(productGroup.active ? .primary : .gray)
             if let description = productGroup.mdProductGroupDescription, !description.isEmpty {
                 Text(productGroup.mdProductGroupDescription!)
                     .font(.caption)
@@ -178,7 +179,7 @@ struct MDProductGroupsView: View {
 struct MDProductGroupsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDProductGroupRowView(productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""))
+            MDProductGroupRowView(productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""))
 #if os(macOS)
             MDProductGroupsView()
 #else

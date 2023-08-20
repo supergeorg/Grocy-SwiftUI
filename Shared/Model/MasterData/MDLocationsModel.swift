@@ -12,12 +12,14 @@ import Foundation
 struct MDLocation: Codable {
     let id: Int
     let name: String
+    var active: Bool
     let mdLocationDescription: String?
     let rowCreatedTimestamp: String
     var isFreezer: Bool
     
     enum CodingKeys: String, CodingKey {
         case id, name
+        case active
         case mdLocationDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
         case isFreezer = "is_freezer"
@@ -28,6 +30,15 @@ struct MDLocation: Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
+            do {
+                self.active = try container.decode(Bool.self, forKey: .active)
+            } catch {
+                do {
+                    self.active = try container.decode(Int.self, forKey: .active) == 1
+                } catch {
+                    self.active = ["1", "true"].contains(try? container.decode(String.self, forKey: .active))
+                }
+            }
             self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do {
@@ -47,12 +58,14 @@ struct MDLocation: Codable {
     init(
         id: Int,
         name: String,
+        active: Bool,
         mdLocationDescription: String? = nil,
-        rowCreatedTimestamp: String,
-        isFreezer: Bool
+        isFreezer: Bool,
+        rowCreatedTimestamp: String
     ) {
         self.id = id
         self.name = name
+        self.active = active
         self.mdLocationDescription = mdLocationDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
         self.isFreezer = isFreezer

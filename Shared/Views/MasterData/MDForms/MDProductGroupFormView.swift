@@ -16,6 +16,7 @@ struct MDProductGroupFormView: View {
     @State private var isProcessing: Bool = false
     
     @State private var name: String = ""
+    @State private var isActive: Bool = true
     @State private var mdProductGroupDescription: String = ""
     
     var isNewProductGroup: Bool
@@ -32,6 +33,7 @@ struct MDProductGroupFormView: View {
     
     private func resetForm() {
         self.name = productGroup?.name ?? ""
+        self.isActive = productGroup?.active ?? true
         self.mdProductGroupDescription = productGroup?.mdProductGroupDescription ?? ""
         isNameCorrect = checkNameCorrect()
     }
@@ -54,7 +56,13 @@ struct MDProductGroupFormView: View {
     private func saveProductGroup() async {
         let id = isNewProductGroup ? grocyVM.findNextID(.product_groups) : productGroup!.id
         let timeStamp = isNewProductGroup ? Date().iso8601withFractionalSeconds : productGroup!.rowCreatedTimestamp
-        let productGroupPOST = MDProductGroup(id: id, name: name, mdProductGroupDescription: mdProductGroupDescription, rowCreatedTimestamp: timeStamp)
+        let productGroupPOST = MDProductGroup(
+            id: id,
+            name: name,
+            active: isActive,
+            mdProductGroupDescription: mdProductGroupDescription,
+            rowCreatedTimestamp: timeStamp
+        )
         isProcessing = true
         if isNewProductGroup {
             do {
@@ -119,6 +127,7 @@ struct MDProductGroupFormView: View {
                     .onChange(of: name, perform: { value in
                         isNameCorrect = checkNameCorrect()
                     })
+                MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
@@ -145,7 +154,7 @@ struct MDProductGroupFormView_Previews: PreviewProvider {
                 MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
             NavigationView {
-                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
+                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
             }
         }
 #endif
