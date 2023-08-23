@@ -35,7 +35,7 @@ struct ShoppingListRowView: View {
     
     var amountString: String {
         if let quantityUnit = quantityUnit {
-            return "\(factoredAmount.formattedAmount) \(factoredAmount == 1 ? quantityUnit.name : quantityUnit.namePlural)"
+            return "\(factoredAmount.formattedAmount) \(factoredAmount == 1 ? quantityUnit.name : quantityUnit.namePlural ?? quantityUnit.name)"
         } else {
             return "\(factoredAmount.formattedAmount)"
         }

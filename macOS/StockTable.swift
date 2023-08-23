@@ -66,7 +66,7 @@ struct StockTable: View {
             TableColumn(LocalizedStringKey("str.stock.tbl.amount"), content: { stockElement in
                 HStack(){
                     if let quantityUnit = grocyVM.mdQuantityUnits.first(where: { $0.id == stockElement.product.quIDStock }) {
-                        Text("\(stockElement.amount.formattedAmount) \(stockElement.amount == 1 ? quantityUnit.name : quantityUnit.namePlural)")
+                        Text("\(stockElement.amount.formattedAmount) \(stockElement.amount == 1 ? quantityUnit.name : quantityUnit.namePlural ?? quantityUnit.name)")
                     } else {
                         Text("\(stockElement.amount.formattedAmount)")
                     }

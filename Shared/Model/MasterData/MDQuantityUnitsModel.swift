@@ -12,7 +12,7 @@ import Foundation
 struct MDQuantityUnit: Codable {
     let id: Int
     let name: String
-    let namePlural: String
+    let namePlural: String?
     var active: Bool
     let mdQuantityUnitDescription: String?
     let rowCreatedTimestamp: String
@@ -31,7 +31,7 @@ struct MDQuantityUnit: Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
-            self.namePlural = try container.decode(String.self, forKey: .namePlural)
+            self.namePlural = try? container.decodeIfPresent(String.self, forKey: .namePlural) ?? nil
             do {
                 self.active = try container.decode(Bool.self, forKey: .active)
             } catch {
@@ -51,7 +51,7 @@ struct MDQuantityUnit: Codable {
     init(
         id: Int,
         name: String,
-        namePlural: String,
+        namePlural: String?,
         active: Bool,
         mdQuantityUnitDescription: String? = nil,
         rowCreatedTimestamp: String

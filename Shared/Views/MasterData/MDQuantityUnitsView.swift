@@ -15,8 +15,10 @@ struct MDQuantityUnitRowView: View {
             HStack(alignment: .center) {
                 Text(quantityUnit.name)
                     .font(.title)
-                Text("(\(quantityUnit.namePlural))")
-                    .font(.title3)
+                if let namePlural = quantityUnit.namePlural {
+                    Text("(\(namePlural))")
+                        .font(.title3)
+                }
             }
             .foregroundColor(quantityUnit.active ? .primary : .gray)
             if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {

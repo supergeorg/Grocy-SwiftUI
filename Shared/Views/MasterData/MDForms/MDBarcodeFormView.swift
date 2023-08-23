@@ -201,7 +201,11 @@ struct MDBarcodeFormView: View {
                 Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
-                        Text("\(pickerQU.name) (\(pickerQU.namePlural))").tag(pickerQU.id as Int?)
+                        if let namePlural = pickerQU.namePlural {
+                            Text("\(pickerQU.name) (\(namePlural))").tag(pickerQU.id as Int?)
+                        } else {
+                            Text("\(pickerQU.name)").tag(pickerQU.id as Int?)
+                        }
                     }
                 }).disabled(true)
             }

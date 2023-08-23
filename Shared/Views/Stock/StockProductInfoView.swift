@@ -37,7 +37,7 @@ struct StockProductInfoView: View {
                 Group {
                     Text(LocalizedStringKey("str.details.amount")).bold()
                     +
-                    Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.stockAmount == 1 ? productDetails.quantityUnitStock.name : productDetails.quantityUnitStock.namePlural)")
+                    Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.stockAmount == 1 ? productDetails.quantityUnitStock.name : productDetails.quantityUnitStock.namePlural ?? productDetails.quantityUnitStock.name)")
                     
                     Text(LocalizedStringKey("str.details.stockValue")).bold()
                     +
