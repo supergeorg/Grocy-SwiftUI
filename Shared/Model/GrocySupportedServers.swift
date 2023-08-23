@@ -28,6 +28,7 @@ struct GrocyAPP {
         case portuguese_pt = "https://pt-pt.demo.grocy.info"
         case portuguese_br = "https://pt-br.demo.grocy.info"
         case develop = "https://test-iwz5eqdtrrwco5or26tvo.demo.grocy.info"
+        case developOld = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
         var id: Int {
             self.hashValue
@@ -67,6 +68,8 @@ struct GrocyAPP {
                 return "🇧🇷 Português Brasileiro (Portuguese Brazil) Grocy Server"
             case .develop:
                 return "Private demo instance used for development"
+            case .developOld:
+                return "Old private demo instance used for development"
             }
         }
     }
