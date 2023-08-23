@@ -197,5 +197,30 @@ struct Translators {
         ]
     )
     
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT]
+    static let portuguese_BR = Language(
+        name: "Portuguese (Brazil)",
+        flag: "🇧🇷",
+        maintainers: "otshug",
+        contributors: [
+            "Joao Santos <joaocpdsantos@gmail.com>, 2019",
+            "Armando Neto <armando.muassab@gmail.com>, 2019",
+            "Danilo Vieira <cebikyn@gmail.com>, 2019",
+            "Jefferson Brito Passos dos Santos <jeffersantoss@gmail.com>, 2019",
+            "Arthur Vieira <skytakes.arthur@gmail.com>, 2020",
+            "Leonardo Fialho <leonardofialho@gmail.com>, 2020",
+            "Andre Souto <andre.jost@gmail.com>, 2020",
+            "Wendell Mendes <wendellmendes@live.com>, 2021",
+            "Jonatha Nogueira Barbosa <jb.barbosa133@gmail.com>, 2021",
+            "Bruno Mouta <brumouta@gmail.com>, 2021",
+            "João Filipe Cavichiolo Storrer <jofi_casto@hotmail.com>, 2021",
+            "Eduardo Bizarro, 2021",
+            "Ryan Monteiro, 2022",
+            "Fernando Luiz Bonifácio de Oliveira, 2022",
+            "Webysther Sperandio <webysther@gmail.com>, 2022",
+            "Marcio Ota, 2023",
+            "Aurelio Barreto <aurelio@aureliobarreto.com>, 2023",
+        ]
+    )
+    
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR]
 }

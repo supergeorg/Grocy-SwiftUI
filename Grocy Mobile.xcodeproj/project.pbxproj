@@ -511,6 +511,7 @@
 		781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodeFormView.swift; sourceTree = "<group>"; };
 		781DD5C62579028800A30ECA /* MDBarcodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodesView.swift; sourceTree = "<group>"; };
 		781E97DF27834C43004E9798 /* GrocyUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserSettings.swift; sourceTree = "<group>"; };
+		7823B97A2A967B4A00FEB84C /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeInputView.swift; sourceTree = "<group>"; };
 		782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductDetailsModel.swift; sourceTree = "<group>"; };
 		782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductBarcodeModel.swift; sourceTree = "<group>"; };
@@ -1288,6 +1289,7 @@
 				"zh-Hans",
 				"zh-Hant",
 				"pt-PT",
+				"pt-BR",
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1865,6 +1867,7 @@
 				7816A8542A1FCE74006FF076 /* zh-Hans */,
 				7816A8552A1FCF37006FF076 /* zh-Hant */,
 				7809CAA32A923B3D00CB7F81 /* pt-PT */,
+				7823B97A2A967B4A00FEB84C /* pt-BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
