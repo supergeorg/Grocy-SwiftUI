@@ -16,15 +16,7 @@ struct StockProductInfoView: View {
     
     @Binding var stockElement: StockElement?
     @State private var firstOpen: Bool = true
-    
-    var productDetails: StockProductDetails? {
-        if let productID = stockElement?.productID {
-            Task {
-                try await grocyVM.getStockProductDetails(productID: productID)
-            }
-            return grocyVM.stockProductDetails[productID]
-        } else { return nil }
-    }
+    @State private var productDetails: StockProductDetails? = nil
     
     var body: some View {
         List {
@@ -101,6 +93,16 @@ struct StockProductInfoView: View {
                 }
             }
         })
+        .task {
+            do {
+                if let productID = stockElement?.productID {
+                    try await grocyVM.getStockProductDetails(productID: productID)
+                    productDetails = grocyVM.stockProductDetails[productID]
+                }
+            } catch {
+                grocyVM.postLog("Get stock detail failed. \(error)", type: .error)
+            }
+        }
     }
 }
 
