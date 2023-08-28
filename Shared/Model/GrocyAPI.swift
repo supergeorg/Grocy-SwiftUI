@@ -85,7 +85,7 @@ protocol GrocyAPI {
     func getStock() async throws -> Stock
     func getStockJournal() async throws -> StockJournal
     func getVolatileStock(expiringDays: Int) async throws -> VolatileStock
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String?) async throws -> T
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]?) async throws -> T
     func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
     func getBookingWithID(id: Int) async throws -> StockJournalEntry
@@ -101,6 +101,7 @@ protocol GrocyAPI {
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
     // MARK: - Files
+    func getFile(fileName: String, groupName: String, bestFitHeight: Int?, bestFitWidth: Int?) async throws -> Data
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws
     func putFileData(fileData: Data, fileName: String, groupName: String) async throws
     func deleteFile(fileName: String, groupName: String) async throws
@@ -136,6 +137,48 @@ public class GrocyApi: GrocyAPI {
         case POST
         case DELETE
         case PUT
+    }
+    
+    private func callGetFileData(
+        _ endPoint: Endpoint,
+        fileName: String? = nil,
+        groupName: String? = nil,
+        bestFitHeight: Int? = nil,
+        bestFitWidth: Int? = nil,
+        hassIngressToken: String? = nil
+    ) async throws -> Data {
+        var queries = ["force_serve_as=picture"]
+        if let bestFitHeight = bestFitHeight { queries.append("best_fit_height=\(bestFitHeight)") }
+        if let bestFitWidth = bestFitWidth { queries.append("best_fit_width=\(bestFitWidth)") }
+        
+        let urlRequest = request(
+            for: endPoint,
+            method: .GET,
+            fileName: fileName,
+            groupName: groupName,
+            isOctet: true,
+            queries: queries,
+            hassIngressToken: hassIngressToken
+        )
+        let (resultData, resultCode) = try await URLSession.shared.data(for: urlRequest)
+        if let httpResponse = resultCode as? HTTPURLResponse {
+            if httpResponse.statusCode == 200 {
+                return resultData
+            } else if httpResponse.statusCode == 204 {
+                throw APIError.serverError(errorMessage: "No content found. Wrong image?")
+            } else {
+                do {
+                    print(httpResponse.statusCode)
+                    print(resultData)
+                    let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
+                    throw APIError.errorString(description: responseErrorDecoded.errorMessage)
+                } catch {
+                    throw APIError.decodingError(error: error)
+                }
+            }
+        } else {
+            throw APIError.internalError
+        }
     }
     
     private func callUploadFileData(
@@ -194,13 +237,32 @@ public class GrocyApi: GrocyAPI {
         fileName: String? = nil,
         groupName: String? = nil,
         content: Data? = nil,
-        query: String? = nil
+        queries: [String]? = nil
     ) async throws {
         if let hassAuthenticator = hassAuthenticator {
             let hassToken = try await hassAuthenticator.validTokenAsync()
-            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query, hassIngressToken: hassToken)
+            try await self.callAPIEmptyResponse(
+                endPoint,
+                method: method,
+                object: object,
+                id: id,
+                fileName: fileName,
+                groupName: groupName,
+                content: content,
+                queries: queries,
+                hassIngressToken: hassToken
+            )
         } else {
-            try await self.callAPIEmptyResponse(endPoint, method: method, object: object, id: id, fileName: fileName, groupName: groupName, content: content, query: query)
+            try await self.callAPIEmptyResponse(
+                endPoint,
+                method: method,
+                object: object,
+                id: id,
+                fileName: fileName,
+                groupName: groupName,
+                content: content,
+                queries: queries
+            )
         }
     }
     
@@ -212,7 +274,7 @@ public class GrocyApi: GrocyAPI {
         fileName: String? = nil,
         groupName: String? = nil,
         content: Data? = nil,
-        query: String? = nil,
+        queries: [String]? = nil,
         hassIngressToken: String? = nil
     ) async throws {
         let urlRequest = request(
@@ -220,8 +282,10 @@ public class GrocyApi: GrocyAPI {
             method: method,
             object: object,
             id: id,
+            fileName: fileName,
+            groupName: groupName,
             content: content,
-            query: query,
+            queries: queries,
             hassIngressToken: hassIngressToken
         )
         let result = try await URLSession.shared.data(for: urlRequest)
@@ -245,13 +309,13 @@ public class GrocyApi: GrocyAPI {
         object: ObjectEntities? = nil,
         id: String? = nil,
         content: Data? = nil,
-        query: String? = nil
+        queries: [String]? = nil
     ) async throws -> T {
         if let hassAuthenticator = hassAuthenticator {
             let hassToken = try await hassAuthenticator.validTokenAsync()
-            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query, hassIngressToken: hassToken)
+            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, queries: queries, hassIngressToken: hassToken)
         } else {
-            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, query: query)
+            return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, queries: queries)
         }
     }
     
@@ -261,7 +325,7 @@ public class GrocyApi: GrocyAPI {
         object: ObjectEntities? = nil,
         id: String? = nil,
         content: Data? = nil,
-        query: String? = nil,
+        queries: [String]? = nil,
         hassIngressToken: String? = nil
     ) async throws -> T {
         let urlRequest = request(
@@ -270,7 +334,7 @@ public class GrocyApi: GrocyAPI {
             object: object,
             id: id,
             content: content,
-            query: query,
+            queries: queries,
             hassIngressToken: hassIngressToken
         )
         let result = try await URLSession.shared.data(for: urlRequest)
@@ -303,7 +367,7 @@ public class GrocyApi: GrocyAPI {
         groupName: String? = nil,
         isOctet: Bool = false,
         content: Data? = nil,
-        query: String? = nil,
+        queries: [String]? = nil,
         hassIngressToken: String? = nil
     ) -> URLRequest {
         if self.baseURL.hasSuffix("/") { self.baseURL = String(self.baseURL.dropLast()) }
@@ -327,7 +391,10 @@ public class GrocyApi: GrocyAPI {
         if path.contains("{fileName}") { path = path.replacingOccurrences(of: "{fileName}", with: fileName!) }
         if path.contains("{group}") { path = path.replacingOccurrences(of: "{group}", with: groupName!) }
         if path.contains("{settingKey}") { path = path.replacingOccurrences(of: "{settingKey}", with: id!) }
-        if let query = query { path += query }
+        if let queries = queries {
+            let query = queries.joined(separator: "&")
+            path += "?\(query)"
+        }
         
         guard let url = URL(string: path)
         else { preconditionFailure("Bad URL") }
@@ -343,6 +410,8 @@ public class GrocyApi: GrocyAPI {
         if content != nil {
             request.httpBody = content
         }
+        
+        print(url.absoluteString)
         
         request.timeoutInterval = self.timeoutInterval
         return request
@@ -497,15 +566,15 @@ extension GrocyApi {
     }
     
     func getVolatileStock(expiringDays: Int) async throws -> VolatileStock {
-        return try await call(.stockVolatile, method: .GET, query: "?expiring_days=\(expiringDays)")
+        return try await call(.stockVolatile, method: .GET, queries: ["expiring_days=\(expiringDays)"])
     }
     
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, query: String? = nil) async throws -> T {
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]? = nil) async throws -> T {
         switch stockModeGet {
         case .details:
             return try await call(.stockProductWithId, method: .GET, id: String(id))
         case .entries:
-            return try await call(.stockProductWithIdEntries, method: .GET, id: String(id), query: query)
+            return try await call(.stockProductWithIdEntries, method: .GET, id: String(id), queries: queries)
         case .locations:
             return try await call(.stockProductWithIdLocations, method: .GET, id: String(id))
         case .priceHistory:
@@ -541,7 +610,7 @@ extension GrocyApi {
     }
     
     func getPictureURL(groupName: String, fileName: String) -> String? {
-        let filepath = request(for: .filesGroupFilename, method: .GET, fileName: fileName, groupName: groupName, query: "?force_serve_as=picture").url?.absoluteString
+        let filepath = request(for: .filesGroupFilename, method: .GET, fileName: fileName, groupName: groupName, queries: ["force_serve_as=picture"]).url?.absoluteString
         if groupName == "userfiles" || groupName == "userpictures" {
             return filepath?.replacingOccurrences(of: "/api", with: "")
         } else {
@@ -593,6 +662,10 @@ extension GrocyApi {
     }
     
     // MARK: - Files
+    func getFile(fileName: String, groupName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data {
+        return try await callGetFileData(.filesGroupFilename, fileName: fileName, groupName: groupName, bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+    }
+    
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws {
         return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName)
     }
