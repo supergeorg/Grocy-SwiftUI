@@ -118,7 +118,7 @@ struct StockProductDetails: Codable {
                     self.hasChilds = ["1", "true"].contains(try container.decode(String.self, forKey: .hasChilds))
                 }
             }
-            self.defaultConsumeLocation = try container.decode(MDLocation.self, forKey: .defaultConsumeLocation)
+            self.defaultConsumeLocation = try container.decodeIfPresent(MDLocation.self, forKey: .defaultConsumeLocation)
             do { self.quConversionFactorPurchaseToStock = try container.decode(Double.self, forKey: .quConversionFactorPurchaseToStock) } catch { self.quConversionFactorPurchaseToStock = try Double(container.decode(String.self, forKey: .quConversionFactorPurchaseToStock))! }
             do { self.quConversionFactorPriceToStock = try container.decode(Double.self, forKey: .quConversionFactorPriceToStock) } catch { self.quConversionFactorPriceToStock = try Double(container.decode(String.self, forKey: .quConversionFactorPriceToStock))! }
         } catch {
