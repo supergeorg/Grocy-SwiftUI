@@ -109,7 +109,7 @@ struct MDProductFormView: View {
     @State private var active: Bool = true
     @State private var parentProductID: Int?
     @State private var mdProductDescription: String = ""
-    @State private var pictureFilename: String?
+    @State private var pictureFileName: String?
     
     @State private var locationID: Int? // REQUIRED
     @State private var defaultConsumeLocationID: Int?
@@ -186,7 +186,7 @@ struct MDProductFormView: View {
         noOwnStock = product?.noOwnStock ?? false
         shouldNotBeFrozen = product?.shouldNotBeFrozen ?? false
         treatOpenedAsOutOfStock = (product?.treatOpenedAsOutOfStock != nil ? (product?.treatOpenedAsOutOfStock ?? false) : (grocyVM.userSettings?.productPresetsTreatOpenedAsOutOfStock)) ?? false
-        pictureFilename = product?.pictureFileName
+        pictureFileName = product?.pictureFileName
         
         locationID = product?.locationID ?? grocyVM.userSettings?.productPresetsLocationID
         defaultConsumeLocationID = product?.defaultConsumeLocationID
@@ -505,13 +505,13 @@ struct MDProductFormView: View {
             
             // Product picture
 #if os(iOS)
-            NavigationLink(destination: MDProductPictureFormView(product: product, pictureFilename: $pictureFilename), label: {
+            NavigationLink(destination: MDProductPictureFormView(product: product, pictureFileName: $pictureFileName), label: {
                 MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })
             .disabled(isNewProduct)
 #elseif os(macOS)
             DisclosureGroup(content: {
-                MDProductPictureFormView(product: product, pictureFilename: $pictureFilename)
+                MDProductPictureFormView(product: product, pictureFileName: $pictureFileName)
             }, label: {
                 MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
             })

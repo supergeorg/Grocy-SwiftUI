@@ -77,6 +77,9 @@ final class GrocyViewModel: ObservableObject {
     @Published var loadingObjectEntities: Set<ObjectEntities> = Set()
     @Published var loadingAdditionalEntities: Set<AdditionalEntities> = Set()
     
+    @Published var productPictures: [String: Data] = [:]
+    @Published var userPictures: [String: Data] = [:]
+    
     var cancellables = Set<AnyCancellable>()
     
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
@@ -368,6 +371,10 @@ final class GrocyViewModel: ObservableObject {
         failedToLoadObjects.removeAll()
         failedToLoadAdditionalObjects.removeAll()
         failedToLoadErrors.removeAll()
+        
+        productPictures.removeAll()
+        userPictures.removeAll()
+        
         self.postLog("Deleted all cached data from the viewmodel.", type: .info)
     }
     
@@ -508,8 +515,8 @@ final class GrocyViewModel: ObservableObject {
     }
     
     // MARK: - Stock management
-    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, query: String? = nil) async throws -> T {
-        return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, query: query)
+    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, queries: [String]? = nil) async throws -> T {
+        return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, queries: queries)
     }
     
     func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) async throws {
@@ -534,15 +541,15 @@ final class GrocyViewModel: ObservableObject {
     }
     
     func getStockProductLocations(productID: Int) async throws {
-        self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, query: nil)
+        self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, queries: nil)
     }
     
     func getStockProductDetails(productID: Int) async throws {
-        self.stockProductDetails[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, query: nil)
+        self.stockProductDetails[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, queries: nil)
     }
     
     func getStockProductEntries(productID: Int) async throws {
-        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, query: "?include_sub_products=true")
+        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, queries: ["include_sub_products=true"])
     }
     
     func putStockProductEntry(id: Int, content: StockEntry) async throws -> StockJournal {
@@ -562,6 +569,24 @@ final class GrocyViewModel: ObservableObject {
     
     func getPictureURL(groupName: String, fileName: String) async throws -> String? {
         try await grocyApi.getPictureURL(groupName: groupName, fileName: fileName)
+    }
+    
+    func getProductPicture(fileName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data? {
+        if self.productPictures.keys.contains(fileName) {
+            return self.productPictures[fileName]
+        }
+        let productPictureData = try await grocyApi.getFile(fileName: fileName, groupName: "productpictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        self.productPictures[fileName] = productPictureData
+        return productPictureData
+    }
+    
+    func getUserPicture(fileName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data? {
+        if self.productPictures.keys.contains(fileName) {
+            return self.productPictures[fileName]
+        }
+        let userPictureData = try await grocyApi.getFile(fileName: fileName, groupName: "userpictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        self.userPictures[fileName] = userPictureData
+        return userPictureData
     }
     
     func uploadFile(fileURL: URL, groupName: String, fileName: String) async throws {

@@ -16,8 +16,6 @@ struct StockProductInfoView: View {
     
     @Binding var stockElement: StockElement?
     @State private var firstOpen: Bool = true
-    @State private var productPictureURL: URL? = nil
-    
     
     var productDetails: StockProductDetails? {
         if let productID = stockElement?.productID {
@@ -90,16 +88,8 @@ struct StockProductInfoView: View {
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
                 
-                if let productPictureURL = productPictureURL {
-                    AsyncImage(url: productPictureURL, content: { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(Color.white)
-                    }, placeholder: {
-                        ProgressView()
-                    })
-                    .frame(width: 200)
+                if let pictureFileName = stockElement?.product.pictureFileName {
+                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 200.0)
                 }
             } else { Text("Retrieving Details Failed. Please open another window first.") }
         }
@@ -111,21 +101,6 @@ struct StockProductInfoView: View {
                 }
             }
         })
-        .task {
-            do {
-                if let pictureFileName = productDetails?.product.pictureFileName,
-                   !pictureFileName.isEmpty,
-                   let pictureFileNameUTF8 = pictureFileName.data(using: .utf8),
-                   let pictureURLString = try await grocyVM.getPictureURL(
-                    groupName: "productpictures",
-                    fileName: pictureFileNameUTF8.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-                   ) {
-                    self.productPictureURL = URL(string: pictureURLString)
-                }
-            } catch {
-                grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
-            }
-        }
     }
 }
 

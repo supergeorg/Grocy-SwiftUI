@@ -130,6 +130,8 @@
 		785814E029F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
 		785814E129F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
 		785814E229F6FB8F002D273B /* HomeAssistantSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */; };
+		785C72D92A9D053600D3EA9D /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C72D82A9D053600D3EA9D /* PictureView.swift */; };
+		785C72DA2A9D074B00D3EA9D /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C72D82A9D053600D3EA9D /* PictureView.swift */; };
 		785D7C5025F65FE0009DCA88 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */; };
 		785D7C5B25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */; };
 		785D7C5C25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */; };
@@ -543,6 +545,7 @@
 		785427B425D29C3000AFE726 /* MySymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySymbols.swift; sourceTree = "<group>"; };
 		78559CC1278347EA00680600 /* SettingsStockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStockView.swift; sourceTree = "<group>"; };
 		785814DE29F6FB8F002D273B /* HomeAssistantSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssistantSocketMessages.swift; sourceTree = "<group>"; };
+		785C72D82A9D053600D3EA9D /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureView.swift; sourceTree = "<group>"; };
 		785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		785D7C5A25F68595009DCA88 /* MDProductPictureFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductPictureFormView.swift; sourceTree = "<group>"; };
 		78644EC02791E6E0007110CF /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1105,6 +1108,7 @@
 				785D7C4F25F65FE0009DCA88 /* ImagePicker.swift */,
 				786618D12718ACEE001552FA /* AmountSelectionView.swift */,
 				787E7DC2281C53A900E4D269 /* ServerSettingsItems.swift */,
+				785C72D82A9D053600D3EA9D /* PictureView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1423,6 +1427,7 @@
 				78A201C525EE64210031BFDE /* ServerProblemView.swift in Sources */,
 				7880F10B256FC4F100FB8431 /* ShoppingListEntriesView.swift in Sources */,
 				78E02CC625DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
+				785C72D92A9D053600D3EA9D /* PictureView.swift in Sources */,
 				789D167825DE7996006FC33F /* GrocySupportedServers.swift in Sources */,
 				78CB7599255EA56D00319108 /* GrocyInfoView.swift in Sources */,
 				78CB7602255EB9A000319108 /* VolatileStockModel.swift in Sources */,
@@ -1575,6 +1580,7 @@
 				78138F4A25AEF95800B9A50A /* ProductField.swift in Sources */,
 				786F6E9A2564034F004D8DE0 /* MDProductGroupsView.swift in Sources */,
 				78FDCE1F25BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
+				785C72DA2A9D074B00D3EA9D /* PictureView.swift in Sources */,
 				78CB7609255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				78CB74BF255E9EF800319108 /* ContentView.swift in Sources */,
 				789D166725DE6C9B006FC33F /* LoginView.swift in Sources */,

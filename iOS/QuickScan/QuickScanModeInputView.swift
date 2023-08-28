@@ -113,8 +113,7 @@ struct QuickScanModeInputView: View {
     @State private var purchaseLocationID: Int?
     @Binding var lastPurchaseLocationID: Int?
     @State private var note: String = ""
-    
-    @State private var productPictureURL: URL? = nil
+
     
     var body: some View {
         NavigationView {
@@ -122,16 +121,8 @@ struct QuickScanModeInputView: View {
                 if let product = product {
                     Section {
                         HStack {
-                            if let productPictureURL = productPictureURL {
-                                AsyncImage(url: productPictureURL, content: { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .background(Color.white)
-                                }, placeholder: {
-                                    ProgressView()
-                                })
-                                .frame(width: 50, height: 50)
+                            if let pictureFileName = product.pictureFileName {
+                                PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 50.0, maxHeight: 50.0)
                             }
                             VStack(alignment: .leading) {
                                 Text(product.name).font(.title)
@@ -224,19 +215,6 @@ struct QuickScanModeInputView: View {
                     }
                 }
                 firstOpen = false
-            }
-            do {
-                if let pictureFileName = product?.pictureFileName,
-                   !pictureFileName.isEmpty,
-                   let utf8str = pictureFileName.data(using: .utf8),
-                   let pictureURL = try await grocyVM.getPictureURL(
-                    groupName: "productpictures",
-                    fileName: utf8str.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-                   ) {
-                    self.productPictureURL = URL(string: pictureURL)
-                }
-            } catch {
-                grocyVM.postLog("Getting product picture failed. \(error)", type: .error)
             }
         }
     }
