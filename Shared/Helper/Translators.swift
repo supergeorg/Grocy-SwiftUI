@@ -222,5 +222,20 @@ struct Translators {
         ]
     )
     
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR]
+    static let norwegian_bokmal = Language(
+        name: "Norwegian Bokmål",
+        flag: "🇳🇴",
+        maintainers: "RonnyRusten, jonsigg",
+        contributors: [
+            "Andreas Henden <chairman2s.ah@gmail.com>, 2019",
+            "Ruben Sperre <ruben@rsperre.net>, 2020",
+            "Marius Borø <blizzwave@gmail.com>, 2021",
+            "Bernd Bestel <bernd@berrnd.de>, 2021",
+            "Tor Eirik Trandal <teitrand@hotmail.com>, 2021",
+            "Kurt Inge Smådal, 2022",
+            "Vegard Fladby <vegard.fladby@gmail.com>, 2023",
+        ]
+    )
+    
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal]
 }

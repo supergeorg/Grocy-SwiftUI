@@ -47,11 +47,11 @@ struct SettingsAppView: View {
                     Text("🇨🇳 汉文 (Chinese Simplified)").tag("zh-Hans")
                     Text("🇵🇹 Português (Portuguese Portugal)").tag("pt-PT")
                     Text("🇧🇷 Português Brasileiro (Portuguese Brazil)").tag("pt-BR")
+                    Text("🇳🇴 Norsk (Norwegian Bokmål)").tag("nb")
                 }
                 if devMode {
                     Group {
                         Text("🇩🇰 Dansk (Danish)").tag("da")
-                        Text("🇳🇴 Norsk (Norwegian Bokmål)").tag("nb")
                         Text("🇭🇺 Magyar (Hungarian)").tag("hu")
                         Text("🇹🇼 漢文 (Chinese Traditional)").tag("zh-Hant")
                     }
