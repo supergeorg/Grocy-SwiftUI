@@ -305,7 +305,7 @@ struct ConsumeProductView: View {
             
             if !quickScan {
                 ProductField(productID: $productID, description: "str.stock.consume.product")
-                    .onChange(of: productID) { newProduct in
+                    .onChange(of: productID) {
                         if let productID = productID {
                             Task {
                                 try await grocyVM.getStockProductEntries(productID: productID)
@@ -391,28 +391,28 @@ struct ConsumeProductView: View {
             }
 #endif
         }
-        .task {
-            if firstAppear {
-                await updateData()
-                resetForm()
-                if let productID = productID {
-                    do {
-                        try await grocyVM.getStockProductEntries(productID: productID)
-                        if let product = product {
-                            locationID = product.locationID
-                            quantityUnitID = product.quIDStock
-                            if let directStockEntryID = directStockEntryID {
-                                useSpecificStockEntry = true
-                                stockEntryID = directStockEntryID
-                            }
-                        }
-                    } catch {
-                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
-                    }
-                }
-                firstAppear = false
-            }
-        }
+        //        .task {
+        //            if firstAppear {
+        //                await updateData()
+        //                resetForm()
+        //                if let productID = productID {
+        //                    do {
+        //                        try await grocyVM.getStockProductEntries(productID: productID)
+        //                        if let product = product {
+        //                            locationID = product.locationID
+        //                            quantityUnitID = product.quIDStock
+        //                            if let directStockEntryID = directStockEntryID {
+        //                                useSpecificStockEntry = true
+        //                                stockEntryID = directStockEntryID
+        //                            }
+        //                        }
+        //                    } catch {
+        //                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
+        //                    }
+        //                }
+        //                firstAppear = false
+        //            }
+        //        }
     }
     
     var stockEntryPicker: some View {

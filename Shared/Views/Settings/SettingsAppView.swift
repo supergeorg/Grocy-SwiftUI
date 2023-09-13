@@ -58,9 +58,9 @@ struct SettingsAppView: View {
                 }
             })
             MyDoubleStepper(amount: $timeoutInterval, description: "str.settings.serverTimeoutInterval", minAmount: 1.0, maxAmount: 1000.0, amountStep: 1.0, amountName: "s", systemImage: MySymbols.timeout)
-                .onChange(of: timeoutInterval, perform: { newTimeoutInterval in
-                    grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: newTimeoutInterval)
-                })
+                .onChange(of: timeoutInterval) {
+                    grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
+                }
 #if os(iOS)
             NavigationLink(
                 destination: CodeTypeSelectionView(),

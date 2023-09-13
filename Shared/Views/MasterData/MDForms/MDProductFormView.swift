@@ -62,9 +62,9 @@ struct MDProductFormOFFView: View {
             
             if productNames.isEmpty {
                 MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
             } else {
                 Picker(selection: $name, content: {
                     ForEach(productNames.sorted(by: >), id: \.key) { key, value in
@@ -87,9 +87,9 @@ struct MDProductFormOFFView: View {
                         }
                     }
                 })
-                .onChange(of: name, perform: { value in
+                .onChange(of: name) {
                     isNameCorrect = checkNameCorrect()
-                })
+                }
             }
         }
     }
@@ -341,9 +341,9 @@ struct MDProductFormView: View {
                 Button(action: {
                     showOFFResult.toggle()
                 }, label: {Label("Open Food Facts", systemImage: MySymbols.barcodeScan)})
-                .onChange(of: queuedBarcode, perform: { newBarcode in
+                .onChange(of: queuedBarcode) {
                     isBarcodeCorrect = checkBarcodeCorrect()
-                })
+                }
 #if os(iOS)
                 .sheet(isPresented: $showOFFResult, content: {
                     NavigationView {
@@ -367,21 +367,21 @@ struct MDProductFormView: View {
             
             if let openFoodFactsBarcode = openFoodFactsBarcode {
                 MDProductFormOFFView(barcode: openFoodFactsBarcode, name: $name)
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
             } else {
                 MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
             }
             
             if !queuedBarcode.isEmpty && isNewProduct {
                 MyTextField(textToEdit: $queuedBarcode, description: "str.md.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "str.md.barcode.barcode.invalid")
-                    .onChange(of: queuedBarcode, perform: { newBarcode in
+                    .onChange(of: queuedBarcode) {
                         isBarcodeCorrect = checkBarcodeCorrect()
-                    })
+                    }
             }
             
 #if os(macOS)
@@ -597,13 +597,13 @@ struct MDProductFormView: View {
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                .onChange(of: quIDStock, perform: { newValue in
+                .onChange(of: quIDStock) {
                     if quIDPurchase == nil {
                         quIDPurchase = quIDStock
                         quIDConsume = quIDStock
                         quIDPrice = quIDPrice
                     }
-                })
+                }
                 
                 FieldDescription(description: "str.md.product.quStock.info")
             }

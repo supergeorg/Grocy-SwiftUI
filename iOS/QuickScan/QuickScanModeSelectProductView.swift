@@ -84,13 +84,13 @@ struct QuickScanModeSelectProductView: View {
                                 Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
                             }
                         )
-                        .onChange(of: newProductBarcode?.id, perform: { _ in
+                        .onChange(of: newProductBarcode?.id) {
                             if newProductBarcode != nil {
                                 toastType = .successAdd
                                 finishForm()
                                 newRecognizedBarcode = newProductBarcode
                             }
-                        })
+                        }
                     }
                 }
             }

@@ -118,9 +118,9 @@ struct MDStoreFormView: View {
             
             Section(header: Text(LocalizedStringKey("str.md.store.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.store.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.store.name.required", errorMessage: "str.md.store.name.exists")
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
                 MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }

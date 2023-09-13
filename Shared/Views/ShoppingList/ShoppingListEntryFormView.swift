@@ -150,7 +150,7 @@ struct ShoppingListEntryFormView: View {
             })
             
             ProductField(productID: $productID, description: "str.shL.entryForm.product")
-                .onChange(of: productID) { _ in
+                .onChange(of: productID) {
                     if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
                         quantityUnitID = selectedProduct.quIDPurchase
                     }

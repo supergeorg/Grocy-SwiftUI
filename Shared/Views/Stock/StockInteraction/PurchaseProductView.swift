@@ -234,7 +234,7 @@ struct PurchaseProductView: View {
             
             if !quickScan {
                 ProductField(productID: $productID, description: "str.stock.buy.product")
-                    .onChange(of: productID) { _ in
+                    .onChange(of: productID) {
                         if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
                             if locationID == nil { locationID = selectedProduct.locationID }
                             if storeID == nil { storeID = selectedProduct.storeID }

@@ -49,13 +49,13 @@ struct ServerSettingsToggle: View {
                 }
             }
             .disabled(isFirstShown)
-            .onChange(of: isOn, perform: { value in
+            .onChange(of: isOn) {
                 if !self.isFirstShown {
                     Task {
                         await putSetting()
                     }
                 }
-            })
+            }
     }
 }
 
@@ -97,13 +97,13 @@ struct ServerSettingsIntStepper: View {
                 }
             }
             .disabled(isFirstShown)
-            .onChange(of: value, perform: { value in
+            .onChange(of: value) {
                 if !self.isFirstShown {
                     Task {
                         await putSetting()
                     }
                 }
-            })
+            }
     }
 }
 
@@ -145,13 +145,13 @@ struct ServerSettingsDoubleStepper: View {
                 }
             }
             .disabled(isFirstShown)
-            .onChange(of: value, perform: { value in
+            .onChange(of: value) {
                 if !self.isFirstShown {
                     Task {
                         await putSetting()
                     }
                 }
-            })
+            }
     }
 }
 
@@ -226,12 +226,12 @@ struct ServerSettingsObjectPicker: View {
             }
         }
         .disabled(isFirstShown)
-        .onChange(of: objectID, perform: { value in
+        .onChange(of: objectID) {
             if !self.isFirstShown {
                 Task {
                     await putSetting()
                 }
             }
-        })
+        }
     }
 }

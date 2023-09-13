@@ -152,9 +152,9 @@ struct OpenFoodFactsFillProductView: View {
                             }
                         }
                     })
-                    .onChange(of: selectedProductName, perform: { value in
+                    .onChange(of: selectedProductName) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
                 }
             } else if let errorMessage = offVM.errorMessage {
                 Text("Error: \(errorMessage)")

@@ -242,7 +242,7 @@ struct QuickScanModeView: View {
                 await updateData()
             }
         }
-        .onChange(of: newRecognizedBarcode?.id, perform: { _ in
+        .onChange(of: newRecognizedBarcode?.id) {
             DispatchQueue.main.async {
                 if quickScanActionAfterAdd {
                     recognizedBarcode = newRecognizedBarcode
@@ -250,12 +250,12 @@ struct QuickScanModeView: View {
                     checkScanPause()
                 }
             }
-        })
-        .onChange(of: qsActiveSheet, perform: { _ in
+        }
+        .onChange(of: qsActiveSheet) {
             DispatchQueue.main.async {
                 checkScanPause()
             }
-        })
+        }
     }
 }
 

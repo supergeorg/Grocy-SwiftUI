@@ -146,9 +146,9 @@ struct StockTable: View {
             await grocyVM.requestData(objects: [.product_groups, .shopping_list, .quantity_units, .products, .locations], additionalObjects: [.stock, .system_config])}
         .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .animation(.default, value: searchedStock.count)
-        //            .onChange(of: sortOrder, perform: { srt in
+        //            .onChange(of: sortOrder) {
         //                filteredStock.sorted(by: { $0.product.name > $1.product.name })
-        //            })
+        //            }
     }
 }
 

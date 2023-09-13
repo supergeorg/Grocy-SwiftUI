@@ -178,9 +178,9 @@ struct MDQuantityUnitConversionFormView: View {
                             Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                         }
                     })
-                    .onChange(of: quIDTo, perform: { newQUIDTo in
+                    .onChange(of: quIDTo) {
                         conversionCorrect = checkConversionCorrect()
-                    })
+                    }
                     if checkConversionExists() {
                         Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
                             .font(.caption)
@@ -193,16 +193,16 @@ struct MDQuantityUnitConversionFormView: View {
                 }
                 
                 MyDoubleStepper(amount: $factor, description: "str.md.quantityUnit.conversion.factor", minAmount: 0.0001, amountStep: 1, amountName: "", systemImage: MySymbols.amount)
-                    .onChange(of: factor, perform: { newFactor in
+                    .onChange(of: factor) {
                         conversionCorrect = checkConversionCorrect()
-                    })
+                    }
                 
                 if isNewQuantityUnitConversion {
                     VStack(alignment: .leading) {
                         MyToggle(isOn: $createInverseConversion, description: "str.md.quantityUnit.conversion.createInverse", icon: MySymbols.transfer)
-                            .onChange(of: createInverseConversion, perform: { newInverse in
+                            .onChange(of: createInverseConversion) {
                                 conversionCorrect = checkConversionCorrect()
-                            })
+                            }
                         if checkReverseConversionExists() {
                             Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
                                 .font(.caption)

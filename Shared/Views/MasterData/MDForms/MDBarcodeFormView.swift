@@ -153,9 +153,9 @@ struct MDBarcodeFormView: View {
 #endif
             HStack{
                 MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
-                    .onChange(of: barcode, perform: {newBC in
+                    .onChange(of: barcode) {
                         isBarcodeCorrect = checkBarcodeCorrect()
-                    })
+                    }
 #if os(iOS)
                 Button(action: {
                     isShowingScanner.toggle()

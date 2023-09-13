@@ -174,7 +174,7 @@ struct InventoryProductView: View {
             }
             
             ProductField(productID: $productID, description: "str.stock.inventory.product")
-                .onChange(of: productID) { newProduct in
+                .onChange(of: productID) {
                     if let productID = productID {
                         Task {
                             try await grocyVM.getStockProductEntries(productID: productID)

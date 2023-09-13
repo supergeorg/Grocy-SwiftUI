@@ -116,7 +116,7 @@ struct UserFormView: View {
 #endif
             Section(header: Text(LocalizedStringKey("str.admin.user.new.userName")).font(.title)){
                 MyTextField(textToEdit: $username, description: "str.admin.user.new.userName", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.admin.user.new.userName.required", errorMessage: "str.admin.user.new.userName.exists")
-                    .onChange(of: username) { newValue in
+                    .onChange(of: username) {
                         isValidUsername = checkUsernameCorrect()
                     }
                 MyTextField(textToEdit: $firstName, description: "str.admin.user.new.firstName", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
@@ -145,10 +145,10 @@ struct UserFormView: View {
             }
 #endif
         }
-        .onChange(of: password) { newValue in
+        .onChange(of: password) {
             checkPWParity()
         }
-        .onChange(of: passwordConfirm) {  newValue in
+        .onChange(of: passwordConfirm) {
             checkPWParity()
         }
         .toast(

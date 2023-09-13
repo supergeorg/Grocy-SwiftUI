@@ -127,11 +127,13 @@ struct MDUserEntityFormView: View {
 #endif
             Section(header: Text(LocalizedStringKey("str.md.userEntity.name"))){
                 MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
-                    .onChange(of: name, perform: {newValue in
-                        isNameCorrect = checkNameCorrect() })
+                    .onChange(of: name) {
+                        isNameCorrect = checkNameCorrect()
+                    }
                 MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.caption.required")
-                    .onChange(of: caption, perform: {newValue in
-                        isCaptionCorrect = checkCaptionCorrect() })
+                    .onChange(of: caption) {
+                        isCaptionCorrect = checkCaptionCorrect()
+                    }
             }
             
             MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)

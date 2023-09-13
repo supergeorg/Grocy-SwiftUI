@@ -162,7 +162,7 @@ struct TransferProductView: View {
             }
             
             ProductField(productID: $productID, description: "str.stock.transfer.product")
-                .onChange(of: productID) { newProduct in
+                .onChange(of: productID) {
                     Task {
                         try await grocyVM.getStockProductEntries(productID: productID ?? 0)
                         if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {

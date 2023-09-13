@@ -127,7 +127,9 @@ struct ShoppingListFormView: View {
                 emptyMessage: "str.shL.form.name.required",
                 errorMessage: "str.shL.form.name.exists"
             )
-            .onChange(of: name, perform: { _ in isNameCorrect = checkNameCorrect() })
+            .onChange(of: name) {
+                isNameCorrect = checkNameCorrect()
+            }
 #if os(macOS)
             HStack {
                 Button(LocalizedStringKey("str.cancel")) {

@@ -135,9 +135,9 @@ struct MDLocationFormView: View {
 #endif
             Section(header: Text(LocalizedStringKey("str.md.location.info")).font(.title), content: {
                 MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.location.name.required", errorMessage: "str.md.location.name.exists")
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
                 MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdLocationDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             })

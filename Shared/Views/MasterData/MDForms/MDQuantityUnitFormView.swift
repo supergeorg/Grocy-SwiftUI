@@ -156,9 +156,9 @@ struct MDQuantityUnitFormView: View {
 #endif
             Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
                 MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
-                    .onChange(of: name, perform: { value in
+                    .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
-                    })
+                    }
                 MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
                 MyToggle(isOn: $isActive, description: "str.md.product.active")
                 MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)

@@ -536,12 +536,12 @@ struct ShoppingListView: View {
 #else
             .pickerStyle(.inline)
 #endif
-            .onChange(of: sortOrder, perform: { newOrder in
+            .onChange(of: sortOrder) {
                 if var sortElement = sortSetting.first {
-                    sortElement.order = newOrder
+                    sortElement.order = sortOrder
                     sortSetting = [sortElement]
                 }
-            })
+            }
         }, label: {
             Label(LocalizedStringKey("str.sort"), systemImage: MySymbols.sort)
         })

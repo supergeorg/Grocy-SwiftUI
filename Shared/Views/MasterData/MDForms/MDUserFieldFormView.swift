@@ -146,11 +146,13 @@ struct MDUserFieldFormView: View {
             
             Section(header: Text(LocalizedStringKey("str.md.userField.name"))){
                 MyTextField(textToEdit: $name, description: "str.md.userField.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.name.required", errorMessage: "str.md.userField.name.invalid", helpText: "str.md.userField.name.info")
-                    .onChange(of: name, perform: {newValue in
-                        isNameCorrect = checkNameCorrect() })
+                    .onChange(of: name) {
+                        isNameCorrect = checkNameCorrect()
+                    }
                 MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
-                    .onChange(of: caption, perform: {newValue in
-                        isCaptionCorrect = checkCaptionCorrect() })
+                    .onChange(of: caption) {
+                        isCaptionCorrect = checkCaptionCorrect()
+                    }
             }
             MyIntStepperOptional(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
             

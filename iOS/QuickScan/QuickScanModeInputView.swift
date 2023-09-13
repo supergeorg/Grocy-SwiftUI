@@ -173,11 +173,11 @@ struct QuickScanModeInputView: View {
                     Text(LocalizedStringKey("str.md.products.empty"))
                 }
             }
-            .onChange(of: actionFinished, perform: { actionFinished in
+            .onChange(of: actionFinished) {
                 if self.actionFinished {
                     self.dismiss()
                 }
-            })
+            }
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
                     Button(LocalizedStringKey("str.cancel")) {
