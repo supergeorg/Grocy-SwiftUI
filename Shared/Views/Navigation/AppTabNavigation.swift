@@ -34,7 +34,7 @@ struct AppTabNavigation: View {
                 }
                 .tag(Tab.quickScanMode)
             
-            NavigationView {
+            NavigationStack {
                 StockView()
             }
             .tabItem {
@@ -42,9 +42,8 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.stockOverview"))
             }
             .tag(Tab.stockOverview)
-            .navigationViewStyle(StackNavigationViewStyle())
             
-            NavigationView {
+            NavigationStack {
                 ShoppingListView()
             }
             .tabItem {
@@ -52,7 +51,6 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.shoppingList"))
             }
             .tag(Tab.shoppingList)
-            .navigationViewStyle(StackNavigationViewStyle())
             
             if devMode {
                 NavigationView {
@@ -62,17 +60,9 @@ struct AppTabNavigation: View {
                     Label("str.nav.recipes", systemImage: Tab.recipes.rawValue)
                 })
                 .tag(Tab.recipes)
-//                NavigationView {
-//                    ActivitiesView()
-//                }
-//                .tabItem {
-//                    Label("str.nav.activities", systemImage: Tab.activities.rawValue)
-//                        .accessibility(label: Text("str.nav.activities"))
-//                }
-//                .tag(Tab.activities)
             }
             
-            NavigationView {
+            NavigationStack {
                 MasterDataView()
             }
             .tabItem {
@@ -80,9 +70,8 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.md"))
             }
             .tag(Tab.masterData)
-            .navigationViewStyle(StackNavigationViewStyle())
             
-            NavigationView {
+            NavigationStack {
                 SettingsView()
             }
             .tabItem {
@@ -90,7 +79,6 @@ struct AppTabNavigation: View {
                     .accessibility(label: Text("str.nav.settings"))
             }
             .tag(Tab.settings)
-            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

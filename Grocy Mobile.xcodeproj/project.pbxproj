@@ -887,7 +887,6 @@
 			isa = PBXGroup;
 			children = (
 				78CB749D255E9EF800319108 /* Info.plist */,
-				78CB74E0255EA04A00319108 /* AppTabNavigation.swift */,
 				7812FFA625BB0B6900377773 /* ActivitiesView.swift */,
 				78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */,
 				783454EB25A74E100024F556 /* QuickScan */,
@@ -931,6 +930,7 @@
 			isa = PBXGroup;
 			children = (
 				78CB7494255E9EF700319108 /* ContentView.swift */,
+				78CB74E0255EA04A00319108 /* AppTabNavigation.swift */,
 				78CB74D5255EA01600319108 /* AppSidebarNavigation.swift */,
 				78E04A3A2ABA52FE00603A41 /* Navigation.swift */,
 				78E04A382ABA4BB900603A41 /* Sidebar.swift */,
