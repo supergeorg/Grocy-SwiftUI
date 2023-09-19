@@ -110,9 +110,9 @@ struct MDQuantityUnitsView: View {
     var content: some View {
         List {
             if grocyVM.mdQuantityUnits.isEmpty {
-                Text(LocalizedStringKey("str.md.quantityUnits.empty"))
+                ContentUnavailableView("str.md.quantityUnits.empty", systemImage: MySymbols.quantityUnit)
             } else if filteredQuantityUnits.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddQuantityUnit {

@@ -338,7 +338,7 @@ struct StockView: View {
             NavigationView {
                 List {
                     if grocyVM.stock.isEmpty {
-                        Text("str.stock.empty").padding()
+                        ContentUnavailableView("str.stock.empty", systemImage: MySymbols.stockOverview)
                     }
                     ForEach(groupedProducts.sorted(by: {
                         switch stockGrouping {
@@ -419,9 +419,7 @@ struct StockView: View {
                 StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
             }
             if grocyVM.stock.isEmpty {
-                Section {
-                    Text("str.stock.empty").padding()
-                }
+                ContentUnavailableView("str.stock.empty", systemImage: MySymbols.stockOverview)
             }
             ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {

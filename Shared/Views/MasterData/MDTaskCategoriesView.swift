@@ -109,7 +109,7 @@ struct MDTaskCategoriesView: View {
             if grocyVM.mdTaskCategories.isEmpty {
                 Text(LocalizedStringKey("str.md.taskCategories.empty"))
             } else if filteredTaskCategories.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddTaskCategory {

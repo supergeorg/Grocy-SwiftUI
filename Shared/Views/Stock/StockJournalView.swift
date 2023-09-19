@@ -332,9 +332,9 @@ struct StockJournalView: View {
         List {
             StockJournalFilterBar(searchString: $searchString, filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
             if grocyVM.stockJournal.isEmpty {
-                Text(LocalizedStringKey("str.stock.journal.empty")).padding()
+                ContentUnavailableView("str.stock.journal.empty", systemImage: MySymbols.stockJournal)
             } else if filteredJournal.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult")).padding()
+                ContentUnavailableView.search.padding()
             }
             ForEach(filteredJournal, id: \.id) { journalEntry in
                 StockJournalRowView(journalEntry: journalEntry, showToastUndoFailed: $showToastUndoFailed)

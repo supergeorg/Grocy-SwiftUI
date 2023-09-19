@@ -110,9 +110,9 @@ struct MDProductGroupsView: View {
     var content: some View {
         List {
             if grocyVM.mdProductGroups.isEmpty {
-                Text(LocalizedStringKey("str.md.productGroups.empty"))
+                ContentUnavailableView("str.md.productGroups.empty", systemImage: MySymbols.productGroup)
             } else if filteredProductGroups.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddProductGroup {

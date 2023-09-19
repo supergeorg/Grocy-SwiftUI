@@ -105,9 +105,9 @@ struct MDStoresView: View {
     var content: some View {
         List{
             if grocyVM.mdStores.isEmpty {
-                Text(LocalizedStringKey("str.md.stores.empty"))
+                ContentUnavailableView("str.md.stores.empty", systemImage: MySymbols.store)
             } else if filteredStores.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddStore {

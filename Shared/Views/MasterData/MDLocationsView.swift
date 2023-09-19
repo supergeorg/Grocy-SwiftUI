@@ -112,9 +112,9 @@ struct MDLocationsView: View {
     var content: some View {
         List {
             if grocyVM.mdLocations.isEmpty {
-                Text(LocalizedStringKey("str.md.locations.empty"))
+                ContentUnavailableView("str.md.locations.empty", systemImage: MySymbols.location)
             } else if filteredLocations.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddLocation {

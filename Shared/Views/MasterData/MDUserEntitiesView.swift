@@ -105,7 +105,7 @@ struct MDUserEntitiesView: View {
             if grocyVM.mdUserEntities.isEmpty {
                 Text(LocalizedStringKey("str.md.userEntities.empty"))
             } else if filteredUserEntities.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddUserEntity {

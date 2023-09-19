@@ -109,7 +109,7 @@ struct MDUserFieldsView: View {
             if grocyVM.mdUserFields.isEmpty {
                 Text(LocalizedStringKey("str.md.userFields.empty"))
             } else if filteredUserFields.isEmpty {
-                Text(LocalizedStringKey("str.noSearchResult"))
+                ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddUserField {
