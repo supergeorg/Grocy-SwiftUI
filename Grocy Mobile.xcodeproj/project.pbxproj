@@ -369,6 +369,9 @@
 		78E02CDD25DAC20D00668403 /* OpenFoodFactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */; };
 		78E02CE425DAC3BF00668403 /* OpenFoodFactsScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */; };
 		78E02CE625DAC3BF00668403 /* OpenFoodFactsScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */; };
+		78E04A392ABA4BB900603A41 /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A382ABA4BB900603A41 /* Sidebar.swift */; };
+		78E04A3B2ABA52FE00603A41 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3A2ABA52FE00603A41 /* Navigation.swift */; };
+		78E04A3C2ABA52FE00603A41 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3A2ABA52FE00603A41 /* Navigation.swift */; };
 		78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802F25A5D14300661FDB /* QuickScanModeView.swift */; };
@@ -646,6 +649,8 @@
 		78E02CC525DAB83C00668403 /* OpenFoodFactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsViewModel.swift; sourceTree = "<group>"; };
 		78E02CDA25DAC20D00668403 /* OpenFoodFactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsView.swift; sourceTree = "<group>"; };
 		78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsScannerView.swift; sourceTree = "<group>"; };
+		78E04A382ABA4BB900603A41 /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
+		78E04A3A2ABA52FE00603A41 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		78E4802825A5CC2600661FDB /* FieldDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDescription.swift; sourceTree = "<group>"; };
 		78E4802F25A5D14300661FDB /* QuickScanModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeView.swift; sourceTree = "<group>"; };
 		78E96E8C2707784200DBAF6A /* StockEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockEntriesView.swift; sourceTree = "<group>"; };
@@ -927,6 +932,8 @@
 			children = (
 				78CB7494255E9EF700319108 /* ContentView.swift */,
 				78CB74D5255EA01600319108 /* AppSidebarNavigation.swift */,
+				78E04A3A2ABA52FE00603A41 /* Navigation.swift */,
+				78E04A382ABA4BB900603A41 /* Sidebar.swift */,
 				781A25552566838C00560026 /* AppCommands.swift */,
 			);
 			path = Navigation;
@@ -1392,6 +1399,7 @@
 				781A25AE2566952A00560026 /* MDProductFormView.swift in Sources */,
 				78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */,
 				786A13A62943B1420011BCAF /* RecipeFulfillmentModel.swift in Sources */,
+				78E04A3B2ABA52FE00603A41 /* Navigation.swift in Sources */,
 				788C6288293A7AA40081A5BD /* RecipesView.swift in Sources */,
 				78CB74E1255EA04A00319108 /* AppTabNavigation.swift in Sources */,
 				7839E30B25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift in Sources */,
@@ -1431,6 +1439,7 @@
 				78CB74BE255E9EF800319108 /* ContentView.swift in Sources */,
 				78ADA1E626D1509100946E1B /* Translators.swift in Sources */,
 				785427B525D29C3000AFE726 /* MySymbols.swift in Sources */,
+				78E04A392ABA4BB900603A41 /* Sidebar.swift in Sources */,
 				78CB75A8255EA5A900319108 /* DateFormatter.swift in Sources */,
 				789ADDB225C45B3000D7EB35 /* ToastTypes.swift in Sources */,
 				7848A0CD256BD2C3004EAF18 /* UserManagementView.swift in Sources */,
@@ -1618,6 +1627,7 @@
 				78AF64E42719F38400C439AF /* StockEntryFormView.swift in Sources */,
 				78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */,
 				78A201C625EE64210031BFDE /* ServerProblemView.swift in Sources */,
+				78E04A3C2ABA52FE00603A41 /* Navigation.swift in Sources */,
 				78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */,
 				781E97E127834C43004E9798 /* GrocyUserSettings.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,

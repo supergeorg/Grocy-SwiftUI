@@ -16,6 +16,8 @@ struct MySymbols {
     static let stockJournal = "list.bullet.rectangle"
     static let addToShoppingList = "note.text.badge.plus"
     static let shoppingList = "note.text"
+    static let masterData = "text.book.closed"
+    static let settings = "gear"
 
     static let stockOverview = "books.vertical"
     static let product = "tag"
