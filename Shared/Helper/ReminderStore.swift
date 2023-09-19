@@ -121,7 +121,7 @@ class ReminderStore {
     @Published var isAvailable_: Bool = false
     
     var isAvailable: Bool {
-        EKEventStore.authorizationStatus(for: .reminder) == .authorized && isCalendarSelected
+        EKEventStore.authorizationStatus(for: .reminder) == .fullAccess && isCalendarSelected
     }
     
     private var isCalendarSelected: Bool = false
@@ -135,11 +135,15 @@ class ReminderStore {
         case .restricted:
             throw TodayError.accessRestricted
         case .notDetermined:
-            let accessGranted = try await ekStore.requestAccess(to: .reminder)
+            let accessGranted = try await ekStore.requestFullAccessToReminders()
             guard accessGranted else {
                 throw TodayError.accessDenied
             }
         case .denied:
+            throw TodayError.accessDenied
+        case .fullAccess:
+            return
+        case .writeOnly:
             throw TodayError.accessDenied
         @unknown default:
             throw TodayError.unknown
