@@ -15,7 +15,7 @@ struct ActivitiesView: View {
 
     var body: some View {
         List {
-            NavigationLink(destination: PurchaseProductView(toastType: $toastType, infoString: $infoString)) {
+            NavigationLink(destination: PurchaseProductView()) {
                 Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
             }
 

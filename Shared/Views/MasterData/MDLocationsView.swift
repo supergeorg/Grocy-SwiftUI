@@ -103,7 +103,7 @@ struct MDLocationsView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddLocation, content: {
                 NavigationView {
-                    MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType)
+                    MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation)
                 } })
 #endif
     }
@@ -118,14 +118,14 @@ struct MDLocationsView: View {
             }
 #if os(macOS)
             if showAddLocation {
-                NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation, toastType: $toastType), isActive: $showAddLocation, label: {
+                NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation), isActive: $showAddLocation, label: {
                     NewMDRowLabel(title: "str.md.location.new")
                 })
                     .frame(height: showAddLocation ? 50 : 0)
             }
 #endif
             ForEach(filteredLocations, id:\.id) {location in
-                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, showAddLocation: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, showAddLocation: Binding.constant(false))) {
                     MDLocationRowView(location: location)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

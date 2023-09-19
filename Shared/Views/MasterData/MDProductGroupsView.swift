@@ -101,7 +101,7 @@ struct MDProductGroupsView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddProductGroup, content: {
                 NavigationView {
-                    MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType)
+                    MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup)
                 }
             })
 #endif
@@ -116,13 +116,13 @@ struct MDProductGroupsView: View {
             }
 #if os(macOS)
             if showAddProductGroup {
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup, toastType: $toastType), isActive: $showAddProductGroup, label: {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup), isActive: $showAddProductGroup, label: {
                     NewMDRowLabel(title: "str.md.productGroup.new")
                 })
             }
 #endif
             ForEach(filteredProductGroups, id:\.id) { productGroup in
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: $showAddProductGroup, toastType: $toastType)) {
+                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: $showAddProductGroup)) {
                     MDProductGroupRowView(productGroup: productGroup)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

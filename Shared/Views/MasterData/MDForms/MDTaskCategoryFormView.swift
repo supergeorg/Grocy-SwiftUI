@@ -22,7 +22,7 @@ struct MDTaskCategoryFormView: View {
     var taskCategory: MDTaskCategory?
     
     @Binding var showAddTaskCategory: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -139,22 +139,22 @@ struct MDTaskCategoryFormView: View {
     }
 }
 
-struct MDTaskCategoryFormView_Previews: PreviewProvider {
-    static var previews: some View {
-#if os(macOS)
-        Group {
-            MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
-            MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
-        }
-#else
-        Group {
-            NavigationView {
-                MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
-            }
-            NavigationView {
-                MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true), toastType: Binding.constant(nil))
-            }
-        }
-#endif
-    }
-}
+//struct MDTaskCategoryFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//#if os(macOS)
+//        Group {
+//            MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true))
+//            MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true))
+//        }
+//#else
+//        Group {
+//            NavigationView {
+//                MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: Binding.constant(true))
+//            }
+//            NavigationView {
+//                MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: MDTaskCategory(id: 0, name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: ""), showAddTaskCategory: Binding.constant(true))
+//            }
+//        }
+//#endif
+//    }
+//}

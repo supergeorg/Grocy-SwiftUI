@@ -26,7 +26,7 @@ struct MDUserFieldFormView: View {
     var userField: MDUserField?
     
     @Binding var showAddUserField: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -176,6 +176,6 @@ struct MDUserFieldFormView: View {
 
 struct MDUserFieldFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDUserFieldFormView(isNewUserField: true, showAddUserField: Binding.constant(true), toastType: Binding.constant(.successAdd))
+        MDUserFieldFormView(isNewUserField: true, showAddUserField: Binding.constant(true))
     }
 }

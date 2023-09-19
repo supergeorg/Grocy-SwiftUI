@@ -13,7 +13,7 @@ struct UserRowActionsView: View {
     var user: GrocyUser
     var isCurrentUser: Bool
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
@@ -65,11 +65,11 @@ struct UserRowView: View {
     
     var isCurrentUser: Bool
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     var body: some View {
         HStack{
-            UserRowActionsView(user: user, isCurrentUser: isCurrentUser, toastType: $toastType)
+            UserRowActionsView(user: user, isCurrentUser: isCurrentUser)
             Divider()
             VStack(alignment: .leading){
                 Text(user.username)
@@ -83,6 +83,6 @@ struct UserRowView: View {
 
 //struct UserRowView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false, toastType: Binding.constant(nil))
+//        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false)
 //    }
 //}

@@ -29,7 +29,7 @@ struct StockTableRowActionsView: View {
         }
     }
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})

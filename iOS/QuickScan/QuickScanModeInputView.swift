@@ -25,8 +25,8 @@ struct QuickScanModeInputView: View {
     var productBarcode: MDProductBarcode?
     var grocyCode: GrocyCode?
     
-    @Binding var toastType: ToastType?
-    @Binding var infoString: String?
+    @State var toastType: ToastType? = nil
+    @State var infoString: String? = nil
     
     @State private var consumeAmountMode: ConsumeAmountMode = .standard
     
@@ -140,9 +140,7 @@ struct QuickScanModeInputView: View {
                             barcode: productBarcode,
                             consumeType: .consume,
                             quickScan: true,
-                            actionFinished: $actionFinished,
-                            toastType: $toastType,
-                            infoString: $infoString
+                            actionFinished: $actionFinished
                         )
                     }
                     
@@ -153,9 +151,7 @@ struct QuickScanModeInputView: View {
                             barcode: productBarcode,
                             consumeType: .open,
                             quickScan: true,
-                            actionFinished: $actionFinished,
-                            toastType: $toastType,
-                            infoString: $infoString
+                            actionFinished: $actionFinished
                         )
                     }
                     
@@ -164,9 +160,7 @@ struct QuickScanModeInputView: View {
                             directProductToPurchaseID: product.id,
                             barcode: productBarcode,
                             quickScan: true,
-                            actionFinished: $actionFinished,
-                            toastType: $toastType,
-                            infoString: $infoString
+                            actionFinished: $actionFinished
                         )
                     }
                 } else {
@@ -227,8 +221,6 @@ struct QuickScanModeInputView_Previews: PreviewProvider {
                 quickScanMode: Binding.constant(QuickScanMode.consume),
                 productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
-                toastType: Binding.constant(ToastType.successConsume),
-                infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
                 lastPurchaseStoreID: Binding.constant(nil),
@@ -239,8 +231,6 @@ struct QuickScanModeInputView_Previews: PreviewProvider {
                 quickScanMode: Binding.constant(QuickScanMode.markAsOpened),
                 productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
-                toastType: Binding.constant(ToastType.successOpen),
-                infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
                 lastPurchaseStoreID: Binding.constant(nil),
@@ -251,8 +241,6 @@ struct QuickScanModeInputView_Previews: PreviewProvider {
                 quickScanMode: Binding.constant(QuickScanMode.purchase),
                 productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
                 grocyCode: nil,
-                toastType: Binding.constant(ToastType.successPurchase),
-                infoString: Binding.constant(nil),
                 lastConsumeLocationID: Binding.constant(nil),
                 lastPurchaseDueDate: Binding.constant(Date()),
                 lastPurchaseStoreID: Binding.constant(nil),

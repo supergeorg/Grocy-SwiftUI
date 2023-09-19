@@ -102,7 +102,7 @@ struct MDQuantityUnitsView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddQuantityUnit, content: {
                 NavigationView {
-                    MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType)
+                    MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit)
                 } })
 #endif
     }
@@ -116,13 +116,13 @@ struct MDQuantityUnitsView: View {
             }
 #if os(macOS)
             if showAddQuantityUnit {
-                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit, toastType: $toastType), isActive: $showAddQuantityUnit, label: {
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit), isActive: $showAddQuantityUnit, label: {
                     NewMDRowLabel(title: "str.md.quantityUnit.new")
                 })
             }
 #endif
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
-                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, showAddQuantityUnit: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: false, quantityUnit: quantityUnit, showAddQuantityUnit: Binding.constant(false))) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

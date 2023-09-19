@@ -24,7 +24,7 @@ struct MDLocationFormView: View {
     var location: MDLocation?
     
     @Binding var showAddLocation: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -160,16 +160,16 @@ struct MDLocationFormView_Previews: PreviewProvider {
     static var previews: some View {
 #if os(macOS)
         Group {
-            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
-            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: true, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true))
+            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: true, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false))
         }
 #else
         Group {
             NavigationView {
-                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true), toastType: Binding.constant(.successAdd))
+                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true))
             }
             NavigationView {
-                MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Location", active: true, mdLocationDescription: "Location Description", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false), toastType: Binding.constant(.successAdd))
+                MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Location", active: true, mdLocationDescription: "Location Description", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false))
             }
         }
 #endif

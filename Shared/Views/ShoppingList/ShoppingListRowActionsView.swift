@@ -17,8 +17,8 @@ struct ShoppingListRowActionsView: View {
     @State private var showAutoPurchase: Bool = false
     @State private var showEntryDeleteAlert: Bool = false
     
-    @Binding var toastType: ToastType?
-    @Binding var infoString: String?
+    @State var toastType: ToastType? = nil
+    @State var infoString: String? = nil
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
@@ -119,22 +119,22 @@ struct ShoppingListRowActionsView: View {
                 }
 #if os(macOS)
                 .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType, infoString: $infoString)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                         .padding()
                 })
                 .popover(isPresented: $showAutoPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType, infoString: $infoString)
+                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
                         .padding()
                 })
 #elseif os(iOS)
                 .sheet(isPresented: $showPurchase, content: {
                     NavigationView {
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, toastType: $toastType, infoString: $infoString)
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                     }
                 })
                 .sheet(isPresented: $showAutoPurchase, content: {
                     NavigationView {
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true, toastType: $toastType, infoString: $infoString)
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
                     }
                 })
 #endif
@@ -144,6 +144,6 @@ struct ShoppingListRowActionsView: View {
 
 struct ShoppingListRowActionsView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 1, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: ""), toastType: Binding.constant(nil), infoString: Binding.constant(nil))
+        ShoppingListRowActionsView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 1, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: ""))
     }
 }

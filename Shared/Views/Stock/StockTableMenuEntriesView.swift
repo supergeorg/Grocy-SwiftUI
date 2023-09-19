@@ -17,7 +17,7 @@ struct StockTableMenuEntriesView: View {
 #elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
 #endif
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})

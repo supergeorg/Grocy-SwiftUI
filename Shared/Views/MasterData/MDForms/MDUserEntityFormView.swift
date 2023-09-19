@@ -24,7 +24,7 @@ struct MDUserEntityFormView: View {
     var userEntity: MDUserEntity?
     
     @Binding var showAddUserEntity: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -152,6 +152,6 @@ struct MDUserEntityFormView: View {
 
 struct MDUserEntityFormView_Previews: PreviewProvider {
     static var previews: some View {
-        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: Binding.constant(false), toastType: Binding.constant(nil))
+        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: Binding.constant(false))
     }
 }

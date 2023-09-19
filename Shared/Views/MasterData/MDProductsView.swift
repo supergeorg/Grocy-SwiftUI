@@ -119,7 +119,7 @@ struct MDProductsView: View {
 #if os(iOS)
             .sheet(isPresented: $showAddProduct, content: {
                 NavigationView {
-                    MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType)
+                    MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct)
                 }
             })
 #endif
@@ -134,13 +134,13 @@ struct MDProductsView: View {
             }
 #if os(macOS)
             if showAddProduct {
-                NavigationLink(destination: MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct, toastType: $toastType), isActive: $showAddProduct, label: {
+                NavigationLink(destination: MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct), isActive: $showAddProduct, label: {
                     NewMDRowLabel(title: "str.md.product.new")
                 })
             }
 #endif
             ForEach(filteredProducts, id:\.id) { product in
-                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, showAddProduct: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDProductFormView(isNewProduct: false, product: product, showAddProduct: Binding.constant(false))) {
                     MDProductRowView(product: product)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

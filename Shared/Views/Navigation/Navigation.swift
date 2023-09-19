@@ -51,6 +51,12 @@ struct Navigation: View {
             StockView()
         case .shoppingList:
             ShoppingListView()
+        case .purchase:
+            PurchaseProductView()
+        case .transfer:
+            TransferProductView()
+        case .inventory:
+            InventoryProductView()
         case .mdProducts:
             MDProductsView()
         case .mdLocations:

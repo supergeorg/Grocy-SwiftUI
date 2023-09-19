@@ -95,7 +95,7 @@ struct MDUserEntitiesView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddUserEntity, content: {
                 NavigationView {
-                    MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType)
+                    MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
                 } })
 #endif
     }
@@ -109,13 +109,13 @@ struct MDUserEntitiesView: View {
             }
 #if os(macOS)
             if showAddUserEntity {
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity, toastType: $toastType), isActive: $showAddUserEntity, label: {
+                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity), isActive: $showAddUserEntity, label: {
                     NewMDRowLabel(title: "str.md.userEntity.new")
                 })
             }
 #endif
             ForEach(filteredUserEntities, id:\.id) { userEntity in
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

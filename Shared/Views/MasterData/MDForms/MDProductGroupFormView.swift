@@ -23,7 +23,7 @@ struct MDProductGroupFormView: View {
     var productGroup: MDProductGroup?
     
     @Binding var showAddProductGroup: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -141,22 +141,22 @@ struct MDProductGroupFormView: View {
     }
 }
 
-struct MDProductGroupFormView_Previews: PreviewProvider {
-    static var previews: some View {
-#if os(macOS)
-        Group {
-            MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true), toastType: Binding.constant(nil))
-            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
-        }
-#else
-        Group {
-            NavigationView {
-                MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
-            }
-            NavigationView {
-                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false), toastType: Binding.constant(nil))
-            }
-        }
-#endif
-    }
-}
+//struct MDProductGroupFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//#if os(macOS)
+//        Group {
+//            MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(true))
+//            MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false))
+//        }
+//#else
+//        Group {
+//            NavigationView {
+//                MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: Binding.constant(false))
+//            }
+//            NavigationView {
+//                MDProductGroupFormView(isNewProductGroup: false, productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""), showAddProductGroup: Binding.constant(false))
+//            }
+//        }
+//#endif
+//    }
+//}

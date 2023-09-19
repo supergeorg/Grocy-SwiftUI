@@ -149,7 +149,7 @@ struct MDProductFormView: View {
     var openFoodFactsBarcode: String?
     
     @Binding var showAddProduct: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     var isPopup: Bool = false
     
@@ -681,7 +681,7 @@ struct MDProductFormView: View {
     var barcodePropertiesView: some View {
         Group {
             if let product = product {
-                MDBarcodesView(productID: product.id, toastType: $toastType)
+                MDBarcodesView(productID: product.id)
             }
         }
     }
@@ -690,7 +690,7 @@ struct MDProductFormView: View {
 struct MDProductFormView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MDProductFormView(isNewProduct: true, showAddProduct: Binding.constant(true), toastType: Binding.constant(nil))
+            MDProductFormView(isNewProduct: true, showAddProduct: Binding.constant(true))
         }
     }
 }

@@ -96,7 +96,7 @@ struct MDStoresView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddStore, content: {
                 NavigationView {
-                    MDStoreFormView(isNewStore: true, showAddStore: $showAddStore, toastType: $toastType)
+                    MDStoreFormView(isNewStore: true, showAddStore: $showAddStore)
                 }
             })
 #endif
@@ -111,13 +111,13 @@ struct MDStoresView: View {
             }
 #if os(macOS)
             if showAddStore {
-                NavigationLink(destination: MDStoreFormView(isNewStore: true, showAddStore: $showAddStore, toastType: $toastType), isActive: $showAddStore, label: {
+                NavigationLink(destination: MDStoreFormView(isNewStore: true, showAddStore: $showAddStore), isActive: $showAddStore, label: {
                     NewMDRowLabel(title: "str.md.store.new")
                 })
             }
 #endif
             ForEach(filteredStores, id:\.id) { store in
-                NavigationLink(destination: MDStoreFormView(isNewStore: false, store: store, showAddStore: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDStoreFormView(isNewStore: false, store: store, showAddStore: Binding.constant(false))) {
                     MDStoreRowView(store: store)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

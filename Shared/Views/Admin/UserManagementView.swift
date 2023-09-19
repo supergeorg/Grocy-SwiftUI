@@ -68,7 +68,7 @@ struct UserManagementView: View {
                         }
                     })
                     .popover(isPresented: $showAddUser, content: {
-                        UserFormView(isNewUser: true, toastType: $toastType)
+                        UserFormView(isNewUser: true)
                             .padding()
                             .frame(width: 500, height: 500)
                     })
@@ -90,7 +90,7 @@ struct UserManagementView: View {
                     })
                     .sheet(isPresented: $showAddUser, content: {
                         NavigationView{
-                            UserFormView(isNewUser: true, toastType: $toastType)
+                            UserFormView(isNewUser: true)
                         }
                     })
                 })
@@ -104,7 +104,7 @@ struct UserManagementView: View {
                 Text(LocalizedStringKey("str.admin.user.empty")).padding()
             }
             ForEach(filteredUsers, id:\.id) {user in
-                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username), toastType: $toastType)
+                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
             }
         }
         .navigationTitle(LocalizedStringKey("str.admin.user"))

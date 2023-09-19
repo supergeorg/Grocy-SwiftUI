@@ -192,8 +192,6 @@ struct QuickScanModeView: View {
                 QuickScanModeInputView(
                     quickScanMode: $quickScanMode,
                     grocyCode: recognizedGrocyCode,
-                    toastType: $toastType,
-                    infoString: $infoString,
                     lastConsumeLocationID: $lastConsumeLocationID,
                     lastPurchaseDueDate: $lastPurchaseDueDate,
                     lastPurchaseStoreID: $lastPurchaseStoreID,
@@ -203,8 +201,6 @@ struct QuickScanModeView: View {
                 QuickScanModeInputView(
                     quickScanMode: $quickScanMode,
                     productBarcode: recognizedBarcode,
-                    toastType: $toastType,
-                    infoString: $infoString,
                     lastConsumeLocationID: $lastConsumeLocationID,
                     lastPurchaseDueDate: $lastPurchaseDueDate,
                     lastPurchaseStoreID: $lastPurchaseStoreID,
@@ -213,7 +209,6 @@ struct QuickScanModeView: View {
             case .selectProduct:
                 QuickScanModeSelectProductView(
                     barcode: notRecognizedBarcode,
-                    toastType: $toastType,
                     qsActiveSheet: $qsActiveSheet,
                     newRecognizedBarcode: $newRecognizedBarcode
                 )

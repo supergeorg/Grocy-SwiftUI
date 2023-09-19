@@ -44,15 +44,15 @@ struct StockTable: View {
     
     @Binding var selectedStockElement: StockElement?
     @Binding var activeSheet: StockInteractionPopover?
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     //
     var body: some View {
         Table(searchedStock, columns: {
             TableColumn("", content: { stockElement in
                 HStack {
-                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .consumeAll, .openQA], toastType: $toastType)
+                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .consumeAll, .openQA])
                     Menu(content: {
-                        StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                        StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
                     }, label: {
                         Image(systemName: "ellipsis")
                     })

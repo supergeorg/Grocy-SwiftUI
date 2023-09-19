@@ -21,7 +21,7 @@ struct QuickScanModeSelectProductView: View {
     
     @State private var productID: Int?
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     @Binding var qsActiveSheet: QSActiveSheet?
     @Binding var newRecognizedBarcode: MDProductBarcode?
     @State var newProductBarcode: MDProductBarcode?
@@ -79,7 +79,7 @@ struct QuickScanModeSelectProductView: View {
                 if let barcode = barcode {
                     Section("Open Food Facts") {
                         NavigationLink(
-                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: false, mdBarcodeReturn: $newProductBarcode),
+                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), isPopup: false, mdBarcodeReturn: $newProductBarcode),
                             label: {
                                 Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
                             }
@@ -130,7 +130,6 @@ struct QuickScanModeSelectProductView_Previews: PreviewProvider {
     static var previews: some View {
         QuickScanModeSelectProductView(
             barcode: "12345",
-            toastType: Binding.constant(ToastType.successAdd),
             qsActiveSheet: Binding.constant(QSActiveSheet.selectProduct),
             newRecognizedBarcode: Binding.constant(nil)
         )

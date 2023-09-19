@@ -45,7 +45,7 @@ struct MDBarcodesView: View {
     
     @State private var showAddBarcode: Bool = false
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
     
@@ -91,7 +91,7 @@ struct MDBarcodesView: View {
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
                 .popover(isPresented: $showAddBarcode, content: {
                     ScrollView {
-                        MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+                        MDBarcodeFormView(isNewBarcode: true, productID: productID)
                     }
                     .padding()
                 })
@@ -103,7 +103,7 @@ struct MDBarcodesView: View {
                     ForEach(filteredBarcodes, id:\.id) {productBarcode in
                         NavigationLink(
                             destination: ScrollView{
-                                MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode, toastType: $toastType)
+                                MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode)
                             },
                             label: {
                                 MDBarcodeRowView(barcode: productBarcode)
@@ -163,7 +163,7 @@ struct MDBarcodesView: View {
             } else {
                 ForEach(filteredBarcodes, id:\.id) {productBarcode in
                     NavigationLink(
-                        destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode, toastType: $toastType),
+                        destination: MDBarcodeFormView(isNewBarcode: false, productID: productID, editBarcode: productBarcode),
                         label: {
                             MDBarcodeRowView(barcode: productBarcode)
                         })
@@ -216,7 +216,7 @@ struct MDBarcodesView: View {
         })
         .sheet(isPresented: $showAddBarcode, content: {
             NavigationView{
-                MDBarcodeFormView(isNewBarcode: true, productID: productID, toastType: $toastType)
+                MDBarcodeFormView(isNewBarcode: true, productID: productID)
             }
         })
         .alert(LocalizedStringKey("str.md.barcode.delete.confirm"), isPresented: $showDeleteAlert, actions: {
@@ -237,7 +237,7 @@ struct MDBarcodesView_Previews: PreviewProvider {
     @StateObject var grocyVM: GrocyViewModel = .shared
     static var previews: some View {
         NavigationView{
-            MDBarcodesView(productID: 27, toastType: Binding.constant(nil))
+            MDBarcodesView(productID: 27)
         }
     }
 }

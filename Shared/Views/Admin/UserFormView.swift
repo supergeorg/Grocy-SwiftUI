@@ -21,7 +21,7 @@ struct UserFormView: View {
     var isNewUser: Bool
     var user: GrocyUser?
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
@@ -168,8 +168,6 @@ struct UserFormView: View {
     }
 }
 
-struct UserFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserFormView(isNewUser: true, toastType: Binding.constant(nil))
-    }
+#Preview {
+    UserFormView(isNewUser: true)
 }

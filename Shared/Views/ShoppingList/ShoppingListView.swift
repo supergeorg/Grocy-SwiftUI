@@ -403,9 +403,7 @@ struct ShoppingListView: View {
                         ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
                             ShoppingListEntriesView(
                                 shoppingListItem: element.shoppingListItem,
-                                selectedShoppingListID: $selectedShoppingListID,
-                                toastType: $toastType,
-                                infoString: $infoString
+                                selectedShoppingListID: $selectedShoppingListID
                             )
                         })
                     }, label: {
@@ -423,9 +421,7 @@ struct ShoppingListView: View {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
                         ShoppingListEntriesView(
                             shoppingListItem: element.shoppingListItem,
-                            selectedShoppingListID: $selectedShoppingListID,
-                            toastType: $toastType,
-                            infoString: $infoString
+                            selectedShoppingListID: $selectedShoppingListID
                         )
                     })
                 }, header: {

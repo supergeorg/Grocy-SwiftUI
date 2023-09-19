@@ -55,9 +55,9 @@ struct ConsumeProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
-    @Binding var infoString: String?
+    @State var infoString: String? = nil
     
     @State private var showRecipeInfo: Bool = false
     
@@ -454,8 +454,6 @@ struct ConsumeProductView: View {
     }
 }
 
-struct ConsumeProductView_Previews: PreviewProvider {
-    static var previews: some View {
-        ConsumeProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
-    }
+#Preview {
+        ConsumeProductView()
 }

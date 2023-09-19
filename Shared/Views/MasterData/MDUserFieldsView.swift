@@ -99,7 +99,7 @@ struct MDUserFieldsView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddUserField, content: {
                 NavigationView {
-                    MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField, toastType: $toastType)
+                    MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
                 } })
 #endif
     }
@@ -113,13 +113,13 @@ struct MDUserFieldsView: View {
             }
 #if os(macOS)
             if showAddUserField {
-                NavigationLink(destination: MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField, toastType: $toastType), isActive: $showAddUserField, label: {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField), isActive: $showAddUserField, label: {
                     NewMDRowLabel(title: "str.md.userField.new")
                 })
             }
 #endif
             ForEach(filteredUserFields, id:\.id) { userField in
-                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: Binding.constant(false), toastType: $toastType)) {
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: Binding.constant(false))) {
                     MDUserFieldRowView(userField: userField)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

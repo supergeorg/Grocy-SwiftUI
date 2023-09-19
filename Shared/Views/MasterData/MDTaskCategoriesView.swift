@@ -98,7 +98,7 @@ struct MDTaskCategoriesView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddTaskCategory, content: {
                 NavigationView {
-                    MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory, toastType: $toastType)
+                    MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory)
                 }
             })
 #endif
@@ -113,13 +113,13 @@ struct MDTaskCategoriesView: View {
             }
 #if os(macOS)
             if showAddTaskCategory {
-                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory, toastType: $toastType), isActive: $showAddTaskCategory, label: {
+                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory), isActive: $showAddTaskCategory, label: {
                     NewMDRowLabel(title: "str.md.taskCategory.new")
                 })
             }
 #endif
             ForEach(filteredTaskCategories, id:\.id) { taskCategory in
-                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: taskCategory, showAddTaskCategory: $showAddTaskCategory, toastType: $toastType)) {
+                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: taskCategory, showAddTaskCategory: $showAddTaskCategory)) {
                     MDTaskCategoryRowView(taskCategory: taskCategory)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {

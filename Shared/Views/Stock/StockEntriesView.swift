@@ -18,7 +18,7 @@ struct StockEntryRowView: View {
     var productID: Int
     
     @Binding var stockEntries: StockEntries
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     var backgroundColor: Color {
         if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
@@ -203,7 +203,7 @@ struct StockEntriesView: View {
                 Text(LocalizedStringKey("str.stock.entries.empty"))
             }
             ForEach(stockEntries, id:\.id) { entry in
-                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, productID: stockElement.productID, stockEntries: $stockEntries, toastType: $toastType)
+                StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, productID: stockElement.productID, stockEntries: $stockEntries)
             }
         }
 #if os(macOS)

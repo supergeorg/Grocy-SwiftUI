@@ -191,7 +191,7 @@ struct StockView: View {
 #if os(macOS)
     var bodyContent: some View {
         contentmacOS
-        //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+        //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
             .toolbar(content: {
                 ToolbarItemGroup(placement: .automatic, content: {
                     RefreshButton(updateData: { Task { await updateData() } })
@@ -204,10 +204,10 @@ struct StockView: View {
                                     .padding()
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productPurchase:
-                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType, infoString: $infoString)
+                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 500)
                             case .productConsume:
-                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true, toastType: $toastType, infoString: $infoString)
+                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .productTransfer:
                                 TransferProductView(stockElement: $selectedStockElement, isPopup: true)
@@ -222,7 +222,7 @@ struct StockView: View {
                                 StockJournalView(stockElement: $selectedStockElement)
                                     .frame(minWidth: 500, minHeight: 300)
                             case .editProduct:
-                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true)
+                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), isPopup: true)
                                     .frame(minWidth: 400, minHeight: 300)
                             }
                         })
@@ -281,11 +281,11 @@ struct StockView: View {
                     StockJournalView()
                 case .purchaseProduct:
                     NavigationView{
-                        PurchaseProductView(toastType: $toastType, infoString: $infoString)
+                        PurchaseProductView()
                     }
                 case .consumeProduct:
                     NavigationView{
-                        ConsumeProductView(toastType: $toastType, infoString: $infoString)
+                        ConsumeProductView()
                     }
                 case .transferProduct:
                     NavigationView{
@@ -299,11 +299,11 @@ struct StockView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID)
                 case .productPurchase:
                     NavigationView{
-                        PurchaseProductView(stockElement: $selectedStockElement, toastType: $toastType, infoString: $infoString)
+                        PurchaseProductView(stockElement: $selectedStockElement)
                     }
                 case .productConsume:
                     NavigationView{
-                        ConsumeProductView(stockElement: $selectedStockElement, toastType: $toastType, infoString: $infoString)
+                        ConsumeProductView(stockElement: $selectedStockElement)
                     }
                 case .productTransfer:
                     NavigationView{
@@ -321,7 +321,7 @@ struct StockView: View {
                     StockJournalView(stockElement: $selectedStockElement)
                 case .editProduct:
                     NavigationView{
-                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), toastType: $toastType, isPopup: true)
+                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), isPopup: true)
                     }
                 }
             })
@@ -352,12 +352,12 @@ struct StockView: View {
                     }), id: \.key) { groupName, groupElements in
                         if stockGrouping == .none {
                             ForEach(groupElements, id:\.product.id) { stockElement in
-                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
                             }
                         }
                         Section(content: {
                             ForEach(groupElements, id:\.product.id) { stockElement in
-                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, toastType: $toastType)
+                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
                             }
                         }, header: {
                             if stockGrouping == .productGroup, groupName.isEmpty {
@@ -429,8 +429,7 @@ struct StockView: View {
                         StockTableRow(
                             stockElement: stockElement,
                             selectedStockElement: $selectedStockElement,
-                            activeSheet: $activeSheet,
-                            toastType: $toastType
+                            activeSheet: $activeSheet
                         )
                     })
                 }, header: {

@@ -43,8 +43,8 @@ struct PurchaseProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @Binding var toastType: ToastType?
-    @Binding var infoString: String?
+    @State var toastType: ToastType? = nil
+    @State var infoString: String? = nil
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations, .shopping_locations, .product_barcodes]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
@@ -333,14 +333,12 @@ struct PurchaseProductView: View {
     }
 }
 
-struct PurchaseProductView_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
 #if os(iOS)
-        NavigationView {
-            PurchaseProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
-        }
-#else
-        PurchaseProductView(toastType: Binding.constant(nil), infoString: Binding.constant(nil))
-#endif
+    NavigationStack {
+        PurchaseProductView()
     }
+#else
+    PurchaseProductView()
+#endif
 }

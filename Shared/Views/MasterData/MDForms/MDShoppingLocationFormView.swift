@@ -23,7 +23,7 @@ struct MDStoreFormView: View {
     var store: MDStore?
     
     @Binding var showAddStore: Bool
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -135,22 +135,22 @@ struct MDStoreFormView: View {
     }
 }
 
-struct MDStoreFormView_Previews: PreviewProvider {
-    static var previews: some View {
-#if os(macOS)
-        Group {
-            MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
-            MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Shoppingloc", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
-        }
-#else
-        Group {
-            NavigationView {
-                MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true), toastType: Binding.constant(nil))
-            }
-            NavigationView {
-                MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Store", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false), toastType: Binding.constant(nil))
-            }
-        }
-#endif
-    }
-}
+//struct MDStoreFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//#if os(macOS)
+//        Group {
+//            MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true))
+//            MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Shoppingloc", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false))
+//        }
+//#else
+//        Group {
+//            NavigationView {
+//                MDStoreFormView(isNewStore: true, showAddStore: Binding.constant(true))
+//            }
+//            NavigationView {
+//                MDStoreFormView(isNewStore: false, store: MDStore(id: 0, name: "Store", active: true, mdStoreDescription: "Descr", rowCreatedTimestamp: ""), showAddStore: Binding.constant(false))
+//            }
+//        }
+//#endif
+//    }
+//}

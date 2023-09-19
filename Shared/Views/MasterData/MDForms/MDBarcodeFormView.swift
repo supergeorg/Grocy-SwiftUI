@@ -25,7 +25,7 @@ struct MDBarcodeFormView: View {
     var productID: Int
     var editBarcode: MDProductBarcode?
     
-    @Binding var toastType: ToastType?
+    @State var toastType: ToastType? = nil
     
     @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
@@ -249,15 +249,15 @@ struct MDBarcodeFormView: View {
     }
 }
 
-struct MDBarcodeFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group{
-            NavigationView{
-                MDBarcodeFormView(isNewBarcode: true, productID: 1, toastType: Binding.constant(.successAdd))
-            }
-            NavigationView{
-                MDBarcodeFormView(isNewBarcode: false, productID: 1, editBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 3, amount: 1, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"), toastType: Binding.constant(.successAdd))
-            }
-        }
-    }
-}
+//struct MDBarcodeFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group{
+//            NavigationView{
+//                MDBarcodeFormView(isNewBarcode: true, productID: 1)
+//            }
+//            NavigationView{
+//                MDBarcodeFormView(isNewBarcode: false, productID: 1, editBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 3, amount: 1, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"))
+//            }
+//        }
+//    }
+//}
