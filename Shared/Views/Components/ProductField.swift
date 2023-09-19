@@ -90,12 +90,8 @@ struct ProductField: View {
     
 #if os(iOS)
     var body: some View {
-        if #available(iOS 16.0, *) {
-            pickerView
-                .pickerStyle(.navigationLink)
-        } else {
-            pickerView
-        }
+        pickerView
+            .pickerStyle(.navigationLink)
     }
     var pickerView: some View {
             Picker(selection: $productID,

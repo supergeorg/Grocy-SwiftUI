@@ -135,34 +135,15 @@ struct InventoryProductView: View {
     }
     
     var body: some View {
-        if #available(macOS 13.0, iOS 16.0, *) {
-            content
-                .formStyle(.grouped)
-                .toolbar(content: {
+        content
+            .formStyle(.grouped)
+            .toolbar(content: {
 #if os(iOS)
-                    ToolbarItem(placement: .cancellationAction, content: {
-                        Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
-                    })
-#endif
+                ToolbarItem(placement: .cancellationAction, content: {
+                    Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
                 })
-        } else {
-#if os(iOS)
-            content
-                .toolbar(content: {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            self.dismiss()
-                        }
-                    }
-                })
-#elseif os(macOS)
-            ScrollView {
-                content
-                    .padding()
-                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-            }
 #endif
-        }
+            })
     }
     
     var content: some View {

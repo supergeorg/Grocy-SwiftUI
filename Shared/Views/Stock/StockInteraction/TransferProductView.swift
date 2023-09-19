@@ -112,45 +112,16 @@ struct TransferProductView: View {
     }
     
     var body: some View {
-        if #available(macOS 13.0, iOS 16.0, *) {
-            content
-                .formStyle(.grouped)
-                .toolbar(content: {
+        content
+            .formStyle(.grouped)
+            .toolbar(content: {
 #if os(iOS)
-                    ToolbarItem(placement: .cancellationAction, content: {
-                        Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
-                    })
-#endif
-                    ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
+                ToolbarItem(placement: .cancellationAction, content: {
+                    Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
                 })
-        } else {
-#if os(iOS)
-            content
-                .toolbar(content: {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            self.dismiss()
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction, content: {
-                        HStack {
-                            toolbarContent
-                        }
-                    })
-                })
-#elseif os(macOS)
-            ScrollView {
-                content
-                    .padding()
-                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                    .toolbar(content: {
-                        ToolbarItemGroup(placement: .confirmationAction, content: {
-                            toolbarContent
-                        })
-                    })
-            }
 #endif
-        }
+                ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
+            })
     }
     
     var content: some View {
@@ -223,12 +194,8 @@ struct TransferProductView: View {
                 
                 if (useSpecificStockEntry) {
 #if os(iOS)
-                    if #available(iOS 16.0, *) {
-                        stockEntryPicker
-                            .pickerStyle(.navigationLink)
-                    } else {
-                        stockEntryPicker
-                    }
+                    stockEntryPicker
+                        .pickerStyle(.navigationLink)
 #else
                     stockEntryPicker
 #endif

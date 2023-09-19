@@ -19,19 +19,8 @@ struct SettingsStockView: View {
     private let dataToUpdate: [ObjectEntities] = [.locations, .product_groups, .quantity_units]
     
     var body: some View {
-        if #available(macOS 13.0, iOS 16.0, *) {
-            content
-                .formStyle(.grouped)
-        } else {
-#if os(macOS)
-            ScrollView {
-                content
-                    .padding()
-            }
-#else
-            content
-#endif
-        }
+        content
+            .formStyle(.grouped)
     }
     
     var content: some View {

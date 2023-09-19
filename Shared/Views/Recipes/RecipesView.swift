@@ -63,7 +63,7 @@ struct RecipesView: View {
     var bodyContent: some View {
 #if os(iOS)
         Group {
-            if #available(iOS 16.0, *), idiom == .pad {
+            if idiom == .pad {
                 tableView
             } else {
                 List {
