@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDLocationRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
-    
     var location: MDLocation
     
     var body: some View {
@@ -35,6 +34,8 @@ struct MDLocationRowView: View {
 struct MDLocationsView: View {
     @StateObject var grocyVM: GrocyViewModel = .shared
     
+    @Environment(\.modelContext) private var context
+    
     @State private var searchString: String = ""
     
     @State private var showAddLocation: Bool = false
@@ -45,10 +46,15 @@ struct MDLocationsView: View {
     private let dataToUpdate: [ObjectEntities] = [.locations]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
+        for loc in grocyVM.mdLocations {
+            context.insert(loc)
+        }
     }
     
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: [MDLocation]
+    
     private var filteredLocations: MDLocations {
-        grocyVM.mdLocations
+        mdLocations
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -103,7 +109,7 @@ struct MDLocationsView: View {
 #if os(iOS)
             .sheet(isPresented: self.$showAddLocation, content: {
                 NavigationView {
-                    MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation)
+                    MDLocationFormView(showAddLocation: $showAddLocation)
                 } })
 #endif
     }
@@ -111,21 +117,21 @@ struct MDLocationsView: View {
     
     var content: some View {
         List {
-            if grocyVM.mdLocations.isEmpty {
+            if filteredLocations.isEmpty {
                 ContentUnavailableView("str.md.locations.empty", systemImage: MySymbols.location)
             } else if filteredLocations.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddLocation {
-                NavigationLink(destination: MDLocationFormView(isNewLocation: true, showAddLocation: $showAddLocation), isActive: $showAddLocation, label: {
+                NavigationLink(destination: MDLocationFormView(showAddLocation: $showAddLocation), isActive: $showAddLocation, label: {
                     NewMDRowLabel(title: "str.md.location.new")
                 })
                     .frame(height: showAddLocation ? 50 : 0)
             }
 #endif
             ForEach(filteredLocations, id:\.id) {location in
-                NavigationLink(destination: MDLocationFormView(isNewLocation: false, location: location, showAddLocation: Binding.constant(false))) {
+                NavigationLink(destination: MDLocationFormView(location: location, showAddLocation: Binding.constant(false))) {
                     MDLocationRowView(location: location)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
@@ -180,17 +186,17 @@ struct MDLocationsView: View {
     }
 }
 
-struct MDLocationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            MDLocationRowView(location: MDLocation(id: 0, name: "Location", active: true, mdLocationDescription: "Location description", isFreezer: true, rowCreatedTimestamp: ""))
-#if os(macOS)
-            MDLocationsView()
-#else
-            NavigationView() {
-                MDLocationsView()
-            }
-#endif
-        }
-    }
-}
+//struct MDLocationsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            MDLocationRowView(location: MDLocation(id: 0, name: "Location", active: true, mdLocationDescription: "Location description", isFreezer: true, rowCreatedTimestamp: ""))
+//#if os(macOS)
+//            MDLocationsView()
+//#else
+//            NavigationView() {
+//                MDLocationsView()
+//            }
+//#endif
+//        }
+//    }
+//}

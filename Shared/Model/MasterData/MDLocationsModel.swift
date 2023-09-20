@@ -6,16 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
 // MARK: - MDLocation
 
-struct MDLocation: Codable {
-    let id: Int
-    let name: String
+@Model
+class MDLocation: Codable {
+    @Attribute(.unique) var id: Int
+    var name: String
     var active: Bool
-    let mdLocationDescription: String?
-    let rowCreatedTimestamp: String
+    var mdLocationDescription: String? = nil
     var isFreezer: Bool
+    var rowCreatedTimestamp: String
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -25,7 +27,7 @@ struct MDLocation: Codable {
         case isFreezer = "is_freezer"
     }
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -40,7 +42,6 @@ struct MDLocation: Codable {
                 }
             }
             self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
-            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
             do {
                 self.isFreezer = try container.decode(Bool.self, forKey: .isFreezer)
             } catch {
@@ -50,25 +51,29 @@ struct MDLocation: Codable {
                     self.isFreezer = ["1", "true"].contains(try? container.decode(String.self, forKey: .isFreezer))
                 }
             }
+            self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
         }
     }
     
-    init(
-        id: Int,
-        name: String,
-        active: Bool,
-        mdLocationDescription: String? = nil,
-        isFreezer: Bool,
-        rowCreatedTimestamp: String
-    ) {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(active, forKey: .active)
+        try container.encode(mdLocationDescription, forKey: .mdLocationDescription)
+        try container.encode(isFreezer, forKey: .isFreezer)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
+    }
+    
+    init(id: Int, name: String, active: Bool, mdLocationDescription: String? = nil, isFreezer: Bool, rowCreatedTimestamp: String) {
         self.id = id
         self.name = name
         self.active = active
         self.mdLocationDescription = mdLocationDescription
-        self.rowCreatedTimestamp = rowCreatedTimestamp
         self.isFreezer = isFreezer
+        self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }
 

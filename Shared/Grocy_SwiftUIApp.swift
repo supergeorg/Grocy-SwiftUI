@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Grocy_SwiftUIApp: App {
@@ -25,6 +26,9 @@ struct Grocy_SwiftUIApp: App {
                 } else {
                     ContentView()
                         .environment(\.locale, Locale(identifier: localizationKey))
+                        .modelContainer(for: [
+                                            MDLocation.self,
+                                        ])
                 }
             }
         }
