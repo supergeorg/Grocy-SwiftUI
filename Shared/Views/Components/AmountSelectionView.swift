@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AmountSelectionView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Binding var productID: Int?
     @Binding var amount: Double

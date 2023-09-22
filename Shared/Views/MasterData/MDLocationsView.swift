@@ -32,7 +32,7 @@ struct MDLocationRowView: View {
 }
 
 struct MDLocationsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.modelContext) private var context
     

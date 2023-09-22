@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDProductRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var product: MDProduct
     
@@ -24,11 +24,11 @@ struct MDProductRowView: View {
                     .font(.title)
                     .foregroundColor(product.active ? .primary : .gray)
                 HStack(alignment: .top){
-                    if let locationID = GrocyViewModel.shared.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
+                    if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
                         Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
                             .font(.caption)
                     }
-                    if let productGroup = GrocyViewModel.shared.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
+                    if let productGroup = grocyVM.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
                         Text(LocalizedStringKey("str.md.product.rowProductGroup \(grocyVM.mdProductGroups[productGroup].name)"))
                             .font(.caption)
                     }
@@ -49,7 +49,7 @@ struct MDProductRowView: View {
 }
 
 struct MDProductsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var searchString: String = ""
     

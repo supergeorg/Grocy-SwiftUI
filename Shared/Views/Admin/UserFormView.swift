@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserFormView: View {
-    @StateObject private var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.dismiss) var dismiss
     

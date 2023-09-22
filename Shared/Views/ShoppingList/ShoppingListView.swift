@@ -13,7 +13,7 @@ struct ShoppingListItemWrapped {
 }
 
 struct ShoppingListView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var selectedShoppingListID: Int = 1
     

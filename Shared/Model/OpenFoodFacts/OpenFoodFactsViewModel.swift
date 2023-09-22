@@ -10,7 +10,7 @@ import Foundation
 import Combine
 
 class OpenFoodFactsViewModel: ObservableObject {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     @Published var offData: OpenFoodFactsResult?
     @Published var errorMessage: String? = nil
     

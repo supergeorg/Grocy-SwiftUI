@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct Grocy_SwiftUIApp: App {
+    @State private var grocyVM = GrocyViewModel()
+    
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -26,6 +28,7 @@ struct Grocy_SwiftUIApp: App {
                 } else {
                     ContentView()
                         .environment(\.locale, Locale(identifier: localizationKey))
+                        .environment(grocyVM)
                         .modelContainer(for: [
                                             MDLocation.self,
                                         ])

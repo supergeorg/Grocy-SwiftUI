@@ -21,7 +21,7 @@ struct MDUserEntityRowView: View {
 }
 
 struct MDUserEntitiesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.dismiss) var dismiss
     

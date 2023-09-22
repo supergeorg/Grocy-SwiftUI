@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ServerSettingsToggle: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var isOn: Bool = false
     
@@ -60,7 +60,7 @@ struct ServerSettingsToggle: View {
 }
 
 struct ServerSettingsIntStepper: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var value: Int = 0
     
@@ -108,7 +108,7 @@ struct ServerSettingsIntStepper: View {
 }
 
 struct ServerSettingsDoubleStepper: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var value: Double = 0
     
@@ -156,7 +156,7 @@ struct ServerSettingsDoubleStepper: View {
 }
 
 struct ServerSettingsObjectPicker: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var objectID: Int? = nil
     

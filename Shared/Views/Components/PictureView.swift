@@ -13,7 +13,7 @@ enum PictureType: String {
 }
 
 struct PictureView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var pictureFileName: String
     var pictureType: PictureType

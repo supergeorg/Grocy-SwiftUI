@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct RecipesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
 #if os(iOS)
     private var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }

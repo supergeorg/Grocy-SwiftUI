@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserRowActionsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var user: GrocyUser
     var isCurrentUser: Bool

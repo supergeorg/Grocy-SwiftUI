@@ -11,81 +11,77 @@ import SwiftUI
 import OSLog
 import WebKit
 
-@MainActor
-final class GrocyViewModel: ObservableObject {
-    static let shared = GrocyViewModel()
-    
+@Observable class GrocyViewModel { 
     var grocyApi: GrocyAPI
     
-    @AppStorage("grocyServerURL") var grocyServerURL: String = ""
-    @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-    @AppStorage("isDemoModus") var isDemoModus: Bool = false
-    @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
-    @AppStorage("localizationKey") var localizationKey: String = "en"
-    @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
-    @AppStorage("autoReload") private var autoReload: Bool = false
-    @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
-    @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
-    @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
+    @ObservationIgnored @AppStorage("grocyServerURL") var grocyServerURL: String = ""
+    @ObservationIgnored @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
+    @ObservationIgnored @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @ObservationIgnored @AppStorage("isDemoModus") var isDemoModus: Bool = false
+    @ObservationIgnored @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
+    @ObservationIgnored @AppStorage("localizationKey") var localizationKey: String = "en"
+    @ObservationIgnored @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
+    @ObservationIgnored @AppStorage("autoReload") private var autoReload: Bool = false
+    @ObservationIgnored @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
+    @ObservationIgnored @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
+    @ObservationIgnored @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
+    @ObservationIgnored @AppStorage("useHassIngress") var useHassIngress: Bool = false
+    @ObservationIgnored @AppStorage("hassToken") var hassToken: String = ""
     
     let grocyLog = Logger(subsystem: "Grocy-Mobile", category: "APIAccess")
     
-    @Published var systemInfo: SystemInfo?
-    @Published var systemDBChangedTime: SystemDBChangedTime?
-    @Published var systemConfig: SystemConfig?
-    @Published var userSettings: GrocyUserSettings?
+    var systemInfo: SystemInfo?
+    var systemDBChangedTime: SystemDBChangedTime?
+    var systemConfig: SystemConfig?
+    var userSettings: GrocyUserSettings?
     
-    @Published var users: GrocyUsers = []
-    @Published var currentUser: GrocyUser? = nil
-    @Published var stock: Stock = []
-    @Published var volatileStock: VolatileStock? = nil
-    @Published var stockJournal: StockJournal = []
-    @Published var shoppingListDescriptions: ShoppingListDescriptions = []
-    @Published var shoppingList: ShoppingList = []
-    @Published var recipes: Recipes = []
-    @Published var recipeFulfillments: RecipeFulfilments = []
+    var users: GrocyUsers = []
+    var currentUser: GrocyUser? = nil
+    var stock: Stock = []
+    var volatileStock: VolatileStock? = nil
+    var stockJournal: StockJournal = []
+    var shoppingListDescriptions: ShoppingListDescriptions = []
+    var shoppingList: ShoppingList = []
+    var recipes: Recipes = []
+    var recipeFulfillments: RecipeFulfilments = []
     
-    @Published var mdProducts: MDProducts = []
-    @Published var mdProductBarcodes: MDProductBarcodes = []
-    @Published var mdLocations: MDLocations = []
-    @Published var mdStores: MDStores = []
-    @Published var mdQuantityUnits: MDQuantityUnits = []
-    @Published var mdQuantityUnitConversions: MDQuantityUnitConversions = []
-    @Published var mdProductGroups: MDProductGroups = []
-    @Published var mdBatteries: MDBatteries = []
-    @Published var mdTaskCategories: MDTaskCategories = []
-    @Published var mdUserFields: MDUserFields = []
-    @Published var mdUserEntities: MDUserEntities = []
+    var mdProducts: MDProducts = []
+    var mdProductBarcodes: MDProductBarcodes = []
+    var mdLocations: MDLocations = []
+    var mdStores: MDStores = []
+    var mdQuantityUnits: MDQuantityUnits = []
+    var mdQuantityUnitConversions: MDQuantityUnitConversions = []
+    var mdProductGroups: MDProductGroups = []
+    var mdBatteries: MDBatteries = []
+    var mdTaskCategories: MDTaskCategories = []
+    var mdUserFields: MDUserFields = []
+    var mdUserEntities: MDUserEntities = []
     
-    @Published var stockProductDetails: [Int: StockProductDetails] = [:]
-    @Published var stockProductLocations: [Int: StockLocations] = [:]
-    @Published var stockProductEntries: [Int: StockEntries] = [:]
-    @Published var stockProductPriceHistories: [Int: ProductPriceHistories] = [:]
+    var stockProductDetails: [Int: StockProductDetails] = [:]
+    var stockProductLocations: [Int: StockLocations] = [:]
+    var stockProductEntries: [Int: StockEntries] = [:]
+    var stockProductPriceHistories: [Int: ProductPriceHistories] = [:]
     
-    @Published var lastStockActions: StockJournal = []
+    var lastStockActions: StockJournal = []
     
-    @Published var failedToLoadObjects = Set<ObjectEntities>()
-    @Published var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
-    @Published var failedToLoadErrors: [Error] = []
+    var failedToLoadObjects = Set<ObjectEntities>()
+    var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
+    var failedToLoadErrors: [Error] = []
     
-    @Published var timeStampsObjects: [ObjectEntities: SystemDBChangedTime] = [:]
-    @Published var timeStampsAdditionalObjects: [AdditionalEntities: SystemDBChangedTime] = [:]
+    var timeStampsObjects: [ObjectEntities: SystemDBChangedTime] = [:]
+    var timeStampsAdditionalObjects: [AdditionalEntities: SystemDBChangedTime] = [:]
     
-    @Published var logEntries: [OSLogEntryLog] = []
+    var logEntries: [OSLogEntryLog] = []
     
-    @Published var loadingObjectEntities: Set<ObjectEntities> = Set()
-    @Published var loadingAdditionalEntities: Set<AdditionalEntities> = Set()
+    var loadingObjectEntities: Set<ObjectEntities> = Set()
+    var loadingAdditionalEntities: Set<AdditionalEntities> = Set()
     
-    @Published var productPictures: [String: Data] = [:]
-    @Published var userPictures: [String: Data] = [:]
+    var productPictures: [String: Data] = [:]
+    var userPictures: [String: Data] = [:]
     
     var cancellables = Set<AnyCancellable>()
     
-    @AppStorage("useHassIngress") var useHassIngress: Bool = false
-    @AppStorage("hassToken") var hassToken: String = ""
-    
-    @State private var refreshTimer: Timer?
+    @ObservationIgnored @State private var refreshTimer: Timer?
     
     let jsonEncoder = JSONEncoder()
     

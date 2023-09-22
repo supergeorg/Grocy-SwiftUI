@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OpenFoodFactsFillProductView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     @ObservedObject var offVM: OpenFoodFactsViewModel = OpenFoodFactsViewModel()
     
     @Environment(\.dismiss) var dismiss

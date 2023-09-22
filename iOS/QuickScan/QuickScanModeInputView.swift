@@ -12,7 +12,7 @@ enum ConsumeAmountMode {
 }
 
 struct QuickScanModeInputView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     

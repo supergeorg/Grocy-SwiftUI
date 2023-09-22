@@ -30,7 +30,7 @@ enum StockInteractionPopover: Identifiable {
 #endif
 
 struct StockView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var firstAppear: Bool = true
     

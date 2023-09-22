@@ -25,7 +25,7 @@ struct MDUserFieldRowView: View {
 }
 
 struct MDUserFieldsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.dismiss) var dismiss
     

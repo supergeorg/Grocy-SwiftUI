@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockFilterBar: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Binding var searchString: String
     @Binding var filteredLocation: Int?

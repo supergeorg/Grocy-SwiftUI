@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsStockView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var useQuickConsume: Bool = false
     

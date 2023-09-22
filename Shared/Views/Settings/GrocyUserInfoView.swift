@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GrocyUserInfoView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State private var userPictureURL: URL? = nil
     

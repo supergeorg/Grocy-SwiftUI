@@ -24,7 +24,7 @@ struct MDTaskCategoryRowView: View {
 }
 
 struct MDTaskCategoriesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.dismiss) var dismiss
     

@@ -31,7 +31,7 @@ enum QSActiveSheet: Identifiable {
 }
 
 struct QuickScanModeView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false

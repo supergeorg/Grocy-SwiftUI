@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShoppingListRowActionsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var shoppingListItem: ShoppingListItem
     

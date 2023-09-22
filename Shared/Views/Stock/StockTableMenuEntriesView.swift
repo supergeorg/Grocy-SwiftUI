@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockTableMenuEntriesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?

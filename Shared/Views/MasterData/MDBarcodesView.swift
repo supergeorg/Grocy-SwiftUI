@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDBarcodeRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var barcode: MDProductBarcode
     
@@ -36,7 +36,7 @@ struct MDBarcodeRowView: View {
 }
 
 struct MDBarcodesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     var productID: Int
     
@@ -234,7 +234,7 @@ struct MDBarcodesView: View {
 }
 
 struct MDBarcodesView_Previews: PreviewProvider {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     static var previews: some View {
         NavigationView{
             MDBarcodesView(productID: 27)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ActivitiesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @State var toastType: ToastType?
     @State var infoString: String?

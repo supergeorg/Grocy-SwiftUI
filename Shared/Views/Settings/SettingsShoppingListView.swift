@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsShoppingListView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false

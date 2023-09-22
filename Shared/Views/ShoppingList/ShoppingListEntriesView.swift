@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShoppingListRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -59,7 +59,7 @@ struct ShoppingListRowView: View {
 }
 
 struct ShoppingListEntriesView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.colorScheme) var colorScheme
     
