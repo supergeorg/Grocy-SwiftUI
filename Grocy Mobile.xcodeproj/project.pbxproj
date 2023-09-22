@@ -227,6 +227,7 @@
 		7891C656257E45DC0014C59E /* StockTableMenuEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891C654257E45DC0014C59E /* StockTableMenuEntriesView.swift */; };
 		7891C65C257E539A0014C59E /* ProductInventoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891C65B257E539A0014C59E /* ProductInventoryModel.swift */; };
 		7891C65D257E539A0014C59E /* ProductInventoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891C65B257E539A0014C59E /* ProductInventoryModel.swift */; };
+		7894570B2ABE098200F30298 /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A382ABA4BB900603A41 /* Sidebar.swift */; };
 		789ADDA425C419C500D7EB35 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789ADDA325C419C500D7EB35 /* Constants.swift */; };
 		789ADDA525C419C500D7EB35 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789ADDA325C419C500D7EB35 /* Constants.swift */; };
 		789ADDAB25C427DD00D7EB35 /* View+ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789ADDAA25C427DD00D7EB35 /* View+ToastMessage.swift */; };
@@ -372,6 +373,8 @@
 		78E04A392ABA4BB900603A41 /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A382ABA4BB900603A41 /* Sidebar.swift */; };
 		78E04A3B2ABA52FE00603A41 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3A2ABA52FE00603A41 /* Navigation.swift */; };
 		78E04A3C2ABA52FE00603A41 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3A2ABA52FE00603A41 /* Navigation.swift */; };
+		78E04A3E2ABA6B8000603A41 /* MyTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3D2ABA6B8000603A41 /* MyTextEditor.swift */; };
+		78E04A3F2ABA6B8000603A41 /* MyTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E04A3D2ABA6B8000603A41 /* MyTextEditor.swift */; };
 		78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4802A25A5CC2600661FDB /* FieldDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802825A5CC2600661FDB /* FieldDescription.swift */; };
 		78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E4802F25A5D14300661FDB /* QuickScanModeView.swift */; };
@@ -651,6 +654,7 @@
 		78E02CE325DAC3BF00668403 /* OpenFoodFactsScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsScannerView.swift; sourceTree = "<group>"; };
 		78E04A382ABA4BB900603A41 /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
 		78E04A3A2ABA52FE00603A41 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		78E04A3D2ABA6B8000603A41 /* MyTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTextEditor.swift; sourceTree = "<group>"; };
 		78E4802825A5CC2600661FDB /* FieldDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDescription.swift; sourceTree = "<group>"; };
 		78E4802F25A5D14300661FDB /* QuickScanModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeView.swift; sourceTree = "<group>"; };
 		78E96E8C2707784200DBAF6A /* StockEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockEntriesView.swift; sourceTree = "<group>"; };
@@ -1086,6 +1090,7 @@
 			isa = PBXGroup;
 			children = (
 				78396E8B25629FE600B9878F /* MyTextField.swift */,
+				78E04A3D2ABA6B8000603A41 /* MyTextEditor.swift */,
 				781A25BC2566B5AF00560026 /* MyIntStepper.swift */,
 				781A25C72566B84600560026 /* MyDoubleStepper.swift */,
 				781A25D22566BB9100560026 /* MyToggle.swift */,
@@ -1469,6 +1474,7 @@
 				78E4803025A5D14300661FDB /* QuickScanModeView.swift in Sources */,
 				789ADDAB25C427DD00D7EB35 /* View+ToastMessage.swift in Sources */,
 				78A201CC25EE810A0031BFDE /* MyLabelWithSubtitle.swift in Sources */,
+				78E04A3E2ABA6B8000603A41 /* MyTextEditor.swift in Sources */,
 				78E4802925A5CC2600661FDB /* FieldDescription.swift in Sources */,
 				78A33CC125752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				78ADA1DC26D1446100946E1B /* HomeAssistantAPI.swift in Sources */,
@@ -1593,6 +1599,7 @@
 				78CB75FF255EB9A000319108 /* StockEntryModel.swift in Sources */,
 				78396E7725629F7700B9878F /* MDLocationFormView.swift in Sources */,
 				789ADDAC25C427DD00D7EB35 /* View+ToastMessage.swift in Sources */,
+				78E04A3F2ABA6B8000603A41 /* MyTextEditor.swift in Sources */,
 				785427B625D29C3000AFE726 /* MySymbols.swift in Sources */,
 				781A25AF2566952A00560026 /* MDProductFormView.swift in Sources */,
 				78CB7587255EA3D000319108 /* SystemDBChangedTimeModel.swift in Sources */,
@@ -1607,6 +1614,7 @@
 				78CB74BD255E9EF800319108 /* Grocy_SwiftUIApp.swift in Sources */,
 				786F6E852563FDC7004D8DE0 /* MDShoppingLocationsView.swift in Sources */,
 				78FDCE3F25BAF0C70089CB5E /* UserEntityView.swift in Sources */,
+				7894570B2ABE098200F30298 /* Sidebar.swift in Sources */,
 				782A7F1425838C3E0010472F /* MDUserFieldsView.swift in Sources */,
 				782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */,
 				78CB7630255EBA3F00319108 /* StockFilterActionsView.swift in Sources */,
@@ -2053,7 +2061,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "3.0.0-beta";
+				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -2084,7 +2092,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "3.0.0-beta";
+				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;
@@ -2303,7 +2311,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "3.0.0-beta";
+				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
 				SDKROOT = macosx;

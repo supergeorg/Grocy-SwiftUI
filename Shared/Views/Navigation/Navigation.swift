@@ -45,8 +45,10 @@ struct Navigation: View {
     
     var body: some View {
         switch selection ?? .stockOverview {
+#if os(iOS)
         case .quickScan:
             QuickScanModeView()
+#endif
         case .stockOverview:
             StockView()
         case .shoppingList:

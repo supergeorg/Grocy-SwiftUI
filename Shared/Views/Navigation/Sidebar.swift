@@ -67,6 +67,7 @@ struct Sidebar: View {
             }
 #endif
         }
+#if os(iOS)
         .toolbar(content: {
             ToolbarItem(placement: .topBarLeading, content: {
                 Image("grocy-logo")
@@ -74,6 +75,7 @@ struct Sidebar: View {
                     .scaledToFit()
             })
         })
+#endif
 #if os(macOS)
         .navigationSplitViewColumnWidth(min: 200, ideal: 200)
 #endif
