@@ -7,78 +7,71 @@
 
 import SwiftUI
 
-extension AppTabNavigation {
-    private enum Tab: String {
-        case quickScanMode = "barcode.viewfinder"
-        case stockOverview = "books.vertical"
-        case shoppingList = "cart"
-        case more = "ellipsis.circle"
-        case masterData = "text.book.closed"
-        case activities = "play.rectangle"
-        case settings = "gear"
-        case openFoodFacts = "barcode"
-        case recipes = "list.bullet.below.rectangle"
-    }
+private enum TabNavigationItem: String {
+    case quickScanMode = "quickScanMode"
+    case stockOverview = "stockOverview"
+    case shoppingList = "shoppingList"
+    case more = "more"
+    case masterData = "masterData"
+    case activities = "activities"
+    case settings = "settings"
+    case openFoodFacts = "openFoodFacts"
+    case recipes = "recipes"
 }
 
 struct AppTabNavigation: View {
-    @AppStorage("tabSelection") private var tabSelection: Tab = .stockOverview
+    @AppStorage("tabSelection") private var tabSelection: TabNavigationItem = .stockOverview
     @AppStorage("devMode") private var devMode: Bool = false
     
     var body: some View {
         TabView(selection: $tabSelection) {
             QuickScanModeView()
                 .tabItem {
-                    Label(LocalizedStringKey("str.nav.quickScan"), systemImage: Tab.quickScanMode.rawValue)
-                        .accessibility(label: Text(LocalizedStringKey("str.nav.quickScan")))
+                    Label("Quick Scan", systemImage: MySymbols.barcodeScan)
                 }
-                .tag(Tab.quickScanMode)
+                .tag(TabNavigationItem.quickScanMode)
             
             NavigationStack {
                 StockView()
             }
             .tabItem {
-                Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: Tab.stockOverview.rawValue)
-                    .accessibility(label: Text("str.nav.stockOverview"))
+                Label("Stock overview", systemImage: MySymbols.stockOverview)
             }
-            .tag(Tab.stockOverview)
+            .tag(TabNavigationItem.stockOverview)
             
             NavigationStack {
                 ShoppingListView()
             }
             .tabItem {
-                Label("str.nav.shoppingList", systemImage: Tab.shoppingList.rawValue)
-                    .accessibility(label: Text("str.nav.shoppingList"))
+                Label("Shopping list", systemImage: MySymbols.shoppingList)
             }
-            .tag(Tab.shoppingList)
+            .tag(TabNavigationItem.shoppingList)
             
             if devMode {
                 NavigationView {
                     RecipesView()
                 }
                 .tabItem({
-                    Label("str.nav.recipes", systemImage: Tab.recipes.rawValue)
+                    Label("Recipes", systemImage: MySymbols.recipe)
                 })
-                .tag(Tab.recipes)
+                .tag(TabNavigationItem.recipes)
             }
             
             NavigationStack {
                 MasterDataView()
             }
             .tabItem {
-                Label("str.nav.md", systemImage: Tab.masterData.rawValue)
-                    .accessibility(label: Text("str.nav.md"))
+                Label("Master data", systemImage: MySymbols.masterData)
             }
-            .tag(Tab.masterData)
+            .tag(TabNavigationItem.masterData)
             
             NavigationStack {
                 SettingsView()
             }
             .tabItem {
-                Label("str.nav.settings", systemImage: Tab.settings.rawValue)
-                    .accessibility(label: Text("str.nav.settings"))
+                Label("Settings", systemImage: MySymbols.settings)
             }
-            .tag(Tab.settings)
+            .tag(TabNavigationItem.settings)
         }
     }
 }
