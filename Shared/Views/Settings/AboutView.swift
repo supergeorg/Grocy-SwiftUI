@@ -11,15 +11,21 @@ struct AboutLineView: View {
     var iconName: String
     var caption: String
     var content: String? = nil
-
+    
     var body: some View {
-        HStack(alignment: .center) {
-            Image(systemName: iconName).font(.title)
+        Label {
             VStack(alignment: .leading) {
-                Text(LocalizedStringKey(caption)).font(.title3)
+                Text(caption)
+                    .font(.title)
                 if let content = content {
-                    Text(content).font(.body)
+                    Text(content)
+                        .font(.body)
                 }
+            }
+        } icon: {
+            VStack {
+                Image(systemName: iconName)
+                    .font(.title2)
             }
         }
     }
@@ -40,60 +46,47 @@ struct AboutView: View {
     }
     
     var content: some View {
-        Form(){
+        Form{
             Section{
-                Text(LocalizedStringKey("str.settings.about.thanks"))
+                Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
                     .lineLimit(.none)
-                
-                AboutLineView(iconName: MySymbols.info, caption: "str.settings.about.version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
-                
-                AboutLineView(iconName: "person.circle", caption: "str.settings.about.developer", content: "Georg Meißner")
-                
+                AboutLineView(iconName: MySymbols.info, caption: "Version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
+                AboutLineView(iconName: "person.circle", caption: "Developer", content: "Georg Meißner")
                 Link(destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!, label: {
                     AboutLineView(iconName: "chevron.left.forwardslash.chevron.right", caption: "Github", content: "supergeorg/Grocy-SwiftUI")
                 })
-                    .foregroundColor(.primary)
-                
                 Link(destination: URL(string: "https://github.com/grocy/grocy")!, label: {
                     AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
                 })
-                    .foregroundColor(.primary)
                 
 #if os(iOS)
                 NavigationLink(destination: TranslatorsView(), label: {
-                    AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
+                    AboutLineView(iconName: MySymbols.language, caption: "Translators")
                 })
 #else
                 DisclosureGroup(content: {
                     TranslatorsView()
                 }, label: {
-                    AboutLineView(iconName: "flag", caption: "str.settings.about.translators")
+                    AboutLineView(iconName: MySymbols.language, caption: "Translators")
                 })
 #endif
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
                 })
-                    .foregroundColor(.primary)
-                
                 Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
                     AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (Apache License 2.0) 2020 Steven Grosmark")
                 })
-                    .foregroundColor(.primary)
+                
             }
-            Button(action: {
+            .foregroundStyle(.primary)
+            Button("Replay app onboarding", action: {
                 self.onboardingNeeded = true
-            }, label: {
-                Text(LocalizedStringKey("str.settings.about.showOnboarding"))
             })
         }
-        .navigationTitle(LocalizedStringKey("str.settings.about"))
+        .navigationTitle("About this app")
     }
 }
 
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView() {
-            AboutView()
-        }
-    }
+#Preview {
+    AboutView()
 }

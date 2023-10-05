@@ -7,10 +7,23 @@
 
 import SwiftUI
 
+enum SettingsNavigationItem: Hashable {
+    case serverInfo
+    case userInfo
+    case appSettings
+    case stockSettings
+    case shoppingListSettings
+    case appLog
+    case aboutApp
+}
+
 struct SettingsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Environment(\.dismiss) var dismiss
+    
+    @State private var selection: SettingsNavigationItem? = nil
+    @State private var path = NavigationPath()
     
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -18,94 +31,87 @@ struct SettingsView: View {
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
     
     var body: some View {
-#if os(macOS)
-        NavigationView {
-            content
-                .frame(minWidth: Constants.macOSNavWidth, maxWidth: .infinity)
-                .padding()
-        }
-        .listStyle(.sidebar)
-        .navigationTitle("str.settings")
-        .frame(minWidth: Constants.macOSSettingsWidth, minHeight: Constants.macOSSettingsHeight)
-#else
-        Form {
-            content
-                .navigationTitle(LocalizedStringKey("str.settings"))
-        }
-#endif
-    }
-    
-    var content: some View {
-        List {
-            if isLoggedIn {
-                Section(header: Text("Grocy")) {
-                    NavigationLink(
-                        destination: GrocyInfoView(systemInfo: grocyVM.systemInfo ?? SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite", os: "iOS", client: "Grocy Mobile")),
-                        label: {
-                            Label(LocalizedStringKey("str.settings.info"), systemImage: MySymbols.info)
-                                .foregroundColor(.primary)
+        NavigationStack(path: $path) {
+            List {
+                if isLoggedIn {
+                    Section("Grocy") {
+                        NavigationLink(value: SettingsNavigationItem.serverInfo) {
+                            Label("Information about Grocy Server", systemImage: MySymbols.info)
+                                .foregroundStyle(.primary)
+                        }
+                        if let currentUser = grocyVM.currentUser {
+                            NavigationLink(value: SettingsNavigationItem.userInfo) {
+                                Label("Logged in as user \(currentUser.displayName)", systemImage: MySymbols.user)
+                                    .foregroundStyle(.primary)
+                            }
+                        }
+                        Button(action: {
+                            grocyVM.deleteAllCachedData()
+                        }, label: {
+                            Label("Reset cache", systemImage: MySymbols.delete)
+                                .foregroundStyle(.primary)
                         })
-                    if let currentUser = grocyVM.currentUser {
-                        NavigationLink(destination: GrocyUserInfoView(grocyUser: currentUser), label: {
-                            Label(LocalizedStringKey("str.settings.loggedInAs \(currentUser.displayName)"), systemImage: "person")
-                                .foregroundColor(.primary)
+                        Button(action: {
+                            grocyVM.logout()
+                        }, label: {
+                            Label("Logout from server", systemImage: MySymbols.logout)
+                                .foregroundStyle(.red)
                         })
                     }
-                    Button(action: {
-                        grocyVM.deleteAllCachedData()
-                    }, label: {
-                        Label(LocalizedStringKey("str.settings.resetCache"), systemImage: MySymbols.delete)
-                            .foregroundColor(.primary)
-                    })
-                    Button(action: {
-                        grocyVM.logout()
-                    }, label: {
-                        Label(LocalizedStringKey("str.settings.logout"), systemImage: MySymbols.logout)
-                            .foregroundColor(.red)
-                    })
+                }
+                
+                Section("Grocy settings") {
+                    NavigationLink(value: SettingsNavigationItem.appSettings) {
+                        Label("App settings", systemImage: MySymbols.app)
+                            .foregroundStyle(.primary)
+                    }
+                    NavigationLink(value: SettingsNavigationItem.stockSettings) {
+                        Label("Stock settings", systemImage: MySymbols.stockOverview)
+                            .foregroundStyle(.primary)
+                    }
+                    NavigationLink(value: SettingsNavigationItem.shoppingListSettings) {
+                        Label("Shopping list settings", systemImage: MySymbols.shoppingList)
+                            .foregroundStyle(.primary)
+                    }
+                }
+                
+                Section("App") {
+                    NavigationLink(value: SettingsNavigationItem.appLog) {
+                        Label("App log", systemImage: MySymbols.logFile)
+                            .foregroundStyle(.primary)
+                    }
+                    NavigationLink(value: SettingsNavigationItem.aboutApp) {
+                        Label("About this app", systemImage: MySymbols.info)
+                            .foregroundStyle(.primary)
+                    }
                 }
             }
-            Section(header: Text(LocalizedStringKey("str.settings.grocy"))) {
-                NavigationLink(destination: SettingsAppView(), label: {
-                    Label(LocalizedStringKey("str.settings.app"), systemImage: MySymbols.app)
-                        .foregroundColor(.primary)
-                })
-                NavigationLink(destination: SettingsStockView(), label: {
-                    Label(LocalizedStringKey("str.settings.stock"), systemImage: MySymbols.stockOverview)
-                        .foregroundColor(.primary)
-                })
-                NavigationLink(destination: SettingsShoppingListView(), label: {
-                    Label(LocalizedStringKey("str.settings.shoppingList"), systemImage: MySymbols.shoppingList)
-                        .foregroundColor(.primary)
-                })
+            .navigationDestination(for: SettingsNavigationItem.self) { destination in
+                switch destination {
+                case .serverInfo:
+                    GrocyInfoView(systemInfo: grocyVM.systemInfo)
+                case .userInfo:
+                    GrocyUserInfoView(grocyUser: grocyVM.currentUser)
+                case .appSettings:
+                    SettingsAppView()
+                case .stockSettings:
+                    SettingsStockView()
+                case .shoppingListSettings:
+                    SettingsShoppingListView()
+                case .appLog:
+                    LogView()
+                case .aboutApp:
+                    AboutView()
+                }
             }
-            Section(header: Text("App")) {
-                NavigationLink(
-                    destination: LogView(),
-                    label: {
-                        Label(LocalizedStringKey("str.settings.log"), systemImage: MySymbols.logFile)
-                            .foregroundColor(.primary)
-                    })
-                NavigationLink(
-                    destination: AboutView(),
-                    label: {
-                        Label(LocalizedStringKey("str.settings.about"), systemImage: MySymbols.info)
-                            .foregroundColor(.primary)
-                    })
-            }
-        }
-        .task {
-            Task {
+            .navigationTitle("Settings")
+            .task {
                 await grocyVM.requestData(additionalObjects: [.system_info, .current_user])
             }
         }
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            SettingsView()
-        }
-    }
+#Preview {
+    SettingsView()
 }

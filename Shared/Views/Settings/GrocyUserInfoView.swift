@@ -12,24 +12,26 @@ struct GrocyUserInfoView: View {
     
     @State private var userPictureURL: URL? = nil
     
-    var grocyUser: GrocyUser
+    var grocyUser: GrocyUser? = nil
     
     var body: some View {
-        HStack{
-            if let pictureFileName = grocyUser.pictureFileName {
-                PictureView(pictureFileName: pictureFileName, pictureType: .userPictures)
+        if let grocyUser = grocyUser {
+            HStack{
+                if let pictureFileName = grocyUser.pictureFileName {
+                    PictureView(pictureFileName: pictureFileName, pictureType: .userPictures)
+                }
+                VStack(alignment: .leading){
+                    Text(grocyUser.username)
+                        .font(.title)
+                    Text(grocyUser.displayName)
+                }
             }
-            VStack(alignment: .leading){
-                Text(grocyUser.username)
-                    .font(.title)
-                Text(grocyUser.displayName)
-            }
+        } else {
+            Text("str.details.unknown")
         }
     }
 }
 
-//struct GrocyUserInfoView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        GrocyUserInfoView()
-//    }
-//}
+#Preview {
+    GrocyUserInfoView(grocyUser: nil)
+}

@@ -21,31 +21,27 @@ struct SettingsShoppingListView: View {
     private let dataToUpdate: [ObjectEntities] = [.shopping_lists]
     
     var body: some View {
-        content
-            .formStyle(.grouped)
-    }
-    
-    var content: some View {
         Form {
-            Section(header: Text(LocalizedStringKey("str.settings.shoppingList.shoppingList")).font(.title)) {
+            Section("Shopping list") {
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmount.rawValue,
-                    description: "str.settings.shoppingList.autoAddToShL",
+                    description: "Automatically add products that are below their defined min. stock amount to the shopping list",
                     icon: MySymbols.amount,
                     toggleFeedback: $useAutoAddBelowMinStockAmount
                 )
-                ServerSettingsObjectPicker(
-                    settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmountListID.rawValue,
-                    description: "str.shL",
-                    icon: MySymbols.shoppingList,
-                    objects: .shoppingLists
-                )
-                .disabled(!useAutoAddBelowMinStockAmount)
+                if useAutoAddBelowMinStockAmount {
+                    ServerSettingsObjectPicker(
+                        settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmountListID.rawValue,
+                        description: "Shopping list",
+                        icon: MySymbols.shoppingList,
+                        objects: .shoppingLists
+                    )
+                }
             }
-            Section(header: Text(LocalizedStringKey("str.settings.shoppingList.shLToStockWF")).font(.title)) {
+            Section("Shopping list to stock workflow") {
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.shoppingListToStockWorkflowAutoSubmitWhenPrefilled.rawValue,
-                    description: "str.settings.shoppingList.autoAddToStock",
+                    description: "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set ",
                     icon: MySymbols.stockOverview
                 )
             }
@@ -100,13 +96,12 @@ struct SettingsShoppingListView: View {
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey("str.settings.shoppingList"))
+        .formStyle(.grouped)
+        .navigationTitle("Shopping list settings")
         .task {
             if isFirst {
-                Task {
-                    await grocyVM.requestData(objects: dataToUpdate)
-                    isFirst = false
-                }
+                await grocyVM.requestData(objects: dataToUpdate)
+                isFirst = false
             }
         }
         .onDisappear(perform: {
@@ -117,8 +112,6 @@ struct SettingsShoppingListView: View {
     }
 }
 
-struct SettingsShoppingListView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsShoppingListView()
-    }
+#Preview {
+    SettingsShoppingListView()
 }

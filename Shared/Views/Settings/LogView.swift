@@ -46,23 +46,9 @@ struct LogView: View {
     }
     
     var body: some View {
-        content
-            .navigationTitle(LocalizedStringKey("str.settings.log"))
-#if os(iOS)
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-                    Button(action: {
-                        shareFile()
-                    }, label: { Image(systemName: MySymbols.share) })
-                })
-            })
-#endif
-    }
-    
-    var content: some View {
         List {
             if grocyVM.logEntries.isEmpty {
-                Text(LocalizedStringKey("str.settings.log.empty"))
+                Text("No log entry found.")
             }
             ForEach(grocyVM.logEntries.reversed(), id: \.self) { logEntry in
                 VStack(alignment: .leading) {
@@ -72,6 +58,16 @@ struct LogView: View {
                 }
             }
         }
+        .navigationTitle("App log")
+#if os(iOS)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .automatic, content: {
+                Button(action: {
+                    shareFile()
+                }, label: { Image(systemName: MySymbols.share) })
+            })
+        })
+#endif
         .onAppear(perform: { grocyVM.getLogEntries() })
         .refreshable {
             grocyVM.getLogEntries()

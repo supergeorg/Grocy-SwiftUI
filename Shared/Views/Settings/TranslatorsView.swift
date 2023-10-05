@@ -12,21 +12,35 @@ struct TranslatorLineView: View {
     var languageFlag: String
     var languageMaintainers: String
     var languageContributors: [String]
+    
     var body: some View {
         DisclosureGroup(content: {
             Group {
                 ForEach(languageContributors, id: \.self) { contributor in
-                    Text(contributor).font(.caption)
+                    Text(contributor)
+                        .font(.caption)
                 }
             }
         }, label: {
-            HStack {
-                Text(languageFlag).font(.title)
+            Label {
                 VStack(alignment: .leading) {
-                    Text(languageName).font(.title3)
-                    Text(languageMaintainers).font(.body)
+                    Text(languageName)
+                        .font(.title)
+                    Text(languageMaintainers)
+                        .font(.body)
+                }
+            } icon: {
+                VStack {
+                    Text(languageFlag).font(.title)
                 }
             }
+//            HStack {
+//                Text(languageFlag).font(.title)
+//                VStack(alignment: .leading) {
+//                    Text(languageName).font(.title3)
+//                    Text(languageMaintainers).font(.body)
+//                }
+//            }
         })
     }
 }

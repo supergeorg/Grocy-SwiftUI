@@ -10,130 +10,123 @@ import SwiftUI
 struct SettingsStockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @State private var useQuickConsume: Bool = false
-    
-    @State private var isFirst: Bool = true
-    
     @AppStorage("devMode") private var devMode: Bool = false
+    
+    @State private var useQuickConsume: Bool = false
+    @State private var isFirst: Bool = true
     
     private let dataToUpdate: [ObjectEntities] = [.locations, .product_groups, .quantity_units]
     
     var body: some View {
-        content
-            .formStyle(.grouped)
-    }
-    
-    var content: some View {
         Form {
-            Section(header: Text(LocalizedStringKey("str.settings.stock.presets")).font(.title)) {
+            Section("Presets for new products") {
                 ServerSettingsObjectPicker(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsLocationID.rawValue,
-                    description: "str.settings.stock.presets.location",
+                    description: "Location",
                     icon: MySymbols.location,
                     objects: .location
                 )
                 ServerSettingsObjectPicker(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsProductGroupID.rawValue,
-                    description: "str.settings.stock.presets.productGroup",
+                    description: "Product group",
                     icon: MySymbols.productGroup,
                     objects: .productGroup
                 )
                 ServerSettingsObjectPicker(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsQuID.rawValue,
-                    description: "str.settings.stock.presets.quantityUnit",
+                    description: "Quantity unit",
                     icon: MySymbols.quantityUnit,
                     objects: .quantityUnit
                 )
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue,
-                    description: "str.settings.stock.presets.defaultDueDays",
+                    description: "Default due days",
                     icon: MySymbols.date
                 )
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsTreatOpenedAsOutOfStock.rawValue,
-                    description: "str.settings.stock.presets.treatOpenedAsOutOfStock",
+                    description: "Treat opened as out of stock",
                     icon: MySymbols.stockOverview
                 )
             }
-            Section(header: Text(LocalizedStringKey("str.settings.stock.stockOverview")).font(.title)) {
+            Section("Stock overview") {
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDueSoonDays.rawValue,
-                    description: "str.settings.stock.stockOverview.dueSoonDays",
+                    description: "Due soon days",
                     icon: MySymbols.date
                 )
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.showIconOnStockOverviewPageWhenProductIsOnShoppingList.rawValue,
-                    description: "str.settings.stock.stockOverview.showIconShoppingList",
+                    description: "Show an icon if the product is already on the shopping list",
                     icon: MySymbols.shoppingList
                 )
             }
-            Section(header: Text(LocalizedStringKey("str.settings.stock.purchase")).font(.title)) {
+            Section("Purchase") {
                 ServerSettingsDoubleStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDefaultPurchaseAmount.rawValue,
-                    description: "str.settings.stock.purchase.defaultAmount",
+                    description: "Default amount for purchase",
                     icon: MySymbols.amount
                 )
                 if devMode {
                     ServerSettingsToggle(
                         settingKey: GrocyUserSettings.CodingKeys.showPurchasedDateOnPurchase.rawValue,
-                        description: "str.settings.stock.purchase.showPurchasedDate",
+                        description: "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)",
                         icon: MySymbols.date
                     )
                     ServerSettingsToggle(
                         settingKey: GrocyUserSettings.CodingKeys.showWarningOnPurchaseWhenDueDateIsEarlierThanNext.rawValue,
-                        description: "str.settings.stock.purchase.showWarningWhenEarlier",
+                        description: "Show a warning when the due date of the purchased product is earlier than the next due date in stock",
                         icon: MySymbols.date
                     )
                 }
             }
-            Section(header: Text(LocalizedStringKey("str.settings.stock.consume")).font(.title)) {
+            Section("Consume") {
                 ServerSettingsDoubleStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmount.rawValue,
-                    description: "str.settings.stock.consume.defaultAmount",
+                    description: "Default amount for consume",
                     icon: MySymbols.amount
                 )
                 .disabled(useQuickConsume)
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue,
-                    description: "str.settings.stock.consume.useQuickConsume",
+                    description: "Use the products \"Quick consume amount\" ",
                     icon: MySymbols.amount,
                     toggleFeedback: $useQuickConsume
                 )
             }
             
-            Section(header: Text(LocalizedStringKey("str.settings.stock.common")).font(.title)) {
+            Section("Common") {
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue,
-                    description: "str.settings.stock.common.amountDecimalPlaces",
+                    description: "Decimal places allowed for amounts",
                     icon: MySymbols.decimalPlaces
                 )
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesInput.rawValue,
-                    description: "str.settings.stock.common.priceDecimalPlacesInput",
+                    description: "Decimal places allowed for prices (input)",
                     icon: MySymbols.decimalPlaces
                 )
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesDisplay.rawValue,
-                    description: "str.settings.stock.common.priceDecimalPlacesDisplay",
+                    description: "Decimal places allowed for prices (display)",
                     icon: MySymbols.decimalPlaces
                 )
                 if devMode {
                     ServerSettingsToggle(
                         settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue,
-                        description: "str.settings.stock.common.priceAddSeparatorAuto",
-                        descriptionInfo: "str.settings.stock.common.priceAddSeparatorAuto.hint",
+                        description: "Add decimal separator automatically for price inputs",
+                        descriptionInfo: "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places",
                         icon: MySymbols.price
                     )
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey("str.settings.stock"))
+        .formStyle(.grouped)
+        .navigationTitle("Stock settings")
         .task {
             if isFirst {
-                Task {
-                    await grocyVM.requestData(objects: dataToUpdate)
-                    isFirst = false
-                }
+                await grocyVM.requestData(objects: dataToUpdate)
+                isFirst = false
             }
         }
         .onDisappear(perform: {
@@ -144,8 +137,6 @@ struct SettingsStockView: View {
     }
 }
 
-struct SettingsStockView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsStockView()
-    }
+#Preview {
+    SettingsStockView()
 }
