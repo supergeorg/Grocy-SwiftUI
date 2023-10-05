@@ -55,10 +55,6 @@ struct ConsumeProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State var toastType: ToastType? = nil
-    
-    @State var infoString: String? = nil
-    
     @State private var showRecipeInfo: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations]
@@ -171,12 +167,10 @@ struct ConsumeProductView: View {
     private func openProduct() async {
         if let productID = productID {
             let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
-            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
                 grocyVM.postLog("Opening successful.", type: .info)
-                toastType = .successOpen
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
                 if self.actionFinished != nil {
@@ -184,7 +178,6 @@ struct ConsumeProductView: View {
                 }
             } catch {
                 grocyVM.postLog("Opening failed: \(error)", type: .error)
-                toastType = .failOpen
             }
             isProcessingAction = false
         }
@@ -193,7 +186,6 @@ struct ConsumeProductView: View {
     private func consumeProduct() async {
         if let productID = productID {
             let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
-            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
@@ -207,14 +199,12 @@ struct ConsumeProductView: View {
                         grocyVM.postLog("SHLAction failed. \(error)", type: .error)
                     }
                 }
-                toastType = .successConsume
                 resetForm()
                 if self.actionFinished != nil {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
                 grocyVM.postLog("Consume failed: \(error)", type: .error)
-                toastType = .failConsume
             }
             isProcessingAction = false
         }
@@ -241,24 +231,6 @@ struct ConsumeProductView: View {
         Form {
             consumeForm
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successConsume || toastType == .successOpen),
-            isShown: [.successConsume, .failConsume, .successOpen, .failOpen].contains(toastType),
-            text: { item in
-                switch item {
-                case .successConsume:
-                    return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
-                case .failConsume:
-                    return LocalizedStringKey("str.stock.consume.product.consume.fail")
-                case .successOpen:
-                    return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
-                case .failOpen:
-                    return LocalizedStringKey("str.stock.consume.product.open.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .navigationTitle(LocalizedStringKey("str.stock.consume"))
     }
     

@@ -188,7 +188,6 @@ struct ShoppingListEntryFormView: View {
                 firstAppear = false
             }
         }
-        .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.entryForm.save.failed"))
     }
 }
 

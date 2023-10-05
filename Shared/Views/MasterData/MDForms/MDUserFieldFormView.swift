@@ -26,7 +26,7 @@ struct MDUserFieldFormView: View {
     var userField: MDUserField?
     
     @Binding var showAddUserField: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -74,25 +74,21 @@ struct MDUserFieldFormView: View {
             if isNewUserField {
                 do {
                     _ = try await grocyVM.postMDObject(object: .userfields, content: userFieldPOST)
-                                            grocyVM.postLog("Userfield add successful.", type: .info)
-                                            toastType = .successAdd
-                                            resetForm()
-                                            await updateData()
-                                            finishForm()
+                    grocyVM.postLog("Userfield add successful.", type: .info)
+                    resetForm()
+                    await updateData()
+                    finishForm()
                 } catch {
-                                            grocyVM.postLog("Userfield add failed. \(error)", type: .error)
-                                            toastType = .failAdd
+                    grocyVM.postLog("Userfield add failed. \(error)", type: .error)
                 }
             } else {
                 do {
                     _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
-                                            grocyVM.postLog("Userfield edit successful.", type: .info)
-                                            toastType = .successEdit
-                                            await updateData()
-                                            finishForm()
+                    grocyVM.postLog("Userfield edit successful.", type: .info)
+                    await updateData()
+                    finishForm()
                 } catch {
-                                            grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
-                                            toastType = .failEdit
+                    grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
                 }
             }
             isProcessing = true

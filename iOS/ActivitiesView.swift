@@ -9,9 +9,6 @@ import SwiftUI
 
 struct ActivitiesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @State var toastType: ToastType?
-    @State var infoString: String?
 
     var body: some View {
         List {

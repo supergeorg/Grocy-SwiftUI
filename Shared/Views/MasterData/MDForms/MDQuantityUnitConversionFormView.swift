@@ -25,7 +25,7 @@ struct MDQuantityUnitConversionFormView: View {
     var quantityUnitConversion: MDQuantityUnitConversion?
     
     @Binding var showAddQuantityUnitConversion: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var conversionCorrect: Bool = false
     private func checkConversionExists() -> Bool {
@@ -103,28 +103,23 @@ struct MDQuantityUnitConversionFormView: View {
                         grocyVM.postLog("Inverse quantity unit conversion add successful.", type: .info)
                     } catch {
                         grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
-                        toastType = .failAdd
                     }
                 } else {
                     grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
-                    toastType = .successAdd
                 }
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit conversion add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: id, content: quantityUnitConversionPOST)
                 grocyVM.postLog("Quantity unit conversion edited successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit conversion edit failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         }
         isProcessing = false

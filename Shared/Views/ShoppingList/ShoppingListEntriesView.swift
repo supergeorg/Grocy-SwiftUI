@@ -14,8 +14,6 @@ struct ShoppingListRowView: View {
     
     var shoppingListItem: ShoppingListItem
     var isBelowStock: Bool
-    @State var toastType: ToastType? = nil
-    @State var infoString: String? = nil
     
     var product: MDProduct? {
         grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })
@@ -66,8 +64,6 @@ struct ShoppingListEntriesView: View {
     let shoppingListItem: ShoppingListItem
     @Binding var selectedShoppingListID: Int
     
-    @State var toastType: ToastType? = nil
-    @State var infoString: String? = nil
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     @State private var showPurchase: Bool = false
@@ -107,7 +103,6 @@ struct ShoppingListEntriesView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -123,7 +118,6 @@ struct ShoppingListEntriesView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     

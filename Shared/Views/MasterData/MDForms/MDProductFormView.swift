@@ -149,7 +149,7 @@ struct MDProductFormView: View {
     var openFoodFactsBarcode: String?
     
     @Binding var showAddProduct: Bool
-    @State var toastType: ToastType? = nil
+    
     
     var isPopup: Bool = false
     
@@ -278,7 +278,6 @@ struct MDProductFormView: View {
                 do {
                     _ = try await grocyVM.postMDObject(object: .products, content: productPOST)
                     grocyVM.postLog("Product added successfully.", type: .info)
-                    toastType = .successAdd
                     await grocyVM.requestData(objects: [.products])
                     if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
                         let barcodePOST = MDProductBarcode(id: grocyVM.findNextID(.product_barcodes), productID: id, barcode: openFoodFactsBarcode ?? queuedBarcode, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
@@ -286,23 +285,19 @@ struct MDProductFormView: View {
                         grocyVM.postLog("Barcode add successful.", type: .info)
                         await grocyVM.requestData(objects: [.product_barcodes])
                         mdBarcodeReturn?.wrappedValue = barcodePOST
-                        toastType = .successAdd
                     }
                     finishForm()
                 } catch {
                     grocyVM.postLog("Product add failed. \(error)", type: .error)
-                    toastType = .failAdd
                 }
             } else {
                 do {
                     try await grocyVM.putMDObjectWithID(object: .products, id: id, content: productPOST)
                     grocyVM.postLog("Product edit successful.", type: .info)
-                    toastType = .successEdit
                     await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Product edit failed. \(error)", type: .error)
-                    toastType = .failEdit
                 }
             }
         }

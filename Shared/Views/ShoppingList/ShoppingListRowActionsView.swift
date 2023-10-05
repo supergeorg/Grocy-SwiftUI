@@ -17,9 +17,6 @@ struct ShoppingListRowActionsView: View {
     @State private var showAutoPurchase: Bool = false
     @State private var showEntryDeleteAlert: Bool = false
     
-    @State var toastType: ToastType? = nil
-    @State var infoString: String? = nil
-    
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
     }
@@ -53,7 +50,6 @@ struct ShoppingListRowActionsView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             grocyVM.postLog("Done status change failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -68,7 +64,6 @@ struct ShoppingListRowActionsView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     

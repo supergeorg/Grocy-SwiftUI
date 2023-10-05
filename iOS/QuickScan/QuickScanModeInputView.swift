@@ -25,9 +25,6 @@ struct QuickScanModeInputView: View {
     var productBarcode: MDProductBarcode?
     var grocyCode: GrocyCode?
     
-    @State var toastType: ToastType? = nil
-    @State var infoString: String? = nil
-    
     @State private var consumeAmountMode: ConsumeAmountMode = .standard
     
     @State private var isProcessingAction: Bool = false
@@ -183,22 +180,6 @@ struct QuickScanModeInputView: View {
             })
         }
         .interactiveDismissDisabled(grocyVM.loadingObjectEntities.count > 0)
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(false),
-            isShown: [.failConsume, .failOpen, .failPurchase].contains(toastType),
-            text: { item in
-                switch item {
-                case .failConsume:
-                    return LocalizedStringKey("str.stock.consume.product.consume.fail")
-                case .failOpen:
-                    return LocalizedStringKey("str.stock.consume.product.open.fail")
-                case .failPurchase:
-                    return LocalizedStringKey("str.stock.buy.product.buy.fail")
-                default:
-                    return LocalizedStringKey("")
-                }
-            })
         .task {
             if firstOpen {
                 if let productID = product?.id {

@@ -25,7 +25,7 @@ struct MDBarcodeFormView: View {
     var productID: Int
     var editBarcode: MDProductBarcode?
     
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
@@ -70,24 +70,20 @@ struct MDBarcodeFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .product_barcodes, content: saveBarcode)
                 grocyVM.postLog("Barcode added successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Barcode add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             if let id = editBarcode?.id {
                 do {
                     try await grocyVM.putMDObjectWithID(object: .product_barcodes, id: id, content: saveBarcode)
                     grocyVM.postLog("Barcode edit successful.", type: .info)
-                    toastType = .successEdit
                     await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Barcode edit failed. \(error)", type: .error)
-                    toastType = .failEdit
                 }
             }
         }

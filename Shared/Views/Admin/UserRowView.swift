@@ -13,7 +13,7 @@ struct UserRowActionsView: View {
     var user: GrocyUser
     var isCurrentUser: Bool
     
-    @State var toastType: ToastType? = nil
+    
     
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
@@ -24,11 +24,9 @@ struct UserRowActionsView: View {
         do {
             try await grocyVM.deleteUser(id: user.id)
             grocyVM.postLog("Delete user successful.", type: .info)
-            toastType = .successAdd
             await grocyVM.requestData(additionalObjects: [.users])
         } catch {
             grocyVM.postLog("Delete user failed. \(error)", type: .error)
-            toastType = .failDelete
         }
     }
     
@@ -65,7 +63,7 @@ struct UserRowView: View {
     
     var isCurrentUser: Bool
     
-    @State var toastType: ToastType? = nil
+    
     
     var body: some View {
         HStack{

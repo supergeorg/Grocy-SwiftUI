@@ -56,7 +56,6 @@ struct MDProductsView: View {
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteAlert: Bool = false
-    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
     private func updateData() async {
@@ -74,7 +73,6 @@ struct MDProductsView: View {
             await grocyVM.requestData(objects: [.products, .product_barcodes])
         } catch {
             grocyVM.postLog("Deleting product failed. \(error)", type: .error)
-            toastType = .failDelete
         }
     }
     
@@ -161,26 +159,6 @@ struct MDProductsView: View {
             await updateData()
         }
         .animation(.default, value: filteredProducts.count)
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
-            isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
-            text: { item in
-                switch item {
-                case .successAdd:
-                    return LocalizedStringKey("str.md.new.success")
-                case .failAdd:
-                    return LocalizedStringKey("str.md.new.fail")
-                case .successEdit:
-                    return LocalizedStringKey("str.md.edit.success")
-                case .failEdit:
-                    return LocalizedStringKey("str.md.edit.fail")
-                case .failDelete:
-                    return LocalizedStringKey("str.md.delete.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .alert(LocalizedStringKey("str.md.product.delete.confirm"), isPresented: $showDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {

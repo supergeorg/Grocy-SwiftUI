@@ -23,7 +23,7 @@ struct MDProductGroupFormView: View {
     var productGroup: MDProductGroup?
     
     @Binding var showAddProductGroup: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -68,23 +68,19 @@ struct MDProductGroupFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .product_groups, content: productGroupPOST)
                 grocyVM.postLog("Product group added successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Product group add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .product_groups, id: id, content: productGroupPOST)
                 grocyVM.postLog("Product group edited successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Product group edit failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         }
         isProcessing = false

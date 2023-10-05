@@ -33,16 +33,6 @@ struct InventoryProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var toastType: InventoryToastType?
-    private enum InventoryToastType: Identifiable {
-        case successInventory, failInventory
-        
-        var id: Int {
-            self.hashValue
-        }
-    }
-    @State private var infoString: String?
-    
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .quantity_units, .quantity_unit_conversions]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .system_info]
     
@@ -118,17 +108,14 @@ struct InventoryProductView: View {
         let noteText = note.isEmpty ? nil : note
         if let productID = productID {
             let inventoryInfo = ProductInventory(newAmount: factoredAmount, bestBeforeDate: strDueDate, storeID: storeID, locationID: locationID, price: price, note: noteText)
-            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: inventoryInfo)
                 grocyVM.postLog("Inventory successful.", type: .info)
-                toastType = .successInventory
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
             } catch {
                 grocyVM.postLog("Inventory failed: \(error)", type: .error)
-                toastType = .failInventory
             }
             isProcessingAction = false
         }
@@ -226,18 +213,6 @@ struct InventoryProductView: View {
                 firstAppear = false
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successInventory),
-            isShown: [.successInventory, .failInventory].contains(toastType),
-            text: { item in
-                switch item {
-                case .successInventory:
-                    return LocalizedStringKey("str.stock.inventory.product.inventory.success \(infoString ?? "")")
-                case .failInventory:
-                    return LocalizedStringKey("str.stock.inventory.product.inventory.fail")
-                }
-            })
         .toolbar(content: {
             if isProcessingAction {
                 ProgressView().progressViewStyle(CircularProgressViewStyle())

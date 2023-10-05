@@ -147,7 +147,6 @@ struct ShoppingListFormView: View {
 #endif
         }
         .onAppear(perform: resetForm)
-        .toast(isPresented: $showFailToast, isSuccess: false, text: LocalizedStringKey("str.shL.form.save.failed"))
     }
 }
 

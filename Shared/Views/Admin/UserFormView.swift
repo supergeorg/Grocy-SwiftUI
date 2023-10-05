@@ -21,7 +21,7 @@ struct UserFormView: View {
     var isNewUser: Bool
     var user: GrocyUser?
     
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
@@ -58,12 +58,10 @@ struct UserFormView: View {
             do {
                 try await grocyVM.postUser(user: userPost)
                 grocyVM.postLog("Successfully saved user.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Saving user failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             if let intID = user?.id {
@@ -71,12 +69,10 @@ struct UserFormView: View {
                 do {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
                     grocyVM.postLog("Successfully edited user.", type: .info)
-                    toastType = .successEdit
                     await updateData()
                     finishForm()
                 } catch {
                     grocyVM.postLog("Editing user failed. \(error)", type: .error)
-                    toastType = .failAdd
                 }
             }
         }
@@ -151,20 +147,6 @@ struct UserFormView: View {
         .onChange(of: passwordConfirm) {
             checkPWParity()
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(false),
-            isShown: [.failAdd, .failEdit].contains(toastType),
-            text: { item in
-                switch item {
-                case .failAdd:
-                    return LocalizedStringKey("str.md.new.fail")
-                case .failEdit:
-                    return LocalizedStringKey("str.md.edit.fail")
-                default:
-                    return LocalizedStringKey("")
-                }
-            })
     }
 }
 

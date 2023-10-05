@@ -30,8 +30,6 @@ struct ShoppingListView: View {
     @State private var sortOrder: SortOrder = .forward
     
     @State private var showSHLDeleteAlert: Bool = false
-    @State var toastType: ToastType?
-    @State var infoString: String?
     @State private var showClearListAlert: Bool = false
     @State private var showClearDoneAlert: Bool = false
     
@@ -161,7 +159,6 @@ struct ShoppingListView: View {
             await grocyVM.requestData(objects: [.shopping_lists])
         } catch {
             grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -178,7 +175,6 @@ struct ShoppingListView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             grocyVM.postLog("SHLAction failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -464,19 +460,6 @@ struct ShoppingListView: View {
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(false),
-            isShown: [.shLActionFail].contains(toastType),
-            text: { item in
-                switch item {
-                case .shLActionFail:
-                    return LocalizedStringKey("str.shL.action.failed")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            }
-        )
     }
     
     var sortGroupMenu: some View {

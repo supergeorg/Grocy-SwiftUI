@@ -24,7 +24,7 @@ struct MDUserEntityFormView: View {
     var userEntity: MDUserEntity?
     
     @Binding var showAddUserEntity: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -70,24 +70,20 @@ struct MDUserEntityFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .userentities, content: userEntityPOST)
                 grocyVM.postLog("User entity add successful.", type: .info)
-                toastType = .successAdd
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("User entity add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
                 grocyVM.postLog("User entity edit successful.", type: .info)
-                toastType = .successEdit
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("User entity edit failed. \(error)", type: .error)
-                toastType = .failEdit
             }
         }
         isProcessing = false

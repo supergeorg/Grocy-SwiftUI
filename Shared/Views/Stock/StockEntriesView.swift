@@ -60,7 +60,6 @@ struct StockEntryRowView: View {
             await fetchData()
         } catch {
             grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
-            toastType = .failConsume
         }
     }
     
@@ -71,7 +70,6 @@ struct StockEntryRowView: View {
             await fetchData()
         } catch {
             grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
-            toastType = .failOpen
         }
     }
     
@@ -182,7 +180,6 @@ struct StockEntriesView: View {
     
     @State private var selectedStockElement: StockElement? = nil
     @State private var stockEntries: StockEntries = []
-    @State private var toastType: ToastType?
     
     func fetchData(ignoreCachedStock: Bool = true) async {
         // This local management is needed due to the SwiftUI Views not updating correctly.
@@ -219,18 +216,6 @@ struct StockEntriesView: View {
                 await fetchData(ignoreCachedStock: false)
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType != ToastType.failEdit),
-            isShown: [.failEdit].contains(toastType),
-            text: { item in
-                switch item {
-                case .failEdit:
-                    return LocalizedStringKey("str.failed")
-                default:
-                    return LocalizedStringKey("")
-                }
-            })
     }
 }
 

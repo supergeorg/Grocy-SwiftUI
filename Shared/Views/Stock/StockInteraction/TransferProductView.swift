@@ -33,9 +33,6 @@ struct TransferProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State private var toastType: ToastType?
-    @State private var infoString: String?
-    
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
     
     private func updateData() async {
@@ -95,17 +92,14 @@ struct TransferProductView: View {
     private func transferProduct() async {
         if let productID = productID, let locationIDFrom = locationIDFrom, let locationIDTo = locationIDTo {
             let transferInfo = ProductTransfer(amount: factoredAmount, locationIDFrom: locationIDFrom, locationIDTo: locationIDTo, stockEntryID: stockEntryID)
-            infoString = "\(factoredAmount.formattedAmount) \(getQUString(stockQU: true)) \(productName)"
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
                 grocyVM.postLog("Transfer successful.", type: .info)
-                toastType = .successTransfer
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
             } catch {
                 grocyVM.postLog("Transfer failed: \(error)", type: .error)
-                toastType = .failTransfer
             }
             isProcessingAction = false
         }
@@ -216,20 +210,6 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successTransfer),
-            isShown: [.successTransfer, .failTransfer].contains(toastType),
-            text: { item in
-                switch item {
-                case .successTransfer:
-                    return LocalizedStringKey("str.stock.transfer.product.transfer.success \(infoString ?? "")")
-                case .failTransfer:
-                    return LocalizedStringKey("str.stock.transfer.product.transfer.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .navigationTitle(LocalizedStringKey("str.stock.transfer"))
     }
     

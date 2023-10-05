@@ -25,7 +25,7 @@ struct StockTableRow: View {
 #elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
 #endif
-    @State var toastType: ToastType? = nil
+    
     
     @State private var showDetailView: Bool = false
     

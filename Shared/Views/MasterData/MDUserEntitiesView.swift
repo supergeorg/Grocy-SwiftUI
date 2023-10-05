@@ -33,8 +33,6 @@ struct MDUserEntitiesView: View {
     @State private var userEntityToDelete: MDUserEntity? = nil
     @State private var showDeleteAlert: Bool = false
     
-    @State private var toastType: ToastType?
-    
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
     private func updateData() async {
@@ -59,7 +57,6 @@ struct MDUserEntitiesView: View {
             await updateData()
         } catch {
             grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
-            toastType = .failDelete
         }
     }
     
@@ -136,26 +133,6 @@ struct MDUserEntitiesView: View {
             await updateData()
         }
         .animation(.default, value: filteredUserEntities.count)
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
-            isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
-            text: { item in
-                switch item {
-                case .successAdd:
-                    return LocalizedStringKey("str.md.new.success")
-                case .failAdd:
-                    return LocalizedStringKey("str.md.new.fail")
-                case .successEdit:
-                    return LocalizedStringKey("str.md.edit.success")
-                case .failEdit:
-                    return LocalizedStringKey("str.md.edit.fail")
-                case .failDelete:
-                    return LocalizedStringKey("str.md.delete.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .alert(LocalizedStringKey("str.md.userEntity.delete.confirm"), isPresented: $showDeleteAlert, actions: {
             Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {

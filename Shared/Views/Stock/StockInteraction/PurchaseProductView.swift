@@ -43,9 +43,6 @@ struct PurchaseProductView: View {
     
     @State private var searchProductTerm: String = ""
     
-    @State var toastType: ToastType? = nil
-    @State var infoString: String? = nil
-    
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations, .shopping_locations, .product_barcodes]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_config, .system_info]
     
@@ -131,12 +128,10 @@ struct PurchaseProductView: View {
         let purchaseStoreID = selfProduction ? nil : storeID
         let purchaseInfo = ProductBuy(amount: amount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, storeID: purchaseStoreID, note: noteText)
         if let productID = productID {
-            infoString = "\(amount.formattedAmount) \(getQUString(stockQU: false)) \(product?.name ?? "")"
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
                 grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
-                toastType = .successPurchase
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
                 if autoPurchase {
@@ -147,7 +142,6 @@ struct PurchaseProductView: View {
                 }
             } catch {
                 grocyVM.postLog("Purchase failed: \(error)", type: .error)
-                toastType = .failPurchase
             }
             isProcessingAction = false
         }
@@ -174,20 +168,6 @@ struct PurchaseProductView: View {
         Form {
             purchaseForm
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successPurchase),
-            isShown: [.successPurchase, .failPurchase].contains(toastType),
-            text: { item in
-                switch item {
-                case .successPurchase:
-                    return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
-                case .failPurchase:
-                    return LocalizedStringKey("str.stock.buy.product.buy.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .navigationTitle(LocalizedStringKey("str.stock.buy"))
     }
     

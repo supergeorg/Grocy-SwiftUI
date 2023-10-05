@@ -16,8 +16,6 @@ struct UserManagementView: View {
     
     @State private var showAddUser: Bool = false
     
-    @State private var toastType: ToastType?
-    
     private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
     
     private func updateData() async {
@@ -116,22 +114,6 @@ struct UserManagementView: View {
         .refreshable {
             await updateData()
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
-            isShown: [.successAdd, .successEdit, .failDelete].contains(toastType),
-            text: { item in
-                switch item {
-                case .successAdd:
-                    return LocalizedStringKey("str.md.new.success")
-                case .successEdit:
-                    return LocalizedStringKey("str.md.edit.success")
-                case .failDelete:
-                    return LocalizedStringKey("str.md.delete.fail")
-                default:
-                    return LocalizedStringKey("")
-                }
-            })
     }
 }
 

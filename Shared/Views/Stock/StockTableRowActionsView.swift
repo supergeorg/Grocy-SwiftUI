@@ -29,7 +29,7 @@ struct StockTableRowActionsView: View {
         }
     }
     
-    @State var toastType: ToastType? = nil
+    
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
@@ -42,11 +42,9 @@ struct StockTableRowActionsView: View {
         selectedStockElement = stockElement
         do {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
-            toastType = .successConsumeOne
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
             grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -54,11 +52,9 @@ struct StockTableRowActionsView: View {
         selectedStockElement = stockElement
         do {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
-            toastType = .successConsumeAll
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
             grocyVM.postLog("Consume all items failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     
@@ -66,11 +62,9 @@ struct StockTableRowActionsView: View {
         selectedStockElement = stockElement
         do {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
-            toastType = .successOpenOne
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
             grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     

@@ -23,7 +23,7 @@ struct MDStoreFormView: View {
     var store: MDStore?
     
     @Binding var showAddStore: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -62,23 +62,19 @@ struct MDStoreFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .shopping_locations, content: storePOST)
                 grocyVM.postLog("Store added successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Store add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: id, content: storePOST)
                 grocyVM.postLog("Store \(storePOST.name) edited successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Store edit failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         }
         isProcessing = false

@@ -21,7 +21,7 @@ struct QuickScanModeSelectProductView: View {
     
     @State private var productID: Int?
     
-    @State var toastType: ToastType? = nil
+    
     @Binding var qsActiveSheet: QSActiveSheet?
     @Binding var newRecognizedBarcode: MDProductBarcode?
     @State var newProductBarcode: MDProductBarcode?
@@ -59,11 +59,9 @@ struct QuickScanModeSelectProductView: View {
                 grocyVM.postLog("Add barcode successful.)", type: .info)
                 await grocyVM.requestData(objects: [.product_barcodes])
                 newRecognizedBarcode = newBarcode
-                toastType = .successAdd
                 finishForm()
             } catch {
                 grocyVM.postLog("Add barcode failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         }
     }
@@ -86,7 +84,6 @@ struct QuickScanModeSelectProductView: View {
                         )
                         .onChange(of: newProductBarcode?.id) {
                             if newProductBarcode != nil {
-                                toastType = .successAdd
                                 finishForm()
                                 newRecognizedBarcode = newProductBarcode
                             }
@@ -111,18 +108,6 @@ struct QuickScanModeSelectProductView: View {
                 })
             })
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(false),
-            isShown: [.failAdd].contains(toastType),
-            text: { item in
-                switch item {
-                case .failAdd:
-                    return LocalizedStringKey("str.quickScan.add.product.add.fail")
-                default:
-                    return LocalizedStringKey("")
-                }
-            })
     }
 }
 

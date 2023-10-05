@@ -24,7 +24,7 @@ struct MDQuantityUnitFormView: View {
     var quantityUnit: MDQuantityUnit?
     
     @Binding var showAddQuantityUnit: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var showAddQuantityUnitConversion: Bool = false
     
@@ -77,10 +77,8 @@ struct MDQuantityUnitFormView: View {
             try await grocyVM.deleteMDObject(object: .quantity_unit_conversions, id: toDelID)
             grocyVM.postLog("QU conversion delete successful.", type: .info)
             await grocyVM.requestData(objects: [.quantity_unit_conversions])
-            toastType = .successEdit
         } catch {
             grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
-            toastType = .failEdit
         }
     }
     
@@ -100,23 +98,19 @@ struct MDQuantityUnitFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST)
                 grocyVM.postLog("Quantity unit added successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST)
                 grocyVM.postLog("Quantity unit \(quantityUnitPOST.name) edited successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         }
         isProcessing = false

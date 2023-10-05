@@ -17,7 +17,7 @@ struct StockTableMenuEntriesView: View {
 #elseif os(macOS)
     @Binding var activeSheet: StockInteractionPopover?
 #endif
-    @State var toastType: ToastType? = nil
+    
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
@@ -29,11 +29,9 @@ struct StockTableMenuEntriesView: View {
     func consumeAsSpoiled() async {
         do {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
-            toastType = .successConsumeAllSpoiled
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
             grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
-            toastType = .shLActionFail
         }
     }
     

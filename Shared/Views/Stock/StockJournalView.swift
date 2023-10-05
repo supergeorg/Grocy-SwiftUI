@@ -355,7 +355,6 @@ struct StockJournalView: View {
                 filteredProductID = selectedProductID
             }
         }
-        .toast(isPresented: $showToastUndoFailed, isSuccess: false, text: LocalizedStringKey("str.stock.journal.undo.failed"))
     }
 }
 

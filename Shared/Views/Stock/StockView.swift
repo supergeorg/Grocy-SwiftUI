@@ -52,8 +52,6 @@ struct StockView: View {
     @State private var filteredStatus: ProductStatus = .all
     
     @State private var selectedStockElement: StockElement? = nil
-    @State var toastType: ToastType?
-    @State var infoString: String?
     
 #if os(iOS)
     @State private var activeSheet: StockInteractionSheet?
@@ -388,28 +386,6 @@ struct StockView: View {
                 }
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),
-            isShown: [.successConsumeOne, .successConsumeAll, .successOpenOne, .successConsumeAllSpoiled, .failOpen, .failConsume].contains(toastType),
-            text: { item in
-                switch item {
-                case .successConsumeOne:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
-                case .successConsumeAll:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
-                case .successOpenOne:
-                    return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
-                case .successConsumeAllSpoiled:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-                case .failOpen:
-                    return LocalizedStringKey("str.stock.tbl.action.fail")
-                case .failConsume:
-                    return LocalizedStringKey("str.stock.tbl.action.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
     }
     
     var content: some View {
@@ -455,28 +431,6 @@ struct StockView: View {
                 }
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successConsumeOne || toastType == .successConsumeAll || toastType == .successOpenOne || toastType == .successConsumeAllSpoiled),
-            isShown: [.successConsumeOne, .successConsumeAll, .successOpenOne, .successConsumeAllSpoiled, .failOpen, .failConsume].contains(toastType),
-            text: { item in
-                switch item {
-                case .successConsumeOne:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeOne \(selectedStockElement?.product.name ?? "")")
-                case .successConsumeAll:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAll \(selectedStockElement?.product.name ?? "")")
-                case .successOpenOne:
-                    return LocalizedStringKey("str.stock.tbl.action.successOpenOne \(selectedStockElement?.product.name ?? "")")
-                case .successConsumeAllSpoiled:
-                    return LocalizedStringKey("str.stock.tbl.action.successConsumeAllSpoiled \(selectedStockElement?.product.name ?? "")")
-                case .failOpen:
-                    return LocalizedStringKey("str.stock.tbl.action.fail")
-                case .failConsume:
-                    return LocalizedStringKey("str.stock.tbl.action.fail")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
     }
     
     var sortMenu: some View {

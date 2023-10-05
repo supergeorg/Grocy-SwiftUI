@@ -22,7 +22,7 @@ struct MDTaskCategoryFormView: View {
     var taskCategory: MDTaskCategory?
     
     @Binding var showAddTaskCategory: Bool
-    @State var toastType: ToastType? = nil
+    
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -66,24 +66,20 @@ struct MDTaskCategoryFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST)
                 grocyVM.postLog("Task category add successful.", type: .info)
-                toastType = .successAdd
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Task category add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST)
                 grocyVM.postLog("Task category edit successful.", type: .info)
-                toastType = .successEdit
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Task category edit failed. \(error)", type: .error)
-                toastType = .failEdit
             }
         }
         isProcessing = false

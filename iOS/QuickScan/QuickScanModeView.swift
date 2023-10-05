@@ -51,9 +51,6 @@ struct QuickScanModeView: View {
     @State var recognizedGrocyCode: GrocyCode? = nil
     @State var notRecognizedBarcode: String? = nil
     
-    @State var toastType: ToastType?
-    @State private var infoString: String?
-    
     @State private var lastConsumeLocationID: Int?
     @State private var lastPurchaseDueDate: Date = .init()
     @State private var lastPurchaseStoreID: Int?
@@ -214,24 +211,6 @@ struct QuickScanModeView: View {
                 )
             }
         }
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(true),
-            isShown: [.successAdd, .successConsume, .successOpen, .successPurchase].contains(toastType),
-            text: { item in
-                switch item {
-                case .successAdd:
-                    return LocalizedStringKey("str.quickScan.add.product.add.success")
-                case .successConsume:
-                    return LocalizedStringKey("str.stock.consume.product.consume.success \(infoString ?? "")")
-                case .successOpen:
-                    return LocalizedStringKey("str.stock.consume.product.open.success \(infoString ?? "")")
-                case .successPurchase:
-                    return LocalizedStringKey("str.stock.buy.product.buy.success \(infoString ?? "")")
-                default:
-                    return LocalizedStringKey("str.error")
-                }
-            })
         .task {
             Task {
                 await updateData()
