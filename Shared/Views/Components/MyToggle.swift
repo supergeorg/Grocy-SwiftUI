@@ -20,30 +20,27 @@ struct MyToggle: View {
             Toggle(isOn: $isOn, label: {
                 if let icon = icon {
                     HStack {
-                        Image(systemName: icon)
+                        Label(description, systemImage: icon)
                             .foregroundColor(.primary)
-                        Text(LocalizedStringKey(description))
-                        #if os(macOS)
-                        if let descriptionInfoU = descriptionInfo {
-                            FieldDescription(description: descriptionInfoU)
+#if os(macOS)
+                        if let descriptionInfo = descriptionInfo {
+                            FieldDescription(description: descriptionInfo)
                         }
-                        #endif
+#endif
                     }
                 } else {
-                    Text(LocalizedStringKey(description))
+                    Text(description)
                 }
             })
-            #if os(iOS)
-            if let descriptionInfoU = descriptionInfo {
-                FieldDescription(description: descriptionInfoU)
+#if os(iOS)
+            if let descriptionInfo = descriptionInfo {
+                FieldDescription(description: descriptionInfo)
             }
-            #endif
+#endif
         }
     }
 }
 
-struct MyToggle_Previews: PreviewProvider {
-    static var previews: some View {
-        MyToggle(isOn: Binding.constant(true), description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
-    }
+#Preview {
+    MyToggle(isOn: Binding.constant(true), description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
 }
