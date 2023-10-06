@@ -22,40 +22,51 @@ struct GrocyInfoView: View {
             return false
         }
     }
+    var releaseDate: String {
+        if let systemInfo = systemInfo {
+            return formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? formatTimestampOutput(systemInfo.grocyVersion.releaseDate, localizationKey: localizationKey) ?? ""
+        } else {
+            return ""
+        }
+    }
     
     var body: some View {
         Form {
             if isDemoModus {
-                Text(demoServerURL)
+                Link(destination: URL(string: demoServerURL)!, label: {
+                    Label("Grocy Server Demo URL: \(demoServerURL)", systemImage: "safari")
+                })
             } else {
-                Text(grocyServerURL)
-            }
-            if let systemInfo = systemInfo {
-                HStack {
-                    Text("str.settings.info.grocyVersion \(systemInfo.grocyVersion.version)")
-                    Label(
-                        isSupportedServer ? "str.settings.about.version.supported" : "str.settings.about.version.notSupported",
-                        systemImage: isSupportedServer ? MySymbols.success : MySymbols.failure
-                    )
-//                    .foregroundStyle(isSupportedServer ? Color.grocyGreen : Color.grocyRed)
-                }
-                Text("str.settings.info.grocyRLSDate \(formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? formatTimestampOutput(systemInfo.grocyVersion.releaseDate, localizationKey: localizationKey) ?? "")")
-                Text("str.settings.info.grocyPHPVersion \(systemInfo.phpVersion)")
-                Text("str.settings.info.grocySQLiteVersion \(systemInfo.sqliteVersion)")
-                if let os = systemInfo.os {
-                    Text(os)
-                }
-                if let client = systemInfo.client {
-                    Text(client)
-                }
-                Link(destination: URL(string: isDemoModus ? demoServerURL : grocyServerURL)!, label: {
-                    Text("str.settings.info.openInBrowser")
+                Link(destination: URL(string: grocyServerURL)!, label: {
+                    Label("Grocy Server URL: \(grocyServerURL)", systemImage: "safari")
                 })
             }
+            if let systemInfo = systemInfo {
+                if isSupportedServer {
+                    Label("Supported server version: \(systemInfo.grocyVersion.version)", systemImage: MySymbols.success)
+                        .foregroundStyle(.green)
+                } else {
+                    Label("Unsupported server version: \(systemInfo.grocyVersion.version)", systemImage: MySymbols.failure)
+                        .foregroundStyle(.red)
+                }
+                Label("Release date: \(releaseDate)", systemImage: MySymbols.date)
+                    .foregroundStyle(.primary)
+                Label("PHP version: \(systemInfo.phpVersion)", systemImage: "chevron.left.forwardslash.chevron.right")
+                    .foregroundStyle(.primary)
+                Label("SQLite version: \(systemInfo.sqliteVersion)", systemImage: "cylinder.split.1x2")
+                    .foregroundStyle(.primary)
+                if let os = systemInfo.os {
+                    Label("OS: \(os)", systemImage: "server.rack")
+                        .foregroundStyle(.primary)
+                }
+                if let client = systemInfo.client {
+                    Label("Client information: \(client)", systemImage: "ipad.and.iphone")
+                        .foregroundStyle(.primary)
+                }
+            }
         }
-#if os(macOS)
-        .frame(minWidth: Constants.macOSSettingsWidth, minHeight: Constants.macOSSettingsHeight)
-#endif
+        .navigationTitle("Information about Grocy Server")
+        .formStyle(.grouped)
     }
 }
 
