@@ -16,7 +16,7 @@ struct MDLocationRowView: View {
             HStack{
                 Text(location.name)
                     .font(.title)
-                    .foregroundColor(location.active ? .primary : .gray)
+                    .foregroundStyle(location.active ? .primary : .secondary)
                 if location.isFreezer {
                     Image(systemName: "thermometer.snowflake")
                         .font(.title)
@@ -41,20 +41,19 @@ struct MDLocationsView: View {
     @State private var showAddLocation: Bool = false
     @State private var locationToDelete: MDLocation? = nil
     @State private var showDeleteAlert: Bool = false
-    @State private var toastType: ToastType?
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
-        for loc in grocyVM.mdLocations {
-            context.insert(loc)
-        }
+        //        for loc in grocyVM.mdLocations {
+        //            context.insert(loc)
+        //        }
     }
     
-    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: [MDLocation]
+    //    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: [MDLocation]
     
     private var filteredLocations: MDLocations {
-        mdLocations
+        grocyVM.mdLocations
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -71,7 +70,6 @@ struct MDLocationsView: View {
             await updateData()
         } catch {
             grocyVM.postLog("Deleting location failed. \(error)", type: .error)
-            toastType = .failDelete
         }
     }
     
@@ -79,110 +77,94 @@ struct MDLocationsView: View {
         if grocyVM.failedToLoadObjects.filter( {dataToUpdate.contains($0) }).count == 0 {
 #if os(macOS)
             NavigationView{
-                bodyContent
+                content
                     .frame(minWidth: Constants.macOSNavWidth)
             }
 #else
-            bodyContent
+            content
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.locations"))
+                .navigationTitle("Locations")
         }
     }
     
-    var bodyContent: some View {
-        content
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .primaryAction, content: {
-#if os(macOS)
-                    RefreshButton(updateData: { Task { await updateData() } })
-#endif
-                    Button(action: {
-                        showAddLocation = true
-                    }, label: {
-                        Image(systemName: MySymbols.new)
-                    })
-                })
-            })
-            .navigationTitle(LocalizedStringKey("str.md.locations"))
-#if os(iOS)
-            .sheet(isPresented: self.$showAddLocation, content: {
-                NavigationView {
-                    MDLocationFormView(showAddLocation: $showAddLocation)
-                } })
-#endif
-    }
-    
-    
     var content: some View {
         List {
-            if filteredLocations.isEmpty {
-                ContentUnavailableView("str.md.locations.empty", systemImage: MySymbols.location)
+            if grocyVM.mdLocations.isEmpty {
+                ContentUnavailableView("No locations", systemImage: MySymbols.location)
             } else if filteredLocations.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddLocation {
                 NavigationLink(destination: MDLocationFormView(showAddLocation: $showAddLocation), isActive: $showAddLocation, label: {
-                    NewMDRowLabel(title: "str.md.location.new")
+                    NewMDRowLabel(title: "Create location")
                 })
-                    .frame(height: showAddLocation ? 50 : 0)
+                .frame(height: showAddLocation ? 50 : 0)
             }
 #endif
-            ForEach(filteredLocations, id:\.id) {location in
-                NavigationLink(destination: MDLocationFormView(location: location, showAddLocation: Binding.constant(false))) {
-                    MDLocationRowView(location: location)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                    Button(role: .destructive,
-                           action: { deleteItem(itemToDelete: location) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
-                    )
-                })
+            ForEach(filteredLocations, id:\.id) { location in
+                NavigationLink(
+                    value: location,
+                    label: { MDLocationRowView(location: location) }
+                )
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                        Button(role: .destructive,
+                               action: { deleteItem(itemToDelete: location) },
+                               label: { Label(LocalizedStringKey("Delete"), systemImage: MySymbols.delete) }
+                        )
+                    })
             }
         }
+        .navigationDestination(for: MDLocation.self, destination: { location in
+            MDLocationFormView(location: location, showAddLocation: Binding.constant(false))
+        })
         .task {
-            Task {
-                await updateData()
-            }
+            await updateData()
         }
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
         .refreshable {
             await updateData()
         }
+        .searchable(
+            text: $searchString,
+            prompt: "Search"
+        )
         .animation(.default,
-                   value: filteredLocations.count)
-        .toast(
-            item: $toastType,
-            isSuccess: Binding.constant(toastType == .successAdd || toastType == .successEdit),
-            isShown: [.successAdd, .failAdd, .successEdit, .failEdit, .failDelete].contains(toastType),
-            text: { item in
-            switch item {
-            case .successAdd:
-                return LocalizedStringKey("str.md.new.success")
-            case .failAdd:
-                return LocalizedStringKey("str.md.new.fail")
-            case .successEdit:
-                return LocalizedStringKey("str.md.edit.success")
-            case .failEdit:
-                return LocalizedStringKey("str.md.edit.fail")
-            case .failDelete:
-                return LocalizedStringKey("str.md.delete.fail")
-            default:
-                return LocalizedStringKey("str.error")
-            }
-        })
-        .alert(LocalizedStringKey("str.md.location.delete.confirm"), isPresented: $showDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                   value: filteredLocations.count
+        )
+        .alert(LocalizedStringKey("Do you really want to delete this location?"), isPresented: $showDeleteAlert, actions: {
+            Button("Cancel", role: .cancel) { }
+            Button(LocalizedStringKey("Delete"), role: .destructive) {
                 if let toDelID = locationToDelete?.id {
                     Task {
                         await deleteLocation(toDelID: toDelID)
                     }
                 }
             }
-        }, message: { Text(locationToDelete?.name ?? "Name not found") })
+        }, message: {
+            Text(locationToDelete?.name ?? "")
+        })
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .primaryAction, content: {
+#if os(macOS)
+                RefreshButton(updateData: { Task { await updateData() } })
+#endif
+                Button(action: {
+                    showAddLocation = true
+                }, label: {
+                    Image(systemName: MySymbols.new)
+                })
+            })
+        })
+        .navigationTitle("Locations")
+#if os(iOS)
+        .sheet(isPresented: self.$showAddLocation, content: {
+            NavigationView {
+                MDLocationFormView(showAddLocation: $showAddLocation)
+            }
+        })
+#endif
     }
 }
 

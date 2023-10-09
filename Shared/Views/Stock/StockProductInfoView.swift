@@ -88,7 +88,7 @@ struct StockProductInfoView: View {
         .navigationTitle(LocalizedStringKey("str.details.title"))
         .toolbar(content: {
             ToolbarItem(placement: .cancellationAction) {
-                Button(LocalizedStringKey("str.close")) {
+                Button("Close") {
                     self.dismiss()
                 }
             }

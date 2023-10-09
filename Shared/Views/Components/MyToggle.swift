@@ -21,7 +21,7 @@ struct MyToggle: View {
                 if let icon = icon {
                     HStack {
                         Label(description, systemImage: icon)
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
 #if os(macOS)
                         if let descriptionInfo = descriptionInfo {
                             FieldDescription(description: descriptionInfo)

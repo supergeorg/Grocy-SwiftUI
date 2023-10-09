@@ -14,7 +14,7 @@ struct MDStoreRowView: View {
         VStack(alignment: .leading) {
             Text(store.name)
                 .font(.title)
-                .foregroundColor(store.active ? .primary : .gray)
+                .foregroundStyle(store.active ? .primary : .secondary)
             if let description = store.mdStoreDescription, !description.isEmpty {
                 Text(description)
                     .font(.caption)
@@ -72,7 +72,7 @@ struct MDStoresView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.stores"))
+                .navigationTitle("Stores")
         }
     }
     
@@ -90,7 +90,7 @@ struct MDStoresView: View {
                     })
                 })
             })
-            .navigationTitle(LocalizedStringKey("str.md.stores"))
+            .navigationTitle("Stores")
 #if os(iOS)
             .sheet(isPresented: self.$showAddStore, content: {
                 NavigationView {
@@ -131,14 +131,14 @@ struct MDStoresView: View {
                 await updateData()
             }
         }
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default,
                    value: filteredStores.count)
         .alert(LocalizedStringKey("str.md.store.delete.confirm"), isPresented: $showDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button("Cancel", role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = storeToDelete?.id {
                     Task {

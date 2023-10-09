@@ -22,7 +22,7 @@ struct StockTableConfigView: View {
             Toggle(LocalizedStringKey("str.stock.tbl.productGroup"), isOn: $showProductGroup)
             Toggle(LocalizedStringKey("str.stock.tbl.amount"), isOn: $showAmount)
             Toggle(LocalizedStringKey("str.stock.tbl.value"), isOn: $showValue)
-            Toggle(LocalizedStringKey("str.stock.tbl.nextDueDate"), isOn: $showNextBestBeforeDate)
+            Toggle("Next due date", isOn: $showNextBestBeforeDate)
             Toggle(LocalizedStringKey("str.stock.tbl.caloriesPerStockQU"), isOn: $showCaloriesPerStockQU)
             Toggle(LocalizedStringKey("str.stock.tbl.calories"), isOn: $showCalories)
         }

@@ -13,7 +13,7 @@ struct ActivitiesView: View {
     var body: some View {
         List {
             NavigationLink(destination: PurchaseProductView()) {
-                Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
+                Label("Products", systemImage: "archivebox")
             }
 
             ForEach(grocyVM.mdUserEntities, id: \.id) { userEntity in
@@ -22,7 +22,7 @@ struct ActivitiesView: View {
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey("str.nav.activities"))
+        .navigationTitle("Activities")
         .task {
             Task {
                 await grocyVM.requestData(objects: [.userentities])

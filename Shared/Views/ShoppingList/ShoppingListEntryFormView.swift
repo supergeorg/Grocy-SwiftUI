@@ -121,7 +121,7 @@ struct ShoppingListEntryFormView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewShoppingListEntry {
-                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                        Button("Cancel", role: .cancel, action: finishForm)
                             .keyboardShortcut(.cancelAction)
                     }
                 }
@@ -166,7 +166,7 @@ struct ShoppingListEntryFormView: View {
                 }
 #if os(macOS)
             HStack {
-                Button(LocalizedStringKey("str.cancel")) {
+                Button("Cancel") {
                     finishForm()
                 }
                 .keyboardShortcut(.cancelAction)

@@ -32,17 +32,17 @@ struct UserRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color.grocyTurquoise, helpString: LocalizedStringKey("str.admin.user.tooltip.edit"))
+            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: LocalizedStringKey("str.admin.user.tooltip.edit"))
                 .onTapGesture {
                     grocyVM.postLog("Edit user not implemented", type: .info)
                 }
                 .disabled(true)
-            RowInteractionButton(image: "lock.fill", backgroundColor: Color.grocyTurquoise, helpString: LocalizedStringKey("str.admin.user.tooltip.permissions"))
+            RowInteractionButton(image: "lock.fill", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: LocalizedStringKey("str.admin.user.tooltip.permissions"))
                 .onTapGesture {
                     grocyVM.postLog("Edit permissions not implemented", type: .info)
                 }
                 .disabled(true)
-            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color.grocyDeleteLocked : Color.grocyDelete, helpString: LocalizedStringKey("str.admin.user.tooltip.delete"))
+            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color(.GrocyColors.grocyDeleteLocked) : Color(.GrocyColors.grocyDelete), helpString: LocalizedStringKey("str.admin.user.tooltip.delete"))
                 .onTapGesture {
                     showDeleteAction.toggle()
                 }

@@ -223,7 +223,7 @@ struct StockJournalRowView: View {
                             .font(.caption)
                             .italic()
                     }
-                    .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
+                    .foregroundStyle(journalEntry.undone == 1 ? Color.gray : Color.primary)
                 }
             }
             Group {
@@ -240,7 +240,7 @@ struct StockJournalRowView: View {
                     Text(LocalizedStringKey("str.stock.entries.note \(note)"))
                 }
             }
-            .foregroundColor(journalEntry.undone == 1 ? Color.gray : Color.primary)
+            .foregroundStyle(journalEntry.undone == 1 ? Color.gray : Color.primary)
             .font(.caption)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
@@ -319,7 +319,7 @@ struct StockJournalView: View {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(role: .cancel,
                                action: { self.dismiss() },
-                               label: { Text(LocalizedStringKey("str.close")) })
+                               label: { Text("Close") })
                     }
                 })
         }
@@ -342,7 +342,7 @@ struct StockJournalView: View {
         }
         .navigationTitle(LocalizedStringKey("str.stock.journal"))
         .searchable(text: $searchString,
-                    prompt: LocalizedStringKey("str.search"))
+                    prompt: "Search")
         .refreshable(action: {
             await updateData()
         })

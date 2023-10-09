@@ -42,16 +42,21 @@ struct AmountSelectionView: View {
         return factoredAmount == 1 ? stockQuantityUnit?.name : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name
     }
     
-    
     var body: some View {
-        Section(header: Text(LocalizedStringKey("str.stock.product.amount")).font(.headline)) {
+        Section(header: Text("Amount").font(.headline)) {
             VStack(alignment: .leading) {
-                MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", amountStep: 1.0, amountName: currentQuantityUnitName, systemImage: MySymbols.amount)
+                MyDoubleStepper(
+                    amount: $amount,
+                    description: "Amount",
+                    amountStep: 1.0,
+                    amountName: currentQuantityUnitName,
+                    systemImage: MySymbols.amount
+                )
             }
             
             VStack(alignment: .leading) {
                 Picker(selection: $quantityUnitID,
-                       label: Label(LocalizedStringKey("str.stock.product.quantityUnit"), systemImage: MySymbols.quantityUnit).foregroundColor(.primary),
+                       label: Label("Quantity unit", systemImage: MySymbols.quantityUnit).foregroundStyle(.primary),
                        content: {
                     Text("").tag(nil as Int?)
                     if let stockQU = grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
@@ -64,9 +69,9 @@ struct AmountSelectionView: View {
                 })
                 .disabled(quantityUnitConversions.isEmpty)
                 if quantityUnitID == nil {
-                    Text(LocalizedStringKey("str.stock.product.quantityUnit.required"))
+                    Text("A quantity unit is required")
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
         }

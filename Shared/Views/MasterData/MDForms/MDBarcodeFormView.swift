@@ -112,7 +112,7 @@ struct MDBarcodeFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewBarcode {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }
@@ -143,7 +143,7 @@ struct MDBarcodeFormView: View {
                     Spacer()
                     Text(LocalizedStringKey("str.md.barcode.for \(product?.name ?? "PRODUCT")"))
                         .font(.title2)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
             }
 #endif
@@ -206,7 +206,7 @@ struct MDBarcodeFormView: View {
                 }).disabled(true)
             }
             
-            Picker(selection: $storeID, label: Label(LocalizedStringKey("str.md.barcode.store"), systemImage: MySymbols.store).foregroundColor(.primary), content: {
+            Picker(selection: $storeID, label: Label(LocalizedStringKey("str.md.barcode.store"), systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
@@ -217,7 +217,7 @@ struct MDBarcodeFormView: View {
             
 #if os(macOS)
             HStack{
-                Button(LocalizedStringKey("str.cancel")) {
+                Button("Cancel") {
                     if isNewBarcode{
                         finishForm()
                     } else {

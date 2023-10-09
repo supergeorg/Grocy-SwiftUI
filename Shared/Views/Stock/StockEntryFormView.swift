@@ -108,9 +108,9 @@ struct StockEntryFormView: View {
                         .disabled(productDoesntSpoil)
                 }
                 Text(getRelativeDateAsText(bestBeforeDate, localizationKey: localizationKey) ?? "")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .italic()
-                MyToggle(isOn: $productDoesntSpoil, description: "str.stock.buy.product.doesntSpoil", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
+                MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
             MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnitName, systemImage: MySymbols.amount)
@@ -118,7 +118,7 @@ struct StockEntryFormView: View {
             MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
             Picker(selection: $storeID,
-                   label: Label(LocalizedStringKey("str.stock.buy.product.store"), systemImage: MySymbols.store).foregroundColor(.primary),
+                   label: Label(LocalizedStringKey("str.stock.buy.product.store"), systemImage: MySymbols.store).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
@@ -127,7 +127,7 @@ struct StockEntryFormView: View {
             })
             
             Picker(selection: $locationID,
-                   label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundColor(.primary),
+                   label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in

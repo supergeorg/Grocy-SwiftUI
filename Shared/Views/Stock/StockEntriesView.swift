@@ -18,17 +18,17 @@ struct StockEntryRowView: View {
     var productID: Int
     
     @Binding var stockEntries: StockEntries
-    @State var toastType: ToastType? = nil
+    
     
     var backgroundColor: Color {
         if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
-            return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
+            return Color(.GrocyColors.grocyYellowBackground)
         }
         if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
+            return Color(.GrocyColors.grocyGrayBackground)
         }
         if (dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-            return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
+            return Color(.GrocyColors.grocyRedBackground)
         }
         return colorScheme == .light ? Color.white : Color.black
     }
@@ -92,7 +92,7 @@ struct StockEntryRowView: View {
                 if stockEntry.bestBeforeDate == getNeverOverdueDate() {
                     Text(LocalizedStringKey("str.stock.entries.dueDate \("")"))
                     +
-                    Text(LocalizedStringKey("str.stock.buy.product.doesntSpoil"))
+                    Text("Never overdue")
                         .italic()
                 } else {
                     Text(LocalizedStringKey("str.stock.entries.dueDate \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")"))
@@ -131,13 +131,13 @@ struct StockEntryRowView: View {
                 Button(action: { Task { await openEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
                 })
-                .tint(Color.grocyBlue)
+                .tint(Color(.GrocyColors.grocyBlue))
                 .help(LocalizedStringKey("str.stock.entry.open"))
                 .disabled(stockEntry.stockEntryOpen)
                 Button(action: { Task { await consumeEntry() } }, label: {
                     Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
                 })
-                .tint(Color.grocyDelete)
+                .tint(Color(.GrocyColors.grocyDelete))
                 .help(LocalizedStringKey("str.stock.entry.consume"))
 #endif
             }
@@ -146,7 +146,7 @@ struct StockEntryRowView: View {
             Button(action: { Task { await openEntry() } }, label: {
                 Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
             })
-            .tint(Color.grocyBlue)
+            .tint(Color(.GrocyColors.grocyBlue))
             .help(LocalizedStringKey("str.stock.entry.open"))
             .disabled(stockEntry.stockEntryOpen)
         })
@@ -154,12 +154,12 @@ struct StockEntryRowView: View {
             Button(action: { Task { await consumeEntry() } }, label: {
                 Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
             })
-            .tint(Color.grocyDelete)
+            .tint(Color(.GrocyColors.grocyDelete))
             .help(LocalizedStringKey("str.stock.entry.consume"))
         })
 #if os(macOS)
         .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-        .foregroundColor(colorScheme == .light ? Color.black : Color.white)
+        .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
         .padding(.horizontal)
 #else
         .listRowBackground(backgroundColor)
@@ -174,8 +174,6 @@ struct StockEntriesView: View {
     
 #if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
-#elseif os(macOS)
-    @Binding var activeSheet: StockInteractionPopover?
 #endif
     
     @State private var selectedStockElement: StockElement? = nil

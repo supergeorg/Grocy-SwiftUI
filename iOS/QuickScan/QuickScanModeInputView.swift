@@ -124,7 +124,7 @@ struct QuickScanModeInputView: View {
                             VStack(alignment: .leading) {
                                 Text(product.name).font(.title)
                                 if let amount = stockElement?.amount {
-                                    Text(LocalizedStringKey("str.quickScan.input.info.stockAmount \("\(amount.formattedAmount) \(getQUString(amount: amount))")"))
+                                    Text("Stock amount: \(amount.formattedAmount) \(getQUString(amount: amount))")
                                 }
                             }
                         }
@@ -161,7 +161,7 @@ struct QuickScanModeInputView: View {
                         )
                     }
                 } else {
-                    Text(LocalizedStringKey("str.md.products.empty"))
+                    Text("No products found.")
                 }
             }
             .onChange(of: actionFinished) {
@@ -171,7 +171,7 @@ struct QuickScanModeInputView: View {
             }
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
-                    Button(LocalizedStringKey("str.cancel")) {
+                    Button("Cancel") {
                         self.dismiss()
                     }
                     .keyboardShortcut(.cancelAction)

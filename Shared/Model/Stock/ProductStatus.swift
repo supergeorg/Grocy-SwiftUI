@@ -20,13 +20,13 @@ enum ProductStatus: String {
         case .all:
             return "no description"
         case .expiringSoon:
-            return amount == 1 ? LocalizedStringKey("str.stock.info.1expiringSoon \(expiringDays ?? 5)") : LocalizedStringKey("str.stock.info.expiringSoon \(amount) \(expiringDays ?? 5)")
+            return LocalizedStringKey("str.stock.info.expiringSoon \(amount) \(expiringDays ?? 5)")
         case .overdue:
-            return amount == 1 ? LocalizedStringKey("str.stock.info.1overdue") : LocalizedStringKey("str.stock.info.overdue \(amount)")
+            return LocalizedStringKey("str.stock.info.overdue \(amount)")
         case .expired:
-            return amount == 1 ? LocalizedStringKey("str.stock.info.1expired") : LocalizedStringKey("str.stock.info.expired \(amount)")
+            return LocalizedStringKey("str.stock.info.expired \(amount)")
         case .belowMinStock:
-            return amount == 1 ? LocalizedStringKey("str.stock.info.1belowMinStock") : LocalizedStringKey("str.stock.info.belowMinStock \(amount)")
+            return LocalizedStringKey("str.stock.info.belowMinStock \(amount)")
         }
     }
 

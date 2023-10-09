@@ -32,7 +32,7 @@ struct LoginInfoView: View {
                             AboutView()
                                 .toolbar(content: {
                                     ToolbarItem(placement: .cancellationAction, content: {
-                                        Button(LocalizedStringKey("str.close"))
+                                        Button("Close")
                                         { showAbout = false }})
                                 })
                         }
@@ -41,7 +41,7 @@ struct LoginInfoView: View {
                             .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
-                                    Button(LocalizedStringKey("str.close"))
+                                    Button("Close")
                                     { showAbout = false }})
                             })
 #endif
@@ -61,7 +61,7 @@ struct LoginInfoView: View {
                             SettingsView()
                                 .toolbar(content: {
                                     ToolbarItem(placement: .cancellationAction, content: {
-                                        Button(LocalizedStringKey("str.close"))
+                                        Button("Close")
                                         { showSettings = false }})
                                 })
                         }
@@ -70,13 +70,13 @@ struct LoginInfoView: View {
                             .padding()
                             .toolbar(content: {
                                 ToolbarItem(placement: .cancellationAction, content: {
-                                    Button(LocalizedStringKey("str.close"))
+                                    Button("Close")
                                     { showSettings = false }})
                             })
 #endif
                     })
             }
-            .foregroundColor(.primary)
+            .foregroundStyle(.primary)
         }
     }
 }
@@ -343,7 +343,7 @@ struct LoginStatusView: View {
                         .task({
                             await tryLogin()
                         })
-                    Button(LocalizedStringKey("str.cancel"), action: {
+                    Button("Cancel", action: {
                         grocyVM.cancelAllURLSessionTasks()
                     })
                     .buttonStyle(BorderButtonStyle())

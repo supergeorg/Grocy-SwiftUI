@@ -22,7 +22,7 @@ struct MDProductRowView: View {
             VStack(alignment: .leading) {
                 Text(product.name)
                     .font(.title)
-                    .foregroundColor(product.active ? .primary : .gray)
+                    .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
                     if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
                         Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
@@ -154,13 +154,13 @@ struct MDProductsView: View {
                 await updateData()
             }
         }
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default, value: filteredProducts.count)
         .alert(LocalizedStringKey("str.md.product.delete.confirm"), isPresented: $showDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button("Cancel", role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productToDelete?.id {
                     Task {

@@ -101,7 +101,7 @@ struct MDProductGroupFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewProductGroup {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }

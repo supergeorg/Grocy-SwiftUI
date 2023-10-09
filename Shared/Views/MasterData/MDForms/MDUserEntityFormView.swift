@@ -104,7 +104,7 @@ struct MDUserEntityFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserEntity {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }

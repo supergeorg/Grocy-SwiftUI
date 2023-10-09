@@ -114,7 +114,7 @@ struct OpenFoodFactsFillProductView: View {
                 Button(action: {
                     offVM.updateBarcode(barcode: scanBarcode)
                 }, label: {
-                    Text(LocalizedStringKey("str.search"))
+                    Text("Search")
                 })
             }
 #endif
@@ -139,15 +139,15 @@ struct OpenFoodFactsFillProductView: View {
                         HStack{
                             Image(systemName: "tag")
                             VStack(alignment: .leading){
-                                Text(LocalizedStringKey("str.md.product.name"))
+                                Text("Product name")
                                 if selectedProductName.isEmpty {
                                     Text(LocalizedStringKey("str.md.product.name.required"))
                                         .font(.caption)
-                                        .foregroundColor(Color.red)
+                                        .foregroundStyle(Color.red)
                                 } else if !isNameCorrect {
                                     Text("str.md.product.name.exists")
                                         .font(.caption)
-                                        .foregroundColor(Color.red)
+                                        .foregroundStyle(Color.red)
                                 }
                             }
                         }
@@ -158,12 +158,12 @@ struct OpenFoodFactsFillProductView: View {
                 }
             } else if let errorMessage = offVM.errorMessage {
                 Text("Error: \(errorMessage)")
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
             }
 #if os(macOS)
             if !selectedProductName.isEmpty {
                 Button(action: confirmData, label: {
-                    Label(LocalizedStringKey("str.confirm"), systemImage: MySymbols.save)
+                    Label("Confirm", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isNameCorrect || selectedProductName.isEmpty)
@@ -175,12 +175,12 @@ struct OpenFoodFactsFillProductView: View {
 #if os(iOS)
         .toolbar(content: {
             ToolbarItem(placement: .cancellationAction) {
-                Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                Button("Cancel", role: .cancel, action: finishForm)
                     .keyboardShortcut(.cancelAction)
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: confirmData, label: {
-                    Label(LocalizedStringKey("str.confirm"), systemImage: MySymbols.save)
+                    Label("Confirm", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isNameCorrect || selectedProductName.isEmpty)

@@ -127,7 +127,7 @@ struct InventoryProductView: View {
             .toolbar(content: {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction, content: {
-                    Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
+                    Button("Cancel", action: { self.dismiss() })
                 })
 #endif
             })
@@ -165,7 +165,7 @@ struct InventoryProductView: View {
                 } else {
                     Text(LocalizedStringKey("str.stock.inventory.product.amount.equal"))
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             
@@ -182,14 +182,14 @@ struct InventoryProductView: View {
             MyDoubleStepperOptional(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
             Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
-                Picker(selection: $storeID, label: Label(LocalizedStringKey("str.stock.inventory.product.store"), systemImage: MySymbols.store).foregroundColor(.primary), content: {
+                Picker(selection: $storeID, label: Label(LocalizedStringKey("str.stock.inventory.product.store"), systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
                         Text(store.name).tag(store.id as Int?)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: MySymbols.location).foregroundColor(.primary), content: {
+                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: MySymbols.location).foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
@@ -218,8 +218,8 @@ struct InventoryProductView: View {
                 ProgressView().progressViewStyle(CircularProgressViewStyle())
             } else {
                 Button(action: resetForm, label: {
-                    Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                        .help(LocalizedStringKey("str.clear"))
+                    Label("Clear", systemImage: MySymbols.cancel)
+                        .help("Clear")
                 })
                 .keyboardShortcut("r", modifiers: [.command])
             }

@@ -131,7 +131,7 @@ struct MDQuantityUnitFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewQuantityUnit {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }
@@ -219,7 +219,7 @@ struct MDQuantityUnitFormView: View {
 #endif
                 })
                 .alert(LocalizedStringKey("str.delete"), isPresented: $showConversionDeleteAlert, actions: {
-                    Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+                    Button("Cancel", role: .cancel) { }
                     Button(LocalizedStringKey("str.delete"), role: .destructive) {
                         if let deleteID = conversionToDelete?.id {
                             Task {

@@ -15,8 +15,6 @@ struct StockTableRowActionsView: View {
     @Binding var selectedStockElement: StockElement?
 #if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
-#elseif os(macOS)
-    @Binding var activeSheet: StockInteractionPopover?
 #endif
     
     var shownActions: [ShownAction] = []
@@ -73,21 +71,21 @@ struct StockTableRowActionsView: View {
             Button(action: { Task { await consumeQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.consume)
             })
-            .tint(Color.grocyGreen)
+            .tint(Color(.GrocyColors.grocyGreen))
             .help(LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
         if shownActions.contains(.consumeAll) {
             Button(action: { Task { await consumeAll() } }, label: {
                 Label(LocalizedStringKey("str.stock.tbl.action.all"), systemImage: MySymbols.consume)
             })
-            .tint(Color.grocyDelete)
+            .tint(Color(.GrocyColors.grocyDelete))
             .help(LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
         }
         if shownActions.contains(.openQA) {
             Button(action: { Task { await openQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.open)
             })
-            .tint(Color.grocyBlue)
+            .tint(Color(.GrocyColors.grocyBlue))
             .help(LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
     }

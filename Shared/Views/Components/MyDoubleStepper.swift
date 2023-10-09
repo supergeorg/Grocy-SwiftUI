@@ -73,15 +73,15 @@ struct MyDoubleStepper: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount {
-                Text(LocalizedStringKey("str.double.invalid \(smallestValidAmount.formattedAmount) \(Double(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4).formattedAmount)"))
+                Text("str.double.invalid \(smallestValidAmount, specifier: "%.0f") \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)")
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, amount > maxAmount, let errorMessageMax = errorMessageMax {
                 Text(LocalizedStringKey(errorMessageMax))
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -173,15 +173,15 @@ struct MyDoubleStepperOptional: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount {
-                Text(LocalizedStringKey("str.double.invalid \(smallestValidAmount.formattedAmount) \(Double(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4).formattedAmount)"))
+                Text("str.double.invalid \(smallestValidAmount.formattedAmount) \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)")
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
                 Text(LocalizedStringKey(errorMessageMax))
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

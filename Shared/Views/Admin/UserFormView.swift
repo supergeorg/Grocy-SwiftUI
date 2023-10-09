@@ -86,7 +86,7 @@ struct UserFormView: View {
             .navigationTitle(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(LocalizedStringKey("str.cancel")) {
+                    Button("Cancel") {
                         finishForm()
                     }
                 }
@@ -125,7 +125,7 @@ struct UserFormView: View {
 #if os(macOS)
             Divider()
             HStack{
-                Button(LocalizedStringKey("str.cancel")) {
+                Button("Cancel") {
                     NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
                 }
                 .keyboardShortcut(.cancelAction)

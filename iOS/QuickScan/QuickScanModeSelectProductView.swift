@@ -56,7 +56,7 @@ struct QuickScanModeSelectProductView: View {
             )
             do {
                 _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                grocyVM.postLog("Add barcode successful.)", type: .info)
+                grocyVM.postLog("Add barcode successful.", type: .info)
                 await grocyVM.requestData(objects: [.product_barcodes])
                 newRecognizedBarcode = newBarcode
                 finishForm()
@@ -72,14 +72,14 @@ struct QuickScanModeSelectProductView: View {
                 Section {
                     Text(barcode ?? "Barcode error").font(.title)
                 }
-                ProductField(productID: $productID, description: "str.quickScan.add.product")
+                ProductField(productID: $productID, description: "Product for this barcode")
                 
                 if let barcode = barcode {
                     Section("Open Food Facts") {
                         NavigationLink(
                             destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), isPopup: false, mdBarcodeReturn: $newProductBarcode),
                             label: {
-                                Label(LocalizedStringKey("str.quickScan.add.product.new.openfoodfacts"), systemImage: MySymbols.barcodeScan)
+                                Label("Create new product with Open Food Facts", systemImage: MySymbols.barcodeScan)
                             }
                         )
                         .onChange(of: newProductBarcode?.id) {
@@ -93,14 +93,14 @@ struct QuickScanModeSelectProductView: View {
             }
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
-                    Button(LocalizedStringKey("str.cancel")) {
+                    Button("Cancel") {
                         finishForm()
                     }
                     .keyboardShortcut(.cancelAction)
                 })
                 ToolbarItem(placement: .automatic, content: {
                     Button(action: { Task { await addBarcodeForProduct() } }, label: {
-                        Label(LocalizedStringKey("str.quickScan.add.product.add"), systemImage: "plus")
+                        Label("Add barcode", systemImage: "plus")
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(productID == nil)

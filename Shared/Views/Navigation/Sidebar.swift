@@ -16,56 +16,56 @@ struct Sidebar: View {
         List(selection: $selection) {
 #if os(iOS)
             NavigationLink(value: NavigationItem.quickScan) {
-                Label("str.nav.quickScan", systemImage: MySymbols.barcodeScan)
+                Label("Quick-Scan", systemImage: MySymbols.barcodeScan)
             }
 #endif
             NavigationLink(value: NavigationItem.stockOverview) {
-                Label("str.nav.stockOverview", systemImage: MySymbols.stockOverview)
+                Label("Stock overview", systemImage: MySymbols.stockOverview)
             }
             NavigationLink(value: NavigationItem.shoppingList) {
-                Label("str.nav.shoppingList", systemImage: MySymbols.shoppingList)
+                Label("Shopping list", systemImage: MySymbols.shoppingList)
             }
             
             Divider()
             
             NavigationLink(value: NavigationItem.purchase) {
-                Label("str.nav.purchase", systemImage: MySymbols.purchase)
+                Label("Purchase", systemImage: MySymbols.purchase)
             }
             NavigationLink(value: NavigationItem.consume) {
-                Label("str.nav.consume", systemImage: MySymbols.consume)
+                Label("Consume", systemImage: MySymbols.consume)
             }
             NavigationLink(value: NavigationItem.transfer) {
-                Label("str.nav.transfer", systemImage: MySymbols.transfer)
+                Label("Transfer", systemImage: MySymbols.transfer)
             }
             NavigationLink(value: NavigationItem.inventory) {
-                Label("str.nav.inventory", systemImage: MySymbols.inventory)
+                Label("Inventory", systemImage: MySymbols.inventory)
             }
             
             Section(isExpanded: $isMasterDataSectionExpanded, content: {
                 NavigationLink(value: NavigationItem.mdProducts) {
-                    Label("str.nav.md.products", systemImage: MySymbols.product)
+                    Label("Products", systemImage: MySymbols.product)
                 }
                 NavigationLink(value: NavigationItem.mdLocations) {
-                    Label("str.nav.md.locations", systemImage: MySymbols.location)
+                    Label("Locations", systemImage: MySymbols.location)
                 }
                 NavigationLink(value: NavigationItem.mdStores) {
-                    Label("str.nav.md.stores", systemImage: MySymbols.store)
+                    Label("Stores", systemImage: MySymbols.store)
                 }
                 NavigationLink(value: NavigationItem.mdQuantityUnits) {
-                    Label("str.nav.md.quantityUnits", systemImage: MySymbols.quantityUnit)
+                    Label("Quantity units", systemImage: MySymbols.quantityUnit)
                 }
                 NavigationLink(value: NavigationItem.mdProductGroups) {
-                    Label("str.nav.md.productGroups", systemImage: MySymbols.productGroup)
+                    Label("Product groups", systemImage: MySymbols.productGroup)
                 }
             }, header: {
-                Label("str.nav.md", systemImage: MySymbols.masterData)
+                Label("Master data", systemImage: MySymbols.masterData)
             })
             
-#if os(iOS)
+//#if os(iOS)
             NavigationLink(value: NavigationItem.settings) {
-                Label("str.nav.settings", systemImage: MySymbols.settings)
+                Label("Settings", systemImage: MySymbols.settings)
             }
-#endif
+//#endif
         }
 #if os(iOS)
         .toolbar(content: {

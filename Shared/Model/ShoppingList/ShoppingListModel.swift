@@ -66,8 +66,6 @@ struct ShoppingListItem: Codable {
     }
 }
 
-typealias ShoppingList = [ShoppingListItem]
-
 // MARK: - ShoppingListAddItem
 
 struct ShoppingListItemAdd: Codable {

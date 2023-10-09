@@ -41,7 +41,7 @@ import WebKit
     var volatileStock: VolatileStock? = nil
     var stockJournal: StockJournal = []
     var shoppingListDescriptions: ShoppingListDescriptions = []
-    var shoppingList: ShoppingList = []
+    var shoppingList: [ShoppingListItem] = []
     var recipes: Recipes = []
     var recipeFulfillments: RecipeFulfilments = []
     
@@ -87,7 +87,6 @@ import WebKit
     
     init() {
         self.grocyApi = GrocyApi()
-        //        jsonEncoder.dateEncodingStrategy = .iso8601
         jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"

@@ -9,17 +9,6 @@ import SwiftUI
 
 enum QuickScanMode {
     case consume, markAsOpened, purchase
-    
-    func getDescription() -> LocalizedStringKey {
-        switch self {
-        case .consume:
-            return LocalizedStringKey("str.quickScan.consume")
-        case .markAsOpened:
-            return LocalizedStringKey("str.quickScan.markAsOpened")
-        case .purchase:
-            return LocalizedStringKey("str.quickScan.purchase")
-        }
-    }
 }
 
 enum QSActiveSheet: Identifiable {
@@ -123,20 +112,20 @@ struct QuickScanModeView: View {
             bodyContent
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.nav.quickScan"))
+                .navigationTitle("Quick-Scan")
         }
     }
     
     var modePicker: some View {
         HStack {
-            Picker(selection: $quickScanMode, label: Label(quickScanMode.getDescription(), systemImage: MySymbols.menuPick), content: {
-                Label(QuickScanMode.consume.getDescription(), systemImage: MySymbols.consume)
+            Picker(selection: $quickScanMode, label: Label("Quick-Scan Mode", systemImage: MySymbols.menuPick), content: {
+                Label("Consume", systemImage: MySymbols.consume)
                     .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.consume)
-                Label(QuickScanMode.markAsOpened.getDescription(), systemImage: MySymbols.open)
+                Label("Open", systemImage: MySymbols.open)
                     .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.markAsOpened)
-                Label(QuickScanMode.purchase.getDescription(), systemImage: MySymbols.purchase)
+                Label("Purchase", systemImage: MySymbols.purchase)
                     .labelStyle(.titleAndIcon)
                     .tag(QuickScanMode.purchase)
             })

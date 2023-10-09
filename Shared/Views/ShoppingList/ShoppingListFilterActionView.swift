@@ -8,32 +8,31 @@
 import SwiftUI
 
 private struct ShoppingListFilterItemView: View {
-    @Environment(\.colorScheme) var colorScheme
-    var num: Int
     @Binding var filteredStatus: ShoppingListStatus
+    
     var ownFilteredStatus: ShoppingListStatus
-    var normalColor: Color
-    var lightColor: Color
-    var darkColor: Color
-
+    var num: Int
+    var color: Color
+    var backgroundColor: Color
+    
     var body: some View {
         VStack(spacing: 0.0) {
             Divider()
                 .hidden()
                 .frame(height: 10.0)
-                .background(normalColor)
+                .background(color)
             HStack {
                 if filteredStatus == ownFilteredStatus {
                     Image(systemName: MySymbols.filter)
                 }
                 Text(ownFilteredStatus.getDescription(amount: num))
                     .bold()
-                    .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+                    .foregroundStyle(color)
             }
             .padding(.horizontal, 10.0)
             .padding(.top, 10.0)
             .padding(.bottom, 10.0)
-            .background(colorScheme == .light ? lightColor : darkColor)
+            .background(backgroundColor)
         }
         .fixedSize()
         .cornerRadius(5.0)
@@ -44,40 +43,37 @@ private struct ShoppingListFilterItemView: View {
                 filteredStatus = ShoppingListStatus.all
             }
         }
-        .animation(.default, value: filteredStatus)
     }
 }
 
 struct ShoppingListFilterActionView: View {
     @Binding var filteredStatus: ShoppingListStatus
-
+    
     var numBelowStock: Int
     var numUndone: Int
-
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 if numUndone > 0 {
                     // Undone items
                     ShoppingListFilterItemView(
-                        num: numUndone,
                         filteredStatus: $filteredStatus,
                         ownFilteredStatus: ShoppingListStatus.undone,
-                        normalColor: Color.grocyGray,
-                        lightColor: Color.grocyGrayLight,
-                        darkColor: Color.grocyGrayDark
+                        num: numUndone,
+                        color: Color(.GrocyColors.grocyGray),
+                        backgroundColor: Color(.GrocyColors.grocyGrayBackground)
                     )
                     .animation(.default, value: numUndone > 0)
                 }
                 if numBelowStock > 0 {
                     // Below stock
                     ShoppingListFilterItemView(
-                        num: numBelowStock,
                         filteredStatus: $filteredStatus,
                         ownFilteredStatus: ShoppingListStatus.belowMinStock,
-                        normalColor: Color.grocyBlue,
-                        lightColor: Color.grocyBlueLight,
-                        darkColor: Color.grocyBlueDark
+                        num: numBelowStock,
+                        color: Color(.GrocyColors.grocyBlue),
+                        backgroundColor: Color(.GrocyColors.grocyBlueBackground)
                     )
                     .animation(.default, value: numUndone > 0)
                 }
@@ -86,8 +82,6 @@ struct ShoppingListFilterActionView: View {
     }
 }
 
-struct ShoppingListFilterActionView_Previews: PreviewProvider {
-    static var previews: some View {
-        ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1, numUndone: 1)
-    }
+#Preview {
+    ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1, numUndone: 1)
 }

@@ -23,7 +23,7 @@ struct CodeTypeSelectionView: View {
     @AppStorage("enabledCodeUPCE") var enabledCodeUPCE: Bool = false
     
     var body: some View {
-        List() {
+        List {
             Group {
                 Toggle(CodeTypes.codeAztec.name, isOn: $enabledCodeAztec)
                 Toggle(CodeTypes.code128.name, isOn: $enabledCode128)
@@ -41,14 +41,10 @@ struct CodeTypeSelectionView: View {
                 Toggle(CodeTypes.upce.name, isOn: $enabledCodeUPCE)
             }
         }
-        .navigationTitle(LocalizedStringKey("str.settings.codeTypes"))
+        .navigationTitle("Barcode settings")
     }
 }
 
-struct CodeTypeSelectionView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView{
-            CodeTypeSelectionView()
-        }
-    }
+#Preview {
+    CodeTypeSelectionView()
 }

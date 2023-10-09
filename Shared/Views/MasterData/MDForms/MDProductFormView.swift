@@ -78,11 +78,11 @@ struct MDProductFormOFFView: View {
                             if name.isEmpty {
                                 Text(LocalizedStringKey("str.md.product.name.required"))
                                     .font(.caption)
-                                    .foregroundColor(Color.red)
+                                    .foregroundStyle(Color.red)
                             } else if !isNameCorrect {
                                 Text("str.md.product.name.exists")
                                     .font(.caption)
-                                    .foregroundColor(Color.red)
+                                    .foregroundStyle(Color.red)
                             }
                         }
                     }
@@ -321,7 +321,7 @@ struct MDProductFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewProduct || isPopup {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }
@@ -478,7 +478,7 @@ struct MDProductFormView: View {
             MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             // Product group
-            Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundColor(.primary), content: {
+            Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundStyle(.primary), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { grocyProductGroup in
                     Text(grocyProductGroup.name).tag(grocyProductGroup.id as Int?)

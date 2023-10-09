@@ -18,7 +18,7 @@ struct FilledButtonStyle: ButtonStyle {
                 .label
             Spacer()
         }
-        .foregroundColor(Color.white)
+        .foregroundStyle(Color.white)
         .padding(paddingAmount)
         .background(Color.accentColor)
         .cornerRadius(cornerRadiusValue)
@@ -39,7 +39,7 @@ struct BorderButtonStyle: ButtonStyle {
                 .label
             Spacer()
         }
-        .foregroundColor(Color.primary)
+        .foregroundStyle(Color.primary)
         .padding(paddingAmount)
         .background(colorScheme == .light ? Color.white : Color.black)
         .cornerRadius(cornerRadiusValue)

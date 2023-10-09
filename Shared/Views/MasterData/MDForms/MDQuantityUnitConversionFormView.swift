@@ -140,7 +140,7 @@ struct MDQuantityUnitConversionFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewQuantityUnitConversion {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }
@@ -179,7 +179,7 @@ struct MDQuantityUnitConversionFormView: View {
                     if checkConversionExists() {
                         Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
                             .font(.caption)
-                            .foregroundColor(Color.red)
+                            .foregroundStyle(Color.red)
                     }
                     if let quIDTo = quIDTo {
                         Text(LocalizedStringKey("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: quantityUnit)) \(getQUString(amount: factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo })))"))
@@ -201,7 +201,7 @@ struct MDQuantityUnitConversionFormView: View {
                         if checkReverseConversionExists() {
                             Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
                                 .font(.caption)
-                                .foregroundColor(Color.red)
+                                .foregroundStyle(Color.red)
                         }
                         if let quIDTo = quIDTo {
                             Text(LocalizedStringKey("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) \(getQUString(amount: (1 / factor), qu: quantityUnit))"))

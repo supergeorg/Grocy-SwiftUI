@@ -15,7 +15,7 @@ struct NewMDRowLabel: View {
             Image(systemName: MySymbols.new)
             Text(LocalizedStringKey(title))
         }
-        .foregroundColor(.primary)
+        .foregroundStyle(.primary)
         .font(.largeTitle)
         .padding(10)
     }

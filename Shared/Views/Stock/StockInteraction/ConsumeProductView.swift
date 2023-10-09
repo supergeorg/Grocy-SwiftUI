@@ -219,7 +219,7 @@ struct ConsumeProductView: View {
                 .toolbar(content: {
 #if os(iOS)
                     ToolbarItem(placement: .cancellationAction, content: {
-                        Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
+                        Button("Cancel", action: { self.dismiss() })
                     })
 #endif
                     ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
@@ -373,8 +373,8 @@ struct ConsumeProductView: View {
                     ProgressView().progressViewStyle(.circular)
                 } else {
                     Button(action: resetForm, label: {
-                        Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                            .help(LocalizedStringKey("str.clear"))
+                        Label("Clear", systemImage: MySymbols.cancel)
+                            .help("Clear")
                     })
                     .keyboardShortcut("r", modifiers: [.command])
                 }

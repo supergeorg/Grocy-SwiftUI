@@ -23,27 +23,28 @@ struct MyIntStepper: View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
                 Text(LocalizedStringKey(description))
-                if let helpTextU = helpText {
-                    FieldDescription(description: helpTextU)
+                if let helpText = helpText {
+                    FieldDescription(description: helpText)
                 }
             }
             HStack{
-                if systemImage != nil {
-                    Image(systemName: systemImage!)
+                if let systemImage = systemImage {
+                    Image(systemName: systemImage)
                 }
                 TextField("", value: $amount, formatter: NumberFormatter())
 #if os(macOS)
                     .frame(width: 90)
 #elseif os(iOS)
                     .keyboardType(.decimalPad)
+//                    .keyboardType(.numberPad)
 #endif
-                Stepper(LocalizedStringKey(amountName ?? ""), value: $amount, in: ((minAmount ?? 0)...(Int.max - 1)), step: 1)
+                Stepper(amountName ?? "", value: $amount, in: ((minAmount ?? 0)...(Int.max - 1)), step: 1)
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -106,7 +107,7 @@ struct MyIntStepperOptional: View {
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(LocalizedStringKey(errorMessage))
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

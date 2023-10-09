@@ -77,7 +77,7 @@ struct OnboardingView: View {
                                 .fill(Color.green)
                         }
                     )
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
 #endif                
             })
                 .padding()

@@ -22,8 +22,6 @@ struct StockTableRow: View {
     @Binding var selectedStockElement: StockElement?
 #if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
-#elseif os(macOS)
-    @Binding var activeSheet: StockInteractionPopover?
 #endif
     
     
@@ -38,16 +36,16 @@ struct StockTableRow: View {
     
     var backgroundColor: Color {
         if grocyVM.volatileStock?.dueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-            return colorScheme == .light ? Color.grocyYellowLight : Color.grocyYellowDark
+            return Color(.GrocyColors.grocyYellowBackground)
         }
         if grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-            return colorScheme == .light ? Color.grocyRedLight : Color.grocyRedDark
+            return Color(.GrocyColors.grocyRedBackground)
         }
         if grocyVM.volatileStock?.overdueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-            return colorScheme == .light ? Color.grocyGrayLight : Color.grocyGrayDark
+            return Color(.GrocyColors.grocyGrayBackground)
         }
         if grocyVM.volatileStock?.missingProducts.map({$0.id}).contains(stockElement.product.id) ?? false {
-            return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
+            return Color(.GrocyColors.grocyBlueBackground)
         }
 #if os(iOS)
         return colorScheme == .light ? Color.white : Color.black
@@ -60,7 +58,7 @@ struct StockTableRow: View {
         NavigationLink(destination: {
 #if os(macOS)
             NavigationView {
-                StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
+                StockEntriesView(stockElement: stockElement)
             }
 #else
             StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
@@ -88,7 +86,7 @@ struct StockTableRow: View {
             })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-            .foregroundColor(colorScheme == .light ? Color.black : Color.white)
+            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
 #else
             .listRowBackground(backgroundColor)
 #endif
@@ -143,10 +141,10 @@ struct StockTableRow: View {
                 }
                 if stockElement.amount != stockElement.amountAggregated {
                     Text("Σ \(stockElement.amountAggregated.formattedAmount) \(getQUString(amount: stockElement.amountAggregated))")
-                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                        .foregroundStyle(Color(.GrocyColors.grocyGray))
                     if stockElement.amountOpenedAggregated > 0 {
                         Text(LocalizedStringKey("str.stock.info.opened \(stockElement.amountOpenedAggregated.formattedAmount)"))
-                            .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                            .foregroundStyle(Color(.GrocyColors.grocyGray))
                             .font(.caption)
                             .italic()
                     }
@@ -154,14 +152,14 @@ struct StockTableRow: View {
                 if grocyVM.userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
                    grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
                     Image(systemName: MySymbols.shoppingList)
-                        .foregroundColor(colorScheme == .light ? Color.grocyGray : Color.grocyGrayLight)
+                        .foregroundStyle(Color(.GrocyColors.grocyGray))
                         .help(LocalizedStringKey("str.stock.info.onShoppingList"))
                 }
             }
             if let dueDate = stockElement.bestBeforeDate {
                 HStack {
                     if dueDate == getNeverOverdueDate() {
-                        Text(LocalizedStringKey("str.stock.buy.product.doesntSpoil"))
+                        Text("Never overdue")
                     } else {
                         Text(formatDateAsString(dueDate, showTime: false, localizationKey: localizationKey) ?? "")
                         Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")

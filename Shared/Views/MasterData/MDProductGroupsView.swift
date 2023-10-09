@@ -135,13 +135,13 @@ struct MDProductGroupsView: View {
                 await updateData()
             }
         }
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default, value: filteredProductGroups.count)
         .alert(LocalizedStringKey("str.md.productGroup.delete.confirm"), isPresented: $showDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button("Cancel", role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = productGroupToDelete?.id {
                     Task {

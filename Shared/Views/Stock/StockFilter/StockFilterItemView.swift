@@ -34,16 +34,16 @@ struct StockFilterItemView: View {
                         .bold()
                     Image(systemName: ownFilteredStatus.getIconName())
                 }
-                .foregroundColor(color)
+                .foregroundStyle(color)
             } else {
                 Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                     .bold()
-                    .foregroundColor(color)
+                    .foregroundStyle(color)
             }
 #elseif os(macOS)
             Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                 .bold()
-                .foregroundColor(colorScheme == .light ? darkColor : lightColor)
+                .foregroundStyle(color)
 #endif
         }
         .padding(.horizontal, 10.0)
@@ -53,7 +53,7 @@ struct StockFilterItemView: View {
         .overlay(alignment: .top) {
             Rectangle()
                 .frame(width: nil, height: 10.0, alignment: .top)
-                .foregroundColor(color)
+                .foregroundStyle(color)
         }
         .onTapGesture {
             if filteredStatus != ownFilteredStatus {

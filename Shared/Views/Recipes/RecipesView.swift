@@ -49,7 +49,7 @@ struct RecipesView: View {
                     await updateData()
                 }
             }
-            .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+            .searchable(text: $searchString, prompt: "Search")
             .animation(.default, value: recipes.count)
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {

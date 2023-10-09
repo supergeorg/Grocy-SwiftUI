@@ -105,7 +105,7 @@ struct MDProductPictureFormView: View {
                             }
                         }, label: {
                             Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                         })
                         .disabled(isProcessing)
                     }

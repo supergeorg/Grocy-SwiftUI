@@ -35,7 +35,7 @@ struct RowInteractionButton: View {
         .frame(height: fontSizeValue)
         .padding(paddingValue)
         .background(backgroundColor)
-        .foregroundColor(foregroundColor ?? Color.white)
+        .foregroundStyle(foregroundColor ?? Color.white)
         .cornerRadius(cornerRadiusValue)
         .help(helpString ?? "")
     }
@@ -46,8 +46,8 @@ struct GreenInteractionButtonStyle: ButtonStyle {
         configuration.label
             .frame(height: 15)
             .padding(7)
-            .background(Color.grocyGreen)
-            .foregroundColor(.white)
+            .background(Color(.GrocyColors.grocyGreen))
+            .foregroundStyle(.white)
             .cornerRadius(3)
             .clipShape(RoundedRectangle(cornerRadius: 3))
     }

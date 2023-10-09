@@ -12,6 +12,8 @@ struct ShoppingListFormView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State private var isProcessing: Bool = false
+    
     @State private var name: String = ""
     
     var isNewShoppingListDescription: Bool
@@ -20,14 +22,12 @@ struct ShoppingListFormView: View {
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundShoppingListDescription = grocyVM.shoppingListDescriptions.first(where: { $0.name == name })
-        return isNewShoppingListDescription ? !(name.isEmpty || foundShoppingListDescription != nil) : !(name.isEmpty || (foundShoppingListDescription != nil && foundShoppingListDescription!.id != shoppingListDescription!.id))
+        return shoppingListDescription == nil ? !(name.isEmpty || foundShoppingListDescription != nil) : !(name.isEmpty || (foundShoppingListDescription != nil && foundShoppingListDescription!.id != shoppingListDescription!.id))
     }
-    
-    @State private var showFailToast: Bool = false
     
     private func finishForm() {
 #if os(iOS)
-        dismiss()
+        self.dismiss()
 #elseif os(macOS)
         NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
 #endif
@@ -38,48 +38,41 @@ struct ShoppingListFormView: View {
     }
     
     func saveShoppingList() async {
-        if isNewShoppingListDescription {
-            let newShoppingList = ShoppingListDescription(
-                id: grocyVM.findNextID(.shopping_lists),
-                name: name,
-                shoppingListDescriptionDescription: nil,
-                rowCreatedTimestamp: Date().iso8601withFractionalSeconds
-            )
+        let id = shoppingListDescription == nil ? grocyVM.findNextID(.shopping_lists) : shoppingListDescription!.id
+        let timeStamp = shoppingListDescription == nil ? Date().iso8601withFractionalSeconds : shoppingListDescription!.rowCreatedTimestamp
+        let shoppingListPOST = ShoppingListDescription(
+            id: id,
+            name: name,
+            rowCreatedTimestamp: timeStamp
+        )
+        isProcessing = true
+        if shoppingListDescription == nil {
             do {
                 _ = try await grocyVM.postMDObject(
                     object: .shopping_lists,
-                    content: newShoppingList
+                    content: shoppingListPOST
                 )
                 grocyVM.postLog("Shopping list save successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
-                showFailToast = true
             }
         } else {
-            if let shoppingListDescription = shoppingListDescription {
-                let editedShoppingList = ShoppingListDescription(
-                    id: shoppingListDescription.id,
-                    name: name,
-                    shoppingListDescriptionDescription: shoppingListDescription.shoppingListDescriptionDescription,
-                    rowCreatedTimestamp: shoppingListDescription.rowCreatedTimestamp
+            do {
+                try await grocyVM.putMDObjectWithID(
+                    object: .shopping_lists,
+                    id: id,
+                    content: shoppingListPOST
                 )
-                do {
-                    try await grocyVM.putMDObjectWithID(
-                        object: .shopping_lists,
-                        id: shoppingListDescription.id,
-                        content: editedShoppingList
-                    )
-                    grocyVM.postLog("Shopping list edit successful.", type: .info)
-                    await updateData()
-                    finishForm()
-                } catch {
-                    grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
-                    showFailToast = true
-                }
+                grocyVM.postLog("Shopping list edit successful.", type: .info)
+                await updateData()
+                finishForm()
+            } catch {
+                grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
             }
         }
+        isProcessing = false
     }
     
     private func resetForm() {
@@ -88,70 +81,61 @@ struct ShoppingListFormView: View {
     }
     
     var body: some View {
-#if os(macOS)
-        content
-#elseif os(iOS)
-        NavigationView {
-            content
-                .navigationTitle(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit"))
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(LocalizedStringKey("str.cancel")) {
-                            finishForm()
-                        }
-                        .keyboardShortcut(.cancelAction)
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(LocalizedStringKey("str.save")) {
-                            Task {
-                                await saveShoppingList()
-                            }
-                        }
-                        .keyboardShortcut(.defaultAction)
-                    }
-                }
-        }
-#endif
-    }
-    
-    var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewShoppingListDescription ? LocalizedStringKey("str.shL.form.new") : LocalizedStringKey("str.shL.form.edit")).font(.headline)
+            Text(isNewShoppingListDescription ? "Create shopping list" : "Edit shopping list")
+                .font(.headline)
 #endif
             MyTextField(
                 textToEdit: $name,
-                description: "str.shL.form.name",
+                description: "Name",
                 isCorrect: $isNameCorrect,
-                leadingIcon: "rectangle.and.pencil.and.ellipsis",
-                emptyMessage: "str.shL.form.name.required",
-                errorMessage: "str.shL.form.name.exists"
+                leadingIcon: MySymbols.name,
+                emptyMessage: "A name is required",
+                errorMessage: "Name already exists"
             )
             .onChange(of: name) {
                 isNameCorrect = checkNameCorrect()
             }
 #if os(macOS)
             HStack {
-                Button(LocalizedStringKey("str.cancel")) {
+                Button("Cancel") {
                     finishForm()
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button(LocalizedStringKey("str.save")) {
+                Button("Save") {
                     Task {
                         await saveShoppingList()
                     }
                 }
+                .disabled(isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
 #endif
         }
         .onAppear(perform: resetForm)
+        .navigationTitle(shoppingListDescription == nil ? "Create shopping list" : "Edit shopping list")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    finishForm()
+                }
+                .keyboardShortcut(.cancelAction)
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button(LocalizedStringKey("Save")) {
+                    Task {
+                        await saveShoppingList()
+                    }
+                }
+                .disabled(isProcessing)
+                .keyboardShortcut(.defaultAction)
+            }
+        }
     }
 }
 
-struct ShoppingListFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        ShoppingListFormView(isNewShoppingListDescription: true)
-    }
+#Preview {
+    ShoppingListFormView(isNewShoppingListDescription: true)
 }

@@ -168,7 +168,6 @@ struct ServerSettingsObjectPicker: View {
     
     let settingKey: String
     let description: String
-    var descriptionInfo: String? = nil
     var icon: String? = nil
     let objects: Objects
     
@@ -218,7 +217,12 @@ struct ServerSettingsObjectPicker: View {
                 }
             }
         }, label: {
-            MyLabelWithSubtitle(title: description, subTitle: descriptionInfo, systemImage: icon, isProblem: false, isSubtitleProblem: false, hideSubtitle: false)
+            if let icon = icon {
+                Label(description, systemImage: icon)
+                    .foregroundStyle(.primary)
+            } else {
+                Text(description)
+            }
         })
         .task {
             if isFirstShown {

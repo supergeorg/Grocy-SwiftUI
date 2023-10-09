@@ -171,7 +171,7 @@ class ReminderStore {
     private func createCalendar() {
         let calendar = EKCalendar(for: .reminder, eventStore: ekStore)
         calendar.title = "Grocy Mobile"
-        calendar.cgColor = Color.grocyBlue.cgColor
+        calendar.cgColor = Color(.GrocyColors.grocyBlue).cgColor
         guard let source = bestPossibleEKSource() else {
             return
         }

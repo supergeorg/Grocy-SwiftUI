@@ -67,7 +67,7 @@ struct SettingsAppView: View {
             NavigationLink(
                 destination: CodeTypeSelectionView(),
                 label: {
-                    Label(LocalizedStringKey("Barcode settings"), systemImage: MySymbols.barcodeScan)
+                    Label("Barcode settings", systemImage: MySymbols.barcodeScan)
                         .foregroundStyle(.primary)
                 })
 #endif

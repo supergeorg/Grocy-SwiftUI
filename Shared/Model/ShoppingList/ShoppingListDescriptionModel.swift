@@ -12,12 +12,10 @@ import Foundation
 struct ShoppingListDescription: Codable {
     let id: Int
     let name: String
-    let shoppingListDescriptionDescription: String?
     let rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id, name
-        case shoppingListDescriptionDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
@@ -30,7 +28,6 @@ struct ShoppingListDescription: Codable {
                 self.id = Int(try container.decode(String.self, forKey: .id))!
             }
             self.name = try container.decode(String.self, forKey: .name)
-            self.shoppingListDescriptionDescription = try? container.decodeIfPresent(String.self, forKey: .shoppingListDescriptionDescription) ?? nil
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
@@ -40,12 +37,10 @@ struct ShoppingListDescription: Codable {
     init(
         id: Int,
         name: String,
-        shoppingListDescriptionDescription: String? = nil,
         rowCreatedTimestamp: String
     ) {
         self.id = id
         self.name = name
-        self.shoppingListDescriptionDescription = shoppingListDescriptionDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 }

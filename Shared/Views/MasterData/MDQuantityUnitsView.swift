@@ -20,7 +20,7 @@ struct MDQuantityUnitRowView: View {
                         .font(.title3)
                 }
             }
-            .foregroundColor(quantityUnit.active ? .primary : .gray)
+            .foregroundStyle(quantityUnit.active ? .primary : .secondary)
             if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
                 Text(description)
                     .font(.caption)
@@ -135,13 +135,13 @@ struct MDQuantityUnitsView: View {
                 await updateData()
             }
         }
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default, value: filteredQuantityUnits.count)
         .alert(LocalizedStringKey("str.md.quantityUnit.delete.confirm"), isPresented: $showDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) { }
+            Button("Cancel", role: .cancel) { }
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let toDelID = quantityUnitToDelete?.id {
                     Task {

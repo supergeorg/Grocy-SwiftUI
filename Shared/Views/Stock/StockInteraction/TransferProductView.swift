@@ -111,7 +111,7 @@ struct TransferProductView: View {
             .toolbar(content: {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction, content: {
-                    Button(LocalizedStringKey("str.cancel"), action: { self.dismiss() })
+                    Button("Cancel", action: { self.dismiss() })
                 })
 #endif
                 ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
@@ -138,7 +138,7 @@ struct TransferProductView: View {
                 }
             
             VStack(alignment: .leading) {
-                Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up").foregroundColor(.primary), content: {
+                Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up").foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationFrom in
                         Text(locationFrom.name).tag(locationFrom.id as Int?)
@@ -148,7 +148,7 @@ struct TransferProductView: View {
                 if locationIDFrom == nil {
                     Text(LocalizedStringKey("str.stock.transfer.product.locationFrom.required"))
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             
@@ -157,7 +157,7 @@ struct TransferProductView: View {
             VStack(alignment: .leading) {
                 Picker(
                     selection: $locationIDTo,
-                    label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundColor(.primary),
+                    label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundStyle(.primary),
                     content: {
                         Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationTo in
@@ -167,19 +167,19 @@ struct TransferProductView: View {
                 if locationIDTo == nil {
                     Text(LocalizedStringKey("str.stock.transfer.product.locationTo.required"))
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
                 if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
                     Text(LocalizedStringKey("str.stock.transfer.product.locationTo.same"))
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
                 if product?.shouldNotBeFrozen == true,
                    locationTo?.isFreezer == true
                 {
                     Text(LocalizedStringKey("str.stock.transfer.product.shouldNotBeFrozen"))
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             
@@ -235,8 +235,8 @@ struct TransferProductView: View {
                 ProgressView().progressViewStyle(.circular)
             } else {
                 Button(action: resetForm, label: {
-                    Label(LocalizedStringKey("str.clear"), systemImage: MySymbols.cancel)
-                        .help(LocalizedStringKey("str.clear"))
+                    Label("Clear", systemImage: MySymbols.cancel)
+                        .help("Clear")
                 })
                 .keyboardShortcut("r", modifiers: [.command])
             }

@@ -110,7 +110,7 @@ struct MDUserFieldFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserField {
-                        Button(LocalizedStringKey("str.cancel")) {
+                        Button("Cancel") {
                             finishForm()
                         }
                     }
@@ -136,7 +136,7 @@ struct MDUserFieldFormView: View {
                 })
                 if entity == nil {
                     Text(LocalizedStringKey("str.md.userField.entity.required"))
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             

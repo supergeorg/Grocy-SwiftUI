@@ -23,7 +23,6 @@ struct MDLocationFormView: View {
     var location: MDLocation? = nil
     
     @Binding var showAddLocation: Bool
-    @State var toastType: ToastType? = nil
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
@@ -70,23 +69,19 @@ struct MDLocationFormView: View {
             do {
                 _ = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
                 grocyVM.postLog("Location added successfully.", type: .info)
-                toastType = .successAdd
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Location add failed. \(error)", type: .error)
-                toastType = .failAdd
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST)
                 grocyVM.postLog("Location edit successful.", type: .info)
-                toastType = .successEdit
                 await updateData()
                 finishForm()
             } catch {
                 grocyVM.postLog("Location edit failed. \(error)", type: .error)
-                toastType = .failEdit
             }
         }
         isProcessing = false
@@ -94,18 +89,18 @@ struct MDLocationFormView: View {
     
     var body: some View {
         Form {
-            Section("str.md.location.info") {
-                MyTextField(textToEdit: $name, description: "str.md.location.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.location.name.required", errorMessage: "str.md.location.name.exists")
-                    .onChange(of: name) {
-                        isNameCorrect = checkNameCorrect()
-                    }
-                MyToggle(isOn: $isActive, description: "str.md.product.active")
-                MyTextEditor(textToEdit: $mdLocationDescription, description: "str.md.description", leadingIcon: MySymbols.description)
-            }
-            
-            Section("str.md.location.freezer") {
-                MyToggle(isOn: $isFreezer, description: "str.md.location.isFreezing", descriptionInfo: "str.md.location.isFreezing.description", icon: "thermometer.snowflake")
-            }
+            MyTextField(textToEdit: $name, description: "Name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
+                .onChange(of: name) {
+                    isNameCorrect = checkNameCorrect()
+                }
+            MyToggle(isOn: $isActive, description: "Active")
+            MyTextEditor(textToEdit: $mdLocationDescription, description: "Description", leadingIcon: MySymbols.description)
+            MyToggle(
+                isOn: $isFreezer,
+                description: "Is freezer",
+                descriptionInfo: "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
+                icon: MySymbols.freezing
+            )
         }
         .task {
             if firstAppear {
@@ -114,12 +109,12 @@ struct MDLocationFormView: View {
                 firstAppear = false
             }
         }
-        .navigationTitle(location == nil ? LocalizedStringKey("str.md.location.new") : LocalizedStringKey("str.md.location.edit"))
+        .navigationTitle(location == nil ? "Create location" : "Edit location")
         .toolbar(content: {
 #if os(iOS)
             if location == nil {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                    Button("Cancel", role: .cancel, action: finishForm)
                         .keyboardShortcut(.cancelAction)
                 }
             }
@@ -130,7 +125,7 @@ struct MDLocationFormView: View {
                         await saveLocation()
                     }
                 }, label: {
-                    Label("str.md.location.save", systemImage: MySymbols.save)
+                    Label("Save", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isNameCorrect || isProcessing)
@@ -139,23 +134,3 @@ struct MDLocationFormView: View {
         })
     }
 }
-
-//struct MDLocationFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//#if os(macOS)
-//        Group {
-//            MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true))
-//            MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Loc", active: true, mdLocationDescription: "descr", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false))
-//        }
-//#else
-//        Group {
-//            NavigationView {
-//                MDLocationFormView(isNewLocation: true, showAddLocation: Binding.constant(true))
-//            }
-//            NavigationView {
-//                MDLocationFormView(isNewLocation: false, location: MDLocation(id: 1, name: "Location", active: true, mdLocationDescription: "Location Description", isFreezer: true, rowCreatedTimestamp: ""), showAddLocation: Binding.constant(false))
-//            }
-//        }
-//#endif
-//    }
-//}

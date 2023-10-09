@@ -31,7 +31,7 @@ struct MyTextField: View {
 #if os(iOS)
             Text(LocalizedStringKey(description))
                 .font(showSmallDescription ? .caption : .body)
-                .foregroundColor(isCorrect ? Color.gray : Color.red)
+                .foregroundStyle(isCorrect ? Color.gray : Color.red)
                 .padding(.top, showSmallDescription ? 0 : 16)
                 .padding(.leading, (leadingIcon == nil || showSmallDescription) ? 0 : 30)
                 .opacity(showSmallDescription ? 1 : 0)
@@ -49,7 +49,7 @@ struct MyTextField: View {
                     .disableAutocorrection(true)
                     .focused($isFocused)
                     .font(.body)
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                     .padding(.top, 15)
                     .zIndex(1)
             }
@@ -63,14 +63,14 @@ struct MyTextField: View {
                         if textToEdit.isEmpty {
                             if let emptyMessage = emptyMessage {
                                 Text(LocalizedStringKey(emptyMessage))
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .font(.caption)
                                     .animation(.default, value: textToEdit.isEmpty)
                             }
                         } else {
                             if let errorMessage = errorMessage {
                                 Text(LocalizedStringKey(errorMessage))
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .font(.caption)
                                     .animation(.default, value: (!isCorrect && !textToEdit.isEmpty))
                             }

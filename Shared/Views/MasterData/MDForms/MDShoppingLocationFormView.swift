@@ -96,7 +96,7 @@ struct MDStoreFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewStore {
-                        Button(LocalizedStringKey("str.cancel"), role: .cancel, action: finishForm)
+                        Button("Cancel", role: .cancel, action: finishForm)
                     }
                 }
 #endif

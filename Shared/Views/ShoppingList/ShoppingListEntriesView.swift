@@ -51,7 +51,7 @@ struct ShoppingListRowView: View {
                 Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))
                     .strikethrough(shoppingListItem.done == 1)
             }
-            .foregroundColor(shoppingListItem.done == 1 ? Color.gray : Color.primary)
+            .foregroundStyle(shoppingListItem.done == 1 ? Color.gray : Color.primary)
         }
     }
 }
@@ -80,9 +80,9 @@ struct ShoppingListEntriesView: View {
     
     var backgroundColor: Color {
         if isBelowStock {
-            return colorScheme == .light ? Color.grocyBlueLight : Color.grocyBlueDark
+            return Color(.GrocyColors.grocyBlueBackground)
         } else {
-            return colorScheme == .light ? Color.white : Color.grocyGrayDark
+            return Color(.GrocyColors.grocyGrayBackground)
         }
     }
     
@@ -163,7 +163,7 @@ struct ShoppingListEntriesView: View {
             }
         })
         .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
             Button(LocalizedStringKey("str.delete"), role: .destructive) {
                 if let deleteID = shlItemToDelete?.id {
                     Task {
@@ -186,7 +186,7 @@ struct ShoppingListEntriesView: View {
                 .tint(.green)
             })
             .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
-                Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
+                Button("Cancel", role: .cancel) {}
                 Button(LocalizedStringKey("str.delete"), role: .destructive) {
                     if let deleteID = shlItemToDelete?.id {
                         Task {

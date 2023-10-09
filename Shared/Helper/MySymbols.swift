@@ -28,6 +28,7 @@ struct MySymbols {
     static let recipe = "list.bullet.below.rectangle"
     static let picture = "photo"
     static let gallery = "photo.on.rectangle.angled"
+    static let user = "person"
 
     static let amount = "number.circle"
     static let price = "banknote"
@@ -41,6 +42,7 @@ struct MySymbols {
     static let accumulate = "arrow.triangle.merge"
     static let tareWeight = "scalemass.fill"
     static let selfProduction = "house"
+    static let name = "tag"
 
     static let logFile = "doc.plaintext"
     static let info = "info.circle"
@@ -49,6 +51,8 @@ struct MySymbols {
     static let unknown = "questionmark"
     static let timeout = "clock.arrow.circlepath"
     static let decimalPlaces = "00.square"
+    static let hint = "questionmark.circle.fill"
+    static let language = "flag"
 
     static let new = "plus"
     static let edit = "square.and.pencil"

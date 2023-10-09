@@ -25,6 +25,7 @@ struct Grocy_SwiftUIApp: App {
                 if !isLoggedIn {
                     LoginView()
                         .environment(\.locale, Locale(identifier: localizationKey))
+                        .environment(grocyVM)
                 } else {
                     ContentView()
                         .environment(\.locale, Locale(identifier: localizationKey))

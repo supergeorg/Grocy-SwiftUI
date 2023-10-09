@@ -33,11 +33,6 @@ struct ShoppingListView: View {
     @State private var showClearListAlert: Bool = false
     @State private var showClearDoneAlert: Bool = false
     
-#if os(macOS)
-    @State private var showNewShoppingList: Bool = false
-    @State private var showEditShoppingList: Bool = false
-    @State private var showAddItem: Bool = false
-#elseif os(iOS)
     private enum InteractionSheet: Identifiable {
         case newShoppingList, editShoppingList, newShoppingListEntry
         var id: Int {
@@ -46,7 +41,6 @@ struct ShoppingListView: View {
     }
     
     @State private var activeSheet: InteractionSheet?
-#endif
     
     private let dataToUpdate: [ObjectEntities] = [
         .products,
@@ -69,10 +63,34 @@ struct ShoppingListView: View {
         return false
     }
     
-    var selectedShoppingList: ShoppingList {
+    var selectedShoppingList: ShoppingListDescription? {
+        grocyVM.shoppingListDescriptions
+            .filter {
+                $0.id == selectedShoppingListID
+            }
+            .first
+    }
+    
+    var selectedShoppingListItems: [ShoppingListItem] {
         grocyVM.shoppingList
             .filter {
                 $0.shoppingListID == selectedShoppingListID
+            }
+    }
+    
+    var filteredShoppingListItems: [ShoppingListItem] {
+        selectedShoppingListItems
+            .filter { shLItem in
+                switch filteredStatus {
+                case .all:
+                    return true
+                case .belowMinStock:
+                    return checkBelowStock(item: shLItem)
+                case .done:
+                    return shLItem.done == 1
+                case .undone:
+                    return shLItem.done == 0
+                }
             }
             .filter { shLItem in
                 if !searchString.isEmpty {
@@ -87,25 +105,9 @@ struct ShoppingListView: View {
             }
     }
     
-    var filteredShoppingList: ShoppingList {
-        selectedShoppingList
-            .filter { shLItem in
-                switch filteredStatus {
-                case .all:
-                    return true
-                case .belowMinStock:
-                    return checkBelowStock(item: shLItem)
-                case .done:
-                    return shLItem.done == 1
-                case .undone:
-                    return shLItem.done == 0
-                }
-            }
-    }
-    
     var groupedShoppingList: [String: [ShoppingListItemWrapped]] {
         var dict: [String: [ShoppingListItemWrapped]] = [:]
-        for listItem in filteredShoppingList {
+        for listItem in filteredShoppingListItems {
             let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
             switch shoppingListGrouping {
             case .productGroup:
@@ -137,7 +139,7 @@ struct ShoppingListView: View {
     }
     
     var numBelowStock: Int {
-        selectedShoppingList
+        selectedShoppingListItems
             .filter { shLItem in
                 checkBelowStock(item: shLItem)
             }
@@ -145,7 +147,7 @@ struct ShoppingListView: View {
     }
     
     var numUndone: Int {
-        selectedShoppingList
+        selectedShoppingListItems
             .filter { shLItem in
                 shLItem.done == 0
             }
@@ -183,213 +185,33 @@ struct ShoppingListView: View {
             bodyContent
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.shL"))
+                .navigationTitle("Shopping list")
         }
     }
     
     var bodyContent: some View {
-        content
-#if os(macOS)
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-                    shoppingListActionContent
-                    RefreshButton(updateData: { Task { await updateData() } })
-                        .help(LocalizedStringKey("str.refresh"))
-                    sortGroupMenu
-                    Button(action: {
-                        showAddItem.toggle()
-                    }, label: {
-                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
-                    })
-                    .help(LocalizedStringKey("str.shL.action.addItem"))
-                    .popover(isPresented: $showAddItem, content: {
-                        ScrollView {
-                            ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                                .frame(width: 500, height: 400)
-                        }
-                    })
-                })
-            })
-#else
-            .toolbar(content: {
-                HStack {
-                    Menu(content: {
-                        shoppingListActionContent
-                    }, label: { HStack(spacing: 2) {
-                        Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "No selected list")
-                        Image(systemName: "chevron.down.square.fill")
-                    }})
-                    sortGroupMenu
-                    Button(action: {
-                        activeSheet = .newShoppingListEntry
-                    }, label: {
-                        Label(LocalizedStringKey("str.shL.action.addItem"), systemImage: MySymbols.new)
-                    })
-                    .help(LocalizedStringKey("str.shL.action.addItem"))
-                }
-            })
-#endif
-            .alert(LocalizedStringKey("str.shL.delete.confirm"), isPresented: $showSHLDeleteAlert, actions: {
-                Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
-                Button(LocalizedStringKey("str.delete"), role: .destructive) {
-                    Task {
-                        await deleteShoppingList()
-                    }
-                }
-            }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-#if os(iOS)
-            .sheet(item: $activeSheet, content: { item in
-                switch item {
-                case .newShoppingList:
-                    ShoppingListFormView(isNewShoppingListDescription: true)
-                case .editShoppingList:
-                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
-                case .newShoppingListEntry:
-                    NavigationView {
-                        ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                    }
-                }
-            })
-#endif
-    }
-    
-    var shoppingListActionContent: some View {
-        Group {
-            Button(action: {
-#if os(iOS)
-                activeSheet = .newShoppingList
-#elseif os(macOS)
-                showNewShoppingList.toggle()
-#endif
-            }, label: {
-                Label(LocalizedStringKey("str.shL.new"), systemImage: MySymbols.shoppingList)
-            })
-            .help(LocalizedStringKey("str.shL.new"))
-#if os(macOS)
-            .popover(isPresented: $showNewShoppingList, content: {
-                ShoppingListFormView(isNewShoppingListDescription: true)
-                    .padding()
-                    .frame(width: 250, height: 150)
-            })
-#endif
-            Button(action: {
-#if os(iOS)
-                activeSheet = .editShoppingList
-#elseif os(macOS)
-                showEditShoppingList.toggle()
-#endif
-            }, label: {
-                Label(LocalizedStringKey("str.shL.edit"), systemImage: MySymbols.edit)
-            })
-            .help(LocalizedStringKey("str.shL.edit"))
-#if os(macOS)
-            .popover(isPresented: $showEditShoppingList, content: {
-                ShoppingListFormView(
-                    isNewShoppingListDescription: false,
-                    shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })
-                )
-                .padding()
-                .frame(width: 250, height: 150)
-            })
-#endif
-            Button(role: .destructive, action: {
-                showSHLDeleteAlert.toggle()
-            }, label: {
-                Label(LocalizedStringKey("str.shL.delete"), systemImage: MySymbols.delete)
-            })
-            .help(LocalizedStringKey("str.shL.delete"))
-            Divider()
-            shoppingListItemActionContent
-            Divider()
-            Picker(selection: $selectedShoppingListID, label: Text(""), content: {
-                ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shoppingListDescription in
-                    Text(shoppingListDescription.name).tag(shoppingListDescription.id)
-                }
-            })
-            .help(LocalizedStringKey("str.shL"))
-        }
-    }
-    
-    var shoppingListItemActionContent: some View {
-        Group {
-            Button(role: .destructive, action: {
-                showClearListAlert.toggle()
-            }, label: {
-                Label(LocalizedStringKey("str.shL.action.clearList"), systemImage: MySymbols.clear)
-            })
-            .help(LocalizedStringKey("str.shL.action.clearList"))
-            //            Button(action: {
-            //                print("Not implemented")
-            //            }, label: {
-            //                Label(LocalizedStringKey("str.shL.action.addListItemsToStock"), systemImage: "questionmark")
-            //            })
-            //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
-            //                .disabled(true)
-            Button(role: .destructive, action: {
-                showClearDoneAlert.toggle()
-            }, label: {
-                Label(LocalizedStringKey("str.shL.action.clearDone"), systemImage: MySymbols.done)
-            })
-            .help(LocalizedStringKey("str.shL.action.clearDone"))
-            Button(action: {
-                Task {
-                    await slAction(.addMissing)
-                }
-            }, label: {
-                Label(LocalizedStringKey("str.shL.action.addBelowMinStock"), systemImage: MySymbols.addToShoppingList)
-            })
-            .help(LocalizedStringKey("str.shL.action.addBelowMinStock"))
-            Button(action: {
-                Task {
-                    await slAction(.addExpired)
-                    await slAction(.addOverdue)
-                }
-            }, label: {
-                Label(LocalizedStringKey("str.shL.action.addOverdue"), systemImage: MySymbols.addToShoppingList)
-            })
-            .help(LocalizedStringKey("str.shL.action.addOverdue"))
-        }
-    }
-    
-    var content: some View {
         List {
             Section {
-                ShoppingListFilterActionView(
-                    filteredStatus: $filteredStatus,
-                    numBelowStock: numBelowStock,
-                    numUndone: numUndone
-                )
-#if os(iOS)
-                Menu {
-                    Picker("", selection: $filteredStatus, content: {
-                        Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
-                        Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
-                        Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
-                        Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
-                    })
-                    .labelsHidden()
-                } label: {
-                    HStack {
-                        Image(systemName: MySymbols.filter)
-                        VStack {
-                            Text(LocalizedStringKey("str.shL.filter.status"))
-                            if filteredStatus != ShoppingListStatus.all {
-                                Text(LocalizedStringKey(filteredStatus.rawValue))
-                                    .font(.caption)
-                            }
-                        }
-                    }
+                if numBelowStock > 0 || numUndone > 0 {
+                    ShoppingListFilterActionView(
+                        filteredStatus: $filteredStatus,
+                        numBelowStock: numBelowStock,
+                        numUndone: numUndone
+                    )
                 }
-#else
-                Picker(selection: $filteredStatus,
-                       label: Label(LocalizedStringKey("str.shL.filter.status"), systemImage: MySymbols.filter),
-                       content: {
-                    Text(LocalizedStringKey(ShoppingListStatus.all.rawValue)).tag(ShoppingListStatus.all)
-                    Text(LocalizedStringKey(ShoppingListStatus.belowMinStock.rawValue)).tag(ShoppingListStatus.belowMinStock)
-                    Text(LocalizedStringKey(ShoppingListStatus.done.rawValue)).tag(ShoppingListStatus.done)
-                    Text(LocalizedStringKey(ShoppingListStatus.undone.rawValue)).tag(ShoppingListStatus.undone)
+                Picker(selection: $filteredStatus, content: {
+                    Text("All")
+                        .tag(ShoppingListStatus.all)
+                    Text("Below min. stock amount")
+                        .tag(ShoppingListStatus.belowMinStock)
+                    Text("Only done items")
+                        .tag(ShoppingListStatus.done)
+                    Text("Only undone items")
+                        .tag(ShoppingListStatus.undone)
+                }, label: {
+                    Label("Status", systemImage: MySymbols.filter)
+                        .foregroundStyle(.primary)
                 })
-#endif
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
 #if os(macOS)
@@ -422,7 +244,8 @@ struct ShoppingListView: View {
                     })
                 }, header: {
                     if shoppingListGrouping == .productGroup, groupName.isEmpty {
-                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        Text("Ungrouped")
+                            .italic()
                     } else if shoppingListGrouping == .none {
                         EmptyView()
                     } else {
@@ -432,46 +255,160 @@ struct ShoppingListView: View {
 #endif
             }
         }
-        .navigationTitle(LocalizedStringKey("str.shL"))
-        .task {
-            Task {
-                await updateData()
+        .navigationTitle(selectedShoppingList?.name ?? "Shopping list")
+        .toolbar {
+            ToolbarTitleMenu {
+                shoppingListActionContent
+                Divider()
+                shoppingListItemActionContent
+                Divider()
+                sortGroupMenu
             }
+            ToolbarItem(placement: .primaryAction, content: {
+                Button(action: {
+                    activeSheet = .newShoppingListEntry
+                }, label: {
+                    Label("Add item", systemImage: MySymbols.new)
+                })
+                .help("Add item")
+            })
+        }
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .task {
+            await updateData()
         }
         .searchable(text: $searchString,
-                    prompt: LocalizedStringKey("str.search"))
+                    prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
-        .alert(LocalizedStringKey("str.shL.action.clearList.confirm"), isPresented: $showClearListAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
-            Button(LocalizedStringKey("str.confirm"), role: .destructive) {
+        .alert("Do you really want to delete this shopping list?", isPresented: $showSHLDeleteAlert, actions: {
+            Button("Cancel", role: .cancel) {}
+            Button(LocalizedStringKey("Delete"), role: .destructive) {
+                Task {
+                    await deleteShoppingList()
+                }
+            }
+        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        .alert("Do your really want to clear this shopping list?", isPresented: $showClearListAlert, actions: {
+            Button("Cancel", role: .cancel) {}
+            Button("Confirm", role: .destructive) {
                 Task {
                     await slAction(.clear)
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .alert(LocalizedStringKey("str.shL.action.clearDone"), isPresented: $showClearDoneAlert, actions: {
-            Button(LocalizedStringKey("str.cancel"), role: .cancel) {}
-            Button(LocalizedStringKey("str.confirm"), role: .destructive) {
+        .alert("Do you really want to clear all done items?", isPresented: $showClearDoneAlert, actions: {
+            Button("Cancel", role: .cancel) {}
+            Button("Confirm", role: .destructive) {
                 Task {
                     await slAction(.clearDone)
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        .sheet(item: $activeSheet, content: { item in
+            switch item {
+            case .newShoppingList:
+                NavigationView {
+                    ShoppingListFormView(isNewShoppingListDescription: true)
+                }
+            case .editShoppingList:
+                NavigationView {
+                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
+                }
+            case .newShoppingListEntry:
+                NavigationView {
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                }
+            }
+        })
+    }
+    
+    
+    var shoppingListActionContent: some View {
+        Group {
+            Picker(selection: $selectedShoppingListID, label: Text(""), content: {
+                ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shoppingListDescription in
+                    Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+                }
+            })
+            .help("Shopping list")
+            Divider()
+            Button(action: {
+                activeSheet = .newShoppingList
+            }, label: {
+                Label("New shopping list", systemImage: MySymbols.shoppingList)
+            })
+            .help("New shopping list")
+            Button(action: {
+                activeSheet = .editShoppingList
+            }, label: {
+                Label("Edit shopping list", systemImage: MySymbols.edit)
+            })
+            .help("Edit shopping list")
+            Button(role: .destructive, action: {
+                showSHLDeleteAlert.toggle()
+            }, label: {
+                Label("Delete shopping list", systemImage: MySymbols.delete)
+            })
+            .help("Delete shopping list")
+        }
+    }
+    
+    var shoppingListItemActionContent: some View {
+        Group {
+            Button(role: .destructive, action: {
+                showClearListAlert.toggle()
+            }, label: {
+                Label("Clear list", systemImage: MySymbols.clear)
+            })
+            .help("Clear list")
+            //            Button(action: {
+            //                print("Not implemented")
+            //            }, label: {
+            //                Label(LocalizedStringKey("str.shL.action.addListItemsToStock"), systemImage: "questionmark")
+            //            })
+            //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
+            //                .disabled(true)
+            Button(role: .destructive, action: {
+                showClearDoneAlert.toggle()
+            }, label: {
+                Label("Clear done items", systemImage: MySymbols.done)
+            })
+            .help("Clear done items")
+            Button(action: {
+                Task {
+                    await slAction(.addMissing)
+                }
+            }, label: {
+                Label("Add products that are below defined min. stock amount", systemImage: MySymbols.addToShoppingList)
+            })
+            .help("Add products that are below defined min. stock amount")
+            Button(action: {
+                Task {
+                    await slAction(.addExpired)
+                    await slAction(.addOverdue)
+                }
+            }, label: {
+                Label("Add overdue/expired products", systemImage: MySymbols.addToShoppingList)
+            })
+            .help("Add overdue/expired products")
+        }
     }
     
     var sortGroupMenu: some View {
         Menu(content: {
-            Picker(LocalizedStringKey("str.group.category"), selection: $shoppingListGrouping, content: {
-                Label(LocalizedStringKey("str.none"), systemImage: MySymbols.product)
+            Picker("Group by", selection: $shoppingListGrouping, content: {
+                Label("None", systemImage: MySymbols.product)
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.none)
-                Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.amount)
+                Label("Product group", systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.productGroup)
-                Label(LocalizedStringKey("str.md.product.store"), systemImage: MySymbols.amount)
+                Label("Store", systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(ShoppingListGrouping.defaultStore)
             })
@@ -480,19 +417,19 @@ struct ShoppingListView: View {
 #else
             .pickerStyle(.inline)
 #endif
-            Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
+            Picker("Sort category", selection: $sortSetting, content: {
                 if sortOrder == .forward {
-                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                    Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .forward)])
-                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                    Label("Amount", systemImage: MySymbols.amount)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .forward)])
                 } else {
-                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                    Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .reverse)])
-                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                    Label("Amount", systemImage: MySymbols.amount)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .reverse)])
                 }
@@ -502,11 +439,11 @@ struct ShoppingListView: View {
 #else
             .pickerStyle(.inline)
 #endif
-            Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
-                Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
+            Picker("Sort order", selection: $sortOrder, content: {
+                Label("Ascending", systemImage: MySymbols.sortForward)
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.forward)
-                Label(LocalizedStringKey("str.sort.order.reverse"), systemImage: MySymbols.sortReverse)
+                Label("Descending", systemImage: MySymbols.sortReverse)
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.reverse)
             })
@@ -522,7 +459,7 @@ struct ShoppingListView: View {
                 }
             }
         }, label: {
-            Label(LocalizedStringKey("str.sort"), systemImage: MySymbols.sort)
+            Label("Sort", systemImage: MySymbols.sort)
         })
     }
 }

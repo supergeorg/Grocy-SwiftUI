@@ -13,48 +13,48 @@ struct MasterDataView: View {
     var body: some View {
         List {
             NavigationLink(destination: MDProductsView()) {
-                Label(LocalizedStringKey("str.md.products"), systemImage: "archivebox")
+                Label("Products", systemImage: MySymbols.product)
             }
             
             NavigationLink(destination: MDLocationsView()) {
-                Label(LocalizedStringKey("str.md.locations"), systemImage: MySymbols.location)
+                Label("Locations", systemImage: MySymbols.location)
             }
             
             NavigationLink(destination: MDStoresView()) {
-                Label(LocalizedStringKey("str.md.stores"), systemImage: MySymbols.store)
+                Label("Stores", systemImage: MySymbols.store)
             }
             
             NavigationLink(destination: MDQuantityUnitsView()) {
-                Label(LocalizedStringKey("str.md.quantityUnits"), systemImage: "number.circle")
+                Label("Quantity units", systemImage: MySymbols.quantityUnit)
             }
             
             NavigationLink(destination: MDProductGroupsView()) {
-                Label(LocalizedStringKey("str.md.productGroups"), systemImage: "lessthan.circle")
+                Label("Product groups", systemImage: MySymbols.productGroup)
             }
             
             if devMode {
                 NavigationLink(destination: MDChoresView()) {
-                    Label(LocalizedStringKey("str.md.chores"), systemImage: "house")
+                    Label("Chores", systemImage: "house")
                 }
                 
                 NavigationLink(destination: MDBatteriesView()) {
-                    Label(LocalizedStringKey("str.md.batteries"), systemImage: "battery.25")
+                    Label("Batteries", systemImage: "battery.25")
                 }
                 
                 NavigationLink(destination: MDTaskCategoriesView()) {
-                    Label(LocalizedStringKey("str.md.taskCategories"), systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+                    Label("Task categories", systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
                 }
                 
                 NavigationLink(destination: MDUserFieldsView()) {
-                    Label(LocalizedStringKey("str.md.userFields"), systemImage: "bookmark.fill")
+                    Label("Userfields", systemImage: "bookmark.fill")
                 }
                 
                 NavigationLink(destination: MDUserEntitiesView()) {
-                    Label(LocalizedStringKey("str.md.userEntities"), systemImage: "bookmark")
+                    Label("User entities", systemImage: "bookmark")
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey("str.md.masterData"))
+        .navigationTitle("Master data")
     }
 }
 
