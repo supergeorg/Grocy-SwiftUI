@@ -12,12 +12,7 @@ struct StockTableMenuEntriesView: View {
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-#if os(iOS)
     @Binding var activeSheet: StockInteractionSheet?
-#elseif os(macOS)
-    @Binding var activeSheet: StockInteractionPopover?
-#endif
-    
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
@@ -38,9 +33,8 @@ struct StockTableMenuEntriesView: View {
     var body: some View {
         Button(action: {
             selectedStockElement = stockElement
-            activeSheet = .addToShL
         }, label: {
-            Label(LocalizedStringKey("str.stock.tbl.menu.addToShL"), systemImage: MySymbols.addToShoppingList)
+            Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
                 .labelStyle(.titleAndIcon)
         })
         Divider()
@@ -49,28 +43,28 @@ struct StockTableMenuEntriesView: View {
                 selectedStockElement = stockElement
                 activeSheet = .productPurchase
             }, label: {
-                Label(LocalizedStringKey("str.stock.buy"), systemImage: MySymbols.purchase)
+                Label("Purchase", systemImage: MySymbols.purchase)
                     .labelStyle(.titleAndIcon)
             })
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .productConsume
             }, label: {
-                Label(LocalizedStringKey("str.stock.consume"), systemImage: MySymbols.consume)
+                Label("Consume", systemImage: MySymbols.consume)
                     .labelStyle(.titleAndIcon)
             })
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .productTransfer
             }, label: {
-                Label(LocalizedStringKey("str.stock.transfer"), systemImage: MySymbols.transfer)
+                Label("Transfer", systemImage: MySymbols.transfer)
                     .labelStyle(.titleAndIcon)
             })
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .productInventory
             }, label: {
-                Label(LocalizedStringKey("str.stock.inventory"), systemImage: MySymbols.inventory)
+                Label("Inventory", systemImage: MySymbols.inventory)
                     .labelStyle(.titleAndIcon)
             })
         }
@@ -82,13 +76,13 @@ struct StockTableMenuEntriesView: View {
                     await consumeAsSpoiled()
                 }
             }, label: {
-                Label(LocalizedStringKey("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount.formattedAmount) \(quString)")"), systemImage: MySymbols.clear)
+                Label("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount.formattedAmount) \(quString)""), systemImage: MySymbols.clear)
             })
             
             //                Button(action: {
             //                    print("recip")
             //                }, label: {
-            //                    Text(LocalizedStringKey("str.stock.tbl.menu.searchRecipes"))
+            //                    Text("Search for recipes which contain this product")
             //                })
         }
         Divider()
@@ -97,29 +91,29 @@ struct StockTableMenuEntriesView: View {
                 selectedStockElement = stockElement
                 activeSheet = .productOverview
             }, label: {
-                Label(LocalizedStringKey("str.details.title"), systemImage: MySymbols.info)
+                Label("Product overview", systemImage: MySymbols.info)
             })
             //                Button(action: {
             //                    print("Stock entries are not accessed here")
             //                }, label: {
-            //                    Text(LocalizedStringKey("str.details.stockEntries"))
+            //                    Text("Stock entries")
             //                })
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .productJournal
             }, label: {
-                Label(LocalizedStringKey("str.details.stockJournal"), systemImage: MySymbols.stockJournal)
+                Label("Stock journal", systemImage: MySymbols.stockJournal)
             })
             //                Button(action: {
             //                    print("Stock Journal summary is not available yet")
             //                }, label: {
-            //                    Text(LocalizedStringKey("str.stock.journal.summary"))
+            //                    Text("Stock journal summary")
             //                })
             Button(action: {
                 selectedStockElement = stockElement
                 activeSheet = .editProduct
             }, label: {
-                Label(LocalizedStringKey("str.details.edit"), systemImage: MySymbols.edit)
+                Label("Edit product", systemImage: MySymbols.edit)
             })
         }
     }

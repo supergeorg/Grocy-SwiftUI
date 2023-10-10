@@ -88,11 +88,11 @@ struct MDProductGroupFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
+            .navigationTitle(isNewProductGroup ? "Create product group" : "Edit product group")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveProductGroup() } }, label: {
-                        Label(LocalizedStringKey("str.md.productGroup.save"), systemImage: MySymbols.save)
+                        Label("Save product group", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -113,18 +113,18 @@ struct MDProductGroupFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewProductGroup ? LocalizedStringKey("str.md.productGroup.new") : LocalizedStringKey("str.md.productGroup.edit"))
+            Text(isNewProductGroup ? "Create product group" : "Edit product group")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
-            Section(header: Text(LocalizedStringKey("str.md.productGroup.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.productGroup.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.productGroup.name.exists")
+            Section(header: Text("Product group info")){
+                MyTextField(textToEdit: $name, description: "Product group name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyToggle(isOn: $isActive, description: "str.md.product.active")
-                MyTextField(textToEdit: $mdProductGroupDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                MyToggle(isOn: $isActive, description: "Active")
+                MyTextField(textToEdit: $mdProductGroupDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
         .task {

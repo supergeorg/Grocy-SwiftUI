@@ -68,7 +68,7 @@ struct OnboardingView: View {
                 onboardingNeeded = false
             }, label: {
                 
-                Text(LocalizedStringKey("str.onboard.start"))
+                Text("Let's get started!")
 #if os(iOS)
                     .padding(20)
                     .background(
@@ -101,9 +101,9 @@ public enum OnboardingCards: CaseIterable {
         case .GROCY:
             return "Grocy"
         case .ERP_BEYOND:
-            return "str.onboard.grocy.title"
+            return "grocy - ERP beyond your fridge"
         case .IOS_MACOS:
-            return "str.onboard.app.title"
+            return "Grocy for iOS/macOS"
         }
     }
     
@@ -112,9 +112,9 @@ public enum OnboardingCards: CaseIterable {
         case .GROCY:
             return ""
         case .ERP_BEYOND:
-            return "str.onboard.grocy.subtitle"
+            return "grocy is a web-based self-hosted groceries & household management solution for your home."
         case .IOS_MACOS:
-            return "str.onboard.app.subtitle"
+            return "An app in native design, allowing a comfortable use of Grocy at home and on the go."
         }
     }
     

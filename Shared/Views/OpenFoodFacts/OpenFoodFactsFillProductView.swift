@@ -110,7 +110,7 @@ struct OpenFoodFactsFillProductView: View {
             Text("Open Food Facts")
                 .font(.title)
             HStack(alignment: .center) {
-                MyTextField(textToEdit: $scanBarcode, description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcodeScan)
+                MyTextField(textToEdit: $scanBarcode, description: "Barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcodeScan)
                 Button(action: {
                     offVM.updateBarcode(barcode: scanBarcode)
                 }, label: {
@@ -141,11 +141,11 @@ struct OpenFoodFactsFillProductView: View {
                             VStack(alignment: .leading){
                                 Text("Product name")
                                 if selectedProductName.isEmpty {
-                                    Text(LocalizedStringKey("str.md.product.name.required"))
+                                    Text("A name is required")
                                         .font(.caption)
                                         .foregroundStyle(Color.red)
                                 } else if !isNameCorrect {
-                                    Text("str.md.product.name.exists")
+                                    Text("Name already exists")
                                         .font(.caption)
                                         .foregroundStyle(Color.red)
                                 }

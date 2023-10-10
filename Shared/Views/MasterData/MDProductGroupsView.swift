@@ -78,7 +78,7 @@ struct MDProductGroupsView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.productGroups"))
+                .navigationTitle("Product groups")
         }
     }
     
@@ -94,7 +94,7 @@ struct MDProductGroupsView: View {
                     }, label: {Image(systemName: MySymbols.new)})
                 }
             }
-            .navigationTitle(LocalizedStringKey("str.md.productGroups"))
+            .navigationTitle("Product groups")
 #if os(iOS)
             .sheet(isPresented: self.$showAddProductGroup, content: {
                 NavigationView {
@@ -107,14 +107,14 @@ struct MDProductGroupsView: View {
     var content: some View {
         List {
             if grocyVM.mdProductGroups.isEmpty {
-                ContentUnavailableView("str.md.productGroups.empty", systemImage: MySymbols.productGroup)
+                ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
             } else if filteredProductGroups.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddProductGroup {
                 NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup), isActive: $showAddProductGroup, label: {
-                    NewMDRowLabel(title: "str.md.productGroup.new")
+                    NewMDRowLabel(title: "Create product group")
                 })
             }
 #endif
@@ -125,7 +125,7 @@ struct MDProductGroupsView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: productGroup) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -140,9 +140,9 @@ struct MDProductGroupsView: View {
             await updateData()
         }
         .animation(.default, value: filteredProductGroups.count)
-        .alert(LocalizedStringKey("str.md.productGroup.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this product group?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = productGroupToDelete?.id {
                     Task {
                         await deleteProductGroup(toDelID: toDelID)

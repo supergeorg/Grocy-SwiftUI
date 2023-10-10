@@ -22,23 +22,23 @@ enum TransactionType: String, Codable, CaseIterable {
     func formatTransactionType() -> LocalizedStringKey {
         switch self {
         case .consume:
-            return LocalizedStringKey("tr.consume")
+            return "Consume"
         case .inventoryCorrection:
-            return LocalizedStringKey("tr.inventoryCorrection")
+            return "Inventory"
         case .productOpened:
-            return LocalizedStringKey("tr.opened")
+            return "Opened"
         case .purchase:
-            return LocalizedStringKey("tr.purchase")
+            return "Purchase"
         case .selfProduction:
-            return LocalizedStringKey("tr.selfProduction")
+            return "Self-production"
         case .stockEditNew:
-            return LocalizedStringKey("tr.stockEditNew")
+            return "Stock edit (new)"
         case .stockEditOld:
-            return LocalizedStringKey("tr.stockEditOld")
+            return "Stock edit (old)"
         case .transferFrom:
-            return LocalizedStringKey("tr.transferFrom")
+            return "Transfer from"
         case .transferTo:
-            return LocalizedStringKey("tr.transferTo")
+            return "Transfer to"
         }
     }
 }

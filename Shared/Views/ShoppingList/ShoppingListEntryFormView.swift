@@ -116,7 +116,7 @@ struct ShoppingListEntryFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title"))
+            .navigationTitle(isNewShoppingListEntry ? "Create shopping list item" : "Edit shopping list item")
 #if os(iOS)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -126,7 +126,7 @@ struct ShoppingListEntryFormView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(LocalizedStringKey("str.save")) {
+                    Button("Save") {
                         Task {
                             await saveShoppingListEntry()
                         }
@@ -141,15 +141,15 @@ struct ShoppingListEntryFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewShoppingListEntry ? LocalizedStringKey("str.shL.entryForm.new.title") : LocalizedStringKey("str.shL.entryForm.edit.title")).font(.headline)
+            Text(isNewShoppingListEntry ? "Create shopping list item" : "Edit shopping list item").font(.headline)
 #endif
-            Picker(selection: $shoppingListID, label: Text(LocalizedStringKey("str.shL.entryForm.shoppingList")), content: {
+            Picker(selection: $shoppingListID, label: Text("Shopping list"), content: {
                 ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shLDescription in
                     Text(shLDescription.name).tag(shLDescription.id)
                 }
             })
             
-            ProductField(productID: $productID, description: "str.shL.entryForm.product")
+            ProductField(productID: $productID, description: "Product")
                 .onChange(of: productID) {
                     if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
                         quantityUnitID = selectedProduct.quIDPurchase
@@ -158,7 +158,7 @@ struct ShoppingListEntryFormView: View {
             
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
-            Section(header: Label(LocalizedStringKey("str.shL.entryForm.note"), systemImage: "square.and.pencil")
+            Section(header: Label("Note", systemImage: "square.and.pencil")
                 .labelStyle(.titleAndIcon)
                 .font(.headline)) {
                     TextEditor(text: $note)
@@ -171,7 +171,7 @@ struct ShoppingListEntryFormView: View {
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button(LocalizedStringKey("str.save")) {
+                Button("Save") {
                     Task {
                         await saveShoppingListEntry()
                     }

@@ -57,7 +57,7 @@ struct TranslatorsView: View {
                 )
             })
         }
-        .navigationTitle("str.settings.about.translators")
+        .navigationTitle("Translators")
     }
 }
 

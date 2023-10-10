@@ -48,7 +48,7 @@ struct ShoppingListRowView: View {
                 Text(product?.name ?? shoppingListItem.note ?? "?")
                     .font(.headline)
                     .strikethrough(shoppingListItem.done == 1)
-                Text(LocalizedStringKey("str.shL.entry.info.amount \(amountString)"))
+                Text("str.shL.entry.info.amount \(amountString)")
                     .strikethrough(shoppingListItem.done == 1)
             }
             .foregroundStyle(shoppingListItem.done == 1 ? Color.gray : Color.primary)
@@ -130,7 +130,7 @@ struct ShoppingListEntriesView: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
             Button(role: .destructive,
                    action: { deleteItem(itemToDelete: shoppingListItem) },
-                   label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) })
+                   label: { Label("Delete", systemImage: MySymbols.delete) })
         })
         .swipeActions(edge: .leading, allowsFullSwipe: shoppingListItem.done != 1, content: {
             Group {
@@ -162,9 +162,9 @@ struct ShoppingListEntriesView: View {
                 PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
             }
         })
-        .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
+        .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
             Button("Cancel", role: .cancel) {}
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let deleteID = shlItemToDelete?.id {
                     Task {
                         await deleteSHLItem(toDelID: deleteID)
@@ -178,16 +178,16 @@ struct ShoppingListEntriesView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                 Button(role: .destructive,
                        action: { deleteItem(itemToDelete: shoppingListItem) },
-                       label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) })
+                       label: { Label("Delete", systemImage: MySymbols.delete) })
             })
             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                 Button(action: { Task { await changeDoneStatus(shoppingListItem: shoppingListItem) } },
                        label: { Image(systemName: MySymbols.done) })
                 .tint(.green)
             })
-            .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
+            .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
                 Button("Cancel", role: .cancel) {}
-                Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                Button("Delete", role: .destructive) {
                     if let deleteID = shlItemToDelete?.id {
                         Task {
                             await deleteSHLItem(toDelID: deleteID)

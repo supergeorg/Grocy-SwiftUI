@@ -75,7 +75,7 @@ struct MDTaskCategoriesView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.taskCategories"))
+                .navigationTitle("Task categories")
         }
     }
     
@@ -91,7 +91,7 @@ struct MDTaskCategoriesView: View {
                     }, label: {Image(systemName: MySymbols.new)})
                 }
             }
-            .navigationTitle(LocalizedStringKey("str.md.taskCategories"))
+            .navigationTitle("Task categories")
 #if os(iOS)
             .sheet(isPresented: self.$showAddTaskCategory, content: {
                 NavigationView {
@@ -104,14 +104,14 @@ struct MDTaskCategoriesView: View {
     var content: some View {
         List{
             if grocyVM.mdTaskCategories.isEmpty {
-                Text(LocalizedStringKey("str.md.taskCategories.empty"))
+                Text("No task categories found.")
             } else if filteredTaskCategories.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddTaskCategory {
                 NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory), isActive: $showAddTaskCategory, label: {
-                    NewMDRowLabel(title: "str.md.taskCategory.new")
+                    NewMDRowLabel(title: "Create task category")
                 })
             }
 #endif
@@ -122,7 +122,7 @@ struct MDTaskCategoriesView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: taskCategory) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -137,9 +137,9 @@ struct MDTaskCategoriesView: View {
             await updateData()
         }
         .animation(.default, value: filteredTaskCategories.count)
-        .alert(LocalizedStringKey("str.md.taskCategory.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this task category?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = taskCategoryToDelete?.id {
                     Task {
                         await deleteTaskCategory(toDelID: toDelID)

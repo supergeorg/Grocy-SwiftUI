@@ -112,7 +112,7 @@ struct MDLocationsView: View {
                     .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                         Button(role: .destructive,
                                action: { deleteItem(itemToDelete: location) },
-                               label: { Label(LocalizedStringKey("Delete"), systemImage: MySymbols.delete) }
+                               label: { Label("Delete", systemImage: MySymbols.delete) }
                         )
                     })
             }
@@ -133,9 +133,9 @@ struct MDLocationsView: View {
         .animation(.default,
                    value: filteredLocations.count
         )
-        .alert(LocalizedStringKey("Do you really want to delete this location?"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this location?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("Delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = locationToDelete?.id {
                     Task {
                         await deleteLocation(toDelID: toDelID)

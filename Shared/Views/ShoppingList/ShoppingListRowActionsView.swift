@@ -69,7 +69,7 @@ struct ShoppingListRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2) {
-            RowInteractionButton(image: "checkmark", backgroundColor: Color(.GrocyColors.grocyGreen), helpString: LocalizedStringKey("str.shL.entry.done"))
+            RowInteractionButton(image: "checkmark", backgroundColor: Color(.GrocyColors.grocyGreen), helpString: "Mark this item as done")
                 .onTapGesture {
                     Task {
                         await changeDoneStatus()
@@ -78,7 +78,7 @@ struct ShoppingListRowActionsView: View {
                         showAutoPurchase.toggle()
                     }
                 }
-            RowInteractionButton(image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: LocalizedStringKey("str.shL.entry.edit"))
+            RowInteractionButton(image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Edit this item")
                 .onTapGesture {
                     showEdit.toggle()
                 }
@@ -95,20 +95,20 @@ struct ShoppingListRowActionsView: View {
                     ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
                 })
 #endif
-            RowInteractionButton(image: "trash.fill", backgroundColor: Color(.GrocyColors.grocyDelete), helpString: LocalizedStringKey("str.shL.entry.delete"))
+            RowInteractionButton(image: "trash.fill", backgroundColor: Color(.GrocyColors.grocyDelete), helpString: "Delete this item")
                 .onTapGesture {
                     deleteItem()
                 }
-                .alert(LocalizedStringKey("str.shL.entry.delete.confirm"), isPresented: $showEntryDeleteAlert, actions: {
+                .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
                     Button("Cancel", role: .cancel) {}
-                    Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                    Button("Delete", role: .destructive) {
                         Task {
                             await deleteSHLItem()
                         }
                     }
                 }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: LocalizedStringKey("str.shL.entry.add \("\(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName)")"))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "str.shL.entry.add \("\(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName)""))
                 .onTapGesture {
                     showPurchase.toggle()
                 }

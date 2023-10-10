@@ -25,10 +25,10 @@ struct MDBarcodeRowView: View {
                 .font(.title)
             HStack{
                 if let amount = barcode.amount {
-                    Text(LocalizedStringKey("str.md.barcode.info.amount \("\(amount.formattedAmount) \(quIDName ?? String(barcode.quID ?? 0))")"))
+                    Text("str.md.barcode.info.amount \("\(amount.formattedAmount) \(quIDName ?? String(barcode.quID ?? 0))""))
                 }
                 if let storeName = storeName {
-                    Text(LocalizedStringKey("str.md.barcode.info.store \(storeName)"))
+                    Text("str.md.barcode.info.store \(storeName)")
                 }
             }.font(.caption)
         }
@@ -79,13 +79,13 @@ struct MDBarcodesView: View {
             bodyContent
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.barcodes"))
+                .navigationTitle("Barcodes")
         }
     }
     
 #if os(macOS)
     var bodyContent: some View {
-        Section(header: Text(LocalizedStringKey("str.md.barcodes")).font(.headline)) {
+        Section(header: Text("Barcodes").font(.headline)) {
             
             Button(action: {showAddBarcode.toggle()}, label: {Image(systemName: MySymbols.new)})
                 .popover(isPresented: $showAddBarcode, content: {
@@ -95,7 +95,7 @@ struct MDBarcodesView: View {
                     .padding()
                 })
             if filteredBarcodes.isEmpty {
-                Text(LocalizedStringKey("str.md.barcodes.empty"))
+                Text("No Barcodes added.")
             }
             NavigationView{
                 List{
@@ -110,7 +110,7 @@ struct MDBarcodesView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                             Button(role: .destructive,
                                    action: { deleteItem(itemToDelete: productBarcode) },
-                                   label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                   label: { Label("Delete", systemImage: MySymbols.delete) }
                             )
                         })
                     }
@@ -123,9 +123,9 @@ struct MDBarcodesView: View {
                 await updateData()
             }
         }
-        .alert(LocalizedStringKey("str.md.barcode.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
                     Task {
                         await deleteProductBarcode(toDelID: toDelID)
@@ -138,7 +138,7 @@ struct MDBarcodesView: View {
     var bodyContent: some View {
         Form {
             if filteredBarcodes.isEmpty {
-                Text(LocalizedStringKey("str.md.barcodes.empty"))
+                Text("No Barcodes added.")
             } else {
                 ForEach(filteredBarcodes, id:\.id) {productBarcode in
                     NavigationLink(
@@ -149,13 +149,13 @@ struct MDBarcodesView: View {
                     .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                         Button(role: .destructive,
                                action: { deleteItem(itemToDelete: productBarcode) },
-                               label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                               label: { Label("Delete", systemImage: MySymbols.delete) }
                         )
                     })
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey("str.md.barcodes"))
+        .navigationTitle("Barcodes")
         .task {
             Task {
                 await updateData()
@@ -168,7 +168,7 @@ struct MDBarcodesView: View {
         .toolbar(content: {
             ToolbarItem(placement: .automatic, content: {
                 Button(action: {showAddBarcode.toggle()}, label: {
-                    Label("str.md.barcode.new", systemImage: "plus")
+                    Label("Add barcode", systemImage: "plus")
                         .labelStyle(.titleAndIcon)
                 })
             })
@@ -178,9 +178,9 @@ struct MDBarcodesView: View {
                 MDBarcodeFormView(isNewBarcode: true, productID: productID)
             }
         })
-        .alert(LocalizedStringKey("str.md.barcode.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
                     Task {
                         await deleteProductBarcode(toDelID: toDelID)

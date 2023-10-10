@@ -141,7 +141,7 @@ struct InventoryProductView: View {
                 }
             }
             
-            ProductField(productID: $productID, description: "str.stock.inventory.product")
+            ProductField(productID: $productID, description: "Product")
                 .onChange(of: productID) {
                     if let productID = productID {
                         Task {
@@ -160,47 +160,47 @@ struct InventoryProductView: View {
             
             if productID != nil {
                 if stockAmountDifference != 0 {
-                    Text(stockAmountDifference > 0 ? LocalizedStringKey("str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))")") : LocalizedStringKey("str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))")"))
+                    Text(stockAmountDifference > 0 ? "str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))"") : "str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))""))
                         .font(.caption)
                 } else {
-                    Text(LocalizedStringKey("str.stock.inventory.product.amount.equal"))
+                    Text("The selected amount is equal to the stock amount.")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
             }
             
-            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.dueDate")).font(.headline)) {
+            Section(header: Text("Due date").font(.headline)) {
                 HStack {
                     Image(systemName: MySymbols.date)
-                    DatePicker(LocalizedStringKey("str.stock.inventory.product.dueDate"), selection: $dueDate, displayedComponents: .date)
+                    DatePicker("Due date", selection: $dueDate, displayedComponents: .date)
                         .disabled(productNeverOverdue)
                 }
                 
-                MyToggle(isOn: $productNeverOverdue, description: "str.stock.inventory.product.neverOverdue", icon: MySymbols.doesntSpoil)
+                MyToggle(isOn: $productNeverOverdue, description: "Never overdue", icon: MySymbols.doesntSpoil)
             }
             
-            MyDoubleStepperOptional(amount: $price, description: "str.stock.inventory.product.price", descriptionInfo: "str.stock.inventory.product.price.info", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+            MyDoubleStepperOptional(amount: $price, description: "Price", descriptionInfo: "Per stock quantity unit", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
-            Section(header: Text(LocalizedStringKey("str.stock.inventory.product.location")).font(.headline)) {
-                Picker(selection: $storeID, label: Label(LocalizedStringKey("str.stock.inventory.product.store"), systemImage: MySymbols.store).foregroundStyle(.primary), content: {
+            Section(header: Text("Location").font(.headline)) {
+                Picker(selection: $storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
                         Text(store.name).tag(store.id as Int?)
                     }
                 })
                 
-                Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.inventory.product.location"), systemImage: MySymbols.location).foregroundStyle(.primary), content: {
+                Picker(selection: $locationID, label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })
             }
-            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
 #if os(macOS)
             if isPopup {
-                Button(action: { Task { await inventoryProduct() } }, label: {Text(LocalizedStringKey("str.stock.inventory.product.inventory"))})
+                Button(action: { Task { await inventoryProduct() } }, label: {Text("Perform inventory")})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }
@@ -228,13 +228,13 @@ struct InventoryProductView: View {
                     await inventoryProduct()
                 }
             }, label: {
-                Label(LocalizedStringKey("str.stock.inventory.product.inventory"), systemImage: MySymbols.inventory)
+                Label("Perform inventory", systemImage: MySymbols.inventory)
                     .labelStyle(.titleAndIcon)
             })
             .disabled(!isFormValid || isProcessingAction)
             .keyboardShortcut("s", modifiers: [.command])
         })
-        .navigationTitle(LocalizedStringKey("str.stock.inventory"))
+        .navigationTitle("Inventory")
     }
 }
 

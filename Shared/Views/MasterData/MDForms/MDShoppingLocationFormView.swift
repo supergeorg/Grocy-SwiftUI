@@ -82,12 +82,12 @@ struct MDStoreFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewStore ? LocalizedStringKey("str.md.store.new") : LocalizedStringKey("str.md.store.edit"))
+            .navigationTitle(isNewStore ? "New store" : "Edit store")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveStore() } },
                            label: {
-                        Label(LocalizedStringKey("str.md.store.save"), systemImage: MySymbols.save)
+                        Label("Save store", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -106,19 +106,19 @@ struct MDStoreFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewStore ? LocalizedStringKey("str.md.store.new") : LocalizedStringKey("str.md.store.edit"))
+            Text(isNewStore ? "New store" : "Edit store")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
             
-            Section(header: Text(LocalizedStringKey("str.md.store.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.store.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.store.name.required", errorMessage: "str.md.store.name.exists")
+            Section(header: Text("Store info")){
+                MyTextField(textToEdit: $name, description: "Store", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyToggle(isOn: $isActive, description: "str.md.product.active")
-                MyTextField(textToEdit: $mdStoreDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                MyToggle(isOn: $isActive, description: "Active")
+                MyTextField(textToEdit: $mdStoreDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
         .task {

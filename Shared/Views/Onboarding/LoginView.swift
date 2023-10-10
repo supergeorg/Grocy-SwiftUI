@@ -89,17 +89,20 @@ struct LoginStartView: View {
     var body: some View {
         CardView{
             VStack{
-                Text(LocalizedStringKey("str.login.info"))
+                Text("Welcome to Grocy Mobile!
+
+ This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server).
+ If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.")
                 Spacer()
-                Text(LocalizedStringKey("str.login.select"))
+                Text("Select a server type:")
                 HStack {
-                    Button(LocalizedStringKey("str.login.demoServer"), action: {
+                    Button("Demo server", action: {
                         loginViewState = .demoServer
                     })
                     .buttonStyle(BorderButtonStyle())
                     .matchedGeometryEffect(id: "demoServer", in: animation)
                     
-                    Button(LocalizedStringKey("str.login.ownServer"), action: {
+                    Button("Own server", action: {
                         loginViewState = .ownServer
                     })
                     .buttonStyle(FilledButtonStyle())
@@ -122,13 +125,13 @@ struct LoginDemoServerView: View {
         VStack{
             CardView{
                 VStack{
-                    Text(LocalizedStringKey("str.login.demoServer.info"))
+                    Text("Select a demo server:")
                     
 #if os(iOS)
                     Menu {
                         Picker(selection: $demoServerURL, label: CardView{
                             HStack(alignment: .center){
-                                Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
+                                Text("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                                 Image(systemName: MySymbols.menuPick)
                             }
                         }, content: {
@@ -139,12 +142,12 @@ struct LoginDemoServerView: View {
                         .labelsHidden()
                     } label: {
                         HStack(alignment: .center){
-                            Text(LocalizedStringKey("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)"))
+                            Text("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                             Image(systemName: MySymbols.menuPick)
                         }
                     }
 #elseif os(macOS)
-                    Picker(selection: $demoServerURL, label: Text(LocalizedStringKey("str.login.demoServer \("")")), content: {
+                    Picker(selection: $demoServerURL, label: Text("str.login.demoServer \(""")), content: {
                         ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
                             Text(demoServer.description).tag(demoServer.rawValue)
                         })
@@ -154,11 +157,11 @@ struct LoginDemoServerView: View {
                     Spacer()
                     
                     HStack{
-                        Button(LocalizedStringKey("str.back"), action: {
+                        Button("Back", action: {
                             loginViewState = .start
                         })
                         .buttonStyle(BorderButtonStyle())
-                        Button(LocalizedStringKey("str.login.demoServer.use"), action: {
+                        Button("Use demo server", action: {
                             passDemoMode = true
                             loginViewState = .logginIn
                         })
@@ -229,13 +232,13 @@ struct LoginOwnServerView: View {
     var body: some View {
         CardView{
             VStack{
-                MyTextField(textToEdit: $grocyServerURL, description: "str.login.ownServer.manual.serverURL", isCorrect: Binding.constant(true), leadingIcon: "network", helpText: "str.login.ownServer.manual.serverURL.help")
-                MyTextField(textToEdit: $grocyAPIKey, description: "str.login.ownServer.manual.APIKey", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.ownServer.manual.APIKey.help")
+                MyTextField(textToEdit: $grocyServerURL, description: "Server URL", isCorrect: Binding.constant(true), leadingIcon: "network", helpText: "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)")
+                MyTextField(textToEdit: $grocyAPIKey, description: "Valid API key", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "API key for the user which is shown in the Manage API keys webview. If none exist, you need to create a new one.")
 #if os(iOS)
                 Button(action: {
                     isShowingGrocyScanner.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.login.ownServer.qr"), systemImage: MySymbols.qrScan)
+                    Label("QR-Scan", systemImage: MySymbols.qrScan)
                 })
                 .buttonStyle(FilledButtonStyle())
                 .sheet(isPresented: $isShowingGrocyScanner, content: {
@@ -244,10 +247,10 @@ struct LoginOwnServerView: View {
 #endif
                 CardView {
                     VStack(spacing: 20) {
-                        MyToggle(isOn: $useHassIngress, description: "str.login.hassIngress.use", icon: "house")
+                        MyToggle(isOn: $useHassIngress, description: "Use Home Assistant Ingress", icon: "house")
                         if useHassIngress {
                             HStack {
-                                MyTextField(textToEdit: $hassToken, description: "str.login.hassIngress.token", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "str.login.hassIngress.token.help")
+                                MyTextField(textToEdit: $hassToken, description: "Long-Term-Token for Home Assistant", isCorrect: Binding.constant(true), leadingIcon: "key", helpText: "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS).")
 #if os(iOS)
                                 Button(action: {
                                     isShowingTokenScanner.toggle()
@@ -269,18 +272,18 @@ struct LoginOwnServerView: View {
                 CardView{
                     VStack{
                         HStack{
-                            Button(LocalizedStringKey("str.back"), action: {
+                            Button("Back", action: {
                                 loginViewState = .start
                             })
                             .buttonStyle(BorderButtonStyle())
                             if let manageKeysURL = URL(string: "\(grocyServerURL)/manageapikeys") {
                                 Link(destination: manageKeysURL, label: {
-                                    Text(LocalizedStringKey("str.login.ownServer.manual.APIKey.create"))
+                                    Text("Create API key")
                                 })
                                 .buttonStyle(BorderButtonStyle())
                             }
                         }
-                        Button(LocalizedStringKey("str.login.ownServer.manual.login"), action: {
+                        Button("Login", action: {
                             passDemoMode = false
                             loginViewState = .logginIn
                         })
@@ -354,19 +357,19 @@ struct LoginStatusView: View {
                 VStack{
                     CardView{
                         VStack(alignment: .leading){
-                            Text(LocalizedStringKey("str.login.connect.fail"))
+                            Text("Connection to server failed.")
                             ScrollView {
-                                Text(LocalizedStringKey("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? "")"))
+                                Text("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? """))
                             }
                         }
                     }
                     CardView{
                         HStack{
-                            Button(LocalizedStringKey("str.back"), action: {
+                            Button("Back", action: {
                                 loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                             })
                             .buttonStyle(BorderButtonStyle())
-                            Button(LocalizedStringKey("str.retry"), action: {
+                            Button("Try again", action: {
                                 Task {
                                     await tryLogin()
                                 }
@@ -378,14 +381,14 @@ struct LoginStatusView: View {
             case .unsupportedVersion:
                 VStack{
                     CardView{
-                        Text(LocalizedStringKey("str.login.connect.unsupportedVersion \(grocyVM.systemInfo?.grocyVersion.version ?? "?")"))
+                        Text("str.login.connect.unsupportedVersion \(grocyVM.systemInfo?.grocyVersion.version ?? "?""))
                     }
                     HStack{
-                        Button(LocalizedStringKey("str.back"), action: {
+                        Button("Back", action: {
                             loginViewState = (isDemoMode ?? false) ? .demoServer : .ownServer
                         })
                         .buttonStyle(BorderButtonStyle())
-                        Button(LocalizedStringKey("str.login.connect.unsupportedVersion.confirm"), action: {
+                        Button("Continue anyway", action: {
                             Task {
                                 if isDemoMode ?? false {
                                     grocyVM.setDemoModus()

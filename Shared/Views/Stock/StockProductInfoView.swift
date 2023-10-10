@@ -25,23 +25,23 @@ struct StockProductInfoView: View {
                     .font(.title)
                 
                 Group {
-                    Text(LocalizedStringKey("str.details.amount")).bold()
+                    Text("Stock amount: ").bold()
                     +
                     Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.stockAmount == 1 ? productDetails.quantityUnitStock.name : productDetails.quantityUnitStock.namePlural ?? productDetails.quantityUnitStock.name)")
                     
-                    Text(LocalizedStringKey("str.details.stockValue")).bold()
+                    Text("Stock value: ").bold()
                     +
                     Text(grocyVM.getFormattedCurrency(amount: productDetails.stockValue ?? 0.0))
                     
-                    Text(LocalizedStringKey("str.details.defaultLocation")).bold()
+                    Text("Default location: ").bold()
                     +
                     Text(productDetails.location.name)
                 }
                 
                 Group {
-                    Text(LocalizedStringKey("str.details.lastPurchaseDate")).bold()
+                    Text("Last purchased: ").bold()
                     +
-                    Text(LocalizedStringKey(formatDateAsString(productDetails.lastPurchased, localizationKey: localizationKey) ?? "str.details.never"))
+                    Text(LocalizedStringKey(formatDateAsString(productDetails.lastPurchased, localizationKey: localizationKey) ?? "Never"))
                     +
                     Text(" ")
                     +
@@ -49,9 +49,9 @@ struct StockProductInfoView: View {
                         .font(.caption)
                         .italic()
                     
-                    Text(LocalizedStringKey("str.details.lastUseDate")).bold()
+                    Text("Last used: ").bold()
                     +
-                    Text(LocalizedStringKey(formatDateAsString(productDetails.lastUsed, localizationKey: localizationKey) ?? "str.details.never"))
+                    Text(LocalizedStringKey(formatDateAsString(productDetails.lastUsed, localizationKey: localizationKey) ?? "Never"))
                     +
                     Text(" ")
                     +
@@ -61,21 +61,21 @@ struct StockProductInfoView: View {
                 }
                 
                 Group {
-                    Text(LocalizedStringKey("str.details.lastPrice")).bold()
+                    Text("Last price: ").bold()
                     +
-                    Text(productDetails.lastPrice != nil ? LocalizedStringKey("str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
+                    Text(productDetails.lastPrice != nil ? "str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)" : "Unknown")
                     
-                    Text(LocalizedStringKey("str.details.averagePrice")).bold()
+                    Text("Average price: ").bold()
                     +
-                    Text(productDetails.avgPrice != nil ? LocalizedStringKey("str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)") : LocalizedStringKey("str.details.unknown"))
+                    Text(productDetails.avgPrice != nil ? "str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)" : "Unknown")
                 }
                 
                 Group {
-                    Text(LocalizedStringKey("str.details.averageShelfLife")).bold()
+                    Text("Average shelf life: ").bold()
                     +
-                    Text(productDetails.averageShelfLifeDays  > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "str.details.unknown") : LocalizedStringKey("str.details.unknown"))
+                    Text(productDetails.averageShelfLifeDays  > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown") : "Unknown")
                     
-                    Text(LocalizedStringKey("str.details.spoilRate")).bold()
+                    Text("Spoil rate: ").bold()
                     +
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
@@ -85,7 +85,7 @@ struct StockProductInfoView: View {
                 }
             } else { Text("Retrieving Details Failed. Please open another window first.") }
         }
-        .navigationTitle(LocalizedStringKey("str.details.title"))
+        .navigationTitle("Product overview")
         .toolbar(content: {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close") {

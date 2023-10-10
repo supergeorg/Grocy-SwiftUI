@@ -83,7 +83,7 @@ struct UserFormView: View {
         content
 #elseif os(iOS)
         content
-            .navigationTitle(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
+            .navigationTitle(isNewUser ? "Create user" : "Edit user")
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -92,7 +92,7 @@ struct UserFormView: View {
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
-                    Button(LocalizedStringKey("str.save")) {
+                    Button("Save") {
                         Task {
                             await saveUser()
                         }
@@ -107,20 +107,20 @@ struct UserFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewUser ? LocalizedStringKey("str.admin.user.new.create") : LocalizedStringKey("str.admin.user.new.edit"))
+            Text(isNewUser ? "Create user" : "Edit user")
                 .font(.headline)
 #endif
-            Section(header: Text(LocalizedStringKey("str.admin.user.new.userName")).font(.title)){
-                MyTextField(textToEdit: $username, description: "str.admin.user.new.userName", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "str.admin.user.new.userName.required", errorMessage: "str.admin.user.new.userName.exists")
+            Section(header: Text("Username").font(.title)){
+                MyTextField(textToEdit: $username, description: "Username", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "A username is required", errorMessage: "Username already exists")
                     .onChange(of: username) {
                         isValidUsername = checkUsernameCorrect()
                     }
-                MyTextField(textToEdit: $firstName, description: "str.admin.user.new.firstName", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
-                MyTextField(textToEdit: $lastName, description: "str.admin.user.new.lastName", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
+                MyTextField(textToEdit: $firstName, description: "First name", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
+                MyTextField(textToEdit: $lastName, description: "Last name", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
             }
-            Section(header: Text(LocalizedStringKey("str.admin.user.new.password")).font(.title)){
-                MyTextField(textToEdit: $password, description: "str.admin.user.new.password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
-                MyTextField(textToEdit: $passwordConfirm, description: "str.admin.user.new.password.confirm", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "str.admin.user.new.password.mismatch")
+            Section(header: Text("Password").font(.title)){
+                MyTextField(textToEdit: $password, description: "Password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
+                MyTextField(textToEdit: $passwordConfirm, description: "Confirm password", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "Passwords do not match")
             }
 #if os(macOS)
             Divider()
@@ -130,7 +130,7 @@ struct UserFormView: View {
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button(LocalizedStringKey("str.save")) {
+                Button("Save") {
                     Task {
                         await saveUser()
                     }

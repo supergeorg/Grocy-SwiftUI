@@ -87,11 +87,11 @@ struct MDTaskCategoryFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
+            .navigationTitle(isNewTaskCategory ? "Create task category" : "Edit task category")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveTaskCategory() } }, label: {
-                        Label(LocalizedStringKey("str.md.taskCategory.save"), systemImage: MySymbols.save)
+                        Label("Save task category", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -112,17 +112,17 @@ struct MDTaskCategoryFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewTaskCategory ? LocalizedStringKey("str.md.taskCategory.new") : LocalizedStringKey("str.md.taskCategory.edit"))
+            Text(isNewTaskCategory ? "Create task category" : "Edit task category")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
-            Section(header: Text(LocalizedStringKey("str.md.taskCategory.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.taskCategory.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.productGroup.name.required", errorMessage: "str.md.taskCategory.name.exists")
+            Section(header: Text("Task category info")){
+                MyTextField(textToEdit: $name, description: "Task category name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyTextField(textToEdit: $mdTaskCategoryDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                MyTextField(textToEdit: $mdTaskCategoryDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
         }
         .task {

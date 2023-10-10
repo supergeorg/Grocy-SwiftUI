@@ -118,11 +118,11 @@ struct MDQuantityUnitFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
+            .navigationTitle(isNewQuantityUnit ? "New quantity unit" : "Edit quantity unit")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveQuantityUnit() } }, label: {
-                        Label(LocalizedStringKey("str.md.quantityUnit.save"), systemImage: MySymbols.save)
+                        Label("Save quantity unit", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -143,24 +143,24 @@ struct MDQuantityUnitFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewQuantityUnit ? LocalizedStringKey("str.md.quantityUnit.new") : LocalizedStringKey("str.md.quantityUnit.edit"))
+            Text(isNewQuantityUnit ? "New quantity unit" : "Edit quantity unit")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
-            Section(header: Text(LocalizedStringKey("str.md.quantityUnit.info"))){
-                MyTextField(textToEdit: $name, description: "str.md.quantityUnit.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.quantityUnit.name.required", errorMessage: "str.md.quantityUnit.name.exists")
+            Section(header: Text("Quantity unit info")){
+                MyTextField(textToEdit: $name, description: "Name (in singular form)", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyTextField(textToEdit: $namePlural, description: "str.md.quantityUnit.namePlural", isCorrect: Binding.constant(true), leadingIcon: "tag")
-                MyToggle(isOn: $isActive, description: "str.md.product.active")
-                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "str.md.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+                MyTextField(textToEdit: $namePlural, description: "Name (in plural form)", isCorrect: Binding.constant(true), leadingIcon: "tag")
+                MyToggle(isOn: $isActive, description: "Active")
+                MyTextField(textToEdit: $mdQuantityUnitDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             }
             if !isNewQuantityUnit, let quantityUnit = quantityUnit {
                 Section(header: VStack(alignment: .leading) {
                     HStack(alignment: .top) {
-                        Text(LocalizedStringKey("str.md.quantityUnit.conversions"))
+                        Text("Default conversions")
                         Spacer()
                         Button(action: {
                             showAddQuantityUnitConversion.toggle()
@@ -169,7 +169,7 @@ struct MDQuantityUnitFormView: View {
                                 .font(.body)
                         })
                     }
-                    Text(LocalizedStringKey("str.md.quantityUnit.conversions.hint \("1 \(quantityUnit.name)")"))
+                    Text("str.md.quantityUnit.conversions.hint \("1 \(quantityUnit.name)""))
                         .italic()
                 })
                 {
@@ -185,7 +185,7 @@ struct MDQuantityUnitFormView: View {
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                                     Button(role: .destructive,
                                            action: { markDeleteQUConversion(conversion: quConversion) },
-                                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                           label: { Label("Delete", systemImage: MySymbols.delete) }
                                     )
                                 })
                             }
@@ -202,7 +202,7 @@ struct MDQuantityUnitFormView: View {
                             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                                 Button(role: .destructive,
                                        action: { markDeleteQUConversion(conversion: quConversion) },
-                                       label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                                       label: { Label("Delete", systemImage: MySymbols.delete) }
                                 )
                             })
                         }
@@ -218,9 +218,9 @@ struct MDQuantityUnitFormView: View {
                     }
 #endif
                 })
-                .alert(LocalizedStringKey("str.delete"), isPresented: $showConversionDeleteAlert, actions: {
+                .alert("Delete", isPresented: $showConversionDeleteAlert, actions: {
                     Button("Cancel", role: .cancel) { }
-                    Button(LocalizedStringKey("str.delete"), role: .destructive) {
+                    Button("Delete", role: .destructive) {
                         if let deleteID = conversionToDelete?.id {
                             Task {
                                 await deleteQUConversion(toDelID: deleteID)
@@ -231,7 +231,7 @@ struct MDQuantityUnitFormView: View {
                     if let conversionToDelete = conversionToDelete {
                         Text("\(conversionToDelete.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")")
                     } else {
-                        Text(LocalizedStringKey("str.error.other"))
+                        Text("Unknown error occured.")
                     }
                 })
             }

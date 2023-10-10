@@ -9,21 +9,21 @@ import Foundation
 import SwiftUI
 
 enum ShoppingListStatus: String {
-    case all = "str.shL.filter.all"
-    case belowMinStock = "str.shL.filter.belowMinStock"
-    case done = "str.shL.filter.done"
-    case undone = "str.shL.filter.undone"
+    case all = "All"
+    case belowMinStock = "Below min. stock amount"
+    case done = "Only done items"
+    case undone = "Only undone items"
 
     func getDescription(amount: Int) -> LocalizedStringKey {
         switch self {
         case .all:
-            return LocalizedStringKey("no description")
+            return "no description"
         case .belowMinStock:
-            return amount == 1 ? LocalizedStringKey("str.shL.filter.info.1belowMinStock") : LocalizedStringKey("str.shL.filter.info.belowMinStock \(amount)")
+            return amount == 1 ? "1 product is below min. defined stock amount" : "str.shL.filter.info.belowMinStock \(amount)"
         case .done:
-            return amount == 1 ? LocalizedStringKey("str.shL.filter.info.1done") : LocalizedStringKey("str.shL.filter.info.done \(amount)")
+            return amount == 1 ? "1 entry is done" : "str.shL.filter.info.done \(amount)"
         case .undone:
-            return amount == 1 ? LocalizedStringKey("str.shL.filter.info.1undone") : LocalizedStringKey("str.shL.filter.info.undone \(amount)")
+            return amount == 1 ? "1 entry is undone" : "str.shL.filter.info.undone \(amount)"
         }
     }
 }

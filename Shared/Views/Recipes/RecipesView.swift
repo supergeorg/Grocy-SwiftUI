@@ -40,7 +40,7 @@ struct RecipesView: View {
     
     var body: some View {
         bodyContent
-            .navigationTitle(LocalizedStringKey("str.nav.recipes"))
+            .navigationTitle("Recipes")
             .refreshable(action: {
                 await updateData()
             })
@@ -80,18 +80,18 @@ struct RecipesView: View {
     var tableView: some View {
 #if os(macOS)
         Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
-            TableColumn(LocalizedStringKey("str.recipes.name"), value: \.name)
-            TableColumn(LocalizedStringKey("str.recipes.dueScore"), value: \.dueScore) { recipe in
+            TableColumn("Name", value: \.name)
+            TableColumn("Due score", value: \.dueScore) { recipe in
                 Text(String(recipe.dueScore))
             }
-            TableColumn(LocalizedStringKey("str.recipes.fulfillment"), value: \.needFulfilled.rawValue) { recipe in
+            TableColumn("Requirements fulfilled", value: \.needFulfilled.rawValue) { recipe in
                 switch recipe.needFulfilled {
                 case .fulfilled:
-                    Text(LocalizedStringKey("str.recipes.fulfillment.enough"))
+                    Text("Enough in stock")
                 case .shoppingList:
                     Text("SHL")
                 case .none:
-                    Text(LocalizedStringKey("str.recipes.fulfillment.notEnough"))
+                    Text("Not enough in stock")
                 }
             }
         })

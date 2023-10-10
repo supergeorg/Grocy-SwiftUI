@@ -29,7 +29,7 @@ extension String {
 
 func formatDateOutput(_ dateStrIN: String) -> String? {
     if dateStrIN == "2999-12-31" {
-        return "str.time.unlimited"
+        return "unlimited"
     }
     let dateFormatterIN = DateFormatter()
     dateFormatterIN.dateFormat = "yyyy-MM-dd"

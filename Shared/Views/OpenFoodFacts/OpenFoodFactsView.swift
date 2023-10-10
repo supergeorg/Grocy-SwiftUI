@@ -27,7 +27,7 @@ struct OpenFoodFactsView: View {
                 Text("NO OFF DATA FOUND")
             }
         }
-        .navigationTitle(LocalizedStringKey("OPEN FOOD FACTS"))
+        .navigationTitle("OPEN FOOD FACTS")
     }
 }
 

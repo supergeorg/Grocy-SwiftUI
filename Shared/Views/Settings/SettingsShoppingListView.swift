@@ -46,7 +46,7 @@ struct SettingsShoppingListView: View {
                 )
             }
             if devMode {
-                Section(header: Text(LocalizedStringKey("REMINDER SYNC")).font(.title)) {
+                Section(header: Text("REMINDER SYNC").font(.title)) {
                     MyToggle(isOn: $syncShoppingListToReminders, description: "SYNC SHOPPING LIST TO REMINDERS")
                     Picker("SHOPPING LIST", selection: $shoppingListToSyncID, content: {
                         Text("").tag(0)

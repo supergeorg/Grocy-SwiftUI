@@ -79,7 +79,7 @@ struct MDQuantityUnitsView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
+                .navigationTitle("Quantity units")
         }
     }
     
@@ -95,7 +95,7 @@ struct MDQuantityUnitsView: View {
                     }, label: {Image(systemName: MySymbols.new)})
                 }
             }
-            .navigationTitle(LocalizedStringKey("str.md.quantityUnits"))
+            .navigationTitle("Quantity units")
 #if os(iOS)
             .sheet(isPresented: self.$showAddQuantityUnit, content: {
                 NavigationView {
@@ -107,14 +107,14 @@ struct MDQuantityUnitsView: View {
     var content: some View {
         List {
             if grocyVM.mdQuantityUnits.isEmpty {
-                ContentUnavailableView("str.md.quantityUnits.empty", systemImage: MySymbols.quantityUnit)
+                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
             } else if filteredQuantityUnits.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddQuantityUnit {
                 NavigationLink(destination: MDQuantityUnitFormView(isNewQuantityUnit: true, showAddQuantityUnit: $showAddQuantityUnit), isActive: $showAddQuantityUnit, label: {
-                    NewMDRowLabel(title: "str.md.quantityUnit.new")
+                    NewMDRowLabel(title: "New quantity unit")
                 })
             }
 #endif
@@ -125,7 +125,7 @@ struct MDQuantityUnitsView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: quantityUnit) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -140,9 +140,9 @@ struct MDQuantityUnitsView: View {
             await updateData()
         }
         .animation(.default, value: filteredQuantityUnits.count)
-        .alert(LocalizedStringKey("str.md.quantityUnit.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this quantity unit?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = quantityUnitToDelete?.id {
                     Task {
                         await deleteQuantityUnit(toDelID: toDelID)

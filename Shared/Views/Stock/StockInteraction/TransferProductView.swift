@@ -126,7 +126,7 @@ struct TransferProductView: View {
                 }
             }
             
-            ProductField(productID: $productID, description: "str.stock.transfer.product")
+            ProductField(productID: $productID, description: "Product")
                 .onChange(of: productID) {
                     Task {
                         try await grocyVM.getStockProductEntries(productID: productID ?? 0)
@@ -138,7 +138,7 @@ struct TransferProductView: View {
                 }
             
             VStack(alignment: .leading) {
-                Picker(selection: $locationIDFrom, label: Label(LocalizedStringKey("str.stock.transfer.product.locationFrom"), systemImage: "square.and.arrow.up").foregroundStyle(.primary), content: {
+                Picker(selection: $locationIDFrom, label: Label("From location", systemImage: "square.and.arrow.up").foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationFrom in
                         Text(locationFrom.name).tag(locationFrom.id as Int?)
@@ -146,7 +146,7 @@ struct TransferProductView: View {
                 })
                 
                 if locationIDFrom == nil {
-                    Text(LocalizedStringKey("str.stock.transfer.product.locationFrom.required"))
+                    Text("A location is required")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
@@ -157,7 +157,7 @@ struct TransferProductView: View {
             VStack(alignment: .leading) {
                 Picker(
                     selection: $locationIDTo,
-                    label: Label(LocalizedStringKey("str.stock.transfer.product.locationTo"), systemImage: "square.and.arrow.down").foregroundStyle(.primary),
+                    label: Label("To location", systemImage: "square.and.arrow.down").foregroundStyle(.primary),
                     content: {
                         Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationTo in
@@ -165,26 +165,26 @@ struct TransferProductView: View {
                         }
                     })
                 if locationIDTo == nil {
-                    Text(LocalizedStringKey("str.stock.transfer.product.locationTo.required"))
+                    Text("A location is required")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
                 if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
-                    Text(LocalizedStringKey("str.stock.transfer.product.locationTo.same"))
+                    Text("This cannot be the same as the "From" location")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
                 if product?.shouldNotBeFrozen == true,
                    locationTo?.isFreezer == true
                 {
-                    Text(LocalizedStringKey("str.stock.transfer.product.shouldNotBeFrozen"))
+                    Text("This product shouldn't be frozen")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
             }
             
             if productID != nil {
-                MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.transfer.product.useStockEntry", descriptionInfo: "str.stock.transfer.product.useStockEntry.description", icon: "tag")
+                MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is "Opened first, then first due first, then first in first out"", icon: "tag")
                 
                 if (useSpecificStockEntry) {
 #if os(iOS)
@@ -197,7 +197,7 @@ struct TransferProductView: View {
             }
 #if os(macOS)
             if isPopup {
-                Button(action: { Task { await transferProduct() } }, label: {Text(LocalizedStringKey("str.stock.transfer.product.transfer"))})
+                Button(action: { Task { await transferProduct() } }, label: {Text("Transfer product")})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }
@@ -210,19 +210,19 @@ struct TransferProductView: View {
                 firstAppear = false
             }
         }
-        .navigationTitle(LocalizedStringKey("str.stock.transfer"))
+        .navigationTitle("Transfer")
     }
     
     var stockEntryPicker: some View {
-        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.transfer.product.stockEntry"), systemImage: "tag"), content: {
+        Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
             Text("").tag(nil as String?)
             ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
                 Group {
-                    Text(stockProduct.stockEntryOpen == true ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    Text(stockProduct.stockEntryOpen == true ? "str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : "str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                     +
                     Text("; ")
                     +
-                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                    Text(stockProduct.note != nil ? "str.stock.entries.note \(stockProduct.note ?? """) : LocalizedStringKey(""))
                 }
                 .tag(stockProduct.stockID as String?)
             }
@@ -245,7 +245,7 @@ struct TransferProductView: View {
                     await transferProduct()
                 }
             }, label: {
-                Label(LocalizedStringKey("str.stock.transfer.product.transfer"), systemImage: MySymbols.transfer)
+                Label("Transfer product", systemImage: MySymbols.transfer)
                     .labelStyle(.titleAndIcon)
             })
             .disabled(!isFormValid || isProcessingAction)

@@ -94,29 +94,29 @@ enum UserFieldType: String, CaseIterable {
         case .none:
             return ""
         case .textSingleLine:
-            return "str.md.userField.type.textSingleLine"
+            return "Text (single line)"
         case .textMultiLine:
-            return "str.md.userField.type.textMultiLine"
+            return "Text (multi line)"
         case .numberIntegral:
-            return "str.md.userField.type.numberIntegral"
+            return "Number (integral)"
         case .numberDezimal:
-            return "str.md.userField.type.numberDezimal"
+            return "Number (decimal)"
         case .date:
-            return "str.md.userField.type.date"
+            return "Date (without time)"
         case .dateTime:
-            return "str.md.userField.type.dateTime"
+            return "Date & time"
         case .checkbox:
-            return "str.md.userField.type.checkbox"
+            return "Checkbox"
         case .presetList:
-            return "str.md.userField.type.presetList"
+            return "Select list (a single item can be selected)"
         case .presetChecklist:
-            return "str.md.userField.type.presetChecklist"
+            return "Select list (multiple items can be selected)"
         case .link:
-            return "str.md.userField.type.link"
+            return "Link"
         case .file:
-            return "str.md.userField.type.file"
+            return "File"
         case .image:
-            return "str.md.userField.type.image"
+            return "Image"
         }
     }
 }

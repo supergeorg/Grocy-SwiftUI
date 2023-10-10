@@ -18,13 +18,13 @@ struct StockTableConfigView: View {
     
     var body: some View {
         Form() {
-            Toggle(LocalizedStringKey("str.stock.tbl.product"), isOn: $showProduct)
-            Toggle(LocalizedStringKey("str.stock.tbl.productGroup"), isOn: $showProductGroup)
-            Toggle(LocalizedStringKey("str.stock.tbl.amount"), isOn: $showAmount)
-            Toggle(LocalizedStringKey("str.stock.tbl.value"), isOn: $showValue)
+            Toggle("Product", isOn: $showProduct)
+            Toggle("Product group", isOn: $showProductGroup)
+            Toggle("Amount", isOn: $showAmount)
+            Toggle("Value", isOn: $showValue)
             Toggle("Next due date", isOn: $showNextBestBeforeDate)
-            Toggle(LocalizedStringKey("str.stock.tbl.caloriesPerStockQU"), isOn: $showCaloriesPerStockQU)
-            Toggle(LocalizedStringKey("str.stock.tbl.calories"), isOn: $showCalories)
+            Toggle("Calories (Per stock quantity unit)", isOn: $showCaloriesPerStockQU)
+            Toggle("Calories", isOn: $showCalories)
         }
     }
 }

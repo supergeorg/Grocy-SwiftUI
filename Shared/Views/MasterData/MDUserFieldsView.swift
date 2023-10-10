@@ -14,9 +14,9 @@ struct MDUserFieldRowView: View {
         VStack(alignment: .leading) {
             Text(userField.caption)
                 .font(.title)
-            Text(LocalizedStringKey("str.md.userFields.rowName \(userField.name)"))
-            Text(LocalizedStringKey("str.md.userFields.rowEntity \(userField.entity)"))
-            Text(LocalizedStringKey("str.md.userFields.rowType \("")"))
+            Text("str.md.userFields.rowName \(userField.name)")
+            Text("str.md.userFields.rowEntity \(userField.entity)")
+            Text("str.md.userFields.rowType \("""))
             +
             Text(LocalizedStringKey(UserFieldType(rawValue: userField.type)?.getDescription() ?? userField.type))
         }
@@ -76,7 +76,7 @@ struct MDUserFieldsView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.userFields"))
+                .navigationTitle("Userfields")
         }
     }
     
@@ -92,7 +92,7 @@ struct MDUserFieldsView: View {
                     }, label: {Image(systemName: MySymbols.new)})
                 }
             }
-            .navigationTitle(LocalizedStringKey("str.md.userFields"))
+            .navigationTitle("Userfields")
 #if os(iOS)
             .sheet(isPresented: self.$showAddUserField, content: {
                 NavigationView {
@@ -104,14 +104,14 @@ struct MDUserFieldsView: View {
     var content: some View {
         List{
             if grocyVM.mdUserFields.isEmpty {
-                Text(LocalizedStringKey("str.md.userFields.empty"))
+                Text("No userfields found.")
             } else if filteredUserFields.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddUserField {
                 NavigationLink(destination: MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField), isActive: $showAddUserField, label: {
-                    NewMDRowLabel(title: "str.md.userField.new")
+                    NewMDRowLabel(title: "Create userfield")
                 })
             }
 #endif
@@ -122,7 +122,7 @@ struct MDUserFieldsView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: userField) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -137,9 +137,9 @@ struct MDUserFieldsView: View {
             await updateData()
         }
         .animation(.default, value: filteredUserFields.count)
-        .alert(LocalizedStringKey("str.md.userField.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this userfield?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = userFieldToDelete?.id {
                     Task {
                         await deleteUserField(toDelID: toDelID)

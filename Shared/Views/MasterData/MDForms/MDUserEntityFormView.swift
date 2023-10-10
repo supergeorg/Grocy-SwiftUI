@@ -91,11 +91,11 @@ struct MDUserEntityFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
+            .navigationTitle(isNewUserEntity ? "New userentity" : "Edit userentity")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveUserEntity() } }, label: {
-                        Label(LocalizedStringKey("str.md.userEntity.save"), systemImage: MySymbols.save)
+                        Label("Save userentity", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -116,25 +116,25 @@ struct MDUserEntityFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewUserEntity ? LocalizedStringKey("str.md.userEntity.new") : LocalizedStringKey("str.md.userEntity.edit"))
+            Text(isNewUserEntity ? "New userentity" : "Edit userentity")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
-            Section(header: Text(LocalizedStringKey("str.md.userEntity.name"))){
-                MyTextField(textToEdit: $name, description: "str.md.userEntity.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.name.required", errorMessage: "str.md.userEntity.name.invalid")
+            Section(header: Text("Name of the userentity")){
+                MyTextField(textToEdit: $name, description: "Name of the userentity", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "This is required and can only contain letters and numbers", errorMessage: "str.md.userEntity.name.invalid")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyTextField(textToEdit: $caption, description: "str.md.userEntity.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userEntity.caption.required")
+                MyTextField(textToEdit: $caption, description: "Caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "A caption is required")
                     .onChange(of: caption) {
                         isCaptionCorrect = checkCaptionCorrect()
                     }
             }
             
-            MyTextField(textToEdit: $mdUserEntityDescription, description: "str.md.userEntity.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(textToEdit: $mdUserEntityDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
-            MyToggle(isOn: $showInSidebarMenu, description: "str.md.userEntity.showInSideBarMenu", icon: "tablecells")
+            MyToggle(isOn: $showInSidebarMenu, description: "Show in sidebar menu", icon: "tablecells")
         }
         .task {
             if firstAppear {

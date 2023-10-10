@@ -56,12 +56,12 @@ struct MDProductFormOFFView: View {
                     })
                     .frame(maxWidth: 150.0, maxHeight: 150.0)
                 }
-                MyTextField(textToEdit: Binding.constant(barcode), description: "str.md.barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
+                MyTextField(textToEdit: Binding.constant(barcode), description: "Barcode", isCorrect: Binding.constant(true), leadingIcon: MySymbols.barcode)
                     .disabled(true)
             }
             
             if productNames.isEmpty {
-                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+                MyTextField(textToEdit: $name, description: "Product name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
@@ -74,13 +74,13 @@ struct MDProductFormOFFView: View {
                     HStack{
                         Image(systemName: "tag")
                         VStack(alignment: .leading){
-                            Text(LocalizedStringKey("str.md.product.name"))
+                            Text("Product name")
                             if name.isEmpty {
-                                Text(LocalizedStringKey("str.md.product.name.required"))
+                                Text("A name is required")
                                     .font(.caption)
                                     .foregroundStyle(Color.red)
                             } else if !isNameCorrect {
-                                Text("str.md.product.name.exists")
+                                Text("Name already exists")
                                     .font(.caption)
                                     .foregroundStyle(Color.red)
                             }
@@ -306,11 +306,11 @@ struct MDProductFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
+            .navigationTitle(isNewProduct ? "Create product" : "Edit product")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveProduct() } }, label: {
-                        Label(LocalizedStringKey("str.md.product.save"), systemImage: MySymbols.save)
+                        Label("Save product", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing || !isBarcodeCorrect)
@@ -354,7 +354,7 @@ struct MDProductFormView: View {
             }
             
 #if os(macOS)
-            Text(isNewProduct ? LocalizedStringKey("str.md.product.new") : LocalizedStringKey("str.md.product.edit"))
+            Text(isNewProduct ? "Create product" : "Edit product")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
@@ -366,14 +366,14 @@ struct MDProductFormView: View {
                         isNameCorrect = checkNameCorrect()
                     }
             } else {
-                MyTextField(textToEdit: $name, description: "str.md.product.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.product.name.required", errorMessage: "str.md.product.name.exists")
+                MyTextField(textToEdit: $name, description: "Product name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
             }
             
             if !queuedBarcode.isEmpty && isNewProduct {
-                MyTextField(textToEdit: $queuedBarcode, description: "str.md.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "str.md.barcode.barcode.invalid")
+                MyTextField(textToEdit: $queuedBarcode, description: "Barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "The barcode is invalid or already in use.")
                     .onChange(of: queuedBarcode) {
                         isBarcodeCorrect = checkBarcodeCorrect()
                     }
@@ -383,37 +383,37 @@ struct MDProductFormView: View {
             DisclosureGroup(content: {
                 optionalPropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
+                MyLabelWithSubtitle(title: "Optional properties", subTitle: "State, Parent product, Description, Product group, Energy, Picture", systemImage: MySymbols.description)
             })
             
             DisclosureGroup(content: {
                 locationPropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.defaultLocations", subTitle: "str.md.product.category.defaultLocations.description", systemImage: MySymbols.location, isProblem: locationID == nil)
+                MyLabelWithSubtitle(title: "Default locations", subTitle: "Location, Store", systemImage: MySymbols.location, isProblem: locationID == nil)
             })
             
             DisclosureGroup(content: {
                 dueDatePropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.dueDate", subTitle: "str.md.product.category.dueDate.description", systemImage: MySymbols.date)
+                MyLabelWithSubtitle(title: "Due date", subTitle: "Type, Default days; after opening, freezing, thawing", systemImage: MySymbols.date)
             })
             
             DisclosureGroup(content: {
                 quantityUnitPropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
+                MyLabelWithSubtitle(title: "Quantity units", subTitle: "Stock, Purchase", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
             })
             
             DisclosureGroup(content: {
                 amountPropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.category.amount", subTitle: "str.md.product.category.amount.description", systemImage: MySymbols.amount)
+                MyLabelWithSubtitle(title: "Amounts", subTitle: "Min. stock, Quick consume, Factor, Tare weight", systemImage: MySymbols.amount)
             })
             
             DisclosureGroup(content: {
                 barcodePropertiesView
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
+                MyLabelWithSubtitle(title: "Barcodes", subTitle: isNewProduct ? "Product is not on server" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
             })
             .disabled(isNewProduct)
 #else
@@ -421,37 +421,37 @@ struct MDProductFormView: View {
                 NavigationLink(
                     destination: optionalPropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.optionalProperties", subTitle: "str.md.product.category.optionalProperties.description", systemImage: MySymbols.description)
+                        MyLabelWithSubtitle(title: "Optional properties", subTitle: "State, Parent product, Description, Product group, Energy, Picture", systemImage: MySymbols.description)
                     })
                 
                 NavigationLink(
                     destination: locationPropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.defaultLocations", subTitle: "str.md.product.category.defaultLocations.description", systemImage: MySymbols.location, isProblem: locationID == nil)
+                        MyLabelWithSubtitle(title: "Default locations", subTitle: "Location, Store", systemImage: MySymbols.location, isProblem: locationID == nil)
                     })
                 
                 NavigationLink(
                     destination: dueDatePropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.dueDate", subTitle: "str.md.product.category.dueDate.description", systemImage: MySymbols.date)
+                        MyLabelWithSubtitle(title: "Due date", subTitle: "Type, Default days; after opening, freezing, thawing", systemImage: MySymbols.date)
                     })
                 
                 NavigationLink(
                     destination: quantityUnitPropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.quantityUnits", subTitle: "str.md.product.category.quantityUnits.description", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
+                        MyLabelWithSubtitle(title: "Quantity units", subTitle: "Stock, Purchase", systemImage: MySymbols.quantityUnit, isProblem: (quIDStock == nil || quIDPurchase == nil || quIDConsume == nil || quIDPrice == nil))
                     })
                 
                 NavigationLink(
                     destination: amountPropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.product.category.amount", subTitle: "str.md.product.category.amount.description", systemImage: MySymbols.amount)
+                        MyLabelWithSubtitle(title: "Amounts", subTitle: "Min. stock, Quick consume, Factor, Tare weight", systemImage: MySymbols.amount)
                     })
                 
                 NavigationLink(
                     destination: barcodePropertiesView,
                     label: {
-                        MyLabelWithSubtitle(title: "str.md.barcodes", subTitle: isNewProduct ? "str.md.product.notOnServer" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
+                        MyLabelWithSubtitle(title: "Barcodes", subTitle: isNewProduct ? "Product is not on server" : "", systemImage: MySymbols.barcode, hideSubtitle: !isNewProduct)
                     })
                 .disabled(isNewProduct)
             }
@@ -469,16 +469,16 @@ struct MDProductFormView: View {
     var optionalPropertiesView: some View {
         Form {
             // Active
-            MyToggle(isOn: $active, description: "str.md.product.active", descriptionInfo: nil, icon: "checkmark.circle")
+            MyToggle(isOn: $active, description: "Active", descriptionInfo: nil, icon: "checkmark.circle")
             
             // Parent Product
-            ProductField(productID: $parentProductID, description: "str.md.product.parentProduct")
+            ProductField(productID: $parentProductID, description: "Parent product ")
             
             // Product Description
-            MyTextField(textToEdit: $mdProductDescription, description: "str.md.product.description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(textToEdit: $mdProductDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
             // Product group
-            Picker(selection: $productGroupID, label: Label(LocalizedStringKey("str.md.product.productGroup"), systemImage: MySymbols.productGroup).foregroundStyle(.primary), content: {
+            Picker(selection: $productGroupID, label: Label("Product group", systemImage: MySymbols.productGroup).foregroundStyle(.primary), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { grocyProductGroup in
                     Text(grocyProductGroup.name).tag(grocyProductGroup.id as Int?)
@@ -486,63 +486,63 @@ struct MDProductFormView: View {
             })
             
             // Energy
-            MyDoubleStepper(amount: $calories, description: "str.md.product.calories", descriptionInfo: "str.md.product.calories.info", minAmount: 0, amountStep: 1, amountName: "kcal", systemImage: MySymbols.energy)
+            MyDoubleStepper(amount: $calories, description: "Energy (kcal)", descriptionInfo: "Per stock quantity unit", minAmount: 0, amountStep: 1, amountName: "kcal", systemImage: MySymbols.energy)
             
             // Don't show on stock overview
-            MyToggle(isOn: $hideOnStockOverview, description: "str.md.product.dontShowOnStockOverview", descriptionInfo: "str.md.product.dontShowOnStockOverview.info", icon: MySymbols.stockOverview)
+            MyToggle(isOn: $hideOnStockOverview, description: "Never show on stock overview ", descriptionInfo: "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always", icon: MySymbols.stockOverview)
             
             // Disable own stock
-            MyToggle(isOn: $noOwnStock, description: "str.md.product.noOwnStock", descriptionInfo: "str.md.product.noOwnStock.hint", icon: MySymbols.stockOverview)
+            MyToggle(isOn: $noOwnStock, description: "Disable own stock", descriptionInfo: "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)", icon: MySymbols.stockOverview)
             
             // Product should not be frozen
-            MyToggle(isOn: $shouldNotBeFrozen, description: "str.md.product.shouldNotBeFrozen", descriptionInfo: "str.md.product.shouldNotBeFrozen.hint", icon: MySymbols.freezing)
+            MyToggle(isOn: $shouldNotBeFrozen, description: "Should not be frozen", descriptionInfo: "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown", icon: MySymbols.freezing)
             
             
             // Product picture
 #if os(iOS)
             NavigationLink(destination: MDProductPictureFormView(product: product, pictureFileName: $pictureFileName), label: {
-                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
+                MyLabelWithSubtitle(title: "Product picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
             })
             .disabled(isNewProduct)
 #elseif os(macOS)
             DisclosureGroup(content: {
                 MDProductPictureFormView(product: product, pictureFileName: $pictureFileName)
             }, label: {
-                MyLabelWithSubtitle(title: "str.md.product.picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "str.md.product.picture.none" : "str.md.product.picture.saved", systemImage: MySymbols.picture)
+                MyLabelWithSubtitle(title: "Product picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
             })
             .disabled(isNewProduct)
 #endif
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.category.optionalProperties"))
+        .navigationTitle("Optional properties")
 #endif
     }
     var locationPropertiesView: some View {
         Form {
             // Default Location - REQUIRED
-            Picker(selection: $locationID, label: MyLabelWithSubtitle(title: "str.md.product.location", subTitle: "str.md.product.location.required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: locationID != nil), content: {
+            Picker(selection: $locationID, label: MyLabelWithSubtitle(title: "Default location", subTitle: "A location is required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: locationID != nil), content: {
                 ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                     Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                 }
             })
             // Default consume location
             HStack {
-                Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "str.md.product.location.consume", systemImage: MySymbols.location, hideSubtitle: true), content: {
+                Picker(selection: $defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "Default consume location", systemImage: MySymbols.location, hideSubtitle: true), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                         Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                     }
                 })
-                FieldDescription(description: "str.md.product.location.consume.info")
+                FieldDescription(description: "Stock entries at this location will be consumed first")
             }
             
             // Move on open
             if defaultConsumeLocationID != nil {
-                MyToggle(isOn: $moveOnOpen, description: "str.md.product.location.consume.moveOnOpen", descriptionInfo: "str.md.product.location.consume.moveOnOpen.info", icon: MySymbols.transfer)
+                MyToggle(isOn: $moveOnOpen, description: "Move on open", descriptionInfo: "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location", icon: MySymbols.transfer)
             }
             
             // Default Store
-            Picker(selection: $storeID, label: MyLabelWithSubtitle(title: "str.md.product.store", systemImage: MySymbols.store, hideSubtitle: true), content: {
+            Picker(selection: $storeID, label: MyLabelWithSubtitle(title: "Default store", systemImage: MySymbols.store, hideSubtitle: true), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
@@ -550,43 +550,43 @@ struct MDProductFormView: View {
             })
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.category.defaultLocations"))
+        .navigationTitle("Default locations")
 #endif
     }
     var dueDatePropertiesView: some View {
         Form {
             VStack(alignment: .leading){
-                Text(LocalizedStringKey("str.md.product.dueType"))
+                Text("Due date type")
                     .font(.headline)
                 // Due Type, default best before
                 Picker("", selection: $dueType, content: {
-                    Text("str.md.product.dueType.bestBefore").tag(DueType.bestBefore)
-                    Text("str.md.product.dueType.expires").tag(DueType.expires)
+                    Text("Best before date").tag(DueType.bestBefore)
+                    Text("Expiration date").tag(DueType.expires)
                 })
                 .pickerStyle(.segmented)
             }
             
             // Default due days
-            MyIntStepper(amount: $defaultDueDays, description: "str.md.product.defaultDueDays", helpText: "str.md.product.defaultDueDays.info", minAmount: -1, amountName: defaultDueDays == 1 ? "str.day" : "str.days", systemImage: MySymbols.date)
+            MyIntStepper(amount: $defaultDueDays, description: "Default due days", helpText: "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)", minAmount: -1, amountName: defaultDueDays == 1 ? "Day" : "Days", systemImage: MySymbols.date)
             
             // Default due days afer opening
-            MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "str.md.product.defaultDueDaysAfterOpen", helpText: "str.md.product.defaultDueDaysAfterOpen.info", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "str.day" : "str.days", systemImage: MySymbols.date)
+            MyIntStepper(amount: $defaultDueDaysAfterOpen, description: "Default due days after opened", helpText: "When this product was marked as opened, the due date will be replaced by today + this amount of days (a value of 0 disables this)", minAmount: 0, amountName: defaultDueDaysAfterOpen == 1 ? "Day" : "Days", systemImage: MySymbols.date)
             
             // Default due days after freezing
-            MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "str.md.product.defaultDueDaysAfterFreezing", helpText: "str.md.product.defaultDueDaysAfterFreezing.info", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterFreezing.invalid", systemImage: MySymbols.freezing)
+            MyIntStepper(amount: $defaultDueDaysAfterFreezing, description: "Default due days after freezing", helpText: "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days", minAmount: -1, amountName: defaultDueDaysAfterFreezing == 1 ? "Day" : "Days", errorMessage: "This cannot be lower than -1 and needs to be a valid number with max. 0 decimal places", systemImage: MySymbols.freezing)
             
             // Default due days after thawing
-            MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "str.md.product.defaultDueDaysAfterThawing", helpText: "str.md.product.defaultDueDaysAfterThawing.info", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "str.day" : "str.days", errorMessage: "str.md.product.defaultDueDaysAfterThawing.invalid", systemImage: MySymbols.thawing)
+            MyIntStepper(amount: $defaultDueDaysAfterThawing, description: "Default due days after thawing", helpText: "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days", minAmount: 0, amountName: defaultDueDaysAfterThawing == 1 ? "Day" : "Days", errorMessage: "This cannot be lower than 0 and needs to be a valid number with max. 0 decimal places", systemImage: MySymbols.thawing)
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.category.dueDate"))
+        .navigationTitle("Due date")
 #endif
     }
     var quantityUnitPropertiesView: some View {
         Form {
             // Default Quantity Unit Stock - REQUIRED
             HStack{
-                Picker(selection: $quIDStock, label: MyLabelWithSubtitle(title: "str.md.product.quStock", subTitle: "str.md.product.quStock.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDStock != nil), content: {
+                Picker(selection: $quIDStock, label: MyLabelWithSubtitle(title: "Quantity unit stock", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDStock != nil), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
@@ -600,77 +600,77 @@ struct MDProductFormView: View {
                     }
                 }
                 
-                FieldDescription(description: "str.md.product.quStock.info")
+                FieldDescription(description: "Quantity unit stock cannot be changed after first purchase")
             }
             
             // Default Quantity Unit Purchase - REQUIRED
             HStack{
-                Picker(selection: $quIDPurchase, label: MyLabelWithSubtitle(title: "str.md.product.quPurchase", subTitle: "str.md.product.quPurchase.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPurchase != nil), content: {
+                Picker(selection: $quIDPurchase, label: MyLabelWithSubtitle(title: "Default quantity unit purchase", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPurchase != nil), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                FieldDescription(description: "str.md.product.quPurchase.info")
+                FieldDescription(description: "This is the default quantity unit used when adding this product to the shopping list")
             }
             
             // Default Quantity Unit Consume - REQUIRED
             HStack{
-                Picker(selection: $quIDConsume, label: MyLabelWithSubtitle(title: "str.md.product.quConsume", subTitle: "str.md.product.quConsume.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDConsume != nil), content: {
+                Picker(selection: $quIDConsume, label: MyLabelWithSubtitle(title: "Default quantity unit consume", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDConsume != nil), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                FieldDescription(description: "str.md.product.quConsume.info")
+                FieldDescription(description: "This is the default quantity unit used when consuming this product")
             }
             
             // Default Quantity Unit Price - REQUIRED
             HStack{
-                Picker(selection: $quIDPrice, label: MyLabelWithSubtitle(title: "str.md.product.quPrice", subTitle: "str.md.product.quPrice.required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPrice != nil), content: {
+                Picker(selection: $quIDPrice, label: MyLabelWithSubtitle(title: "Quantity unit for prices", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: quIDPrice != nil), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
-                FieldDescription(description: "str.md.product.quPrice.info")
+                FieldDescription(description: "When displaying prices for this product, they will be related to this quantity unit")
             }
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.category.quantityUnits"))
+        .navigationTitle("Quantity units")
 #endif
     }
     var amountPropertiesView: some View {
         Form {
             // Min Stock amount
-            MyDoubleStepper(amount: $minStockAmount, description: "str.md.product.minStockAmount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
+            MyDoubleStepper(amount: $minStockAmount, description: "Minimum stock amount ", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
             
             // Accumulate sub products min stock amount
-            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "str.md.product.cumulateMinStockAmountOfSubProducts", descriptionInfo: "str.md.product.cumulateMinStockAmountOfSubProducts.info", icon: MySymbols.accumulate)
+            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "Accumulate sub products min. stock amount ", descriptionInfo: "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be "missing", only this product", icon: MySymbols.accumulate)
             
             // Treat opened as out of stock
-            MyToggle(isOn: $treatOpenedAsOutOfStock, description: "str.md.product.treatOpenedAsOutOfStock", descriptionInfo: "str.md.product.treatOpenedAsOutOfStock.hint", icon: MySymbols.stockOverview)
+            MyToggle(isOn: $treatOpenedAsOutOfStock, description: "Treat opened as out of stock", descriptionInfo: "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount", icon: MySymbols.stockOverview)
             
             // Quick consume amount
-            MyDoubleStepper(amount: $quickConsumeAmount, description: "str.md.product.quickConsumeAmount", descriptionInfo: "str.md.product.quickConsumeAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
+            MyDoubleStepper(amount: $quickConsumeAmount, description: "Quick consume amount", descriptionInfo: "This amount is used for the "quick consume button" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
             
             // Quick open amount
-            MyDoubleStepper(amount: $quickOpenAmount, description: "str.md.product.quickOpenAmount", descriptionInfo: "str.md.product.quickOpenAmount.info", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.open)
+            MyDoubleStepper(amount: $quickOpenAmount, description: "Quick open amount", descriptionInfo: "This amount is used for the "quick open button" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.open)
             
             // Tare weight
             Group {
-                MyToggle(isOn: $enableTareWeightHandling, description: "str.md.product.enableTareWeightHandling", descriptionInfo: "str.md.product.enableTareWeightHandling.info", icon: MySymbols.tareWeight)
+                MyToggle(isOn: $enableTareWeightHandling, description: "Enable tare weight handling", descriptionInfo: "This is useful e.g. for flour in jars - on purchase/consume/inventory you always weigh the whole jar, the amount to be posted is then automatically calculated based on what is in stock and the tare weight defined below", icon: MySymbols.tareWeight)
                 
                 if enableTareWeightHandling {
-                    MyDoubleStepper(amount: $tareWeight, description: "str.md.product.tareWeight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.tareWeight)
+                    MyDoubleStepper(amount: $tareWeight, description: "Tare weight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.tareWeight)
                 }
             }
             
             // Check stock fulfillment for recipes
-            MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "str.md.product.notCheckStockFulfillmentForRecipes", descriptionInfo: "str.md.product.notCheckStockFulfillmentForRecipes.info", icon: MySymbols.recipe)
+            MyToggle(isOn: $notCheckStockFulfillmentForRecipes, description: "Disable stock fulfillment checking for this ingredient", descriptionInfo: "This will be used as the default setting when adding this product as a recipe ingredient", icon: MySymbols.recipe)
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.category.amount"))
+        .navigationTitle("Amounts")
 #endif
     }
     var barcodePropertiesView: some View {

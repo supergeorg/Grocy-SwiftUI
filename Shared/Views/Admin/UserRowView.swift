@@ -32,22 +32,22 @@ struct UserRowActionsView: View {
     
     var body: some View {
         HStack(spacing: 2){
-            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: LocalizedStringKey("str.admin.user.tooltip.edit"))
+            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Edit this item")
                 .onTapGesture {
                     grocyVM.postLog("Edit user not implemented", type: .info)
                 }
                 .disabled(true)
-            RowInteractionButton(image: "lock.fill", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: LocalizedStringKey("str.admin.user.tooltip.permissions"))
+            RowInteractionButton(image: "lock.fill", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Configure user permissions")
                 .onTapGesture {
                     grocyVM.postLog("Edit permissions not implemented", type: .info)
                 }
                 .disabled(true)
-            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color(.GrocyColors.grocyDeleteLocked) : Color(.GrocyColors.grocyDelete), helpString: LocalizedStringKey("str.admin.user.tooltip.delete"))
+            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color(.GrocyColors.grocyDeleteLocked) : Color(.GrocyColors.grocyDelete), helpString: "Delete this item")
                 .onTapGesture {
                     showDeleteAction.toggle()
                 }
                 .alert(isPresented:$showDeleteAction) {
-                    Alert(title: Text(LocalizedStringKey("str.admin.user.delete.question")), message: Text(""), primaryButton: .destructive(Text(LocalizedStringKey("str.delete"))) {
+                    Alert(title: Text("Do you really want to delete this user?"), message: Text(""), primaryButton: .destructive(Text("Delete")) {
                         Task {
                             await deleteUser()
                         }

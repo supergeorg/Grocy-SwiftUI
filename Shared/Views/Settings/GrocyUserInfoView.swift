@@ -27,7 +27,7 @@ struct GrocyUserInfoView: View {
                 }
             }
         } else {
-            Text("str.details.unknown")
+            Text("Unknown")
         }
     }
 }

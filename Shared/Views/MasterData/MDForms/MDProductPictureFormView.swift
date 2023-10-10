@@ -104,7 +104,7 @@ struct MDProductPictureFormView: View {
                                 await deletePicture(savedPictureFileNameData: pictureFileNameData)
                             }
                         }, label: {
-                            Label(LocalizedStringKey("str.md.product.picture.delete"), systemImage: MySymbols.delete)
+                            Label("Delete product picture", systemImage: MySymbols.delete)
                                 .foregroundStyle(.red)
                         })
                         .disabled(isProcessing)
@@ -113,7 +113,7 @@ struct MDProductPictureFormView: View {
             }
             Section {
 #if os(macOS)
-                Button(LocalizedStringKey("str.md.product.picture.add.file")) {
+                Button("Select product picture from file") {
                     let openPanel = NSOpenPanel()
                     openPanel.prompt = "Select File"
                     openPanel.allowsMultipleSelection = false
@@ -137,7 +137,7 @@ struct MDProductPictureFormView: View {
                 Button(action: {
                     showImagePicker.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.md.product.picture.add.gallery"), systemImage: MySymbols.gallery)
+                    Label("Select product picture from gallery", systemImage: MySymbols.gallery)
                 })
                 .sheet(isPresented: $showImagePicker, onDismiss: {
                     if let product = product {
@@ -151,7 +151,7 @@ struct MDProductPictureFormView: View {
                 Button(action: {
                     showCamera.toggle()
                 }, label: {
-                    Label(LocalizedStringKey("str.md.product.picture.add.camera"), systemImage: MySymbols.camera)
+                    Label("Add product picture from camera", systemImage: MySymbols.camera)
                 })
                 .sheet(isPresented: $showCamera, onDismiss: {
                     if let product = product {
@@ -183,7 +183,7 @@ struct MDProductPictureFormView: View {
                                 await uploadPicture(imagePicture: picture, newPictureFileName: selectedPictureFileName)
                             }
                         }, label: {
-                            Label(LocalizedStringKey("str.md.product.picture.upload"), systemImage: MySymbols.upload)
+                            Label("Upload product picture", systemImage: MySymbols.upload)
                         })
                         .disabled(isProcessing)
                     }
@@ -191,7 +191,7 @@ struct MDProductPictureFormView: View {
             }
         }
 #if os(iOS)
-        .navigationTitle(LocalizedStringKey("str.md.product.picture"))
+        .navigationTitle("Product picture")
 #endif
     }
 }

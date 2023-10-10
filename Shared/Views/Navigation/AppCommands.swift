@@ -9,15 +9,15 @@ import SwiftUI
 
 struct AppCommands: Commands {
     @CommandsBuilder var body: some Commands {
-        CommandMenu(LocalizedStringKey("str.nav.stockOverview")) {
+        CommandMenu("Stock overview") {
             Button(action: {}, label: {
-                Label(LocalizedStringKey("str.nav.stockOverview"), systemImage: MySymbols.stockOverview)
+                Label("Stock overview", systemImage: MySymbols.stockOverview)
                     .labelStyle(.titleAndIcon)
             })
             .keyboardShortcut("o")
             
             Button(action: {}, label: {
-                Label(LocalizedStringKey("str.stock.journal"), systemImage: MySymbols.stockJournal)
+                Label("Stock journal", systemImage: MySymbols.stockJournal)
                     .labelStyle(.titleAndIcon)
             })
             .keyboardShortcut("j")

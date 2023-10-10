@@ -104,7 +104,7 @@ struct StockEntryFormView: View {
             VStack(alignment: .trailing, spacing: 5.0){
                 HStack {
                     Image(systemName: MySymbols.date)
-                    DatePicker(LocalizedStringKey("str.stock.buy.product.dueDate"), selection: $bestBeforeDate, displayedComponents: .date)
+                    DatePicker("Due date", selection: $bestBeforeDate, displayedComponents: .date)
                         .disabled(productDoesntSpoil)
                 }
                 Text(getRelativeDateAsText(bestBeforeDate, localizationKey: localizationKey) ?? "")
@@ -113,12 +113,12 @@ struct StockEntryFormView: View {
                 MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
-            MyDoubleStepper(amount: $amount, description: "str.stock.product.amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnitName, systemImage: MySymbols.amount)
+            MyDoubleStepper(amount: $amount, description: "Amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnitName, systemImage: MySymbols.amount)
             
-            MyDoubleStepperOptional(amount: $price, description: "str.stock.buy.product.price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+            MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
             Picker(selection: $storeID,
-                   label: Label(LocalizedStringKey("str.stock.buy.product.store"), systemImage: MySymbols.store).foregroundStyle(.primary),
+                   label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
@@ -127,27 +127,27 @@ struct StockEntryFormView: View {
             })
             
             Picker(selection: $locationID,
-                   label: Label(LocalizedStringKey("str.stock.buy.product.location"), systemImage: MySymbols.location).foregroundStyle(.primary),
+                   label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
-                    Text(location.id == product?.locationID ? LocalizedStringKey("str.stock.buy.product.location.default \(location.name)") : LocalizedStringKey(location.name)).tag(location.id as Int?)
+                    Text(location.id == product?.locationID ? "str.stock.buy.product.location.default \(location.name)" : LocalizedStringKey(location.name)).tag(location.id as Int?)
                 }
             })
             
-            MyTextField(textToEdit: $note, description: "str.stock.buy.product.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
         }
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
                 Button(action: { Task { await editEntryForm() } }, label: {
-                    Label(LocalizedStringKey("str.stock.entry.save"), systemImage: MySymbols.save)
+                    Label("Save entry", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isFormValid || isProcessing)
                 .keyboardShortcut("s", modifiers: [.command])
             })
         })
-        .navigationTitle(LocalizedStringKey("str.stock.entry.edit"))
+        .navigationTitle("Edit entry")
         .task {
             if firstAppear {
                 resetForm()

@@ -72,7 +72,7 @@ struct MDUserEntitiesView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.userEntities"))
+                .navigationTitle("Userentities")
         }
     }
     
@@ -88,7 +88,7 @@ struct MDUserEntitiesView: View {
                     }, label: {Image(systemName: MySymbols.new)})
                 }
             }
-            .navigationTitle(LocalizedStringKey("str.md.userEntities"))
+            .navigationTitle("Userentities")
 #if os(iOS)
             .sheet(isPresented: self.$showAddUserEntity, content: {
                 NavigationView {
@@ -100,14 +100,14 @@ struct MDUserEntitiesView: View {
     var content: some View {
         List{
             if grocyVM.mdUserEntities.isEmpty {
-                Text(LocalizedStringKey("str.md.userEntities.empty"))
+                Text("No userentities found.")
             } else if filteredUserEntities.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddUserEntity {
                 NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity), isActive: $showAddUserEntity, label: {
-                    NewMDRowLabel(title: "str.md.userEntity.new")
+                    NewMDRowLabel(title: "New userentity")
                 })
             }
 #endif
@@ -118,7 +118,7 @@ struct MDUserEntitiesView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: userEntity) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -133,9 +133,9 @@ struct MDUserEntitiesView: View {
             await updateData()
         }
         .animation(.default, value: filteredUserEntities.count)
-        .alert(LocalizedStringKey("str.md.userEntity.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this user entity?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = userEntityToDelete?.id {
                     Task {
                         await deleteUserEntity(toDelID: toDelID)

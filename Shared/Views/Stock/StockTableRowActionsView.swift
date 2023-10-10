@@ -72,21 +72,21 @@ struct StockTableRowActionsView: View {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.consume)
             })
             .tint(Color(.GrocyColors.grocyGreen))
-            .help(LocalizedStringKey("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .help("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1" \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
         if shownActions.contains(.consumeAll) {
             Button(action: { Task { await consumeAll() } }, label: {
-                Label(LocalizedStringKey("str.stock.tbl.action.all"), systemImage: MySymbols.consume)
+                Label("All", systemImage: MySymbols.consume)
             })
             .tint(Color(.GrocyColors.grocyDelete))
-            .help(LocalizedStringKey("str.stock.tbl.action.consume.all \(stockElement.product.name)"))
+            .help("str.stock.tbl.action.consume.all \(stockElement.product.name)")
         }
         if shownActions.contains(.openQA) {
             Button(action: { Task { await openQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.open)
             })
             .tint(Color(.GrocyColors.grocyBlue))
-            .help(LocalizedStringKey("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .help("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1" \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
         }
     }
 }

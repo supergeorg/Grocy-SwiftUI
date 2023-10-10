@@ -103,14 +103,14 @@ struct MDStoresView: View {
     var content: some View {
         List{
             if grocyVM.mdStores.isEmpty {
-                ContentUnavailableView("str.md.stores.empty", systemImage: MySymbols.store)
+                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
             } else if filteredStores.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddStore {
                 NavigationLink(destination: MDStoreFormView(isNewStore: true, showAddStore: $showAddStore), isActive: $showAddStore, label: {
-                    NewMDRowLabel(title: "str.md.store.new")
+                    NewMDRowLabel(title: "New store")
                 })
             }
 #endif
@@ -121,7 +121,7 @@ struct MDStoresView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: store) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -137,9 +137,9 @@ struct MDStoresView: View {
         }
         .animation(.default,
                    value: filteredStores.count)
-        .alert(LocalizedStringKey("str.md.store.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this store?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = storeToDelete?.id {
                     Task {
                         await deleteStore(toDelID: toDelID)

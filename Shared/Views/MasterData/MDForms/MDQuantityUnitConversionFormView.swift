@@ -127,11 +127,11 @@ struct MDQuantityUnitConversionFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewQuantityUnitConversion ? LocalizedStringKey("str.md.quantityUnit.conversion.new") : LocalizedStringKey("str.md.quantityUnit.conversion.edit"))
+            .navigationTitle(isNewQuantityUnitConversion ? "Create QU conversion" : "Edit QU conversion")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveQuantityUnitConversion() } }, label: {
-                        Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
+                        Label("Save", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!conversionCorrect || isProcessing)
@@ -152,13 +152,13 @@ struct MDQuantityUnitConversionFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewQuantityUnitConversion ? LocalizedStringKey("str.md.quantityUnit.conversion.new") : LocalizedStringKey("str.md.quantityUnit.conversion.edit"))
+            Text(isNewQuantityUnitConversion ? "Create QU conversion" : "Edit QU conversion")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
             Section(){
-                Picker(selection: $quIDFrom, label: Label(LocalizedStringKey("str.md.quantityUnit.conversion.quFrom"), systemImage: MySymbols.quantityUnit), content: {
+                Picker(selection: $quIDFrom, label: Label("Quantity unit from", systemImage: MySymbols.quantityUnit), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
@@ -167,7 +167,7 @@ struct MDQuantityUnitConversionFormView: View {
                 .disabled(true)
                 
                 VStack(alignment: .leading) {
-                    Picker(selection: $quIDTo, label: Label(LocalizedStringKey("str.md.quantityUnit.conversion.quTo"), systemImage: MySymbols.quantityUnit), content: {
+                    Picker(selection: $quIDTo, label: Label("Quantity unit to", systemImage: MySymbols.quantityUnit), content: {
                         Text("").tag(nil as Int?)
                         ForEach(grocyVM.mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id:\.id) { grocyQuantityUnit in
                             Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
@@ -177,41 +177,41 @@ struct MDQuantityUnitConversionFormView: View {
                         conversionCorrect = checkConversionCorrect()
                     }
                     if checkConversionExists() {
-                        Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
+                        Text("Such a conversion already exists")
                             .font(.caption)
                             .foregroundStyle(Color.red)
                     }
                     if let quIDTo = quIDTo {
-                        Text(LocalizedStringKey("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: quantityUnit)) \(getQUString(amount: factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo })))"))
+                        Text("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: quantityUnit)) \(getQUString(amount: factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo })))")
                             .font(.caption)
                     }
                 }
                 
-                MyDoubleStepper(amount: $factor, description: "str.md.quantityUnit.conversion.factor", minAmount: 0.0001, amountStep: 1, amountName: "", systemImage: MySymbols.amount)
+                MyDoubleStepper(amount: $factor, description: "Factor", minAmount: 0.0001, amountStep: 1, amountName: "", systemImage: MySymbols.amount)
                     .onChange(of: factor) {
                         conversionCorrect = checkConversionCorrect()
                     }
                 
                 if isNewQuantityUnitConversion {
                     VStack(alignment: .leading) {
-                        MyToggle(isOn: $createInverseConversion, description: "str.md.quantityUnit.conversion.createInverse", icon: MySymbols.transfer)
+                        MyToggle(isOn: $createInverseConversion, description: "Create inverse QU conversion", icon: MySymbols.transfer)
                             .onChange(of: createInverseConversion) {
                                 conversionCorrect = checkConversionCorrect()
                             }
                         if checkReverseConversionExists() {
-                            Text(LocalizedStringKey("str.md.quantityUnit.conversion.quTo.exists"))
+                            Text("Such a conversion already exists")
                                 .font(.caption)
                                 .foregroundStyle(Color.red)
                         }
                         if let quIDTo = quIDTo {
-                            Text(LocalizedStringKey("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) \(getQUString(amount: (1 / factor), qu: quantityUnit))"))
+                            Text("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) \(getQUString(amount: (1 / factor), qu: quantityUnit))")
                                 .font(.caption)
                         }
                     }
                 }
 #if os(macOS)
                 Button(action: { Task { await saveQuantityUnitConversion() } }, label: {
-                    Label(LocalizedStringKey("str.save"), systemImage: MySymbols.save)
+                    Label("Save", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
 #endif

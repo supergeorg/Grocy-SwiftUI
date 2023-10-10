@@ -124,7 +124,7 @@ struct ShoppingListFormView: View {
                 .keyboardShortcut(.cancelAction)
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(LocalizedStringKey("Save")) {
+                Button("Save") {
                     Task {
                         await saveShoppingList()
                     }

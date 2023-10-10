@@ -41,11 +41,11 @@ struct ServerProblemView: View {
     private var serverErrorInfo: (String, String) {
         switch serverErrorState {
         case .connection:
-            return (MySymbols.offline, "str.error.connection")
+            return (MySymbols.offline, "No connection to server.")
         case .api:
-            return (MySymbols.api, "str.error.api")
+            return (MySymbols.api, "API error detected.")
         case .other:
-            return (MySymbols.unknown, "str.error.other")
+            return (MySymbols.unknown, "Unknown error occured.")
         case .none:
             return (MySymbols.success, "")
         }
@@ -71,7 +71,7 @@ struct ServerProblemView: View {
             if serverErrorState != .none {
                 VStack(alignment: .center) {
                     Text(LocalizedStringKey(serverErrorInfo.1))
-                    Text(LocalizedStringKey("str.error.logInfo"))
+                    Text("Please check the log to determine the problem.")
                         .font(.caption)
                 }
             }
@@ -80,7 +80,7 @@ struct ServerProblemView: View {
                     await grocyVM.retryFailedRequests()
                 }
             }, label: {
-                Label(LocalizedStringKey("str.retry"), systemImage: MySymbols.reload)
+                Label("Try again", systemImage: MySymbols.reload)
             })
                 .buttonStyle(FilledButtonStyle())
                 .controlSize(.large)
@@ -107,7 +107,7 @@ struct ServerProblemView: View {
             Image(systemName: serverErrorInfo.0)
             VStack(alignment: .leading) {
                 Text(LocalizedStringKey(serverErrorInfo.1))
-                Text(LocalizedStringKey("str.error.logInfo"))
+                Text("Please check the log to determine the problem.")
                     .font(.caption)
             }
             Spacer()
@@ -116,7 +116,7 @@ struct ServerProblemView: View {
                     await grocyVM.retryFailedRequests()
                 }
             }, label: {
-                Label(LocalizedStringKey("str.retry"), systemImage: MySymbols.reload)
+                Label("Try again", systemImage: MySymbols.reload)
             })
                 .buttonStyle(.bordered)
                 .controlSize(.large)

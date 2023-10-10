@@ -25,11 +25,11 @@ struct MDProductRowView: View {
                     .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
                     if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
-                        Text(LocalizedStringKey("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)"))
+                        Text("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)")
                             .font(.caption)
                     }
                     if let productGroup = grocyVM.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
-                        Text(LocalizedStringKey("str.md.product.rowProductGroup \(grocyVM.mdProductGroups[productGroup].name)"))
+                        Text("str.md.product.rowProductGroup \(grocyVM.mdProductGroups[productGroup].name)")
                             .font(.caption)
                     }
                 }
@@ -95,7 +95,7 @@ struct MDProductsView: View {
 #endif
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.md.products"))
+                .navigationTitle("Products")
         }
     }
     
@@ -113,7 +113,7 @@ struct MDProductsView: View {
                     })
                 })
             })
-            .navigationTitle(LocalizedStringKey("str.md.products"))
+            .navigationTitle("Products")
 #if os(iOS)
             .sheet(isPresented: $showAddProduct, content: {
                 NavigationView {
@@ -126,14 +126,14 @@ struct MDProductsView: View {
     var content: some View {
         List{
             if grocyVM.mdProducts.isEmpty {
-                ContentUnavailableView("str.md.products.empty", systemImage: MySymbols.product)
+                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
             } else if filteredProducts.isEmpty {
                 ContentUnavailableView.search
             }
 #if os(macOS)
             if showAddProduct {
                 NavigationLink(destination: MDProductFormView(isNewProduct: true, showAddProduct: $showAddProduct), isActive: $showAddProduct, label: {
-                    NewMDRowLabel(title: "str.md.product.new")
+                    NewMDRowLabel(title: "Create product")
                 })
             }
 #endif
@@ -144,7 +144,7 @@ struct MDProductsView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: product) },
-                           label: { Label(LocalizedStringKey("str.delete"), systemImage: MySymbols.delete) }
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
                     )
                 })
             }
@@ -159,9 +159,9 @@ struct MDProductsView: View {
             await updateData()
         }
         .animation(.default, value: filteredProducts.count)
-        .alert(LocalizedStringKey("str.md.product.delete.confirm"), isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this product?", isPresented: $showDeleteAlert, actions: {
             Button("Cancel", role: .cancel) { }
-            Button(LocalizedStringKey("str.delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let toDelID = productToDelete?.id {
                     Task {
                         await deleteProduct(toDelID: toDelID)

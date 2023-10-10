@@ -34,7 +34,7 @@ struct UserManagementView: View {
             bodyContent
         } else {
             ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.admin.user"))
+                .navigationTitle("User management")
         }
     }
     
@@ -61,7 +61,7 @@ struct UserManagementView: View {
                         showAddUser.toggle()
                     }, label: {
                         HStack{
-                            Text(LocalizedStringKey("str.admin.user.new"))
+                            Text("New user")
                             Image(systemName: MySymbols.new)
                         }
                     })
@@ -82,7 +82,7 @@ struct UserManagementView: View {
                         showAddUser.toggle()
                     }, label: {
                         HStack{
-                            Text(LocalizedStringKey("str.admin.user.new"))
+                            Text("New user")
                             Image(systemName: MySymbols.new)
                         }
                     })
@@ -99,13 +99,13 @@ struct UserManagementView: View {
     var content: some View {
         List{
             if grocyVM.users.isEmpty {
-                Text(LocalizedStringKey("str.admin.user.empty")).padding()
+                Text("No users found").padding()
             }
             ForEach(filteredUsers, id:\.id) {user in
                 UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
             }
         }
-        .navigationTitle(LocalizedStringKey("str.admin.user"))
+        .navigationTitle("User management")
         .task {
             Task {
                 await updateData()

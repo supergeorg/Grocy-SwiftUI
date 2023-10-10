@@ -97,11 +97,11 @@ struct MDUserFieldFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
+            .navigationTitle(isNewUserField ? "Create userfield" : "Edit userfield")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveUserField() } }, label: {
-                        Label(LocalizedStringKey("str.md.userField.save"), systemImage: MySymbols.save)
+                        Label("Save userfield", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)
@@ -122,43 +122,43 @@ struct MDUserFieldFormView: View {
     var content: some View {
         Form {
 #if os(macOS)
-            Text(isNewUserField ? LocalizedStringKey("str.md.userField.new") : LocalizedStringKey("str.md.userField.edit"))
+            Text(isNewUserField ? "Create userfield" : "Edit userfield")
                 .font(.title)
                 .bold()
                 .padding(.bottom, 20.0)
 #endif
             VStack(alignment: .leading){
-                Picker(selection: $entity, label: Text(LocalizedStringKey("str.md.userField.entity")), content: {
+                Picker(selection: $entity, label: Text("Entity"), content: {
                     Text("").tag(nil as ObjectEntities?)
                     ForEach(ObjectEntities.allCases, id:\.self){ objectEntity in
                         Text(objectEntity.rawValue).tag(objectEntity as ObjectEntities?)
                     }
                 })
                 if entity == nil {
-                    Text(LocalizedStringKey("str.md.userField.entity.required"))
+                    Text("An entity is required")
                         .foregroundStyle(.red)
                 }
             }
             
-            Section(header: Text(LocalizedStringKey("str.md.userField.name"))){
-                MyTextField(textToEdit: $name, description: "str.md.userField.name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.name.required", errorMessage: "str.md.userField.name.invalid", helpText: "str.md.userField.name.info")
+            Section(header: Text("Name")){
+                MyTextField(textToEdit: $name, description: "Name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "This is required and can only contain letters and numbers", errorMessage: "This is required and can only contain letters and numbers", helpText: "This is the internal field name, e. g. for the API")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }
-                MyTextField(textToEdit: $caption, description: "str.md.userField.caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "str.md.userField.caption.required", helpText: "str.md.userField.caption.info")
+                MyTextField(textToEdit: $caption, description: "Caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "A caption is required", helpText: "This is used to display the field on the frontend")
                     .onChange(of: caption) {
                         isCaptionCorrect = checkCaptionCorrect()
                     }
             }
-            MyIntStepperOptional(amount: $sortNumber, description: "str.md.userField.sortNumber", helpText: "str.md.userField.sortNumber.info", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
+            MyIntStepperOptional(amount: $sortNumber, description: "Sort number", helpText: "Multiple Userfields will be ordered by that number on the input form", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
             
-            Picker(selection: $type, label: Text(LocalizedStringKey("str.md.userField.type")), content: {
+            Picker(selection: $type, label: Text("Type"), content: {
                 ForEach(UserFieldType.allCases, id:\.self) { userFieldType in
                     Text(LocalizedStringKey(userFieldType.getDescription())).tag(userFieldType)
                 }
             })
             
-            MyToggle(isOn: $showAsColumnInTables, description: "str.md.userField.showAsColumnInTables", icon: "tablecells")
+            MyToggle(isOn: $showAsColumnInTables, description: "Show as column in tables", icon: "tablecells")
         }
         .task {
             if firstAppear {

@@ -226,7 +226,7 @@ struct ShoppingListView: View {
                         })
                     }, label: {
                         if shoppingListGrouping == .productGroup, groupName.isEmpty {
-                            Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                            Text("Ungrouped").italic()
                         } else if shoppingListGrouping == .none {
                             EmptyView()
                         } else {
@@ -287,7 +287,7 @@ struct ShoppingListView: View {
         .animation(.default, value: groupedShoppingList.count)
         .alert("Do you really want to delete this shopping list?", isPresented: $showSHLDeleteAlert, actions: {
             Button("Cancel", role: .cancel) {}
-            Button(LocalizedStringKey("Delete"), role: .destructive) {
+            Button("Delete", role: .destructive) {
                 Task {
                     await deleteShoppingList()
                 }
@@ -369,9 +369,9 @@ struct ShoppingListView: View {
             //            Button(action: {
             //                print("Not implemented")
             //            }, label: {
-            //                Label(LocalizedStringKey("str.shL.action.addListItemsToStock"), systemImage: "questionmark")
+            //                Label("Add all list items to stock", systemImage: "questionmark")
             //            })
-            //            .help(LocalizedStringKey("str.shL.action.addListItemsToStock"))
+            //            .help("Add all list items to stock")
             //                .disabled(true)
             Button(role: .destructive, action: {
                 showClearDoneAlert.toggle()

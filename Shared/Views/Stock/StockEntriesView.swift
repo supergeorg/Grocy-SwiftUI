@@ -78,24 +78,24 @@ struct StockEntryRowView: View {
             StockEntryFormView(stockEntry: stockEntry)
         }, label: {
             VStack(alignment: .leading) {
-                Text(LocalizedStringKey("str.stock.entries.product \(product?.name ?? "")"))
+                Text("str.stock.entries.product \(product?.name ?? """))
                     .font(.headline)
                 
-                Text(LocalizedStringKey("str.stock.entries.amount \("\(stockEntry.amount.formattedAmount) \(stockEntry.amount == 1 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")"))
+                Text("str.stock.entries.amount \("\(stockEntry.amount.formattedAmount) \(stockEntry.amount == 1 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? """)"))
                 +
                 Text(" ")
                 +
-                Text(LocalizedStringKey(stockEntry.stockEntryOpen == true ? "tr.opened" : ""))
+                Text(LocalizedStringKey(stockEntry.stockEntryOpen == true ? "Opened" : ""))
                     .font(.caption)
                     .italic()
                 
                 if stockEntry.bestBeforeDate == getNeverOverdueDate() {
-                    Text(LocalizedStringKey("str.stock.entries.dueDate \("")"))
+                    Text("str.stock.entries.dueDate \("""))
                     +
                     Text("Never overdue")
                         .italic()
                 } else {
-                    Text(LocalizedStringKey("str.stock.entries.dueDate \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")"))
+                    Text("str.stock.entries.dueDate \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? """))
                     +
                     Text(" ")
                     +
@@ -105,18 +105,18 @@ struct StockEntryRowView: View {
                 }
                 
                 if let locationID = stockEntry.locationID, let location = grocyVM.mdLocations.first(where: { $0.id == locationID }) {
-                    Text(LocalizedStringKey("str.stock.entries.location \(location.name)"))
+                    Text("str.stock.entries.location \(location.name)")
                 }
                 
                 if let storeID = stockEntry.storeID, let store = grocyVM.mdStores.first(where: { $0.id == storeID }) {
-                    Text(LocalizedStringKey("str.stock.entries.store \(store.name)"))
+                    Text("str.stock.entries.store \(store.name)")
                 }
                 
                 if let price = stockEntry.price, price > 0 {
-                    Text(LocalizedStringKey("str.stock.entries.price \("\(price.formattedAmount) \(grocyVM.systemConfig?.currency ?? "")")"))
+                    Text("str.stock.entries.price \("\(price.formattedAmount) \(grocyVM.systemConfig?.currency ?? """)"))
                 }
                 
-                Text(LocalizedStringKey("str.stock.entries.purchasedDate \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")"))
+                Text("str.stock.entries.purchasedDate \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? """))
                 +
                 Text(" ")
                 +
@@ -129,33 +129,33 @@ struct StockEntryRowView: View {
                 }
 #if os(macOS)
                 Button(action: { Task { await openEntry() } }, label: {
-                    Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
+                    Label("Mark this stock entry as open", systemImage: MySymbols.open)
                 })
                 .tint(Color(.GrocyColors.grocyBlue))
-                .help(LocalizedStringKey("str.stock.entry.open"))
+                .help("Mark this stock entry as open")
                 .disabled(stockEntry.stockEntryOpen)
                 Button(action: { Task { await consumeEntry() } }, label: {
-                    Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
+                    Label("Consume this stock entry", systemImage: MySymbols.consume)
                 })
                 .tint(Color(.GrocyColors.grocyDelete))
-                .help(LocalizedStringKey("str.stock.entry.consume"))
+                .help("Consume this stock entry")
 #endif
             }
         })
         .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
             Button(action: { Task { await openEntry() } }, label: {
-                Label(LocalizedStringKey("str.stock.entry.open"), systemImage: MySymbols.open)
+                Label("Mark this stock entry as open", systemImage: MySymbols.open)
             })
             .tint(Color(.GrocyColors.grocyBlue))
-            .help(LocalizedStringKey("str.stock.entry.open"))
+            .help("Mark this stock entry as open")
             .disabled(stockEntry.stockEntryOpen)
         })
         .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
             Button(action: { Task { await consumeEntry() } }, label: {
-                Label(LocalizedStringKey("str.stock.entry.consume"), systemImage: MySymbols.consume)
+                Label("Consume this stock entry", systemImage: MySymbols.consume)
             })
             .tint(Color(.GrocyColors.grocyDelete))
-            .help(LocalizedStringKey("str.stock.entry.consume"))
+            .help("Consume this stock entry")
         })
 #if os(macOS)
         .listRowBackground(backgroundColor.clipped().cornerRadius(5))
@@ -195,7 +195,7 @@ struct StockEntriesView: View {
     var body: some View {
         List {
             if stockEntries.isEmpty {
-                Text(LocalizedStringKey("str.stock.entries.empty"))
+                Text("No matching records found")
             }
             ForEach(stockEntries, id:\.id) { entry in
                 StockEntryRowView(stockEntry: entry, dueType: stockElement.dueType, productID: stockElement.productID, stockEntries: $stockEntries)
@@ -204,7 +204,7 @@ struct StockEntriesView: View {
 #if os(macOS)
         .frame(minWidth: 350)
 #endif
-        .navigationTitle(LocalizedStringKey("str.stock.entries"))
+        .navigationTitle("Stock entries")
         .refreshable {
             await fetchData(ignoreCachedStock: true)
         }

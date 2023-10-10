@@ -231,7 +231,7 @@ struct ConsumeProductView: View {
         Form {
             consumeForm
         }
-        .navigationTitle(LocalizedStringKey("str.stock.consume"))
+        .navigationTitle("Consume")
     }
     
     var consumeForm: some View {
@@ -243,7 +243,7 @@ struct ConsumeProductView: View {
             }
             
             if !quickScan {
-                ProductField(productID: $productID, description: "str.stock.consume.product")
+                ProductField(productID: $productID, description: "Product")
                     .onChange(of: productID) {
                         if let productID = productID {
                             Task {
@@ -260,21 +260,21 @@ struct ConsumeProductView: View {
             
             AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
             
-            Picker(selection: $locationID, label: Label(LocalizedStringKey("str.stock.consume.product.location"), systemImage: MySymbols.location), content: {
+            Picker(selection: $locationID, label: Label("Location", systemImage: MySymbols.location), content: {
                 Text("").tag(nil as Int?)
                 ForEach(filteredLocations, id:\.id) { location in
-                    Text(product?.locationID == location.id ? LocalizedStringKey("str.stock.consume.product.location.default \(location.name)") : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
+                    Text(product?.locationID == location.id ? "str.stock.consume.product.location.default \(location.name)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
                 }
             })
             
-            Section(header: Text(LocalizedStringKey("str.stock.consume.product.details")).font(.headline)) {
+            Section(header: Text("Details").font(.headline)) {
                 
                 if (consumeType == .consume) || (consumeType == .both) {
-                    MyToggle(isOn: $spoiled, description: "str.stock.consume.product.spoiled", icon: MySymbols.spoiled)
+                    MyToggle(isOn: $spoiled, description: "Spoiled", icon: MySymbols.spoiled)
                 }
                 
                 if productID != nil {
-                    MyToggle(isOn: $useSpecificStockEntry, description: "str.stock.consume.product.useStockEntry", descriptionInfo: "str.stock.consume.product.useStockEntry.description", icon: "tag")
+                    MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is "Opened first, then first due first, then first in first out"", icon: "tag")
                     
                     if useSpecificStockEntry {
 #if os(iOS)
@@ -298,20 +298,20 @@ struct ConsumeProductView: View {
                 
                 if devMode {
                     HStack{
-                        Picker(selection: $recipeID, label: Label(LocalizedStringKey("str.stock.consume.product.recipe"), systemImage: "tag"), content: {
+                        Picker(selection: $recipeID, label: Label("Recipe", systemImage: "tag"), content: {
                             Text("Not implemented").tag(nil as Int?)
                         })
 #if os(macOS)
                         Image(systemName: "questionmark.circle.fill")
-                            .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                            .help("This is for statistical purposes only")
 #elseif os(iOS)
                         Image(systemName: "questionmark.circle.fill")
                             .onTapGesture {
                                 showRecipeInfo.toggle()
                             }
-                            .help(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                            .help("This is for statistical purposes only")
                             .popover(isPresented: $showRecipeInfo, content: {
-                                Text(LocalizedStringKey("str.stock.consume.product.recipe.info"))
+                                Text("This is for statistical purposes only")
                                     .padding()
                             })
 #endif
@@ -320,7 +320,7 @@ struct ConsumeProductView: View {
             }
 #if os(macOS)
             if isPopup {
-                Button(action: { Task { await consumeProduct() } }, label: {Text(LocalizedStringKey("str.stock.consume.product.consume"))})
+                Button(action: { Task { await consumeProduct() } }, label: {Text("Consume product")})
                     .disabled(!isFormValid || isProcessingAction)
                     .keyboardShortcut(.defaultAction)
             }
@@ -351,15 +351,15 @@ struct ConsumeProductView: View {
     }
     
     var stockEntryPicker: some View {
-        Picker(selection: $stockEntryID, label: Label(LocalizedStringKey("str.stock.consume.product.stockEntry"), systemImage: "tag"), content: {
+        Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
             Text("").tag(nil as String?)
             ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
                 Group {
-                    Text(stockProduct.stockEntryOpen == false ? LocalizedStringKey("str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : LocalizedStringKey("str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error") \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    Text(stockProduct.stockEntryOpen == false ? "str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : "str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
                     +
                     Text("; ")
                     +
-                    Text(stockProduct.note != nil ? LocalizedStringKey("str.stock.entries.note \(stockProduct.note ?? "")") : LocalizedStringKey(""))
+                    Text(stockProduct.note != nil ? "str.stock.entries.note \(stockProduct.note ?? """) : LocalizedStringKey(""))
                 }
                 .tag(stockProduct.stockID as String?)
             }
@@ -388,13 +388,13 @@ struct ConsumeProductView: View {
                 }, label: {
 #if os(iOS)
                     if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                        Label("Mark as opened", systemImage: MySymbols.open)
                     } else {
-                        Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                        Label("Mark as opened", systemImage: MySymbols.open)
                             .labelStyle(.titleAndIcon)
                     }
 #else
-                    Label(LocalizedStringKey("str.stock.consume.product.open"), systemImage: MySymbols.open)
+                    Label("Mark as opened", systemImage: MySymbols.open)
                         .labelStyle(.titleAndIcon)
 #endif
                 })
@@ -409,13 +409,13 @@ struct ConsumeProductView: View {
                 }, label: {
 #if os(iOS)
                     if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                        Label("Consume product", systemImage: MySymbols.consume)
                     } else {
-                        Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                        Label("Consume product", systemImage: MySymbols.consume)
                             .labelStyle(.titleAndIcon)
                     }
 #else
-                    Label(LocalizedStringKey("str.stock.consume.product.consume"), systemImage: MySymbols.consume)
+                    Label("Consume product", systemImage: MySymbols.consume)
                         .labelStyle(.titleAndIcon)
 #endif
                 })

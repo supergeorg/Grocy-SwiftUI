@@ -135,7 +135,7 @@ struct StockTableRow: View {
             HStack{
                 Text("\(stockElement.amount.formattedAmount) \(getQUString(amount: stockElement.amount))")
                 if stockElement.amountOpened > 0 {
-                    Text(LocalizedStringKey("str.stock.info.opened \(stockElement.amountOpened.formattedAmount)"))
+                    Text("str.stock.info.opened \(stockElement.amountOpened.formattedAmount)")
                         .font(.caption)
                         .italic()
                 }
@@ -143,7 +143,7 @@ struct StockTableRow: View {
                     Text("Σ \(stockElement.amountAggregated.formattedAmount) \(getQUString(amount: stockElement.amountAggregated))")
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
                     if stockElement.amountOpenedAggregated > 0 {
-                        Text(LocalizedStringKey("str.stock.info.opened \(stockElement.amountOpenedAggregated.formattedAmount)"))
+                        Text("str.stock.info.opened \(stockElement.amountOpenedAggregated.formattedAmount)")
                             .foregroundStyle(Color(.GrocyColors.grocyGray))
                             .font(.caption)
                             .italic()
@@ -153,7 +153,7 @@ struct StockTableRow: View {
                    grocyVM.shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
-                        .help(LocalizedStringKey("str.stock.info.onShoppingList"))
+                        .help("This product is currently on a shopping list.")
                 }
             }
             if let dueDate = stockElement.bestBeforeDate {

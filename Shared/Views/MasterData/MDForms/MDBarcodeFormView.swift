@@ -107,7 +107,7 @@ struct MDBarcodeFormView: View {
     
     var body: some View {
         content
-            .navigationTitle(isNewBarcode ? LocalizedStringKey("str.md.barcode.new") : LocalizedStringKey("str.md.barcode.edit"))
+            .navigationTitle(isNewBarcode ? "Add barcode" : "Edit barcode")
 #if os(iOS)
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
@@ -123,7 +123,7 @@ struct MDBarcodeFormView: View {
                             await saveBarcode()
                         }
                     }, label: {
-                        Label(LocalizedStringKey("str.md.barcode.save"), systemImage: MySymbols.save)
+                        Label("Save barcode", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                         .disabled(!isBarcodeCorrect || isProcessing)
@@ -138,17 +138,17 @@ struct MDBarcodeFormView: View {
 #if os(macOS)
             if isNewBarcode {
                 HStack(alignment: .center){
-                    Text(LocalizedStringKey("str.md.barcode.new"))
+                    Text("Add barcode")
                         .font(.title)
                     Spacer()
-                    Text(LocalizedStringKey("str.md.barcode.for \(product?.name ?? "PRODUCT")"))
+                    Text("str.md.barcode.for \(product?.name ?? "PRODUCT""))
                         .font(.title2)
                         .foregroundStyle(.gray)
                 }
             }
 #endif
             HStack{
-                MyTextField(textToEdit: $barcode, description: "str.md.barcode.barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "str.md.barcode.barcode.required", errorMessage: "str.md.barcode.barcode.invalid", helpText: nil)
+                MyTextField(textToEdit: $barcode, description: "Barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "A barcode is required", errorMessage: "The barcode is invalid or already in use.", helpText: nil)
                     .onChange(of: barcode) {
                         isBarcodeCorrect = checkBarcodeCorrect()
                     }
@@ -192,9 +192,9 @@ struct MDBarcodeFormView: View {
                     }
 #endif
             }
-            Section(header: Text(LocalizedStringKey("str.md.barcode.amount")).font(.headline)) {
-                MyDoubleStepperOptional(amount: $amount, description: "str.md.barcode.amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
-                Picker(selection: $quantityUnitID, label: Label(LocalizedStringKey("str.md.barcode.quantityUnit"), systemImage: "scalemass"), content: {
+            Section(header: Text("Amount").font(.headline)) {
+                MyDoubleStepperOptional(amount: $amount, description: "Amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
+                Picker(selection: $quantityUnitID, label: Label("Quantity unit", systemImage: "scalemass"), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
                         if let namePlural = pickerQU.namePlural {
@@ -206,14 +206,14 @@ struct MDBarcodeFormView: View {
                 }).disabled(true)
             }
             
-            Picker(selection: $storeID, label: Label(LocalizedStringKey("str.md.barcode.store"), systemImage: MySymbols.store).foregroundStyle(.primary), content: {
+            Picker(selection: $storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
                 }
             })
             
-            MyTextField(textToEdit: $note, description: "str.md.barcode.note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
 #if os(macOS)
             HStack{
@@ -226,7 +226,7 @@ struct MDBarcodeFormView: View {
                 }
                 .keyboardShortcut(.cancelAction)
                 Spacer()
-                Button(LocalizedStringKey("str.save")) {
+                Button("Save") {
                     Task {
                         await saveBarcode()
                     }
