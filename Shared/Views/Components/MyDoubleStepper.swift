@@ -73,7 +73,7 @@ struct MyDoubleStepper: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount {
-                Text("str.double.invalid \(smallestValidAmount, specifier: "%.0f") \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)")
+                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.0f") and needs to be a valid number with max.  \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -173,7 +173,7 @@ struct MyDoubleStepperOptional: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount {
-                Text("str.double.invalid \(smallestValidAmount.formattedAmount) \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)")
+                Text("This cannot be lower than \(smallestValidAmount.formattedAmount) and needs to be a valid number with max.  \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)

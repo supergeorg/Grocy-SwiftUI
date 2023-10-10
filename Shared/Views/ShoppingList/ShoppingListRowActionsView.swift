@@ -108,7 +108,7 @@ struct ShoppingListRowActionsView: View {
                     }
                 }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "str.shL.entry.add \("\(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName)""))
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "Add \(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName) to stock")
                 .onTapGesture {
                     showPurchase.toggle()
                 }

@@ -72,21 +72,21 @@ struct StockTableRowActionsView: View {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.consume)
             })
             .tint(Color(.GrocyColors.grocyGreen))
-            .help("str.stock.tbl.action.consume \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1" \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .help("Consume \(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")
         }
         if shownActions.contains(.consumeAll) {
             Button(action: { Task { await consumeAll() } }, label: {
                 Label("All", systemImage: MySymbols.consume)
             })
             .tint(Color(.GrocyColors.grocyDelete))
-            .help("str.stock.tbl.action.consume.all \(stockElement.product.name)")
+            .help("Consume all \(stockElement.product.name) which are currently in stock")
         }
         if shownActions.contains(.openQA) {
             Button(action: { Task { await openQuickConsumeAmount() } }, label: {
                 Label(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.open)
             })
             .tint(Color(.GrocyColors.grocyBlue))
-            .help("str.stock.tbl.action.consume.open \("\(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1" \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name)")"))
+            .help("Mark \(stockElement.product.quickConsumeAmount?.formattedAmount ?? "1") \(getQUString(amount: stockElement.product.quickConsumeAmount ?? 1.0)) \(stockElement.product.name) as open")
         }
     }
 }

@@ -169,7 +169,7 @@ struct MDQuantityUnitFormView: View {
                                 .font(.body)
                         })
                     }
-                    Text("str.md.quantityUnit.conversions.hint \("1 \(quantityUnit.name)""))
+                    Text("1 \(quantityUnit.name) is the same as...")
                         .italic()
                 })
                 {

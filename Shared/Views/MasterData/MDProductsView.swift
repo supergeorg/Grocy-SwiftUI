@@ -25,11 +25,11 @@ struct MDProductRowView: View {
                     .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
                     if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
-                        Text("str.md.product.rowLocation \(grocyVM.mdLocations[locationID].name)")
+                        Text("Location: \(grocyVM.mdLocations[locationID].name)")
                             .font(.caption)
                     }
                     if let productGroup = grocyVM.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
-                        Text("str.md.product.rowProductGroup \(grocyVM.mdProductGroups[productGroup].name)")
+                        Text("Product group: \(grocyVM.mdProductGroups[productGroup].name)")
                             .font(.caption)
                     }
                 }

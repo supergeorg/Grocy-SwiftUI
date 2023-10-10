@@ -15,18 +15,18 @@ enum ProductStatus: String {
     case expired = "Expired"
     case belowMinStock = "Below min. stock amount"
 
-    func getDescription(amount: Int, expiringDays: Int? = 5) -> LocalizedStringKey {
+    func getDescription(amount: Int, expiringDays: Int? = 5) -> String {
         switch self {
         case .all:
             return "no description"
         case .expiringSoon:
-            return "str.stock.info.expiringSoon \(amount) \(expiringDays ?? 5)"
+            return "\(amount) products are due within the next \(expiringDays ?? 5) days"
         case .overdue:
-            return "str.stock.info.overdue \(amount)"
+            return "\(amount) products are overdue"
         case .expired:
-            return "str.stock.info.expired \(amount)"
+            return "\(amount) products are expired"
         case .belowMinStock:
-            return "str.stock.info.belowMinStock \(amount)"
+            return "\(amount) products are below min. defined stock amount"
         }
     }
 

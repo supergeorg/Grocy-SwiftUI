@@ -48,7 +48,7 @@ struct ShoppingListRowView: View {
                 Text(product?.name ?? shoppingListItem.note ?? "?")
                     .font(.headline)
                     .strikethrough(shoppingListItem.done == 1)
-                Text("str.shL.entry.info.amount \(amountString)")
+                Text("Amount: \(amountString)")
                     .strikethrough(shoppingListItem.done == 1)
             }
             .foregroundStyle(shoppingListItem.done == 1 ? Color.gray : Color.primary)

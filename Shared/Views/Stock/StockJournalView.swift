@@ -217,7 +217,7 @@ struct StockJournalRowView: View {
             if journalEntry.undone == 1 {
                 if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
                     HStack(alignment: .bottom){
-                        Text("str.stock.journal.undo.date \(formatDateAsString(date, showTime: true, localizationKey: localizationKey) ?? """))
+                        Text("Undone on \(formatDateAsString(date, showTime: true, localizationKey: localizationKey) ?? "")")
                             .font(.caption)
                         Text(getRelativeDateAsText(date, localizationKey: localizationKey) ?? "")
                             .font(.caption)
@@ -227,17 +227,14 @@ struct StockJournalRowView: View {
                 }
             }
             Group {
-                Text("str.stock.journal.amount.info \("\(journalEntry.amount.formattedAmount) \(journalEntry.amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? """)"))
-                Text("str.stock.journal.transactionTime.info \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? """))
-                Text("str.stock.journal.transactionType.info \("""))
+                Text("Amount: \(journalEntry.amount.formattedAmount) \(journalEntry.amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")
+                Text("Transaction time: \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
+                Text("Transaction type: \(journalEntry.transactionType.formatTransactionType())")
                     .font(.caption)
-                +
-                Text(journalEntry.transactionType.formatTransactionType())
-                    .font(.caption)
-                Text("str.stock.journal.location.info \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error""))
-                Text("str.stock.journal.user.info \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error""))
+                Text("Location: \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
+                Text("Done by: \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
                 if let note = journalEntry.note {
-                    Text("str.stock.entries.note \(note)")
+                    Text("Note: \(note)")
                 }
             }
             .foregroundStyle(journalEntry.undone == 1 ? Color.gray : Color.primary)

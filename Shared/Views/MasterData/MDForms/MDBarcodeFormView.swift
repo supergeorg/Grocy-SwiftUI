@@ -141,7 +141,7 @@ struct MDBarcodeFormView: View {
                     Text("Add barcode")
                         .font(.title)
                     Spacer()
-                    Text("str.md.barcode.for \(product?.name ?? "PRODUCT""))
+                    Text("Barcode for product \(product?.name ?? "?")")
                         .font(.title2)
                         .foregroundStyle(.gray)
                 }

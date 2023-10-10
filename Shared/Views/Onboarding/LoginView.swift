@@ -89,10 +89,7 @@ struct LoginStartView: View {
     var body: some View {
         CardView{
             VStack{
-                Text("Welcome to Grocy Mobile!
-
- This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server).
- If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.")
+                Text("Welcome to Grocy Mobile! This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server). If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent.")
                 Spacer()
                 Text("Select a server type:")
                 HStack {
@@ -131,7 +128,7 @@ struct LoginDemoServerView: View {
                     Menu {
                         Picker(selection: $demoServerURL, label: CardView{
                             HStack(alignment: .center){
-                                Text("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
+                                Text("Demo server: \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                                 Image(systemName: MySymbols.menuPick)
                             }
                         }, content: {
@@ -142,12 +139,12 @@ struct LoginDemoServerView: View {
                         .labelsHidden()
                     } label: {
                         HStack(alignment: .center){
-                            Text("str.login.demoServer \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
+                            Text("Demo server: \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                             Image(systemName: MySymbols.menuPick)
                         }
                     }
 #elseif os(macOS)
-                    Picker(selection: $demoServerURL, label: Text("str.login.demoServer \(""")), content: {
+                    Picker(selection: $demoServerURL, label: Text("Demo server"), content: {
                         ForEach(GrocyAPP.DemoServers.allCases, content: { demoServer in
                             Text(demoServer.description).tag(demoServer.rawValue)
                         })
@@ -359,7 +356,7 @@ struct LoginStatusView: View {
                         VStack(alignment: .leading){
                             Text("Connection to server failed.")
                             ScrollView {
-                                Text("str.login.connect.fail.info \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? """))
+                                Text("Server: \((isDemoMode ?? false) ? demoServerURL : grocyServerURL) \(errorMessage ?? "")")
                             }
                         }
                     }
@@ -381,7 +378,7 @@ struct LoginStatusView: View {
             case .unsupportedVersion:
                 VStack{
                     CardView{
-                        Text("str.login.connect.unsupportedVersion \(grocyVM.systemInfo?.grocyVersion.version ?? "?""))
+                        Text("The server version \(grocyVM.systemInfo?.grocyVersion.version ?? "?") is currently unsupported by the app. You can use it anyways, but there can be problems.")
                     }
                     HStack{
                         Button("Back", action: {

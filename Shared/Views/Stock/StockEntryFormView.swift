@@ -131,7 +131,8 @@ struct StockEntryFormView: View {
                    content: {
                 Text("").tag(nil as Int?)
                 ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
-                    Text(location.id == product?.locationID ? "str.stock.buy.product.location.default \(location.name)" : LocalizedStringKey(location.name)).tag(location.id as Int?)
+                    Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
+                        .tag(location.id as Int?)
                 }
             })
             

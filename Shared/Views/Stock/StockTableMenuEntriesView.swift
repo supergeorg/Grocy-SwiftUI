@@ -76,7 +76,7 @@ struct StockTableMenuEntriesView: View {
                     await consumeAsSpoiled()
                 }
             }, label: {
-                Label("str.stock.tbl.menu.consumeAsSpoiled \("\(stockElement.amount.formattedAmount) \(quString)""), systemImage: MySymbols.clear)
+                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
             })
             
             //                Button(action: {

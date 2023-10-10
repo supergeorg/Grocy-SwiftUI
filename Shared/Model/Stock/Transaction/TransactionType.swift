@@ -19,7 +19,7 @@ enum TransactionType: String, Codable, CaseIterable {
     case transferFrom = "transfer_from"
     case transferTo = "transfer_to"
 
-    func formatTransactionType() -> LocalizedStringKey {
+    func formatTransactionType() -> String {
         switch self {
         case .consume:
             return "Consume"

@@ -78,10 +78,10 @@ struct StockEntryRowView: View {
             StockEntryFormView(stockEntry: stockEntry)
         }, label: {
             VStack(alignment: .leading) {
-                Text("str.stock.entries.product \(product?.name ?? """))
+                Text("Product: \(product?.name ?? "")")
                     .font(.headline)
                 
-                Text("str.stock.entries.amount \("\(stockEntry.amount.formattedAmount) \(stockEntry.amount == 1 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? """)"))
+                Text("Amount: \(stockEntry.amount.formattedAmount) \(stockEntry.amount == 1 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? "")")
                 +
                 Text(" ")
                 +
@@ -90,12 +90,12 @@ struct StockEntryRowView: View {
                     .italic()
                 
                 if stockEntry.bestBeforeDate == getNeverOverdueDate() {
-                    Text("str.stock.entries.dueDate \("""))
+                    Text("Due date: \("")")
                     +
                     Text("Never overdue")
                         .italic()
                 } else {
-                    Text("str.stock.entries.dueDate \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? """))
+                    Text("Due date: \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")")
                     +
                     Text(" ")
                     +
@@ -105,18 +105,18 @@ struct StockEntryRowView: View {
                 }
                 
                 if let locationID = stockEntry.locationID, let location = grocyVM.mdLocations.first(where: { $0.id == locationID }) {
-                    Text("str.stock.entries.location \(location.name)")
+                    Text("Location: \(location.name)")
                 }
                 
                 if let storeID = stockEntry.storeID, let store = grocyVM.mdStores.first(where: { $0.id == storeID }) {
-                    Text("str.stock.entries.store \(store.name)")
+                    Text("Store: \(store.name)")
                 }
                 
                 if let price = stockEntry.price, price > 0 {
-                    Text("str.stock.entries.price \("\(price.formattedAmount) \(grocyVM.systemConfig?.currency ?? """)"))
+                    Text("Price: \(price.formattedAmount) \(grocyVM.systemConfig?.currency ?? "")")
                 }
                 
-                Text("str.stock.entries.purchasedDate \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? """))
+                Text("Purchased date: \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")")
                 +
                 Text(" ")
                 +
@@ -125,7 +125,7 @@ struct StockEntryRowView: View {
                     .italic()
                 
                 if let note = stockEntry.note {
-                    Text("str.stock.entries.note \(note)")
+                    Text("Note: \(note)")
                 }
 #if os(macOS)
                 Button(action: { Task { await openEntry() } }, label: {

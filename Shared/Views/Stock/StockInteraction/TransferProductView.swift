@@ -170,7 +170,7 @@ struct TransferProductView: View {
                         .foregroundStyle(.red)
                 }
                 if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
-                    Text("This cannot be the same as the "From" location")
+                    Text("This cannot be the same as the \"From\" location")
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
@@ -184,7 +184,7 @@ struct TransferProductView: View {
             }
             
             if productID != nil {
-                MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is "Opened first, then first due first, then first in first out"", icon: "tag")
+                MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
                 
                 if (useSpecificStockEntry) {
 #if os(iOS)
@@ -218,11 +218,15 @@ struct TransferProductView: View {
             Text("").tag(nil as String?)
             ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
                 Group {
-                    Text(stockProduct.stockEntryOpen == true ? "str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : "str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    Text("Amount: \(stockProduct.amount.formattedAmount); ")
+                    +
+                    Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
+                    +
+                    Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
                     +
                     Text("; ")
                     +
-                    Text(stockProduct.note != nil ? "str.stock.entries.note \(stockProduct.note ?? """) : LocalizedStringKey(""))
+                    Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
                 }
                 .tag(stockProduct.stockID as String?)
             }

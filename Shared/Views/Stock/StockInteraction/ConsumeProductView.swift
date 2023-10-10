@@ -263,7 +263,8 @@ struct ConsumeProductView: View {
             Picker(selection: $locationID, label: Label("Location", systemImage: MySymbols.location), content: {
                 Text("").tag(nil as Int?)
                 ForEach(filteredLocations, id:\.id) { location in
-                    Text(product?.locationID == location.id ? "str.stock.consume.product.location.default \(location.name)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))").tag(location.id as Int?)
+                    Text(product?.locationID == location.id ? "\(location.name) (Default location)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
+                        .tag(location.id as Int?)
                 }
             })
             
@@ -274,7 +275,7 @@ struct ConsumeProductView: View {
                 }
                 
                 if productID != nil {
-                    MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is "Opened first, then first due first, then first in first out"", icon: "tag")
+                    MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
                     
                     if useSpecificStockEntry {
 #if os(iOS)
@@ -355,11 +356,15 @@ struct ConsumeProductView: View {
             Text("").tag(nil as String?)
             ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
                 Group {
-                    Text(stockProduct.stockEntryOpen == false ? "str.stock.entry.description.notOpened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")") : "str.stock.entry.description.opened \(stockProduct.amount.formattedAmount) \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "best before error" \(formatDateAsString(stockProduct.purchasedDate, localizationKey: localizationKey) ?? "purchasedate error")"))
+                    Text("Amount: \(stockProduct.amount.formattedAmount); ")
+                    +
+                    Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
+                    +
+                    Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
                     +
                     Text("; ")
                     +
-                    Text(stockProduct.note != nil ? "str.stock.entries.note \(stockProduct.note ?? """) : LocalizedStringKey(""))
+                    Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
                 }
                 .tag(stockProduct.stockID as String?)
             }

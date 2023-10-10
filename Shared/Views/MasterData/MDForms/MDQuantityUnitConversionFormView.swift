@@ -182,7 +182,7 @@ struct MDQuantityUnitConversionFormView: View {
                             .foregroundStyle(Color.red)
                     }
                     if let quIDTo = quIDTo {
-                        Text("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: quantityUnit)) \(getQUString(amount: factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo })))")
+                        Text("This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo })))")
                             .font(.caption)
                     }
                 }
@@ -204,7 +204,7 @@ struct MDQuantityUnitConversionFormView: View {
                                 .foregroundStyle(Color.red)
                         }
                         if let quIDTo = quIDTo {
-                            Text("str.md.quantityUnit.conversion.means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) \(getQUString(amount: (1 / factor), qu: quantityUnit))")
+                            Text("This means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quIDTo }))) is the same as \(getQUString(amount: (1 / factor), qu: quantityUnit))")
                                 .font(.caption)
                         }
                     }

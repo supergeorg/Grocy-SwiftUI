@@ -135,7 +135,7 @@ struct StockTableRow: View {
             HStack{
                 Text("\(stockElement.amount.formattedAmount) \(getQUString(amount: stockElement.amount))")
                 if stockElement.amountOpened > 0 {
-                    Text("str.stock.info.opened \(stockElement.amountOpened.formattedAmount)")
+                    Text("\(stockElement.amountOpened.formattedAmount) opened")
                         .font(.caption)
                         .italic()
                 }
@@ -143,7 +143,7 @@ struct StockTableRow: View {
                     Text("Σ \(stockElement.amountAggregated.formattedAmount) \(getQUString(amount: stockElement.amountAggregated))")
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
                     if stockElement.amountOpenedAggregated > 0 {
-                        Text("str.stock.info.opened \(stockElement.amountOpenedAggregated.formattedAmount)")
+                        Text("\(stockElement.amountOpenedAggregated.formattedAmount) opened")
                             .foregroundStyle(Color(.GrocyColors.grocyGray))
                             .font(.caption)
                             .italic()

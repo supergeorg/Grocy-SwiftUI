@@ -63,17 +63,17 @@ struct StockProductInfoView: View {
                 Group {
                     Text("Last price: ").bold()
                     +
-                    Text(productDetails.lastPrice != nil ? "str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)" : "Unknown")
+                    Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)" : "Unknown")
                     
                     Text("Average price: ").bold()
                     +
-                    Text(productDetails.avgPrice != nil ? "str.details.relation \(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) \(productDetails.quantityUnitStock.name)" : "Unknown")
+                    Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)" : "Unknown")
                 }
                 
                 Group {
                     Text("Average shelf life: ").bold()
                     +
-                    Text(productDetails.averageShelfLifeDays  > 0 ? LocalizedStringKey(formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown") : "Unknown")
+                    Text(productDetails.averageShelfLifeDays  > 0 ? formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown" : "Unknown")
                     
                     Text("Spoil rate: ").bold()
                     +

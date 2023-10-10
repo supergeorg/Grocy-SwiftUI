@@ -646,16 +646,16 @@ struct MDProductFormView: View {
             MyDoubleStepper(amount: $minStockAmount, description: "Minimum stock amount ", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
             
             // Accumulate sub products min stock amount
-            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "Accumulate sub products min. stock amount ", descriptionInfo: "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be "missing", only this product", icon: MySymbols.accumulate)
+            MyToggle(isOn: $cumulateMinStockAmountOfSubProducts, description: "Accumulate sub products min. stock amount ", descriptionInfo: "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product", icon: MySymbols.accumulate)
             
             // Treat opened as out of stock
             MyToggle(isOn: $treatOpenedAsOutOfStock, description: "Treat opened as out of stock", descriptionInfo: "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount", icon: MySymbols.stockOverview)
             
             // Quick consume amount
-            MyDoubleStepper(amount: $quickConsumeAmount, description: "Quick consume amount", descriptionInfo: "This amount is used for the "quick consume button" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
+            MyDoubleStepper(amount: $quickConsumeAmount, description: "Quick consume amount", descriptionInfo: "This amount is used for the \"quick consume button\" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.consume)
             
             // Quick open amount
-            MyDoubleStepper(amount: $quickOpenAmount, description: "Quick open amount", descriptionInfo: "This amount is used for the "quick open button" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.open)
+            MyDoubleStepper(amount: $quickOpenAmount, description: "Quick open amount", descriptionInfo: "This amount is used for the \"quick open button\" on the stock overview page (related to quantity unit stock)", minAmount: 0.0001, amountStep: 1.0, amountName: nil, systemImage: MySymbols.open)
             
             // Tare weight
             Group {

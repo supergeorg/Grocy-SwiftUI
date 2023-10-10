@@ -122,7 +122,7 @@ struct MDUserEntityFormView: View {
                 .padding(.bottom, 20.0)
 #endif
             Section(header: Text("Name of the userentity")){
-                MyTextField(textToEdit: $name, description: "Name of the userentity", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "This is required and can only contain letters and numbers", errorMessage: "str.md.userEntity.name.invalid")
+                MyTextField(textToEdit: $name, description: "Name of the userentity", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "This is required and can only contain letters and numbers", errorMessage: "This is required and can only contain letters and numbers")
                     .onChange(of: name) {
                         isNameCorrect = checkNameCorrect()
                     }

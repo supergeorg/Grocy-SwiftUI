@@ -160,7 +160,7 @@ struct InventoryProductView: View {
             
             if productID != nil {
                 if stockAmountDifference != 0 {
-                    Text(stockAmountDifference > 0 ? "str.stock.inventory.product.amount.higher \("\(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true))"") : "str.stock.inventory.product.amount.lower \("\((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true))""))
+                    Text(stockAmountDifference > 0 ? "This means \(stockAmountDifference.formattedAmount) \(getQUString(stockQU: true)) will be added to stock" : "This means \((-stockAmountDifference).formattedAmount) \(getQUString(stockQU: true)) will be removed from stock")
                         .font(.caption)
                 } else {
                     Text("The selected amount is equal to the stock amount.")

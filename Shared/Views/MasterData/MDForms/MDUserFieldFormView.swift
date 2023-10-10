@@ -150,7 +150,7 @@ struct MDUserFieldFormView: View {
                         isCaptionCorrect = checkCaptionCorrect()
                     }
             }
-            MyIntStepperOptional(amount: $sortNumber, description: "Sort number", helpText: "Multiple Userfields will be ordered by that number on the input form", minAmount: -1, errorMessage: "str.md.userField.sortNumber.error", systemImage: "list.number")
+            MyIntStepperOptional(amount: $sortNumber, description: "Sort number", helpText: "Multiple Userfields will be ordered by that number on the input form", minAmount: -1, errorMessage: "", systemImage: "list.number")
             
             Picker(selection: $type, label: Text("Type"), content: {
                 ForEach(UserFieldType.allCases, id:\.self) { userFieldType in
