@@ -12,30 +12,31 @@ struct MDLocationFormView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
+    @State private var isSuccessful: Bool? = nil
+    @State private var errorMessage: String? = nil
     
-    @State private var name: String = ""
-    @State private var isActive: Bool = true
-    @State private var mdLocationDescription: String = ""
-    @State private var isFreezer: Bool = false
-    
-    var location: MDLocation? = nil
-    
-    @Binding var showAddLocation: Bool
+    var existingLocation: MDLocation?
+    @State var location: MDLocation
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundLocation = grocyVM.mdLocations.first(where: {$0.name == name})
-        return location == nil ? !(name.isEmpty || foundLocation != nil) : !(name.isEmpty || (foundLocation != nil && foundLocation!.id != location!.id))
+        let foundLocation = grocyVM.mdLocations.first(where: { $0.name == location.name })
+        return !(location.name.isEmpty || (foundLocation != nil && foundLocation!.id != location.id))
     }
     
-    private func resetForm() {
-        self.name = location?.name ?? ""
-        self.isActive = location?.active ?? true
-        self.mdLocationDescription = location?.mdLocationDescription ?? ""
-        self.isFreezer = location?.isFreezer ?? false
-        isNameCorrect = checkNameCorrect()
+    init(existingLocation: MDLocation? = nil) {
+        self.existingLocation = existingLocation
+        let initialLocation = existingLocation ?? MDLocation(
+            id: 0,
+            name: "",
+            active: true,
+            mdLocationDescription: "",
+            isFreezer: false,
+            rowCreatedTimestamp: Date().iso8601withFractionalSeconds
+        )
+        _location = State(initialValue: initialLocation)
+        _isNameCorrect = State(initialValue: true)
     }
     
     private let dataToUpdate: [ObjectEntities] = [.locations]
@@ -44,93 +45,87 @@ struct MDLocationFormView: View {
     }
     
     private func finishForm() {
-#if os(iOS)
-        self.dismiss()
-#elseif os(macOS)
-        if location == nil {
-            showAddLocation = false
-        }
-#endif
+        dismiss()
     }
     
     private func saveLocation() async {
-        let id = location == nil ? grocyVM.findNextID(.locations) : location!.id
-        let timeStamp = location == nil ? Date().iso8601withFractionalSeconds : location!.rowCreatedTimestamp
-        let locationPOST = MDLocation(
-            id: id,
-            name: name,
-            active: isActive,
-            mdLocationDescription: mdLocationDescription,
-            isFreezer: isFreezer,
-            rowCreatedTimestamp: timeStamp
-        )
+        if location.id == 0 {
+            location.id = grocyVM.findNextID(.locations)
+        }
         isProcessing = true
-        if location == nil {
-            do {
-                _ = try await grocyVM.postMDObject(object: .locations, content: locationPOST)
-                grocyVM.postLog("Location added successfully.", type: .info)
-                await updateData()
-                finishForm()
-            } catch {
-                grocyVM.postLog("Location add failed. \(error)", type: .error)
+        isSuccessful = nil
+        do {
+            if existingLocation == nil {
+                _ = try await grocyVM.postMDObject(object: .locations, content: location)
+            } else {
+                try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
             }
-        } else {
-            do {
-                try await grocyVM.putMDObjectWithID(object: .locations, id: id, content: locationPOST)
-                grocyVM.postLog("Location edit successful.", type: .info)
-                await updateData()
-                finishForm()
-            } catch {
-                grocyVM.postLog("Location edit failed. \(error)", type: .error)
-            }
+            grocyVM.postLog("Location \(location.name) successful.", type: .info)
+            await updateData()
+            isSuccessful = true
+        } catch {
+            grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
+            errorMessage = error.localizedDescription
+            isSuccessful = false
         }
         isProcessing = false
     }
     
     var body: some View {
         Form {
-            MyTextField(textToEdit: $name, description: "Name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
-                .onChange(of: name) {
-                    isNameCorrect = checkNameCorrect()
-                }
-            MyToggle(isOn: $isActive, description: "Active")
-            MyTextEditor(textToEdit: $mdLocationDescription, description: "Description", leadingIcon: MySymbols.description)
+            if isSuccessful == false, let errorMessage = errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
+            MyTextField(
+                textToEdit: $location.name,
+                description: "Name",
+                isCorrect: $isNameCorrect,
+                leadingIcon: MySymbols.name,
+                emptyMessage: "A name is required",
+                errorMessage: "Name already exists"
+            )
+            .onChange(of: location.name) {
+                isNameCorrect = checkNameCorrect()
+            }
+            MyToggle(isOn: $location.active, description: "Active", icon: MySymbols.active)
+            MyTextEditor(textToEdit: $location.mdLocationDescription, description: "Description", leadingIcon: MySymbols.description)
             MyToggle(
-                isOn: $isFreezer,
+                isOn: $location.isFreezer,
                 description: "Is freezer",
                 descriptionInfo: "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
                 icon: MySymbols.freezing
             )
         }
+        .formStyle(.grouped)
         .task {
-            if firstAppear {
-                await updateData()
-                resetForm()
-                firstAppear = false
-            }
+            await updateData()
+            isNameCorrect = checkNameCorrect()
         }
-        .navigationTitle(location == nil ? "Create location" : "Edit location")
+        .navigationTitle(existingLocation == nil ? "Create location" : "Edit location")
         .toolbar(content: {
-#if os(iOS)
-            if location == nil {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", role: .cancel, action: finishForm)
-                        .keyboardShortcut(.cancelAction)
-                }
-            }
-#endif
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     Task {
                         await saveLocation()
                     }
                 }, label: {
-                    Label("Save", systemImage: MySymbols.save)
-                        .labelStyle(.titleAndIcon)
+                    if isProcessing == false {
+                        Label("Save", systemImage: MySymbols.save)
+                            .labelStyle(.titleAndIcon)
+                    } else {
+                        ProgressView()
+                    }
                 })
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
         })
+        .onChange(of: isSuccessful) {
+            if isSuccessful == true {
+                finishForm()
+            }
+        }
+        .sensoryFeedback(.success, trigger: isSuccessful == true)
+        .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 }

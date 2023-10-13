@@ -8,14 +8,12 @@
 import Foundation
 import SwiftData
 
-// MARK: - MDLocation
-
 @Model
 class MDLocation: Codable {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
-    var mdLocationDescription: String? = nil
+    var mdLocationDescription: String
     var isFreezer: Bool
     var rowCreatedTimestamp: String
     
@@ -30,7 +28,7 @@ class MDLocation: Codable {
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
+            do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = try Int(container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
             do {
                 self.active = try container.decode(Bool.self, forKey: .active)
@@ -41,7 +39,7 @@ class MDLocation: Codable {
                     self.active = ["1", "true"].contains(try? container.decode(String.self, forKey: .active))
                 }
             }
-            self.mdLocationDescription = try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription) ?? nil
+            self.mdLocationDescription = (try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription)) ?? ""
             do {
                 self.isFreezer = try container.decode(Bool.self, forKey: .isFreezer)
             } catch {
@@ -67,13 +65,22 @@ class MDLocation: Codable {
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
     
-    init(id: Int, name: String, active: Bool, mdLocationDescription: String? = nil, isFreezer: Bool, rowCreatedTimestamp: String) {
+    init(id: Int, name: String, active: Bool, mdLocationDescription: String = "", isFreezer: Bool, rowCreatedTimestamp: String) {
         self.id = id
         self.name = name
         self.active = active
         self.mdLocationDescription = mdLocationDescription
         self.isFreezer = isFreezer
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+    
+    static func == (lhs: MDLocation, rhs: MDLocation) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.name == rhs.name &&
+            lhs.active == rhs.active &&
+            lhs.mdLocationDescription == rhs.mdLocationDescription &&
+            lhs.isFreezer == rhs.isFreezer &&
+            lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 
