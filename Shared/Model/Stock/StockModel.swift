@@ -6,21 +6,21 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - StockEntry
-
-struct StockElement: Codable, Identifiable {
-    let id = UUID()
-    let amount: Double
-    let amountAggregated: Double
-    let value: Double
-    let bestBeforeDate: Date?
-    let amountOpened: Double
-    let amountOpenedAggregated: Double
-    let isAggregatedAmount: Bool
-    let dueType: Int
-    let productID: Int
-    let product: MDProduct
+@Model
+class StockElement: Codable, Identifiable {
+    @Attribute(.unique) var id = UUID()
+    var amount: Double
+    var amountAggregated: Double
+    var value: Double
+    var bestBeforeDate: Date?
+    var amountOpened: Double
+    var amountOpenedAggregated: Double
+    var isAggregatedAmount: Bool
+    var dueType: Int
+    var productID: Int
+    var product: MDProduct
 
     enum CodingKeys: String, CodingKey {
         case amount
@@ -35,7 +35,7 @@ struct StockElement: Codable, Identifiable {
         case product
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
@@ -60,6 +60,20 @@ struct StockElement: Codable, Identifiable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(amountAggregated, forKey: .amountAggregated)
+        try container.encode(value, forKey: .value)
+        try container.encode(bestBeforeDate, forKey: .bestBeforeDate)
+        try container.encode(amountOpened, forKey: .amountOpened)
+        try container.encode(amountOpenedAggregated, forKey: .amountOpenedAggregated)
+        try container.encode(isAggregatedAmount, forKey: .isAggregatedAmount)
+        try container.encode(dueType, forKey: .dueType)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(product, forKey: .product)
     }
 
     init(

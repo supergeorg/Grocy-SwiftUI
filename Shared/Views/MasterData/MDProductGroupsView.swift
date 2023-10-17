@@ -15,8 +15,8 @@ struct MDProductGroupRowView: View {
             Text(productGroup.name)
                 .font(.title)
                 .foregroundColor(productGroup.active ? .primary : .gray)
-            if let description = productGroup.mdProductGroupDescription, !description.isEmpty {
-                Text(productGroup.mdProductGroupDescription!)
+            if !productGroup.mdProductGroupDescription.isEmpty {
+                Text(productGroup.mdProductGroupDescription)
                     .font(.caption)
             }
         }

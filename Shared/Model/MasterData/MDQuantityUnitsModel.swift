@@ -6,16 +6,16 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - MDQuantityUnit
-
-struct MDQuantityUnit: Codable {
-    let id: Int
-    let name: String
-    let namePlural: String?
+@Model
+class MDQuantityUnit: Codable {
+    @Attribute(.unique) var id: Int
+    var name: String
+    var namePlural: String?
     var active: Bool
-    let mdQuantityUnitDescription: String?
-    let rowCreatedTimestamp: String
+    var mdQuantityUnitDescription: String
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -26,7 +26,7 @@ struct MDQuantityUnit: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -41,11 +41,21 @@ struct MDQuantityUnit: Codable {
                     self.active = ["1", "true"].contains(try? container.decode(String.self, forKey: .active))
                 }
             }
-            self.mdQuantityUnitDescription = try? container.decodeIfPresent(String.self, forKey: .mdQuantityUnitDescription) ?? nil
+            self.mdQuantityUnitDescription = (try? container.decodeIfPresent(String.self, forKey: .mdQuantityUnitDescription)) ?? ""
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(namePlural, forKey: .namePlural)
+        try container.encode(active, forKey: .active)
+        try container.encode(mdQuantityUnitDescription, forKey: .mdQuantityUnitDescription)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 
     init(
@@ -53,7 +63,7 @@ struct MDQuantityUnit: Codable {
         name: String,
         namePlural: String?,
         active: Bool,
-        mdQuantityUnitDescription: String? = nil,
+        mdQuantityUnitDescription: String = "",
         rowCreatedTimestamp: String
     ) {
         self.id = id

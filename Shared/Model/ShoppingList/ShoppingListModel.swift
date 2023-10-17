@@ -6,18 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - ShoppingListElement
-
-struct ShoppingListItem: Codable {
-    let id: Int
-    let productID: Int?
-    let note: String?
-    let amount: Double
-    let shoppingListID: Int
-    let done: Int
-    let quID: Int?
-    let rowCreatedTimestamp: String
+@Model
+class ShoppingListItem: Codable {
+    @Attribute(.unique) var id: Int
+    var productID: Int?
+    var note: String?
+    var amount: Double
+    var shoppingListID: Int
+    var done: Int
+    var quID: Int?
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -29,7 +29,7 @@ struct ShoppingListItem: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -43,6 +43,18 @@ struct ShoppingListItem: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(note, forKey: .note)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(shoppingListID, forKey: .shoppingListID)
+        try container.encode(done, forKey: .done)
+        try container.encode(quID, forKey: .quID)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 
     init(

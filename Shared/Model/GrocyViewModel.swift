@@ -249,25 +249,45 @@ import SwiftData
                         case .locations:
                             self.mdLocations = try await grocyApi.getObject(object: object)
                             try self.modelContext.delete(model: MDLocation.self)
-                            for loc in self.mdLocations {
-                                self.modelContext.insert(loc)
+                            for location in self.mdLocations {
+                                self.modelContext.insert(location)
                             }
                         case .product_barcodes:
                             self.mdProductBarcodes = try await grocyApi.getObject(object: object)
                         case .product_groups:
                             self.mdProductGroups = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: MDProductGroup.self)
+                            for productGroup in self.mdProductGroups {
+                                self.modelContext.insert(productGroup)
+                            }
                         case .products:
                             self.mdProducts = try await grocyApi.getObject(object: object)
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: MDQuantityUnitConversion.self)
+                            for quConversion in self.mdQuantityUnitConversions {
+                                self.modelContext.insert(quConversion)
+                            }
                         case .recipes:
                             self.recipes = try await grocyApi.getObject(object: object)
                         case .quantity_units:
                             self.mdQuantityUnits = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: MDQuantityUnit.self)
+                            for quantityUnit in self.mdQuantityUnits {
+                                self.modelContext.insert(quantityUnit)
+                            }
                         case .shopping_list:
                             self.shoppingList = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: ShoppingListItem.self)
+                            for shlItem in self.shoppingList {
+                                self.modelContext.insert(shlItem)
+                            }
                         case .shopping_lists:
                             self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: ShoppingListDescription.self)
+                            for shlDesc in self.shoppingListDescriptions {
+                                self.modelContext.insert(shlDesc)
+                            }
                         case .shopping_locations:
                             self.mdStores = try await grocyApi.getObject(object: object)
                             try self.modelContext.delete(model: MDStore.self)

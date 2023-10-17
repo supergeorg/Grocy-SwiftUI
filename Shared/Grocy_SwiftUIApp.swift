@@ -20,7 +20,7 @@ struct Grocy_SwiftUIApp: App {
     
     init() {
         do {
-            modelContainer = try ModelContainer(for: MDLocation.self, MDStore.self)
+            modelContainer = try ModelContainer(for: StockElement.self, ShoppingListItem.self, ShoppingListDescription.self, MDLocation.self, MDStore.self, MDQuantityUnit.self, MDQuantityUnitConversion.self, MDProductGroup.self)
             let modelContext = ModelContext(modelContainer)
             self._grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
         } catch {

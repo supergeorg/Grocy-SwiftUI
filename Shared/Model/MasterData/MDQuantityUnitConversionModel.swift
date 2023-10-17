@@ -6,16 +6,16 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - MDQuantityUnitConversion
-
-struct MDQuantityUnitConversion: Codable {
-    let id: Int
-    let fromQuID: Int
-    let toQuID: Int
-    let factor: Double
-    let productID: Int?
-    let rowCreatedTimestamp: String
+@Model
+class MDQuantityUnitConversion: Codable {
+    @Attribute(.unique) var id: Int
+    var fromQuID: Int
+    var toQuID: Int
+    var factor: Double
+    var productID: Int?
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -26,7 +26,7 @@ struct MDQuantityUnitConversion: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -38,6 +38,16 @@ struct MDQuantityUnitConversion: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(fromQuID, forKey: .fromQuID)
+        try container.encode(toQuID, forKey: .toQuID)
+        try container.encode(factor, forKey: .factor)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 
     init(

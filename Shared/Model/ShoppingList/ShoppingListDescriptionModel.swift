@@ -6,20 +6,20 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - ShoppingListDescription
-
-struct ShoppingListDescription: Codable {
-    let id: Int
-    let name: String
-    let rowCreatedTimestamp: String
+@Model
+class ShoppingListDescription: Codable {
+    @Attribute(.unique) var id: Int
+    var name: String
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id, name
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do {
@@ -32,6 +32,13 @@ struct ShoppingListDescription: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 
     init(

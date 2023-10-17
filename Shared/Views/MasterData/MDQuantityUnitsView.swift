@@ -21,8 +21,8 @@ struct MDQuantityUnitRowView: View {
                 }
             }
             .foregroundStyle(quantityUnit.active ? .primary : .secondary)
-            if let description = quantityUnit.mdQuantityUnitDescription, !description.isEmpty {
-                Text(description)
+            if !quantityUnit.mdQuantityUnitDescription.isEmpty {
+                Text(quantityUnit.mdQuantityUnitDescription)
                     .font(.caption)
             }
         }
