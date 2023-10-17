@@ -10,9 +10,13 @@ import Combine
 import SwiftUI
 import OSLog
 import WebKit
+import SwiftData
 
 @Observable class GrocyViewModel { 
     var grocyApi: GrocyAPI
+    
+//    @ObservationIgnored @Environment(\.modelContext) private var modelContext
+    var modelContext: ModelContext
     
     @ObservationIgnored @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @ObservationIgnored @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
@@ -85,8 +89,9 @@ import WebKit
     
     let jsonEncoder = JSONEncoder()
     
-    init() {
+    init(modelContext: ModelContext) {
         self.grocyApi = GrocyApi()
+        self.modelContext = modelContext
         jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -243,6 +248,10 @@ import WebKit
                             self.mdBatteries = try await grocyApi.getObject(object: object)
                         case .locations:
                             self.mdLocations = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: MDLocation.self)
+                            for loc in self.mdLocations {
+                                self.modelContext.insert(loc)
+                            }
                         case .product_barcodes:
                             self.mdProductBarcodes = try await grocyApi.getObject(object: object)
                         case .product_groups:
@@ -261,6 +270,10 @@ import WebKit
                             self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
                         case .shopping_locations:
                             self.mdStores = try await grocyApi.getObject(object: object)
+                            try self.modelContext.delete(model: MDStore.self)
+                            for store in self.mdStores {
+                                self.modelContext.insert(store)
+                            }
                         case .stock_log:
                             self.stockJournal = try await grocyApi.getObject(object: object)
                         default:
