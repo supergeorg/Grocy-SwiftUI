@@ -44,13 +44,13 @@ struct MDQuantityUnitsView: View {
             grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
         }
     }
-
+    
     
     var body: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else  if mdQuantityUnits.isEmpty {
+            } else if mdQuantityUnits.isEmpty {
                 ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
             } else if filteredQuantityUnits.isEmpty {
                 ContentUnavailableView.search
@@ -67,12 +67,11 @@ struct MDQuantityUnitsView: View {
                 })
             }
         }
-        .navigationDestination(for: String.self, destination: { _ in
+        .navigationDestination(isPresented: $showAddQuantityUnit, destination: {
             MDQuantityUnitFormView()
         })
         .navigationDestination(for: MDQuantityUnit.self, destination: { quantityUnit in
             MDQuantityUnitFormView(existingQuantityUnit: quantityUnit)
-            EmptyView()
         })
         .navigationTitle("Quantity units")
         .task {
@@ -89,7 +88,9 @@ struct MDQuantityUnitsView: View {
 #endif
                 Button(action: {
                     showAddQuantityUnit.toggle()
-                }, label: {Image(systemName: MySymbols.new)})
+                }, label: {
+                    Label("New quantity unit", systemImage: MySymbols.new)
+                })
             }
         }
         .animation(.default, value: filteredQuantityUnits.count)

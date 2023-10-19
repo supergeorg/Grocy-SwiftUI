@@ -49,11 +49,11 @@ struct MDQuantityUnitFormView: View {
         await grocyVM.requestData(objects: dataToUpdate)
     }
     
-    private var quConversions: MDQuantityUnitConversions? {
+    private var quConversions: MDQuantityUnitConversions {
         if let existingQuantityUnit = existingQuantityUnit {
             return grocyVM.mdQuantityUnitConversions.filter({ $0.fromQuID == existingQuantityUnit.id })
         } else {
-            return nil
+            return []
         }
     }
     
@@ -76,154 +76,125 @@ struct MDQuantityUnitFormView: View {
     }
     
     private func saveQuantityUnit() async {
-        //        let id = isNewQuantityUnit ? grocyVM.findNextID(.quantity_units) : quantityUnit!.id
-        //        let timeStamp = isNewQuantityUnit ? Date().iso8601withFractionalSeconds : quantityUnit!.rowCreatedTimestamp
-        //        let quantityUnitPOST = MDQuantityUnit(
-        //            id: id,
-        //            name: name,
-        //            namePlural: namePlural,
-        //            active: isActive,
-        //            mdQuantityUnitDescription: mdQuantityUnitDescription,
-        //            rowCreatedTimestamp: timeStamp
-        //        )
+        if quantityUnit.id == 0 {
+            quantityUnit.id = grocyVM.findNextID(.quantity_units)
+        }
         isProcessing = true
-        //        if isNewQuantityUnit {
-        //            do {
-        //                _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnitPOST)
-        //                grocyVM.postLog("Quantity unit added successfully.", type: .info)
-        //                await updateData()
-        //                finishForm()
-        //            } catch {
-        //                grocyVM.postLog("Quantity unit add failed. \(error)", type: .error)
-        //            }
-        //        } else {
-        //            do {
-        //                try await grocyVM.putMDObjectWithID(object: .quantity_units, id: id, content: quantityUnitPOST)
-        //                grocyVM.postLog("Quantity unit \(quantityUnitPOST.name) edited successfully.", type: .info)
-        //                await updateData()
-        //                finishForm()
-        //            } catch {
-        //                grocyVM.postLog("Quantity unit edit failed. \(error)", type: .error)
-        //            }
-        //        }
+        isSuccessful = nil
+        do {
+            if existingQuantityUnit == nil {
+                _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnit)
+            } else {
+                try await grocyVM.putMDObjectWithID(object: .quantity_units, id: quantityUnit.id, content: quantityUnit)
+            }
+            grocyVM.postLog("Quantity unit \(quantityUnit.name) successful.", type: .info)
+            await updateData()
+            isSuccessful = true
+        } catch {
+            grocyVM.postLog("Quantity unit \(quantityUnit.name) failed. \(error)", type: .error)
+            errorMessage = error.localizedDescription
+            isSuccessful = false
+        }
         isProcessing = false
     }
     
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage = errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             MyTextField(textToEdit: $quantityUnit.name, description: "Name (in singular form)", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
             MyTextField(textToEdit: $quantityUnit.namePlural, description: "Name (in plural form)", isCorrect: Binding.constant(true), leadingIcon: "tag")
             MyToggle(isOn: $quantityUnit.active, description: "Active")
             MyTextField(textToEdit: $quantityUnit.mdQuantityUnitDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
             
-            if let existingQuantityUnit = existingQuantityUnit {
-                Section(header: VStack(alignment: .leading) {
-                    HStack(alignment: .top) {
-                        Text("Default conversions")
-                        Spacer()
-                        Button(action: {
-                            //                                        showAddQuantityUnitConversion.toggle()
-                            print("ADD")
-                        }, label: {
-                            Image(systemName: MySymbols.new)
-                            //                                            .font(.body)
+            if existingQuantityUnit != nil {
+                Section(content: {
+                    ForEach(quConversions, id:\.id) { quConversion in
+                        NavigationLink(value: quConversion) {
+                            Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                            Button(role: .destructive,
+                                   action: { markDeleteQUConversion(conversion: quConversion) },
+                                   label: { Label("Delete", systemImage: MySymbols.delete) }
+                            )
                         })
                     }
-                    Text("1 \(quantityUnit.name) is the same as...")
-                        .italic()
+                }, header: {
+                    VStack(alignment: .leading) {
+                        HStack(alignment: .top) {
+                            Text("Default conversions")
+                            Spacer()
+                            Button(action: {
+                                showAddQuantityUnitConversion.toggle()
+                            }, label: {
+                                Label("New quantity unit conversion", systemImage: MySymbols.new)
+                            })
+                        }
+                        Text("1 \(quantityUnit.name) is the same as...")
+                            .italic()
+                    }
                 })
             }
         }
         .formStyle(.grouped)
+        .navigationDestination(isPresented: $showAddQuantityUnitConversion, destination: {
+            MDQuantityUnitConversionFormView(quantityUnit: quantityUnit)
+        })
+        .navigationDestination(for: MDQuantityUnitConversion.self, destination: { quantityUnitConversion in
+            MDQuantityUnitConversionFormView(quantityUnit: quantityUnit, existingQuantityUnitConversion: quantityUnitConversion)
+        })
+        .navigationTitle(existingQuantityUnit == nil ? "New quantity unit" : "Edit quantity unit")
         .onChange(of: quantityUnit.name) {
             isNameCorrect = checkNameCorrect()
         }
-        .navigationTitle(existingQuantityUnit == nil ? "New quantity unit" : "Edit quantity unit")
         .task {
             await updateData()
-            
+            self.isNameCorrect = checkNameCorrect()
+        }
+        .refreshable {
+            await updateData()
         }
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction) {
-                Button(action: { Task { await saveQuantityUnit() } }, label: {
-                    Label("Save quantity unit", systemImage: MySymbols.save)
-                        .labelStyle(.titleAndIcon)
+                Button(action: {
+                    Task {
+                        await saveQuantityUnit()
+                    }
+                }, label: {
+                    if isProcessing == false {
+                        Label("Save quantity unit", systemImage: MySymbols.save)
+                    } else {
+                        ProgressView()
+                    }
                 })
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
         })
+        .confirmationDialog("Delete", isPresented: $showConversionDeleteAlert, actions: {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                if let deleteID = conversionToDelete?.id {
+                    Task {
+                        await deleteQUConversion(toDelID: deleteID)
+                    }
+                }
+            }
+        }, message: {
+            if let conversionToDelete = conversionToDelete {
+                Text("\(conversionToDelete.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")")
+            } else {
+                Text("Unknown error occured.")
+            }
+        })
+        .onChange(of: isSuccessful) {
+            if isSuccessful == true {
+                finishForm()
+            }
+        }
+        .sensoryFeedback(.success, trigger: isSuccessful == true)
+        .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
-    //                {
-    //#if os(macOS)
-    //                    NavigationView {
-    //                        List {
-    //                            ForEach(quConversions ?? [], id:\.id) { quConversion in
-    //                                NavigationLink(destination: {
-    //                                    MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion)
-    //                                }, label: {
-    //                                    Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
-    //                                })
-    //                                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-    //                                    Button(role: .destructive,
-    //                                           action: { markDeleteQUConversion(conversion: quConversion) },
-    //                                           label: { Label("Delete", systemImage: MySymbols.delete) }
-    //                                    )
-    //                                })
-    //                            }
-    //                        }
-    //                    }
-    //#else
-    //                    List {
-    //                        ForEach(quConversions ?? [], id:\.id) { quConversion in
-    //                            NavigationLink(destination: {
-    //                                MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: false, quantityUnit: quantityUnit, quantityUnitConversion: quConversion, showAddQuantityUnitConversion: $showAddQuantityUnitConversion)
-    //                            }, label: {
-    //                                Text("\(quConversion.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
-    //                            })
-    //                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-    //                                Button(role: .destructive,
-    //                                       action: { markDeleteQUConversion(conversion: quConversion) },
-    //                                       label: { Label("Delete", systemImage: MySymbols.delete) }
-    //                                )
-    //                            })
-    //                        }
-    //                    }
-    //#endif
-    //                }
-    //                .sheet(isPresented: $showAddQuantityUnitConversion, content: {
-    //#if os(macOS)
-    //                    MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion)
-    //#else
-    //                    NavigationView {
-    //                        MDQuantityUnitConversionFormView(isNewQuantityUnitConversion: true, quantityUnit: quantityUnit, showAddQuantityUnitConversion: $showAddQuantityUnitConversion)
-    //                    }
-    //#endif
-    //                })
-    //                .alert("Delete", isPresented: $showConversionDeleteAlert, actions: {
-    //                    Button("Cancel", role: .cancel) { }
-    //                    Button("Delete", role: .destructive) {
-    //                        if let deleteID = conversionToDelete?.id {
-    //                            Task {
-    //                                await deleteQUConversion(toDelID: deleteID)
-    //                            }
-    //                        }
-    //                    }
-    //                }, message: {
-    //                    if let conversionToDelete = conversionToDelete {
-    //                        Text("\(conversionToDelete.factor.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")")
-    //                    } else {
-    //                        Text("Unknown error occured.")
-    //                    }
-    //                })
-    //            }
-    //        }
-    //        .task {
-    //            if firstAppear {
-    //                await updateData()
-    //                resetForm()
-    //                firstAppear = false
-    //            }
-    //        }
-    //    }
 }
