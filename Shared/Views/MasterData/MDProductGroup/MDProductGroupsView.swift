@@ -8,39 +8,18 @@
 import SwiftUI
 import SwiftData
 
-struct MDProductGroupRowView: View {
-    var productGroup: MDProductGroup
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(productGroup.name)
-                .font(.title)
-                .foregroundColor(productGroup.active ? .primary : .gray)
-            if !productGroup.mdProductGroupDescription.isEmpty {
-                Text(productGroup.mdProductGroupDescription)
-                    .font(.caption)
-            }
-        }
-        .multilineTextAlignment(.leading)
-    }
-}
-
 struct MDProductGroupsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
-
-    @State private var firstAppear: Bool = true
+    
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
-    
-    @State private var shownEditPopover: MDProductGroup? = nil
     
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
-    
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -69,61 +48,18 @@ struct MDProductGroupsView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 {
-#if os(macOS)
-            NavigationView {
-                bodyContent
-                    .frame(minWidth: Constants.macOSNavWidth)
-            }
-#else
-            bodyContent
-#endif
-        } else {
-            ServerProblemView()
-                .navigationTitle("Product groups")
-        }
-    }
-    
-    var bodyContent: some View {
-        content
-            .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-#if os(macOS)
-                    RefreshButton(updateData: { Task { await updateData() } })
-#endif
-                    Button(action: {
-                        showAddProductGroup.toggle()
-                    }, label: {Image(systemName: MySymbols.new)})
-                }
-            }
-            .navigationTitle("Product groups")
-#if os(iOS)
-            .sheet(isPresented: self.$showAddProductGroup, content: {
-                NavigationView {
-                    MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup)
-                }
-            })
-#endif
-    }
-    
-    var content: some View {
         List {
-            if mdProductGroups.isEmpty {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdProductGroups.isEmpty {
                 ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
             } else if filteredProductGroups.isEmpty {
                 ContentUnavailableView.search
             }
-#if os(macOS)
-            if showAddProductGroup {
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: true, showAddProductGroup: $showAddProductGroup), isActive: $showAddProductGroup, label: {
-                    NewMDRowLabel(title: "Create product group")
-                })
-            }
-#endif
             ForEach(filteredProductGroups, id:\.id) { productGroup in
-                NavigationLink(destination: MDProductGroupFormView(isNewProductGroup: false, productGroup: productGroup, showAddProductGroup: $showAddProductGroup)) {
+                NavigationLink(value: productGroup, label: {
                     MDProductGroupRowView(productGroup: productGroup)
-                }
+                })
                 .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                     Button(role: .destructive,
                            action: { deleteItem(itemToDelete: productGroup) },
@@ -132,18 +68,36 @@ struct MDProductGroupsView: View {
                 })
             }
         }
+        .navigationDestination(isPresented: $showAddProductGroup, destination: {
+            MDProductGroupFormView()
+        })
+        .navigationDestination(for: MDProductGroup.self, destination: { productGroup in
+            MDProductGroupFormView(existingProductGroup: productGroup)
+        })
+        .navigationTitle("Product groups")
         .task {
-            if firstAppear {
-                await updateData()
-                firstAppear = false
-            }
+            await updateData()
         }
-        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
+        .searchable(text: $searchString, prompt: "Search")
+
         .animation(.default, value: filteredProductGroups.count)
-        .alert("Do you really want to delete this product group?", isPresented: $showDeleteConfirmation, actions: {
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+#if os(macOS)
+                RefreshButton(updateData: { Task { await updateData() } })
+#endif
+                Button(action: {
+                    showAddProductGroup.toggle()
+                }, label: {
+                    Label("New product group", systemImage: MySymbols.new)
+                })
+            }
+        }
+
+        .confirmationDialog("Do you really want to delete this product group?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = productGroupToDelete?.id {
@@ -156,17 +110,6 @@ struct MDProductGroupsView: View {
     }
 }
 
-struct MDProductGroupsView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            MDProductGroupRowView(productGroup: MDProductGroup(id: 0, name: "Name", active: true, mdProductGroupDescription: "Description", rowCreatedTimestamp: ""))
-#if os(macOS)
-            MDProductGroupsView()
-#else
-            NavigationView() {
-                MDProductGroupsView()
-            }
-#endif
-        }
-    }
+#Preview {
+    MDProductGroupsView()
 }
