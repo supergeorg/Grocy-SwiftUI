@@ -14,7 +14,7 @@ struct MDLocationsView: View {
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @State private var searchString: String = ""
-    
+    @State private var showAddLocation: Bool = false
     @State private var locationToDelete: MDLocation? = nil
     @State private var showDeleteConfirmation: Bool = false
     
@@ -71,7 +71,7 @@ struct MDLocationsView: View {
                 })
             }
         }
-        .navigationDestination(for: String.self, destination: { _ in
+        .navigationDestination(isPresented: $showAddLocation, destination: {
             MDLocationFormView()
         })
         .navigationDestination(for: MDLocation.self, destination: { location in
@@ -112,9 +112,11 @@ struct MDLocationsView: View {
 #if os(macOS)
                 RefreshButton(updateData: { Task { await updateData() } })
 #endif
-                NavigationLink(value: "New Location") {
-                    Label("New Location", systemImage: MySymbols.new)
-                }
+                Button(action: {
+                    showAddLocation.toggle()
+                }, label: {
+                    Label("New location", systemImage: MySymbols.new)
+                })
             })
         })
         .navigationTitle("Locations")

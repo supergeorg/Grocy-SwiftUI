@@ -99,7 +99,7 @@ struct MDLocationFormView: View {
         .formStyle(.grouped)
         .task {
             await updateData()
-            isNameCorrect = checkNameCorrect()
+            self.isNameCorrect = checkNameCorrect()
         }
         .navigationTitle(existingLocation == nil ? "Create location" : "Edit location")
         .toolbar(content: {
@@ -111,7 +111,6 @@ struct MDLocationFormView: View {
                 }, label: {
                     if isProcessing == false {
                         Label("Save", systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
                     } else {
                         ProgressView()
                     }
