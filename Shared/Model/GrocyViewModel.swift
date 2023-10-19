@@ -12,10 +12,10 @@ import OSLog
 import WebKit
 import SwiftData
 
-@Observable class GrocyViewModel { 
+@Observable class GrocyViewModel {
     var grocyApi: GrocyAPI
     
-//    @ObservationIgnored @Environment(\.modelContext) private var modelContext
+    //    @ObservationIgnored @Environment(\.modelContext) private var modelContext
     var modelContext: ModelContext
     
     @ObservationIgnored @AppStorage("grocyServerURL") var grocyServerURL: String = ""
@@ -237,6 +237,28 @@ import SwiftData
         }
     }
     
+    func getObjectAndSaveSwiftData<T: Codable & Equatable & PersistentModel>(object: ObjectEntities) async throws -> [T] {
+        do {
+            let objects: [T] = try await grocyApi.getObject(object: object)
+            let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
+            let existingObjects = try modelContext.fetch(fetchDescriptor)
+            for existingObject in existingObjects {
+                if !objects.contains(existingObject)  {
+                    self.modelContext.delete(existingObject)
+                }
+            }
+            for newObject in objects {
+                if !existingObjects.contains(newObject) {
+                    self.modelContext.insert(newObject)
+                }
+            }
+            return objects
+        } catch {
+            self.postLog("\(error)", type: .error)
+            throw error
+        }
+    }
+    
     func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) async {
         if let objects = objects {
             for object in objects {
@@ -247,53 +269,25 @@ import SwiftData
                         case .batteries:
                             self.mdBatteries = try await grocyApi.getObject(object: object)
                         case .locations:
-                            self.mdLocations = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: MDLocation.self)
-                            for location in self.mdLocations {
-                                self.modelContext.insert(location)
-                            }
+                            self.mdLocations = try await self.getObjectAndSaveSwiftData(object: object)
                         case .product_barcodes:
                             self.mdProductBarcodes = try await grocyApi.getObject(object: object)
                         case .product_groups:
-                            self.mdProductGroups = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: MDProductGroup.self)
-                            for productGroup in self.mdProductGroups {
-                                self.modelContext.insert(productGroup)
-                            }
+                            self.mdProductGroups = try await self.getObjectAndSaveSwiftData(object: object)
                         case .products:
-                            self.mdProducts = try await grocyApi.getObject(object: object)
+                            self.mdProducts = try await self.getObjectAndSaveSwiftData(object: object)
                         case .quantity_unit_conversions:
-                            self.mdQuantityUnitConversions = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: MDQuantityUnitConversion.self)
-                            for quConversion in self.mdQuantityUnitConversions {
-                                self.modelContext.insert(quConversion)
-                            }
+                            self.mdQuantityUnitConversions = try await self.getObjectAndSaveSwiftData(object: object)
                         case .recipes:
                             self.recipes = try await grocyApi.getObject(object: object)
                         case .quantity_units:
-                            self.mdQuantityUnits = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: MDQuantityUnit.self)
-                            for quantityUnit in self.mdQuantityUnits {
-                                self.modelContext.insert(quantityUnit)
-                            }
+                            self.mdQuantityUnits = try await self.getObjectAndSaveSwiftData(object: object)
                         case .shopping_list:
-                            self.shoppingList = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: ShoppingListItem.self)
-                            for shlItem in self.shoppingList {
-                                self.modelContext.insert(shlItem)
-                            }
+                            self.shoppingList = try await self.getObjectAndSaveSwiftData(object: object)
                         case .shopping_lists:
-                            self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: ShoppingListDescription.self)
-                            for shlDesc in self.shoppingListDescriptions {
-                                self.modelContext.insert(shlDesc)
-                            }
+                            self.shoppingListDescriptions = try await self.getObjectAndSaveSwiftData(object: object)
                         case .shopping_locations:
-                            self.mdStores = try await grocyApi.getObject(object: object)
-                            try self.modelContext.delete(model: MDStore.self)
-                            for store in self.mdStores {
-                                self.modelContext.insert(store)
-                            }
+                            self.mdStores = try await self.getObjectAndSaveSwiftData(object: object)
                         case .stock_log:
                             self.stockJournal = try await grocyApi.getObject(object: object)
                         default:
@@ -402,6 +396,20 @@ import SwiftData
         
         productPictures.removeAll()
         userPictures.removeAll()
+        
+        do {
+            try modelContext.delete(model: MDProduct.self)
+            try modelContext.delete(model: MDProductBarcode.self)
+            try modelContext.delete(model: MDLocation.self)
+            try modelContext.delete(model: MDStore.self)
+            try modelContext.delete(model: MDQuantityUnit.self)
+            try modelContext.delete(model: MDQuantityUnitConversion.self)
+            try modelContext.delete(model: MDProductGroup.self)
+            try modelContext.delete(model: ShoppingListItem.self)
+            try modelContext.delete(model: ShoppingListDescription.self)
+        } catch {
+            self.postLog("\(error)", type: .error)
+        }
         
         self.postLog("Deleted all cached data from the viewmodel.", type: .info)
     }
