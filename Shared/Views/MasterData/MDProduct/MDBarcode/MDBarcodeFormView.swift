@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDBarcodeFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @Environment(\.dismiss) var dismiss
     
@@ -30,7 +33,7 @@ struct MDBarcodeFormView: View {
     @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
         // check if Barcode is already used
-        let foundBarcode = grocyVM.mdProductBarcodes.filter({ $0.barcode == barcode }).first
+        let foundBarcode = mdProductBarcodes.filter({ $0.barcode == barcode }).first
         return ((foundBarcode == nil || foundBarcode?.barcode == editBarcode?.barcode) && (!barcode.isEmpty))
     }
     
@@ -197,10 +200,12 @@ struct MDBarcodeFormView: View {
                 Picker(selection: $quantityUnitID, label: Label("Quantity unit", systemImage: "scalemass"), content: {
                     Text("").tag(nil as Int?)
                     ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
-                        if let namePlural = pickerQU.namePlural {
-                            Text("\(pickerQU.name) (\(namePlural))").tag(pickerQU.id as Int?)
+                        if !pickerQU.namePlural.isEmpty {
+                            Text("\(pickerQU.name) (\(pickerQU.namePlural))")
+                                .tag(pickerQU.id as Int?)
                         } else {
-                            Text("\(pickerQU.name)").tag(pickerQU.id as Int?)
+                            Text("\(pickerQU.name)")
+                                .tag(pickerQU.id as Int?)
                         }
                     }
                 }).disabled(true)

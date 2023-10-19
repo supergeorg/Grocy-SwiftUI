@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDBarcodeRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -38,10 +39,12 @@ struct MDBarcodeRowView: View {
 struct MDBarcodesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    
     var productID: Int
     
     @State private var productBarcodeToDelete: MDProductBarcode? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     @State private var showAddBarcode: Bool = false
     
@@ -54,7 +57,7 @@ struct MDBarcodesView: View {
     }
     
     var filteredBarcodes: MDProductBarcodes {
-        grocyVM.mdProductBarcodes
+        mdProductBarcodes
             .filter{
                 $0.productID == productID
             }
@@ -62,7 +65,7 @@ struct MDBarcodesView: View {
     
     private func deleteItem(itemToDelete: MDProductBarcode) {
         productBarcodeToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteProductBarcode(toDelID: Int) async {
         do {
@@ -123,7 +126,7 @@ struct MDBarcodesView: View {
                 await updateData()
             }
         }
-        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {
@@ -178,7 +181,7 @@ struct MDBarcodesView: View {
                 MDBarcodeFormView(isNewBarcode: true, productID: productID)
             }
         })
-        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = productBarcodeToDelete?.id {

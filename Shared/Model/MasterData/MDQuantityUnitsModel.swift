@@ -9,14 +9,14 @@ import Foundation
 import SwiftData
 
 @Model
-class MDQuantityUnit: Codable {
+class MDQuantityUnit: Codable, Equatable {
     @Attribute(.unique) var id: Int
     var name: String
-    var namePlural: String?
+    var namePlural: String
     var active: Bool
     var mdQuantityUnitDescription: String
     var rowCreatedTimestamp: String
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -25,13 +25,13 @@ class MDQuantityUnit: Codable {
         case mdQuantityUnitDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-
+    
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
-            self.namePlural = try? container.decodeIfPresent(String.self, forKey: .namePlural) ?? nil
+            self.namePlural = (try? container.decodeIfPresent(String.self, forKey: .namePlural)) ?? ""
             do {
                 self.active = try container.decode(Bool.self, forKey: .active)
             } catch {
@@ -52,16 +52,16 @@ class MDQuantityUnit: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
-        try container.encode(namePlural, forKey: .namePlural)
+        try container.encode(namePlural.isEmpty ? nil : namePlural, forKey: .namePlural)
         try container.encode(active, forKey: .active)
-        try container.encode(mdQuantityUnitDescription, forKey: .mdQuantityUnitDescription)
+        try container.encode(mdQuantityUnitDescription.isEmpty ? nil : mdQuantityUnitDescription, forKey: .mdQuantityUnitDescription)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-
+    
     init(
         id: Int,
         name: String,
-        namePlural: String?,
+        namePlural: String = "",
         active: Bool,
         mdQuantityUnitDescription: String = "",
         rowCreatedTimestamp: String
@@ -72,6 +72,15 @@ class MDQuantityUnit: Codable {
         self.active = active
         self.mdQuantityUnitDescription = mdQuantityUnitDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+    
+    static func == (lhs: MDQuantityUnit, rhs: MDQuantityUnit) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.namePlural == rhs.namePlural &&
+        lhs.active == rhs.active &&
+        lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class ShoppingListItem: Codable {
+class ShoppingListItem: Codable, Equatable {
     @Attribute(.unique) var id: Int
     var productID: Int?
     var note: String?
@@ -18,7 +18,7 @@ class ShoppingListItem: Codable {
     var done: Int
     var quID: Int?
     var rowCreatedTimestamp: String
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -28,7 +28,7 @@ class ShoppingListItem: Codable {
         case quID = "qu_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-
+    
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -56,7 +56,7 @@ class ShoppingListItem: Codable {
         try container.encode(quID, forKey: .quID)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-
+    
     init(
         id: Int,
         productID: Int? = nil,
@@ -76,6 +76,17 @@ class ShoppingListItem: Codable {
         self.quID = quID
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
+    
+    static func == (lhs: ShoppingListItem, rhs: ShoppingListItem) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.productID == rhs.productID &&
+        lhs.note == rhs.note &&
+        lhs.amount == rhs.amount &&
+        lhs.shoppingListID == rhs.shoppingListID &&
+        lhs.done == rhs.done &&
+        lhs.quID == rhs.quID &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+    }
 }
 
 // MARK: - ShoppingListAddItem
@@ -85,7 +96,7 @@ struct ShoppingListItemAdd: Codable {
     let note: String?
     let productID, quID: Int?
     let shoppingListID: Int
-
+    
     enum CodingKeys: String, CodingKey {
         case amount, note
         case productID = "product_id"

@@ -6,19 +6,20 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - MDProductBarcode
-
-struct MDProductBarcode: Codable {
-    let id, productID: Int
+@Model
+class MDProductBarcode: Codable {
+    let id: Int
+    let productID: Int
     let barcode: String
     let quID: Int?
     let amount: Double?
     let storeID: Int?
     let lastPrice: Double?
-    let rowCreatedTimestamp: String
     let note: String?
-
+    let rowCreatedTimestamp: String
+    
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -30,8 +31,8 @@ struct MDProductBarcode: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case note
     }
-
-    init(from decoder: Decoder) throws {
+    
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -47,7 +48,20 @@ struct MDProductBarcode: Codable {
             throw APIError.decodingError(error: error)
         }
     }
-
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(barcode, forKey: .barcode)
+        try container.encode(quID, forKey: .quID)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(storeID, forKey: .storeID)
+        try container.encode(lastPrice, forKey: .lastPrice)
+        try container.encode(note, forKey: .note)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
+    }
+    
     init(
         id: Int,
         productID: Int,
@@ -61,13 +75,25 @@ struct MDProductBarcode: Codable {
     ) {
         self.id = id
         self.productID = productID
-        self.barcode = String(barcode)
+        self.barcode = barcode
         self.quID = quID
         self.amount = amount
         self.storeID = storeID
         self.lastPrice = lastPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
         self.note = note
+    }
+    
+    static func == (lhs: MDProductBarcode, rhs: MDProductBarcode) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.productID == rhs.productID &&
+        lhs.barcode == rhs.barcode &&
+        lhs.quID == rhs.quID &&
+        lhs.amount == rhs.amount &&
+        lhs.storeID == rhs.storeID &&
+        lhs.lastPrice == rhs.lastPrice &&
+        lhs.note == rhs.note &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

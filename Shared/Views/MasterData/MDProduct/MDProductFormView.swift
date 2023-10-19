@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDProductFormOFFView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -98,6 +99,8 @@ struct MDProductFormOFFView: View {
 struct MDProductFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    
     @Environment(\.dismiss) var dismiss
     
     @AppStorage("devMode") private var devMode: Bool = false
@@ -140,7 +143,7 @@ struct MDProductFormView: View {
     
     @State private var queuedBarcode: String = ""
     
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     @State private var showOFFResult: Bool = false
     
     var isNewProduct: Bool
@@ -163,7 +166,7 @@ struct MDProductFormView: View {
     
     @State private var isBarcodeCorrect: Bool = true
     private func checkBarcodeCorrect() -> Bool {
-        let foundBarcode = grocyVM.mdProductBarcodes.first(where: { $0.barcode == queuedBarcode })
+        let foundBarcode = mdProductBarcodes.first(where: { $0.barcode == queuedBarcode })
         return (queuedBarcode.isEmpty || (foundBarcode == nil))
     }
     
@@ -270,7 +273,7 @@ struct MDProductFormView: View {
                 treatOpenedAsOutOfStock: treatOpenedAsOutOfStock,
                 noOwnStock: noOwnStock,
                 defaultConsumeLocationID: defaultConsumeLocationID,
-                moveOnOpen: defaultConsumeLocationID != nil ? moveOnOpen : nil,
+                moveOnOpen: defaultConsumeLocationID != nil ? moveOnOpen : false,
                 rowCreatedTimestamp: timeStamp
             )
             isProcessing = true

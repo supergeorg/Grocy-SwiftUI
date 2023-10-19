@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDProductGroupRowView: View {
     var productGroup: MDProductGroup
@@ -27,15 +28,16 @@ struct MDProductGroupRowView: View {
 struct MDProductGroupsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Environment(\.dismiss) var dismiss
-    
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+
+    @State private var firstAppear: Bool = true
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
     
     @State private var shownEditPopover: MDProductGroup? = nil
     
     @State private var productGroupToDelete: MDProductGroup? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
     
@@ -44,7 +46,7 @@ struct MDProductGroupsView: View {
     }
     
     private var filteredProductGroups: MDProductGroups {
-        grocyVM.mdProductGroups
+        mdProductGroups
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -52,7 +54,7 @@ struct MDProductGroupsView: View {
     
     private func deleteItem(itemToDelete: MDProductGroup) {
         productGroupToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteProductGroup(toDelID: Int?) async {
         if let toDelID = toDelID {
@@ -106,7 +108,7 @@ struct MDProductGroupsView: View {
     
     var content: some View {
         List {
-            if grocyVM.mdProductGroups.isEmpty {
+            if mdProductGroups.isEmpty {
                 ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
             } else if filteredProductGroups.isEmpty {
                 ContentUnavailableView.search
@@ -131,8 +133,9 @@ struct MDProductGroupsView: View {
             }
         }
         .task {
-            Task {
+            if firstAppear {
                 await updateData()
+                firstAppear = false
             }
         }
         .searchable(text: $searchString, prompt: "Search")
@@ -140,7 +143,7 @@ struct MDProductGroupsView: View {
             await updateData()
         }
         .animation(.default, value: filteredProductGroups.count)
-        .alert("Do you really want to delete this product group?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this product group?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = productGroupToDelete?.id {

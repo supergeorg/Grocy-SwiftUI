@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MDLocation: Codable {
+class MDLocation: Codable, Equatable {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
@@ -76,11 +76,11 @@ class MDLocation: Codable {
     
     static func == (lhs: MDLocation, rhs: MDLocation) -> Bool {
         lhs.id == rhs.id &&
-            lhs.name == rhs.name &&
-            lhs.active == rhs.active &&
-            lhs.mdLocationDescription == rhs.mdLocationDescription &&
-            lhs.isFreezer == rhs.isFreezer &&
-            lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.name == rhs.name &&
+        lhs.active == rhs.active &&
+        lhs.mdLocationDescription == rhs.mdLocationDescription &&
+        lhs.isFreezer == rhs.isFreezer &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

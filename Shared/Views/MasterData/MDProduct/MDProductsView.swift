@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDProductRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     
     var product: MDProduct
     
@@ -24,12 +28,12 @@ struct MDProductRowView: View {
                     .font(.title)
                     .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
-                    if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
-                        Text("Location: \(grocyVM.mdLocations[locationID].name)")
+                    if let locationID = mdLocations.firstIndex(where: { $0.id == product.locationID }) {
+                        Text("Location: \(mdLocations[locationID].name)")
                             .font(.caption)
                     }
-                    if let productGroup = grocyVM.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
-                        Text("Product group: \(grocyVM.mdProductGroups[productGroup].name)")
+                    if let productGroup = mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
+                        Text("Product group: \(mdProductGroups[productGroup].name)")
                             .font(.caption)
                     }
                 }
@@ -40,9 +44,7 @@ struct MDProductRowView: View {
                 }
             }
             .task {
-                if let mdProductDescription = product.mdProductDescription {
-                    productDescription = await grocyVM.getAttributedStringFromHTML(htmlString: mdProductDescription)
-                }
+                productDescription = await grocyVM.getAttributedStringFromHTML(htmlString: product.mdProductDescription)
             }
         }
     }
@@ -51,11 +53,14 @@ struct MDProductRowView: View {
 struct MDProductsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    
+    @State private var firstAppear: Bool = true
     @State private var searchString: String = ""
     
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
     private func updateData() async {
@@ -64,7 +69,7 @@ struct MDProductsView: View {
     
     private func deleteItem(itemToDelete: MDProduct) {
         productToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteProduct(toDelID: Int) async {
         do {
@@ -77,7 +82,7 @@ struct MDProductsView: View {
     }
     
     private var filteredProducts: MDProducts {
-        grocyVM.mdProducts
+        mdProducts
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -125,7 +130,7 @@ struct MDProductsView: View {
     
     var content: some View {
         List{
-            if grocyVM.mdProducts.isEmpty {
+            if mdProducts.isEmpty {
                 ContentUnavailableView("No products found.", systemImage: MySymbols.product)
             } else if filteredProducts.isEmpty {
                 ContentUnavailableView.search
@@ -150,8 +155,9 @@ struct MDProductsView: View {
             }
         }
         .task {
-            Task {
+            if firstAppear {
                 await updateData()
+                firstAppear = false
             }
         }
         .searchable(text: $searchString, prompt: "Search")
@@ -159,7 +165,7 @@ struct MDProductsView: View {
             await updateData()
         }
         .animation(.default, value: filteredProducts.count)
-        .alert("Do you really want to delete this product?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this product?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = productToDelete?.id {

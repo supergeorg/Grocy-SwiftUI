@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class ShoppingListDescription: Codable {
+class ShoppingListDescription: Codable, Equatable {
     @Attribute(.unique) var id: Int
     var name: String
     var rowCreatedTimestamp: String
@@ -49,6 +49,12 @@ class ShoppingListDescription: Codable {
         self.id = id
         self.name = name
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+    
+    static func == (lhs: ShoppingListDescription, rhs: ShoppingListDescription) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

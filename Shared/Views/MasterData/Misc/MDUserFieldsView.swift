@@ -35,7 +35,7 @@ struct MDUserFieldsView: View {
     @State private var shownEditPopover: MDUserField? = nil
     
     @State private var userFieldToDelete: MDUserField? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.userfields]
     
@@ -52,7 +52,7 @@ struct MDUserFieldsView: View {
     
     private func deleteItem(itemToDelete: MDUserField) {
         userFieldToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteUserField(toDelID: Int) async {
         do {
@@ -137,7 +137,7 @@ struct MDUserFieldsView: View {
             await updateData()
         }
         .animation(.default, value: filteredUserFields.count)
-        .alert("Do you really want to delete this userfield?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this userfield?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = userFieldToDelete?.id {

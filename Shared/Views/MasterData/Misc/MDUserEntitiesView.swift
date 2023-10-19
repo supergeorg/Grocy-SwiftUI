@@ -31,7 +31,7 @@ struct MDUserEntitiesView: View {
     @State private var shownEditPopover: MDUserEntity? = nil
     
     @State private var userEntityToDelete: MDUserEntity? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.userentities]
     
@@ -48,7 +48,7 @@ struct MDUserEntitiesView: View {
     
     private func deleteItem(itemToDelete: MDUserEntity) {
         userEntityToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteUserEntity(toDelID: Int) async {
         do {
@@ -133,7 +133,7 @@ struct MDUserEntitiesView: View {
             await updateData()
         }
         .animation(.default, value: filteredUserEntities.count)
-        .alert("Do you really want to delete this user entity?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this user entity?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = userEntityToDelete?.id {

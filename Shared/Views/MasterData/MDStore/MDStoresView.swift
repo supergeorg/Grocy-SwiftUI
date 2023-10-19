@@ -28,12 +28,13 @@ struct MDStoreRowView: View {
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDStore.name, order: .forward) var mdStores: [MDStore]
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
+    @State private var firstAppear: Bool = true
     @State private var searchString: String = ""
 
     @State private var storeToDelete: MDStore? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() async {
@@ -49,7 +50,7 @@ struct MDStoresView: View {
     
     private func deleteItem(itemToDelete: MDStore) {
         storeToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     
     private func deleteStore(toDelID: Int) async {
@@ -98,7 +99,10 @@ struct MDStoresView: View {
             MDStoreFormView(existingStore: store)
         })
         .task {
-            await updateData()
+            if firstAppear {
+                await updateData()
+                firstAppear = false
+            }
         }
         .refreshable {
             await updateData()
@@ -111,7 +115,7 @@ struct MDStoresView: View {
             .default,
             value: filteredStores.count
         )
-        .confirmationDialog("Do you really want to delete this store?", isPresented: $showDeleteAlert, titleVisibility: .visible, actions: {
+        .confirmationDialog("Do you really want to delete this store?", isPresented: $showDeleteConfirmation, titleVisibility: .visible, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 if let toDelID = storeToDelete?.id {

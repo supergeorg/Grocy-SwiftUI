@@ -34,7 +34,7 @@ struct MDTaskCategoriesView: View {
     @State private var shownEditPopover: MDTaskCategory? = nil
     
     @State private var taskCategoryToDelete: MDTaskCategory? = nil
-    @State private var showDeleteAlert: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
     
@@ -51,7 +51,7 @@ struct MDTaskCategoriesView: View {
     
     private func deleteItem(itemToDelete: MDTaskCategory) {
         taskCategoryToDelete = itemToDelete
-        showDeleteAlert.toggle()
+        showDeleteConfirmation.toggle()
     }
     private func deleteTaskCategory(toDelID: Int) async {
         do {
@@ -137,7 +137,7 @@ struct MDTaskCategoriesView: View {
             await updateData()
         }
         .animation(.default, value: filteredTaskCategories.count)
-        .alert("Do you really want to delete this task category?", isPresented: $showDeleteAlert, actions: {
+        .alert("Do you really want to delete this task category?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 if let toDelID = taskCategoryToDelete?.id {

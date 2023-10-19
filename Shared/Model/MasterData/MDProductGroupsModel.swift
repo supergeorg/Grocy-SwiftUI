@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MDProductGroup: Codable {
+class MDProductGroup: Codable, Equatable {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
@@ -65,6 +65,14 @@ class MDProductGroup: Codable {
         self.active = active
         self.mdProductGroupDescription = mdProductGroupDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+    
+    static func == (lhs: MDProductGroup, rhs: MDProductGroup) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.active == rhs.active &&
+        lhs.mdProductGroupDescription == rhs.mdProductGroupDescription &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

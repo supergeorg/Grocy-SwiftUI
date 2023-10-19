@@ -6,39 +6,45 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - MDProduct
-
-struct MDProduct: Codable {
-    let id: Int
-    let name: String
-    @NullCodable var mdProductDescription: String?
-    @NullCodable var productGroupID: Int?
-    let active: Bool
-    let locationID: Int
-    @NullCodable var storeID: Int?
-    let quIDPurchase, quIDStock, quIDConsume, quIDPrice: Int
-    let minStockAmount: Double
-    let defaultBestBeforeDays, defaultBestBeforeDaysAfterOpen, defaultBestBeforeDaysAfterFreezing, defaultBestBeforeDaysAfterThawing: Int
-    @NullCodable var pictureFileName: String?
-    let enableTareWeightHandling: Bool?
-    @NullCodable var tareWeight: Double?
-    let notCheckStockFulfillmentForRecipes: Bool?
-    @NullCodable var parentProductID: Int?
-    @NullCodable var calories: Double?
-    let cumulateMinStockAmountOfSubProducts: Bool?
-    let dueType: Int
-    @NullCodable var quickConsumeAmount: Double?
-    @NullCodable var quickOpenAmount: Double?
-    @NullCodable var hideOnStockOverview: Bool?
-    let defaultStockLabelType: Int?
-    let shouldNotBeFrozen: Bool?
-    let treatOpenedAsOutOfStock: Bool?
-    let noOwnStock: Bool?
-    @NullCodable var defaultConsumeLocationID: Int?
-    let moveOnOpen: Bool?
-    let autoReprintStockLabel: Bool?
-    let rowCreatedTimestamp: String
+@Model
+class MDProduct: Codable, Equatable {
+    @Attribute(.unique) var id: Int
+    var name: String
+    var mdProductDescription: String
+    var productGroupID: Int?
+    var active: Bool
+    var locationID: Int
+    var storeID: Int?
+    var quIDPurchase: Int
+    var quIDStock: Int
+    var quIDConsume: Int
+    var quIDPrice: Int
+    var minStockAmount: Double
+    var defaultBestBeforeDays: Int
+    var defaultBestBeforeDaysAfterOpen: Int
+    var defaultBestBeforeDaysAfterFreezing: Int
+    var defaultBestBeforeDaysAfterThawing: Int
+    var pictureFileName: String?
+    var enableTareWeightHandling: Bool
+    var tareWeight: Double?
+    var notCheckStockFulfillmentForRecipes: Bool
+    var parentProductID: Int?
+    var calories: Double?
+    var cumulateMinStockAmountOfSubProducts: Bool?
+    var dueType: Int
+    var quickConsumeAmount: Double?
+    var quickOpenAmount: Double?
+    var hideOnStockOverview: Bool
+    var defaultStockLabelType: Int?
+    var shouldNotBeFrozen: Bool
+    var treatOpenedAsOutOfStock: Bool
+    var noOwnStock: Bool
+    var defaultConsumeLocationID: Int?
+    var moveOnOpen: Bool
+    var autoReprintStockLabel: Bool
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -78,12 +84,12 @@ struct MDProduct: Codable {
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             self.name = try container.decode(String.self, forKey: .name)
-            self.mdProductDescription = try? container.decodeIfPresent(String.self, forKey: .mdProductDescription) ?? nil
+            self.mdProductDescription = (try? container.decodeIfPresent(String.self, forKey: .mdProductDescription)) ?? ""
             do { self.productGroupID = try container.decodeIfPresent(Int.self, forKey: .productGroupID) } catch { self.productGroupID = try Int(container.decodeIfPresent(String.self, forKey: .productGroupID) ?? "") }
             do {
                 self.active = try container.decode(Bool.self, forKey: .active)
@@ -200,11 +206,51 @@ struct MDProduct: Codable {
             throw APIError.decodingError(error: error)
         }
     }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(mdProductDescription, forKey: .mdProductDescription)
+        try container.encode(productGroupID, forKey: .productGroupID)
+        try container.encode(active, forKey: .active)
+        try container.encode(locationID, forKey: .locationID)
+        try container.encode(storeID, forKey: .storeID)
+        try container.encode(quIDPurchase, forKey: .quIDPurchase)
+        try container.encode(quIDStock, forKey: .quIDStock)
+        try container.encode(quIDConsume, forKey: .quIDConsume)
+        try container.encode(quIDPrice, forKey: .quIDPrice)
+        try container.encode(minStockAmount, forKey: .minStockAmount)
+        try container.encode(defaultBestBeforeDays, forKey: .defaultBestBeforeDays)
+        try container.encode(defaultBestBeforeDaysAfterOpen, forKey: .defaultBestBeforeDaysAfterOpen)
+        try container.encode(defaultBestBeforeDaysAfterFreezing, forKey: .defaultBestBeforeDaysAfterFreezing)
+        try container.encode(defaultBestBeforeDaysAfterThawing, forKey: .defaultBestBeforeDaysAfterThawing)
+        try container.encode(pictureFileName, forKey: .pictureFileName)
+        try container.encode(enableTareWeightHandling, forKey: .enableTareWeightHandling)
+        
+        try container.encode(tareWeight, forKey: .tareWeight)
+        try container.encode(notCheckStockFulfillmentForRecipes, forKey: .notCheckStockFulfillmentForRecipes)
+        try container.encode(parentProductID, forKey: .parentProductID)
+        try container.encode(calories, forKey: .calories)
+        try container.encode(cumulateMinStockAmountOfSubProducts, forKey: .cumulateMinStockAmountOfSubProducts)
+        try container.encode(dueType, forKey: .dueType)
+        try container.encode(quickConsumeAmount, forKey: .quickConsumeAmount)
+        try container.encode(quickOpenAmount, forKey: .quickOpenAmount)
+        try container.encode(hideOnStockOverview, forKey: .hideOnStockOverview)
+        try container.encode(defaultStockLabelType, forKey: .defaultStockLabelType)
+        try container.encode(shouldNotBeFrozen, forKey: .shouldNotBeFrozen)
+        try container.encode(treatOpenedAsOutOfStock, forKey: .treatOpenedAsOutOfStock)
+        try container.encode(noOwnStock, forKey: .noOwnStock)
+        try container.encode(defaultConsumeLocationID, forKey: .defaultConsumeLocationID)
+        try container.encode(moveOnOpen, forKey: .moveOnOpen)
+        try container.encode(autoReprintStockLabel, forKey: .autoReprintStockLabel)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
+    }
 
     init(
         id: Int,
         name: String,
-        mdProductDescription: String? = nil,
+        mdProductDescription: String = "",
         productGroupID: Int? = nil,
         active: Bool,
         locationID: Int,
@@ -219,23 +265,24 @@ struct MDProduct: Codable {
         defaultBestBeforeDaysAfterFreezing: Int,
         defaultBestBeforeDaysAfterThawing: Int,
         pictureFileName: String? = nil,
-        enableTareWeightHandling: Bool? = nil,
+        enableTareWeightHandling: Bool = false,
+        
         tareWeight: Double? = nil,
-        notCheckStockFulfillmentForRecipes: Bool? = nil,
+        notCheckStockFulfillmentForRecipes: Bool = false,
         parentProductID: Int? = nil,
         calories: Double? = nil,
         cumulateMinStockAmountOfSubProducts: Bool,
         dueType: Int,
         quickConsumeAmount: Double? = nil,
         quickOpenAmount: Double? = nil,
-        hideOnStockOverview: Bool? = nil,
+        hideOnStockOverview: Bool = false,
         defaultStockLabelType: Int? = nil,
-        shouldNotBeFrozen: Bool? = nil,
-        treatOpenedAsOutOfStock: Bool? = nil,
-        noOwnStock: Bool? = nil,
+        shouldNotBeFrozen: Bool = false,
+        treatOpenedAsOutOfStock: Bool = false,
+        noOwnStock: Bool = false,
         defaultConsumeLocationID: Int? = nil,
-        moveOnOpen: Bool? = nil,
-        autoReprintStockLabel: Bool? = nil,
+        moveOnOpen: Bool = false,
+        autoReprintStockLabel: Bool = false,
         rowCreatedTimestamp: String
     ) {
         self.id = id
@@ -273,6 +320,44 @@ struct MDProduct: Codable {
         self.autoReprintStockLabel = autoReprintStockLabel
         self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+    
+    static func == (lhs: MDProduct, rhs: MDProduct) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.mdProductDescription == rhs.mdProductDescription &&
+        lhs.productGroupID == rhs.productGroupID &&
+        lhs.active == rhs.active &&
+        lhs.locationID == rhs.locationID &&
+        lhs.storeID == rhs.storeID &&
+        lhs.quIDPurchase == rhs.quIDPurchase &&
+        lhs.quIDStock == rhs.quIDStock &&
+        lhs.minStockAmount == rhs.minStockAmount &&
+        lhs.defaultBestBeforeDays == rhs.defaultBestBeforeDays &&
+        lhs.defaultBestBeforeDaysAfterOpen == rhs.defaultBestBeforeDaysAfterOpen &&
+        lhs.defaultBestBeforeDaysAfterFreezing == rhs.defaultBestBeforeDaysAfterFreezing &&
+        lhs.defaultBestBeforeDaysAfterThawing == rhs.defaultBestBeforeDaysAfterThawing &&
+        lhs.pictureFileName == rhs.pictureFileName &&
+        lhs.enableTareWeightHandling == rhs.enableTareWeightHandling &&
+        lhs.tareWeight == rhs.tareWeight &&
+        lhs.notCheckStockFulfillmentForRecipes == rhs.notCheckStockFulfillmentForRecipes &&
+        lhs.parentProductID == rhs.parentProductID &&
+        lhs.calories == rhs.calories &&
+        lhs.cumulateMinStockAmountOfSubProducts == rhs.cumulateMinStockAmountOfSubProducts &&
+        lhs.dueType == rhs.dueType &&
+        lhs.quickConsumeAmount == rhs.quickConsumeAmount &&
+        lhs.quickOpenAmount == rhs.quickOpenAmount &&
+        lhs.hideOnStockOverview == rhs.hideOnStockOverview &&
+        lhs.defaultStockLabelType == rhs.defaultStockLabelType &&
+        lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen &&
+        lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock &&
+        lhs.noOwnStock == rhs.noOwnStock &&
+        lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID &&
+        lhs.moveOnOpen == rhs.moveOnOpen &&
+        lhs.quIDConsume == rhs.quIDConsume &&
+        lhs.autoReprintStockLabel == rhs.autoReprintStockLabel &&
+        lhs.quIDPrice == rhs.quIDPrice &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 
