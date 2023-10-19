@@ -8,31 +8,15 @@
 import SwiftUI
 import SwiftData
 
-struct MDStoreRowView: View {
-    var store: MDStore
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(store.name)
-                .font(.title)
-                .foregroundStyle(store.active ? .primary : .secondary)
-            if !store.mdStoreDescription.isEmpty {
-                Text(store.mdStoreDescription)
-                    .font(.caption)
-            }
-        }
-        .multilineTextAlignment(.leading)
-    }
-}
-
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
-    @State private var firstAppear: Bool = true
     @State private var searchString: String = ""
-
+    
+    @State private var showAddStore: Bool = false
+    
     @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteConfirmation: Bool = false
     
@@ -64,19 +48,10 @@ struct MDStoresView: View {
     }
     
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) })
-            .count == 0
-        {
-            content
-        } else {
-            ServerProblemView()
-                .navigationTitle("Stores")
-        }
-    }
-    
-    var content: some View {
         List {
-            if mdStores.isEmpty {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdStores.isEmpty {
                 ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
             } else if filteredStores.isEmpty {
                 ContentUnavailableView.search
@@ -92,17 +67,14 @@ struct MDStoresView: View {
                 })
             }
         }
-        .navigationDestination(for: String.self, destination: { _ in
+        .navigationDestination(isPresented: $showAddStore, destination: {
             MDStoreFormView()
         })
         .navigationDestination(for: MDStore.self, destination: { store in
             MDStoreFormView(existingStore: store)
         })
         .task {
-            if firstAppear {
-                await updateData()
-                firstAppear = false
-            }
+            await updateData()
         }
         .refreshable {
             await updateData()
@@ -131,9 +103,9 @@ struct MDStoresView: View {
                 RefreshButton(updateData: { Task { await updateData() } })
 #endif
                 Button(action: {
-//                    showAddStore.toggle()
+                    showAddStore.toggle()
                 }, label: {
-                    Image(systemName: MySymbols.new)
+                    Label("New store", systemImage: MySymbols.new)
                 })
             })
         })
