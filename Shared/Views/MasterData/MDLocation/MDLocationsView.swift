@@ -11,7 +11,7 @@ import SwiftData
 struct MDLocationsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+//    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @State private var searchString: String = ""
     @State private var showAddLocation: Bool = false
@@ -24,7 +24,7 @@ struct MDLocationsView: View {
     }
     
     private var filteredLocations: MDLocations {
-        mdLocations
+        grocyVM.mdLocations
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -54,7 +54,7 @@ struct MDLocationsView: View {
     
     var content: some View {
         List {
-            if mdLocations.isEmpty {
+            if grocyVM.mdLocations.isEmpty {
                 ContentUnavailableView("No locations", systemImage: MySymbols.location)
             } else if filteredLocations.isEmpty {
                 ContentUnavailableView.search

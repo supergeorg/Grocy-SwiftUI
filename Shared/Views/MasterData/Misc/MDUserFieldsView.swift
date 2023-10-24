@@ -108,13 +108,6 @@ struct MDUserFieldsView: View {
             } else if filteredUserFields.isEmpty {
                 ContentUnavailableView.search
             }
-#if os(macOS)
-            if showAddUserField {
-                NavigationLink(destination: MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField), isActive: $showAddUserField, label: {
-                    NewMDRowLabel(title: "Create userfield")
-                })
-            }
-#endif
             ForEach(filteredUserFields, id:\.id) { userField in
                 NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: Binding.constant(false))) {
                     MDUserFieldRowView(userField: userField)
@@ -150,17 +143,6 @@ struct MDUserFieldsView: View {
     }
 }
 
-struct MDUserFieldsView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            MDUserFieldRowView(userField: MDUserField(id: 1, name: "Test", entity: "locations", caption: "caption", type: "1", showAsColumnInTables: 0, config: nil, sortNumber: nil, rowCreatedTimestamp: "ts"))
-#if os(macOS)
-            MDUserFieldsView()
-#else
-            NavigationView() {
-                MDUserFieldsView()
-            }
-#endif
-        }
-    }
+#Preview {
+    MDUserFieldsView()
 }

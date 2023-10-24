@@ -108,13 +108,6 @@ struct MDTaskCategoriesView: View {
             } else if filteredTaskCategories.isEmpty {
                 ContentUnavailableView.search
             }
-#if os(macOS)
-            if showAddTaskCategory {
-                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: true, showAddTaskCategory: $showAddTaskCategory), isActive: $showAddTaskCategory, label: {
-                    NewMDRowLabel(title: "Create task category")
-                })
-            }
-#endif
             ForEach(filteredTaskCategories, id:\.id) { taskCategory in
                 NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: taskCategory, showAddTaskCategory: $showAddTaskCategory)) {
                     MDTaskCategoryRowView(taskCategory: taskCategory)
@@ -150,17 +143,6 @@ struct MDTaskCategoriesView: View {
     }
 }
 
-struct MDTaskCategoriesView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            //            MDTaskCategoryRowView(taskCategory: MDTaskCategory(id: "0", name: "Name", mdTaskCategoryDescription: "Description", rowCreatedTimestamp: "", userfields: nil))
-#if os(macOS)
-            MDTaskCategoriesView()
-#else
-            NavigationView() {
-                MDTaskCategoriesView()
-            }
-#endif
-        }
-    }
+#Preview {
+    MDTaskCategoriesView()
 }

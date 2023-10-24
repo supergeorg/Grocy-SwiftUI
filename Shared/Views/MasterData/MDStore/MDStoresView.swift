@@ -11,7 +11,7 @@ import SwiftData
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+//    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
     @State private var searchString: String = ""
     
@@ -26,7 +26,7 @@ struct MDStoresView: View {
     }
     
     private var filteredStores: MDStores {
-        mdStores
+        grocyVM.mdStores
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -51,7 +51,7 @@ struct MDStoresView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdStores.isEmpty {
+            } else if grocyVM.mdStores.isEmpty {
                 ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
             } else if filteredStores.isEmpty {
                 ContentUnavailableView.search

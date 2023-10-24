@@ -104,13 +104,6 @@ struct MDUserEntitiesView: View {
             } else if filteredUserEntities.isEmpty {
                 ContentUnavailableView.search
             }
-#if os(macOS)
-            if showAddUserEntity {
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity), isActive: $showAddUserEntity, label: {
-                    NewMDRowLabel(title: "New userentity")
-                })
-            }
-#endif
             ForEach(filteredUserEntities, id:\.id) { userEntity in
                 NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
                     MDUserEntityRowView(userEntity: userEntity)
@@ -146,16 +139,6 @@ struct MDUserEntitiesView: View {
     }
 }
 
-struct MDUserEntitiesView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-#if os(macOS)
-            MDUserEntitiesView()
-#else
-            NavigationView() {
-                MDUserEntitiesView()
-            }
-#endif
-        }
-    }
+#Preview {
+    MDUserEntitiesView()
 }

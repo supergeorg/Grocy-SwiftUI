@@ -11,7 +11,7 @@ import SwiftData
 struct MDQuantityUnitsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
@@ -25,7 +25,7 @@ struct MDQuantityUnitsView: View {
     }
     
     private var filteredQuantityUnits: MDQuantityUnits {
-        mdQuantityUnits
+        grocyVM.mdQuantityUnits
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -50,7 +50,7 @@ struct MDQuantityUnitsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdQuantityUnits.isEmpty {
+            } else if grocyVM.mdQuantityUnits.isEmpty {
                 ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
             } else if filteredQuantityUnits.isEmpty {
                 ContentUnavailableView.search
@@ -107,17 +107,6 @@ struct MDQuantityUnitsView: View {
     }
 }
 
-struct MDQuantityUnitsView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 0, name: "QU NAME", namePlural: "QU NAME PLURAL", active: true, mdQuantityUnitDescription: "Description", rowCreatedTimestamp: ""))
-#if os(macOS)
-            MDQuantityUnitsView()
-#else
-            NavigationView() {
-                MDQuantityUnitsView()
-            }
-#endif
-        }
-    }
+#Preview {
+    MDQuantityUnitsView()
 }

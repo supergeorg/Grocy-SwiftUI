@@ -70,7 +70,7 @@ struct MDQuantityUnitConversionFormView: View {
     
     private func getQUString(amount: Double, qu: MDQuantityUnit?) -> String {
         if let qu = qu {
-            return "\(amount.formattedAmount) \(amount == 1 ? qu.name : qu.namePlural.isEmpty ? qu.name : qu.namePlural)"
+            return "\(amount.formattedAmount) \(qu.getName(amount: amount))"
         } else {
             return amount.formattedAmount
         }
