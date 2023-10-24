@@ -31,9 +31,8 @@ struct StockEntryFormView: View {
     private var product: MDProduct? {
         grocyVM.mdProducts.first(where: { $0.id == stockEntry.productID })
     }
-    private var quantityUnitName: String {
-        let quantityUnit = grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
-        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? quantityUnit?.name ?? ""
+    private var quantityUnit: MDQuantityUnit? {
+        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     var isFormValid: Bool {
@@ -113,7 +112,7 @@ struct StockEntryFormView: View {
                 MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
             }
             
-            MyDoubleStepper(amount: $amount, description: "Amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnitName, systemImage: MySymbols.amount)
+            MyDoubleStepper(amount: $amount, description: "Amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnit?.getName(amount: amount), systemImage: MySymbols.amount)
             
             MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
             
