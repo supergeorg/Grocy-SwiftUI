@@ -72,11 +72,7 @@ struct AboutView: View {
 #endif
                 Link(destination: URL(string: "https://github.com/twostraws/CodeScanner")!, label: {
                     AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
-                })
-                Link(destination: URL(string: "https://github.com/g-mark/NullCodable")!, label: {
-                    AboutLineView(iconName: MySymbols.upload, caption: "Null Codable", content: "Copyright (Apache License 2.0) 2020 Steven Grosmark")
-                })
-                
+                })                
             }
             .foregroundStyle(.primary)
             Button("Replay app onboarding", action: {
