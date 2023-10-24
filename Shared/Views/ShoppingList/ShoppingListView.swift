@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShoppingListItemWrapped {
     let shoppingListItem: ShoppingListItem
@@ -15,7 +16,15 @@ struct ShoppingListItemWrapped {
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+//    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
+//    @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
+//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+//    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+//    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
+    
     @State private var selectedShoppingListID: Int = 1
+    
+    @State private var firstAppear: Bool = true
     
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = .all
@@ -39,8 +48,6 @@ struct ShoppingListView: View {
             hashValue
         }
     }
-    
-    @State private var activeSheet: InteractionSheet?
     
     private let dataToUpdate: [ObjectEntities] = [
         .products,
@@ -266,7 +273,7 @@ struct ShoppingListView: View {
             }
             ToolbarItem(placement: .primaryAction, content: {
                 Button(action: {
-                    activeSheet = .newShoppingListEntry
+//                    activeSheet = .newShoppingListEntry
                 }, label: {
                     Label("Add item", systemImage: MySymbols.new)
                 })
@@ -277,7 +284,10 @@ struct ShoppingListView: View {
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .task {
-            await updateData()
+            if firstAppear {
+                await updateData()
+                firstAppear = false
+            }
         }
         .searchable(text: $searchString,
                     prompt: "Search")
@@ -285,7 +295,7 @@ struct ShoppingListView: View {
             await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
-        .alert("Do you really want to delete this shopping list?", isPresented: $showSHLDeleteAlert, actions: {
+        .confirmationDialog("Do you really want to delete this shopping list?", isPresented: $showSHLDeleteAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 Task {
@@ -293,7 +303,7 @@ struct ShoppingListView: View {
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .alert("Do your really want to clear this shopping list?", isPresented: $showClearListAlert, actions: {
+        .confirmationDialog("Do your really want to clear this shopping list?", isPresented: $showClearListAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Confirm", role: .destructive) {
                 Task {
@@ -301,7 +311,7 @@ struct ShoppingListView: View {
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .alert("Do you really want to clear all done items?", isPresented: $showClearDoneAlert, actions: {
+        .confirmationDialog("Do you really want to clear all done items?", isPresented: $showClearDoneAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Confirm", role: .destructive) {
                 Task {
@@ -309,22 +319,22 @@ struct ShoppingListView: View {
                 }
             }
         }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .sheet(item: $activeSheet, content: { item in
-            switch item {
-            case .newShoppingList:
-                NavigationView {
-                    ShoppingListFormView(isNewShoppingListDescription: true)
-                }
-            case .editShoppingList:
-                NavigationView {
-                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
-                }
-            case .newShoppingListEntry:
-                NavigationView {
-                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-                }
-            }
-        })
+//        .sheet(item: $activeSheet, content: { item in
+//            switch item {
+//            case .newShoppingList:
+//                NavigationView {
+//                    ShoppingListFormView(isNewShoppingListDescription: true)
+//                }
+//            case .editShoppingList:
+//                NavigationView {
+//                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
+//                }
+//            case .newShoppingListEntry:
+//                NavigationView {
+//                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+//                }
+//            }
+//        })
     }
     
     
@@ -338,13 +348,13 @@ struct ShoppingListView: View {
             .help("Shopping list")
             Divider()
             Button(action: {
-                activeSheet = .newShoppingList
+//                activeSheet = .newShoppingList
             }, label: {
                 Label("New shopping list", systemImage: MySymbols.shoppingList)
             })
             .help("New shopping list")
             Button(action: {
-                activeSheet = .editShoppingList
+//                activeSheet = .editShoppingList
             }, label: {
                 Label("Edit shopping list", systemImage: MySymbols.edit)
             })

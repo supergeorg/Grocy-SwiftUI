@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShoppingListRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var shoppingListItem: ShoppingListItem
     
@@ -19,10 +23,6 @@ struct ShoppingListRowActionsView: View {
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
-    }
-    
-    private func getQUString(amount: Double) -> String {
-        amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var productName: String {
@@ -108,7 +108,7 @@ struct ShoppingListRowActionsView: View {
                     }
                 }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             
-            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "Add \(shoppingListItem.amount.formattedAmount) \(getQUString(amount: shoppingListItem.amount)) \(productName) to stock")
+            RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "Add \(shoppingListItem.amount, specifier: "%.2f") \(quantityUnit?.getName(amount: shoppingListItem.amount) ?? "") \(productName) to stock")
                 .onTapGesture {
                     showPurchase.toggle()
                 }

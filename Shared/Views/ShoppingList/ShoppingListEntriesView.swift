@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShoppingListRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+//    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+//    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+//    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -33,7 +40,7 @@ struct ShoppingListRowView: View {
     
     var amountString: String {
         if let quantityUnit = quantityUnit {
-            return "\(factoredAmount.formattedAmount) \(factoredAmount == 1 ? quantityUnit.name : quantityUnit.namePlural ?? quantityUnit.name)"
+            return "\(factoredAmount.formattedAmount) \(quantityUnit.getName(amount: factoredAmount) ?? "")"
         } else {
             return "\(factoredAmount.formattedAmount)"
         }
@@ -59,6 +66,8 @@ struct ShoppingListRowView: View {
 struct ShoppingListEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    
     @Environment(\.colorScheme) var colorScheme
     
     let shoppingListItem: ShoppingListItem
@@ -70,7 +79,7 @@ struct ShoppingListEntriesView: View {
     @State private var showAutoPurchase: Bool = false
     
     var isBelowStock: Bool {
-        if let product = grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID }) {
+        if let product = mdProducts.first(where: { $0.id == shoppingListItem.productID }) {
             if product.minStockAmount > shoppingListItem.amount {
                 return true
             }
@@ -162,7 +171,7 @@ struct ShoppingListEntriesView: View {
                 PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
             }
         })
-        .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
+        .confirmationDialog("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 if let deleteID = shlItemToDelete?.id {
@@ -171,7 +180,7 @@ struct ShoppingListEntriesView: View {
                     }
                 }
             }
-        }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
+        }, message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
 #else
         ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
             .listRowBackground(backgroundColor)
@@ -185,7 +194,7 @@ struct ShoppingListEntriesView: View {
                        label: { Image(systemName: MySymbols.done) })
                 .tint(.green)
             })
-            .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
+            .confirmationDialog("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
                 Button("Cancel", role: .cancel) {}
                 Button("Delete", role: .destructive) {
                     if let deleteID = shlItemToDelete?.id {
@@ -194,7 +203,7 @@ struct ShoppingListEntriesView: View {
                         }
                     }
                 }
-            }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
+            }, message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
 #endif
     }
 }

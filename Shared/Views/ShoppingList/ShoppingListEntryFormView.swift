@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShoppingListEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @Environment(\.dismiss) var dismiss
     
