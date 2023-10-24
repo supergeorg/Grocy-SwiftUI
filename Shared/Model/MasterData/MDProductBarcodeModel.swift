@@ -10,15 +10,15 @@ import SwiftData
 
 @Model
 class MDProductBarcode: Codable {
-    let id: Int
-    let productID: Int
-    let barcode: String
-    let quID: Int?
-    let amount: Double?
-    let storeID: Int?
-    let lastPrice: Double?
-    let note: String?
-    let rowCreatedTimestamp: String
+    var id: Int
+    var productID: Int
+    var barcode: String
+    var quID: Int?
+    var amount: Double?
+    var storeID: Int?
+    var lastPrice: Double?
+    var note: String
+    var rowCreatedTimestamp: String
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -43,7 +43,7 @@ class MDProductBarcode: Codable {
             do { self.storeID = try container.decodeIfPresent(Int.self, forKey: .storeID) } catch { self.storeID = try? Int(container.decodeIfPresent(String.self, forKey: .storeID) ?? "") }
             do { self.lastPrice = try container.decodeIfPresent(Double.self, forKey: .lastPrice) } catch { self.lastPrice = try? Double(container.decodeIfPresent(String.self, forKey: .lastPrice) ?? "") }
             self.rowCreatedTimestamp = try container.decode(String.self, forKey: .rowCreatedTimestamp)
-            self.note = try? container.decodeIfPresent(String.self, forKey: .note)
+            self.note = (try? container.decodeIfPresent(String.self, forKey: .note)) ?? ""
         } catch {
             throw APIError.decodingError(error: error)
         }
@@ -70,8 +70,8 @@ class MDProductBarcode: Codable {
         amount: Double? = nil,
         storeID: Int? = nil,
         lastPrice: Double? = nil,
-        rowCreatedTimestamp: String,
-        note: String? = nil
+        note: String = "",
+        rowCreatedTimestamp: String
     ) {
         self.id = id
         self.productID = productID
@@ -80,8 +80,8 @@ class MDProductBarcode: Codable {
         self.amount = amount
         self.storeID = storeID
         self.lastPrice = lastPrice
-        self.rowCreatedTimestamp = rowCreatedTimestamp
         self.note = note
+        self.rowCreatedTimestamp = rowCreatedTimestamp
     }
     
     static func == (lhs: MDProductBarcode, rhs: MDProductBarcode) -> Bool {

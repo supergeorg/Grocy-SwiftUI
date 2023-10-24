@@ -6,30 +6,32 @@
 //
 
 import Foundation
+import SwiftData
 
-struct StockJournalEntry: Codable {
-    let id: Int
-    let productID: Int
-    let amount: Double
-    let bestBeforeDate: String?
-    let purchasedDate: String?
-    let usedDate: String?
-    let spoiled: Int
-    let stockID: String
-    let transactionType: TransactionType
-    let price: Double?
-    let undone: Int
-    let undoneTimestamp: String?
-    let openedDate: String?
-    let rowCreatedTimestamp: String
-    let locationID: Int
-    let recipeID: Int?
-    let correlationID: Int?
-    let transactionID: String
-    let stockRowID: Int?
-    let storeID: Int?
-    let userID: Int
-    let note: String?
+@Model
+class StockJournalEntry: Codable {
+    @Attribute(.unique) var id: Int
+    var productID: Int
+    var amount: Double
+    var bestBeforeDate: String?
+    var purchasedDate: String?
+    var usedDate: String?
+    var spoiled: Int
+    var stockID: String
+    var transactionType: TransactionType
+    var price: Double?
+    var undone: Int
+    var undoneTimestamp: String?
+    var openedDate: String?
+    var locationID: Int
+    var recipeID: Int?
+    var correlationID: Int?
+    var transactionID: String
+    var stockRowID: Int?
+    var storeID: Int?
+    var userID: Int
+    var note: String?
+    var rowCreatedTimestamp: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -56,7 +58,7 @@ struct StockJournalEntry: Codable {
         case note
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -84,6 +86,57 @@ struct StockJournalEntry: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(bestBeforeDate, forKey: .bestBeforeDate)
+        try container.encode(purchasedDate, forKey: .purchasedDate)
+        try container.encode(usedDate, forKey: .usedDate)
+        try container.encode(spoiled, forKey: .spoiled)
+        try container.encode(stockID, forKey: .stockID)
+        try container.encode(transactionType, forKey: .transactionType)
+        try container.encode(price, forKey: .price)
+        try container.encode(undone, forKey: .undone)
+        try container.encode(undoneTimestamp, forKey: .undoneTimestamp)
+        try container.encode(openedDate, forKey: .openedDate)
+        try container.encode(locationID, forKey: .locationID)
+        try container.encode(recipeID, forKey: .recipeID)
+        try container.encode(correlationID, forKey: .correlationID)
+        try container.encode(transactionID, forKey: .transactionID)
+        try container.encode(stockRowID, forKey: .stockRowID)
+        try container.encode(storeID, forKey: .storeID)
+        try container.encode(userID, forKey: .userID)
+        try container.encode(note, forKey: .note)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
+    }
+    
+    static func == (lhs: StockJournalEntry, rhs: StockJournalEntry) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.productID == rhs.productID &&
+        lhs.amount == rhs.amount &&
+        lhs.bestBeforeDate == rhs.bestBeforeDate &&
+        lhs.purchasedDate == rhs.purchasedDate &&
+        lhs.usedDate == rhs.usedDate &&
+        lhs.spoiled == rhs.spoiled &&
+        lhs.stockID == rhs.stockID &&
+        lhs.transactionType == rhs.transactionType &&
+        lhs.price == rhs.price &&
+        lhs.undone == rhs.undone &&
+        lhs.undoneTimestamp == rhs.undoneTimestamp &&
+        lhs.openedDate == rhs.openedDate &&
+        lhs.locationID == rhs.locationID &&
+        lhs.recipeID == rhs.recipeID &&
+        lhs.correlationID == rhs.correlationID &&
+        lhs.transactionID == rhs.transactionID &&
+        lhs.stockRowID == rhs.stockRowID &&
+        lhs.storeID == rhs.storeID &&
+        lhs.userID == rhs.userID &&
+        lhs.note == rhs.note &&
+        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

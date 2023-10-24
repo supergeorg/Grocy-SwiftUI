@@ -82,6 +82,10 @@ class MDQuantityUnit: Codable, Equatable {
         lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription &&
         lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
+    
+    func getName(amount: Double) -> String {
+        return amount == 1 ? self.name : (self.namePlural.isEmpty ? self.name : self.namePlural)
+    }
 }
 
 typealias MDQuantityUnits = [MDQuantityUnit]

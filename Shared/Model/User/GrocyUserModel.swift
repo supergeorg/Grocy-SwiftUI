@@ -6,16 +6,17 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - GrocyUser
-struct GrocyUser: Codable {
-    let id: Int
-    let username: String
-    let firstName: String?
-    let lastName: String?
-    let displayName: String
-    let pictureFileName: String?
-    let rowCreatedTimestamp: String
+@Model
+class GrocyUser: Codable {
+    @Attribute(.unique) var id: Int
+    var username: String
+    var firstName: String?
+    var lastName: String?
+    var displayName: String
+    var pictureFileName: String?
+    var rowCreatedTimestamp: String
     
     enum CodingKeys: String, CodingKey {
         case id, username
@@ -26,7 +27,7 @@ struct GrocyUser: Codable {
         case pictureFileName = "picture_file_name"
     }
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -39,6 +40,17 @@ struct GrocyUser: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(username, forKey: .username)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encode(displayName, forKey: .displayName)
+        try container.encode(pictureFileName, forKey: .pictureFileName)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 }
 

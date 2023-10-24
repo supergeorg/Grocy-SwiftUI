@@ -11,13 +11,13 @@ import Foundation
 struct Recipe: Codable, Identifiable {
     let id: Int
     let name: String
-    @NullCodable var recipeDescription: String?
-    @NullCodable var pictureFileName: String?
+    var recipeDescription: String?
+    var pictureFileName: String?
     let baseServings: Int
-    @NullCodable var desiredServings: Int?
-    @NullCodable var notCheckShoppinglist: Int?
-    @NullCodable var type: RecipeType?
-    @NullCodable var productID: Int?
+    var desiredServings: Int?
+    var notCheckShoppinglist: Int?
+    var type: RecipeType?
+    var productID: Int?
     let rowCreatedTimestamp: String
     
     enum CodingKeys: String, CodingKey {

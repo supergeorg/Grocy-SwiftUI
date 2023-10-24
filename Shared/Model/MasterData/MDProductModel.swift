@@ -22,17 +22,17 @@ class MDProduct: Codable, Equatable {
     var quIDConsume: Int
     var quIDPrice: Int
     var minStockAmount: Double
-    var defaultBestBeforeDays: Int
-    var defaultBestBeforeDaysAfterOpen: Int
-    var defaultBestBeforeDaysAfterFreezing: Int
-    var defaultBestBeforeDaysAfterThawing: Int
+    var defaultDueDays: Int
+    var defaultDueDaysAfterOpen: Int
+    var defaultDueDaysAfterFreezing: Int
+    var defaultDueDaysAfterThawing: Int
     var pictureFileName: String?
     var enableTareWeightHandling: Bool
     var tareWeight: Double?
     var notCheckStockFulfillmentForRecipes: Bool
     var parentProductID: Int?
     var calories: Double?
-    var cumulateMinStockAmountOfSubProducts: Bool?
+    var cumulateMinStockAmountOfSubProducts: Bool
     var dueType: Int
     var quickConsumeAmount: Double?
     var quickOpenAmount: Double?
@@ -59,10 +59,10 @@ class MDProduct: Codable, Equatable {
         case quIDConsume = "qu_id_consume"
         case quIDPrice = "qu_id_price"
         case minStockAmount = "min_stock_amount"
-        case defaultBestBeforeDays = "default_best_before_days"
-        case defaultBestBeforeDaysAfterOpen = "default_best_before_days_after_open"
-        case defaultBestBeforeDaysAfterFreezing = "default_best_before_days_after_freezing"
-        case defaultBestBeforeDaysAfterThawing = "default_best_before_days_after_thawing"
+        case defaultDueDays = "default_best_before_days"
+        case defaultDueDaysAfterOpen = "default_best_before_days_after_open"
+        case defaultDueDaysAfterFreezing = "default_best_before_days_after_freezing"
+        case defaultDueDaysAfterThawing = "default_best_before_days_after_thawing"
         case pictureFileName = "picture_file_name"
         case enableTareWeightHandling = "enable_tare_weight_handling"
         case tareWeight = "tare_weight"
@@ -105,10 +105,10 @@ class MDProduct: Codable, Equatable {
             do { self.quIDPurchase = try container.decode(Int.self, forKey: .quIDPurchase) } catch { self.quIDPurchase = try Int(container.decode(String.self, forKey: .quIDPurchase))! }
             do { self.quIDStock = try container.decode(Int.self, forKey: .quIDStock) } catch { self.quIDStock = try Int(container.decode(String.self, forKey: .quIDStock))! }
             do { self.minStockAmount = try container.decode(Double.self, forKey: .minStockAmount) } catch { self.minStockAmount = try Double(container.decode(String.self, forKey: .minStockAmount))! }
-            do { self.defaultBestBeforeDays = try container.decode(Int.self, forKey: .defaultBestBeforeDays) } catch { self.defaultBestBeforeDays = try Int(container.decode(String.self, forKey: .defaultBestBeforeDays))! }
-            do { self.defaultBestBeforeDaysAfterOpen = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterOpen) } catch { self.defaultBestBeforeDaysAfterOpen = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterOpen))! }
-            do { self.defaultBestBeforeDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterFreezing) } catch { self.defaultBestBeforeDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterFreezing))! }
-            do { self.defaultBestBeforeDaysAfterThawing = try container.decode(Int.self, forKey: .defaultBestBeforeDaysAfterThawing) } catch { self.defaultBestBeforeDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultBestBeforeDaysAfterThawing))! }
+            do { self.defaultDueDays = try container.decode(Int.self, forKey: .defaultDueDays) } catch { self.defaultDueDays = try Int(container.decode(String.self, forKey: .defaultDueDays))! }
+            do { self.defaultDueDaysAfterOpen = try container.decode(Int.self, forKey: .defaultDueDaysAfterOpen) } catch { self.defaultDueDaysAfterOpen = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterOpen))! }
+            do { self.defaultDueDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultDueDaysAfterFreezing) } catch { self.defaultDueDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterFreezing))! }
+            do { self.defaultDueDaysAfterThawing = try container.decode(Int.self, forKey: .defaultDueDaysAfterThawing) } catch { self.defaultDueDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterThawing))! }
             self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
             do {
                 self.enableTareWeightHandling = try container.decode(Bool.self, forKey: .enableTareWeightHandling)
@@ -221,13 +221,12 @@ class MDProduct: Codable, Equatable {
         try container.encode(quIDConsume, forKey: .quIDConsume)
         try container.encode(quIDPrice, forKey: .quIDPrice)
         try container.encode(minStockAmount, forKey: .minStockAmount)
-        try container.encode(defaultBestBeforeDays, forKey: .defaultBestBeforeDays)
-        try container.encode(defaultBestBeforeDaysAfterOpen, forKey: .defaultBestBeforeDaysAfterOpen)
-        try container.encode(defaultBestBeforeDaysAfterFreezing, forKey: .defaultBestBeforeDaysAfterFreezing)
-        try container.encode(defaultBestBeforeDaysAfterThawing, forKey: .defaultBestBeforeDaysAfterThawing)
+        try container.encode(defaultDueDays, forKey: .defaultDueDays)
+        try container.encode(defaultDueDaysAfterOpen, forKey: .defaultDueDaysAfterOpen)
+        try container.encode(defaultDueDaysAfterFreezing, forKey: .defaultDueDaysAfterFreezing)
+        try container.encode(defaultDueDaysAfterThawing, forKey: .defaultDueDaysAfterThawing)
         try container.encode(pictureFileName, forKey: .pictureFileName)
         try container.encode(enableTareWeightHandling, forKey: .enableTareWeightHandling)
-        
         try container.encode(tareWeight, forKey: .tareWeight)
         try container.encode(notCheckStockFulfillmentForRecipes, forKey: .notCheckStockFulfillmentForRecipes)
         try container.encode(parentProductID, forKey: .parentProductID)
@@ -260,13 +259,12 @@ class MDProduct: Codable, Equatable {
         quIDConsume: Int,
         quIDPrice: Int,
         minStockAmount: Double,
-        defaultBestBeforeDays: Int,
-        defaultBestBeforeDaysAfterOpen: Int,
-        defaultBestBeforeDaysAfterFreezing: Int,
-        defaultBestBeforeDaysAfterThawing: Int,
+        defaultDueDays: Int,
+        defaultDueDaysAfterOpen: Int,
+        defaultDueDaysAfterFreezing: Int,
+        defaultDueDaysAfterThawing: Int,
         pictureFileName: String? = nil,
         enableTareWeightHandling: Bool = false,
-        
         tareWeight: Double? = nil,
         notCheckStockFulfillmentForRecipes: Bool = false,
         parentProductID: Int? = nil,
@@ -295,10 +293,10 @@ class MDProduct: Codable, Equatable {
         self.quIDPurchase = quIDPurchase
         self.quIDStock = quIDStock
         self.minStockAmount = minStockAmount
-        self.defaultBestBeforeDays = defaultBestBeforeDays
-        self.defaultBestBeforeDaysAfterOpen = defaultBestBeforeDaysAfterOpen
-        self.defaultBestBeforeDaysAfterFreezing = defaultBestBeforeDaysAfterFreezing
-        self.defaultBestBeforeDaysAfterThawing = defaultBestBeforeDaysAfterThawing
+        self.defaultDueDays = defaultDueDays
+        self.defaultDueDaysAfterOpen = defaultDueDaysAfterOpen
+        self.defaultDueDaysAfterFreezing = defaultDueDaysAfterFreezing
+        self.defaultDueDaysAfterThawing = defaultDueDaysAfterThawing
         self.pictureFileName = pictureFileName
         self.enableTareWeightHandling = enableTareWeightHandling
         self.tareWeight = tareWeight
@@ -333,10 +331,10 @@ class MDProduct: Codable, Equatable {
         lhs.quIDPurchase == rhs.quIDPurchase &&
         lhs.quIDStock == rhs.quIDStock &&
         lhs.minStockAmount == rhs.minStockAmount &&
-        lhs.defaultBestBeforeDays == rhs.defaultBestBeforeDays &&
-        lhs.defaultBestBeforeDaysAfterOpen == rhs.defaultBestBeforeDaysAfterOpen &&
-        lhs.defaultBestBeforeDaysAfterFreezing == rhs.defaultBestBeforeDaysAfterFreezing &&
-        lhs.defaultBestBeforeDaysAfterThawing == rhs.defaultBestBeforeDaysAfterThawing &&
+        lhs.defaultDueDays == rhs.defaultDueDays &&
+        lhs.defaultDueDaysAfterOpen == rhs.defaultDueDaysAfterOpen &&
+        lhs.defaultDueDaysAfterFreezing == rhs.defaultDueDaysAfterFreezing &&
+        lhs.defaultDueDaysAfterThawing == rhs.defaultDueDaysAfterThawing &&
         lhs.pictureFileName == rhs.pictureFileName &&
         lhs.enableTareWeightHandling == rhs.enableTareWeightHandling &&
         lhs.tareWeight == rhs.tareWeight &&

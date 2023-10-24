@@ -6,11 +6,12 @@
 //
 
 import Foundation
-import SwiftData
-
-@Model
+//import SwiftData
+//
+//@Model
 class StockElement: Codable, Identifiable {
-    @Attribute(.unique) var id = UUID()
+//    @Attribute(.unique) var id = UUID()
+    var id = UUID()
     var amount: Double
     var amountAggregated: Double
     var value: Double
