@@ -9,8 +9,8 @@ import Foundation
 //import SwiftData
 //
 //@Model
-class StockElement: Codable, Identifiable {
-//    @Attribute(.unique) var id = UUID()
+class StockElement: Codable, Identifiable, Equatable, Hashable {
+//    @Attribute(.unique)
     var id = UUID()
     var amount: Double
     var amountAggregated: Double
@@ -99,6 +99,24 @@ class StockElement: Codable, Identifiable {
         self.dueType = dueType
         self.productID = productID
         self.product = product
+    }
+    
+    static func == (lhs: StockElement, rhs: StockElement) -> Bool {
+        lhs.amount == rhs.amount &&
+        lhs.amountAggregated == rhs.amountAggregated &&
+        lhs.value == rhs.value &&
+        lhs.bestBeforeDate == rhs.bestBeforeDate &&
+        lhs.amountOpened == rhs.amountOpened &&
+        lhs.amountOpenedAggregated == rhs.amountOpenedAggregated &&
+        lhs.isAggregatedAmount == rhs.isAggregatedAmount &&
+        lhs.dueType == rhs.dueType &&
+        lhs.productID == rhs.productID &&
+        lhs.product == rhs.product
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(amount)
+        hasher.combine(productID)
     }
 }
 
