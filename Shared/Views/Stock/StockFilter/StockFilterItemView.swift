@@ -9,7 +9,6 @@ import SwiftUI
 
 struct StockFilterItemView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    @Environment(\.colorScheme) var colorScheme
     var num: Int?
     @Binding var filteredStatus: ProductStatus
     var ownFilteredStatus: ProductStatus
@@ -34,16 +33,13 @@ struct StockFilterItemView: View {
                         .bold()
                     Image(systemName: ownFilteredStatus.getIconName())
                 }
-                .foregroundStyle(color)
             } else {
                 Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                     .bold()
-                    .foregroundStyle(color)
             }
 #elseif os(macOS)
             Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
                 .bold()
-                .foregroundStyle(color)
 #endif
         }
         .padding(.horizontal, 10.0)

@@ -19,19 +19,12 @@ struct StockTableRow: View {
 #endif
     
     var stockElement: StockElement
-    @Binding var selectedStockElement: StockElement?
-#if os(iOS)
-    @Binding var activeSheet: StockInteractionSheet?
-#endif
-    
+//    @Binding var selectedStockElement: StockElement?
     
     @State private var showDetailView: Bool = false
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
-    }
-    private func getQUString(amount: Double) -> String {
-        return amount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     var backgroundColor: Color {
@@ -55,41 +48,26 @@ struct StockTableRow: View {
     }
     
     var body: some View {
-        NavigationLink(destination: {
-#if os(macOS)
-            NavigationView {
-                StockEntriesView(stockElement: stockElement)
-            }
-#else
-            StockEntriesView(stockElement: stockElement, activeSheet: $activeSheet)
-#endif
-        }, label: {
-            content
-            // The padding is to make space displaying the swipe action labels
-                .padding(.bottom)
-#if os(macOS)
-                .padding(.horizontal)
-#endif
-        })
-            .contextMenu(menuItems: {
-                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
-            })
-            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                if stockElement.amount > 0 {
-                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeQA, .openQA])
-                }
-            })
-            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                if stockElement.amount > 0 {
-                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet, shownActions: [.consumeAll])
-                }
-            })
-#if os(macOS)
-            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
-#else
+        content
+//            .contextMenu(menuItems: {
+//                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement)
+//            })
+//            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+//                if stockElement.amount > 0 {
+//                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeQA, .openQA])
+//                }
+//            })
+//            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+//                if stockElement.amount > 0 {
+//                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeAll])
+//                }
+//            })
+//#if os(macOS)
+//            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+//            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+//#else
             .listRowBackground(backgroundColor)
-#endif
+//#endif
     }
     
     var content: some View {
@@ -133,14 +111,14 @@ struct StockTableRow: View {
             } else {Text("")}
             
             HStack{
-                Text("\(stockElement.amount.formattedAmount) \(getQUString(amount: stockElement.amount))")
+                Text("\(stockElement.amount.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amount) ?? "")")
                 if stockElement.amountOpened > 0 {
                     Text("\(stockElement.amountOpened.formattedAmount) opened")
                         .font(.caption)
                         .italic()
                 }
                 if stockElement.amount != stockElement.amountAggregated {
-                    Text("Σ \(stockElement.amountAggregated.formattedAmount) \(getQUString(amount: stockElement.amountAggregated))")
+                    Text("Σ \(stockElement.amountAggregated.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amountAggregated) ?? "")")
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
                     if stockElement.amountOpenedAggregated > 0 {
                         Text("\(stockElement.amountOpenedAggregated.formattedAmount) opened")

@@ -8,26 +8,23 @@
 import SwiftUI
 
 enum StockColumn {
-    case product, productGroup, amount, value, nextBestBeforeDate, caloriesPerStockQU, calories
+    case product, productGroup, amount, value, nextDueDate, caloriesPerStockQU, calories
 }
 
-#if os(iOS)
-enum StockInteractionSheet: Identifiable {
-    case purchaseProduct, consumeProduct, transferProduct, inventoryProduct, stockJournal, addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview, productJournal, editProduct
-    
-    var id: Int {
-        self.hashValue
-    }
+enum StockInteraction: Hashable {
+    case purchaseProduct
+    case consumeProduct
+    case transferProduct
+    case inventoryProduct
+    case stockJournal
+    case addToShL
+    case productPurchase
+    case productConsume
+    case productTransfer
+    case productInventory
+    case productOverview
+    case productJournal
 }
-#elseif os(macOS)
-enum StockInteractionPopover: Identifiable {
-    case addToShL, productPurchase, productConsume, productTransfer, productInventory, productOverview, productJournal, editProduct
-    
-    var id: Int {
-        self.hashValue
-    }
-}
-#endif
 
 struct StockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -51,14 +48,9 @@ struct StockView: View {
     @State private var filteredProductGroupID: Int?
     @State private var filteredStatus: ProductStatus = .all
     
-    @State private var selectedStockElement: StockElement? = nil
+    //    @State private var selectedStockElement: StockElement? = nil
     
-#if os(iOS)
-    @State private var activeSheet: StockInteractionSheet?
-#elseif os(macOS)
-    @State private var activeSheet: StockInteractionPopover?
     @State private var showStockJournal: Bool = false
-#endif
     
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
@@ -133,39 +125,42 @@ struct StockView: View {
     }
     
     var groupedProducts: [String: [StockElement]] {
-        var dict: [String: [StockElement]] = [:]
-        var categoryName: String
-        for element in searchedProducts {
-            switch stockGrouping {
-            case .productGroup:
-                let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == element.product.productGroupID })
-                categoryName = productGroup?.name ?? ""
-            case .nextDueDate:
-                categoryName = element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
-            case .lastPurchased:
-                if grocyVM.stockProductDetails[element.productID] == nil {
-                    Task {
-                        try await grocyVM.getStockProductDetails(productID: element.productID)
-                    }
-                }
-                categoryName = grocyVM.stockProductDetails[element.productID]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
-            case .minStockAmount:
-                categoryName = element.product.minStockAmount.formattedAmount
-            case .parentProduct:
-                let parentProduct = grocyVM.mdProducts.first(where: { $0.id == element.product.parentProductID })
-                categoryName = parentProduct?.name ?? ""
-            case .defaultLocation:
-                let defaultLocation = grocyVM.mdLocations.first(where: { $0.id == element.product.locationID })
-                categoryName = defaultLocation?.name ?? ""
-            default:
-                categoryName = ""
-            }
-            if dict[categoryName] == nil {
-                dict[categoryName] = []
-            }
-            dict[categoryName]?.append(element)
+        switch stockGrouping {
+        case .none:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                ""
+            })
+        case .productGroup:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                grocyVM.mdProductGroups.first(where: { productGroup in
+                    productGroup.id == element.product.productGroupID })?
+                    .name ?? ""
+            })
+        case .nextDueDate:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
+            })
+        case .lastPurchased:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+            })
+        case .minStockAmount:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                element.product.minStockAmount.formattedAmount
+            })
+        case .parentProduct:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                grocyVM.mdProducts.first(where: { product in
+                    product.id == element.product.id})?
+                    .name ?? ""
+            })
+        case .defaultLocation:
+            return Dictionary(grouping: searchedProducts, by: { element in
+                grocyVM.mdLocations.first(where: { location in
+                    location.id == element.product.locationID })?
+                    .name ?? ""
+            })
         }
-        return dict
     }
     
     var summedValue: Double {
@@ -178,237 +173,29 @@ struct StockView: View {
     }
     
     var body: some View{
-        if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count == 0 && grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count == 0 {
-            bodyContent
-        } else {
-            ServerProblemView()
-                .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
-        }
-    }
-    
-#if os(macOS)
-    var bodyContent: some View {
-        contentmacOS
-        //        StockTable(filteredStock: filteredProducts, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .automatic, content: {
-                    RefreshButton(updateData: { Task { await updateData() } })
-                    sortMenu
-                    Text("")
-                        .popover(item: $activeSheet, content: { item in
-                            switch item {
-                            case .addToShL:
-                                ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID, isPopup: true)
-                                    .padding()
-                                    .frame(minWidth: 500, minHeight: 300)
-                            case .productPurchase:
-                                PurchaseProductView(stockElement: $selectedStockElement, isPopup: true)
-                                    .frame(minWidth: 500, minHeight: 500)
-                            case .productConsume:
-                                ConsumeProductView(stockElement: $selectedStockElement, isPopup: true)
-                                    .frame(minWidth: 500, minHeight: 300)
-                            case .productTransfer:
-                                TransferProductView(stockElement: $selectedStockElement, isPopup: true)
-                                    .frame(minWidth: 500, minHeight: 300)
-                            case .productInventory:
-                                InventoryProductView(stockElement: $selectedStockElement, isPopup: true)
-                                    .frame(minWidth: 500, minHeight: 500)
-                            case .productOverview:
-                                StockProductInfoView(stockElement: $selectedStockElement)
-                                    .frame(minWidth: 400, minHeight: 300)
-                            case .productJournal:
-                                StockJournalView(stockElement: $selectedStockElement)
-                                    .frame(minWidth: 500, minHeight: 300)
-                            case .editProduct:
-                                MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), isPopup: true)
-                                    .frame(minWidth: 400, minHeight: 300)
-                            }
-                        })
-                    Button(action: {
-                        self.showStockJournal.toggle()
-                    }, label: {
-                        Label("Journal", systemImage: MySymbols.stockJournal)
-                    })
-                    .popover(isPresented: $showStockJournal, content: {
-                        StockJournalView()
-                            .padding()
-                            .frame(width: 700, height: 500, alignment: .leading)
-                    })
-                })
-            })
-            .navigationSubtitle(LocalizedStringKey("str.stock.stockOverviewInfo \(grocyVM.stock.count) \(summedValueStr)"))
-    }
-#elseif os(iOS)
-    var bodyContent: some View {
-        content
-            .toolbar(content: {
-                ToolbarItem(placement: .automatic, content: {
-                    HStack{
-                        sortMenu
-                        Button(action: {
-                            activeSheet = .stockJournal
-                        }, label: {
-                            Label(LocalizedStringKey("str.details.stockJournal"), systemImage: MySymbols.stockJournal)
-                        })
-                        Button(action: {
-                            activeSheet = .inventoryProduct
-                        }, label: {
-                            Label(LocalizedStringKey("str.stock.inventory"), systemImage: MySymbols.inventory)
-                        })
-                        Button(action: {
-                            activeSheet = .transferProduct
-                        }, label: {
-                            Label(LocalizedStringKey("str.stock.transfer"), systemImage: MySymbols.transfer)
-                        })
-                        Button(action: {
-                            activeSheet = .consumeProduct
-                        }, label: {
-                            Label(LocalizedStringKey("str.stock.consume"), systemImage: MySymbols.consume)
-                        })
-                        Button(action: {
-                            activeSheet = .purchaseProduct
-                        }, label: {
-                            Label(LocalizedStringKey("str.stock.buy"), systemImage: MySymbols.purchase)
-                        })
-                    }
-                })
-            })
-            .sheet(item: $activeSheet, content: { item in
-                switch item {
-                case .stockJournal:
-                    StockJournalView()
-                case .purchaseProduct:
-                    NavigationView{
-                        PurchaseProductView()
-                    }
-                case .consumeProduct:
-                    NavigationView{
-                        ConsumeProductView()
-                    }
-                case .transferProduct:
-                    NavigationView{
-                        TransferProductView()
-                    }
-                case .inventoryProduct:
-                    NavigationView{
-                        InventoryProductView()
-                    }
-                case .addToShL:
-                    ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: selectedStockElement?.productID)
-                case .productPurchase:
-                    NavigationView{
-                        PurchaseProductView(stockElement: $selectedStockElement)
-                    }
-                case .productConsume:
-                    NavigationView{
-                        ConsumeProductView(stockElement: $selectedStockElement)
-                    }
-                case .productTransfer:
-                    NavigationView{
-                        TransferProductView(stockElement: $selectedStockElement)
-                    }
-                case .productInventory:
-                    NavigationView{
-                        InventoryProductView(stockElement: $selectedStockElement)
-                    }
-                case .productOverview:
-                    NavigationView {
-                        StockProductInfoView(stockElement: $selectedStockElement)
-                    }
-                case .productJournal:
-                    StockJournalView(stockElement: $selectedStockElement)
-                case .editProduct:
-                    NavigationView{
-                        MDProductFormView(isNewProduct: false, product: selectedStockElement?.product, showAddProduct: Binding.constant(false), isPopup: true)
-                    }
-                }
-            })
-    }
-#endif
-    
-    var contentmacOS: some View {
-        VStack {
-            Group {
-                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-                StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
-            }
-            .padding()
-            NavigationView {
-                List {
-                    if grocyVM.stock.isEmpty {
-                        ContentUnavailableView("str.stock.empty", systemImage: MySymbols.stockOverview)
-                    }
-                    ForEach(groupedProducts.sorted(by: {
-                        switch stockGrouping {
-                        case .minStockAmount:
-                            return $0.key.compare($1.key, options: .numeric) == .orderedAscending
-                        case .lastPurchased, .nextDueDate:
-                            return $0.key.iso8601withFractionalSeconds ?? Date() < $1.key.iso8601withFractionalSeconds ?? Date()
-                        default:
-                            return $0.key < $1.key
-                        }
-                    }), id: \.key) { groupName, groupElements in
-                        if stockGrouping == .none {
-                            ForEach(groupElements, id:\.product.id) { stockElement in
-                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
-                            }
-                        }
-                        Section(content: {
-                            ForEach(groupElements, id:\.product.id) { stockElement in
-                                StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement, activeSheet: $activeSheet)
-                            }
-                        }, header: {
-                            if stockGrouping == .productGroup, groupName.isEmpty {
-                                Text(LocalizedStringKey("str.shL.ungrouped")).italic()
-                            } else {
-                                switch stockGrouping {
-                                case .lastPurchased, .nextDueDate:
-                                    Text(groupName.iso8601withFractionalSeconds?.formatted(date: .numeric, time: .omitted) ?? "").bold()
-                                default:
-                                    Text(groupName).bold()
-                                }
-                            }
-                        })
-                    }
-                }
-                .frame(minWidth: 350)
-            }
-        }
-        .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
-        .animation(.default, value: groupedProducts.count)
-        .animation(.default, value: sortSetting)
-        .task {
-            if firstAppear {
-                Task {
-                    await updateData()
-                    firstAppear = false
-                }
-            }
-        }
-    }
-    
-    var content: some View {
         List {
             Section {
                 StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
                 StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
             }
-            if grocyVM.stock.isEmpty {
-                ContentUnavailableView("str.stock.empty", systemImage: MySymbols.stockOverview)
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if grocyVM.stock.isEmpty {
+                ContentUnavailableView("Stock is empty.", systemImage: MySymbols.quantityUnit)
+            } else if filteredProducts.isEmpty {
+                ContentUnavailableView.search
             }
             ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
-                        StockTableRow(
-                            stockElement: stockElement,
-                            selectedStockElement: $selectedStockElement,
-                            activeSheet: $activeSheet
-                        )
+                        NavigationLink(value: stockElement, label: {
+                            StockTableRow(stockElement: stockElement)
+                        })
                     })
                 }, header: {
                     if stockGrouping == .productGroup, groupName.isEmpty {
-                        Text(LocalizedStringKey("str.shL.ungrouped")).italic()
+                        Text("Ungrouped")
+                            .italic()
                     } else if stockGrouping == .none {
                         EmptyView()
                     } else {
@@ -417,44 +204,78 @@ struct StockView: View {
                 })
             }
         }
-        .navigationTitle(LocalizedStringKey("str.stock.stockOverview"))
-        .searchable(text: $searchString, prompt: LocalizedStringKey("str.search"))
+        .navigationTitle("Stock overview")
+        .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
         .animation(.default, value: groupedProducts.count)
         .task {
-            if firstAppear {
-                Task {
-                    await updateData()
-                    firstAppear = false
-                }
-            }
+            await updateData()
         }
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .automatic, content: {
+                sortMenu
+                NavigationLink(value: StockInteraction.stockJournal) {
+                    Label("Stock journal", systemImage: MySymbols.stockJournal)
+                }
+                NavigationLink(value: StockInteraction.inventoryProduct) {
+                    Label("Inventory", systemImage: MySymbols.inventory)
+                }
+                NavigationLink(value: StockInteraction.transferProduct) {
+                    Label("Transfer", systemImage: MySymbols.transfer)
+                }
+                NavigationLink(value: StockInteraction.consumeProduct) {
+                    Label("Consume", systemImage: MySymbols.consume)
+                }
+                NavigationLink(value: StockInteraction.purchaseProduct) {
+                    Label("Buy", systemImage: MySymbols.purchase)
+                }
+            })
+        })
+        .navigationDestination(for: StockInteraction.self, destination: { interaction in
+            switch interaction {
+            case .stockJournal:
+                StockJournalView()
+            case .inventoryProduct:
+                InventoryProductView()
+            case .transferProduct:
+                TransferProductView()
+            case .consumeProduct:
+                ConsumeProductView()
+            case .purchaseProduct:
+                PurchaseProductView()
+            default:
+                EmptyView()
+            }
+        })
+        .navigationDestination(for: StockElement.self, destination: { stockElement in
+            StockEntriesView(stockElement: stockElement)
+        })
     }
     
     var sortMenu: some View {
         Menu(content: {
-            Picker(LocalizedStringKey("str.group.category"), selection: $stockGrouping, content: {
-                Label(LocalizedStringKey("str.none"), systemImage: MySymbols.product)
+            Picker("Group by", selection: $stockGrouping, content: {
+                Label("None", systemImage: MySymbols.product)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.none)
-                Label(LocalizedStringKey("str.stock.productGroup"), systemImage: MySymbols.amount)
+                Label("Product group", systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.productGroup)
-                Label(LocalizedStringKey("str.stock.tbl.nextDueDate"), systemImage: MySymbols.date)
+                Label("Next due date", systemImage: MySymbols.date)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.nextDueDate)
-                Label(LocalizedStringKey("str.stock.tbl.lastPurchased"), systemImage: MySymbols.date)
+                Label("Last purchased", systemImage: MySymbols.date)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.lastPurchased)
-                Label(LocalizedStringKey("str.stock.tbl.minStockAmount"), systemImage: MySymbols.amount)
+                Label("Min. stock amount", systemImage: MySymbols.amount)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.minStockAmount)
-                Label(LocalizedStringKey("str.stock.tbl.parentProduct"), systemImage: MySymbols.product)
+                Label("Parent product", systemImage: MySymbols.product)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.parentProduct)
-                Label(LocalizedStringKey("str.stock.tbl.defaultLocation"), systemImage: MySymbols.location)
+                Label("Default location", systemImage: MySymbols.location)
                     .labelStyle(.titleAndIcon)
                     .tag(StockGrouping.defaultLocation)
             })
@@ -463,25 +284,25 @@ struct StockView: View {
 #else
             .pickerStyle(.inline)
 #endif
-            Picker(LocalizedStringKey("str.sort.category"), selection: $sortSetting, content: {
+            Picker("Sort category", selection: $sortSetting, content: {
                 if sortOrder == .forward {
-                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                    Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
-                    Label(LocalizedStringKey("str.stock.buy.product.dueDate"), systemImage: MySymbols.date)
+                    Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
-                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                    Label("Amount", systemImage: MySymbols.amount)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.amount, order: .forward)])
                 } else {
-                    Label(LocalizedStringKey("str.md.product.name"), systemImage: MySymbols.product)
+                    Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
-                    Label(LocalizedStringKey("str.stock.buy.product.dueDate"), systemImage: MySymbols.date)
+                    Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
-                    Label(LocalizedStringKey("str.stock.product.amount"), systemImage: MySymbols.amount)
+                    Label("Amount", systemImage: MySymbols.amount)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.amount, order: .reverse)])
                 }
@@ -491,11 +312,11 @@ struct StockView: View {
 #else
             .pickerStyle(.inline)
 #endif
-            Picker(LocalizedStringKey("str.sort.order"), selection: $sortOrder, content: {
-                Label(LocalizedStringKey("str.sort.order.forward"), systemImage: MySymbols.sortForward)
+            Picker("Sort order", selection: $sortOrder, content: {
+                Label("Ascending", systemImage: MySymbols.sortForward)
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.forward)
-                Label(LocalizedStringKey("str.sort.order.reverse"), systemImage: MySymbols.sortReverse)
+                Label("Descending", systemImage: MySymbols.sortReverse)
                     .labelStyle(.titleAndIcon)
                     .tag(SortOrder.reverse)
             })
@@ -511,7 +332,7 @@ struct StockView: View {
                 }
             }
         }, label: {
-            Label(LocalizedStringKey("str.sort"), systemImage: MySymbols.sort)
+            Label("Sort", systemImage: MySymbols.sort)
         })
     }
 }

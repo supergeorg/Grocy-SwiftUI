@@ -12,13 +12,9 @@ struct StockTableMenuEntriesView: View {
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-    @Binding var activeSheet: StockInteractionSheet?
     
     var quantityUnit: MDQuantityUnit? {
         grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
-    }
-    var quString: String {
-        return stockElement.product.quickConsumeAmount == 1.0 ? quantityUnit?.name ?? "" : quantityUnit?.namePlural ?? ""
     }
     
     func consumeAsSpoiled() async {
@@ -38,84 +34,84 @@ struct StockTableMenuEntriesView: View {
                 .labelStyle(.titleAndIcon)
         })
         Divider()
-        Group{
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productPurchase
-            }, label: {
-                Label("Purchase", systemImage: MySymbols.purchase)
-                    .labelStyle(.titleAndIcon)
-            })
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productConsume
-            }, label: {
-                Label("Consume", systemImage: MySymbols.consume)
-                    .labelStyle(.titleAndIcon)
-            })
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productTransfer
-            }, label: {
-                Label("Transfer", systemImage: MySymbols.transfer)
-                    .labelStyle(.titleAndIcon)
-            })
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productInventory
-            }, label: {
-                Label("Inventory", systemImage: MySymbols.inventory)
-                    .labelStyle(.titleAndIcon)
-            })
-        }
-        Divider()
-        Group{
-            Button(role: .destructive, action: {
-                selectedStockElement = stockElement
-                Task {
-                    await consumeAsSpoiled()
-                }
-            }, label: {
-                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
-            })
-            
-            //                Button(action: {
-            //                    print("recip")
-            //                }, label: {
-            //                    Text("Search for recipes which contain this product")
-            //                })
-        }
-        Divider()
-        Group{
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productOverview
-            }, label: {
-                Label("Product overview", systemImage: MySymbols.info)
-            })
-            //                Button(action: {
-            //                    print("Stock entries are not accessed here")
-            //                }, label: {
-            //                    Text("Stock entries")
-            //                })
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .productJournal
-            }, label: {
-                Label("Stock journal", systemImage: MySymbols.stockJournal)
-            })
-            //                Button(action: {
-            //                    print("Stock Journal summary is not available yet")
-            //                }, label: {
-            //                    Text("Stock journal summary")
-            //                })
-            Button(action: {
-                selectedStockElement = stockElement
-                activeSheet = .editProduct
-            }, label: {
-                Label("Edit product", systemImage: MySymbols.edit)
-            })
-        }
+//        Group{
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productPurchase
+//            }, label: {
+//                Label("Purchase", systemImage: MySymbols.purchase)
+//                    .labelStyle(.titleAndIcon)
+//            })
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productConsume
+//            }, label: {
+//                Label("Consume", systemImage: MySymbols.consume)
+//                    .labelStyle(.titleAndIcon)
+//            })
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productTransfer
+//            }, label: {
+//                Label("Transfer", systemImage: MySymbols.transfer)
+//                    .labelStyle(.titleAndIcon)
+//            })
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productInventory
+//            }, label: {
+//                Label("Inventory", systemImage: MySymbols.inventory)
+//                    .labelStyle(.titleAndIcon)
+//            })
+//        }
+//        Divider()
+//        Group{
+//            Button(role: .destructive, action: {
+//                selectedStockElement = stockElement
+//                Task {
+//                    await consumeAsSpoiled()
+//                }
+//            }, label: {
+//                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
+//            })
+//            
+//            //                Button(action: {
+//            //                    print("recip")
+//            //                }, label: {
+//            //                    Text("Search for recipes which contain this product")
+//            //                })
+//        }
+//        Divider()
+//        Group{
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productOverview
+//            }, label: {
+//                Label("Product overview", systemImage: MySymbols.info)
+//            })
+//            //                Button(action: {
+//            //                    print("Stock entries are not accessed here")
+//            //                }, label: {
+//            //                    Text("Stock entries")
+//            //                })
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .productJournal
+//            }, label: {
+//                Label("Stock journal", systemImage: MySymbols.stockJournal)
+//            })
+//            //                Button(action: {
+//            //                    print("Stock Journal summary is not available yet")
+//            //                }, label: {
+//            //                    Text("Stock journal summary")
+//            //                })
+//            Button(action: {
+//                selectedStockElement = stockElement
+//                activeSheet = .editProduct
+//            }, label: {
+//                Label("Edit product", systemImage: MySymbols.edit)
+//            })
+//        }
     }
 }
 

@@ -15,7 +15,7 @@ struct StockEntriesView: View {
     @State private var selectedStockElement: StockElement? = nil
     @State private var stockEntries: StockEntries = []
     
-    func fetchData(ignoreCachedStock: Bool = true) async {
+    func fetchData(ignoreCachedStock: Bool = false) async {
         // This local management is needed due to the SwiftUI Views not updating correctly.
         if stockEntries.isEmpty || ignoreCachedStock {
             do {
@@ -32,7 +32,7 @@ struct StockEntriesView: View {
         do {
             try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .consume, content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-            await fetchData()
+            await fetchData(ignoreCachedStock: false)
         } catch {
             grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
         }
@@ -42,7 +42,7 @@ struct StockEntriesView: View {
         do {
             try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
-            await fetchData()
+            await fetchData(ignoreCachedStock: false)
         } catch {
             grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
         }
@@ -83,13 +83,13 @@ struct StockEntriesView: View {
 #if os(macOS)
         .frame(minWidth: 350)
 #endif
-        .navigationTitle("Stock entries")
+        .navigationTitle(stockElement.product.name)
         .refreshable {
-            await fetchData(ignoreCachedStock: true)
+            await fetchData()
         }
         .animation(.default, value: stockEntries.count)
         .task {
-            await fetchData(ignoreCachedStock: false)
+            await fetchData()
         }
     }
 }
