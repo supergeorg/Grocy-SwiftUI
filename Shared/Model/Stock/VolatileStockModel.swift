@@ -5,15 +5,16 @@
 //  Created by Georg Meissner on 09.11.20.
 //
 
-// Not used for now
-
 import Foundation
+import SwiftData
 
 // MARK: - VolatileStock
-
-struct VolatileStock: Codable {
-    let dueProducts, overdueProducts, expiredProducts: [StockElement]
-    let missingProducts: [VolatileStockProductMissing]
+@Model
+class VolatileStock: Codable {
+    var dueProducts: [StockElement]
+    var overdueProducts: [StockElement]
+    var expiredProducts: [StockElement]
+    var missingProducts: [VolatileStockProductMissing]
 
     enum CodingKeys: String, CodingKey {
         case dueProducts = "due_products"
@@ -21,15 +22,35 @@ struct VolatileStock: Codable {
         case expiredProducts = "expired_products"
         case missingProducts = "missing_products"
     }
+    
+    required init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.dueProducts = try container.decodeIfPresent([StockElement].self, forKey: .dueProducts) ?? []
+            self.overdueProducts = try container.decodeIfPresent([StockElement].self, forKey: .overdueProducts) ?? []
+            self.expiredProducts = try container.decodeIfPresent([StockElement].self, forKey: .expiredProducts) ?? []
+            self.missingProducts = try container.decodeIfPresent([VolatileStockProductMissing].self, forKey: .missingProducts) ?? []
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(dueProducts, forKey: .dueProducts)
+        try container.encode(overdueProducts, forKey: .overdueProducts)
+        try container.encode(expiredProducts, forKey: .expiredProducts)
+        try container.encode(missingProducts, forKey: .missingProducts)
+    }
 }
 
 // MARK: - VolatileStockProductMissing
-
+//@Model
 struct VolatileStockProductMissing: Codable {
-    let id: Int
-    let name: String?
-    let amountMissing: Double
-    let isPartlyInStock: Bool
+    var id: Int
+    var name: String?
+    var amountMissing: Double
+    var isPartlyInStock: Bool
 
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -56,4 +77,12 @@ struct VolatileStockProductMissing: Codable {
             throw APIError.decodingError(error: error)
         }
     }
+    
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(id, forKey: .id)
+//        try container.encode(name, forKey: .name)
+//        try container.encode(amountMissing, forKey: .amountMissing)
+//        try container.encode(isPartlyInStock, forKey: .isPartlyInStock)
+//    }
 }

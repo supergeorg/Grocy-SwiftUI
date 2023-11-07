@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockJournalRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
     var journalEntry: StockJournalEntry
     
     var quantityUnit: MDQuantityUnit? {
-        let product = grocyVM.mdProducts.first(where: {$0.id == journalEntry.productID})
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
+        let product = mdProducts.first(where: {$0.id == journalEntry.productID})
+        return mdQuantityUnits.first(where: {$0.id == product?.quIDStock})
     }
     
     var body: some View {

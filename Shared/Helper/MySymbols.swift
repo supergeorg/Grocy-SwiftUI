@@ -15,7 +15,7 @@ struct MySymbols {
     static let inventory = "list.bullet"
     static let stockJournal = "list.bullet.rectangle"
     static let addToShoppingList = "note.text.badge.plus"
-    static let shoppingList = "note.text"
+    static let shoppingList = "list.bullet"
     static let masterData = "text.book.closed"
     static let settings = "gear"
 
@@ -25,7 +25,7 @@ struct MySymbols {
     static let location = "location"
     static let store = "house"
     static let productGroup = "square.on.circle"
-    static let recipe = "list.bullet.below.rectangle"
+    static let recipe = "newspaper"
     static let picture = "photo"
     static let gallery = "photo.on.rectangle.angled"
     static let user = "person"
@@ -76,6 +76,9 @@ struct MySymbols {
     static let sort = "arrow.up.arrow.down.square"
     static let sortForward = "arrow.up"
     static let sortReverse = "arrow.down"
+    static let active = "checkmark.circle.fill"
+    static let warning = "exclamationmark.triangle.fill"
+    static let error = "xmark.circle.fill"
 
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"

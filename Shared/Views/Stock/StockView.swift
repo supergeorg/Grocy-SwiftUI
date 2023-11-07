@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum StockColumn {
     case product, productGroup, amount, value, nextDueDate, caloriesPerStockQU, calories
@@ -28,6 +29,15 @@ enum StockInteraction: Hashable {
 
 struct StockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query var volatileStockList: [VolatileStock]
+    var volatileStock: VolatileStock? {
+        volatileStockList.first
+    }
     
     @State private var firstAppear: Bool = true
     
@@ -59,55 +69,56 @@ struct StockView: View {
     }
     
     var numExpiringSoon: Int? {
-        grocyVM.volatileStock?.dueProducts.count
+        volatileStock?.dueProducts.count
     }
     
     var numOverdue: Int? {
-        grocyVM.volatileStock?.overdueProducts.count
+        volatileStock?.overdueProducts.count
     }
     
     var numExpired: Int? {
-        grocyVM.volatileStock?.expiredProducts.count
+        volatileStock?.expiredProducts.count
     }
     
     var numBelowStock: Int? {
-        grocyVM.volatileStock?.missingProducts.count
+        volatileStock?.missingProducts.count
     }
     
-    var missingStock: Stock {
-        var missingStockList: Stock = []
-        for missingProduct in grocyVM.volatileStock?.missingProducts ?? [] {
-            if !(missingProduct.isPartlyInStock) {
-                if let foundProduct = grocyVM.mdProducts.first(where: { $0.id == missingProduct.id }) {
-                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
-                    missingStockList.append(missingStockElement)
-                }
-            }
-        }
-        return missingStockList
-    }
-    
+//    var missingStock: Stock {
+//        var missingStockList: Stock = []
+//        for missingProduct in grocyVM.volatileStock?.missingProducts ?? [] {
+//            if !(missingProduct.isPartlyInStock) {
+//                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
+//                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
+//                    missingStockList.append(missingStockElement)
+//                }
+//            }
+//        }
+//        return missingStockList
+//    }
+//    
     var stockWithMissing: Stock {
-        grocyVM.stock + missingStock
+        stock 
+//        + missingStock
     }
     
     var filteredProducts: Stock {
         stockWithMissing
             .filter {
-                filteredStatus == .expiringSoon ? grocyVM.volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
+                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
             }
             .filter {
-                filteredStatus == .overdue ? (grocyVM.volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
+                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
             }
             .filter {
-                filteredStatus == .expired ? grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
+                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
             }
             .filter {
-                filteredStatus == .belowMinStock ? grocyVM.volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
+                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
             }
-            .filter {
-                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
-            }
+//            .filter {
+//                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
+//            }
             .filter {
                 filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
             }
@@ -132,7 +143,7 @@ struct StockView: View {
             })
         case .productGroup:
             return Dictionary(grouping: searchedProducts, by: { element in
-                grocyVM.mdProductGroups.first(where: { productGroup in
+                mdProductGroups.first(where: { productGroup in
                     productGroup.id == element.product.productGroupID })?
                     .name ?? ""
             })
@@ -141,22 +152,23 @@ struct StockView: View {
                 element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
             })
         case .lastPurchased:
-            return Dictionary(grouping: searchedProducts, by: { element in
-                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
-            })
+//            return Dictionary(grouping: searchedProducts, by: { element in
+//                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+//            })
+            return [:]
         case .minStockAmount:
             return Dictionary(grouping: searchedProducts, by: { element in
                 element.product.minStockAmount.formattedAmount
             })
         case .parentProduct:
             return Dictionary(grouping: searchedProducts, by: { element in
-                grocyVM.mdProducts.first(where: { product in
+                mdProducts.first(where: { product in
                     product.id == element.product.id})?
                     .name ?? ""
             })
         case .defaultLocation:
             return Dictionary(grouping: searchedProducts, by: { element in
-                grocyVM.mdLocations.first(where: { location in
+                mdLocations.first(where: { location in
                     location.id == element.product.locationID })?
                     .name ?? ""
             })
@@ -164,23 +176,24 @@ struct StockView: View {
     }
     
     var summedValue: Double {
-        let values = grocyVM.stock.map{ $0.value }
+        let values = stock.map{ $0.value }
         return values.reduce(0, +)
     }
     
     var summedValueStr: String {
-        return "\(String(format: "%.2f", summedValue)) \(grocyVM.getCurrencySymbol())"
+        return "\(String(format: "%.2f", summedValue)) \(getCurrencySymbol())"
     }
     
     var body: some View{
         List {
-            Section {
-                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+//            Section {
+//                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
                 StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
-            }
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.stock.isEmpty {
+//            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else 
+            if stock.isEmpty {
                 ContentUnavailableView("Stock is empty.", systemImage: MySymbols.quantityUnit)
             } else if filteredProducts.isEmpty {
                 ContentUnavailableView.search

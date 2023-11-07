@@ -11,11 +11,11 @@ import SwiftData
 struct ShoppingListRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
-//    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
-//    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
-//    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -23,15 +23,15 @@ struct ShoppingListRowView: View {
     var isBelowStock: Bool
     
     var product: MDProduct? {
-        grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })
+        mdProducts.first(where: { $0.id == shoppingListItem.productID })
     }
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
+        mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        grocyVM.mdQuantityUnitConversions.filter { $0.toQuID == shoppingListItem.quID }
+        mdQuantityUnitConversions.filter { $0.toQuID == shoppingListItem.quID }
     }
     
     private var factoredAmount: Double {
@@ -40,7 +40,7 @@ struct ShoppingListRowView: View {
     
     var amountString: String {
         if let quantityUnit = quantityUnit {
-            return "\(factoredAmount.formattedAmount) \(quantityUnit.getName(amount: factoredAmount) ?? "")"
+            return "\(factoredAmount.formattedAmount) \(quantityUnit.getName(amount: factoredAmount))"
         } else {
             return "\(factoredAmount.formattedAmount)"
         }
@@ -108,10 +108,10 @@ struct ShoppingListEntriesView: View {
         )
         do {
             try await grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: doneChangedShoppingListItem)
-            grocyVM.postLog("Done status changed successfully.", type: .info)
+            await grocyVM.postLog("Done status changed successfully.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
+            await grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
         }
     }
     
@@ -123,10 +123,10 @@ struct ShoppingListEntriesView: View {
     private func deleteSHLItem(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
-            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            await grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
         }
     }
     

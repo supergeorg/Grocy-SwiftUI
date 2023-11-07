@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum ConsumeAmountMode {
     case standard, barcode, custom, all
@@ -13,6 +14,12 @@ enum ConsumeAmountMode {
 
 struct QuickScanModeInputView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -33,27 +40,27 @@ struct QuickScanModeInputView: View {
     
     var product: MDProduct? {
         if let grocyCode = grocyCode {
-            return grocyVM.mdProducts.first(where: { $0.id == grocyCode.entityID })
+            return mdProducts.first(where: { $0.id == grocyCode.entityID })
         } else if let productBarcode = productBarcode {
-            return grocyVM.mdProducts.first(where: { $0.id == productBarcode.productID })
+            return mdProducts.first(where: { $0.id == productBarcode.productID })
         }
         return nil
     }
     
     var stockElement: StockElement? {
-        grocyVM.stock.first(where: { $0.productID == product?.id })
+        stock.first(where: { $0.productID == product?.id })
     }
     
     var quantityUnitPurchase: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
+        mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
     
     var quantityUnitStock: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+        mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        return grocyVM.mdQuantityUnitConversions.filter { $0.toQuID == product?.quIDStock }
+        return mdQuantityUnitConversions.filter { $0.toQuID == product?.quIDStock }
     }
     
     private var purchaseAmountFactored: Double {
@@ -69,23 +76,15 @@ struct QuickScanModeInputView: View {
     }
     
     private func getAmountForLocation(lID: Int) -> Double {
-        if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
-            var maxAmount: Double = 0
-            let filtEntries = entries.filter { $0.locationID == lID }
-            for filtEntry in filtEntries {
-                maxAmount += filtEntry.amount
-            }
-            return maxAmount
-        }
+//        if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
+//            var maxAmount: Double = 0
+//            let filtEntries = entries.filter { $0.locationID == lID }
+//            for filtEntry in filtEntries {
+//                maxAmount += filtEntry.amount
+//            }
+//            return maxAmount
+//        }
         return 0.0
-    }
-    
-    private func getQUString(amount: Double, purchase: Bool = false) -> String {
-        if purchase {
-            return amount == 1 ? quantityUnitPurchase?.name ?? "" : quantityUnitPurchase?.namePlural ?? quantityUnitPurchase?.name ?? ""
-        } else {
-            return amount == 1 ? quantityUnitStock?.name ?? "" : quantityUnitStock?.namePlural ?? quantityUnitStock?.name ?? ""
-        }
     }
     
     // Consume
@@ -124,7 +123,7 @@ struct QuickScanModeInputView: View {
                             VStack(alignment: .leading) {
                                 Text(product.name).font(.title)
                                 if let amount = stockElement?.amount {
-                                    Text("Stock amount: \(amount.formattedAmount) \(getQUString(amount: amount))")
+                                    Text("Stock amount: \(amount.formattedAmount) \(quantityUnitStock?.getName(amount: amount) ?? "")")
                                 }
                             }
                         }
@@ -195,38 +194,38 @@ struct QuickScanModeInputView: View {
     }
 }
 
-struct QuickScanModeInputView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            QuickScanModeInputView(
-                quickScanMode: Binding.constant(QuickScanMode.consume),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
-                grocyCode: nil,
-                lastConsumeLocationID: Binding.constant(nil),
-                lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseStoreID: Binding.constant(nil),
-                lastPurchaseLocationID: Binding.constant(nil)
-            )
-            
-            QuickScanModeInputView(
-                quickScanMode: Binding.constant(QuickScanMode.markAsOpened),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
-                grocyCode: nil,
-                lastConsumeLocationID: Binding.constant(nil),
-                lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseStoreID: Binding.constant(nil),
-                lastPurchaseLocationID: Binding.constant(nil)
-            )
-            
-            QuickScanModeInputView(
-                quickScanMode: Binding.constant(QuickScanMode.purchase),
-                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
-                grocyCode: nil,
-                lastConsumeLocationID: Binding.constant(nil),
-                lastPurchaseDueDate: Binding.constant(Date()),
-                lastPurchaseStoreID: Binding.constant(nil),
-                lastPurchaseLocationID: Binding.constant(nil)
-            )
-        }
-    }
-}
+//struct QuickScanModeInputView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            QuickScanModeInputView(
+//                quickScanMode: Binding.constant(QuickScanMode.consume),
+//                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+//                grocyCode: nil,
+//                lastConsumeLocationID: Binding.constant(nil),
+//                lastPurchaseDueDate: Binding.constant(Date()),
+//                lastPurchaseStoreID: Binding.constant(nil),
+//                lastPurchaseLocationID: Binding.constant(nil)
+//            )
+//            
+//            QuickScanModeInputView(
+//                quickScanMode: Binding.constant(QuickScanMode.markAsOpened),
+//                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+//                grocyCode: nil,
+//                lastConsumeLocationID: Binding.constant(nil),
+//                lastPurchaseDueDate: Binding.constant(Date()),
+//                lastPurchaseStoreID: Binding.constant(nil),
+//                lastPurchaseLocationID: Binding.constant(nil)
+//            )
+//            
+//            QuickScanModeInputView(
+//                quickScanMode: Binding.constant(QuickScanMode.purchase),
+//                productBarcode: MDProductBarcode(id: 1, productID: 1, barcode: "1234567891011", quID: 1, amount: 1.0, storeID: 1, lastPrice: 1, rowCreatedTimestamp: "ts", note: "note"),
+//                grocyCode: nil,
+//                lastConsumeLocationID: Binding.constant(nil),
+//                lastPurchaseDueDate: Binding.constant(Date()),
+//                lastPurchaseStoreID: Binding.constant(nil),
+//                lastPurchaseLocationID: Binding.constant(nil)
+//            )
+//        }
+//    }
+//}

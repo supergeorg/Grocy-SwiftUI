@@ -22,19 +22,19 @@ struct ServerProblemView: View {
         }
     }
     private var serverErrorState: ServerErrorState {
-        if grocyVM.failedToLoadErrors.isEmpty {
-            return .none
-        }
-        for error in grocyVM.failedToLoadErrors {
-            switch error {
-            case APIError.decodingError:
-                return .api
-            case APIError.serverError:
-                return .connection
-            default:
-                break
-            }
-        }
+//        if grocyVM.failedToLoadErrors.isEmpty {
+//            return .none
+//        }
+//        for error in grocyVM.failedToLoadErrors {
+//            switch error {
+//            case APIError.decodingError:
+//                return .api
+//            case APIError.serverError:
+//                return .connection
+//            default:
+//                break
+//            }
+//        }
         return .other
     }
     
@@ -84,18 +84,18 @@ struct ServerProblemView: View {
             })
                 .buttonStyle(FilledButtonStyle())
                 .controlSize(.large)
-            if devMode {
-                List() {
-                    ForEach(grocyVM.failedToLoadObjects.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { object in
-                        Text(object.rawValue)
-                    }
-                }
-                List() {
-                    ForEach(grocyVM.failedToLoadAdditionalObjects.sorted(by:  { $0.rawValue < $1.rawValue }), id: \.self) { additionalObject in
-                        Text(additionalObject.rawValue)
-                    }
-                }
-            }
+//            if devMode {
+//                List() {
+//                    ForEach(grocyVM.failedToLoadObjects.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { object in
+//                        Text(object.rawValue)
+//                    }
+//                }
+//                List() {
+//                    ForEach(grocyVM.failedToLoadAdditionalObjects.sorted(by:  { $0.rawValue < $1.rawValue }), id: \.self) { additionalObject in
+//                        Text(additionalObject.rawValue)
+//                    }
+//                }
+//            }
         }
         .padding()
         .background(.regularMaterial)

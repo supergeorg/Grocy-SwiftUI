@@ -319,9 +319,9 @@ struct LoginStatusView: View {
         if let isDemoMode = isDemoMode {
             do {
                 try await grocyVM.checkServer(baseURL: isDemoMode ? demoServerURL : grocyServerURL, apiKey: isDemoMode ? nil : grocyAPIKey, isDemoMode: isDemoMode)
-                if GrocyAPP.supportedVersions.contains(grocyVM.systemInfo?.grocyVersion.version ?? "") {
+                if await GrocyAPP.supportedVersions.contains(grocyVM.systemInfo?.grocyVersion.version ?? "") {
                     loginState = .success
-                    isDemoMode ? grocyVM.setDemoModus() : await grocyVM.setLoginModus()
+                    await isDemoMode ? grocyVM.setDemoModus() : await grocyVM.setLoginModus()
                 } else {
                     loginState = .unsupportedVersion
                 }

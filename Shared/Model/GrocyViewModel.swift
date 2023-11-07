@@ -12,7 +12,9 @@ import OSLog
 import WebKit
 import SwiftData
 
-@Observable class GrocyViewModel {
+@Observable
+@MainActor
+class GrocyViewModel {
     var grocyApi: GrocyAPI
     
     //    @ObservationIgnored @Environment(\.modelContext) private var modelContext
@@ -240,24 +242,60 @@ import SwiftData
     func getObjectAndSaveSwiftData<T: Codable & Equatable & PersistentModel>(object: ObjectEntities) async throws -> [T] {
         do {
             let objects: [T] = try await grocyApi.getObject(object: object)
-            let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
-            let existingObjects = try modelContext.fetch(fetchDescriptor)
-            for existingObject in existingObjects {
-                if !objects.contains(existingObject)  {
-                    self.modelContext.delete(existingObject)
+//            try await MainActor.run {
+                let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
+                let existingObjects = try modelContext.fetch(fetchDescriptor)
+                for existingObject in existingObjects {
+                    if !objects.contains(existingObject)  {
+                        self.modelContext.delete(existingObject)
+                    }
                 }
-            }
-            for newObject in objects {
-                if !existingObjects.contains(newObject) {
-                    self.modelContext.insert(newObject)
+                for newObject in objects {
+                    if !existingObjects.contains(newObject) {
+                        self.modelContext.insert(newObject)
+                    }
                 }
-            }
+//            }
             return objects
         } catch {
             self.postLog("\(error)", type: .error)
             throw error
         }
     }
+    
+    //    func getAdditionalObjectAndSaveSwiftData<T: Codable>(additionalObject: AdditionalEntities) async throws -> T {
+    //        do {
+    //            let object: T = switch additionalObject {
+    //                
+    //                case .system_db_changed_time: try await grocyApi.getSystemDBChangedTime()
+    //            case .system_info: try await grocyApi.getSystemInfo()
+    //                case .system_config: try await grocyApi.getSystemConfig()
+    //                case .stock: try await grocyApi.getStock()
+    //                case .volatileStock: try await grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
+    //                case .users: try await grocyApi.getUsers()
+    //                case .current_user: try await grocyApi.getUser()
+    //                case .user_settings: try await grocyApi.getUserSettings()
+    //                case .recipeFulfillments: try await grocyApi.getRecipeFulfillments()
+    //            }
+    //            //            let objects: [T] = try await grocyApi.getObject(object: object)
+    //            //            let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
+    //            //            let existingObjects = try modelContext.fetch(fetchDescriptor)
+    //            //            for existingObject in existingObjects {
+    //            //                if !objects.contains(existingObject)  {
+    //            //                    self.modelContext.delete(existingObject)
+    //            //                }
+    //            //            }
+    //            //            for newObject in objects {
+    //            //                if !existingObjects.contains(newObject) {
+    //            //                    self.modelContext.insert(newObject)
+    //            //                }
+    //            //            }
+    //            return object
+    //        } catch {
+    //            self.postLog("\(error)", type: .error)
+    //            throw error
+    //        }
+    //    }
     
     func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) async {
         if let objects = objects {
@@ -271,7 +309,7 @@ import SwiftData
                         case .locations:
                             self.mdLocations = try await self.getObjectAndSaveSwiftData(object: object)
                         case .product_barcodes:
-                            self.mdProductBarcodes = try await grocyApi.getObject(object: object)
+                            self.mdProductBarcodes = try await self.getObjectAndSaveSwiftData(object: object)
                         case .product_groups:
                             self.mdProductGroups = try await self.getObjectAndSaveSwiftData(object: object)
                         case .products:
@@ -289,7 +327,7 @@ import SwiftData
                         case .shopping_locations:
                             self.mdStores = try await self.getObjectAndSaveSwiftData(object: object)
                         case .stock_log:
-                            self.stockJournal = try await grocyApi.getObject(object: object)
+                            self.stockJournal = try await self.getObjectAndSaveSwiftData(object: object)
                         default:
                             self.postLog("Object not implemented", type: .error)
                         }
@@ -314,6 +352,10 @@ import SwiftData
                             self.currentUser = try await grocyApi.getUser().first
                         case .stock:
                             self.stock = try await grocyApi.getStock()
+                            try self.modelContext.delete(model: StockElement.self)
+                            for stockElement in self.stock {
+                                self.modelContext.insert(stockElement)
+                            }
                         case .system_config:
                             self.systemConfig = try await grocyApi.getSystemConfig()
                         case .system_db_changed_time:
@@ -499,14 +541,10 @@ import SwiftData
     }
     
     //MARK: - SYSTEM
-    func getSystemInfo() async throws -> SystemInfo {
-        return try await grocyApi.getSystemInfo()
-    }
-    
-    func getCurrencySymbol() -> String {
-        let locale = NSLocale(localeIdentifier: localizationKey)
-        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
-    }
+//    func getCurrencySymbol() -> String {
+//        let locale = NSLocale(localeIdentifier: localizationKey)
+//        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
+//    }
     
     func getFormattedCurrency(amount: Double) -> String {
         let currencyFormatter = NumberFormatter()

@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TransferProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -40,32 +46,25 @@ struct TransferProductView: View {
     }
     
     private var product: MDProduct? {
-        grocyVM.mdProducts.first(where: {$0.id == productID})
+        mdProducts.first(where: {$0.id == productID})
     }
     private var currentQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID })
+        return mdQuantityUnits.first(where: {$0.id == quantityUnitID })
     }
     private var stockQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
-    }
-    private func getQUString(stockQU: Bool) -> String {
-        if stockQU {
-            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
-        } else {
-            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
-        }
+        return mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     private var productName: String {
         product?.name ?? ""
     }
     
     private var locationTo: MDLocation? {
-        grocyVM.mdLocations.first(where: {$0.id == locationIDTo})
+        mdLocations.first(where: {$0.id == locationIDTo})
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
-            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+            return mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
         } else { return [] }
     }
     private var factoredAmount: Double {
@@ -95,30 +94,17 @@ struct TransferProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
-                grocyVM.postLog("Transfer successful.", type: .info)
+                await grocyVM.postLog("Transfer successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
             } catch {
-                grocyVM.postLog("Transfer failed: \(error)", type: .error)
+                await grocyVM.postLog("Transfer failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }
     }
     
     var body: some View {
-        content
-            .formStyle(.grouped)
-            .toolbar(content: {
-#if os(iOS)
-                ToolbarItem(placement: .cancellationAction, content: {
-                    Button("Cancel", action: { self.dismiss() })
-                })
-#endif
-                ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
-            })
-    }
-    
-    var content: some View {
         Form {
             if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
@@ -136,6 +122,8 @@ struct TransferProductView: View {
                         }
                     }
                 }
+            
+            if productID != nil {
             
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDFrom, label: Label("From location", systemImage: "square.and.arrow.up").foregroundStyle(.primary), content: {
@@ -183,26 +171,55 @@ struct TransferProductView: View {
                 }
             }
             
-            if productID != nil {
-                MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
-                
-                if (useSpecificStockEntry) {
-#if os(iOS)
-                    stockEntryPicker
-                        .pickerStyle(.navigationLink)
-#else
-                    stockEntryPicker
-#endif
+                if productID != nil {
+                    MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
+                    
+                    if (useSpecificStockEntry) {
+                        Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
+                            Text("").tag(nil as String?)
+                            ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
+                                Group {
+                                    Text("Amount: \(stockProduct.amount, specifier: "%.2f"); ")
+                                    +
+                                    Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
+                                    +
+                                    Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
+                                    +
+                                    Text("; ")
+                                    +
+                                    Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
+                                }
+                                .tag(stockProduct.stockID as String?)
+                            }
+                        })
+                    }
                 }
             }
-#if os(macOS)
-            if isPopup {
-                Button(action: { Task { await transferProduct() } }, label: {Text("Transfer product")})
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut(.defaultAction)
-            }
-#endif
         }
+        .formStyle(.grouped)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .automatic, content: {
+                if isProcessingAction {
+                    ProgressView().progressViewStyle(.circular)
+                } else {
+                    Button(action: resetForm, label: {
+                        Label("Clear", systemImage: MySymbols.cancel)
+                            .help("Clear")
+                    })
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+                Button(action: {
+                    Task {
+                        await transferProduct()
+                    }
+                }, label: {
+                    Label("Transfer product", systemImage: MySymbols.transfer)
+                        .labelStyle(.titleAndIcon)
+                })
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            })
+        })
         .task {
             if firstAppear {
                 await updateData()
@@ -211,50 +228,6 @@ struct TransferProductView: View {
             }
         }
         .navigationTitle("Transfer")
-    }
-    
-    var stockEntryPicker: some View {
-        Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
-            Text("").tag(nil as String?)
-            ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
-                Group {
-                    Text("Amount: \(stockProduct.amount.formattedAmount); ")
-                    +
-                    Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
-                    +
-                    Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
-                    +
-                    Text("; ")
-                    +
-                    Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
-                }
-                .tag(stockProduct.stockID as String?)
-            }
-        })
-    }
-    
-    var toolbarContent: some View {
-        Group {
-            if isProcessingAction {
-                ProgressView().progressViewStyle(.circular)
-            } else {
-                Button(action: resetForm, label: {
-                    Label("Clear", systemImage: MySymbols.cancel)
-                        .help("Clear")
-                })
-                .keyboardShortcut("r", modifiers: [.command])
-            }
-            Button(action: {
-                Task {
-                    await transferProduct()
-                }
-            }, label: {
-                Label("Transfer product", systemImage: MySymbols.transfer)
-                    .labelStyle(.titleAndIcon)
-            })
-            .disabled(!isFormValid || isProcessingAction)
-            .keyboardShortcut("s", modifiers: [.command])
-        }
     }
 }
 

@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -29,10 +35,10 @@ struct StockEntryFormView: View {
     @State private var note: String = ""
     
     private var product: MDProduct? {
-        grocyVM.mdProducts.first(where: { $0.id == stockEntry.productID })
+        mdProducts.first(where: { $0.id == stockEntry.productID })
     }
     private var quantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+        return mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     var isFormValid: Bool {
@@ -66,10 +72,10 @@ struct StockEntryFormView: View {
         isProcessing = true
         do {
             _ = try await grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST)
-            grocyVM.postLog("Stock entry edit successful.", type: .info)
+            await grocyVM.postLog("Stock entry edit successful.", type: .info)
             finishForm()
         } catch {
-            grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
+            await grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
         }
         isProcessing = false
     }
@@ -114,13 +120,13 @@ struct StockEntryFormView: View {
             
             MyDoubleStepper(amount: $amount, description: "Amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnit?.getName(amount: amount), systemImage: MySymbols.amount)
             
-            MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+            MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: getCurrencySymbol())
             
             Picker(selection: $storeID,
                    label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
+                ForEach(mdStores.filter({$0.active}), id:\.id) { store in
                     Text(store.name).tag(store.id as Int?)
                 }
             })
@@ -129,7 +135,7 @@ struct StockEntryFormView: View {
                    label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
+                ForEach(mdLocations.filter({$0.active}), id:\.id) { location in
                     Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
                         .tag(location.id as Int?)
                 }

@@ -27,16 +27,16 @@ struct RecipesView: View {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
-    var recipes: Recipes {
-        grocyVM.recipes
-            .filter({
-                $0.type == .normal
-            })
-            .filter({
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            })
-            .sorted(using: sortOrder)
-    }
+//    var recipes: Recipes {
+//        grocyVM.recipes
+//            .filter({
+//                $0.type == .normal
+//            })
+//            .filter({
+//                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
+//            })
+//            .sorted(using: sortOrder)
+//    }
     
     var body: some View {
         bodyContent
@@ -50,7 +50,7 @@ struct RecipesView: View {
                 }
             }
             .searchable(text: $searchString, prompt: "Search")
-            .animation(.default, value: recipes.count)
+//            .animation(.default, value: recipes.count)
             .toolbar(content: {
                 ToolbarItem(placement: .automatic, content: {
 #if os(macOS)
@@ -61,43 +61,43 @@ struct RecipesView: View {
     }
     
     var bodyContent: some View {
-#if os(iOS)
-        Group {
-            if idiom == .pad {
-                tableView
-            } else {
-                List {
-                    ForEach(recipes, id:\.id) { recipe in
-                        RecipeRowView(recipe: recipe)
-                    }
-                }
-            }
-        }
-#else
+//#if os(iOS)
+//        Group {
+//            if idiom == .pad {
+//                tableView
+//            } else {
+//                List {
+//                    ForEach(recipes, id:\.id) { recipe in
+//                        RecipeRowView(recipe: recipe)
+//                    }
+//                }
+//            }
+//        }
+//#else
         tableView
-#endif
+//#endif
     }
     var tableView: some View {
-#if os(macOS)
-        Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
-            TableColumn("Name", value: \.name)
-            TableColumn("Due score", value: \.dueScore) { recipe in
-                Text(String(recipe.dueScore))
-            }
-            TableColumn("Requirements fulfilled", value: \.needFulfilled.rawValue) { recipe in
-                switch recipe.needFulfilled {
-                case .fulfilled:
-                    Text("Enough in stock")
-                case .shoppingList:
-                    Text("SHL")
-                case .none:
-                    Text("Not enough in stock")
-                }
-            }
-        })
-#else
+//#if os(macOS)
+//        Table(recipes, selection: $selection, sortOrder: $sortOrder, columns: {
+//            TableColumn("Name", value: \.name)
+//            TableColumn("Due score", value: \.dueScore) { recipe in
+//                Text(String(recipe.dueScore))
+//            }
+//            TableColumn("Requirements fulfilled", value: \.needFulfilled.rawValue) { recipe in
+//                switch recipe.needFulfilled {
+//                case .fulfilled:
+//                    Text("Enough in stock")
+//                case .shoppingList:
+//                    Text("SHL")
+//                case .none:
+//                    Text("Not enough in stock")
+//                }
+//            }
+//        })
+//#else
         Text("Table not supported yet")
-#endif
+//#endif
     }
 }
 

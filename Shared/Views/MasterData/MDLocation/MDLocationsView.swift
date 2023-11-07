@@ -11,7 +11,7 @@ import SwiftData
 struct MDLocationsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @State private var searchString: String = ""
     @State private var showAddLocation: Bool = false
@@ -24,7 +24,7 @@ struct MDLocationsView: View {
     }
     
     private var filteredLocations: MDLocations {
-        grocyVM.mdLocations
+        mdLocations
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -37,10 +37,10 @@ struct MDLocationsView: View {
     private func deleteLocation(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .locations, id: toDelID)
-            grocyVM.postLog("Deleting location was successful.", type: .info)
+            await grocyVM.postLog("Deleting location was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting location failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting location failed. \(error)", type: .error)
         }
     }
     
@@ -54,11 +54,13 @@ struct MDLocationsView: View {
     
     var content: some View {
         List {
-            if grocyVM.mdLocations.isEmpty {
-                ContentUnavailableView("No locations", systemImage: MySymbols.location)
-            } else if filteredLocations.isEmpty {
-                ContentUnavailableView.search
-            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if mdLocations.isEmpty {
+//                ContentUnavailableView("No locations", systemImage: MySymbols.location)
+//            } else if filteredLocations.isEmpty {
+//                ContentUnavailableView.search
+//            }
             ForEach(filteredLocations, id:\.id) { location in
                 NavigationLink(value: location) {
                     MDLocationRowView(location: location)

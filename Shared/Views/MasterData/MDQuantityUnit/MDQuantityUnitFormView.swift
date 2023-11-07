@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDQuantityUnitFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     
     @Environment(\.dismiss) var dismiss
     
@@ -26,7 +30,7 @@ struct MDQuantityUnitFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundQuantityUnit = grocyVM.mdQuantityUnits.first(where: {$0.name == quantityUnit.name})
+        let foundQuantityUnit = mdQuantityUnits.first(where: {$0.name == quantityUnit.name})
         return !(quantityUnit.name.isEmpty || (foundQuantityUnit != nil && foundQuantityUnit!.id != quantityUnit.id))
     }
     
@@ -51,7 +55,7 @@ struct MDQuantityUnitFormView: View {
     
     private var quConversions: MDQuantityUnitConversions {
         if let existingQuantityUnit = existingQuantityUnit {
-            return grocyVM.mdQuantityUnitConversions.filter({ $0.fromQuID == existingQuantityUnit.id })
+            return mdQuantityUnitConversions.filter({ $0.fromQuID == existingQuantityUnit.id })
         } else {
             return []
         }
@@ -68,16 +72,16 @@ struct MDQuantityUnitFormView: View {
     private func deleteQUConversion(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .quantity_unit_conversions, id: toDelID)
-            grocyVM.postLog("QU conversion delete successful.", type: .info)
+            await grocyVM.postLog("QU conversion delete successful.", type: .info)
             await grocyVM.requestData(objects: [.quantity_unit_conversions])
         } catch {
-            grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
+            await grocyVM.postLog("QU conversion delete failed. \(error)", type: .error)
         }
     }
     
     private func saveQuantityUnit() async {
         if quantityUnit.id == 0 {
-            quantityUnit.id = grocyVM.findNextID(.quantity_units)
+            quantityUnit.id = await grocyVM.findNextID(.quantity_units)
         }
         isProcessing = true
         isSuccessful = nil
@@ -87,11 +91,11 @@ struct MDQuantityUnitFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_units, id: quantityUnit.id, content: quantityUnit)
             }
-            grocyVM.postLog("Quantity unit \(quantityUnit.name) successful.", type: .info)
+            await grocyVM.postLog("Quantity unit \(quantityUnit.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Quantity unit \(quantityUnit.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Quantity unit \(quantityUnit.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

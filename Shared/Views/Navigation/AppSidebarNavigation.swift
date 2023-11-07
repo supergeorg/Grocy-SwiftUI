@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AppSidebarNavigation: View {
-    @State private var selection: NavigationItem? = .stockOverview
+    @State private var selection: NavigationItem? = .mdProducts
     @State private var path = NavigationPath()
     
     var body: some View {

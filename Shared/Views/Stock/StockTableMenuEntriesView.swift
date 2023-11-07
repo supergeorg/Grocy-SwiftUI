@@ -6,15 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockTableMenuEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
+        mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
     }
     
     func consumeAsSpoiled() async {
@@ -22,7 +25,7 @@ struct StockTableMenuEntriesView: View {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
+            await grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
         }
     }
     

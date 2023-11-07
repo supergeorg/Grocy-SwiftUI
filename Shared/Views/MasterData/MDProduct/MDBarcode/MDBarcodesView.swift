@@ -11,7 +11,7 @@ import SwiftData
 struct MDBarcodesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    //    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @State private var searchString: String = ""
     
@@ -28,15 +28,18 @@ struct MDBarcodesView: View {
         await grocyVM.requestData(objects: dataToUpdate)
     }
     
-    var filteredBarcodes: MDProductBarcodes {
-        grocyVM.mdProductBarcodes
+    var productBarcodes: MDProductBarcodes {
+        mdProductBarcodes
             .filter {
                 $0.productID == product.id
             }
+            .sorted(by: { $0.id < $1.id })
+    }
+    var filteredBarcodes: MDProductBarcodes {
+        productBarcodes
             .filter {
                 $0.barcode.contains(searchString)
             }
-            .sorted(by: { $0.id < $1.id })
     }
     
     private func deleteItem(itemToDelete: MDProductBarcode) {
@@ -46,33 +49,33 @@ struct MDBarcodesView: View {
     private func deleteProductBarcode(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID)
-            grocyVM.postLog("Deleting barcode was successful.", type: .info)
+            await grocyVM.postLog("Deleting barcode was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
         }
     }
     
     var body: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.mdProductBarcodes.isEmpty {
-                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
-            } else if filteredBarcodes.isEmpty {
-                ContentUnavailableView.search
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if productBarcodes.isEmpty {
+//                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
+//            } else if filteredBarcodes.isEmpty {
+//                ContentUnavailableView.search
+//            }
+            ForEach(filteredBarcodes, id:\.id) { productBarcode in
+                NavigationLink(value: productBarcode, label: {
+                    MDBarcodeRowView(barcode: productBarcode)
+                })
+                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive,
+                           action: { deleteItem(itemToDelete: productBarcode) },
+                           label: { Label("Delete", systemImage: MySymbols.delete) }
+                    )
+                })
             }
-                ForEach(filteredBarcodes, id:\.id) { productBarcode in
-                    NavigationLink(value: productBarcode, label: {
-                        MDBarcodeRowView(barcode: productBarcode)
-                    })
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                        Button(role: .destructive,
-                               action: { deleteItem(itemToDelete: productBarcode) },
-                               label: { Label("Delete", systemImage: MySymbols.delete) }
-                        )
-                    })
-                }
         }
         .navigationTitle("Barcodes")
         .task {
@@ -111,12 +114,3 @@ struct MDBarcodesView: View {
         })
     }
 }
-
-//struct MDBarcodesView_Previews: PreviewProvider {
-//    @Environment(GrocyViewModel.self) private var grocyVM
-//    static var previews: some View {
-//        NavigationView{
-//            MDBarcodesView(productID: 27)
-//        }
-//    }
-//}

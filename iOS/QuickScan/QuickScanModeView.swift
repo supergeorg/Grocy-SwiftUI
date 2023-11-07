@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum QuickScanMode {
     case consume, markAsOpened, purchase
@@ -21,6 +22,8 @@ enum QSActiveSheet: Identifiable {
 
 struct QuickScanModeView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
@@ -83,9 +86,9 @@ struct QuickScanModeView: View {
     
     func searchForBarcode(barcode: CodeScannerView.ScanResult) -> MDProductBarcode? {
         if barcode.type == .ean13 {
-            return grocyVM.mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.string) })
+            return mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.string) })
         } else {
-            return grocyVM.mdProductBarcodes.first(where: { $0.barcode == barcode.string })
+            return mdProductBarcodes.first(where: { $0.barcode == barcode.string })
         }
     }
     
@@ -103,7 +106,8 @@ struct QuickScanModeView: View {
                 qsActiveSheet = .selectProduct
             }
         case .failure(let error):
-            grocyVM.postLog("Barcode scan failed. \(error)", type: .error)
+//            grocyVM.postLog("Barcode scan failed. \(error)", type: .error)
+            print("Barcode scan failed. \(error)")
         }
     }
     

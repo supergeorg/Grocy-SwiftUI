@@ -11,6 +11,8 @@ import SwiftData
 struct MDBarcodeFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    
     @Environment(\.dismiss) var dismiss
     
     @State private var isProcessing: Bool = false
@@ -24,7 +26,7 @@ struct MDBarcodeFormView: View {
     @State private var isBarcodeCorrect: Bool = false
     private func checkBarcodeCorrect() -> Bool {
         // check if Barcode is already used
-        let foundBarcode = grocyVM.mdProductBarcodes.filter({ $0.barcode == barcode.barcode }).first
+        let foundBarcode = mdProductBarcodes.filter({ $0.barcode == barcode.barcode }).first
         return ((foundBarcode == nil || foundBarcode?.barcode == existingBarcode?.barcode) && (!barcode.barcode.isEmpty))
     }
     
@@ -57,7 +59,7 @@ struct MDBarcodeFormView: View {
     
     private func saveBarcode() async {
         if barcode.id == 0 {
-            barcode.id = grocyVM.findNextID(.product_barcodes)
+            barcode.id = await grocyVM.findNextID(.product_barcodes)
         }
         isProcessing = true
         isSuccessful = nil
@@ -67,11 +69,11 @@ struct MDBarcodeFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_barcodes, id: barcode.id, content: barcode)
             }
-            grocyVM.postLog("Barcode \(barcode.barcode) successful.", type: .info)
+            await grocyVM.postLog("Barcode \(barcode.barcode) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Barcode \(barcode.barcode) failed. \(error)", type: .error)
+            await grocyVM.postLog("Barcode \(barcode.barcode) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }
@@ -89,21 +91,21 @@ struct MDBarcodeFormView: View {
             
             Section("Amount") {
                 MyDoubleStepperOptional(amount: $barcode.amount, description: "Amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
-                Picker(selection: $barcode.quID, label: Label("Quantity unit", systemImage: "scalemass").labelStyle(.foreground), content: {
-                    Text("")
-                        .tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
-                        if !pickerQU.namePlural.isEmpty {
-                            Text("\(pickerQU.name) (\(pickerQU.namePlural))")
-                                .tag(pickerQU.id as Int?)
-                        } else {
-                            Text("\(pickerQU.name)")
-                                .tag(pickerQU.id as Int?)
-                        }
-                    }
-                })
+//                Picker(selection: $barcode.quID, label: Label("Quantity unit", systemImage: "scalemass").labelStyle(.foreground), content: {
+//                    Text("")
+//                        .tag(nil as Int?)
+//                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
+//                        if !pickerQU.namePlural.isEmpty {
+//                            Text("\(pickerQU.name) (\(pickerQU.namePlural))")
+//                                .tag(pickerQU.id as Int?)
+//                        } else {
+//                            Text("\(pickerQU.name)")
+//                                .tag(pickerQU.id as Int?)
+//                        }
+//                    }
+//                })
             }
-            
+//            
             Picker(selection: $barcode.storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                 Text("")
                     .tag(nil as Int?)

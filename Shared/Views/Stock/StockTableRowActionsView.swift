@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockTableRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var stockElement: StockElement
     
@@ -25,7 +28,7 @@ struct StockTableRowActionsView: View {
     }
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
+        mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
     }
     
     private func consumeQuickConsumeAmount() async {
@@ -34,7 +37,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            await grocyVM.postLog("Consume \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
         }
     }
     
@@ -44,7 +47,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Consume all items failed. \(error)", type: .error)
+            await grocyVM.postLog("Consume all items failed. \(error)", type: .error)
         }
     }
     
@@ -54,7 +57,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.product.id, stockModePost: .open, content: ProductConsume(amount: stockElement.product.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            await grocyVM.postLog("Open \(stockElement.product.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
         }
     }
     

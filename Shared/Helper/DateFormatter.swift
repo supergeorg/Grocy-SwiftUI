@@ -21,6 +21,7 @@ extension Formatter {
 
 extension Date {
     var iso8601withFractionalSeconds: String { return Formatter.iso8601withFractionalSeconds.string(from: self) }
+    var asJSONDateString: String { return formatAsJSONDateString(date: self) }
 }
 
 extension String {
@@ -153,4 +154,10 @@ func getNeverOverdueDate() -> Date {
     dateComponents.second = 0
     return Calendar(identifier: .gregorian)
         .date(from: dateComponents)!
+}
+
+func formatAsJSONDateString(date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    return dateFormatter.string(from: date)
 }

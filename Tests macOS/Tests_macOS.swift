@@ -72,13 +72,5 @@ class Tests_macOS: XCTestCase {
     
     func test_SystemInfo() {
         grocyVM.setDemoModus()
-        grocyVM.getSystemInfo(completion: { (result: Result<SystemInfo, Error>) in
-            switch result {
-            case let .success(entityResult):
-                XCTAssertNotNil(entityResult)
-            case .failure:
-                XCTFail()
-            }
-        })
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 @main
 struct Grocy_SwiftUIApp: App {
-    @State private var grocyVM: GrocyViewModel/* = GrocyViewModel()*/
+    @State private var grocyVM: GrocyViewModel
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
@@ -20,9 +20,25 @@ struct Grocy_SwiftUIApp: App {
     
     init() {
         do {
-            modelContainer = try ModelContainer(for: StockElement.self, ShoppingListItem.self, ShoppingListDescription.self, MDLocation.self, MDStore.self, MDQuantityUnit.self, MDQuantityUnitConversion.self, MDProductGroup.self)
+            modelContainer = try ModelContainer(for:
+                                                    StockElement.self,
+                                                ShoppingListItem.self,
+                                                ShoppingListDescription.self,
+                                                MDLocation.self,
+                                                MDStore.self,
+                                                MDQuantityUnit.self,
+                                                MDQuantityUnitConversion.self,
+                                                MDProductGroup.self,
+                                                MDProduct.self,
+                                                MDProductBarcode.self,
+                                                StockJournalEntry.self,
+                                                GrocyUser.self,
+                                                StockEntry.self,
+                                                GrocyUserSettings.self,
+                                                VolatileStock.self
+            )
             let modelContext = ModelContext(modelContainer)
-            self._grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
+            _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
         } catch {
             fatalError("Failed to create ModelContainer.")
         }

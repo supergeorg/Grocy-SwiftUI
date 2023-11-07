@@ -15,12 +15,18 @@ enum MDProductFormPart: Hashable {
     case quantityUnit
     case amount
     case barcode
+    case productPicture
 }
 
 struct MDProductFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    //    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     
@@ -44,13 +50,13 @@ struct MDProductFormView: View {
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
-        let foundProduct = grocyVM.mdProducts.first(where: {$0.name == product.name})
+        let foundProduct = mdProducts.first(where: {$0.name == product.name})
         return existingProduct == nil ? !(product.name.isEmpty || foundProduct != nil) : !(product.name.isEmpty || (foundProduct != nil && foundProduct!.id != product.id))
     }
     
     @State private var isBarcodeCorrect: Bool = true
     private func checkBarcodeCorrect() -> Bool {
-        let foundBarcode = grocyVM.mdProductBarcodes.first(where: { $0.barcode == queuedBarcode })
+        let foundBarcode = mdProductBarcodes.first(where: { $0.barcode == queuedBarcode })
         return (queuedBarcode.isEmpty || (foundBarcode == nil))
     }
     
@@ -98,10 +104,10 @@ struct MDProductFormView: View {
     }
     
     private var currentQUPurchase: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDPurchase})
+        return mdQuantityUnits.first(where: {$0.id == product.quIDPurchase})
     }
     private var currentQUStock: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == product.quIDStock})
+        return mdQuantityUnits.first(where: {$0.id == product.quIDStock})
     }
     
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
@@ -120,7 +126,7 @@ struct MDProductFormView: View {
     
     private func saveProduct() async {
         if product.id == 0 {
-            product.id = grocyVM.findNextID(.products)
+            product.id = await grocyVM.findNextID(.products)
         }
         isProcessing = true
         isSuccessful = nil
@@ -129,27 +135,27 @@ struct MDProductFormView: View {
                 _ = try await grocyVM.postMDObject(object: .products, content: product)
                 await grocyVM.requestData(objects: [.products])
                 if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
-                    let newBarcode = MDProductBarcode(
+                    let newBarcode = await MDProductBarcode(
                         id: grocyVM.findNextID(.product_barcodes),
                         productID: product.id,
                         barcode: openFoodFactsBarcode ?? queuedBarcode,
                         rowCreatedTimestamp: Date().iso8601withFractionalSeconds
                     )
                     let _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                    grocyVM.postLog("Barcode add successful.", type: .info)
+                    await grocyVM.postLog("Barcode add successful.", type: .info)
                     await grocyVM.requestData(objects: [.product_barcodes])
                     //                    mdBarcodeReturn?.wrappedValue = newBarcode
                 }
-                grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                await grocyVM.postLog("Product \(product.name) successful.", type: .info)
                 isSuccessful = true
             } else {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: product)
-                grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                await grocyVM.postLog("Product \(product.name) successful.", type: .info)
                 await grocyVM.requestData(objects: [.products])
                 isSuccessful = true
             }
         } catch {
-            grocyVM.postLog("Product \(product.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Product \(product.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }
@@ -240,6 +246,8 @@ struct MDProductFormView: View {
                 amountPropertiesView
             case .barcode:
                 barcodePropertiesView
+            case .productPicture:
+                MDProductPictureFormViewNew(pictureFileName: $product.pictureFileName)
             }
         })
         .onChange(of: isSuccessful) {
@@ -265,7 +273,7 @@ struct MDProductFormView: View {
             // Product group
             Picker(selection: $product.productGroupID, label: Label("Product group", systemImage: MySymbols.productGroup).foregroundStyle(.primary), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { grocyProductGroup in
+                ForEach(mdProductGroups.filter({$0.active}), id:\.id) { grocyProductGroup in
                     Text(grocyProductGroup.name).tag(grocyProductGroup.id as Int?)
                 }
             })
@@ -282,21 +290,11 @@ struct MDProductFormView: View {
             // Product should not be frozen
             MyToggle(isOn: $product.shouldNotBeFrozen, description: "Should not be frozen", descriptionInfo: "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown", icon: MySymbols.freezing)
             
-            // TODO: ENABLE Product picture again
-            //            // Product picture
-            //            #if os(iOS)
-            //                        NavigationLink(destination: MDProductPictureFormView(product: product, pictureFileName: $pictureFileName), label: {
-            //                            MyLabelWithSubtitle(title: "Product picture", subTitle: (product.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
-            //                        })
-            //                        .disabled(existingProduct == nil)
-            //            #elseif os(macOS)
-            //                        DisclosureGroup(content: {
-            //                            MDProductPictureFormView(product: product, pictureFileName: $pictureFileName)
-            //                        }, label: {
-            //                            MyLabelWithSubtitle(title: "Product picture", subTitle: (product?.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
-            //                        })
-            //                        .disabled(existingProduct == nil)
-            //            #endif
+            // Product picture
+            NavigationLink(value: MDProductFormPart.productPicture, label: {
+                MyLabelWithSubtitle(title: "Product picture", subTitle: (product.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
+            })
+            .disabled(existingProduct == nil)
         }
         .navigationTitle("Optional properties")
     }
@@ -305,7 +303,7 @@ struct MDProductFormView: View {
         Form {
             // Default Location - REQUIRED
             Picker(selection: $product.locationID, label: MyLabelWithSubtitle(title: "Default location", subTitle: "A location is required", systemImage: MySymbols.location, isSubtitleProblem: true, hideSubtitle: product.locationID != 0), content: {
-                ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
+                ForEach(mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                     Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                 }
             })
@@ -313,7 +311,7 @@ struct MDProductFormView: View {
             HStack {
                 Picker(selection: $product.defaultConsumeLocationID, label: MyLabelWithSubtitle(title: "Default consume location", systemImage: MySymbols.location, hideSubtitle: true), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
+                    ForEach(mdLocations.filter({$0.active}), id:\.id) { grocyLocation in
                         Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                     }
                 })
@@ -328,7 +326,7 @@ struct MDProductFormView: View {
             // Default Store
             Picker(selection: $product.storeID, label: MyLabelWithSubtitle(title: "Default store", systemImage: MySymbols.store, hideSubtitle: true), content: {
                 Text("").tag(nil as Int?)
-                ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
+                ForEach(mdStores.filter({$0.active}), id:\.id) { grocyStore in
                     Text(grocyStore.name).tag(grocyStore.id as Int?)
                 }
             })
@@ -372,7 +370,7 @@ struct MDProductFormView: View {
             HStack{
                 Picker(selection: $product.quIDStock, label: MyLabelWithSubtitle(title: "Quantity unit stock", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: product.quIDStock != 0), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name).tag(grocyQuantityUnit.id as Int?)
                     }
                 })
@@ -396,7 +394,7 @@ struct MDProductFormView: View {
                 Picker(selection: $product.quIDPurchase, label: MyLabelWithSubtitle(title: "Default quantity unit purchase", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: product.quIDPurchase != 0), content: {
                     Text("")
                         .tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id as Int?)
                     }
@@ -409,7 +407,7 @@ struct MDProductFormView: View {
                 Picker(selection: $product.quIDConsume, label: MyLabelWithSubtitle(title: "Default quantity unit consume", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: product.quIDConsume != 0), content: {
                     Text("")
                         .tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id as Int?)
                     }
@@ -422,7 +420,7 @@ struct MDProductFormView: View {
                 Picker(selection: $product.quIDPrice, label: MyLabelWithSubtitle(title: "Quantity unit for prices", subTitle: "A quantity unit is required", systemImage: MySymbols.quantityUnit, isSubtitleProblem: true, hideSubtitle: product.quIDPrice != 0), content: {
                     Text("")
                         .tag(nil as Int?)
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id as Int?)
                     }

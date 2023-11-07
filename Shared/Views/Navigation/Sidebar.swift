@@ -14,31 +14,36 @@ struct Sidebar: View {
     
     var body: some View {
         List(selection: $selection) {
+            Section {
 #if os(iOS)
-            NavigationLink(value: NavigationItem.quickScan) {
-                Label("Quick-Scan", systemImage: MySymbols.barcodeScan)
-            }
+                NavigationLink(value: NavigationItem.quickScan) {
+                    Label("Quick-Scan", systemImage: MySymbols.barcodeScan)
+                }
 #endif
-            NavigationLink(value: NavigationItem.stockOverview) {
-                Label("Stock overview", systemImage: MySymbols.stockOverview)
-            }
-            NavigationLink(value: NavigationItem.shoppingList) {
-                Label("Shopping list", systemImage: MySymbols.shoppingList)
+                NavigationLink(value: NavigationItem.stockOverview) {
+                    Label("Stock overview", systemImage: MySymbols.stockOverview)
+                }
+                NavigationLink(value: NavigationItem.stockJournal) {
+                    Label("Stock journal", systemImage: MySymbols.stockJournal)
+                }
+                NavigationLink(value: NavigationItem.shoppingList) {
+                    Label("Shopping list", systemImage: MySymbols.shoppingList)
+                }
             }
             
-            Divider()
-            
-            NavigationLink(value: NavigationItem.purchase) {
-                Label("Purchase", systemImage: MySymbols.purchase)
-            }
-            NavigationLink(value: NavigationItem.consume) {
-                Label("Consume", systemImage: MySymbols.consume)
-            }
-            NavigationLink(value: NavigationItem.transfer) {
-                Label("Transfer", systemImage: MySymbols.transfer)
-            }
-            NavigationLink(value: NavigationItem.inventory) {
-                Label("Inventory", systemImage: MySymbols.inventory)
+            Section {
+                NavigationLink(value: NavigationItem.purchase) {
+                    Label("Purchase", systemImage: MySymbols.purchase)
+                }
+                NavigationLink(value: NavigationItem.consume) {
+                    Label("Consume", systemImage: MySymbols.consume)
+                }
+                NavigationLink(value: NavigationItem.transfer) {
+                    Label("Transfer", systemImage: MySymbols.transfer)
+                }
+                NavigationLink(value: NavigationItem.inventory) {
+                    Label("Inventory", systemImage: MySymbols.inventory)
+                }
             }
             
             Section(isExpanded: $isMasterDataSectionExpanded, content: {
@@ -61,11 +66,11 @@ struct Sidebar: View {
                 Label("Master data", systemImage: MySymbols.masterData)
             })
             
-//#if os(iOS)
+#if os(iOS)
             NavigationLink(value: NavigationItem.settings) {
                 Label("Settings", systemImage: MySymbols.settings)
             }
-//#endif
+#endif
         }
 #if os(iOS)
         .toolbar(content: {

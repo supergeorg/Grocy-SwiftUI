@@ -37,12 +37,12 @@ struct LogView: View {
     }
     
     func shareFile() {
-        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
-            exportLog = ExportLog(content: logData)
-            isExporting = true
-        } else {
+//        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
+//            exportLog = ExportLog(content: logData)
+//            isExporting = true
+//        } else {
             print("Error exporting log")
-        }
+//        }
     }
     
     var body: some View {

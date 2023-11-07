@@ -11,7 +11,7 @@ import SwiftData
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
     @State private var searchString: String = ""
     
@@ -26,7 +26,7 @@ struct MDStoresView: View {
     }
     
     private var filteredStores: MDStores {
-        grocyVM.mdStores
+        mdStores
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -40,22 +40,22 @@ struct MDStoresView: View {
     private func deleteStore(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
-            grocyVM.postLog("Deleting store was successful.", type: .info)
+            await grocyVM.postLog("Deleting store was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting store failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting store failed. \(error)", type: .error)
         }
     }
     
     var body: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.mdStores.isEmpty {
-                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
-            } else if filteredStores.isEmpty {
-                ContentUnavailableView.search
-            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if mdStores.isEmpty {
+//                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
+//            } else if filteredStores.isEmpty {
+//                ContentUnavailableView.search
+//            }
             ForEach(filteredStores, id: \.id) { store in
                 NavigationLink(value: store) {
                     MDStoreRowView(store: store)

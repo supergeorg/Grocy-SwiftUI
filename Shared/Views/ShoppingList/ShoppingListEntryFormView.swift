@@ -11,8 +11,9 @@ import SwiftData
 struct ShoppingListEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     
     @Environment(\.dismiss) var dismiss
     
@@ -37,18 +38,18 @@ struct ShoppingListEntryFormView: View {
     }
     
     var product: MDProduct? {
-        grocyVM.mdProducts.first(where: { $0.id == productID })
+        mdProducts.first(where: { $0.id == productID })
     }
     
     private func getQuantityUnit() -> MDQuantityUnit? {
-        let quIDP = grocyVM.mdProducts.first(where: { $0.id == productID })?.quIDPurchase
-        let qu = grocyVM.mdQuantityUnits.first(where: { $0.id == quIDP })
+        let quIDP = mdProducts.first(where: { $0.id == productID })?.quIDPurchase
+        let qu = mdQuantityUnits.first(where: { $0.id == quIDP })
         return qu
     }
     
     private var currentQuantityUnit: MDQuantityUnit? {
-        let quIDP = grocyVM.mdProducts.first(where: { $0.id == productID })?.quIDPurchase
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == quIDP })
+        let quIDP = mdProducts.first(where: { $0.id == productID })?.quIDPurchase
+        return mdQuantityUnits.first(where: { $0.id == quIDP })
     }
     
     private func updateData() async {
@@ -74,11 +75,11 @@ struct ShoppingListEntryFormView: View {
             )
             do {
                 try await grocyVM.addShoppingListItem(content: newShoppingListEntry)
-                grocyVM.postLog("Shopping list entry saved successfully.", type: .info)
+                await grocyVM.postLog("Shopping list entry saved successfully.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
+                await grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
                 showFailToast = true
             }
         } else {
@@ -99,11 +100,11 @@ struct ShoppingListEntryFormView: View {
                         id: entry.id,
                         content: editedShoppingListEntry
                     )
-                    grocyVM.postLog("Shopping entry edited successfully.", type: .info)
+                    await grocyVM.postLog("Shopping entry edited successfully.", type: .info)
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
+                    await grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
                     showFailToast = true
                 }
             }
@@ -148,14 +149,14 @@ struct ShoppingListEntryFormView: View {
             Text(isNewShoppingListEntry ? "Create shopping list item" : "Edit shopping list item").font(.headline)
 #endif
             Picker(selection: $shoppingListID, label: Text("Shopping list"), content: {
-                ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shLDescription in
+                ForEach(shoppingListDescriptions, id: \.id) { shLDescription in
                     Text(shLDescription.name).tag(shLDescription.id)
                 }
             })
             
             ProductField(productID: $productID, description: "Product")
                 .onChange(of: productID) {
-                    if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
+                    if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
                         quantityUnitID = selectedProduct.quIDPurchase
                     }
                 }

@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PurchaseProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -50,28 +57,20 @@ struct PurchaseProductView: View {
     }
     
     private var product: MDProduct? {
-        grocyVM.mdProducts.first(where: { $0.id == productID })
+        mdProducts.first(where: { $0.id == productID })
     }
     
     private var currentQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == quantityUnitID })
+        return mdQuantityUnits.first(where: { $0.id == quantityUnitID })
     }
     
     private var stockQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
-    }
-    
-    private func getQUString(stockQU: Bool) -> String {
-        if stockQU {
-            return amount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
-        } else {
-            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
-        }
+        return mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
-            return grocyVM.mdQuantityUnitConversions.filter { $0.toQuID == quIDStock }
+            return mdQuantityUnitConversions.filter { $0.toQuID == quIDStock }
         } else { return [] }
     }
     
@@ -93,14 +92,15 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         self.productID = firstAppear ? productToPurchaseID : nil
-        self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0)
+//        self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0)
+        self.amount = 1.0
         self.quantityUnitID = barcode?.quID ?? (firstAppear ? product?.quIDPurchase : nil)
-        if product?.defaultBestBeforeDays ?? 0 == -1 {
+        if product?.defaultDueDays ?? 0 == -1 {
             self.productDoesntSpoil = true
             self.dueDate = Calendar.current.startOfDay(for: Date())
         } else {
             self.productDoesntSpoil = false
-            let dateComponents = DateComponents(day: product?.defaultBestBeforeDays ?? 0)
+            let dateComponents = DateComponents(day: product?.defaultDueDays ?? 0)
             self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
         }
         self.price = nil
@@ -108,8 +108,8 @@ struct PurchaseProductView: View {
         self.storeID = barcode?.storeID
         self.locationID = nil
         self.note = ""
-        if autoPurchase, firstAppear, product?.defaultBestBeforeDays != nil, let productID = productID, isFormValid {
-            self.price = grocyVM.stockProductDetails[productID]?.lastPrice
+        if autoPurchase, firstAppear, product?.defaultDueDays != nil, let productID = productID, isFormValid {
+//            self.price = grocyVM.stockProductDetails[productID]?.lastPrice
             Task {
                 await purchaseProduct()
             }
@@ -128,7 +128,7 @@ struct PurchaseProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
-                grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
+                await grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
                 if autoPurchase {
@@ -138,7 +138,7 @@ struct PurchaseProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Purchase failed: \(error)", type: .error)
+                await grocyVM.postLog("Purchase failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }
@@ -160,87 +160,90 @@ struct PurchaseProductView: View {
                             if locationID == nil { locationID = selectedProduct.locationID }
                             if storeID == nil { storeID = selectedProduct.storeID }
                             quantityUnitID = selectedProduct.quIDPurchase
-                            if product?.defaultBestBeforeDays == -1 {
+                            if product?.defaultDueDays == -1 {
                                 productDoesntSpoil = true
                                 dueDate = Calendar.current.startOfDay(for: Date())
                             } else {
                                 productDoesntSpoil = false
-                                dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultBestBeforeDays ?? 0, to: Date()) ?? Date())
+                                dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date())
                             }
                         }
                     }
             }
             
-            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
-            
-            Section("Due date") {
-                DatePicker(selection: $dueDate, displayedComponents: .date, label: {
-                    Label {
-                        Text("Due date")
-                        if !productDoesntSpoil {
-                            Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")
-                                .foregroundStyle(.secondary)
-                                .italic()
-                        }
-                    } icon: {
-                        Image(systemName: MySymbols.date)
-                    }
-                })
-                .foregroundStyle(.primary)
-                .disabled(productDoesntSpoil)
+            if productID != nil {
                 
-                MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
-            }
-            
-            if !selfProduction {
-                Section("Price") {
-                    VStack(alignment: .leading) {
-                        MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
-                        
-                        if isTotalPrice && productID != nil {
-                            Text("means \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) per \(currentQuantityUnit?.name ?? "")")
-                                .font(.caption)
-                                .foregroundStyle(Color(.GrocyColors.grocyGray))
+                AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+                
+                Section("Due date") {
+                    DatePicker(selection: $dueDate, displayedComponents: .date, label: {
+                        Label {
+                            Text("Due date")
+                            if !productDoesntSpoil {
+                                Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")
+                                    .foregroundStyle(.secondary)
+                                    .italic()
+                            }
+                        } icon: {
+                            Image(systemName: MySymbols.date)
                         }
-                    }
+                    })
+                    .foregroundStyle(.primary)
+                    .disabled(productDoesntSpoil)
                     
-                    if price != nil {
-                        Picker("", selection: $isTotalPrice, content: {
-                            Text("\(currentQuantityUnit?.name ?? "Unit") price")
-                                .tag(false)
-                            Text("Total price")
-                                .tag(true)
-                        })
-                        .pickerStyle(.segmented)
+                    MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
+                }
+                
+                if !selfProduction {
+                    Section("Price") {
+                        VStack(alignment: .leading) {
+                            MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: getCurrencySymbol())
+                            
+                            if isTotalPrice && productID != nil {
+                                Text("means \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) per \(currentQuantityUnit?.name ?? "")")
+                                    .font(.caption)
+                                    .foregroundStyle(Color(.GrocyColors.grocyGray))
+                            }
+                        }
+                        
+                        if price != nil {
+                            Picker("", selection: $isTotalPrice, content: {
+                                Text("\(currentQuantityUnit?.name ?? "Unit") price")
+                                    .tag(false)
+                                Text("Total price")
+                                    .tag(true)
+                            })
+                            .pickerStyle(.segmented)
+                        }
                     }
                 }
-            }
-            
-            Section("Location") {
-                if !selfProduction {
-                    Picker(selection: $storeID,
-                           label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
+                
+                Section("Location") {
+                    if !selfProduction {
+                        Picker(selection: $storeID,
+                               label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
+                               content: {
+                            Text("").tag(nil as Int?)
+                            ForEach(grocyVM.mdStores.filter({$0.active}), id: \.id) { store in
+                                Text(store.name).tag(store.id as Int?)
+                            }
+                        })
+                    }
+                    
+                    Picker(selection: $locationID,
+                           label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
                            content: {
                         Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdStores.filter({$0.active}), id: \.id) { store in
-                            Text(store.name).tag(store.id as Int?)
+                        ForEach(grocyVM.mdLocations.filter({$0.active}), id: \.id) { location in
+                            Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
+                                .tag(location.id as Int?)
                         }
                     })
                 }
+                MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
                 
-                Picker(selection: $locationID,
-                       label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
-                       content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations.filter({$0.active}), id: \.id) { location in
-                        Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
-                            .tag(location.id as Int?)
-                    }
-                })
+                MyToggle(isOn: $selfProduction, description: "Self-production", icon: MySymbols.selfProduction)
             }
-            MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
-            
-            MyToggle(isOn: $selfProduction, description: "Self-production", icon: MySymbols.selfProduction)
         }
         .navigationTitle("Purchase")
         .formStyle(.grouped)
@@ -252,11 +255,6 @@ struct PurchaseProductView: View {
             }
         }
         .toolbar(content: {
-#if os(iOS)
-            ToolbarItem(placement: .cancellationAction, content: {
-                Button("Cancel", action: { self.dismiss() })
-            })
-#endif
             ToolbarItemGroup(placement: .automatic, content: {
                 Group {
                     if !quickScan {
@@ -288,11 +286,5 @@ struct PurchaseProductView: View {
 }
 
 #Preview {
-#if os(iOS)
-    NavigationStack {
-        PurchaseProductView()
-    }
-#else
     PurchaseProductView()
-#endif
 }

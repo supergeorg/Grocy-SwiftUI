@@ -22,7 +22,8 @@ struct MDBarcodeScanner: View {
         case .success(let code):
             barcode = code.string
         case .failure(let error):
-            grocyVM.postLog("Scanning barcode failed. \(error)", type: .error)
+//            grocyVM.postLog("Scanning barcode failed. \(error)", type: .error)
+            print("Scanning barcode failed. \(error)")
         }
     }
     

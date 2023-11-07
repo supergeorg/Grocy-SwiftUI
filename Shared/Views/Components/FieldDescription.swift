@@ -9,10 +9,8 @@ import SwiftUI
 
 struct FieldDescription: View {
     var description: String
-    
-#if os(iOS)
+
     @State private var showDescription: Bool = false
-#endif
     
     var body: some View {
         Image(systemName: MySymbols.hint)

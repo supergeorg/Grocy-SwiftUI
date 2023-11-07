@@ -6,51 +6,52 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - GrocyUserSettings
-struct GrocyUserSettings: Codable {
-    //    let autoReloadOnDBChange: Bool
-    //    let nightModeEnabled: Bool
-    //    let autoNightModeEnabled, autoNightModeTimeRangeFrom, autoNightModeTimeRangeTo: String
-    //    let autoNightModeTimeRangeGoesOverMidnight, currentlyInsideNightModeRange, keepScreenOn, keepScreenOnWhenFullscreenCard: Bool
-    let productPresetsLocationID: Int?
-    let productPresetsProductGroupID: Int?
-    let productPresetsQuID: Int?
-    let productPresetsDefaultDueDays: Int?
-    let productPresetsTreatOpenedAsOutOfStock: Bool?
-    let stockDecimalPlacesAmounts: Int?
-    let stockDecimalPlacesPrices: Int?
-    let stockDecimalPlacesPricesInput: Int?
-    let stockDecimalPlacesPricesDisplay: Int?
-    let stockAutoDecimalSeparatorPrices: Bool?
-    let stockDueSoonDays: Int?
-    let stockDefaultPurchaseAmount: Double?
-    let stockDefaultConsumeAmount: Double?
-    let stockDefaultConsumeAmountUseQuickConsumeAmount: Bool?
-    //    let scanModeConsumeEnabled: Bool
-    //let scanModePurchaseEnabled: Bool
-    let showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
-    let showPurchasedDateOnPurchase: Bool?
-    let showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Bool?
-    let shoppingListShowCalendar: Bool
-    let shoppingListAutoAddBelowMinStockAmount: Bool
-    let shoppingListAutoAddBelowMinStockAmountListID: Int?
-    let shoppingListToStockWorkflowAutoSubmitWhenPrefilled: Bool
-    //    let recipeIngredientsGroupByProductGroup: Bool
-    //    let choresDueSoonDays: Int
-    //    let batteriesDueSoonDays: Int
-    //    let tasksDueSoonDays: Int
-    //    let showClockInHeader: Bool
-    //    let quagga2Numofworkers: Int
-    //    let quagga2Halfsample: Bool
-    //    let quagga2Patchsize: String
-    //    let quagga2Frequency: Int
-    //    let quagga2Debug: Bool
-    //    let datatablesStateBarcodeTable, datatablesStateBatteriesTable, datatablesStateEquipmentTable, datatablesStateLocationsTable: String
-    //    let datatablesStateProductgroupsTable, datatablesStateProductsTable, datatablesStateQuConversionsTable, datatablesStateQuConversionsTableProducts: String
-    //    let datatablesStateQuantityunitsTable, datatablesStateShoppingListPrintShadowTable, datatablesStateShoppinglistTable, datatablesStateStoresTable: String
-    //    let datatablesStateStockJournalTable, datatablesStateStockOverviewTable, datatablesStateStockentriesTable, datatablesStateTaskcategoriesTable: String
-    //    let datatablesStateUserentitiesTable, datatablesStateUserfieldsTable, datatablesStateUsersTable, locale: String
+@Model
+class GrocyUserSettings: Codable {
+    //    var autoReloadOnDBChange: Bool
+    //    var nightModeEnabled: Bool
+    //    var autoNightModeEnabled, autoNightModeTimeRangeFrom, autoNightModeTimeRangeTo: String
+    //    var autoNightModeTimeRangeGoesOverMidnight, currentlyInsideNightModeRange, keepScreenOn, keepScreenOnWhenFullscreenCard: Bool
+    var productPresetsLocationID: Int?
+    var productPresetsProductGroupID: Int?
+    var productPresetsQuID: Int?
+    var productPresetsDefaultDueDays: Int?
+    var productPresetsTreatOpenedAsOutOfStock: Bool?
+    var stockDecimalPlacesAmounts: Int?
+    var stockDecimalPlacesPrices: Int?
+    var stockDecimalPlacesPricesInput: Int?
+    var stockDecimalPlacesPricesDisplay: Int?
+    var stockAutoDecimalSeparatorPrices: Bool?
+    var stockDueSoonDays: Int?
+    var stockDefaultPurchaseAmount: Double?
+    var stockDefaultConsumeAmount: Double?
+    var stockDefaultConsumeAmountUseQuickConsumeAmount: Bool?
+    //    var scanModeConsumeEnabled: Bool
+    //var scanModePurchaseEnabled: Bool
+    var showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
+    var showPurchasedDateOnPurchase: Bool?
+    var showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Bool?
+    var shoppingListShowCalendar: Bool
+    var shoppingListAutoAddBelowMinStockAmount: Bool
+    var shoppingListAutoAddBelowMinStockAmountListID: Int?
+    var shoppingListToStockWorkflowAutoSubmitWhenPrefilled: Bool
+    //    var recipeIngredientsGroupByProductGroup: Bool
+    //    var choresDueSoonDays: Int
+    //    var batteriesDueSoonDays: Int
+    //    var tasksDueSoonDays: Int
+    //    var showClockInHeader: Bool
+    //    var quagga2Numofworkers: Int
+    //    var quagga2Halfsample: Bool
+    //    var quagga2Patchsize: String
+    //    var quagga2Frequency: Int
+    //    var quagga2Debug: Bool
+    //    var datatablesStateBarcodeTable, datatablesStateBatteriesTable, datatablesStateEquipmentTable, datatablesStateLocationsTable: String
+    //    var datatablesStateProductgroupsTable, datatablesStateProductsTable, datatablesStateQuConversionsTable, datatablesStateQuConversionsTableProducts: String
+    //    var datatablesStateQuantityunitsTable, datatablesStateShoppingListPrintShadowTable, datatablesStateShoppinglistTable, datatablesStateStoresTable: String
+    //    var datatablesStateStockJournalTable, datatablesStateStockOverviewTable, datatablesStateStockentriesTable, datatablesStateTaskcategoriesTable: String
+    //    var datatablesStateUserentitiesTable, datatablesStateUserfieldsTable, datatablesStateUsersTable, locale: String
     
     enum CodingKeys: String, CodingKey {
         //        case autoReloadOnDBChange = "auto_reload_on_db_change"
@@ -117,7 +118,7 @@ struct GrocyUserSettings: Codable {
         //        case locale
     }
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
@@ -238,20 +239,45 @@ struct GrocyUserSettings: Codable {
             throw APIError.decodingError(error: error)
         }
     }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(productPresetsLocationID, forKey: .productPresetsLocationID)
+        try container.encode(productPresetsProductGroupID, forKey: .productPresetsProductGroupID)
+        try container.encode(productPresetsQuID, forKey: .productPresetsQuID)
+        try container.encode(productPresetsDefaultDueDays, forKey: .productPresetsDefaultDueDays)
+        try container.encode(productPresetsTreatOpenedAsOutOfStock, forKey: .productPresetsTreatOpenedAsOutOfStock)
+        try container.encode(stockDecimalPlacesAmounts, forKey: .stockDecimalPlacesAmounts)
+        try container.encode(stockDecimalPlacesPrices, forKey: .stockDecimalPlacesPrices)
+        try container.encode(stockDecimalPlacesPricesInput, forKey: .stockDecimalPlacesPricesInput)
+        try container.encode(stockDecimalPlacesPricesDisplay, forKey: .stockDecimalPlacesPricesDisplay)
+        try container.encode(stockAutoDecimalSeparatorPrices, forKey: .stockAutoDecimalSeparatorPrices)
+        try container.encode(stockDueSoonDays, forKey: .stockDueSoonDays)
+        try container.encode(stockDefaultPurchaseAmount, forKey: .stockDefaultPurchaseAmount)
+        try container.encode(stockDefaultConsumeAmount, forKey: .stockDefaultConsumeAmount)
+        try container.encode(stockDefaultConsumeAmountUseQuickConsumeAmount, forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount)
+        try container.encode(showIconOnStockOverviewPageWhenProductIsOnShoppingList, forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList)
+        try container.encode(showPurchasedDateOnPurchase, forKey: .showPurchasedDateOnPurchase)
+        try container.encode(showWarningOnPurchaseWhenDueDateIsEarlierThanNext, forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
+        try container.encode(shoppingListShowCalendar, forKey: .shoppingListShowCalendar)
+        try container.encode(shoppingListAutoAddBelowMinStockAmount, forKey: .shoppingListAutoAddBelowMinStockAmount)
+        try container.encode(shoppingListAutoAddBelowMinStockAmountListID, forKey: .shoppingListAutoAddBelowMinStockAmountListID)
+        try container.encode(shoppingListToStockWorkflowAutoSubmitWhenPrefilled, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
+    }
 }
 
-struct GrocyUserSettingsString: Codable {
-    let value: String?
+class GrocyUserSettingsString: Codable {
+    var value: String?
     
-    init(value: String) {
+    required init(value: String) {
         self.value = value
     }
 }
 
-struct GrocyUserSettingsInt: Codable {
-    let value: Int?
+class GrocyUserSettingsInt: Codable {
+    var value: Int?
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
@@ -266,10 +292,10 @@ struct GrocyUserSettingsInt: Codable {
     }
 }
 
-struct GrocyUserSettingsDouble: Codable {
-    let value: Double?
+class GrocyUserSettingsDouble: Codable {
+    var value: Double?
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
@@ -284,10 +310,10 @@ struct GrocyUserSettingsDouble: Codable {
     }
 }
 
-struct GrocyUserSettingsBool: Codable {
-    let value: Bool
+class GrocyUserSettingsBool: Codable {
+    var value: Bool
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             

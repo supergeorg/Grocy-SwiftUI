@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDLocationFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +24,7 @@ struct MDLocationFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundLocation = grocyVM.mdLocations.first(where: { $0.name == location.name })
+        let foundLocation = mdLocations.first(where: { $0.name == location.name })
         return !(location.name.isEmpty || (foundLocation != nil && foundLocation!.id != location.id))
     }
     
@@ -50,7 +53,7 @@ struct MDLocationFormView: View {
     
     private func saveLocation() async {
         if location.id == 0 {
-            location.id = grocyVM.findNextID(.locations)
+            location.id = await grocyVM.findNextID(.locations)
         }
         isProcessing = true
         isSuccessful = nil
@@ -60,11 +63,11 @@ struct MDLocationFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
             }
-            grocyVM.postLog("Location \(location.name) successful.", type: .info)
+            await grocyVM.postLog("Location \(location.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

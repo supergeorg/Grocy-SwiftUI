@@ -11,8 +11,8 @@ import SwiftData
 struct ShoppingListRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var shoppingListItem: ShoppingListItem
     
@@ -22,11 +22,11 @@ struct ShoppingListRowActionsView: View {
     @State private var showEntryDeleteAlert: Bool = false
     
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
+        mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
     }
     
     var productName: String {
-        grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Productname error"
+        mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Productname error"
     }
     
     private func changeDoneStatus() async {
@@ -46,10 +46,10 @@ struct ShoppingListRowActionsView: View {
                 id: shoppingListItem.id,
                 content: doneChangedShoppingListItem
             )
-            grocyVM.postLog("Done status changed successfully.", type: .info)
+            await grocyVM.postLog("Done status changed successfully.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Done status change failed. \(error)", type: .error)
+            await grocyVM.postLog("Done status change failed. \(error)", type: .error)
         }
     }
     
@@ -60,10 +60,10 @@ struct ShoppingListRowActionsView: View {
     private func deleteSHLItem() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id)
-            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            await grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
         }
     }
     

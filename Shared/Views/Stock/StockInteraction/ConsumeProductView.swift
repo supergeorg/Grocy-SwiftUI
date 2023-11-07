@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ConsumeProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
     
     @Environment(\.dismiss) var dismiss
     
@@ -18,18 +25,12 @@ struct ConsumeProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-#if os(iOS)
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-#endif
-    
     var stockElement: Binding<StockElement?>? = nil
     var directProductToConsumeID: Int? = nil
     var productToConsumeID: Int? {
         return directProductToConsumeID ?? stockElement?.wrappedValue?.productID
     }
     var directStockEntryID: String? = nil
-    var isPopup: Bool = false
     
     var barcode: MDProductBarcode? = nil
     
@@ -65,28 +66,22 @@ struct ConsumeProductView: View {
     }
     
     private var product: MDProduct? {
-        grocyVM.mdProducts.first(where: {$0.id == productID})
+        mdProducts.first(where: {$0.id == productID})
     }
     private var currentQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: {$0.id == quantityUnitID })
+        return mdQuantityUnits.first(where: {$0.id == quantityUnitID })
     }
     private var stockQuantityUnit: MDQuantityUnit? {
-        return grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+        return mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
-    private func getQUString(stockQU: Bool) -> String {
-        if stockQU {
-            return factoredAmount == 1.0 ? stockQuantityUnit?.name ?? "" : stockQuantityUnit?.namePlural ?? stockQuantityUnit?.name ?? ""
-        } else {
-            return amount == 1.0 ? currentQuantityUnit?.name ?? "" : currentQuantityUnit?.namePlural ?? currentQuantityUnit?.name ?? ""
-        }
-    }
+    
     private var productName: String {
         product?.name ?? ""
     }
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
-            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+            return mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
         } else { return [] }
     }
     private var factoredAmount: Double {
@@ -94,30 +89,29 @@ struct ConsumeProductView: View {
     }
     
     private var filteredLocations: MDLocations {
-        var locIDs: Set<Int> = Set<Int>()
-        if let productID = productID, let entries = grocyVM.stockProductEntries[productID] {
-            for entry in entries {
-                if let locID = entry.locationID {
-                    locIDs.insert(locID)
-                }
-            }
-            return grocyVM.mdLocations
-                .filter{ locIDs.contains($0.id) }
-        } else {
-            return grocyVM.mdLocations
-        }
+//        var locIDs: Set<Int> = Set<Int>()
+//        if let productID = productID, let entries = stockProductEntries.filter({ $0.productID == productID }) {
+//            for entry in entries {
+//                if let locID = entry.locationID {
+//                    locIDs.insert(locID)
+//                }
+//            }
+//            return mdLocations
+//                .filter{ locIDs.contains($0.id) }
+//        } else {
+            return mdLocations
+//        }
     }
     
     private var maxAmount: Double? {
-        if let entries = grocyVM.stockProductEntries[productID ?? 0] {
-            var maxAmount: Double = 0
-            let filtEntries = entries.filter{ $0.locationID == locationID }
-            for filtEntry in filtEntries {
-                maxAmount += filtEntry.amount
-            }
-            return maxAmount
+        var maxAmount: Double = 0
+        let filtEntries = stockProductEntries
+            .filter({ $0.productID == productID })
+            .filter({ $0.locationID == locationID })
+        for filtEntry in filtEntries {
+            maxAmount += filtEntry.amount
         }
-        return nil
+        return maxAmount
     }
     
     private let priceFormatter = NumberFormatter()
@@ -129,11 +123,11 @@ struct ConsumeProductView: View {
     private var stockEntriesForLocation: StockEntries {
         if let productID = productID {
             if let locationID = locationID {
-                return grocyVM.stockProductEntries[productID]?.filter({
-                    $0.locationID == locationID
-                }) ?? []
+                return stockProductEntries
+                    .filter({ $0.productID == productID })
+                    .filter({ $0.locationID == locationID })
             } else {
-                return grocyVM.stockProductEntries[productID] ?? []
+                return stockProductEntries.filter({ $0.productID == productID })
             }
         } else {
             return []
@@ -141,20 +135,18 @@ struct ConsumeProductView: View {
     }
     
     private func getAmountForLocation(lID: Int) -> Double {
-        if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
-            var maxAmount: Double = 0
-            let filtEntries = entries.filter { $0.locationID == lID }
-            for filtEntry in filtEntries {
-                maxAmount += filtEntry.amount
-            }
-            return maxAmount
+        var maxAmount: Double = 0
+        let filtEntries = stockProductEntries.filter({ $0.productID == productID }).filter { $0.locationID == lID }
+        for filtEntry in filtEntries {
+            maxAmount += filtEntry.amount
         }
-        return 0.0
+        return maxAmount
     }
     
     private func resetForm() {
         productID = firstAppear ? productToConsumeID : nil
-        amount = barcode?.amount ?? grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
+//        amount = barcode?.amount ?? grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
+        amount = barcode?.amount ?? 1.0
         quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationID = nil
         spoiled = false
@@ -170,14 +162,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
-                grocyVM.postLog("Opening successful.", type: .info)
+                await grocyVM.postLog("Opening successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
                 if self.actionFinished != nil {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Opening failed: \(error)", type: .error)
+                await grocyVM.postLog("Opening failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }
@@ -189,14 +181,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
-                grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
-                if let autoAddBelowMinStock = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+                await grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
+                if let autoAddBelowMinStock = await grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = await grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
-                        grocyVM.postLog("SHLAction successful.", type: .info)
+                        await grocyVM.postLog("SHLAction successful.", type: .info)
                         await grocyVM.requestData(objects: [.shopping_list])
                     } catch {
-                        grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+                        await grocyVM.postLog("SHLAction failed. \(error)", type: .error)
                     }
                 }
                 resetForm()
@@ -204,38 +196,14 @@ struct ConsumeProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Consume failed: \(error)", type: .error)
+                await grocyVM.postLog("Consume failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }
     }
     
     var body: some View {
-        if quickScan {
-            consumeForm
-        } else {
-            content
-                .formStyle(.grouped)
-                .toolbar(content: {
-#if os(iOS)
-                    ToolbarItem(placement: .cancellationAction, content: {
-                        Button("Cancel", action: { self.dismiss() })
-                    })
-#endif
-                    ToolbarItemGroup(placement: .automatic, content: { toolbarContent })
-                })
-        }
-    }
-    
-    var content: some View {
         Form {
-            consumeForm
-        }
-        .navigationTitle("Consume")
-    }
-    
-    var consumeForm: some View {
-        Group {
             if grocyVM.failedToLoadObjects.filter({dataToUpdate.contains($0)}).count > 0 {
                 Section{
                     ServerProblemView(isCompact: true)
@@ -258,179 +226,127 @@ struct ConsumeProductView: View {
                     }
             }
             
-            AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
-            
-            Picker(selection: $locationID, label: Label("Location", systemImage: MySymbols.location), content: {
-                Text("").tag(nil as Int?)
-                ForEach(filteredLocations, id:\.id) { location in
-                    Text(product?.locationID == location.id ? "\(location.name) (Default location)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
-                        .tag(location.id as Int?)
+            if productID != nil {
+                
+                AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+                
+                Picker(selection: $locationID, label: Label("Location", systemImage: MySymbols.location), content: {
+                    Text("")
+                        .tag(nil as Int?)
+                    ForEach(filteredLocations, id:\.id) { location in
+                        Text(product?.locationID == location.id ? "\(location.name) (Default location)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
+                            .tag(location.id as Int?)
+                    }
+                })
+                
+                Section("Details") {
+                    if (consumeType == .consume) || (consumeType == .both) {
+                        MyToggle(isOn: $spoiled, description: "Spoiled", icon: MySymbols.spoiled)
+                    }
+                    
+                    if productID != nil {
+                        MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
+                        
+                        if useSpecificStockEntry {
+                            Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
+                                Text("").tag(nil as String?)
+                                ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
+                                    Group {
+                                        Text("Amount: \(stockProduct.amount.formattedAmount); ")
+                                        +
+                                        Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
+                                        +
+                                        Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
+                                        +
+                                        Text("; ")
+                                        +
+                                        Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
+                                    }
+                                    .tag(stockProduct.stockID as String?)
+                                }
+                            })
+                        }
+                    }
+                    
+                    //                if quickScan {
+                    //                    // This is a workaround for a bug which shows the toolbar multiple times
+                    //                    Text("")
+                    //                        .toolbar(content: {
+                    //                            ToolbarItem(placement: .confirmationAction, content: {
+                    //                                toolbarContent
+                    //                            })
+                    //                        })
+                    //                }
+                    //
+                    if devMode {
+                        HStack{
+                            Picker(selection: $recipeID, label: Label("Recipe", systemImage: "tag"), content: {
+                                Text("Not implemented").tag(nil as Int?)
+                            })
+#if os(macOS)
+                            Image(systemName: "questionmark.circle.fill")
+                                .help("This is for statistical purposes only")
+#elseif os(iOS)
+                            Image(systemName: "questionmark.circle.fill")
+                                .onTapGesture {
+                                    showRecipeInfo.toggle()
+                                }
+                                .help("This is for statistical purposes only")
+                                .popover(isPresented: $showRecipeInfo, content: {
+                                    Text("This is for statistical purposes only")
+                                        .padding()
+                                })
+#endif
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Consume")
+        .formStyle(.grouped)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .automatic, content: {
+                if !quickScan {
+                    if isProcessingAction {
+                        ProgressView().progressViewStyle(.circular)
+                    } else {
+                        Button(action: resetForm, label: {
+                            Label("Clear", systemImage: MySymbols.cancel)
+                                .help("Clear")
+                        })
+                        .keyboardShortcut("r", modifiers: [.command])
+                    }
+                }
+                
+                if (consumeType == .open) || (consumeType == .both) {
+                    Button(action: {
+                        Task {
+                            await openProduct()
+                        }
+                    }, label: {
+                        Label("Mark as opened", systemImage: MySymbols.open)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("o", modifiers: [.command])
+                }
+                if (consumeType == .consume) || (consumeType == .both) {
+                    Button(action: {
+                        Task {
+                            await consumeProduct()
+                        }
+                    }, label: {
+                        Label("Consume product", systemImage: MySymbols.consume)
+                            .labelStyle(.titleAndIcon)
+                    })
+                    .disabled(!isFormValid || isProcessingAction)
+                    .keyboardShortcut("s", modifiers: [.command])
                 }
             })
-            
-            Section(header: Text("Details").font(.headline)) {
-                
-                if (consumeType == .consume) || (consumeType == .both) {
-                    MyToggle(isOn: $spoiled, description: "Spoiled", icon: MySymbols.spoiled)
-                }
-                
-                if productID != nil {
-                    MyToggle(isOn: $useSpecificStockEntry, description: "Use a specific stock item", descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"", icon: "tag")
-                    
-                    if useSpecificStockEntry {
-#if os(iOS)
-                        stockEntryPicker
-                            .pickerStyle(.navigationLink)
-#else
-                        stockEntryPicker
-#endif
-                    }
-                }
-                
-                if quickScan {
-                    // This is a workaround for a bug which shows the toolbar multiple times
-                    Text("")
-                        .toolbar(content: {
-                            ToolbarItem(placement: .confirmationAction, content: {
-                                toolbarContent
-                            })
-                        })
-                }
-                
-                if devMode {
-                    HStack{
-                        Picker(selection: $recipeID, label: Label("Recipe", systemImage: "tag"), content: {
-                            Text("Not implemented").tag(nil as Int?)
-                        })
-#if os(macOS)
-                        Image(systemName: "questionmark.circle.fill")
-                            .help("This is for statistical purposes only")
-#elseif os(iOS)
-                        Image(systemName: "questionmark.circle.fill")
-                            .onTapGesture {
-                                showRecipeInfo.toggle()
-                            }
-                            .help("This is for statistical purposes only")
-                            .popover(isPresented: $showRecipeInfo, content: {
-                                Text("This is for statistical purposes only")
-                                    .padding()
-                            })
-#endif
-                    }
-                }
-            }
-#if os(macOS)
-            if isPopup {
-                Button(action: { Task { await consumeProduct() } }, label: {Text("Consume product")})
-                    .disabled(!isFormValid || isProcessingAction)
-                    .keyboardShortcut(.defaultAction)
-            }
-#endif
-        }
-        //        .task {
-        //            if firstAppear {
-        //                await updateData()
-        //                resetForm()
-        //                if let productID = productID {
-        //                    do {
-        //                        try await grocyVM.getStockProductEntries(productID: productID)
-        //                        if let product = product {
-        //                            locationID = product.locationID
-        //                            quantityUnitID = product.quIDStock
-        //                            if let directStockEntryID = directStockEntryID {
-        //                                useSpecificStockEntry = true
-        //                                stockEntryID = directStockEntryID
-        //                            }
-        //                        }
-        //                    } catch {
-        //                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
-        //                    }
-        //                }
-        //                firstAppear = false
-        //            }
-        //        }
-    }
-    
-    var stockEntryPicker: some View {
-        Picker(selection: $stockEntryID, label: Label("Stock entry", systemImage: "tag"), content: {
-            Text("").tag(nil as String?)
-            ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
-                Group {
-                    Text("Amount: \(stockProduct.amount.formattedAmount); ")
-                    +
-                    Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
-                    +
-                    Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
-                    +
-                    Text("; ")
-                    +
-                    Text(stockProduct.note != nil ? "Note: \(stockProduct.note ?? "")" : "")
-                }
-                .tag(stockProduct.stockID as String?)
-            }
         })
-    }
-    
-    var toolbarContent: some View {
-        Group {
-            if !quickScan {
-                if isProcessingAction {
-                    ProgressView().progressViewStyle(.circular)
-                } else {
-                    Button(action: resetForm, label: {
-                        Label("Clear", systemImage: MySymbols.cancel)
-                            .help("Clear")
-                    })
-                    .keyboardShortcut("r", modifiers: [.command])
-                }
-            }
-            
-            if (consumeType == .open) || (consumeType == .both) {
-                Button(action: {
-                    Task {
-                        await openProduct()
-                    }
-                }, label: {
-#if os(iOS)
-                    if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label("Mark as opened", systemImage: MySymbols.open)
-                    } else {
-                        Label("Mark as opened", systemImage: MySymbols.open)
-                            .labelStyle(.titleAndIcon)
-                    }
-#else
-                    Label("Mark as opened", systemImage: MySymbols.open)
-                        .labelStyle(.titleAndIcon)
-#endif
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("o", modifiers: [.command])
-            }
-            if (consumeType == .consume) || (consumeType == .both) {
-                Button(action: {
-                    Task {
-                        await consumeProduct()
-                    }
-                }, label: {
-#if os(iOS)
-                    if !quickScan && horizontalSizeClass == .compact && verticalSizeClass == .regular {
-                        Label("Consume product", systemImage: MySymbols.consume)
-                    } else {
-                        Label("Consume product", systemImage: MySymbols.consume)
-                            .labelStyle(.titleAndIcon)
-                    }
-#else
-                    Label("Consume product", systemImage: MySymbols.consume)
-                        .labelStyle(.titleAndIcon)
-#endif
-                })
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
-            }
-        }
     }
 }
 
 #Preview {
-        ConsumeProductView()
+    ConsumeProductView()
 }

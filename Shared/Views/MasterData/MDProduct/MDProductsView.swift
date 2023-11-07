@@ -11,7 +11,7 @@ import SwiftData
 struct MDProductsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    //    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
     
     @State private var searchString: String = ""
     
@@ -31,15 +31,15 @@ struct MDProductsView: View {
     private func deleteProduct(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .products, id: toDelID)
-            grocyVM.postLog("Deleting product was successful.", type: .info)
+            await grocyVM.postLog("Deleting product was successful.", type: .info)
             await grocyVM.requestData(objects: [.products, .product_barcodes])
         } catch {
-            grocyVM.postLog("Deleting product failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting product failed. \(error)", type: .error)
         }
     }
     
     private var filteredProducts: MDProducts {
-        grocyVM.mdProducts
+        mdProducts
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -48,13 +48,13 @@ struct MDProductsView: View {
     
     var body: some View {
         List{
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.mdProducts.isEmpty {
-                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
-            } else if filteredProducts.isEmpty {
-                ContentUnavailableView.search
-            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if mdProducts.isEmpty {
+//                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
+//            } else if filteredProducts.isEmpty {
+//                ContentUnavailableView.search
+//            }
             ForEach(filteredProducts, id:\.id) { product in
                 NavigationLink(value: product) {
                     MDProductRowView(product: product)

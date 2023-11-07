@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockEntryRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @Environment(\.colorScheme) var colorScheme
@@ -21,23 +25,23 @@ struct StockEntryRowView: View {
     
     
     var backgroundColor: Color {
-        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
-            return Color(.GrocyColors.grocyYellowBackground)
-        }
-        if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-            return Color(.GrocyColors.grocyGrayBackground)
-        }
-        if (dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-            return Color(.GrocyColors.grocyRedBackground)
-        }
+//        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
+//            return Color(.GrocyColors.grocyYellowBackground)
+//        }
+//        if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
+//            return Color(.GrocyColors.grocyGrayBackground)
+//        }
+//        if (dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
+//            return Color(.GrocyColors.grocyRedBackground)
+//        }
         return colorScheme == .light ? Color.white : Color.black
     }
     
     var product: MDProduct? {
-        grocyVM.mdProducts.first(where: { $0.id == stockEntry.productID })
+        mdProducts.first(where: { $0.id == stockEntry.productID })
     }
     var quantityUnit: MDQuantityUnit? {
-        grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
+        mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
     
     var body: some View {

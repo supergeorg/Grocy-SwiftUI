@@ -39,75 +39,75 @@ struct QuickScanModeSelectProductView: View {
     }
     
     private func addBarcodeForProduct() async {
-        if
-            let barcode = barcode,
-            let productID = productID
-        {
-            let newBarcode = MDProductBarcode(
-                id: grocyVM.findNextID(.product_barcodes),
-                productID: productID,
-                barcode: barcode,
-                quID: nil,
-                amount: nil,
-                storeID: nil,
-                lastPrice: nil,
-                rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
-                note: nil
-            )
-            do {
-                _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                grocyVM.postLog("Add barcode successful.", type: .info)
-                await grocyVM.requestData(objects: [.product_barcodes])
-                newRecognizedBarcode = newBarcode
-                finishForm()
-            } catch {
-                grocyVM.postLog("Add barcode failed. \(error)", type: .error)
-            }
-        }
+//        if
+//            let barcode = barcode,
+//            let productID = productID
+//        {
+//            let newBarcode = MDProductBarcode(
+//                id: grocyVM.findNextID(.product_barcodes),
+//                productID: productID,
+//                barcode: barcode,
+//                quID: nil,
+//                amount: nil,
+//                storeID: nil,
+//                lastPrice: nil,
+//                note: nil
+//                rowCreatedTimestamp: Date().iso8601withFractionalSeconds,
+//            )
+//            do {
+//                _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
+//                grocyVM.postLog("Add barcode successful.", type: .info)
+//                await grocyVM.requestData(objects: [.product_barcodes])
+//                newRecognizedBarcode = newBarcode
+//                finishForm()
+//            } catch {
+//                grocyVM.postLog("Add barcode failed. \(error)", type: .error)
+//            }
+//        }
     }
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section {
-                    Text(barcode ?? "Barcode error").font(.title)
-                }
-                ProductField(productID: $productID, description: "Product for this barcode")
-                
-                if let barcode = barcode {
-                    Section("Open Food Facts") {
-                        NavigationLink(
-                            destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), isPopup: false, mdBarcodeReturn: $newProductBarcode),
-                            label: {
-                                Label("Create new product with Open Food Facts", systemImage: MySymbols.barcodeScan)
-                            }
-                        )
-                        .onChange(of: newProductBarcode?.id) {
-                            if newProductBarcode != nil {
-                                finishForm()
-                                newRecognizedBarcode = newProductBarcode
-                            }
-                        }
-                    }
+        Form {
+            Section {
+                Text(barcode ?? "Barcode error").font(.title)
+            }
+            
+            ProductField(productID: $productID, description: "Product for this barcode")
+            
+            if let barcode = barcode {
+                Section("Open Food Facts") {
+                    EmptyView()
+                    //                    NavigationLink(
+                    //                        destination: MDProductFormView(isNewProduct: true, openFoodFactsBarcode: barcode, showAddProduct: Binding.constant(false), isPopup: false, mdBarcodeReturn: $newProductBarcode),
+                    //                        label: {
+                    //                            Label("Create new product with Open Food Facts", systemImage: MySymbols.barcodeScan)
+                    //                        }
+                    //                    )
+                    //                    .onChange(of: newProductBarcode?.id) {
+                    //                        if newProductBarcode != nil {
+                    //                            finishForm()
+                    //                            newRecognizedBarcode = newProductBarcode
+                    //                        }
+                    //                    }
                 }
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction, content: {
-                    Button("Cancel") {
-                        finishForm()
-                    }
-                    .keyboardShortcut(.cancelAction)
-                })
-                ToolbarItem(placement: .automatic, content: {
-                    Button(action: { Task { await addBarcodeForProduct() } }, label: {
-                        Label("Add barcode", systemImage: "plus")
-                            .labelStyle(.titleAndIcon)
-                    })
-                    .disabled(productID == nil)
-                    .keyboardShortcut(.defaultAction)
-                })
-            })
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .cancellationAction, content: {
+                Button("Cancel") {
+                    finishForm()
+                }
+                .keyboardShortcut(.cancelAction)
+            })
+            ToolbarItem(placement: .automatic, content: {
+                Button(action: { Task { await addBarcodeForProduct() } }, label: {
+                    Label("Add barcode", systemImage: "plus")
+                        .labelStyle(.titleAndIcon)
+                })
+                .disabled(productID == nil)
+                .keyboardShortcut(.defaultAction)
+            })
+        })
     }
 }
 

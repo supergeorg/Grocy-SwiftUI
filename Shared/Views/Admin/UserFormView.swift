@@ -25,8 +25,9 @@ struct UserFormView: View {
     
     @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
-        let foundUsername = grocyVM.users.first(where: {$0.username == username})
-        return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
+//        let foundUsername = grocyVM.users.first(where: {$0.username == username})
+//        return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
+        return false
     }
     
     @State private var isMatchingPassword: Bool = true
@@ -54,25 +55,25 @@ struct UserFormView: View {
     
     private func saveUser() async {
         if isNewUser {
-            let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+            let userPost = await GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
             do {
                 try await grocyVM.postUser(user: userPost)
-                grocyVM.postLog("Successfully saved user.", type: .info)
+                await grocyVM.postLog("Successfully saved user.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Saving user failed. \(error)", type: .error)
+                await grocyVM.postLog("Saving user failed. \(error)", type: .error)
             }
         } else {
             if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
                 do {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
-                    grocyVM.postLog("Successfully edited user.", type: .info)
+                    await grocyVM.postLog("Successfully edited user.", type: .info)
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Editing user failed. \(error)", type: .error)
+                    await grocyVM.postLog("Editing user failed. \(error)", type: .error)
                 }
             }
         }

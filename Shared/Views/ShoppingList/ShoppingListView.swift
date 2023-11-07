@@ -16,11 +16,11 @@ struct ShoppingListItemWrapped {
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
-//    @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
-//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-//    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
-//    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
+    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
+    @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
     
     @State private var selectedShoppingListID: Int = 1
     
@@ -62,7 +62,7 @@ struct ShoppingListView: View {
     }
     
     func checkBelowStock(item: ShoppingListItem) -> Bool {
-        if let product = grocyVM.mdProducts.first(where: { $0.id == item.productID }) {
+        if let product = mdProducts.first(where: { $0.id == item.productID }) {
             if product.minStockAmount > item.amount {
                 return true
             }
@@ -71,7 +71,7 @@ struct ShoppingListView: View {
     }
     
     var selectedShoppingList: ShoppingListDescription? {
-        grocyVM.shoppingListDescriptions
+        shoppingListDescriptions
             .filter {
                 $0.id == selectedShoppingListID
             }
@@ -79,7 +79,7 @@ struct ShoppingListView: View {
     }
     
     var selectedShoppingListItems: [ShoppingListItem] {
-        grocyVM.shoppingList
+        shoppingList
             .filter {
                 $0.shoppingListID == selectedShoppingListID
             }
@@ -101,7 +101,7 @@ struct ShoppingListView: View {
             }
             .filter { shLItem in
                 if !searchString.isEmpty {
-                    if let product = grocyVM.mdProducts.first(where: { $0.id == shLItem.productID }) {
+                    if let product = mdProducts.first(where: { $0.id == shLItem.productID }) {
                         return product.name.localizedCaseInsensitiveContains(searchString)
                     } else {
                         return false
@@ -115,10 +115,10 @@ struct ShoppingListView: View {
     var groupedShoppingList: [String: [ShoppingListItemWrapped]] {
         var dict: [String: [ShoppingListItemWrapped]] = [:]
         for listItem in filteredShoppingListItems {
-            let product = grocyVM.mdProducts.first(where: { $0.id == listItem.productID })
+            let product = mdProducts.first(where: { $0.id == listItem.productID })
             switch shoppingListGrouping {
             case .productGroup:
-                let productGroup = grocyVM.mdProductGroups.first(where: { $0.id == product?.productGroupID })
+                let productGroup = mdProductGroups.first(where: { $0.id == product?.productGroupID })
                 if dict[productGroup?.name ?? ""] == nil {
                     dict[productGroup?.name ?? ""] = []
                 }
@@ -126,7 +126,7 @@ struct ShoppingListView: View {
                     ShoppingListItemWrapped(shoppingListItem: listItem, product: product)
                 )
             case .defaultStore:
-                let store = grocyVM.mdStores.first(where: { $0.id == product?.storeID })
+                let store = mdStores.first(where: { $0.id == product?.storeID })
                 if dict[store?.name ?? ""] == nil {
                     dict[store?.name ?? ""] = []
                 }
@@ -164,10 +164,10 @@ struct ShoppingListView: View {
     func deleteShoppingList() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
-            grocyVM.postLog("Deleting shopping list was successful.", type: .info)
+            await grocyVM.postLog("Deleting shopping list was successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_lists])
         } catch {
-            grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
         }
     }
     
@@ -180,10 +180,10 @@ struct ShoppingListView: View {
             } else {
                 try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
             }
-            grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
+            await grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+            await grocyVM.postLog("SHLAction failed. \(error)", type: .error)
         }
     }
     
@@ -302,7 +302,7 @@ struct ShoppingListView: View {
                     await deleteShoppingList()
                 }
             }
-        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
         .confirmationDialog("Do your really want to clear this shopping list?", isPresented: $showClearListAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Confirm", role: .destructive) {
@@ -310,7 +310,7 @@ struct ShoppingListView: View {
                     await slAction(.clear)
                 }
             }
-        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
         .confirmationDialog("Do you really want to clear all done items?", isPresented: $showClearDoneAlert, actions: {
             Button("Cancel", role: .cancel) {}
             Button("Confirm", role: .destructive) {
@@ -318,7 +318,7 @@ struct ShoppingListView: View {
                     await slAction(.clearDone)
                 }
             }
-        }, message: { Text(grocyVM.shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
 //        .sheet(item: $activeSheet, content: { item in
 //            switch item {
 //            case .newShoppingList:
@@ -341,7 +341,7 @@ struct ShoppingListView: View {
     var shoppingListActionContent: some View {
         Group {
             Picker(selection: $selectedShoppingListID, label: Text(""), content: {
-                ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shoppingListDescription in
+                ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
                     Text(shoppingListDescription.name).tag(shoppingListDescription.id)
                 }
             })

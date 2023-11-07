@@ -5,7 +5,147 @@
 //  Created by Georg Meissner on 08.03.21.
 //
 
+import PhotosUI
 import SwiftUI
+
+struct MDProductPictureFormViewNew: View {
+    @Environment(GrocyViewModel.self) private var grocyVM
+    
+    var product: MDProduct?
+    
+    @Binding var pictureFileName: String?
+    
+    @State private var isProcessing: Bool = false
+    
+    @State private var productImageFilename: String?
+    @State private var productImageItem: PhotosPickerItem?
+    @State private var productImageData: Data?
+    @State private var productImage: Image?
+    
+    private func deletePicture(savedPictureFileNameData: Data) async {
+        isProcessing = true
+        do {
+            try await grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)))
+            await grocyVM.postLog("Picture successfully deleted.", type: .info)
+            await changeProductPicture(newPictureFileName: nil)
+        } catch {
+            await grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
+            isProcessing = false
+        }
+    }
+    
+    private func uploadPicture() async {
+        if let productImageData = productImageData, let productImageFilename = productImageFilename {
+//#if os(iOS)
+//            let imagePicture = UIImage(data: productImageData)
+//#elseif os(macOS)
+//            let imagePicture = NSImage(data: productImageData)
+//#endif
+//            if let pictureFileNameData = productImageFilename.data(using: .utf8), let jpegData = imagePicture?.jpegData(compressionQuality: 0.8) {
+//                let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+//                isProcessing = true
+//                do {
+//                    try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
+//                    grocyVM.postLog("Picture successfully uploaded.", type: .info)
+//                    //                await changeProductPicture(newPictureFileName: newPictureFileName)
+//                } catch {
+//                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+//                    isProcessing = false
+//                }
+//            }
+        }
+    }
+    
+    private func changeProductPicture(newPictureFileName: String?) async {
+        if let product = product {
+            var updatedProduct = product
+            updatedProduct.pictureFileName = newPictureFileName
+            do {
+                try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: updatedProduct)
+                await grocyVM.postLog("Picture successfully changed in product.", type: .info)
+                await grocyVM.requestData(objects: [.products])
+                pictureFileName = newPictureFileName
+                productImageFilename = nil
+                productImage = nil
+                productImageItem = nil
+                productImageData = nil
+            } catch {
+                await grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
+            }
+        }
+        isProcessing = false
+    }
+    
+    var body: some View {
+        Form {
+            if let pictureFileName = pictureFileName, !pictureFileName.isEmpty {
+                Section("Existing product picture") {
+                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 300.0, maxHeight: 300.0)
+                    Text(pictureFileName)
+                        .font(.caption)
+                    if let pictureFileNameData = pictureFileName.data(using: .utf8) {
+                        Button(action: {
+                            Task {
+                                await deletePicture(savedPictureFileNameData: pictureFileNameData)
+                            }
+                        }, label: {
+                            Label("Delete product picture", systemImage: MySymbols.delete)
+                                .foregroundStyle(.red)
+                        })
+                        .disabled(isProcessing)
+                    }
+                }
+            }
+            Section {
+                PhotosPicker(selection: $productImageItem, matching: .images, label: {
+                    Label("Select product picture from gallery", systemImage: MySymbols.gallery)
+                })
+                if let productImage {
+                    productImage
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 300.0, height: 300.0)
+                    if let productImageFilename = productImageFilename {
+                        Text(productImageFilename)
+                            .font(.caption)
+                        Button(action: {
+                            Task {
+                                await uploadPicture()
+                            }
+                        }, label: {
+                            Label("Upload product picture", systemImage: MySymbols.upload)
+                        })
+                        .disabled(isProcessing)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Product picture")
+        .onChange(of: productImageItem) {
+            Task {
+                if let data = try? await productImageItem?.loadTransferable(type: Data.self) {
+                    if let product = product {
+                        productImageFilename = "\(UUID())_\(product.name.cleanedFileName).jpg"
+                    } else {
+                        productImageFilename = "\(UUID()).jpg"
+                    }
+                    productImageData = data
+#if os(iOS)
+                    if let uiImage = UIImage(data: data) {
+                        productImage = Image(uiImage: uiImage)
+                        return
+                    }
+#elseif os(macOS)
+                    if let nsImage = NSImage(data: data) {
+                        productImage = Image(nsImage: nsImage)
+                        return
+                    }
+#endif
+                }
+            }
+        }
+    }
+}
 
 struct MDProductPictureFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -31,10 +171,10 @@ struct MDProductPictureFormView: View {
         isProcessing = true
         do {
             try await grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)))
-            grocyVM.postLog("Picture successfully deleted.", type: .info)
+            await grocyVM.postLog("Picture successfully deleted.", type: .info)
             await changeProductPicture(newPictureFileName: nil)
         } catch {
-            grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
+            await grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
             isProcessing = false
         }
     }
@@ -46,10 +186,10 @@ struct MDProductPictureFormView: View {
             isProcessing = true
             do {
                 try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
-                grocyVM.postLog("Picture successfully uploaded.", type: .info)
+                await grocyVM.postLog("Picture successfully uploaded.", type: .info)
                 await changeProductPicture(newPictureFileName: newPictureFileName)
             } catch {
-                grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+                await grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                 isProcessing = false
             }
         }
@@ -80,12 +220,12 @@ struct MDProductPictureFormView: View {
             productPOST.pictureFileName = newPictureFileName
             do {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST)
-                grocyVM.postLog("Picture successfully changed in product.", type: .info)
+                await grocyVM.postLog("Picture successfully changed in product.", type: .info)
                 await grocyVM.requestData(objects: [.products])
                 pictureFileName = selectedPictureFileName
                 selectedPictureFileName = nil
             } catch {
-                grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
+                await grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
             }
         }
         isProcessing = false
@@ -191,7 +331,7 @@ struct MDProductPictureFormView: View {
             }
         }
 #if os(iOS)
-        .navigationTitle("Product picture")
+        
 #endif
     }
 }

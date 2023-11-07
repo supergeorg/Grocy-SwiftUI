@@ -26,14 +26,15 @@ struct MDTaskCategoryFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundTaskCategory = grocyVM.mdTaskCategories.first(where: {$0.name == name})
-        if isNewTaskCategory {
-            return !(name.isEmpty || foundTaskCategory != nil)
-        } else {
-            if let taskCategory = taskCategory, let foundTaskCategory = foundTaskCategory {
-                return !(name.isEmpty || (foundTaskCategory.id != taskCategory.id))
-            } else { return false }
-        }
+//        let foundTaskCategory = grocyVM.mdTaskCategories.first(where: {$0.name == name})
+//        if isNewTaskCategory {
+//            return !(name.isEmpty || foundTaskCategory != nil)
+//        } else {
+//            if let taskCategory = taskCategory, let foundTaskCategory = foundTaskCategory {
+//                return !(name.isEmpty || (foundTaskCategory.id != taskCategory.id))
+//            } else { return false }
+//        }
+        return false
     }
     
     private func resetForm() {
@@ -58,28 +59,28 @@ struct MDTaskCategoryFormView: View {
     }
     
     private func saveTaskCategory() async {
-        let id = isNewTaskCategory ? grocyVM.findNextID(.task_categories) : taskCategory!.id
+        let id = await isNewTaskCategory ? grocyVM.findNextID(.task_categories) : taskCategory!.id
         let timeStamp = isNewTaskCategory ? Date().iso8601withFractionalSeconds : taskCategory!.rowCreatedTimestamp
         let taskCategoryPOST = MDTaskCategory(id: id, name: name, mdTaskCategoryDescription: mdTaskCategoryDescription, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewTaskCategory {
             do {
                 _ = try await grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST)
-                grocyVM.postLog("Task category add successful.", type: .info)
+                await grocyVM.postLog("Task category add successful.", type: .info)
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Task category add failed. \(error)", type: .error)
+                await grocyVM.postLog("Task category add failed. \(error)", type: .error)
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST)
-                grocyVM.postLog("Task category edit successful.", type: .info)
+                await grocyVM.postLog("Task category edit successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Task category edit failed. \(error)", type: .error)
+                await grocyVM.postLog("Task category edit failed. \(error)", type: .error)
             }
         }
         isProcessing = false

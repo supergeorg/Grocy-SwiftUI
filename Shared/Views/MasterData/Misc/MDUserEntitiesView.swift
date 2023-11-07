@@ -39,12 +39,12 @@ struct MDUserEntitiesView: View {
         await grocyVM.requestData(objects: dataToUpdate)
     }
     
-    private var filteredUserEntities: MDUserEntities {
-        grocyVM.mdUserEntities
-            .filter {
-                searchString.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchString) || $0.caption.localizedCaseInsensitiveContains(searchString))
-            }
-    }
+//    private var filteredUserEntities: MDUserEntities {
+//        grocyVM.mdUserEntities
+//            .filter {
+//                searchString.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchString) || $0.caption.localizedCaseInsensitiveContains(searchString))
+//            }
+//    }
     
     private func deleteItem(itemToDelete: MDUserEntity) {
         userEntityToDelete = itemToDelete
@@ -53,10 +53,10 @@ struct MDUserEntitiesView: View {
     private func deleteUserEntity(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .userentities, id: toDelID)
-            grocyVM.postLog("Deleting user entity was successful.", type: .info)
+            await grocyVM.postLog("Deleting user entity was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
         }
     }
     
@@ -99,22 +99,22 @@ struct MDUserEntitiesView: View {
     
     var content: some View {
         List{
-            if grocyVM.mdUserEntities.isEmpty {
-                Text("No userentities found.")
-            } else if filteredUserEntities.isEmpty {
-                ContentUnavailableView.search
-            }
-            ForEach(filteredUserEntities, id:\.id) { userEntity in
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
-                    MDUserEntityRowView(userEntity: userEntity)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                    Button(role: .destructive,
-                           action: { deleteItem(itemToDelete: userEntity) },
-                           label: { Label("Delete", systemImage: MySymbols.delete) }
-                    )
-                })
-            }
+//            if grocyVM.mdUserEntities.isEmpty {
+//                Text("No userentities found.")
+//            } else if filteredUserEntities.isEmpty {
+//                ContentUnavailableView.search
+//            }
+//            ForEach(filteredUserEntities, id:\.id) { userEntity in
+//                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
+//                    MDUserEntityRowView(userEntity: userEntity)
+//                }
+//                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+//                    Button(role: .destructive,
+//                           action: { deleteItem(itemToDelete: userEntity) },
+//                           label: { Label("Delete", systemImage: MySymbols.delete) }
+//                    )
+//                })
+//            }
         }
         .task {
             Task {
@@ -125,7 +125,7 @@ struct MDUserEntitiesView: View {
         .refreshable {
             await updateData()
         }
-        .animation(.default, value: filteredUserEntities.count)
+//        .animation(.default, value: filteredUserEntities.count)
         .alert("Do you really want to delete this user entity?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

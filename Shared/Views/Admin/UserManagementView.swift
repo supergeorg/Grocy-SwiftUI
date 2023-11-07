@@ -22,12 +22,12 @@ struct UserManagementView: View {
         await grocyVM.requestData(additionalObjects: additionalDataToUpdate)
     }
     
-    var filteredUsers: GrocyUsers {
-        grocyVM.users
-            .filter {
-                !searchString.isEmpty ? ($0.username.localizedCaseInsensitiveContains(searchString) && $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
-            }
-    }
+//    var filteredUsers: GrocyUsers {
+//        grocyVM.users
+//            .filter {
+//                !searchString.isEmpty ? ($0.username.localizedCaseInsensitiveContains(searchString) && $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
+//            }
+//    }
     
     var body: some View {
         if grocyVM.failedToLoadAdditionalObjects.filter({additionalDataToUpdate.contains($0)}).count == 0 {
@@ -98,12 +98,12 @@ struct UserManagementView: View {
     
     var content: some View {
         List{
-            if grocyVM.users.isEmpty {
-                Text("No users found").padding()
-            }
-            ForEach(filteredUsers, id:\.id) {user in
-                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
-            }
+//            if grocyVM.users.isEmpty {
+//                Text("No users found").padding()
+//            }
+//            ForEach(filteredUsers, id:\.id) {user in
+//                UserRowView(user: user, isCurrentUser: (grocyVM.systemConfig?.userUsername == user.username))
+//            }
         }
         .navigationTitle("User management")
         .task {

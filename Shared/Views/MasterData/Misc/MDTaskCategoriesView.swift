@@ -42,12 +42,12 @@ struct MDTaskCategoriesView: View {
         await grocyVM.requestData(objects: dataToUpdate)
     }
     
-    private var filteredTaskCategories: MDTaskCategories {
-        grocyVM.mdTaskCategories
-            .filter {
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            }
-    }
+//    private var filteredTaskCategories: MDTaskCategories {
+//        grocyVM.mdTaskCategories
+//            .filter {
+//                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
+//            }
+//    }
     
     private func deleteItem(itemToDelete: MDTaskCategory) {
         taskCategoryToDelete = itemToDelete
@@ -56,10 +56,10 @@ struct MDTaskCategoriesView: View {
     private func deleteTaskCategory(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .task_categories, id: toDelID)
-            grocyVM.postLog("Deleting task category was successful.", type: .info)
+            await grocyVM.postLog("Deleting task category was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
         }
     }
     
@@ -103,22 +103,22 @@ struct MDTaskCategoriesView: View {
     
     var content: some View {
         List{
-            if grocyVM.mdTaskCategories.isEmpty {
-                Text("No task categories found.")
-            } else if filteredTaskCategories.isEmpty {
-                ContentUnavailableView.search
-            }
-            ForEach(filteredTaskCategories, id:\.id) { taskCategory in
-                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: taskCategory, showAddTaskCategory: $showAddTaskCategory)) {
-                    MDTaskCategoryRowView(taskCategory: taskCategory)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                    Button(role: .destructive,
-                           action: { deleteItem(itemToDelete: taskCategory) },
-                           label: { Label("Delete", systemImage: MySymbols.delete) }
-                    )
-                })
-            }
+//            if grocyVM.mdTaskCategories.isEmpty {
+//                Text("No task categories found.")
+//            } else if filteredTaskCategories.isEmpty {
+//                ContentUnavailableView.search
+//            }
+//            ForEach(filteredTaskCategories, id:\.id) { taskCategory in
+//                NavigationLink(destination: MDTaskCategoryFormView(isNewTaskCategory: false, taskCategory: taskCategory, showAddTaskCategory: $showAddTaskCategory)) {
+//                    MDTaskCategoryRowView(taskCategory: taskCategory)
+//                }
+//                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+//                    Button(role: .destructive,
+//                           action: { deleteItem(itemToDelete: taskCategory) },
+//                           label: { Label("Delete", systemImage: MySymbols.delete) }
+//                    )
+//                })
+//            }
         }
         .task {
             Task {
@@ -129,7 +129,7 @@ struct MDTaskCategoriesView: View {
         .refreshable {
             await updateData()
         }
-        .animation(.default, value: filteredTaskCategories.count)
+//        .animation(.default, value: filteredTaskCategories.count)
         .alert("Do you really want to delete this task category?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

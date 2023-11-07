@@ -11,9 +11,9 @@ import SwiftData
 struct StockJournalView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \StockJournalEntry.id, order: .forward) var stockJournal: StockJournal
-//    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-//    @Query(sort: \GrocyUser.id, order: .forward) var grocyUsers: GrocyUsers
+    @Query(sort: \StockJournalEntry.id, order: .forward) var stockJournal: StockJournal
+    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \GrocyUser.id, order: .forward) var grocyUsers: GrocyUsers
     
     @State private var searchString: String = ""
     
@@ -37,17 +37,17 @@ struct StockJournalView: View {
     private func undoTransaction(stockJournalEntry: StockJournalEntry) async {
         do {
             try await grocyVM.undoBookingWithID(id: stockJournalEntry.id)
-            grocyVM.postLog("Undo transaction \(stockJournalEntry.id) successful.", type: .info)
+            await grocyVM.postLog("Undo transaction \(stockJournalEntry.id) successful.", type: .info)
             await grocyVM.requestData(objects: [.stock_log])
         } catch {
-            grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+            await grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
         }
     }
     
     var filteredJournal: StockJournal {
-        grocyVM.stockJournal
+        stockJournal
             .filter { journalEntry in
-                !searchString.isEmpty ? grocyVM.mdProducts.first(where: { product in
+                !searchString.isEmpty ? mdProducts.first(where: { product in
                     product.name.localizedCaseInsensitiveContains(searchString)
                 })?.id == journalEntry.productID : true
             }
@@ -70,13 +70,13 @@ struct StockJournalView: View {
     
     var body: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.stockJournal.isEmpty {
-                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
-            } else if filteredJournal.isEmpty {
-                ContentUnavailableView.search
-            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if grocyVM.stockJournal.isEmpty {
+//                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
+//            } else if filteredJournal.isEmpty {
+//                ContentUnavailableView.search
+//            }
             ForEach(filteredJournal, id: \.id) { journalEntry in
                 StockJournalRowView(journalEntry: journalEntry)
                     .swipeActions(edge: .leading, allowsFullSwipe: true, content: {

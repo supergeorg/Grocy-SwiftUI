@@ -11,7 +11,7 @@ import SwiftData
 struct MDQuantityUnitsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
@@ -25,7 +25,7 @@ struct MDQuantityUnitsView: View {
     }
     
     private var filteredQuantityUnits: MDQuantityUnits {
-        grocyVM.mdQuantityUnits
+        mdQuantityUnits
             .filter {
                 searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
             }
@@ -38,23 +38,23 @@ struct MDQuantityUnitsView: View {
     private func deleteQuantityUnit(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .quantity_units, id: toDelID)
-            grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
+            await grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
+            await grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
         }
     }
     
     
     var body: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if grocyVM.mdQuantityUnits.isEmpty {
-                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
-            } else if filteredQuantityUnits.isEmpty {
-                ContentUnavailableView.search
-            }
+//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+//                ServerProblemView()
+//            } else if mdQuantityUnits.isEmpty {
+//                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
+//            } else if filteredQuantityUnits.isEmpty {
+//                ContentUnavailableView.search
+//            }
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
                 NavigationLink(value: quantityUnit) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)

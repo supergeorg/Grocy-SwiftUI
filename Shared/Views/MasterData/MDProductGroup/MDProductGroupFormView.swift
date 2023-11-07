@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDProductGroupFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +24,7 @@ struct MDProductGroupFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundProductGroup = grocyVM.mdProductGroups.first(where: {$0.name == productGroup.name})
+        let foundProductGroup = mdProductGroups.first(where: {$0.name == productGroup.name})
         return !(productGroup.name.isEmpty || (foundProductGroup != nil && foundProductGroup!.id != productGroup.id))
     }
     
@@ -49,7 +52,7 @@ struct MDProductGroupFormView: View {
     
     private func saveProductGroup() async {
         if productGroup.id == 0 {
-            productGroup.id = grocyVM.findNextID(.product_groups)
+            productGroup.id = await grocyVM.findNextID(.product_groups)
         }
         isProcessing = true
         isSuccessful = nil
@@ -59,11 +62,11 @@ struct MDProductGroupFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_groups, id: productGroup.id, content: productGroup)
             }
-            grocyVM.postLog("Product group \(productGroup.name) successful.", type: .info)
+            await grocyVM.postLog("Product group \(productGroup.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Product group \(productGroup.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Product group \(productGroup.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

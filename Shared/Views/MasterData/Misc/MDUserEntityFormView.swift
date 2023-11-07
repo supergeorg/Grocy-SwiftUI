@@ -28,8 +28,9 @@ struct MDUserEntityFormView: View {
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
-        let foundUserEntity = grocyVM.mdUserEntities.first(where: {$0.name == name})
-        return isNewUserEntity ? !(name.isEmpty || foundUserEntity != nil) : !(name.isEmpty || (foundUserEntity != nil && foundUserEntity!.id != foundUserEntity!.id))
+//        let foundUserEntity = grocyVM.mdUserEntities.first(where: {$0.name == name})
+//        return isNewUserEntity ? !(name.isEmpty || foundUserEntity != nil) : !(name.isEmpty || (foundUserEntity != nil && foundUserEntity!.id != foundUserEntity!.id))
+        return false
     }
     
     @State private var isCaptionCorrect: Bool = true
@@ -62,28 +63,28 @@ struct MDUserEntityFormView: View {
     }
     
     private func saveUserEntity() async {
-        let id: Int = isNewUserEntity ? grocyVM.findNextID(.userentities) : userEntity!.id
+        let id: Int = await isNewUserEntity ? grocyVM.findNextID(.userentities) : userEntity!.id
         let timeStamp = isNewUserEntity ? Date().iso8601withFractionalSeconds : userEntity!.rowCreatedTimestamp
         let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? 1 : 0, iconCSSClass: nil, rowCreatedTimestamp: timeStamp)
         isProcessing = true
         if isNewUserEntity {
             do {
                 _ = try await grocyVM.postMDObject(object: .userentities, content: userEntityPOST)
-                grocyVM.postLog("User entity add successful.", type: .info)
+                await grocyVM.postLog("User entity add successful.", type: .info)
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("User entity add failed. \(error)", type: .error)
+                await grocyVM.postLog("User entity add failed. \(error)", type: .error)
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
-                grocyVM.postLog("User entity edit successful.", type: .info)
+                await grocyVM.postLog("User entity edit successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("User entity edit failed. \(error)", type: .error)
+                await grocyVM.postLog("User entity edit failed. \(error)", type: .error)
             }
         }
         isProcessing = false

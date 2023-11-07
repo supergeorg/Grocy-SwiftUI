@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShoppingListFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +24,7 @@ struct ShoppingListFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundShoppingListDescription = grocyVM.shoppingListDescriptions.first(where: { $0.name == name })
+        let foundShoppingListDescription = shoppingListDescriptions.first(where: { $0.name == name })
         return shoppingListDescription == nil ? !(name.isEmpty || foundShoppingListDescription != nil) : !(name.isEmpty || (foundShoppingListDescription != nil && foundShoppingListDescription!.id != shoppingListDescription!.id))
     }
     
@@ -38,7 +41,7 @@ struct ShoppingListFormView: View {
     }
     
     func saveShoppingList() async {
-        let id = shoppingListDescription == nil ? grocyVM.findNextID(.shopping_lists) : shoppingListDescription!.id
+        let id = await shoppingListDescription == nil ? grocyVM.findNextID(.shopping_lists) : shoppingListDescription!.id
         let timeStamp = shoppingListDescription == nil ? Date().iso8601withFractionalSeconds : shoppingListDescription!.rowCreatedTimestamp
         let shoppingListPOST = ShoppingListDescription(
             id: id,
@@ -52,11 +55,11 @@ struct ShoppingListFormView: View {
                     object: .shopping_lists,
                     content: shoppingListPOST
                 )
-                grocyVM.postLog("Shopping list save successful.", type: .info)
+                await grocyVM.postLog("Shopping list save successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+                await grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
             }
         } else {
             do {
@@ -65,11 +68,11 @@ struct ShoppingListFormView: View {
                     id: id,
                     content: shoppingListPOST
                 )
-                grocyVM.postLog("Shopping list edit successful.", type: .info)
+                await grocyVM.postLog("Shopping list edit successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+                await grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
             }
         }
         isProcessing = false

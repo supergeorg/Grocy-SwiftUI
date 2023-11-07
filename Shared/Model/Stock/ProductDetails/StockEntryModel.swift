@@ -6,23 +6,23 @@
 //
 
 import Foundation
+import SwiftData
 
-// MARK: - StockEntry
-
-struct StockEntry: Codable, Equatable {
-    let id: Int
-    let productID: Int
-    let amount: Double
-    let bestBeforeDate: Date?
-    let purchasedDate: Date?
-    let stockID: String
-    let price: Double?
-    let stockEntryOpen: Bool
-    let openedDate: Date?
-    let rowCreatedTimestamp: String
-    let locationID: Int?
-    let storeID: Int?
-    let note: String?
+@Model
+class StockEntry: Codable, Equatable {
+    @Attribute(.unique) var id: Int
+    var productID: Int
+    var amount: Double
+    var bestBeforeDate: Date?
+    var purchasedDate: Date?
+    var stockID: String
+    var price: Double?
+    var stockEntryOpen: Bool
+    var openedDate: Date?
+    var rowCreatedTimestamp: String
+    var locationID: Int?
+    var storeID: Int?
+    var note: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -40,7 +40,7 @@ struct StockEntry: Codable, Equatable {
         case note
     }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -104,6 +104,23 @@ struct StockEntry: Codable, Equatable {
         self.locationID = locationID
         self.storeID = storeID
         self.note = note
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(bestBeforeDate, forKey: .bestBeforeDate)
+        try container.encode(purchasedDate, forKey: .purchasedDate)
+        try container.encode(stockID, forKey: .stockID)
+        try container.encode(price, forKey: .price)
+        try container.encode(stockEntryOpen, forKey: .stockEntryOpen)
+        try container.encode(openedDate, forKey: .openedDate)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
+        try container.encode(locationID, forKey: .locationID)
+        try container.encode(storeID, forKey: .storeID)
+        try container.encode(note, forKey: .note)
     }
 }
 

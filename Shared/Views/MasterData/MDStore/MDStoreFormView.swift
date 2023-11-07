@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDStoreFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +24,7 @@ struct MDStoreFormView: View {
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
-        let foundStore = grocyVM.mdStores.first(where: { $0.name == store.name })
+        let foundStore = mdStores.first(where: { $0.name == store.name })
         return !(store.name.isEmpty || (foundStore != nil && foundStore!.id != store.id))
     }
     
@@ -49,7 +52,7 @@ struct MDStoreFormView: View {
     
     private func saveStore() async {
         if store.id == 0 {
-            store.id = grocyVM.findNextID(.shopping_locations)
+            store.id = await grocyVM.findNextID(.shopping_locations)
         }
         isProcessing = true
         isSuccessful = nil
@@ -59,11 +62,11 @@ struct MDStoreFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: store.id, content: store)
             }
-            grocyVM.postLog("Store \(store.name) successful.", type: .info)
+            await grocyVM.postLog("Store \(store.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Store \(store.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Store \(store.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }
