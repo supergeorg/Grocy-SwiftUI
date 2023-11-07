@@ -47,16 +47,6 @@ struct AppTabNavigation: View {
             }
             .tag(TabNavigationItem.shoppingList)
             
-            if devMode {
-                NavigationView {
-                    RecipesView()
-                }
-                .tabItem({
-                    Label("Recipes", systemImage: MySymbols.recipe)
-                })
-                .tag(TabNavigationItem.recipes)
-            }
-            
             NavigationStack {
                 MasterDataView()
             }

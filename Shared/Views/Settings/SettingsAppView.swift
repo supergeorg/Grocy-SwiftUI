@@ -11,6 +11,10 @@ struct SettingsAppView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @AppStorage("devMode") private var devMode: Bool = false
+    #if os(iOS)
+    @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
     
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
     @AppStorage("autoReload") private var autoReload: Bool = false
@@ -70,6 +74,9 @@ struct SettingsAppView: View {
                     Label("Barcode settings", systemImage: MySymbols.barcodeScan)
                         .foregroundStyle(.primary)
                 })
+            if horizontalSizeClass == .compact {
+                MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: classic tab navigation (deprecated)", icon: "platter.filled.bottom.iphone")
+            }
 #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
 #if os(iOS)
