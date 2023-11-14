@@ -203,10 +203,10 @@ struct MDProductPictureFormView: View {
                 isProcessing = true
                 do {
                     try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
-                    grocyVM.postLog("Picture successfully uploaded.", type: .info)
+                    await grocyVM.postLog("Picture successfully uploaded.", type: .info)
                     await changeProductPicture(newPictureFileName: newPictureFileName)
                 } catch {
-                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+                    await grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                     isProcessing = false
                 }
             }

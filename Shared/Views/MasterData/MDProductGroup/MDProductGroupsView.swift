@@ -15,7 +15,6 @@ struct MDProductGroupsView: View {
     
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
-    
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteConfirmation: Bool = false
     
@@ -49,13 +48,13 @@ struct MDProductGroupsView: View {
     
     var body: some View {
         List {
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if mdProductGroups.isEmpty {
-//                ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
-//            } else if filteredProductGroups.isEmpty {
-//                ContentUnavailableView.search
-//            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdProductGroups.isEmpty {
+                ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
+            } else if filteredProductGroups.isEmpty {
+                ContentUnavailableView.search
+            }
             ForEach(filteredProductGroups, id:\.id) { productGroup in
                 NavigationLink(value: productGroup, label: {
                     MDProductGroupRowView(productGroup: productGroup)

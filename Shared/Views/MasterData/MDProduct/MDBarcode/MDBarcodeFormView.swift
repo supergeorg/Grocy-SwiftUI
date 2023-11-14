@@ -12,6 +12,8 @@ struct MDBarcodeFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
+    @Query(filter: #Predicate<MDStore>{$0.active}, sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @Environment(\.dismiss) var dismiss
     
@@ -91,25 +93,25 @@ struct MDBarcodeFormView: View {
             
             Section("Amount") {
                 MyDoubleStepperOptional(amount: $barcode.amount, description: "Amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
-//                Picker(selection: $barcode.quID, label: Label("Quantity unit", systemImage: "scalemass").labelStyle(.foreground), content: {
-//                    Text("")
-//                        .tag(nil as Int?)
-//                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { pickerQU in
-//                        if !pickerQU.namePlural.isEmpty {
-//                            Text("\(pickerQU.name) (\(pickerQU.namePlural))")
-//                                .tag(pickerQU.id as Int?)
-//                        } else {
-//                            Text("\(pickerQU.name)")
-//                                .tag(pickerQU.id as Int?)
-//                        }
-//                    }
-//                })
+                Picker(selection: $barcode.quID, label: Label("Quantity unit", systemImage: "scalemass"), content: {
+                    Text("")
+                        .tag(nil as Int?)
+                    ForEach(mdQuantityUnits, id:\.id) { pickerQU in
+                        if !pickerQU.namePlural.isEmpty {
+                            Text("\(pickerQU.name) (\(pickerQU.namePlural))")
+                                .tag(pickerQU.id as Int?)
+                        } else {
+                            Text("\(pickerQU.name)")
+                                .tag(pickerQU.id as Int?)
+                        }
+                    }
+                })
             }
-//            
+            
             Picker(selection: $barcode.storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                 Text("")
                     .tag(nil as Int?)
-                ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { grocyStore in
+                ForEach(mdStores, id:\.id) { grocyStore in
                     Text(grocyStore.name)
                         .tag(grocyStore.id as Int?)
                 }

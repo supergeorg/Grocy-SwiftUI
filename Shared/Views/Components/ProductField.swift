@@ -11,7 +11,7 @@ import SwiftData
 struct ProductFieldNew: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @Binding var productID: Int?
@@ -30,9 +30,6 @@ struct ProductFieldNew: View {
         .filter {
             $0.noOwnStock != true
         }
-        .filter({
-            $0.active
-        })
         .sorted(by: {
             $0.name.lowercased() < $1.name.lowercased()
         })
@@ -95,7 +92,7 @@ struct ProductField: View {
     
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @Binding var productID: Int?

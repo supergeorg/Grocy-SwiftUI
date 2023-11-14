@@ -11,10 +11,9 @@ import SwiftData
 struct MDProductsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     
     @State private var searchString: String = ""
-    
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteConfirmation: Bool = false
@@ -48,13 +47,13 @@ struct MDProductsView: View {
     
     var body: some View {
         List{
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if mdProducts.isEmpty {
-//                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
-//            } else if filteredProducts.isEmpty {
-//                ContentUnavailableView.search
-//            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdProducts.isEmpty {
+                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
+            } else if filteredProducts.isEmpty {
+                ContentUnavailableView.search
+            }
             ForEach(filteredProducts, id:\.id) { product in
                 NavigationLink(value: product) {
                     MDProductRowView(product: product)

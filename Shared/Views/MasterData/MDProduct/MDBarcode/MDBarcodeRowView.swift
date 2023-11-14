@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDBarcodeRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
     var barcode: MDProductBarcode
     
@@ -18,9 +22,9 @@ struct MDBarcodeRowView: View {
                 .font(.title)
             HStack{
                 if let amount = barcode.amount {
-                    Text("Amount: \(amount.formattedAmount) \(grocyVM.mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name ?? String(barcode.quID ?? 0))")
+                    Text("Amount: \(amount.formattedAmount) \(mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name ?? String(barcode.quID ?? 0))")
                 }
-                if let storeName = grocyVM.mdStores.first(where: {$0.id == barcode.storeID})?.name {
+                if let storeName = mdStores.first(where: {$0.id == barcode.storeID})?.name {
                     Text("Store: \(storeName)")
                 }
             }.font(.caption)

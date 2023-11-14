@@ -11,10 +11,10 @@ import SwiftData
 struct TransferProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(filter: #Predicate<MDProduct>{$0.active}, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
-    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -116,7 +116,7 @@ struct TransferProductView: View {
                 .onChange(of: productID) {
                     Task {
                         try await grocyVM.getStockProductEntries(productID: productID ?? 0)
-                        if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+                        if let selectedProduct = mdProducts.first(where: {$0.id == productID}) {
                             locationIDFrom = selectedProduct.locationID
                             quantityUnitID = selectedProduct.quIDStock
                         }
@@ -128,7 +128,7 @@ struct TransferProductView: View {
             VStack(alignment: .leading) {
                 Picker(selection: $locationIDFrom, label: Label("From location", systemImage: "square.and.arrow.up").foregroundStyle(.primary), content: {
                     Text("").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationFrom in
+                    ForEach(mdLocations, id:\.id) { locationFrom in
                         Text(locationFrom.name).tag(locationFrom.id as Int?)
                     }
                 })
@@ -148,7 +148,7 @@ struct TransferProductView: View {
                     label: Label("To location", systemImage: "square.and.arrow.down").foregroundStyle(.primary),
                     content: {
                         Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { locationTo in
+                        ForEach(mdLocations, id:\.id) { locationTo in
                             Text(locationTo.name).tag(locationTo.id as Int?)
                         }
                     })

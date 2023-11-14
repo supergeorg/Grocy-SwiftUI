@@ -11,9 +11,11 @@ import SwiftData
 struct InventoryProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(filter: #Predicate<MDProduct>{$0.active}, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(filter: #Predicate<MDStore>{$0.active}, sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
     
     @Environment(\.dismiss) var dismiss
@@ -98,8 +100,6 @@ struct InventoryProductView: View {
             price: nil,
             note: ""
         )
-        //                amount = selectedProductStock?.amount ?? 1.0
-        //                        quantityUnitID = firstAppear ? product?.quIDStock : nil
         quantityUnitID = nil
         productNeverOverdue = false
     }
@@ -161,7 +161,7 @@ struct InventoryProductView: View {
                     Picker(selection: $productInventory.storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary), content: {
                         Text("")
                             .tag(nil as Int?)
-                        ForEach(grocyVM.mdStores.filter({$0.active}), id:\.id) { store in
+                        ForEach(mdStores, id:\.id) { store in
                             Text(store.name)
                                 .tag(store.id as Int?)
                         }
@@ -170,7 +170,7 @@ struct InventoryProductView: View {
                     Picker(selection: $productInventory.locationID, label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary), content: {
                         Text("")
                             .tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
+                        ForEach(mdLocations, id:\.id) { location in
                             Text(location.name)
                                 .tag(location.id as Int?)
                         }
@@ -192,7 +192,7 @@ struct InventoryProductView: View {
                     try await grocyVM.getStockProductEntries(productID: productID)
                 }
             }
-            if let selectedProduct = grocyVM.mdProducts.first(where: {$0.id == productID}) {
+            if let selectedProduct = mdProducts.first(where: {$0.id == productID}) {
                 productInventory.storeID = selectedProduct.storeID
                 productInventory.locationID = selectedProduct.locationID
                 quantityUnitID = selectedProduct.quIDStock

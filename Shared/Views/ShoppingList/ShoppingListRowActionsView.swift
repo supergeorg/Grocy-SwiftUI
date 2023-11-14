@@ -11,7 +11,7 @@ import SwiftData
 struct ShoppingListRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var shoppingListItem: ShoppingListItem
@@ -106,7 +106,7 @@ struct ShoppingListRowActionsView: View {
                             await deleteSHLItem()
                         }
                     }
-                }, message: { Text(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
+                }, message: { Text(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
             
             RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "Add \(shoppingListItem.amount, specifier: "%.2f") \(quantityUnit?.getName(amount: shoppingListItem.amount) ?? "") \(productName) to stock")
                 .onTapGesture {

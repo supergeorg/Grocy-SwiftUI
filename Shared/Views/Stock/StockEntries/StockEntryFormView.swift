@@ -11,10 +11,10 @@ import SwiftData
 struct StockEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
-    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
-    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDProduct>{$0.active}, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(filter: #Predicate<MDStore>{$0.active}, sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -126,7 +126,7 @@ struct StockEntryFormView: View {
                    label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
-                ForEach(mdStores.filter({$0.active}), id:\.id) { store in
+                ForEach(mdStores, id:\.id) { store in
                     Text(store.name).tag(store.id as Int?)
                 }
             })
@@ -135,7 +135,7 @@ struct StockEntryFormView: View {
                    label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
                    content: {
                 Text("").tag(nil as Int?)
-                ForEach(mdLocations.filter({$0.active}), id:\.id) { location in
+                ForEach(mdLocations, id:\.id) { location in
                     Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
                         .tag(location.id as Int?)
                 }

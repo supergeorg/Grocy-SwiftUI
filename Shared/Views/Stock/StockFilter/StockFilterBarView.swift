@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockFilterBar: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Binding var searchString: String
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDProductGroup>{$0.active}, sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+
     @Binding var filteredLocation: Int?
     @Binding var filteredProductGroup: Int?
     @Binding var filteredStatus: ProductStatus
@@ -21,7 +24,7 @@ struct StockFilterBar: View {
             Menu {
                 Picker("", selection: $filteredLocation, content: {
                     Text("All").tag(nil as Int?)
-                    ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
+                    ForEach(mdLocations, id:\.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 })
@@ -31,7 +34,7 @@ struct StockFilterBar: View {
                     Image(systemName: MySymbols.filter)
                     VStack{
                         Text("Location")
-                        if let locationName = grocyVM.mdLocations.first(where: { $0.id == filteredLocation })?.name {
+                        if let locationName = mdLocations.first(where: { $0.id == filteredLocation })?.name {
                             Text(locationName)
                                 .font(.caption)
                         }
@@ -43,7 +46,7 @@ struct StockFilterBar: View {
                    label: Label("Location", systemImage: MySymbols.filter),
                    content: {
                 Text("All").tag(nil as Int?)
-                ForEach(grocyVM.mdLocations.filter({$0.active}), id:\.id) { location in
+                ForEach(mdLocations, id:\.id) { location in
                     Text(location.name).tag(location.id as Int?)
                 }
             })
@@ -53,7 +56,7 @@ struct StockFilterBar: View {
             Menu {
                 Picker("", selection: $filteredProductGroup, content: {
                     Text("All").tag(nil as Int?)
-                    ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { productGroup in
+                    ForEach(mdProductGroups, id:\.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 })
@@ -63,7 +66,7 @@ struct StockFilterBar: View {
                     Image(systemName: MySymbols.filter)
                     VStack{
                         Text("Product group")
-                        if let productGroupName = grocyVM.mdProductGroups.first(where: { $0.id == filteredProductGroup })?.name {
+                        if let productGroupName = mdProductGroups.first(where: { $0.id == filteredProductGroup })?.name {
                             Text(productGroupName)
                                 .font(.caption)
                         }
@@ -75,7 +78,7 @@ struct StockFilterBar: View {
                    label: Label("Product group", systemImage: MySymbols.filter),
                    content: {
                 Text("All").tag(nil as Int?)
-                ForEach(grocyVM.mdProductGroups.filter({$0.active}), id:\.id) { productGroup in
+                ForEach(mdProductGroups, id:\.id) { productGroup in
                     Text(productGroup.name).tag(productGroup.id as Int?)
                 }
             })
@@ -137,8 +140,8 @@ struct StockFilterBar: View {
     }
 }
 
-struct StockFilterBar_Previews: PreviewProvider {
-    static var previews: some View {
-        StockFilterBar(searchString: Binding.constant(""), filteredLocation: Binding.constant(nil), filteredProductGroup: Binding.constant(nil), filteredStatus: Binding.constant(ProductStatus.all))
-    }
-}
+//struct StockFilterBar_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StockFilterBar(searchString: Binding.constant(""), filteredLocation: Binding.constant(nil), filteredProductGroup: Binding.constant(nil), filteredStatus: Binding.constant(ProductStatus.all))
+//    }
+//}

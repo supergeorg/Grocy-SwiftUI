@@ -11,8 +11,10 @@ import SwiftData
 struct StockJournalRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \GrocyUser.id, order: .forward) var grocyUsers: GrocyUsers
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -25,7 +27,7 @@ struct StockJournalRowView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            Text(grocyVM.mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
+            Text(mdProducts.first(where: { $0.id == journalEntry.productID })?.name ?? "Name Error")
                 .font(.title)
                 .strikethrough(journalEntry.undone == 1, color: .primary)
             if journalEntry.undone == 1 {
@@ -45,8 +47,8 @@ struct StockJournalRowView: View {
                 Text("Transaction time: \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
                 Text("Transaction type: \(journalEntry.transactionType.formatTransactionType())")
                     .font(.caption)
-                Text("Location: \(grocyVM.mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
-                Text("Done by: \(grocyVM.users.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
+                Text("Location: \(mdLocations.first(where: {$0.id == journalEntry.locationID})?.name ?? "Location Error")")
+                Text("Done by: \(grocyUsers.first(where: { $0.id == journalEntry.userID })?.displayName ?? "Username Error")")
                 if let note = journalEntry.note {
                     Text("Note: \(note)")
                 }

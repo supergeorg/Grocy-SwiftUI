@@ -18,7 +18,7 @@ struct ShoppingListView: View {
     
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
     

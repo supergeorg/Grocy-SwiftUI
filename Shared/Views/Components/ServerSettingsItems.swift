@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ServerSettingsToggle: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -76,7 +77,7 @@ struct ServerSettingsIntStepper: View {
             let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
             self.value = userSettingsResult.value ?? 0
         } catch {
-            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+            await grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
         self.isFirstShown = false
     }
@@ -85,7 +86,7 @@ struct ServerSettingsIntStepper: View {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value))
         } catch {
-            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+            await grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
@@ -158,8 +159,12 @@ struct ServerSettingsDoubleStepper: View {
 struct ServerSettingsObjectPicker: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @State private var objectID: Int? = nil
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDProductGroup>{$0.active}, sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     
+    @State private var objectID: Int? = nil
     @State private var isFirstShown: Bool = true
     
     enum Objects {
@@ -180,7 +185,7 @@ struct ServerSettingsObjectPicker: View {
                 self.objectID = userSettingsResult.value
             }
         } catch {
-            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+            await grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
         self.isFirstShown = false
     }
@@ -189,7 +194,7 @@ struct ServerSettingsObjectPicker: View {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID))
         } catch {
-            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+            await grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
@@ -199,19 +204,19 @@ struct ServerSettingsObjectPicker: View {
             Group {
                 switch objects {
                 case .location:
-                    ForEach(grocyVM.mdLocations.filter({$0.active}), id: \.id) { location in
+                    ForEach(mdLocations, id: \.id) { location in
                         Text(location.name).tag(location.id as Int?)
                     }
                 case .productGroup:
-                    ForEach(grocyVM.mdProductGroups.filter({$0.active}), id: \.id) { productGroup in
+                    ForEach(mdProductGroups, id: \.id) { productGroup in
                         Text(productGroup.name).tag(productGroup.id as Int?)
                     }
                 case .quantityUnit:
-                    ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id: \.id) { quantityUnit in
+                    ForEach(mdQuantityUnits, id: \.id) { quantityUnit in
                         Text(quantityUnit.name).tag(quantityUnit.id as Int?)
                     }
                 case .shoppingLists:
-                    ForEach(grocyVM.shoppingListDescriptions, id: \.id) { shoppingList in
+                    ForEach(shoppingListDescriptions, id: \.id) { shoppingList in
                         Text(shoppingList.name).tag(shoppingList.id as Int?)
                     }
                 }

@@ -30,8 +30,9 @@ enum StockInteraction: Hashable {
 struct StockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    //    @Query(sort: \StockElement.product.name, order: .forward) var stock: Stock
+    @Query var stock: [StockElement]
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query var volatileStockList: [VolatileStock]
@@ -51,7 +52,7 @@ struct StockView: View {
         }
     }
     @State private var stockGrouping: StockGrouping = .none
-    @State private var sortSetting = [KeyPathComparator(\StockElement.product.name)]
+    @State private var sortSetting = [KeyPathComparator(\StockElement.productID)]
     @State private var sortOrder: SortOrder = .forward
     
     @State private var filteredLocationID: Int?
@@ -84,90 +85,89 @@ struct StockView: View {
         volatileStock?.missingProducts.count
     }
     
-//    var missingStock: Stock {
-//        var missingStockList: Stock = []
-//        for missingProduct in grocyVM.volatileStock?.missingProducts ?? [] {
-//            if !(missingProduct.isPartlyInStock) {
-//                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
-//                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
-//                    missingStockList.append(missingStockElement)
-//                }
-//            }
-//        }
-//        return missingStockList
-//    }
-//    
+    var missingStock: Stock {
+        var missingStockList: Stock = []
+        //        for missingProduct in volatileStock?.missingProducts ?? [] {
+        //            if !(missingProduct.isPartlyInStock) {
+        //                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
+        //                    //                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
+        //                    //                    missingStockList.append(missingStockElement)
+        //                }
+        //            }
+        //        }
+        return missingStockList
+    }
+    
     var stockWithMissing: Stock {
-        stock 
-//        + missingStock
+        stock + missingStock
     }
     
-    var filteredProducts: Stock {
+    var filteredStock: Stock {
         stockWithMissing
-            .filter {
-                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
-            }
-            .filter {
-                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
-            }
-            .filter {
-                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
-            }
-            .filter {
-                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
-            }
 //            .filter {
-//                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
+//                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
 //            }
-            .filter {
-                filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
-            }
+//            .filter {
+//                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
+//            }
+//            .filter {
+//                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
+//            }
+//            .filter {
+//                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
+//            }
+        //                            .filter {
+        //                                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
+        //                            }
+//            .filter {
+//                filteredProductGroupID != nil ? $0.product?.productGroupID == filteredProductGroupID : true
+//            }
     }
     
-    var searchedProducts: Stock {
-        filteredProducts
-            .filter {
-                !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
-            }
+    var searchedStock: Stock {
+        filteredStock
+        //            .filter {
+        //                !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) : true
+        //            }
             .filter {
                 $0.product.hideOnStockOverview == false
             }
             .sorted(using: sortSetting)
     }
     
-    var groupedProducts: [String: [StockElement]] {
+    var groupedStock: [String: [StockElement]] {
         switch stockGrouping {
         case .none:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 ""
             })
         case .productGroup:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 mdProductGroups.first(where: { productGroup in
                     productGroup.id == element.product.productGroupID })?
                     .name ?? ""
             })
         case .nextDueDate:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
             })
         case .lastPurchased:
-//            return Dictionary(grouping: searchedProducts, by: { element in
-//                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
-//            })
+            //            return Dictionary(grouping: searchedStock, by: { element in
+            //                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+            //            })
             return [:]
         case .minStockAmount:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 element.product.minStockAmount.formattedAmount
             })
         case .parentProduct:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 mdProducts.first(where: { product in
-                    product.id == element.product.id})?
+                    product.id == element.productID})?
                     .name ?? ""
             })
         case .defaultLocation:
-            return Dictionary(grouping: searchedProducts, by: { element in
+            return Dictionary(grouping: searchedStock, by: { element in
                 mdLocations.first(where: { location in
                     location.id == element.product.locationID })?
                     .name ?? ""
@@ -186,19 +186,18 @@ struct StockView: View {
     
     var body: some View{
         List {
-//            Section {
-//                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-                StockFilterBar(searchString: $searchString, filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
-//            }
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else 
-            if stock.isEmpty {
+            Section {
+                StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+                StockFilterBar(filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
+            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if stock.isEmpty {
                 ContentUnavailableView("Stock is empty.", systemImage: MySymbols.quantityUnit)
-            } else if filteredProducts.isEmpty {
+            } else if searchedStock.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(groupedProducts.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
+            ForEach(groupedStock.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
                         NavigationLink(value: stockElement, label: {
@@ -222,7 +221,7 @@ struct StockView: View {
         .refreshable {
             await updateData()
         }
-        .animation(.default, value: groupedProducts.count)
+        .animation(.default, value: groupedStock.count)
         .task {
             await updateData()
         }
@@ -232,6 +231,7 @@ struct StockView: View {
                 NavigationLink(value: StockInteraction.stockJournal) {
                     Label("Stock journal", systemImage: MySymbols.stockJournal)
                 }
+#if os(iOS)
                 NavigationLink(value: StockInteraction.inventoryProduct) {
                     Label("Inventory", systemImage: MySymbols.inventory)
                 }
@@ -244,6 +244,9 @@ struct StockView: View {
                 NavigationLink(value: StockInteraction.purchaseProduct) {
                     Label("Buy", systemImage: MySymbols.purchase)
                 }
+#elseif os(macOS)
+                RefreshButton(updateData: { Task { await updateData() } })
+#endif
             })
         })
         .navigationDestination(for: StockInteraction.self, destination: { interaction in
@@ -299,9 +302,9 @@ struct StockView: View {
 #endif
             Picker("Sort category", selection: $sortSetting, content: {
                 if sortOrder == .forward {
-                    Label("Product name", systemImage: MySymbols.product)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
+                    //                    Label("Product name", systemImage: MySymbols.product)
+                    //                        .labelStyle(.titleAndIcon)
+                    //                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
@@ -309,9 +312,9 @@ struct StockView: View {
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.amount, order: .forward)])
                 } else {
-                    Label("Product name", systemImage: MySymbols.product)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
+                    //                                        Label("Product name", systemImage: MySymbols.product)
+                    //                                            .labelStyle(.titleAndIcon)
+                    //                                            .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])

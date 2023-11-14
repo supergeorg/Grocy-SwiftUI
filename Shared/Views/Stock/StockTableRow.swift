@@ -14,6 +14,10 @@ struct StockTableRow: View {
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query var volatileStockList: [VolatileStock]
+    var volatileStock: VolatileStock? {
+        volatileStockList.first
+    }
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -24,7 +28,7 @@ struct StockTableRow: View {
 #endif
     
     var stockElement: StockElement
-//    @Binding var selectedStockElement: StockElement?
+//    @State var selectedStockElement: StockElement? = nil
     
     @State private var showDetailView: Bool = false
     
@@ -33,18 +37,18 @@ struct StockTableRow: View {
     }
     
     var backgroundColor: Color {
-//        if grocyVM.volatileStock?.dueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-//            return Color(.GrocyColors.grocyYellowBackground)
-//        }
-//        if grocyVM.volatileStock?.expiredProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-//            return Color(.GrocyColors.grocyRedBackground)
-//        }
-//        if grocyVM.volatileStock?.overdueProducts.map({$0.product.id}).contains(stockElement.product.id) ?? false {
-//            return Color(.GrocyColors.grocyGrayBackground)
-//        }
-//        if grocyVM.volatileStock?.missingProducts.map({$0.id}).contains(stockElement.product.id) ?? false {
-//            return Color(.GrocyColors.grocyBlueBackground)
-//        }
+        if volatileStock?.dueProducts.map({$0.productID}).contains(stockElement.productID) ?? false {
+            return Color(.GrocyColors.grocyYellowBackground)
+        }
+        if volatileStock?.expiredProducts.map({$0.productID}).contains(stockElement.productID) ?? false {
+            return Color(.GrocyColors.grocyRedBackground)
+        }
+        if volatileStock?.overdueProducts.map({$0.productID}).contains(stockElement.productID) ?? false {
+            return Color(.GrocyColors.grocyGrayBackground)
+        }
+        if volatileStock?.missingProducts.map({$0.id}).contains(stockElement.productID) ?? false {
+            return Color(.GrocyColors.grocyBlueBackground)
+        }
 #if os(iOS)
         return colorScheme == .light ? Color.white : Color.black
 #elseif os(macOS)
@@ -67,12 +71,12 @@ struct StockTableRow: View {
 //                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeAll])
 //                }
 //            })
-//#if os(macOS)
-//            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-//            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
-//#else
+#if os(macOS)
+            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
+            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+#else
             .listRowBackground(backgroundColor)
-//#endif
+#endif
     }
     
     var content: some View {
@@ -132,12 +136,12 @@ struct StockTableRow: View {
                             .italic()
                     }
                 }
-//                if grocyVM.userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
-//                   shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
-//                    Image(systemName: MySymbols.shoppingList)
-//                        .foregroundStyle(Color(.GrocyColors.grocyGray))
-//                        .help("This product is currently on a shopping list.")
-//                }
+                //                if grocyVM.userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
+                //                   shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                //                    Image(systemName: MySymbols.shoppingList)
+                //                        .foregroundStyle(Color(.GrocyColors.grocyGray))
+                //                        .help("This product is currently on a shopping list.")
+                //                }
             }
             if let dueDate = stockElement.bestBeforeDate {
                 HStack {

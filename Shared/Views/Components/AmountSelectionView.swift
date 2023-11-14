@@ -11,7 +11,7 @@ import SwiftData
 struct AmountSelectionView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     
@@ -59,12 +59,12 @@ struct AmountSelectionView: View {
                        content: {
                     Text("")
                         .tag(nil as Int?)
-                    if let stockQU = grocyVM.mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
+                    if let stockQU = mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
                         Text(stockQU.name)
                             .tag(stockQU.id as Int?)
                     }
                     ForEach(quantityUnitConversions, id:\.id, content: { quConversion in
-                        Text(grocyVM.mdQuantityUnits.first(where: { $0.id == quConversion.fromQuID})?.name ?? String(quConversion.fromQuID))
+                        Text(mdQuantityUnits.first(where: { $0.id == quConversion.fromQuID})?.name ?? String(quConversion.fromQuID))
                             .tag(quConversion.fromQuID as Int?)
                     })
                 })

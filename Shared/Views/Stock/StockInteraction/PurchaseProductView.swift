@@ -11,11 +11,11 @@ import SwiftData
 struct PurchaseProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(filter: #Predicate<MDProduct>{$0.active}, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
-    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
-    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDStore>{$0.active}, sort: \MDStore.id, order: .forward) var mdStores: MDStores
+    @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -156,7 +156,7 @@ struct PurchaseProductView: View {
 //                ProductField(productID: $productID, description: "Product")
                 ProductFieldNew(productID: $productID, description: "Product")
                     .onChange(of: productID) {
-                        if let selectedProduct = grocyVM.mdProducts.first(where: { $0.id == productID }) {
+                        if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
                             if locationID == nil { locationID = selectedProduct.locationID }
                             if storeID == nil { storeID = selectedProduct.storeID }
                             quantityUnitID = selectedProduct.quIDPurchase
@@ -224,7 +224,7 @@ struct PurchaseProductView: View {
                                label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
                                content: {
                             Text("").tag(nil as Int?)
-                            ForEach(grocyVM.mdStores.filter({$0.active}), id: \.id) { store in
+                            ForEach(mdStores, id: \.id) { store in
                                 Text(store.name).tag(store.id as Int?)
                             }
                         })
@@ -234,7 +234,7 @@ struct PurchaseProductView: View {
                            label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
                            content: {
                         Text("").tag(nil as Int?)
-                        ForEach(grocyVM.mdLocations.filter({$0.active}), id: \.id) { location in
+                        ForEach(mdLocations, id: \.id) { location in
                             Text(location.id == product?.locationID ? "\(location.name) (Default location)" : location.name)
                                 .tag(location.id as Int?)
                         }

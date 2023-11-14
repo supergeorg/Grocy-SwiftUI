@@ -11,8 +11,10 @@ import SwiftData
 struct StockEntryRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @Environment(\.colorScheme) var colorScheme
@@ -75,11 +77,11 @@ struct StockEntryRowView: View {
                         .italic()
                 }
                 
-                if let locationID = stockEntry.locationID, let location = grocyVM.mdLocations.first(where: { $0.id == locationID }) {
+                if let locationID = stockEntry.locationID, let location = mdLocations.first(where: { $0.id == locationID }) {
                     Text("Location: \(location.name)")
                 }
                 
-                if let storeID = stockEntry.storeID, let store = grocyVM.mdStores.first(where: { $0.id == storeID }) {
+                if let storeID = stockEntry.storeID, let store = mdStores.first(where: { $0.id == storeID }) {
                     Text("Store: \(store.name)")
                 }
                 

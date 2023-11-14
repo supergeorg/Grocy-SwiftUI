@@ -14,9 +14,7 @@ struct MDStoresView: View {
     @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
     
     @State private var searchString: String = ""
-    
     @State private var showAddStore: Bool = false
-    
     @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteConfirmation: Bool = false
     
@@ -49,13 +47,13 @@ struct MDStoresView: View {
     
     var body: some View {
         List {
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if mdStores.isEmpty {
-//                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
-//            } else if filteredStores.isEmpty {
-//                ContentUnavailableView.search
-//            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdStores.isEmpty {
+                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
+            } else if filteredStores.isEmpty {
+                ContentUnavailableView.search
+            }
             ForEach(filteredStores, id: \.id) { store in
                 NavigationLink(value: store) {
                     MDStoreRowView(store: store)

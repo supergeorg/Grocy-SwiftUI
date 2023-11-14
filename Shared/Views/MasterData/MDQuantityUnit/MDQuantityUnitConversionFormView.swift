@@ -12,6 +12,7 @@ struct MDQuantityUnitConversionFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
+    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     @Environment(\.dismiss) var dismiss
     
@@ -132,7 +133,7 @@ struct MDQuantityUnitConversionFormView: View {
             Picker(selection: $quantityUnitConversion.fromQuID, label: Label("Quantity unit from", systemImage: MySymbols.quantityUnit), content: {
                 Text("")
                     .tag(0)
-                ForEach(grocyVM.mdQuantityUnits.filter({$0.active}), id:\.id) { grocyQuantityUnit in
+                ForEach(mdQuantityUnits, id:\.id) { grocyQuantityUnit in
                     Text(grocyQuantityUnit.name)
                         .tag(grocyQuantityUnit.id)
                 }
@@ -143,7 +144,7 @@ struct MDQuantityUnitConversionFormView: View {
                 Picker(selection: $quantityUnitConversion.toQuID, label: Label("Quantity unit to", systemImage: MySymbols.quantityUnit), content: {
                     Text("")
                         .tag(0)
-                    ForEach(grocyVM.mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id:\.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id)
                     }
@@ -154,7 +155,7 @@ struct MDQuantityUnitConversionFormView: View {
                         .font(.caption)
                         .foregroundStyle(Color.red)
                 }
-                Text("This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: quantityUnitConversion.factor, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID })))")
+                Text("This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: quantityUnitConversion.factor, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID })))")
                     .font(.caption)
             }
             
@@ -169,7 +170,7 @@ struct MDQuantityUnitConversionFormView: View {
                             .font(.caption)
                             .foregroundStyle(Color.red)
                     }
-                    Text("This means \(getQUString(amount: 1, qu: grocyVM.mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID }))) is the same as \(getQUString(amount: (1 / quantityUnitConversion.factor), qu: quantityUnit))")
+                    Text("This means \(getQUString(amount: 1, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID }))) is the same as \(getQUString(amount: (1 / quantityUnitConversion.factor), qu: quantityUnit))")
                         .font(.caption)
                 }
             }

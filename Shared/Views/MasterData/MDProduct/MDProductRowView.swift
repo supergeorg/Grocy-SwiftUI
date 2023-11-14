@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MDProductRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
-//    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
+    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     
     var product: MDProduct
     
@@ -27,12 +28,12 @@ struct MDProductRowView: View {
                     .font(.title)
                     .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
-                    if let locationID = grocyVM.mdLocations.firstIndex(where: { $0.id == product.locationID }) {
-                        Text("Location: \(grocyVM.mdLocations[locationID].name)")
+                    if let locationID = mdLocations.firstIndex(where: { $0.id == product.locationID }) {
+                        Text("Location: \(mdLocations[locationID].name)")
                             .font(.caption)
                     }
-                    if let productGroup = grocyVM.mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
-                        Text("Product group: \(grocyVM.mdProductGroups[productGroup].name)")
+                    if let productGroup = mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
+                        Text("Product group: \(mdProductGroups[productGroup].name)")
                             .font(.caption)
                     }
                 }

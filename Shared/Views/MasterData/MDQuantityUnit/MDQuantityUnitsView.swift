@@ -15,7 +15,6 @@ struct MDQuantityUnitsView: View {
     
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
-    
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteConfirmation: Bool = false
     
@@ -48,13 +47,13 @@ struct MDQuantityUnitsView: View {
     
     var body: some View {
         List {
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if mdQuantityUnits.isEmpty {
-//                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
-//            } else if filteredQuantityUnits.isEmpty {
-//                ContentUnavailableView.search
-//            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if mdQuantityUnits.isEmpty {
+                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
+            } else if filteredQuantityUnits.isEmpty {
+                ContentUnavailableView.search
+            }
             ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
                 NavigationLink(value: quantityUnit) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)

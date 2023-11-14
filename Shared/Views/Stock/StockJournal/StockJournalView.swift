@@ -12,7 +12,7 @@ struct StockJournalView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \StockJournalEntry.id, order: .forward) var stockJournal: StockJournal
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \GrocyUser.id, order: .forward) var grocyUsers: GrocyUsers
     
     @State private var searchString: String = ""
@@ -69,26 +69,29 @@ struct StockJournalView: View {
     }
     
     var body: some View {
-        List {
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if grocyVM.stockJournal.isEmpty {
-//                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
-//            } else if filteredJournal.isEmpty {
-//                ContentUnavailableView.search
-//            }
-            ForEach(filteredJournal, id: \.id) { journalEntry in
-                StockJournalRowView(journalEntry: journalEntry)
-                    .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                        Button(action: {
-                            Task {
-                                await undoTransaction(stockJournalEntry: journalEntry)
-                            }
-                        }, label: {
-                            Label("Undo transaction", systemImage: MySymbols.undo)
+        VStack {
+            StockJournalFilterBar(filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
+            List {
+                if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                    ServerProblemView()
+                } else if stockJournal.isEmpty {
+                    ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
+                } else if filteredJournal.isEmpty {
+                    ContentUnavailableView.search
+                }
+                ForEach(filteredJournal, id: \.id) { journalEntry in
+                    StockJournalRowView(journalEntry: journalEntry)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                            Button(action: {
+                                Task {
+                                    await undoTransaction(stockJournalEntry: journalEntry)
+                                }
+                            }, label: {
+                                Label("Undo transaction", systemImage: MySymbols.undo)
+                            })
+                            .disabled(journalEntry.undone == 1)
                         })
-                        .disabled(journalEntry.undone == 1)
-                    })
+                }
             }
         }
         .navigationTitle("Stock journal")
