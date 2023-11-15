@@ -9,7 +9,7 @@ import Foundation
 
 struct StockTableElement: Identifiable {
     let id = UUID()
-    let product: MDProduct
+    let product: StockProduct
     let productGroup: MDProductGroup?
     let amount: Double
     let quantityUnit: MDQuantityUnit?

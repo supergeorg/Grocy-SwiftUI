@@ -242,7 +242,6 @@ class GrocyViewModel {
     func getObjectAndSaveSwiftData<T: Codable & Equatable & PersistentModel>(object: ObjectEntities) async throws -> [T] {
         do {
             let objects: [T] = try await grocyApi.getObject(object: object)
-//            try await MainActor.run {
                 let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
                 let existingObjects = try modelContext.fetch(fetchDescriptor)
                 for existingObject in existingObjects {
@@ -255,47 +254,12 @@ class GrocyViewModel {
                         self.modelContext.insert(newObject)
                     }
                 }
-//            }
             return objects
         } catch {
             self.postLog("\(error)", type: .error)
             throw error
         }
     }
-    
-    //    func getAdditionalObjectAndSaveSwiftData<T: Codable>(additionalObject: AdditionalEntities) async throws -> T {
-    //        do {
-    //            let object: T = switch additionalObject {
-    //                
-    //                case .system_db_changed_time: try await grocyApi.getSystemDBChangedTime()
-    //            case .system_info: try await grocyApi.getSystemInfo()
-    //                case .system_config: try await grocyApi.getSystemConfig()
-    //                case .stock: try await grocyApi.getStock()
-    //                case .volatileStock: try await grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
-    //                case .users: try await grocyApi.getUsers()
-    //                case .current_user: try await grocyApi.getUser()
-    //                case .user_settings: try await grocyApi.getUserSettings()
-    //                case .recipeFulfillments: try await grocyApi.getRecipeFulfillments()
-    //            }
-    //            //            let objects: [T] = try await grocyApi.getObject(object: object)
-    //            //            let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
-    //            //            let existingObjects = try modelContext.fetch(fetchDescriptor)
-    //            //            for existingObject in existingObjects {
-    //            //                if !objects.contains(existingObject)  {
-    //            //                    self.modelContext.delete(existingObject)
-    //            //                }
-    //            //            }
-    //            //            for newObject in objects {
-    //            //                if !existingObjects.contains(newObject) {
-    //            //                    self.modelContext.insert(newObject)
-    //            //                }
-    //            //            }
-    //            return object
-    //        } catch {
-    //            self.postLog("\(error)", type: .error)
-    //            throw error
-    //        }
-    //    }
     
     func requestDataWithTimeStamp(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil, timeStamp: SystemDBChangedTime) async {
         if let objects = objects {
@@ -352,10 +316,19 @@ class GrocyViewModel {
                             self.currentUser = try await grocyApi.getUser().first
                         case .stock:
                             self.stock = try await grocyApi.getStock()
-                            try self.modelContext.delete(model: StockElement.self)
-                            for stockElement in self.stock {
-                                self.modelContext.insert(stockElement)
+                            let fetchDescriptor = FetchDescriptor<StockElement>()
+                            let existingObjects = try modelContext.fetch(fetchDescriptor)
+                            for existingObject in existingObjects {
+                                if !self.stock.contains(existingObject)  {
+                                    self.modelContext.delete(existingObject)
+                                }
                             }
+                            for newObject in self.stock {
+                                if !existingObjects.contains(newObject) {
+                                    self.modelContext.insert(newObject)
+                                }
+                            }
+                            try self.modelContext.save()
                         case .system_config:
                             self.systemConfig = try await grocyApi.getSystemConfig()
                         case .system_db_changed_time:
@@ -370,6 +343,10 @@ class GrocyViewModel {
                             self.users = try await grocyApi.getUsers()
                         case .volatileStock:
                             self.volatileStock = try await grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
+                            try self.modelContext.delete(model: VolatileStock.self)
+                            if let volatileStock = self.volatileStock {
+                                self.modelContext.insert(volatileStock)
+                            }
                         }
                         self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                         self.loadingAdditionalEntities.remove(additionalObject)
