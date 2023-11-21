@@ -347,6 +347,7 @@ class GrocyViewModel {
                             if let volatileStock = self.volatileStock {
                                 self.modelContext.insert(volatileStock)
                             }
+                            try self.modelContext.save()
                         }
                         self.timeStampsAdditionalObjects[additionalObject] = timeStamp
                         self.loadingAdditionalEntities.remove(additionalObject)
@@ -426,6 +427,14 @@ class GrocyViewModel {
             try modelContext.delete(model: MDProductGroup.self)
             try modelContext.delete(model: ShoppingListItem.self)
             try modelContext.delete(model: ShoppingListDescription.self)
+            try modelContext.delete(model: StockElement.self)
+            try modelContext.delete(model: VolatileStock.self)
+            try modelContext.delete(model: StockJournalEntry.self)
+            try modelContext.delete(model: GrocyUser.self)
+            try modelContext.delete(model: GrocyUserSettings.self)
+            try modelContext.delete(model: StockEntry.self)
+            try modelContext.delete(model: StockProductDetails.self)
+            try modelContext.delete(model: StockProduct.self)
         } catch {
             self.postLog("\(error)", type: .error)
         }

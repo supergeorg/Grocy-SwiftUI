@@ -35,6 +35,8 @@ struct Grocy_SwiftUIApp: App {
                                                 GrocyUser.self,
                                                 StockEntry.self,
                                                 GrocyUserSettings.self,
+                                                StockProductDetails.self,
+                                                StockProduct.self,
                                                 VolatileStock.self
             )
             let modelContext = ModelContext(modelContainer)

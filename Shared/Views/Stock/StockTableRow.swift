@@ -28,7 +28,6 @@ struct StockTableRow: View {
 #endif
     
     var stockElement: StockElement
-//    @State var selectedStockElement: StockElement? = nil
     
     @State private var showDetailView: Bool = false
     
@@ -46,7 +45,7 @@ struct StockTableRow: View {
         if volatileStock?.overdueProducts.map({$0.productID}).contains(stockElement.productID) ?? false {
             return Color(.GrocyColors.grocyGrayBackground)
         }
-        if volatileStock?.missingProducts.map({$0.id}).contains(stockElement.productID) ?? false {
+        if volatileStock?.missingProducts.map({$0.productID}).contains(stockElement.productID) ?? false {
             return Color(.GrocyColors.grocyBlueBackground)
         }
 #if os(iOS)
