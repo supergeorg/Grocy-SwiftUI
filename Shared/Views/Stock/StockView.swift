@@ -30,14 +30,14 @@ enum StockInteraction: Hashable {
 struct StockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    //    @Query(sort: \StockElement.product.name, order: .forward) var stock: Stock
     @Query var stock: [StockElement]
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \StockProduct.name, order: .forward) var stockProducts: [StockProduct]
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query var volatileStockList: [VolatileStock]
     var volatileStock: VolatileStock? {
-        volatileStockList.first
+        return volatileStockList.first
     }
     
     @State private var firstAppear: Bool = true
@@ -58,8 +58,6 @@ struct StockView: View {
     @State private var filteredLocationID: Int?
     @State private var filteredProductGroupID: Int?
     @State private var filteredStatus: ProductStatus = .all
-    
-    //    @State private var selectedStockElement: StockElement? = nil
     
     @State private var showStockJournal: Bool = false
     
@@ -87,14 +85,14 @@ struct StockView: View {
     
     var missingStock: Stock {
         var missingStockList: Stock = []
-        //        for missingProduct in volatileStock?.missingProducts ?? [] {
-        //            if !(missingProduct.isPartlyInStock) {
-        //                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
-        //                    //                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.id, product: foundProduct)
-        //                    //                    missingStockList.append(missingStockElement)
-        //                }
-        //            }
-        //        }
+        for missingProduct in volatileStock?.missingProducts ?? [] {
+            if !(missingProduct.isPartlyInStock) {
+                if let foundProduct = stockProducts.first(where: { $0.id == missingProduct.id }) {
+                    let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.productID, product: foundProduct)
+                    missingStockList.append(missingStockElement)
+                }
+            }
+        }
         return missingStockList
     }
     
@@ -104,31 +102,31 @@ struct StockView: View {
     
     var filteredStock: Stock {
         stockWithMissing
-//            .filter {
-//                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
-//            }
-//            .filter {
-//                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.product.id}).contains($0.product.id) ?? false) && !(volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false) : true
-//            }
-//            .filter {
-//                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.product.id}).contains($0.product.id) ?? false : true
-//            }
-//            .filter {
-//                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.id}).contains($0.product.id) ?? false : true
-//            }
+            .filter {
+                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.productID}).contains($0.productID) ?? false : true
+            }
+            .filter {
+                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.productID}).contains($0.productID) ?? false) && !(volatileStock?.expiredProducts.map({$0.productID}).contains($0.productID) ?? false) : true
+            }
+            .filter {
+                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.productID}).contains($0.productID) ?? false : true
+            }
+            .filter {
+                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.productID}).contains($0.productID) ?? false : true
+            }
         //                            .filter {
         //                                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
         //                            }
-//            .filter {
-//                filteredProductGroupID != nil ? $0.product?.productGroupID == filteredProductGroupID : true
-//            }
+            .filter {
+                filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
+            }
     }
     
     var searchedStock: Stock {
         filteredStock
-        //            .filter {
-        //                !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) : true
-        //            }
+            .filter {
+                !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
+            }
             .filter {
                 $0.product.hideOnStockOverview == false
             }
@@ -200,9 +198,9 @@ struct StockView: View {
             ForEach(groupedStock.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
-                        NavigationLink(value: stockElement, label: {
+//                        NavigationLink(value: stockElement, label: {
                             StockTableRow(stockElement: stockElement)
-                        })
+//                        })
                     })
                 }, header: {
                     if stockGrouping == .productGroup, groupName.isEmpty {
@@ -302,9 +300,9 @@ struct StockView: View {
 #endif
             Picker("Sort category", selection: $sortSetting, content: {
                 if sortOrder == .forward {
-                    //                    Label("Product name", systemImage: MySymbols.product)
-                    //                        .labelStyle(.titleAndIcon)
-                    //                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
+                    Label("Product name", systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
@@ -312,9 +310,9 @@ struct StockView: View {
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.amount, order: .forward)])
                 } else {
-                    //                                        Label("Product name", systemImage: MySymbols.product)
-                    //                                            .labelStyle(.titleAndIcon)
-                    //                                            .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
+                    Label("Product name", systemImage: MySymbols.product)
+                        .labelStyle(.titleAndIcon)
+                        .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
