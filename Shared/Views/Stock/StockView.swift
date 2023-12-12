@@ -18,13 +18,13 @@ enum StockInteraction: Hashable {
     case transferProduct
     case inventoryProduct
     case stockJournal
-    case addToShL
-    case productPurchase
-    case productConsume
-    case productTransfer
-    case productInventory
-    case productOverview
-    case productJournal
+    case addToShL(StockElement)
+    case productPurchase(stockElement: StockElement)
+    case productConsume(stockElement: StockElement)
+    case productTransfer(stockElement: StockElement)
+    case productInventory(stockElement: StockElement)
+    case productOverview(stockElement: StockElement)
+    case productJournal(stockElement: StockElement)
 }
 
 struct StockView: View {
@@ -32,15 +32,13 @@ struct StockView: View {
     
     @Query var stock: [StockElement]
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \StockProduct.name, order: .forward) var stockProducts: [StockProduct]
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query var volatileStockList: [VolatileStock]
     var volatileStock: VolatileStock? {
         return volatileStockList.first
     }
-    
-    @State private var firstAppear: Bool = true
+    @Query() var stockProductDetails: [StockProductDetails]
     
     @State private var searchString: String = ""
     @State private var showFilter: Bool = false
@@ -59,7 +57,7 @@ struct StockView: View {
     @State private var filteredProductGroupID: Int?
     @State private var filteredStatus: ProductStatus = .all
     
-    @State private var showStockJournal: Bool = false
+    @State var selectedStockElement: StockElement? = nil
     
     private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
@@ -87,7 +85,7 @@ struct StockView: View {
         var missingStockList: Stock = []
         for missingProduct in volatileStock?.missingProducts ?? [] {
             if !(missingProduct.isPartlyInStock) {
-                if let foundProduct = stockProducts.first(where: { $0.id == missingProduct.id }) {
+                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
                     let missingStockElement = StockElement(amount: 0, amountAggregated: 0, value: 0.0, bestBeforeDate: nil, amountOpened: 0, amountOpenedAggregated: 0, isAggregatedAmount: false, dueType: foundProduct.dueType, productID: missingProduct.productID, product: foundProduct)
                     missingStockList.append(missingStockElement)
                 }
@@ -118,17 +116,17 @@ struct StockView: View {
         //                                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
         //                            }
             .filter {
-                filteredProductGroupID != nil ? $0.product.productGroupID == filteredProductGroupID : true
+                filteredProductGroupID != nil ? $0.product?.productGroupID == filteredProductGroupID : true
             }
     }
     
     var searchedStock: Stock {
         filteredStock
             .filter {
-                !searchString.isEmpty ? $0.product.name.localizedCaseInsensitiveContains(searchString) : true
+                !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) ?? true : true
             }
             .filter {
-                $0.product.hideOnStockOverview == false
+                $0.product?.hideOnStockOverview == false
             }
             .sorted(using: sortSetting)
     }
@@ -142,7 +140,7 @@ struct StockView: View {
         case .productGroup:
             return Dictionary(grouping: searchedStock, by: { element in
                 mdProductGroups.first(where: { productGroup in
-                    productGroup.id == element.product.productGroupID })?
+                    productGroup.id == element.product?.productGroupID })?
                     .name ?? ""
             })
         case .nextDueDate:
@@ -150,13 +148,12 @@ struct StockView: View {
                 element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
             })
         case .lastPurchased:
-            //            return Dictionary(grouping: searchedStock, by: { element in
-            //                grocyVM.stockProductDetails[element.product.id]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
-            //            })
-            return [:]
+            return Dictionary(grouping: searchedStock, by: { element in
+                stockProductDetails.first(where: {$0.productID == element.productID})?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+            })
         case .minStockAmount:
             return Dictionary(grouping: searchedStock, by: { element in
-                element.product.minStockAmount.formattedAmount
+                element.product?.minStockAmount.formattedAmount ?? ""
             })
         case .parentProduct:
             return Dictionary(grouping: searchedStock, by: { element in
@@ -167,7 +164,7 @@ struct StockView: View {
         case .defaultLocation:
             return Dictionary(grouping: searchedStock, by: { element in
                 mdLocations.first(where: { location in
-                    location.id == element.product.locationID })?
+                    location.id == element.product?.locationID })?
                     .name ?? ""
             })
         }
@@ -199,7 +196,7 @@ struct StockView: View {
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
 //                        NavigationLink(value: stockElement, label: {
-                            StockTableRow(stockElement: stockElement)
+                        StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
 //                        })
                     })
                 }, header: {
@@ -259,8 +256,19 @@ struct StockView: View {
                 ConsumeProductView()
             case .purchaseProduct:
                 PurchaseProductView()
+//            case .productPurchase(let stockElement):
+//                PurchaseProductView(stockElement: stockElement)
+//            case .productConsume(let stockElement):
+//                ConsumeProductView(stockElement: stockElement)
+//            case .productTransfer(let stockElement):
+//                TransferProductView(stockElement: stockElement)
+//            case .productInventory(let stockElement):
+//                InventoryProductView(stockElement: stockElement)
+            case .productOverview(let stockElement):
+                StockProductInfoView(stockElement: stockElement)
             default:
-                EmptyView()
+                Text("TEST")
+//                EmptyView()
             }
         })
         .navigationDestination(for: StockElement.self, destination: { stockElement in
@@ -302,7 +310,7 @@ struct StockView: View {
                 if sortOrder == .forward {
                     Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\StockElement.product.name, order: .forward)])
+                        .tag([KeyPathComparator(\StockElement.product?.name, order: .forward)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .forward)])
@@ -312,7 +320,7 @@ struct StockView: View {
                 } else {
                     Label("Product name", systemImage: MySymbols.product)
                         .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\StockElement.product.name, order: .reverse)])
+                        .tag([KeyPathComparator(\StockElement.product?.name, order: .reverse)])
                     Label("Due date", systemImage: MySymbols.date)
                         .labelStyle(.titleAndIcon)
                         .tag([KeyPathComparator(\StockElement.bestBeforeDate, order: .reverse)])
