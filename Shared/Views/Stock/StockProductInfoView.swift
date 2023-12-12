@@ -6,28 +6,31 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockProductInfoView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Environment(\.dismiss) var dismiss
+    @Query() var detailsList: [StockProductDetails]
+    var productDetails: StockProductDetails? {
+        return detailsList.first(where: { $0.productID == stockElement.productID })
+    }
+    @Query() var productList: [MDProduct]
+    var product: MDProduct? {
+        productList.first(where: { $0.id == stockElement.productID })
+    }
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
-    @Binding var stockElement: StockElement?
-    @State private var firstOpen: Bool = true
-    @State private var productDetails: StockProductDetails? = nil
+    var stockElement: StockElement
     
     var body: some View {
         List {
             if let productDetails = productDetails {
-                Text(productDetails.product.name)
-                    .font(.title)
-                
                 Group {
                     Text("Stock amount: ").bold()
                     +
-                    Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock.getName(amount: productDetails.stockAmount) ?? "")")
+                    Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock?.getName(amount: productDetails.stockAmount) ?? "")")
                     
                     Text("Stock value: ").bold()
                     +
@@ -35,7 +38,7 @@ struct StockProductInfoView: View {
                     
                     Text("Default location: ").bold()
                     +
-                    Text(productDetails.location.name)
+                    Text(productDetails.location?.name ?? "")
                 }
                 
                 Group {
@@ -63,11 +66,11 @@ struct StockProductInfoView: View {
                 Group {
                     Text("Last price: ").bold()
                     +
-                    Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)" : "Unknown")
+                    Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                     
                     Text("Average price: ").bold()
                     +
-                    Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock.name)" : "Unknown")
+                    Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                 }
                 
                 Group {
@@ -79,26 +82,18 @@ struct StockProductInfoView: View {
                     +
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
-                
-                if let pictureFileName = stockElement?.product.pictureFileName {
-                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 200.0)
-                }
-            } else { Text("Retrieving Details Failed. Please open another window first.") }
-        }
-        .navigationTitle("Product overview")
-        .toolbar(content: {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close") {
-                    self.dismiss()
-                }
+                //
+                //                if let pictureFileName = stockElement?.product.pictureFileName {
+                //                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 200.0)
+                //                }
+            } else {
+                Text("Retrieving Details failed.")
             }
-        })
+        }
+        .navigationTitle(product?.name ?? "Product overview")
         .task {
             do {
-                if let productID = stockElement?.productID {
-                    try await grocyVM.getStockProductDetails(productID: productID)
-                    productDetails = grocyVM.stockProductDetails[productID]
-                }
+                try await grocyVM.requestStockInfo(stockModeGet: .details, productID: stockElement.productID)
             } catch {
                 grocyVM.postLog("Get stock detail failed. \(error)", type: .error)
             }

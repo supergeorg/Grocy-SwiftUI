@@ -84,6 +84,7 @@ class GrocyViewModel {
     
     var productPictures: [String: Data] = [:]
     var userPictures: [String: Data] = [:]
+    var recipePictures: [String: Data] = [:]
     
     var cancellables = Set<AnyCancellable>()
     
@@ -94,6 +95,7 @@ class GrocyViewModel {
     init(modelContext: ModelContext) {
         self.grocyApi = GrocyApi()
         self.modelContext = modelContext
+        self.modelContext.autosaveEnabled = false
         jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -242,18 +244,18 @@ class GrocyViewModel {
     func getObjectAndSaveSwiftData<T: Codable & Equatable & PersistentModel>(object: ObjectEntities) async throws -> [T] {
         do {
             let objects: [T] = try await grocyApi.getObject(object: object)
-                let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
-                let existingObjects = try modelContext.fetch(fetchDescriptor)
-                for existingObject in existingObjects {
-                    if !objects.contains(existingObject)  {
-                        self.modelContext.delete(existingObject)
-                    }
+            let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
+            let existingObjects = try modelContext.fetch(fetchDescriptor)
+            for existingObject in existingObjects {
+                if !objects.contains(existingObject)  {
+                    self.modelContext.delete(existingObject)
                 }
-                for newObject in objects {
-                    if !existingObjects.contains(newObject) {
-                        self.modelContext.insert(newObject)
-                    }
+            }
+            for newObject in objects {
+                if !existingObjects.contains(newObject) {
+                    self.modelContext.insert(newObject)
                 }
+            }
             return objects
         } catch {
             self.postLog("\(error)", type: .error)
@@ -281,7 +283,8 @@ class GrocyViewModel {
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await self.getObjectAndSaveSwiftData(object: object)
                         case .recipes:
-                            self.recipes = try await grocyApi.getObject(object: object)
+                            //                            self.recipes = try await grocyApi.getObject(object: object)
+                            self.recipes = try await self.getObjectAndSaveSwiftData(object: object)
                         case .quantity_units:
                             self.mdQuantityUnits = try await self.getObjectAndSaveSwiftData(object: object)
                         case .shopping_list:
@@ -325,7 +328,12 @@ class GrocyViewModel {
                             }
                             for newObject in self.stock {
                                 if !existingObjects.contains(newObject) {
-                                    self.modelContext.insert(newObject)
+                                    let productFetchDescriptor = FetchDescriptor<MDProduct>(predicate: #Predicate { product in
+                                        product.id == newObject.productID
+                                    })
+                                    if let existingProduct = try modelContext.fetch(productFetchDescriptor).first {
+                                        newObject.product = existingProduct
+                                    }
                                 }
                             }
                             try self.modelContext.save()
@@ -416,6 +424,7 @@ class GrocyViewModel {
         
         productPictures.removeAll()
         userPictures.removeAll()
+        recipePictures.removeAll()
         
         do {
             try modelContext.delete(model: MDProduct.self)
@@ -435,6 +444,7 @@ class GrocyViewModel {
             try modelContext.delete(model: StockEntry.self)
             try modelContext.delete(model: StockProductDetails.self)
             try modelContext.delete(model: StockProduct.self)
+            try modelContext.delete(model: Recipe.self)
         } catch {
             self.postLog("\(error)", type: .error)
         }
@@ -527,10 +537,10 @@ class GrocyViewModel {
     }
     
     //MARK: - SYSTEM
-//    func getCurrencySymbol() -> String {
-//        let locale = NSLocale(localeIdentifier: localizationKey)
-//        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
-//    }
+    //    func getCurrencySymbol() -> String {
+    //        let locale = NSLocale(localeIdentifier: localizationKey)
+    //        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
+    //    }
     
     func getFormattedCurrency(amount: Double) -> String {
         let currencyFormatter = NumberFormatter()
@@ -579,33 +589,40 @@ class GrocyViewModel {
         return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, queries: queries)
     }
     
-    func requestStockInfo(stockModeGet: [StockProductGet]? = nil, productID: Int, ignoreCached: Bool = true) async throws {
-        if let stockModeGet = stockModeGet {
-            for mode in stockModeGet {
-                switch mode {
-                case .details:
-                    if stockProductDetails.isEmpty || ignoreCached {
-                        self.stockProductDetails[productID] = try await getStockProductInfo(mode: mode, productID: productID)
-                    }
-                case .locations:
-                    print("not implemented")
-                case .entries:
-                    if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
-                        self.stockProductEntries[productID] = try await getStockProductInfo(mode: mode, productID: productID)
-                    }
-                case .priceHistory:
-                    print("not implemented")
+    func requestStockInfo(stockModeGet: StockProductGet, productID: Int, ignoreCached: Bool = true) async throws {
+        switch stockModeGet {
+        case .details:
+            if stockProductDetails.isEmpty || ignoreCached {
+                let stockDetails: StockProductDetails = try await getStockProductInfo(mode: stockModeGet, productID: productID)
+                self.stockProductDetails[productID] = stockDetails
+                let fetchDescriptor = FetchDescriptor<StockProductDetails>(predicate: #Predicate { details in
+                    details.productID == productID
+                })
+                if let existingObject = try modelContext.fetch(fetchDescriptor).first {
+                    self.modelContext.delete(existingObject)
                 }
+                stockDetails.quantityUnitStock = try modelContext.fetch(FetchDescriptor<MDQuantityUnit>(predicate: #Predicate { qu in
+                    qu.id == stockDetails.quantityUnitStockID
+                })).first
+                stockDetails.location = try modelContext.fetch(FetchDescriptor<MDLocation>(predicate: #Predicate { location in
+                    location.id == stockDetails.locationID
+                })).first
+                self.modelContext.insert(stockDetails)
+                try self.modelContext.save()
             }
+        case .locations:
+            print("not implemented")
+        case .entries:
+            if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
+                self.stockProductEntries[productID] = try await getStockProductInfo(mode: stockModeGet, productID: productID)
+            }
+        case .priceHistory:
+            print("not implemented")
         }
     }
     
     func getStockProductLocations(productID: Int) async throws {
         self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, queries: nil)
-    }
-    
-    func getStockProductDetails(productID: Int) async throws {
-        self.stockProductDetails[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .details, id: productID, queries: nil)
     }
     
     func getStockProductEntries(productID: Int) async throws {
@@ -647,6 +664,15 @@ class GrocyViewModel {
         let userPictureData = try await grocyApi.getFile(fileName: fileName, groupName: "userpictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
         self.userPictures[fileName] = userPictureData
         return userPictureData
+    }
+    
+    func getRecipePicture(fileName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data? {
+        if self.recipePictures.keys.contains(fileName) {
+            return self.recipePictures[fileName]
+        }
+        let recipePictureData = try await grocyApi.getFile(fileName: fileName, groupName: "recipepictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        self.recipePictures[fileName] = recipePictureData
+        return recipePictureData
     }
     
     func uploadFile(fileURL: URL, groupName: String, fileName: String) async throws {
