@@ -121,13 +121,13 @@ struct StockView: View {
     }
     
     var searchedStock: Stock {
-        filteredStock
+        return filteredStock
             .filter {
                 !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) ?? true : true
             }
-            .filter {
-                $0.product?.hideOnStockOverview == false
-            }
+//            .filter {
+//                $0.product?.hideOnStockOverview == false
+//            }
             .sorted(using: sortSetting)
     }
     
@@ -195,9 +195,10 @@ struct StockView: View {
             ForEach(groupedStock.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
-//                        NavigationLink(value: stockElement, label: {
-                        StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
-//                        })
+                        NavigationLink(value: stockElement, label: {
+                            StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
+                                .listRowBackground(Color.blue)
+                        })
                     })
                 }, header: {
                     if stockGrouping == .productGroup, groupName.isEmpty {
@@ -256,16 +257,16 @@ struct StockView: View {
                 ConsumeProductView()
             case .purchaseProduct:
                 PurchaseProductView()
-//            case .productPurchase(let stockElement):
-//                PurchaseProductView(stockElement: stockElement)
-//            case .productConsume(let stockElement):
-//                ConsumeProductView(stockElement: stockElement)
-//            case .productTransfer(let stockElement):
-//                TransferProductView(stockElement: stockElement)
-//            case .productInventory(let stockElement):
-//                InventoryProductView(stockElement: stockElement)
-            case .productOverview(let stockElement):
-                StockProductInfoView(stockElement: stockElement)
+            case .productPurchase(let stockElement):
+                PurchaseProductView(stockElement: stockElement)
+            case .productConsume(let stockElement):
+                ConsumeProductView(stockElement: stockElement)
+            case .productTransfer(let stockElement):
+                TransferProductView(stockElement: stockElement)
+            case .productInventory(let stockElement):
+                InventoryProductView(stockElement: stockElement)
+//            case .productOverview(let stockElement):
+//                StockProductInfoView(stockElement: stockElement)
             default:
                 Text("TEST")
 //                EmptyView()
