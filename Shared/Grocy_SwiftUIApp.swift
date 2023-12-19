@@ -37,7 +37,8 @@ struct Grocy_SwiftUIApp: App {
                                                 GrocyUserSettings.self,
                                                 StockProductDetails.self,
                                                 StockProduct.self,
-                                                VolatileStock.self
+                                                VolatileStock.self,
+                                                Recipe.self
             )
             let modelContext = ModelContext(modelContainer)
             _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
@@ -74,6 +75,8 @@ struct Grocy_SwiftUIApp: App {
         Settings {
             if !onboardingNeeded, isLoggedIn {
                 SettingsView()
+                    .environment(grocyVM)
+                    .modelContainer(modelContainer)
             }
         }
 #endif
