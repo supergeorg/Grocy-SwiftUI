@@ -16,6 +16,10 @@ struct PurchaseProductView: View {
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(filter: #Predicate<MDStore>{$0.active}, sort: \MDStore.id, order: .forward) var mdStores: MDStores
     @Query(filter: #Predicate<MDLocation>{$0.active}, sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
+    @Query() var detailsList: [StockProductDetails]
+    var productDetails: StockProductDetails? {
+        return detailsList.first(where: { $0.productID == stockElement?.productID })
+    }
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -23,14 +27,13 @@ struct PurchaseProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var stockElement: Binding<StockElement?>? = nil
+    var stockElement: StockElement? = nil
     var directProductToPurchaseID: Int? = nil
     var productToPurchaseID: Int? {
-        return directProductToPurchaseID ?? stockElement?.wrappedValue?.productID
+        return directProductToPurchaseID ?? stockElement?.productID
     }
     
     var productToPurchaseAmount: Double?
-    var isPopup: Bool = false
     var autoPurchase: Bool = false
     var barcode: MDProductBarcode? = nil
     var quickScan: Bool = false
@@ -109,7 +112,7 @@ struct PurchaseProductView: View {
         self.locationID = nil
         self.note = ""
         if autoPurchase, firstAppear, product?.defaultDueDays != nil, let productID = productID, isFormValid {
-//            self.price = grocyVM.stockProductDetails[productID]?.lastPrice
+            self.price = productDetails?.lastPrice
             Task {
                 await purchaseProduct()
             }

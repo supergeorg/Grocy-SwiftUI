@@ -23,9 +23,9 @@ struct TransferProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var stockElement: Binding<StockElement?>? = nil
+    var stockElement: StockElement? = nil
     var productToTransferID: Int? {
-        return stockElement?.wrappedValue?.productID
+        return stockElement?.productID
     }
     var isPopup: Bool = false
     

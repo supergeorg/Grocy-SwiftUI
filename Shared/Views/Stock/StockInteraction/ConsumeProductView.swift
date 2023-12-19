@@ -25,10 +25,10 @@ struct ConsumeProductView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessingAction: Bool = false
     
-    var stockElement: Binding<StockElement?>? = nil
+    var stockElement: StockElement? = nil
     var directProductToConsumeID: Int? = nil
     var productToConsumeID: Int? {
-        return directProductToConsumeID ?? stockElement?.wrappedValue?.productID
+        return directProductToConsumeID ?? stockElement?.productID
     }
     var directStockEntryID: String? = nil
     

@@ -21,17 +21,14 @@ struct InventoryProductView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var isProcessingAction: Bool = false
-    
     @State private var productInventory: ProductInventory
-    
-    var productToInventoryID: Int? = nil
     
     @State private var productID: Int?
     @State private var quantityUnitID: Int?
     @State private var productNeverOverdue: Bool = false
     
-    init(productToInventoryID: Int? = nil) {
-        _productID = State(initialValue: productToInventoryID)
+    init(stockElement: StockElement? = nil) {
+        _productID = State(initialValue: stockElement?.productID)
         let initialProductInventory = ProductInventory(
             newAmount: 1.0,
             bestBeforeDate: Date(),
