@@ -25,7 +25,9 @@ struct AmountSelectionView: View {
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
-            return mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+            return mdQuantityUnitConversions
+                .filter({ $0.toQuID == quIDStock })
+                .filter({ $0.productID == nil ? true : $0.productID == productID })
         } else { return [] }
     }
     
