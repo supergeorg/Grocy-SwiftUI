@@ -20,7 +20,9 @@ struct AmountSelectionView: View {
     
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         if let quIDStock = product?.quIDStock {
-            return grocyVM.mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
+            return grocyVM.mdQuantityUnitConversions
+                .filter({ $0.toQuID == quIDStock })
+                .filter({ $0.productID == nil ? true : $0.productID == productID })
         } else { return [] }
     }
     
