@@ -85,7 +85,7 @@ struct StockEntriesView: View {
 #if os(macOS)
         .frame(minWidth: 350)
 #endif
-        .navigationTitle(stockElement.product.name)
+        .navigationTitle(stockElement.product?.name ?? "Product")
         .refreshable {
             await fetchData()
         }

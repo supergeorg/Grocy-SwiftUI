@@ -28,11 +28,12 @@ struct StockTableRow: View {
 #endif
     
     var stockElement: StockElement
+    @Binding var selectedStockElement: StockElement?
     
     @State private var showDetailView: Bool = false
     
     var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
+        mdQuantityUnits.first(where: {$0.id == stockElement.product?.quIDStock})
     }
     
     var backgroundColor: Color {
@@ -57,19 +58,20 @@ struct StockTableRow: View {
     
     var body: some View {
         content
-//            .contextMenu(menuItems: {
-//                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement)
-//            })
-//            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-//                if stockElement.amount > 0 {
-//                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeQA, .openQA])
-//                }
-//            })
-//            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-//                if stockElement.amount > 0 {
-//                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeAll])
-//                }
-//            })
+            .listRowBackground(Color.blue)
+            .contextMenu(menuItems: {
+                StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement)
+            })
+            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                if stockElement.amount > 0 {
+                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeQA, .openQA])
+                }
+            })
+            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                if stockElement.amount > 0 {
+                    StockTableRowActionsView(stockElement: stockElement, selectedStockElement: $selectedStockElement, shownActions: [.consumeAll])
+                }
+            })
 #if os(macOS)
             .listRowBackground(backgroundColor.clipped().cornerRadius(5))
             .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
@@ -107,13 +109,13 @@ struct StockTableRow: View {
     }
     
     var stockElementNameAndActions: some View {
-        Text(stockElement.product.name)
+        Text(stockElement.product?.name ?? "")
             .font(.headline)
     }
     
     var stockElementDetails: some View {
         VStack(alignment: .leading){
-            if let productGroup = mdProductGroups.first(where:{ $0.id == stockElement.product.productGroupID}) {
+            if let productGroup = mdProductGroups.first(where:{ $0.id == stockElement.product?.productGroupID}) {
                 Text(productGroup.name)
                     .font(.caption)
             } else {Text("")}

@@ -111,7 +111,7 @@ struct PurchaseProductView: View {
         self.storeID = barcode?.storeID
         self.locationID = nil
         self.note = ""
-        if autoPurchase, firstAppear, product?.defaultDueDays != nil, let productID = productID, isFormValid {
+        if autoPurchase, firstAppear, product?.defaultDueDays != nil, productID != nil, isFormValid {
             self.price = productDetails?.lastPrice
             Task {
                 await purchaseProduct()

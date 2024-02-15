@@ -197,7 +197,6 @@ struct StockView: View {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
                         NavigationLink(value: stockElement, label: {
                             StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
-                                .listRowBackground(Color.blue)
                         })
                     })
                 }, header: {
