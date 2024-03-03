@@ -11,7 +11,10 @@ import SwiftData
 struct MyDoubleStepper: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \GrocyUserSettings.productPresetsLocationID, order: .forward) var userSettings: GrocyUserSettings
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @Binding var amount: Double
     
@@ -35,19 +38,16 @@ struct MyDoubleStepper: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
-            f.maximumFractionDigits = 2
-//            f.maximumFractionDigits = userSettings.first?.stockDecimalPlacesPricesInput ?? 2
+            f.maximumFractionDigits = userSettings?.stockDecimalPlacesPricesInput ?? 2
         } else {
             f.numberStyle = .decimal
-//            f.maximumFractionDigits = userSettings.first?.stockDecimalPlacesAmounts ?? 2
-            f.maximumFractionDigits = 2
+            f.maximumFractionDigits = userSettings?.stockDecimalPlacesAmounts ?? 2
         }
         return f
     }
     
     var smallestValidAmount: Double {
-//        let decPlaces = Int(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)
-        let decPlaces = 4
+        let decPlaces = Int(userSettings?.stockDecimalPlacesAmounts ?? 4)
         let increment = 1 / pow(10, decPlaces)
         return (minAmount ?? 0.0) + Double(truncating: increment as NSNumber)
     }
@@ -80,7 +80,7 @@ struct MyDoubleStepper: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount {
-                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.0f") and needs to be a valid number with max.  \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
+                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.0f") and needs to be a valid number with max.  \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -99,7 +99,10 @@ struct MyDoubleStepper: View {
 struct MyDoubleStepperOptional: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-//    @Query(sort: \GrocyUserSettings.productPresetsLocationID, order: .forward) var userSettings: GrocyUserSettings
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @Binding var amount: Double?
     
@@ -123,19 +126,16 @@ struct MyDoubleStepperOptional: View {
             f.numberStyle = .currency
             f.isLenient = true
             f.currencySymbol = currencySymbol
-//            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesPricesInput ?? 2
-            f.maximumFractionDigits = 2
+            f.maximumFractionDigits = userSettings?.stockDecimalPlacesPricesInput ?? 2
         } else {
             f.numberStyle = .decimal
-//            f.maximumFractionDigits = grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 2
-            f.maximumFractionDigits = 2
+            f.maximumFractionDigits = userSettings?.stockDecimalPlacesAmounts ?? 2
         }
         return f
     }
     
     var smallestValidAmount: Double {
-//        let decPlaces = Int(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4)
-        let decPlaces = 4
+        let decPlaces = Int(userSettings?.stockDecimalPlacesAmounts ?? 4)
         let increment = 1 / pow(10, decPlaces)
         return (minAmount ?? 0.0) + Double(truncating: increment as NSNumber)
     }
@@ -186,7 +186,7 @@ struct MyDoubleStepperOptional: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount {
-                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.2f") and needs to be a valid number with max.  \(grocyVM.userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
+                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.2f") and needs to be a valid number with max.  \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
