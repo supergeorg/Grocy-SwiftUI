@@ -29,9 +29,9 @@ struct StockJournalView: View {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
     
-    var stockElement: Binding<StockElement?>? = nil
+    var stockElement: StockElement? = nil
     var selectedProductID: Int? {
-        return stockElement?.wrappedValue?.productID
+        return stockElement?.productID
     }
     
     private func undoTransaction(stockJournalEntry: StockJournalEntry) async {
