@@ -6,17 +6,19 @@
 //
 
 import Foundation
+import SwiftData
 
 // MARK: - StockLocation
 
-struct StockLocation: Codable {
-    let id: Int
-    let productID: Int
-    let amount: Double
-    let locationID: Int
-    let locationName: String
-    let locationIsFreezer: Bool
-
+@Model
+class StockLocation: Codable, Equatable {
+    @Attribute(.unique) var id: Int
+    var productID: Int
+    var amount: Double
+    var locationID: Int
+    var locationName: String
+    var locationIsFreezer: Bool
+    
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -25,8 +27,8 @@ struct StockLocation: Codable {
         case locationName = "location_name"
         case locationIsFreezer = "location_is_freezer"
     }
-
-    init(from decoder: Decoder) throws {
+    
+    required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
@@ -46,6 +48,41 @@ struct StockLocation: Codable {
         } catch {
             throw APIError.decodingError(error: error)
         }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(productID, forKey: .productID)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(locationID, forKey: .locationID)
+        try container.encode(locationName, forKey: .locationName)
+        try container.encode(locationIsFreezer, forKey: .locationIsFreezer)
+    }
+    
+    init(
+        id: Int,
+        productID: Int,
+        amount: Double,
+        locationID: Int,
+        locationName: String,
+        locationIsFreezer: Bool
+    ) {
+        self.id = id
+        self.productID = productID
+        self.amount = amount
+        self.locationID = locationID
+        self.locationName = locationName
+        self.locationIsFreezer = locationIsFreezer
+    }
+    
+    static func == (lhs: StockLocation, rhs: StockLocation) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.productID == rhs.productID &&
+        lhs.amount == rhs.amount &&
+        lhs.locationID == rhs.locationID &&
+        lhs.locationName == rhs.locationName &&
+        lhs.locationIsFreezer == rhs.locationIsFreezer
     }
 }
 
