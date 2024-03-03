@@ -38,7 +38,8 @@ struct StockView: View {
     var volatileStock: VolatileStock? {
         return volatileStockList.first
     }
-    @Query() var stockProductDetails: [StockProductDetails]
+    @Query var stockProductDetails: [StockProductDetails]
+    @Query var stockProductLocations: [StockLocation]
     
     @State private var searchString: String = ""
     @State private var showFilter: Bool = false
@@ -112,9 +113,11 @@ struct StockView: View {
             .filter {
                 filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({$0.productID}).contains($0.productID) ?? false : true
             }
-        //                            .filter {
-        //                                filteredLocationID != nil ? (($0.product.locationID == filteredLocationID) || (grocyVM.stockProductLocations[$0.product.id]?.first(where: { $0.locationID == filteredLocationID }) != nil)) : true
-        //                            }
+            .filter { se in
+                filteredLocationID != nil ? ((se.product?.locationID == filteredLocationID) || (stockProductLocations.first(where: { loc in
+                    se.productID == loc.productID && loc.locationID == filteredLocationID
+                }) != nil)) : true
+            }
             .filter {
                 filteredProductGroupID != nil ? $0.product?.productGroupID == filteredProductGroupID : true
             }
@@ -125,9 +128,9 @@ struct StockView: View {
             .filter {
                 !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) ?? true : true
             }
-//            .filter {
-//                $0.product?.hideOnStockOverview == false
-//            }
+            .filter {
+                $0.product?.hideOnStockOverview == false
+            }
             .sorted(using: sortSetting)
     }
     
@@ -264,11 +267,12 @@ struct StockView: View {
                 TransferProductView(stockElement: stockElement)
             case .productInventory(let stockElement):
                 InventoryProductView(stockElement: stockElement)
-//            case .productOverview(let stockElement):
-//                StockProductInfoView(stockElement: stockElement)
+            case .productOverview(let stockElement):
+                StockProductInfoView(stockElement: stockElement)
+            case .productJournal(let stockElement):
+                StockJournalView(stockElement: stockElement)
             default:
                 Text("TEST")
-//                EmptyView()
             }
         })
         .navigationDestination(for: StockElement.self, destination: { stockElement in
