@@ -18,6 +18,10 @@ struct StockTableRow: View {
     var volatileStock: VolatileStock? {
         volatileStockList.first
     }
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -137,12 +141,12 @@ struct StockTableRow: View {
                             .italic()
                     }
                 }
-                //                if grocyVM.userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
-                //                   shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
-                //                    Image(systemName: MySymbols.shoppingList)
-                //                        .foregroundStyle(Color(.GrocyColors.grocyGray))
-                //                        .help("This product is currently on a shopping list.")
-                //                }
+                if userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
+                   shoppingList.first(where: {$0.productID == stockElement.productID}) != nil {
+                    Image(systemName: MySymbols.shoppingList)
+                        .foregroundStyle(Color(.GrocyColors.grocyGray))
+                        .help("This product is currently on a shopping list.")
+                }
             }
             if let dueDate = stockElement.bestBeforeDate {
                 HStack {
