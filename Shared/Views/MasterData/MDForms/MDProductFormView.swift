@@ -110,6 +110,8 @@ struct MDProductFormView: View {
     @State private var parentProductID: Int?
     @State private var mdProductDescription: String = ""
     @State private var pictureFileName: String?
+    @State private var defaultStockLabelType: DefaultStockLabelType = DefaultStockLabelType.none
+    @State private var autoReprintStockLabel: Bool = false
     
     @State private var locationID: Int? // REQUIRED
     @State private var defaultConsumeLocationID: Int?
@@ -204,6 +206,9 @@ struct MDProductFormView: View {
         quIDConsume = product?.quIDConsume ?? grocyVM.userSettings?.productPresetsQuID
         quIDPrice = product?.quIDPrice ?? grocyVM.userSettings?.productPresetsQuID
         
+        defaultStockLabelType = DefaultStockLabelType(rawValue: product?.defaultStockLabelType ?? 0) ?? DefaultStockLabelType.none
+        autoReprintStockLabel = product?.autoReprintStockLabel ?? false
+        
         minStockAmount = product?.minStockAmount ?? 0.0
         cumulateMinStockAmountOfSubProducts = product?.cumulateMinStockAmountOfSubProducts ?? false
         quickConsumeAmount = product?.quickConsumeAmount ?? 1.0
@@ -266,11 +271,13 @@ struct MDProductFormView: View {
                 quickConsumeAmount: quickConsumeAmount,
                 quickOpenAmount: quickOpenAmount,
                 hideOnStockOverview: hideOnStockOverview,
+                defaultStockLabelType: defaultStockLabelType.rawValue,
                 shouldNotBeFrozen: shouldNotBeFrozen,
                 treatOpenedAsOutOfStock: treatOpenedAsOutOfStock,
                 noOwnStock: noOwnStock,
                 defaultConsumeLocationID: defaultConsumeLocationID,
                 moveOnOpen: defaultConsumeLocationID != nil ? moveOnOpen : nil,
+                autoReprintStockLabel: autoReprintStockLabel,
                 rowCreatedTimestamp: timeStamp
             )
             isProcessing = true
@@ -501,6 +508,19 @@ struct MDProductFormView: View {
             
             // Product should not be frozen
             MyToggle(isOn: $shouldNotBeFrozen, description: "str.md.product.shouldNotBeFrozen", descriptionInfo: "str.md.product.shouldNotBeFrozen.hint", icon: MySymbols.freezing)
+            
+            // Default stock entry label
+            HStack{
+                Picker(selection: $defaultStockLabelType, label: MyLabelWithSubtitle(title: "Default stock entry label", systemImage: "tag", isSubtitleProblem: false, hideSubtitle: true), content: {
+                    Text("No label").tag(DefaultStockLabelType.none)
+                    Text("Single label").tag(DefaultStockLabelType.singleLabel)
+                    Text("Label per unit").tag(DefaultStockLabelType.labelPerUnit)
+                })
+                FieldDescription(description: "This is the default which will be prefilled on purchase")
+            }
+            
+            // Auto reprint stock entry label
+            MyToggle(isOn: $autoReprintStockLabel, description: "Auto reprint stock entry label", descriptionInfo: "When enabled, auto-changing the due date of a stock entry (by opening/freezing/thawing and having corresponding default due days set) will reprint its label", icon: "printer")
             
             
             // Product picture
