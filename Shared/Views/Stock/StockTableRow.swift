@@ -61,8 +61,10 @@ struct StockTableRow: View {
     }
     
     var body: some View {
-        content
-            .listRowBackground(Color.blue)
+        NavigationLink(value: stockElement, label: {
+            content
+        })
+            .listRowBackground(backgroundColor)
             .contextMenu(menuItems: {
                 StockTableMenuEntriesView(stockElement: stockElement, selectedStockElement: $selectedStockElement)
             })

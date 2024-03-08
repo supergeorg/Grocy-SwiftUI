@@ -198,9 +198,7 @@ struct StockView: View {
             ForEach(groupedStock.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 Section(content: {
                     ForEach(groupElements.sorted(using: sortSetting), id: \.productID, content: { stockElement in
-                        NavigationLink(value: stockElement, label: {
-                            StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
-                        })
+                        StockTableRow(stockElement: stockElement, selectedStockElement: $selectedStockElement)
                     })
                 }, header: {
                     if stockGrouping == .productGroup, groupName.isEmpty {
