@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDLocationRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     var location: MDLocation
     
@@ -33,7 +33,7 @@ struct MDLocationRowView: View {
 }
 
 struct MDLocationsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @State private var searchString: String = ""
     

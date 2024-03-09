@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDProductPictureFormView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     var product: MDProduct?
     

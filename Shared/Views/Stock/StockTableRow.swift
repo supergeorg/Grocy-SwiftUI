@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockTableRow: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     

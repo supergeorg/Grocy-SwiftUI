@@ -8,7 +8,7 @@
 import SwiftUI
 
 private struct StockFilterItemView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     @Environment(\.colorScheme) var colorScheme
     var num: Int?
     @Binding var filteredStatus: ProductStatus

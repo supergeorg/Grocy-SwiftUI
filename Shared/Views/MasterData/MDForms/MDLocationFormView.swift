@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDLocationFormView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     

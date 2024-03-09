@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockTable: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.colorScheme) var colorScheme
     

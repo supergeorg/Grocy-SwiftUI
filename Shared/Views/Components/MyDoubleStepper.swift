@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyDoubleStepper: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     @Binding var amount: Double
     
     var description: String
@@ -90,7 +90,7 @@ struct MyDoubleStepper: View {
 
 
 struct MyDoubleStepperOptional: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     @Binding var amount: Double?
     
     var description: String

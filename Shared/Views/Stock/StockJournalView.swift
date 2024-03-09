@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockJournalFilterBar: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Binding var searchString: String
     @Binding var filteredProductID: Int?
@@ -185,7 +185,7 @@ struct StockJournalFilterBar: View {
 }
 
 struct StockJournalRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @AppStorage("localizationKey") var localizationKey: String = "en"
     
@@ -253,7 +253,7 @@ struct StockJournalRowView: View {
 }
 
 struct StockJournalView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     

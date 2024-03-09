@@ -25,7 +25,7 @@ struct MDProductGroupRowView: View {
 }
 
 struct MDProductGroupsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     

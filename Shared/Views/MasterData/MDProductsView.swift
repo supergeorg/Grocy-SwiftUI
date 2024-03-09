@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDProductRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     var product: MDProduct
     
@@ -49,7 +49,7 @@ struct MDProductRowView: View {
 }
 
 struct MDProductsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @State private var searchString: String = ""
     

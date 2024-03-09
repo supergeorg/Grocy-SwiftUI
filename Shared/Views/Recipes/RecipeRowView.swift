@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeRowView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     var recipe: Recipe
     

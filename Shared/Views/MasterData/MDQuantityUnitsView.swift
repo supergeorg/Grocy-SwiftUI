@@ -31,7 +31,7 @@ struct MDQuantityUnitRowView: View {
 }
 
 struct MDQuantityUnitsView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     

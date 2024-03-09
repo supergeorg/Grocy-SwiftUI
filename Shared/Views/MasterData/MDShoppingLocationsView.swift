@@ -25,7 +25,7 @@ struct MDStoreRowView: View {
 }
 
 struct MDStoresView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @State private var searchString: String = ""
     

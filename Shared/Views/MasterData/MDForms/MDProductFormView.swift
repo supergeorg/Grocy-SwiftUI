@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MDProductFormOFFView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     @StateObject var offVM: OpenFoodFactsViewModel
     
     @Binding var name: String
@@ -96,7 +96,7 @@ struct MDProductFormOFFView: View {
 }
 
 struct MDProductFormView: View {
-    @StateObject var grocyVM: GrocyViewModel = .shared
+    @ObservedObject var grocyVM: GrocyViewModel = .shared
     
     @Environment(\.dismiss) var dismiss
     
