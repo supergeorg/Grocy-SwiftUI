@@ -345,12 +345,19 @@ class GrocyViewModel {
                             self.systemInfo = try await grocyApi.getSystemInfo()
                         case .user_settings:
                             self.userSettings = try await grocyApi.getUserSettings()
+                            try self.modelContext.delete(model: GrocyUserSettings.self)
+                            if let userSet = self.userSettings {
+                                self.modelContext.insert(userSet)
+                            }
+                            try self.modelContext.save()
                         case .recipeFulfillments:
                             self.recipeFulfillments = try await grocyApi.getRecipeFulfillments()
                         case .users:
                             self.users = try await grocyApi.getUsers()
                         case .volatileStock:
-                            self.volatileStock = try await grocyApi.getVolatileStock(expiringDays: self.userSettings?.stockDueSoonDays ?? 5)
+                            let userSettingsFetch = FetchDescriptor<GrocyUserSettings>()
+                            let dueSoonDays = try modelContext.fetch(userSettingsFetch).first?.stockDueSoonDays ?? self.userSettings?.stockDueSoonDays ?? 5
+                            self.volatileStock = try await grocyApi.getVolatileStock(dueSoonDays: dueSoonDays)
                             try self.modelContext.delete(model: VolatileStock.self)
                             if let volatileStock = self.volatileStock {
                                 self.modelContext.insert(volatileStock)

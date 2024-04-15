@@ -84,7 +84,7 @@ protocol GrocyAPI {
     // MARK: - Stock
     func getStock() async throws -> Stock
     func getStockJournal() async throws -> StockJournal
-    func getVolatileStock(expiringDays: Int) async throws -> VolatileStock
+    func getVolatileStock(dueSoonDays: Int) async throws -> VolatileStock
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]?) async throws -> T
     func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
@@ -565,8 +565,8 @@ extension GrocyApi {
         return try await call(.objectsEntity, method: .GET, object: .stock_log)
     }
     
-    func getVolatileStock(expiringDays: Int) async throws -> VolatileStock {
-        return try await call(.stockVolatile, method: .GET, queries: ["expiring_days=\(expiringDays)"])
+    func getVolatileStock(dueSoonDays: Int) async throws -> VolatileStock {
+        return try await call(.stockVolatile, method: .GET, queries: ["due_soon_days=\(dueSoonDays)"])
     }
     
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]? = nil) async throws -> T {
