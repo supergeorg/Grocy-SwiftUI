@@ -20,7 +20,7 @@ class StockElement: Codable, Equatable {
     var isAggregatedAmount: Bool
     var dueType: Int
     var productID: Int
-    @Relationship(deleteRule: .cascade) var product: StockProduct
+    @Relationship() var product: MDProduct?
     
     enum CodingKeys: String, CodingKey {
         case amount
@@ -56,7 +56,7 @@ class StockElement: Codable, Equatable {
             }
             do { self.dueType = try container.decode(Int.self, forKey: .dueType) } catch { self.dueType = try Int(container.decode(String.self, forKey: .dueType))! }
             do { self.productID = try container.decode(Int.self, forKey: .productID) } catch { self.productID = try Int(container.decode(String.self, forKey: .productID))! }
-            self.product = try container.decode(StockProduct.self, forKey: .product)
+            self.product = nil
         } catch {
             throw APIError.decodingError(error: error)
         }
@@ -86,7 +86,7 @@ class StockElement: Codable, Equatable {
         isAggregatedAmount: Bool,
         dueType: Int,
         productID: Int,
-        product: StockProduct
+        product: MDProduct
     ) {
         self.amount = amount
         self.amountAggregated = amountAggregated

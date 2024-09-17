@@ -77,7 +77,7 @@ struct ServerSettingsIntStepper: View {
             let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
             self.value = userSettingsResult.value ?? 0
         } catch {
-            await grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
         self.isFirstShown = false
     }
@@ -86,7 +86,7 @@ struct ServerSettingsIntStepper: View {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value))
         } catch {
-            await grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     
@@ -185,7 +185,7 @@ struct ServerSettingsObjectPicker: View {
                 self.objectID = userSettingsResult.value
             }
         } catch {
-            await grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
+            grocyVM.grocyLog.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
         }
         self.isFirstShown = false
     }
@@ -194,7 +194,7 @@ struct ServerSettingsObjectPicker: View {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID))
         } catch {
-            await grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
+            grocyVM.grocyLog.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
     

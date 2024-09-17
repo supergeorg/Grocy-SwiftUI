@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct UserFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query var users: GrocyUsers
     
     @Environment(\.dismiss) var dismiss
     
@@ -25,9 +28,8 @@ struct UserFormView: View {
     
     @State private var isValidUsername: Bool = false
     private func checkUsernameCorrect() -> Bool {
-//        let foundUsername = grocyVM.users.first(where: {$0.username == username})
-//        return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
-        return false
+        let foundUsername = users.first(where: {$0.username == username})
+        return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
     }
     
     @State private var isMatchingPassword: Bool = true

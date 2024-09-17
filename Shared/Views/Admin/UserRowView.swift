@@ -12,9 +12,7 @@ struct UserRowActionsView: View {
     
     var user: GrocyUser
     var isCurrentUser: Bool
-    
-    
-    
+
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
     

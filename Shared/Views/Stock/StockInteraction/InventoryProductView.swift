@@ -127,7 +127,7 @@ struct InventoryProductView: View {
                 }
             }
             
-            ProductFieldNew(productID: $productID, description: "Product")
+            ProductField(productID: $productID, description: "Product")
             
             if productID != nil {
                 AmountSelectionView(productID: $productID, amount: $productInventory.newAmount, quantityUnitID: $quantityUnitID)

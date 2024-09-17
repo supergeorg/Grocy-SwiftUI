@@ -16,8 +16,6 @@ struct MDProductRowView: View {
     
     var product: MDProduct
     
-//    @State private var productDescription: AttributedString? = nil
-    
     var body: some View {
         HStack{
             if let pictureFileName = product.pictureFileName {
@@ -43,9 +41,6 @@ struct MDProductRowView: View {
                         .italic()
                 }
             }
-//            .task {
-//                productDescription = await grocyVM.getAttributedStringFromHTML(htmlString: product.mdProductDescription)
-//            }
         }
     }
 }

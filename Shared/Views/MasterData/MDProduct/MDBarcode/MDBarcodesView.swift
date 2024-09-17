@@ -38,7 +38,7 @@ struct MDBarcodesView: View {
     var filteredBarcodes: MDProductBarcodes {
         productBarcodes
             .filter {
-                $0.barcode.contains(searchString)
+                searchString == "" || $0.barcode.contains(searchString)
             }
     }
     
@@ -58,13 +58,13 @@ struct MDBarcodesView: View {
     
     var body: some View {
         List {
-//            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-//                ServerProblemView()
-//            } else if productBarcodes.isEmpty {
-//                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
-//            } else if filteredBarcodes.isEmpty {
-//                ContentUnavailableView.search
-//            }
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if productBarcodes.isEmpty {
+                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
+            } else if filteredBarcodes.isEmpty {
+                ContentUnavailableView.search
+            }
             ForEach(filteredBarcodes, id:\.id) { productBarcode in
                 NavigationLink(value: productBarcode, label: {
                     MDBarcodeRowView(barcode: productBarcode)

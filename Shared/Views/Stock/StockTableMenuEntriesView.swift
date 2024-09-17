@@ -11,13 +11,15 @@ import SwiftData
 struct StockTableMenuEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @State private var navPath = NavigationPath()
+    
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
     
     var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: {$0.id == stockElement.product.quIDStock})
+        mdQuantityUnits.first(where: {$0.id == stockElement.product?.quIDStock})
     }
     
     func consumeAsSpoiled() async {
@@ -30,91 +32,70 @@ struct StockTableMenuEntriesView: View {
     }
     
     var body: some View {
-        Button(action: {
-            selectedStockElement = stockElement
-        }, label: {
-            Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
-                .labelStyle(.titleAndIcon)
-        })
+        Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
+            .labelStyle(.titleAndIcon)
         Divider()
-//        Group{
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productPurchase
-//            }, label: {
-//                Label("Purchase", systemImage: MySymbols.purchase)
-//                    .labelStyle(.titleAndIcon)
-//            })
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productConsume
-//            }, label: {
-//                Label("Consume", systemImage: MySymbols.consume)
-//                    .labelStyle(.titleAndIcon)
-//            })
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productTransfer
-//            }, label: {
-//                Label("Transfer", systemImage: MySymbols.transfer)
-//                    .labelStyle(.titleAndIcon)
-//            })
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productInventory
-//            }, label: {
-//                Label("Inventory", systemImage: MySymbols.inventory)
-//                    .labelStyle(.titleAndIcon)
-//            })
-//        }
-//        Divider()
-//        Group{
-//            Button(role: .destructive, action: {
-//                selectedStockElement = stockElement
-//                Task {
-//                    await consumeAsSpoiled()
-//                }
-//            }, label: {
-//                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
-//            })
-//            
-//            //                Button(action: {
-//            //                    print("recip")
-//            //                }, label: {
-//            //                    Text("Search for recipes which contain this product")
-//            //                })
-//        }
-//        Divider()
-//        Group{
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productOverview
-//            }, label: {
-//                Label("Product overview", systemImage: MySymbols.info)
-//            })
-//            //                Button(action: {
-//            //                    print("Stock entries are not accessed here")
-//            //                }, label: {
-//            //                    Text("Stock entries")
-//            //                })
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .productJournal
-//            }, label: {
-//                Label("Stock journal", systemImage: MySymbols.stockJournal)
-//            })
-//            //                Button(action: {
-//            //                    print("Stock Journal summary is not available yet")
-//            //                }, label: {
-//            //                    Text("Stock journal summary")
-//            //                })
-//            Button(action: {
-//                selectedStockElement = stockElement
-//                activeSheet = .editProduct
-//            }, label: {
-//                Label("Edit product", systemImage: MySymbols.edit)
-//            })
-//        }
+        Group{
+            NavigationLink(value: StockInteraction.productPurchase(stockElement: stockElement), label: {
+                Label("Purchase", systemImage: MySymbols.purchase)
+                    .labelStyle(.titleAndIcon)
+            })
+            NavigationLink(value: StockInteraction.productConsume(stockElement: stockElement), label: {
+                Label("Consume", systemImage: MySymbols.consume)
+                    .labelStyle(.titleAndIcon)
+            })
+            NavigationLink(value: StockInteraction.productTransfer(stockElement: stockElement), label: {
+                Label("Transfer", systemImage: MySymbols.transfer)
+                    .labelStyle(.titleAndIcon)
+            })
+            NavigationLink(value: StockInteraction.productInventory(stockElement: stockElement), label: {
+                Label("Inventory", systemImage: MySymbols.inventory)
+                    .labelStyle(.titleAndIcon)
+            })
+        }
+        Divider()
+        Group{
+            //            Button(role: .destructive, action: {
+            //                Task {
+            //                    await consumeAsSpoiled()
+            //                }
+            //            }, label: {
+            //                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
+            //            })
+            
+            //                Button(action: {
+            //                    print("recip")
+            //                }, label: {
+            //                    Text("Search for recipes which contain this product")
+            //                })
+        }
+        Divider()
+        Group{
+            NavigationLink(value: StockInteraction.productOverview(stockElement: stockElement), label: {
+                Label("Product overview", systemImage: MySymbols.info)
+                    .labelStyle(.titleAndIcon)
+            })
+            //            //                Button(action: {
+            //            //                    print("Stock entries are not accessed here")
+            //            //                }, label: {
+            //            //                    Text("Stock entries")
+            //            //                })
+            NavigationLink(value: StockInteraction.productJournal(stockElement: stockElement), label: {
+                Label("Stock journal", systemImage: MySymbols.stockJournal)
+                    .labelStyle(.titleAndIcon)
+            })
+            //            //                Button(action: {
+            //            //                    print("Stock Journal summary is not available yet")
+            //            //                }, label: {
+            //            //                    Text("Stock journal summary")
+            //            //                })
+            //            Button(action: {
+            //                selectedStockElement = stockElement
+            //                activeSheet = .editProduct
+            //            }, label: {
+            //                Label("Edit product", systemImage: MySymbols.edit)
+            //            })
+        }
     }
 }
 

@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct StockFilterItemView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        return userSettingsList.first
+    }
+    
     var num: Int?
     @Binding var filteredStatus: ProductStatus
     var ownFilteredStatus: ProductStatus
@@ -34,11 +41,11 @@ struct StockFilterItemView: View {
                     Image(systemName: ownFilteredStatus.getIconName())
                 }
             } else {
-                Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
+                Text(ownFilteredStatus.getDescription(amount: num ?? 0, dueSoonDays: userSettings?.stockDueSoonDays ?? 5))
                     .bold()
             }
 #elseif os(macOS)
-            Text(ownFilteredStatus.getDescription(amount: num ?? 0, expiringDays: grocyVM.userSettings?.stockDueSoonDays ?? 5))
+            Text(ownFilteredStatus.getDescription(amount: num ?? 0, dueSoonDays: userSettings?.stockDueSoonDays ?? 5))
                 .bold()
 #endif
         }

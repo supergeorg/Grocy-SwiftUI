@@ -8,48 +8,6 @@
 import SwiftUI
 import SwiftData
 
-struct ProductFieldNew: View {
-    @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
-    
-    @Binding var productID: Int?
-    var description: String
-    
-    @State private var searchTerm: String = ""
-    
-    private func getBarcodes(pID: Int) -> [String] {
-        mdProductBarcodes.filter{$0.productID == pID}.map{$0.barcode}
-    }
-    
-    private var filteredProducts: MDProducts {
-        mdProducts.filter {
-            searchTerm.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchTerm) || getBarcodes(pID: $0.id).contains(searchTerm))
-        }
-        .filter {
-            $0.noOwnStock != true
-        }
-        .sorted(by: {
-            $0.name.lowercased() < $1.name.lowercased()
-        })
-    }
-    
-    var body: some View {
-        Picker(selection: $productID, content: {
-            Text("")
-                .tag(nil as Int?)
-            ForEach(filteredProducts, id: \.id) { productElement in
-                Text(productElement.name)
-                    .tag(productElement.id as Int?)
-            }
-        }, label: {
-            Label(LocalizedStringKey(description), systemImage: MySymbols.product)
-                .foregroundStyle(.primary)
-        })
-    }
-}
-
 struct ProductField: View {
 #if os(iOS)
     struct SearchBar: UIViewRepresentable {

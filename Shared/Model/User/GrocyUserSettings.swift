@@ -266,6 +266,8 @@ class GrocyUserSettings: Codable {
     }
 }
 
+typealias GrocyUserSettingsList = [GrocyUserSettings]
+
 class GrocyUserSettingsString: Codable {
     var value: String?
     

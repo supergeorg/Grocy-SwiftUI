@@ -10,6 +10,8 @@ import SwiftUI
 struct Sidebar: View {
     @Binding var selection: NavigationItem?
     
+    @AppStorage("devMode") private var devMode: Bool = false
+    
     @State private var isMasterDataSectionExpanded: Bool = false
     
     var body: some View {
@@ -28,6 +30,12 @@ struct Sidebar: View {
                 }
                 NavigationLink(value: NavigationItem.shoppingList) {
                     Label("Shopping list", systemImage: MySymbols.shoppingList)
+                }
+            }
+            
+            Section {
+                NavigationLink(value: NavigationItem.recipes) {
+                    Label("Recipes", systemImage: MySymbols.recipe)
                 }
             }
             
@@ -65,6 +73,12 @@ struct Sidebar: View {
             }, header: {
                 Label("Master data", systemImage: MySymbols.masterData)
             })
+            
+            if devMode {
+                NavigationLink(value: NavigationItem.userManagement, label: {
+                    Label("User management", systemImage: MySymbols.user)
+                })
+            }
             
 #if os(iOS)
             NavigationLink(value: NavigationItem.settings) {

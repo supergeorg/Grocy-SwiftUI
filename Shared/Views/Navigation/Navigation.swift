@@ -56,6 +56,8 @@ struct Navigation: View {
             StockJournalView()
         case .shoppingList:
             ShoppingListView()
+        case .recipes:
+            RecipesView()
         case .purchase:
             PurchaseProductView()
         case .consume:
@@ -76,6 +78,8 @@ struct Navigation: View {
             MDProductGroupsView()
         case .settings:
             SettingsView()
+        case .userManagement:
+            UserManagementView()
         default:
             EmptyView()
         }

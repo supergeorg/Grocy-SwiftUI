@@ -11,6 +11,12 @@ import SwiftData
 struct StockEntryRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
+    @Query var systemConfigList: [SystemConfig]
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
+    
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
@@ -27,15 +33,15 @@ struct StockEntryRowView: View {
     
     
     var backgroundColor: Color {
-//        if ((0..<(grocyVM.userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
-//            return Color(.GrocyColors.grocyYellowBackground)
-//        }
-//        if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-//            return Color(.GrocyColors.grocyGrayBackground)
-//        }
-//        if (dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
-//            return Color(.GrocyColors.grocyRedBackground)
-//        }
+        if ((0..<(userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100) {
+            return Color(.GrocyColors.grocyYellowBackground)
+        }
+        if (dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
+            return Color(.GrocyColors.grocyGrayBackground)
+        }
+        if (dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false) {
+            return Color(.GrocyColors.grocyRedBackground)
+        }
         return colorScheme == .light ? Color.white : Color.black
     }
     
@@ -86,7 +92,7 @@ struct StockEntryRowView: View {
                 }
                 
                 if let price = stockEntry.price, price > 0 {
-                    Text("Price: \(price.formattedAmount) \(grocyVM.systemConfig?.currency ?? "")")
+                    Text("Price: \(price.formattedAmount) \(systemConfigList.first?.currency ?? "")")
                 }
                 
                 Text("Purchased date: \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")")
@@ -100,19 +106,6 @@ struct StockEntryRowView: View {
                 if let note = stockEntry.note {
                     Text("Note: \(note)")
                 }
-//#if os(macOS)
-//                Button(action: { Task { await openEntry() } }, label: {
-//                    Label("Mark this stock entry as open", systemImage: MySymbols.open)
-//                })
-//                .tint(Color(.GrocyColors.grocyBlue))
-//                .help("Mark this stock entry as open")
-//                .disabled(stockEntry.stockEntryOpen)
-//                Button(action: { Task { await consumeEntry() } }, label: {
-//                    Label("Consume this stock entry", systemImage: MySymbols.consume)
-//                })
-//                .tint(Color(.GrocyColors.grocyDelete))
-//                .help("Consume this stock entry")
-//#endif
             }
         })
 #if os(macOS)

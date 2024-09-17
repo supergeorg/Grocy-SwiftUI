@@ -13,6 +13,10 @@ struct ShoppingListRowActionsView: View {
     
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     var shoppingListItem: ShoppingListItem
     
@@ -74,7 +78,7 @@ struct ShoppingListRowActionsView: View {
                     Task {
                         await changeDoneStatus()
                     }
-                    if shoppingListItem.done != 1, grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true {
+                    if shoppingListItem.done != 1, userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true {
                         showAutoPurchase.toggle()
                     }
                 }

@@ -39,7 +39,8 @@ struct Grocy_SwiftUIApp: App {
                                                 StockProduct.self,
                                                 VolatileStock.self,
                                                 Recipe.self,
-                                                StockLocation.self
+                                                StockLocation.self,
+                                                SystemConfig.self
             )
             let modelContext = ModelContext(modelContainer)
             _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))

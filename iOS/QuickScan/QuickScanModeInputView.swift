@@ -16,7 +16,7 @@ struct QuickScanModeInputView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
-    @Query(sort: \MDProduct.id, order: .forward) var mdProducts: MDProducts
+    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
@@ -76,15 +76,14 @@ struct QuickScanModeInputView: View {
     }
     
     private func getAmountForLocation(lID: Int) -> Double {
-//        if let entries = grocyVM.stockProductEntries[product?.id ?? 0] {
-//            var maxAmount: Double = 0
-//            let filtEntries = entries.filter { $0.locationID == lID }
-//            for filtEntry in filtEntries {
-//                maxAmount += filtEntry.amount
-//            }
-//            return maxAmount
-//        }
-        return 0.0
+        var maxAmount: Double = 0.0
+        let filtEntries = stockProductEntries.filter { entry in
+            entry.productID == product?.id && entry.locationID == lID
+        }
+        for filtEntry in filtEntries {
+            maxAmount += filtEntry.amount
+        }
+        return maxAmount
     }
     
     // Consume
@@ -109,7 +108,7 @@ struct QuickScanModeInputView: View {
     @State private var purchaseLocationID: Int?
     @Binding var lastPurchaseLocationID: Int?
     @State private var note: String = ""
-
+    
     
     var body: some View {
         NavigationView {

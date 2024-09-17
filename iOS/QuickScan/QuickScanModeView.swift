@@ -179,29 +179,35 @@ struct QuickScanModeView: View {
         .sheet(item: $qsActiveSheet) { item in
             switch item {
             case .grocyCode:
-                QuickScanModeInputView(
-                    quickScanMode: $quickScanMode,
-                    grocyCode: recognizedGrocyCode,
-                    lastConsumeLocationID: $lastConsumeLocationID,
-                    lastPurchaseDueDate: $lastPurchaseDueDate,
-                    lastPurchaseStoreID: $lastPurchaseStoreID,
-                    lastPurchaseLocationID: $lastPurchaseLocationID
-                )
+                NavigationStack {
+                    QuickScanModeInputView(
+                        quickScanMode: $quickScanMode,
+                        grocyCode: recognizedGrocyCode,
+                        lastConsumeLocationID: $lastConsumeLocationID,
+                        lastPurchaseDueDate: $lastPurchaseDueDate,
+                        lastPurchaseStoreID: $lastPurchaseStoreID,
+                        lastPurchaseLocationID: $lastPurchaseLocationID
+                    )
+                }
             case .barcode:
-                QuickScanModeInputView(
-                    quickScanMode: $quickScanMode,
-                    productBarcode: recognizedBarcode,
-                    lastConsumeLocationID: $lastConsumeLocationID,
-                    lastPurchaseDueDate: $lastPurchaseDueDate,
-                    lastPurchaseStoreID: $lastPurchaseStoreID,
-                    lastPurchaseLocationID: $lastPurchaseLocationID
-                )
+                NavigationStack {
+                    QuickScanModeInputView(
+                        quickScanMode: $quickScanMode,
+                        productBarcode: recognizedBarcode,
+                        lastConsumeLocationID: $lastConsumeLocationID,
+                        lastPurchaseDueDate: $lastPurchaseDueDate,
+                        lastPurchaseStoreID: $lastPurchaseStoreID,
+                        lastPurchaseLocationID: $lastPurchaseLocationID
+                    )
+                }
             case .selectProduct:
-                QuickScanModeSelectProductView(
-                    barcode: notRecognizedBarcode,
-                    qsActiveSheet: $qsActiveSheet,
-                    newRecognizedBarcode: $newRecognizedBarcode
-                )
+                NavigationStack {
+                    QuickScanModeSelectProductView(
+                        barcode: notRecognizedBarcode,
+                        qsActiveSheet: $qsActiveSheet,
+                        newRecognizedBarcode: $newRecognizedBarcode
+                    )
+                }
             }
         }
         .task {

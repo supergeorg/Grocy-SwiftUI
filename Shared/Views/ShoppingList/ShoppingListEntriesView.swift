@@ -67,6 +67,10 @@ struct ShoppingListEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -148,7 +152,7 @@ struct ShoppingListEntriesView: View {
                         await changeDoneStatus(shoppingListItem: shoppingListItem)
                     }
                     if shoppingListItem.done != 1,
-                       grocyVM.userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
+                       userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
                     {
                         showAutoPurchase.toggle()
                     }

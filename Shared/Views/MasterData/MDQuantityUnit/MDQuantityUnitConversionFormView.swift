@@ -114,11 +114,11 @@ struct MDQuantityUnitConversionFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: quantityUnitConversion.id, content: quantityUnitConversion)
             }
-            await grocyVM.postLog("Quantity unit conversion for \(quantityUnit.name) successful.", type: .info)
+            await grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Quantity unit conversion for \(quantityUnit.name) failed. \(error)", type: .error)
+            await grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

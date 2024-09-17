@@ -10,6 +10,7 @@ import SwiftUI
 enum PictureType: String {
     case productPictures = "productpictures"
     case userPictures = "userpictures"
+    case recipePictures = "recipepictures"
 }
 
 struct PictureView: View {
@@ -54,6 +55,8 @@ struct PictureView: View {
                                 pictureData = try await grocyVM.getProductPicture(fileName: base64Encoded)
                             case .userPictures:
                                 pictureData = try await grocyVM.getUserPicture(fileName: base64Encoded)
+                            case .recipePictures:
+                                pictureData = try await grocyVM.getRecipePicture(fileName: base64Encoded)
                             }
                             if let pictureData = pictureData {
 #if os(iOS)

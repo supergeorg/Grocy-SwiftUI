@@ -6,17 +6,20 @@
 //
 
 import Foundation
+import SwiftData
 
 // MARK: - SystemConfig
-struct SystemConfig: Codable {
+@Model
+class SystemConfig: Codable {
 //    let mode: String
 //    let demoDBSuffix: String?
 //    let defaultLocale: String
-    let currency: String
+    var currency: String
 // TODO Real implementation
 //    let calendarFirstDayOfWeek: Int?
 //    let calendarShowWeekOfYear: Bool
-    let basePath, baseURL: String
+    var basePath: String
+    var baseURL: String
 //    let stockBarcodeLookupPlugin: String
 //    let disableURLRewriting: Bool
 //    let entryPage: String
@@ -38,8 +41,9 @@ struct SystemConfig: Codable {
 //    let featureFlagLabelPrinter, featureFlagStockPriceTracking, featureFlagStockLocationTracking, featureFlagStockBestBeforeDateTracking: Bool
 //    let featureFlagStockProductOpenedTracking, featureFlagStockProductFreezing, featureFlagStockBestBeforeDateFieldNumberPad, featureFlagShoppinglistMultipleLists: Bool
 //    let featureFlagChoresAssignments, featureFlagThermalPrinter, featureSettingStockCountOpenedProductsAgainstMinimumStockAmount, featureFlagAutoTorchOnWithCamera: Bool
-    let locale, userUsername: String
-    let userPictureFileName: String?
+    var locale: String
+    var userUsername: String
+    var userPictureFileName: String?
 
     enum CodingKeys: String, CodingKey {
 //        case mode = "MODE"
@@ -99,6 +103,30 @@ struct SystemConfig: Codable {
         case locale = "LOCALE"
         case userUsername = "USER_USERNAME"
         case userPictureFileName = "USER_PICTURE_FILE_NAME"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.currency = try container.decode(String.self, forKey: .currency)
+            self.basePath = try container.decode(String.self, forKey: .basePath)
+            self.baseURL = try container.decode(String.self, forKey: .baseURL)
+            self.locale = try container.decode(String.self, forKey: .locale)
+            self.userUsername = try container.decode(String.self, forKey: .userUsername)
+            self.userPictureFileName = try? container.decodeIfPresent(String.self, forKey: .userPictureFileName)
+        } catch {
+            throw APIError.decodingError(error: error)
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(currency, forKey: .currency)
+        try container.encode(basePath, forKey: .basePath)
+        try container.encode(baseURL, forKey: .baseURL)
+        try container.encode(locale, forKey: .locale)
+        try container.encode(userUsername, forKey: .userUsername)
+        try container.encode(userPictureFileName, forKey: .userPictureFileName)
     }
 }
 

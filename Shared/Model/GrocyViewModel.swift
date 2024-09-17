@@ -283,7 +283,6 @@ class GrocyViewModel {
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await self.getObjectAndSaveSwiftData(object: object)
                         case .recipes:
-                            //                            self.recipes = try await grocyApi.getObject(object: object)
                             self.recipes = try await self.getObjectAndSaveSwiftData(object: object)
                         case .quantity_units:
                             self.mdQuantityUnits = try await self.getObjectAndSaveSwiftData(object: object)
@@ -339,6 +338,11 @@ class GrocyViewModel {
                             try self.modelContext.save()
                         case .system_config:
                             self.systemConfig = try await grocyApi.getSystemConfig()
+                            try self.modelContext.delete(model: SystemConfig.self)
+                            if let cfg = self.systemConfig {
+                                self.modelContext.insert(cfg)
+                            }
+                            try self.modelContext.save()
                         case .system_db_changed_time:
                             self.systemDBChangedTime = try await grocyApi.getSystemDBChangedTime()
                         case .system_info:
@@ -354,6 +358,11 @@ class GrocyViewModel {
                             self.recipeFulfillments = try await grocyApi.getRecipeFulfillments()
                         case .users:
                             self.users = try await grocyApi.getUsers()
+                            try self.modelContext.delete(model: GrocyUser.self)
+                            for user in self.users {
+                                self.modelContext.insert(user)
+                            }
+                            try self.modelContext.save()
                         case .volatileStock:
                             let userSettingsFetch = FetchDescriptor<GrocyUserSettings>()
                             let dueSoonDays = try modelContext.fetch(userSettingsFetch).first?.stockDueSoonDays ?? self.userSettings?.stockDueSoonDays ?? 5

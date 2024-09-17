@@ -285,6 +285,10 @@
 		78AF64E62719F38400C439AF /* StockEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AF64E22719F38400C439AF /* StockEntryFormView.swift */; };
 		78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
 		78B67B7D2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */; };
+		78B88B452B02D60400EB7E5F /* StockProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B88B442B02D60400EB7E5F /* StockProductModel.swift */; };
+		78B88B462B02D60400EB7E5F /* StockProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B88B442B02D60400EB7E5F /* StockProductModel.swift */; };
+		78B88B472B02D60400EB7E5F /* StockProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B88B442B02D60400EB7E5F /* StockProductModel.swift */; };
+		78B88B482B02D60400EB7E5F /* StockProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B88B442B02D60400EB7E5F /* StockProductModel.swift */; };
 		78BCF9642AD7153100E40C93 /* StockTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BCF9632AD7153100E40C93 /* StockTableModel.swift */; };
 		78BCF9652AD7153100E40C93 /* StockTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BCF9632AD7153100E40C93 /* StockTableModel.swift */; };
 		78BCF9662AD7153100E40C93 /* StockTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BCF9632AD7153100E40C93 /* StockTableModel.swift */; };
@@ -358,6 +362,14 @@
 		78CECD10258789E8007780B2 /* AppSpecificUserFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */; };
 		78CECD1625879364007780B2 /* MDUserEntitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD1525879364007780B2 /* MDUserEntitiesView.swift */; };
 		78CECD1725879364007780B2 /* MDUserEntitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CECD1525879364007780B2 /* MDUserEntitiesView.swift */; };
+		78CF32792B0FCB0F00EA77B5 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */; };
+		78CF327A2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */; };
+		78CF327B2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */; };
+		78CF327C2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */; };
+		78CF327E2B0FD2D800EA77B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */; };
+		78CF327F2B0FD2D800EA77B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */; };
+		78CF32802B0FD2D800EA77B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */; };
+		78CF32812B0FD2D800EA77B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */; };
 		78D0F4C32571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */; };
 		78D0F4DC2571238600E1B732 /* ShoppingListStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */; };
@@ -629,6 +641,7 @@
 		78ADA1E526D1509100946E1B /* Translators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translators.swift; sourceTree = "<group>"; };
 		78AF64E22719F38400C439AF /* StockEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockEntryFormView.swift; sourceTree = "<group>"; };
 		78B67B7B2577DD8000EE6BBA /* ShoppingListActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListActionModel.swift; sourceTree = "<group>"; };
+		78B88B442B02D60400EB7E5F /* StockProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductModel.swift; sourceTree = "<group>"; };
 		78BCF9632AD7153100E40C93 /* StockTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableModel.swift; sourceTree = "<group>"; };
 		78C67CAA2AFAD95B00BCDF4B /* CurrencySymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySymbol.swift; sourceTree = "<group>"; };
 		78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocy_SwiftUIApp.swift; sourceTree = "<group>"; };
@@ -674,6 +687,8 @@
 		78CB7656255EC0B500319108 /* StockFilterBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockFilterBarView.swift; sourceTree = "<group>"; };
 		78CECD0E258789E8007780B2 /* AppSpecificUserFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpecificUserFields.swift; sourceTree = "<group>"; };
 		78CECD1525879364007780B2 /* MDUserEntitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUserEntitiesView.swift; sourceTree = "<group>"; };
+		78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeType.swift; sourceTree = "<group>"; };
+		78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		78D0F4C22571228B00E1B732 /* ShoppingListFilterActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListFilterActionView.swift; sourceTree = "<group>"; };
 		78D0F4DB2571238600E1B732 /* ShoppingListStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListStatus.swift; sourceTree = "<group>"; };
 		78D2CAD327EA5403009E5C4D /* OpenFoodFactsFillProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsFillProductView.swift; sourceTree = "<group>"; };
@@ -962,6 +977,7 @@
 			children = (
 				788C6287293A7AA40081A5BD /* RecipesView.swift */,
 				788C6297293A7D960081A5BD /* RecipeRowView.swift */,
+				78CF327D2B0FD2D800EA77B5 /* RecipeView.swift */,
 			);
 			path = Recipes;
 			sourceTree = "<group>";
@@ -972,6 +988,7 @@
 				788C6292293A7B300081A5BD /* RecipeModel.swift */,
 				786A13A52943B1420011BCAF /* RecipeFulfillmentModel.swift */,
 				786A13AA2943B7E80011BCAF /* Recipe+FulfillmentModel.swift */,
+				78CF32782B0FCB0F00EA77B5 /* RecipeType.swift */,
 			);
 			path = Recipes;
 			sourceTree = "<group>";
@@ -1009,7 +1026,6 @@
 			isa = PBXGroup;
 			children = (
 				78CB7493255E9EF700319108 /* Grocy_SwiftUIApp.swift */,
-				78CB75AE255EAB0A00319108 /* Styles */,
 				780B5FB72AB21DEE002A4A12 /* Localizable.xcstrings */,
 				78CB75A3255EA59900319108 /* Helper */,
 				78CB756D255EA38500319108 /* Model */,
@@ -1170,17 +1186,11 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		78CB75AE255EAB0A00319108 /* Styles */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Styles;
-			sourceTree = "<group>";
-		};
 		78CB75F6255EB99400319108 /* Stock */ = {
 			isa = PBXGroup;
 			children = (
 				78CB75F8255EB9A000319108 /* StockModel.swift */,
+				78B88B442B02D60400EB7E5F /* StockProductModel.swift */,
 				78CB75F9255EB9A000319108 /* VolatileStockModel.swift */,
 				78FA6A932567D40500941460 /* StockJournalModel.swift */,
 				78CB762D255EBA3F00319108 /* ProductStatus.swift */,
@@ -1435,6 +1445,7 @@
 				"zh-Hant",
 				"pt-PT",
 				"pt-BR",
+				Base,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1502,8 +1513,10 @@
 				781DD5B52578F74B00A30ECA /* MDBarcodeFormView.swift in Sources */,
 				78CB7604255EB9A000319108 /* ProductConsumeModel.swift in Sources */,
 				788C6298293A7D960081A5BD /* RecipeRowView.swift in Sources */,
+				78CF32792B0FCB0F00EA77B5 /* RecipeType.swift in Sources */,
 				78CB7608255EB9A000319108 /* ProductOpenModel.swift in Sources */,
 				7880F0F1256FB4CB00FB8431 /* ShoppingListView.swift in Sources */,
+				78CF327E2B0FD2D800EA77B5 /* RecipeView.swift in Sources */,
 				782A7F1A25838C630010472F /* MDUserFieldModel.swift in Sources */,
 				78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */,
 				78B67B7C2577DD8000EE6BBA /* ShoppingListActionModel.swift in Sources */,
@@ -1555,6 +1568,7 @@
 				785A31D72AD9C9F600D0C057 /* OverviewTest.swift in Sources */,
 				78E04A3B2ABA52FE00603A41 /* Navigation.swift in Sources */,
 				78780D792AD46A5900F34993 /* StockTableView.swift in Sources */,
+				78B88B452B02D60400EB7E5F /* StockProductModel.swift in Sources */,
 				788C6288293A7AA40081A5BD /* RecipesView.swift in Sources */,
 				78CB74E1255EA04A00319108 /* AppTabNavigation.swift in Sources */,
 				7839E30B25B98ABD007DCE0B /* QuickScanModeSelectProductView.swift in Sources */,
@@ -1698,12 +1712,14 @@
 				787E7DC4281C53A900E4D269 /* ServerSettingsItems.swift in Sources */,
 				786F6EA52564035C004D8DE0 /* MDChoresView.swift in Sources */,
 				78D0F4C42571228B00E1B732 /* ShoppingListFilterActionView.swift in Sources */,
+				78CF327F2B0FD2D800EA77B5 /* RecipeView.swift in Sources */,
 				78CB759C255EA56D00319108 /* AboutView.swift in Sources */,
 				785D7C5C25F68595009DCA88 /* MDProductPictureFormView.swift in Sources */,
 				786F6E9325640332004D8DE0 /* MDProductsView.swift in Sources */,
 				78E02CBE25DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
 				78F1FADC255EFE73007D2E8B /* MDLocationsView.swift in Sources */,
 				7891C641257E33430014C59E /* StockTableRowActionsView.swift in Sources */,
+				78CF327A2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */,
 				78BCF9652AD7153100E40C93 /* StockTableModel.swift in Sources */,
 				788BABC92AE1AA22001F3678 /* MDQuantityUnitRowView.swift in Sources */,
 				78FA6A9C2567D4E000941460 /* TransactionType.swift in Sources */,
@@ -1808,6 +1824,7 @@
 				781E97E127834C43004E9798 /* GrocyUserSettings.swift in Sources */,
 				786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */,
 				78CB759E255EA56D00319108 /* SettingsView.swift in Sources */,
+				78B88B462B02D60400EB7E5F /* StockProductModel.swift in Sources */,
 				78855F7025FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78A33CC225752DC100C450D4 /* AmountFormatter.swift in Sources */,
 				78855F7925FB8EB4007F69AF /* MDTaskCategoryFormView.swift in Sources */,
@@ -1905,10 +1922,12 @@
 				78BCF9662AD7153100E40C93 /* StockTableModel.swift in Sources */,
 				780B8B2F26FA5BAB009ACFB7 /* AppSpecificUserFields.swift in Sources */,
 				78520B512710B5D9006437F4 /* MDQuantityUnitConversionModel.swift in Sources */,
+				78CF32802B0FD2D800EA77B5 /* RecipeView.swift in Sources */,
 				786A13AD2943B7E80011BCAF /* Recipe+FulfillmentModel.swift in Sources */,
 				781E97E227834C43004E9798 /* GrocyUserSettings.swift in Sources */,
 				780B8B4326FA5C18009ACFB7 /* RowInteractionButton.swift in Sources */,
 				786955762AE54F0200123A3B /* MDProductRowView.swift in Sources */,
+				78CF327B2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */,
 				78FDCD8D25BAD2720089CB5E /* GrocyAPI.swift in Sources */,
 				780B8B3E26FA5C12009ACFB7 /* MyTextField.swift in Sources */,
 				788C6295293A7B300081A5BD /* RecipeModel.swift in Sources */,
@@ -1916,6 +1935,7 @@
 				780B8B4526FA5C18009ACFB7 /* FieldDescription.swift in Sources */,
 				78FDCDC925BAD2DE0089CB5E /* MDLocationsModel.swift in Sources */,
 				780B8B2926FA5BAB009ACFB7 /* Constants.swift in Sources */,
+				78B88B472B02D60400EB7E5F /* StockProductModel.swift in Sources */,
 				78E02CC825DAB83C00668403 /* OpenFoodFactsViewModel.swift in Sources */,
 				78FDCDEC25BAD2E90089CB5E /* StockLocationModel.swift in Sources */,
 			);
@@ -1939,6 +1959,7 @@
 				7884606E257F9FB800671C97 /* TransactionType.swift in Sources */,
 				780B8B2826FA5BA4009ACFB7 /* MySymbols.swift in Sources */,
 				780B8B5526FA5C50009ACFB7 /* RowInteractionButton.swift in Sources */,
+				78CF32812B0FD2D800EA77B5 /* RecipeView.swift in Sources */,
 				78FDCDD325BAD2DE0089CB5E /* MDStoreModel.swift in Sources */,
 				78FDCDA625BAD2D10089CB5E /* GrocyUserModel.swift in Sources */,
 				78E02CC025DAB81500668403 /* OpenFoodFactsModel.swift in Sources */,
@@ -1949,6 +1970,7 @@
 				78FDCE0625BAD2F00089CB5E /* ProductOpenModel.swift in Sources */,
 				786618D52718ACEE001552FA /* AmountSelectionView.swift in Sources */,
 				781E97E327834C43004E9798 /* GrocyUserSettings.swift in Sources */,
+				78B88B482B02D60400EB7E5F /* StockProductModel.swift in Sources */,
 				78FDCDB425BAD2D50089CB5E /* SystemConfigModel.swift in Sources */,
 				786A13AE2943B7E80011BCAF /* Recipe+FulfillmentModel.swift in Sources */,
 				780B8B3F26FA5C13009ACFB7 /* MyTextField.swift in Sources */,
@@ -1996,6 +2018,7 @@
 				78CB74BA255E9EF800319108 /* Tests_macOS.swift in Sources */,
 				78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */,
 				78C67CAE2AFAD95B00BCDF4B /* CurrencySymbol.swift in Sources */,
+				78CF327C2B0FCB0F00EA77B5 /* RecipeType.swift in Sources */,
 				78FDCDD025BAD2DE0089CB5E /* MDQuantityUnitsModel.swift in Sources */,
 				78E96E902707784200DBAF6A /* StockEntriesView.swift in Sources */,
 				782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */,
@@ -2082,8 +2105,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2141,8 +2165,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2161,7 +2186,7 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2190,7 +2215,7 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2216,6 +2241,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2229,7 +2255,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
@@ -2246,6 +2272,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2260,7 +2287,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
@@ -2416,8 +2443,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2437,7 +2465,7 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2462,6 +2490,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2479,7 +2508,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";

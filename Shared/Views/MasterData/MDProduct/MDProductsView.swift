@@ -12,6 +12,10 @@ struct MDProductsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @State private var searchString: String = ""
     @State private var showAddProduct: Bool = false
@@ -98,10 +102,10 @@ struct MDProductsView: View {
         })
         .navigationTitle("Products")
         .navigationDestination(isPresented: $showAddProduct, destination: {
-            MDProductFormView(userSettings: grocyVM.userSettings)
+            MDProductFormView(userSettings: userSettings)
         })
         .navigationDestination(for: MDProduct.self, destination: { product in
-            MDProductFormView(existingProduct: product, userSettings: grocyVM.userSettings)
+            MDProductFormView(existingProduct: product, userSettings: userSettings)
         })
     }
 }

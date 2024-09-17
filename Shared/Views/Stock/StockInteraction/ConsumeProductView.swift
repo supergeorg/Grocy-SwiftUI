@@ -16,6 +16,10 @@ struct ConsumeProductView: View {
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @Environment(\.dismiss) var dismiss
     
@@ -145,8 +149,7 @@ struct ConsumeProductView: View {
     
     private func resetForm() {
         productID = firstAppear ? productToConsumeID : nil
-//        amount = barcode?.amount ?? grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1.0
-        amount = barcode?.amount ?? 1.0
+        amount = barcode?.amount ?? userSettings?.stockDefaultConsumeAmount ?? 1.0
         quantityUnitID = firstAppear ? product?.quIDStock : nil
         locationID = nil
         spoiled = false
@@ -182,7 +185,7 @@ struct ConsumeProductView: View {
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
                 await grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
-                if let autoAddBelowMinStock = await grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = await grocyVM.userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+                if let autoAddBelowMinStock = await userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = await userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
                         await grocyVM.postLog("SHLAction successful.", type: .info)
@@ -220,7 +223,7 @@ struct ConsumeProductView: View {
                             if let product = product {
                                 locationID = product.locationID
                                 quantityUnitID = product.quIDStock
-                                amount = grocyVM.userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(grocyVM.userSettings?.stockDefaultConsumeAmount ?? 1)
+                                amount = userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
                             }
                         }
                     }

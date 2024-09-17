@@ -58,7 +58,7 @@ struct MDProductPictureFormViewNew: View {
     
     private func changeProductPicture(newPictureFileName: String?) async {
         if let product = product {
-            var updatedProduct = product
+            let updatedProduct = product
             updatedProduct.pictureFileName = newPictureFileName
             do {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: updatedProduct)

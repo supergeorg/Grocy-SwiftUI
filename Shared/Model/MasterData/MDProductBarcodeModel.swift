@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MDProductBarcode: Codable {
+class MDProductBarcode: Codable, Equatable {
     var id: Int
     var productID: Int
     var barcode: String

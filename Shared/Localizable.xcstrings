@@ -11,7 +11,14 @@
 
     },
     "(%@)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%@)"
+          }
+        }
+      }
     },
     "%@" : {
 
@@ -371,7 +378,14 @@
 
     },
     "%lld" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
     "%lld entries are done" : {
       "localizations" : {
@@ -379,6 +393,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld položek zaškrtnuto"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Eintrage sind erledigt"
           }
         },
         "it" : {
@@ -569,7 +589,14 @@
 
     },
     "🇫🇷 Français (French)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇫🇷 Français (Französisch)"
+          }
+        }
+      }
     },
     "🇬🇧 English" : {
 
@@ -1904,6 +1931,12 @@
     },
     "Amount: %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menge: %1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -1913,7 +1946,14 @@
       }
     },
     "Amount: %@; " : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menge: %@;"
+          }
+        }
+      }
     },
     "Amounts" : {
       "localizations" : {
@@ -2056,10 +2096,25 @@
       }
     },
     "An unknown error occurred." : {
-      "comment" : "unknown error description"
+      "comment" : "unknown error description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein unbekannter Fehler ist aufgetreten."
+          }
+        }
+      }
     },
     "App" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        }
+      }
     },
     "App language" : {
       "localizations" : {
@@ -2255,9 +2310,6 @@
           }
         }
       }
-    },
-    "Average price" : {
-
     },
     "Average price: " : {
       "localizations" : {
@@ -2464,7 +2516,14 @@
       }
     },
     "Barcode settings" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcode-Einstellungen"
+          }
+        }
+      }
     },
     "Barcodes" : {
       "localizations" : {
@@ -2846,7 +2905,14 @@
       }
     },
     "Buy" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaufen"
+          }
+        }
+      }
     },
     "Calories" : {
       "localizations" : {
@@ -3480,7 +3546,14 @@
       }
     },
     "Client information: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client-Informationen: %@"
+          }
+        }
+      }
     },
     "Close" : {
       "localizations" : {
@@ -4489,7 +4562,6 @@
       }
     },
     "Create new product with Open Food Facts" : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6239,7 +6311,14 @@
       }
     },
     "Do you really want to clear all done items?" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möchtest du wirklich alle erledigten Einträge löschen?"
+          }
+        }
+      }
     },
     "Do you really want to delete this barcode?" : {
       "localizations" : {
@@ -7468,6 +7547,9 @@
       }
     },
     "Due on %@; " : {
+
+    },
+    "Due score" : {
 
     },
     "Edit barcode" : {
@@ -8997,7 +9079,14 @@
       }
     },
     "Error: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehler: %@"
+          }
+        }
+      }
     },
     "Existing product picture" : {
 
@@ -9197,7 +9286,14 @@
       }
     },
     "Grocy" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grocy"
+          }
+        }
+      }
     },
     "Grocy Server Demo URL: %@" : {
 
@@ -9370,7 +9466,14 @@
       }
     },
     "Guide (English)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anleitung (Englisch)"
+          }
+        }
+      }
     },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
@@ -9629,9 +9732,6 @@
           }
         }
       }
-    },
-    "Last price" : {
-
     },
     "Last price: " : {
       "localizations" : {
@@ -11442,10 +11542,24 @@
       }
     },
     "New location" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Standort"
+          }
+        }
+      }
     },
     "New product group" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Produktgruppe"
+          }
+        }
+      }
     },
     "New quantity unit" : {
       "localizations" : {
@@ -11971,6 +12085,9 @@
         }
       }
     },
+    "No barcodes found." : {
+
+    },
     "no description" : {
 
     },
@@ -12106,7 +12223,6 @@
 
     },
     "No product groups found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12235,7 +12351,6 @@
       }
     },
     "No quantity units found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12300,7 +12415,6 @@
       }
     },
     "No stores found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12430,7 +12544,6 @@
       }
     },
     "No transactions found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12625,7 +12738,6 @@
       }
     },
     "No users found" : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -13449,7 +13561,14 @@
       }
     },
     "OS: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OS: %@"
+          }
+        }
+      }
     },
     "Own server" : {
       "localizations" : {
@@ -14030,6 +14149,12 @@
     },
     "Price: %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preis: %1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -14131,9 +14256,6 @@
           }
         }
       }
-    },
-    "Product description" : {
-
     },
     "Product group" : {
       "localizations" : {
@@ -15626,7 +15748,14 @@
       }
     },
     "Quick Scan" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick-Scan"
+          }
+        }
+      }
     },
     "Quick-Scan" : {
       "localizations" : {
@@ -15693,7 +15822,14 @@
       }
     },
     "Quick-Scan Mode" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick-Scan-Modus"
+          }
+        }
+      }
     },
     "QuickScan settings" : {
       "localizations" : {
@@ -16124,7 +16260,7 @@
         }
       }
     },
-    "Retrieving Details Failed. Please open another window first." : {
+    "Retrieving Details failed." : {
 
     },
     "Save" : {
@@ -17750,7 +17886,14 @@
       }
     },
     "SQLite version: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SQLite-Version: %@"
+          }
+        }
+      }
     },
     "Status" : {
       "localizations" : {
@@ -18116,7 +18259,14 @@
       }
     },
     "Stock is empty." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestand ist leer."
+          }
+        }
+      }
     },
     "Stock journal" : {
       "localizations" : {
@@ -18849,10 +18999,14 @@
       }
     },
     "Supported server version: %@" : {
-
-    },
-    "Table not supported yet" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterstützte Server-Version: %@"
+          }
+        }
+      }
     },
     "Task categories" : {
       "localizations" : {
@@ -20910,7 +21064,14 @@
       }
     },
     "Unsupported server version: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht unterstützte Server-Version: %@"
+          }
+        }
+      }
     },
     "Upload product picture" : {
       "localizations" : {
@@ -21600,6 +21761,12 @@
     },
     "Σ %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σ %1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",

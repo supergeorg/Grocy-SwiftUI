@@ -20,6 +20,10 @@ struct PurchaseProductView: View {
     var productDetails: StockProductDetails? {
         return detailsList.first(where: { $0.productID == stockElement?.productID })
     }
+    @Query var userSettingsList: GrocyUserSettingsList
+    var userSettings: GrocyUserSettings? {
+        userSettingsList.first
+    }
     
     @Environment(\.dismiss) var dismiss
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -95,8 +99,7 @@ struct PurchaseProductView: View {
     
     private func resetForm() {
         self.productID = firstAppear ? productToPurchaseID : nil
-//        self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (grocyVM.userSettings?.stockDefaultPurchaseAmount ?? 1.0)
-        self.amount = 1.0
+        self.amount = firstAppear ? (productToPurchaseAmount ?? barcode?.amount ?? userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (userSettings?.stockDefaultPurchaseAmount ?? 1.0)
         self.quantityUnitID = barcode?.quID ?? (firstAppear ? product?.quIDPurchase : nil)
         if product?.defaultDueDays ?? 0 == -1 {
             self.productDoesntSpoil = true
@@ -156,8 +159,7 @@ struct PurchaseProductView: View {
             }
             
             if !quickScan {
-//                ProductField(productID: $productID, description: "Product")
-                ProductFieldNew(productID: $productID, description: "Product")
+                ProductField(productID: $productID, description: "Product")
                     .onChange(of: productID) {
                         if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
                             if locationID == nil { locationID = selectedProduct.locationID }
