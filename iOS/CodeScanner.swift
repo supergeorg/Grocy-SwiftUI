@@ -82,7 +82,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         shouldVibrateOnSuccess: Bool = true,
         isTorchOn: Binding<Bool> = .constant(false),
         isGalleryPresented: Binding<Bool> = .constant(false),
-        videoCaptureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video),
+        videoCaptureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .text),
         isPaused: Binding<Bool> = .constant(false),
         isFrontCamera: Binding<Bool> = .constant(false),
         completion: @escaping (Result<ScanResult, ScanError>) -> Void
