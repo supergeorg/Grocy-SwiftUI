@@ -10,24 +10,42 @@ import SwiftData
 
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @Query(sort: \MDStore.name, order: .forward) var mdStores: MDStores
+    @Environment(\.modelContext) private var modelContext
     
     @State private var searchString: String = ""
     @State private var showAddStore: Bool = false
     @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteConfirmation: Bool = false
     
+    // Fetch the data with a dynamic predicate
+    var mdStores: MDStores {
+        let sortDescriptor = SortDescriptor<MDStore>(\.name)
+        let predicate = searchString.isEmpty ? nil :
+        #Predicate<MDStore> { store in
+            searchString == "" ? true : store.name.localizedStandardContains(searchString)
+        }
+        
+        let descriptor = FetchDescriptor<MDStore>(
+            predicate: predicate,
+            sortBy: [sortDescriptor]
+        )
+        
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+    
+    // Get the unfiltered count without fetching any data
+    var mdStoresCount: Int {
+        var descriptor = FetchDescriptor<MDStore>(
+            sortBy: []
+        )
+        descriptor.fetchLimit = 0
+        
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
+    
     private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
-    }
-    
-    private var filteredStores: MDStores {
-        mdStores
-            .filter {
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            }
     }
     
     private func deleteItem(itemToDelete: MDStore) {
@@ -38,10 +56,10 @@ struct MDStoresView: View {
     private func deleteStore(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
-            await grocyVM.postLog("Deleting store was successful.", type: .info)
+            grocyVM.postLog("Deleting store was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting store failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting store failed. \(error)", type: .error)
         }
     }
     
@@ -49,12 +67,12 @@ struct MDStoresView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
+            } else if mdStoresCount == 0 {
+                ContentUnavailableView("No store defined. Please create one.", systemImage: MySymbols.store)
             } else if mdStores.isEmpty {
-                ContentUnavailableView("No stores found.", systemImage: MySymbols.store)
-            } else if filteredStores.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredStores, id: \.id) { store in
+            ForEach(mdStores, id: \.id) { store in
                 NavigationLink(value: store) {
                     MDStoreRowView(store: store)
                 }
@@ -83,7 +101,7 @@ struct MDStoresView: View {
         )
         .animation(
             .default,
-            value: filteredStores.count
+            value: mdStores.count
         )
         .confirmationDialog("Do you really want to delete this store?", isPresented: $showDeleteConfirmation, titleVisibility: .visible, actions: {
             Button("Cancel", role: .cancel) {}

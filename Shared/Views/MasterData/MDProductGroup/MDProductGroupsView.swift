@@ -10,24 +10,42 @@ import SwiftData
 
 struct MDProductGroupsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
+    @Environment(\.modelContext) private var modelContext
     
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteConfirmation: Bool = false
     
+    // Fetch the data with a dynamic predicate
+    var mdProductGroups: MDProductGroups {
+        let sortDescriptor = SortDescriptor<MDProductGroup>(\.name)
+        let predicate = searchString.isEmpty ? nil :
+        #Predicate<MDProductGroup> { store in
+            searchString == "" ? true : store.name.localizedStandardContains(searchString)
+        }
+        
+        let descriptor = FetchDescriptor<MDProductGroup>(
+            predicate: predicate,
+            sortBy: [sortDescriptor]
+        )
+        
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+    
+    // Get the unfiltered count without fetching any data
+    var mdProductGroupsCount: Int {
+        var descriptor = FetchDescriptor<MDProductGroup>(
+            sortBy: []
+        )
+        descriptor.fetchLimit = 0
+        
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
+    
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
-    }
-    
-    private var filteredProductGroups: MDProductGroups {
-        mdProductGroups
-            .filter {
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            }
     }
     
     private func deleteItem(itemToDelete: MDProductGroup) {
@@ -38,10 +56,10 @@ struct MDProductGroupsView: View {
         if let toDelID = toDelID {
             do {
                 try await grocyVM.deleteMDObject(object: .product_groups, id: toDelID)
-                await grocyVM.postLog("Deleting product group was successful.", type: .info)
+                grocyVM.postLog("Deleting product group was successful.", type: .info)
                 await updateData()
             } catch {
-                await grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
+                grocyVM.postLog("Deleting product group failed. \(error)", type: .error)
             }
         }
     }
@@ -50,12 +68,12 @@ struct MDProductGroupsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
+            } else if mdProductGroupsCount == 0 {
+                ContentUnavailableView("No product group defined. Please create one.", systemImage: MySymbols.productGroup)
             } else if mdProductGroups.isEmpty {
-                ContentUnavailableView("No product groups found.", systemImage: MySymbols.productGroup)
-            } else if filteredProductGroups.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredProductGroups, id:\.id) { productGroup in
+            ForEach(mdProductGroups, id:\.id) { productGroup in
                 NavigationLink(value: productGroup, label: {
                     MDProductGroupRowView(productGroup: productGroup)
                 })
@@ -80,9 +98,14 @@ struct MDProductGroupsView: View {
         .refreshable {
             await updateData()
         }
-        .searchable(text: $searchString, prompt: "Search")
-
-        .animation(.default, value: filteredProductGroups.count)
+        .searchable(
+            text: $searchString,
+            prompt: "Search"
+        )
+        .animation(
+            .default,
+            value: mdProductGroups.count
+        )
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
@@ -95,7 +118,6 @@ struct MDProductGroupsView: View {
                 })
             }
         }
-
         .confirmationDialog("Do you really want to delete this product group?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

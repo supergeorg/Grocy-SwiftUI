@@ -10,24 +10,42 @@ import SwiftData
 
 struct MDQuantityUnitsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Environment(\.modelContext) private var modelContext
     
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteConfirmation: Bool = false
     
+    // Fetch the data with a dynamic predicate
+    var mdQuantityUnits: MDQuantityUnits {
+        let sortDescriptor = SortDescriptor<MDQuantityUnit>(\.name)
+        let predicate = searchString.isEmpty ? nil :
+        #Predicate<MDQuantityUnit> { store in
+            searchString == "" ? true : (store.name.localizedStandardContains(searchString) || store.namePlural.localizedStandardContains(searchString))
+        }
+        
+        let descriptor = FetchDescriptor<MDQuantityUnit>(
+            predicate: predicate,
+            sortBy: [sortDescriptor]
+        )
+        
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+    
+    // Get the unfiltered count without fetching any data
+    var mdQuantityUnitsCount: Int {
+        var descriptor = FetchDescriptor<MDQuantityUnit>(
+            sortBy: []
+        )
+        descriptor.fetchLimit = 0
+        
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
+    
     private let dataToUpdate: [ObjectEntities] = [.quantity_units]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
-    }
-    
-    private var filteredQuantityUnits: MDQuantityUnits {
-        mdQuantityUnits
-            .filter {
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            }
     }
     
     private func deleteItem(itemToDelete: MDQuantityUnit) {
@@ -37,24 +55,23 @@ struct MDQuantityUnitsView: View {
     private func deleteQuantityUnit(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .quantity_units, id: toDelID)
-            await grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
+            grocyVM.postLog("Deleting quantity unit was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting quantity unit failed. \(error)", type: .error)
         }
     }
-    
     
     var body: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdQuantityUnits.isEmpty {
+            } else if mdQuantityUnitsCount == 0 {
                 ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
-            } else if filteredQuantityUnits.isEmpty {
+            } else if mdQuantityUnits.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredQuantityUnits, id:\.id) { quantityUnit in
+            ForEach(mdQuantityUnits, id:\.id) { quantityUnit in
                 NavigationLink(value: quantityUnit) {
                     MDQuantityUnitRowView(quantityUnit: quantityUnit)
                 }
@@ -79,7 +96,10 @@ struct MDQuantityUnitsView: View {
         .refreshable {
             await updateData()
         }
-        .searchable(text: $searchString, prompt: "Search")
+        .searchable(
+            text: $searchString,
+            prompt: "Search"
+        )
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
 #if os(macOS)
@@ -92,7 +112,10 @@ struct MDQuantityUnitsView: View {
                 })
             }
         }
-        .animation(.default, value: filteredQuantityUnits.count)
+        .animation(
+            .default,
+            value: mdQuantityUnits.count
+        )
         .confirmationDialog("Do you really want to delete this quantity unit?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

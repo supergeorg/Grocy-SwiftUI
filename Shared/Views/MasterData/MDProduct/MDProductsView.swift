@@ -10,8 +10,8 @@ import SwiftData
 
 struct MDProductsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.modelContext) private var modelContext
     
-    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
         userSettingsList.first
@@ -21,6 +21,32 @@ struct MDProductsView: View {
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteConfirmation: Bool = false
+    
+    // Fetch the data with a dynamic predicate
+    var mdProducts: MDProducts {
+        let sortDescriptor = SortDescriptor<MDProduct>(\.name)
+        let predicate = searchString.isEmpty ? nil :
+        #Predicate<MDProduct> { store in
+            searchString == "" ? true : store.name.localizedStandardContains(searchString)
+        }
+        
+        let descriptor = FetchDescriptor<MDProduct>(
+            predicate: predicate,
+            sortBy: [sortDescriptor]
+        )
+        
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+    
+    // Get the unfiltered count without fetching any data
+    var mdProductsCount: Int {
+        var descriptor = FetchDescriptor<MDProduct>(
+            sortBy: []
+        )
+        descriptor.fetchLimit = 0
+        
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
     
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .product_groups]
     private func updateData() async {
@@ -34,31 +60,23 @@ struct MDProductsView: View {
     private func deleteProduct(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .products, id: toDelID)
-            await grocyVM.postLog("Deleting product was successful.", type: .info)
+            grocyVM.postLog("Deleting product was successful.", type: .info)
             await grocyVM.requestData(objects: [.products, .product_barcodes])
         } catch {
-            await grocyVM.postLog("Deleting product failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting product failed. \(error)", type: .error)
         }
-    }
-    
-    private var filteredProducts: MDProducts {
-        mdProducts
-            .filter {
-                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-            }
-            .sorted(by: { $0.name < $1.name })
     }
     
     var body: some View {
         List{
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProducts.isEmpty {
+            } else if mdProductsCount == 0 {
                 ContentUnavailableView("No products found.", systemImage: MySymbols.product)
-            } else if filteredProducts.isEmpty {
+            } else if mdProducts.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredProducts, id:\.id) { product in
+            ForEach(mdProducts, id:\.id) { product in
                 NavigationLink(value: product) {
                     MDProductRowView(product: product)
                 }
@@ -77,7 +95,10 @@ struct MDProductsView: View {
         .refreshable {
             await updateData()
         }
-        .animation(.default, value: filteredProducts.count)
+        .animation(
+            .default,
+            value: mdProducts.count
+        )
         .confirmationDialog("Do you really want to delete this product?", isPresented: $showDeleteConfirmation, actions: {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

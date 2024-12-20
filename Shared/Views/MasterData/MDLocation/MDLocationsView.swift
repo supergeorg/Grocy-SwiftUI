@@ -18,7 +18,7 @@ struct MDLocationsView: View {
     @State private var showDeleteConfirmation: Bool = false
     
     // Fetch the data with a dynamic predicate
-    var mdLocations: [MDLocation] {
+    var mdLocations: MDLocations {
         let sortDescriptor = SortDescriptor<MDLocation>(\.name)
         let predicate = searchString.isEmpty ? nil :
         #Predicate<MDLocation> { location in
@@ -76,7 +76,7 @@ struct MDLocationsView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdLocationsCount == 0 {
-                ContentUnavailableView("No locations", systemImage: MySymbols.location)
+                ContentUnavailableView("No location defined. Please create one.", systemImage: MySymbols.location)
             } else if mdLocations.isEmpty {
                 ContentUnavailableView.search
             }
