@@ -409,9 +409,9 @@
 "str.md.product.category.dueDate.description" = "Tipo, Giorni predefiniti; post-apertura, congelamento, scongelamento";
 "str.md.product.dueType" = "Tipo di data di scadenza";
 "str.md.product.dueType.info" = "In base al tipo selezionato, l'evidenziazione nella pagina di panoramica della dispensa sarà diversa";
-"str.md.product.dueType.bestBefore" = "Data di scadenza";
+"str.md.product.dueType.bestBefore" = "Consumare preferibilmente entro";
 "str.md.product.dueType.bestBefore.info" = "Significa che il prodotto è probabilmente ancora sicuro per essere consumato dopo che è stata raggiunta la sua data di scadenza";
-"str.md.product.dueType.expires" = "Data di scadenza";
+"str.md.product.dueType.expires" = "Consumare entro";
 "str.md.product.dueType.expires.info" = "Significa che il prodotto non è sicuro da consumare una volta raggiunta la data di scadenza";
 "str.md.product.defaultDueDays" = "Giorni di scadenza predefiniti";
 "str.md.product.defaultDueDays.info" = "Per gli acquisti questa quantità di giorni sarà aggiunta ad oggi come data di scadenza suggerita (-1 significa che queato prodotto non scade mai)";
