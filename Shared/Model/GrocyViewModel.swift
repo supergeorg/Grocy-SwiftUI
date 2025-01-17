@@ -246,16 +246,28 @@ class GrocyViewModel {
             let objects: [T] = try await grocyApi.getObject(object: object)
             let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
             let existingObjects = try modelContext.fetch(fetchDescriptor)
-            for existingObject in existingObjects {
-                if !objects.contains(existingObject)  {
-                    self.modelContext.delete(existingObject)
-                }
+            
+            // Convert to sets for O(1) lookups
+            let newObjectsSet = Set(objects)
+            let existingObjectsSet = Set(existingObjects)
+            
+            // Batch delete
+            let objectsToDelete = existingObjectsSet.subtracting(newObjectsSet)
+            for obsoleteObject in objectsToDelete {
+                self.modelContext.delete(obsoleteObject)
             }
-            for newObject in objects {
-                if !existingObjects.contains(newObject) {
-                    self.modelContext.insert(newObject)
-                }
+            
+            // Batch insert
+            let objectsToInsert = newObjectsSet.subtracting(existingObjectsSet)
+            for newObject in objectsToInsert {
+                self.modelContext.insert(newObject)
             }
+            
+            // Single save after all operations
+            if !objectsToDelete.isEmpty || !objectsToInsert.isEmpty {
+                try self.modelContext.save()
+            }
+            
             return objects
         } catch {
             self.postLog("\(error)", type: .error)
