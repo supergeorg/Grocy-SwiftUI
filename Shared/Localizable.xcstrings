@@ -574,19 +574,54 @@
       }
     },
     "🇧🇷 Português Brasileiro (Portuguese Brazil)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇧🇷 Português Brasileiro (Portugiesisches Brazilianisch)"
+          }
+        }
+      }
     },
     "🇨🇳 汉文 (Chinese Simplified)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇨🇳 汉文 (Vereinfachtes Chinesisch)"
+          }
+        }
+      }
     },
     "🇨🇿 Česky (Czech)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇨🇿 Česky (Tschechisch)"
+          }
+        }
+      }
     },
     "🇩🇪 Deutsch (German)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇩🇪 Deutsch"
+          }
+        }
+      }
     },
     "🇩🇰 Dansk (Danish)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇩🇰 Dansk (Dänisch)"
+          }
+        }
+      }
     },
     "🇫🇷 Français (French)" : {
       "localizations" : {
@@ -599,7 +634,14 @@
       }
     },
     "🇬🇧 English" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🇬🇧 English (Englisch)"
+          }
+        }
+      }
     },
     "🇭🇺 Magyar (Hungarian)" : {
 
@@ -715,6 +757,12 @@
           }
         }
       }
+    },
+    "A barcode is required" : {
+
+    },
+    "A caption is required" : {
+
     },
     "A location is required" : {
       "localizations" : {
@@ -999,7 +1047,18 @@
       }
     },
     "A reminder has no due date." : {
-      "comment" : "reminder has no due date error description"
+      "comment" : "reminder has no due date error description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Erinnerung hat kein Fälligkeitsdatum."
+          }
+        }
+      }
+    },
+    "A username is required" : {
+
     },
     "About this app" : {
       "localizations" : {
@@ -1071,6 +1130,19 @@
         }
       }
     },
+    "Accumulate sub products min. stock amount " : {
+
+    },
+    "Active" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiv"
+          }
+        }
+      }
+    },
     "Activities" : {
       "localizations" : {
         "cs" : {
@@ -1137,6 +1209,12 @@
     },
     "Add %.2f %@ %@ to stock" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge %1$.2f %2$@ %3$@ zum Bestand hinzu"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -1224,6 +1302,9 @@
           }
         }
       }
+    },
+    "Add decimal separator automatically for price inputs" : {
+
     },
     "Add item" : {
       "localizations" : {
@@ -1857,7 +1938,14 @@
       }
     },
     "Amount: %.2f; " : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menge: %.2f; "
+          }
+        }
+      }
     },
     "Amount: %@" : {
       "localizations" : {
@@ -2025,6 +2113,9 @@
         }
       }
     },
+    "An app in native design, allowing a comfortable use of Grocy at home and on the go." : {
+
+    },
     "An entity is required" : {
       "localizations" : {
         "cs" : {
@@ -2105,6 +2196,12 @@
           }
         }
       }
+    },
+    "API error detected." : {
+
+    },
+    "API key for the user which is shown in the Manage API keys webview. If none exist, you need to create a new one." : {
+
     },
     "App" : {
       "localizations" : {
@@ -2257,7 +2354,14 @@
       }
     },
     "App settings" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Einstellungen"
+          }
+        }
+      }
     },
     "Ascending" : {
       "localizations" : {
@@ -2310,6 +2414,15 @@
           }
         }
       }
+    },
+    "Auto reload on external changes" : {
+
+    },
+    "Automatically add products that are below their defined min. stock amount to the shopping list" : {
+
+    },
+    "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set " : {
+
     },
     "Average price: " : {
       "localizations" : {
@@ -2514,6 +2627,9 @@
           }
         }
       }
+    },
+    "Barcode" : {
+
     },
     "Barcode settings" : {
       "localizations" : {
@@ -3165,6 +3281,9 @@
           }
         }
       }
+    },
+    "Caption" : {
+
     },
     "Chores" : {
       "localizations" : {
@@ -3907,6 +4026,9 @@
         }
       }
     },
+    "Confirm password" : {
+
+    },
     "Connection to server failed." : {
       "localizations" : {
         "cs" : {
@@ -4067,6 +4189,12 @@
     },
     "Consume %@ %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbrauche %1$@ %2$@ %3$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -4466,6 +4594,9 @@
           }
         }
       }
+    },
+    "Create inverse QU conversion" : {
+
     },
     "Create location" : {
       "localizations" : {
@@ -5374,6 +5505,24 @@
     "Data fetching settings" : {
 
     },
+    "Decimal places allowed for amounts" : {
+
+    },
+    "Decimal places allowed for prices (display)" : {
+
+    },
+    "Decimal places allowed for prices (input)" : {
+
+    },
+    "Default amount for consume" : {
+
+    },
+    "Default amount for purchase" : {
+
+    },
+    "Default consume location" : {
+
+    },
     "Default conversions" : {
       "localizations" : {
         "cs" : {
@@ -5467,6 +5616,18 @@
           }
         }
       }
+    },
+    "Default due days" : {
+
+    },
+    "Default due days after freezing" : {
+
+    },
+    "Default due days after opened" : {
+
+    },
+    "Default due days after thawing" : {
+
     },
     "Default location" : {
       "localizations" : {
@@ -5701,6 +5862,15 @@
           }
         }
       }
+    },
+    "Default quantity unit consume" : {
+
+    },
+    "Default quantity unit purchase" : {
+
+    },
+    "Default store" : {
+
     },
     "Delete" : {
       "localizations" : {
@@ -6246,6 +6416,9 @@
         }
       }
     },
+    "Description" : {
+
+    },
     "Details" : {
       "localizations" : {
         "cs" : {
@@ -6306,6 +6479,25 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "详细说明"
+          }
+        }
+      }
+    },
+    "DEV MODE" : {
+
+    },
+    "Disable own stock" : {
+
+    },
+    "Disable stock fulfillment checking for this ingredient" : {
+
+    },
+    "Do selected action after assigning a barcode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte Aktion nach Zuweisen des Barcodes durchführen"
           }
         }
       }
@@ -7547,9 +7739,29 @@
       }
     },
     "Due on %@; " : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fällig am %@; "
+          }
+        }
+      }
     },
     "Due score" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fälligkeits-Score"
+          }
+        }
+      }
+    },
+    "Due soon" : {
+
+    },
+    "Due soon days" : {
 
     },
     "Edit barcode" : {
@@ -8914,6 +9126,12 @@
         }
       }
     },
+    "Enable tare weight handling" : {
+
+    },
+    "Energy (kcal)" : {
+
+    },
     "Entity" : {
       "localizations" : {
         "cs" : {
@@ -9089,7 +9307,14 @@
       }
     },
     "Existing product picture" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Existierendes Produktbild"
+          }
+        }
+      }
     },
     "Expiration date" : {
       "localizations" : {
@@ -9185,11 +9410,23 @@
         }
       }
     },
+    "Expired" : {
+
+    },
+    "Factor" : {
+
+    },
     "Failed to read a calendar item." : {
       "comment" : "failed reading calendar item error description"
     },
     "Failed to read reminders." : {
       "comment" : "failed reading reminders error description"
+    },
+    "First name" : {
+
+    },
+    "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)" : {
+
     },
     "From location" : {
       "localizations" : {
@@ -9295,11 +9532,34 @@
         }
       }
     },
-    "Grocy Server Demo URL: %@" : {
+    "grocy - ERP beyond your fridge" : {
 
     },
-    "Grocy Server URL: %@" : {
+    "Grocy for iOS/macOS" : {
 
+    },
+    "grocy is a web-based self-hosted groceries & household management solution for your home." : {
+
+    },
+    "Grocy Server Demo URL: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grocy Demo-Server Addresse: %@"
+          }
+        }
+      }
+    },
+    "Grocy Server URL: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grocy Server Addresse: %@"
+          }
+        }
+      }
     },
     "Grocy settings" : {
       "localizations" : {
@@ -9539,8 +9799,18 @@
         }
       }
     },
-    "Information about Grocy Server" : {
+    "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product" : {
 
+    },
+    "Information about Grocy Server" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information zum Grocy-Server"
+          }
+        }
+      }
     },
     "INIT CALENDAR" : {
 
@@ -9639,6 +9909,9 @@
         }
       }
     },
+    "iPhone: classic tab navigation (deprecated)" : {
+
+    },
     "Is freezer" : {
       "localizations" : {
         "cs" : {
@@ -9732,6 +10005,9 @@
           }
         }
       }
+    },
+    "Last name" : {
+
     },
     "Last price: " : {
       "localizations" : {
@@ -10201,6 +10477,9 @@
         }
       }
     },
+    "Location, Store" : {
+
+    },
     "Location: %@" : {
       "localizations" : {
         "cs" : {
@@ -10593,8 +10872,17 @@
         }
       }
     },
+    "Long-Term-Token for Home Assistant" : {
+
+    },
     "Mark %@ %@ %@ as open" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markiere %1$@ %2$@ %3$@ als geöffnet"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -11149,6 +11437,15 @@
         }
       }
     },
+    "Minimum stock amount " : {
+
+    },
+    "Move on open" : {
+
+    },
+    "Multiple Userfields will be ordered by that number on the input form" : {
+
+    },
     "Name" : {
       "localizations" : {
         "cs" : {
@@ -11242,6 +11539,12 @@
           }
         }
       }
+    },
+    "Name (in plural form)" : {
+
+    },
+    "Name (in singular form)" : {
+
     },
     "Name already exists" : {
       "localizations" : {
@@ -11541,6 +11844,9 @@
         }
       }
     },
+    "Never show on stock overview " : {
+
+    },
     "New location" : {
       "localizations" : {
         "de" : {
@@ -11632,7 +11938,14 @@
       }
     },
     "New quantity unit conversion" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Mengenumwandlung"
+          }
+        }
+      }
     },
     "New shopping list" : {
       "localizations" : {
@@ -12086,10 +12399,30 @@
       }
     },
     "No barcodes found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Barcodes gefunden."
+          }
+        }
+      }
+    },
+    "No connection to server." : {
 
     },
     "no description" : {
 
+    },
+    "No location defined. Please create one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Standort definiert. Bitte erstelle einen."
+          }
+        }
+      }
     },
     "No log entry found." : {
       "localizations" : {
@@ -12222,7 +12555,11 @@
     "NO OFF DATA FOUND" : {
 
     },
+    "No product group defined. Please create one." : {
+
+    },
     "No product groups found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12285,6 +12622,9 @@
           }
         }
       }
+    },
+    "No product picture" : {
+
     },
     "No products found." : {
       "localizations" : {
@@ -12414,7 +12754,18 @@
         }
       }
     },
+    "No store defined. Please create one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Geschäft definiert. Bitte erstelle eines."
+          }
+        }
+      }
+    },
     "No stores found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12479,7 +12830,6 @@
       }
     },
     "No task categories found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12608,7 +12958,6 @@
       }
     },
     "No userentities found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -12896,7 +13245,14 @@
       }
     },
     "Not implemented" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht implementiert"
+          }
+        }
+      }
     },
     "Not opened" : {
       "localizations" : {
@@ -13143,6 +13499,12 @@
           }
         }
       }
+    },
+    "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days" : {
+
+    },
+    "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days" : {
+
     },
     "Only done items" : {
       "localizations" : {
@@ -13397,10 +13759,18 @@
       }
     },
     "Open Food Facts" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Food Fa"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "OPEN FOOD FACTS" : {
-
+      "shouldTranslate" : false
     },
     "Opened" : {
       "localizations" : {
@@ -13569,6 +13939,9 @@
           }
         }
       }
+    },
+    "Overdue" : {
+
     },
     "Own server" : {
       "localizations" : {
@@ -13828,6 +14201,12 @@
         }
       }
     },
+    "Passwords do not match" : {
+
+    },
+    "Per stock quantity unit" : {
+
+    },
     "Perform inventory" : {
       "localizations" : {
         "cs" : {
@@ -13893,7 +14272,14 @@
       }
     },
     "PHP version: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PHP-Version: %@"
+          }
+        }
+      }
     },
     "Please check the log to determine the problem." : {
       "localizations" : {
@@ -14422,6 +14808,9 @@
         }
       }
     },
+    "Product group name" : {
+
+    },
     "Product group: %@" : {
       "localizations" : {
         "cs" : {
@@ -14843,6 +15232,9 @@
           }
         }
       }
+    },
+    "Product picture found" : {
+
     },
     "Product: %@" : {
       "localizations" : {
@@ -15394,6 +15786,9 @@
         }
       }
     },
+    "Quantity unit for prices" : {
+
+    },
     "Quantity unit from" : {
       "localizations" : {
         "cs" : {
@@ -15558,6 +15953,12 @@
           }
         }
       }
+    },
+    "Quantity unit stock" : {
+
+    },
+    "Quantity unit stock cannot be changed after first purchase" : {
+
     },
     "Quantity unit to" : {
       "localizations" : {
@@ -15746,6 +16147,12 @@
           }
         }
       }
+    },
+    "Quick consume amount" : {
+
+    },
+    "Quick open amount" : {
+
     },
     "Quick Scan" : {
       "localizations" : {
@@ -16075,7 +16482,14 @@
       }
     },
     "Release date: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veröffentlichungsdatum: %@"
+          }
+        }
+      }
     },
     "Reload interval" : {
       "localizations" : {
@@ -16261,7 +16675,14 @@
       }
     },
     "Retrieving Details failed." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details abfragen fehlgeschlagen."
+          }
+        }
+      }
     },
     "Save" : {
       "localizations" : {
@@ -17204,7 +17625,14 @@
       }
     },
     "Select product picture from file" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produktfoto aus Datei auswählen"
+          }
+        }
+      }
     },
     "Select product picture from gallery" : {
       "localizations" : {
@@ -17270,8 +17698,26 @@
         }
       }
     },
+    "Self-production" : {
+
+    },
+    "Server timeout interval" : {
+
+    },
+    "Server URL" : {
+
+    },
+    "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)" : {
+
+    },
     "Server: %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server: %1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -17659,6 +18105,24 @@
         }
       }
     },
+    "Should not be frozen" : {
+
+    },
+    "Show a warning when the due date of the purchased product is earlier than the next due date in stock" : {
+
+    },
+    "Show an icon if the product is already on the shopping list" : {
+
+    },
+    "Show as column in tables" : {
+
+    },
+    "Show in sidebar menu" : {
+
+    },
+    "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)" : {
+
+    },
     "Sort" : {
       "localizations" : {
         "cs" : {
@@ -17762,6 +18226,9 @@
           }
         }
       }
+    },
+    "Sort number" : {
+
     },
     "Sort order" : {
       "localizations" : {
@@ -17885,6 +18352,9 @@
         }
       }
     },
+    "Spoiled" : {
+
+    },
     "SQLite version: %@" : {
       "localizations" : {
         "de" : {
@@ -17894,6 +18364,9 @@
           }
         }
       }
+    },
+    "State, Parent product, Description, Product group, Energy, Picture" : {
+
     },
     "Status" : {
       "localizations" : {
@@ -18061,6 +18534,12 @@
     },
     "Stock amount: %@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandsmenge: %1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -18163,6 +18642,9 @@
           }
         }
       }
+    },
+    "Stock entries at this location will be consumed first" : {
+
     },
     "Stock entry" : {
       "localizations" : {
@@ -18944,7 +19426,14 @@
       }
     },
     "success" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolg"
+          }
+        }
+      }
     },
     "Such a conversion already exists" : {
       "localizations" : {
@@ -19007,6 +19496,12 @@
           }
         }
       }
+    },
+    "SYNC SHOPPING LIST TO REMINDERS" : {
+
+    },
+    "Tare weight" : {
+
     },
     "Task categories" : {
       "localizations" : {
@@ -19172,17 +19667,28 @@
         }
       }
     },
-    "test" : {
-
-    },
-    "Test" : {
+    "Task category name" : {
 
     },
     "TEST" : {
 
     },
     "The app doesn't have permission to read reminders." : {
-      "comment" : "access denied error description"
+      "comment" : "access denied error description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die App hat keine Berechtigungen, Erinnerungen zu lesen."
+          }
+        }
+      }
+    },
+    "The barcode is invalid or already in use." : {
+
+    },
+    "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"" : {
+
     },
     "The selected amount is equal to the stock amount." : {
       "localizations" : {
@@ -19300,6 +19806,18 @@
         }
       }
     },
+    "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always" : {
+
+    },
+    "This amount is used for the \"quick consume button\" on the stock overview page (related to quantity unit stock)" : {
+
+    },
+    "This amount is used for the \"quick open button\" on the stock overview page (related to quantity unit stock)" : {
+
+    },
+    "This cannot be lower than -1 and needs to be a valid number with max. 0 decimal places" : {
+
+    },
     "This cannot be lower than %.0f and needs to be a valid number with max.  %lld decimal places" : {
       "localizations" : {
         "en" : {
@@ -19329,6 +19847,9 @@
           }
         }
       }
+    },
+    "This cannot be lower than 0 and needs to be a valid number with max. 0 decimal places" : {
+
     },
     "This cannot be the same as the \"From\" location" : {
       "localizations" : {
@@ -19520,6 +20041,24 @@
           }
         }
       }
+    },
+    "This is required and can only contain letters and numbers" : {
+
+    },
+    "This is the default quantity unit used when adding this product to the shopping list" : {
+
+    },
+    "This is the default quantity unit used when consuming this product" : {
+
+    },
+    "This is the internal field name, e. g. for the API" : {
+
+    },
+    "This is used to display the field on the frontend" : {
+
+    },
+    "This is useful e.g. for flour in jars - on purchase/consume/inventory you always weigh the whole jar, the amount to be posted is then automatically calculated based on what is in stock and the tare weight defined below" : {
+
     },
     "This means %@ %@ will be added to stock" : {
       "localizations" : {
@@ -19768,6 +20307,12 @@
           }
         }
       }
+    },
+    "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS)." : {
+
+    },
+    "This will be used as the default setting when adding this product as a recipe ingredient" : {
+
     },
     "To location" : {
       "localizations" : {
@@ -20419,6 +20964,9 @@
         }
       }
     },
+    "Treat opened as out of stock" : {
+
+    },
     "Try again" : {
       "localizations" : {
         "cs" : {
@@ -20582,6 +21130,9 @@
           }
         }
       }
+    },
+    "Type, Default days; after opening, freezing, thawing" : {
+
     },
     "Type: %@" : {
       "localizations" : {
@@ -21143,6 +21694,9 @@
         }
       }
     },
+    "Use a specific stock item" : {
+
+    },
     "Use demo server" : {
       "localizations" : {
         "cs" : {
@@ -21212,6 +21766,19 @@
           }
         }
       }
+    },
+    "Use Home Assistant Ingress" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home Assistant Ingress benutzen"
+          }
+        }
+      }
+    },
+    "Use the products \"Quick consume amount\" " : {
+
     },
     "User" : {
       "localizations" : {
@@ -21308,7 +21875,14 @@
       }
     },
     "User entities" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzerentitäten"
+          }
+        }
+      }
     },
     "User management" : {
       "localizations" : {
@@ -21662,6 +22236,12 @@
         }
       }
     },
+    "Username already exists" : {
+
+    },
+    "Valid API key" : {
+
+    },
     "Value" : {
       "localizations" : {
         "cs" : {
@@ -21757,6 +22337,30 @@
       }
     },
     "Welcome to Grocy Mobile! This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server). If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent." : {
+
+    },
+    "When displaying prices for this product, they will be related to this quantity unit" : {
+
+    },
+    "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location" : {
+
+    },
+    "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown" : {
+
+    },
+    "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount" : {
+
+    },
+    "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)" : {
+
+    },
+    "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places" : {
+
+    },
+    "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings" : {
+
+    },
+    "When this product was marked as opened, the due date will be replaced by today + this amount of days (a value of 0 disables this)" : {
 
     },
     "Σ %@ %@" : {
