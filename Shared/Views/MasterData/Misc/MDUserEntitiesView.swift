@@ -53,10 +53,10 @@ struct MDUserEntitiesView: View {
     private func deleteUserEntity(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .userentities, id: toDelID)
-            await grocyVM.postLog("Deleting user entity was successful.", type: .info)
+            grocyVM.postLog("Deleting user entity was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting user entity failed. \(error)", type: .error)
         }
     }
     

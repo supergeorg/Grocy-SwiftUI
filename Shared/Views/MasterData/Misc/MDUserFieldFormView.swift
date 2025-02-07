@@ -68,28 +68,28 @@ struct MDUserFieldFormView: View {
     
     private func saveUserField() async {
         if let entity = entity {
-            let id = await isNewUserField ? grocyVM.findNextID(.userfields) : userField!.id
+            let id = isNewUserField ? grocyVM.findNextID(.userfields) : userField!.id
             let timeStamp = isNewUserField ? Date().iso8601withFractionalSeconds : userField!.rowCreatedTimestamp
             let userFieldPOST = MDUserField(id: id, name: name, entity: entity.rawValue, caption: caption, type: type.rawValue, showAsColumnInTables: showAsColumnInTables ? 1 : 0, config: nil, sortNumber: sortNumber, rowCreatedTimestamp: timeStamp)
             isProcessing = true
             if isNewUserField {
                 do {
                     _ = try await grocyVM.postMDObject(object: .userfields, content: userFieldPOST)
-                    await grocyVM.postLog("Userfield add successful.", type: .info)
+                    grocyVM.postLog("Userfield add successful.", type: .info)
                     resetForm()
                     await updateData()
                     finishForm()
                 } catch {
-                    await grocyVM.postLog("Userfield add failed. \(error)", type: .error)
+                    grocyVM.postLog("Userfield add failed. \(error)", type: .error)
                 }
             } else {
                 do {
                     _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
-                    await grocyVM.postLog("Userfield edit successful.", type: .info)
+                    grocyVM.postLog("Userfield edit successful.", type: .info)
                     await updateData()
                     finishForm()
                 } catch {
-                    await grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
+                    grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
                 }
             }
             isProcessing = true

@@ -27,7 +27,7 @@ struct StockTableMenuEntriesView: View {
             try await grocyVM.postStockObject(id: stockElement.productID, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            await grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
+            grocyVM.postLog("Consume all as spoiled failed. \(error)", type: .error)
         }
     }
     

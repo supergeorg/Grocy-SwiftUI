@@ -26,10 +26,10 @@ struct MDProductPictureFormViewNew: View {
         isProcessing = true
         do {
             try await grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)))
-            await grocyVM.postLog("Picture successfully deleted.", type: .info)
+            grocyVM.postLog("Picture successfully deleted.", type: .info)
             await changeProductPicture(newPictureFileName: nil)
         } catch {
-            await grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
+            grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
             isProcessing = false
         }
     }
@@ -62,7 +62,7 @@ struct MDProductPictureFormViewNew: View {
             updatedProduct.pictureFileName = newPictureFileName
             do {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: updatedProduct)
-                await grocyVM.postLog("Picture successfully changed in product.", type: .info)
+                grocyVM.postLog("Picture successfully changed in product.", type: .info)
                 await grocyVM.requestData(objects: [.products])
                 pictureFileName = newPictureFileName
                 productImageFilename = nil
@@ -70,7 +70,7 @@ struct MDProductPictureFormViewNew: View {
                 productImageItem = nil
                 productImageData = nil
             } catch {
-                await grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
+                grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
             }
         }
         isProcessing = false
@@ -171,10 +171,10 @@ struct MDProductPictureFormView: View {
         isProcessing = true
         do {
             try await grocyVM.deleteFile(groupName: "productpictures", fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)))
-            await grocyVM.postLog("Picture successfully deleted.", type: .info)
+            grocyVM.postLog("Picture successfully deleted.", type: .info)
             await changeProductPicture(newPictureFileName: nil)
         } catch {
-            await grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
+            grocyVM.postLog("Picture deletion failed. \(error)", type: .error)
             isProcessing = false
         }
     }
@@ -186,10 +186,10 @@ struct MDProductPictureFormView: View {
             isProcessing = true
             do {
                 try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
-                await grocyVM.postLog("Picture successfully uploaded.", type: .info)
+                grocyVM.postLog("Picture successfully uploaded.", type: .info)
                 await changeProductPicture(newPictureFileName: newPictureFileName)
             } catch {
-                await grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+                grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                 isProcessing = false
             }
         }
@@ -203,10 +203,10 @@ struct MDProductPictureFormView: View {
                 isProcessing = true
                 do {
                     try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
-                    await grocyVM.postLog("Picture successfully uploaded.", type: .info)
+                    grocyVM.postLog("Picture successfully uploaded.", type: .info)
                     await changeProductPicture(newPictureFileName: newPictureFileName)
                 } catch {
-                    await grocyVM.postLog("Picture upload failed. \(error)", type: .error)
+                    grocyVM.postLog("Picture upload failed. \(error)", type: .error)
                     isProcessing = false
                 }
             }
@@ -220,12 +220,12 @@ struct MDProductPictureFormView: View {
             productPOST.pictureFileName = newPictureFileName
             do {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST)
-                await grocyVM.postLog("Picture successfully changed in product.", type: .info)
+                grocyVM.postLog("Picture successfully changed in product.", type: .info)
                 await grocyVM.requestData(objects: [.products])
                 pictureFileName = selectedPictureFileName
                 selectedPictureFileName = nil
             } catch {
-                await grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
+                grocyVM.postLog("Adding picture to product failed. \(error)", type: .error)
             }
         }
         isProcessing = false

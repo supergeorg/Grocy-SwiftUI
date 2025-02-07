@@ -109,11 +109,11 @@ struct InventoryProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: productInventory)
-                await grocyVM.postLog("Inventory successful.", type: .info)
+                grocyVM.postLog("Inventory successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
             } catch {
-                await grocyVM.postLog("Inventory failed: \(error)", type: .error)
+                grocyVM.postLog("Inventory failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }

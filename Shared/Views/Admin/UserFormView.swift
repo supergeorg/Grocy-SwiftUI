@@ -57,25 +57,25 @@ struct UserFormView: View {
     
     private func saveUser() async {
         if isNewUser {
-            let userPost = await GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
+            let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
             do {
                 try await grocyVM.postUser(user: userPost)
-                await grocyVM.postLog("Successfully saved user.", type: .info)
+                grocyVM.postLog("Successfully saved user.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                await grocyVM.postLog("Saving user failed. \(error)", type: .error)
+                grocyVM.postLog("Saving user failed. \(error)", type: .error)
             }
         } else {
             if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
                 do {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
-                    await grocyVM.postLog("Successfully edited user.", type: .info)
+                    grocyVM.postLog("Successfully edited user.", type: .info)
                     await updateData()
                     finishForm()
                 } catch {
-                    await grocyVM.postLog("Editing user failed. \(error)", type: .error)
+                    grocyVM.postLog("Editing user failed. \(error)", type: .error)
                 }
             }
         }

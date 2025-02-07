@@ -164,10 +164,10 @@ struct ShoppingListView: View {
     func deleteShoppingList() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
-            await grocyVM.postLog("Deleting shopping list was successful.", type: .info)
+            grocyVM.postLog("Deleting shopping list was successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_lists])
         } catch {
-            await grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
         }
     }
     
@@ -180,10 +180,10 @@ struct ShoppingListView: View {
             } else {
                 try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
             }
-            await grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
+            grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            await grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+            grocyVM.postLog("SHLAction failed. \(error)", type: .error)
         }
     }
     

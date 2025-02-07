@@ -112,10 +112,10 @@ struct ShoppingListEntriesView: View {
         )
         do {
             try await grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: doneChangedShoppingListItem)
-            await grocyVM.postLog("Done status changed successfully.", type: .info)
+            grocyVM.postLog("Done status changed successfully.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            await grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
+            grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
         }
     }
     
@@ -127,10 +127,10 @@ struct ShoppingListEntriesView: View {
     private func deleteSHLItem(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
-            await grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            await grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
         }
     }
     

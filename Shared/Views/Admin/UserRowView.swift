@@ -21,10 +21,10 @@ struct UserRowActionsView: View {
     private func deleteUser() async {
         do {
             try await grocyVM.deleteUser(id: user.id)
-            await grocyVM.postLog("Delete user successful.", type: .info)
+            grocyVM.postLog("Delete user successful.", type: .info)
             await grocyVM.requestData(additionalObjects: [.users])
         } catch {
-            await grocyVM.postLog("Delete user failed. \(error)", type: .error)
+            grocyVM.postLog("Delete user failed. \(error)", type: .error)
         }
     }
     

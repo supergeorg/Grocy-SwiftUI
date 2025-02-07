@@ -61,7 +61,7 @@ struct MDBarcodeFormView: View {
     
     private func saveBarcode() async {
         if barcode.id == 0 {
-            barcode.id = await grocyVM.findNextID(.product_barcodes)
+            barcode.id = grocyVM.findNextID(.product_barcodes)
         }
         isProcessing = true
         isSuccessful = nil
@@ -71,11 +71,11 @@ struct MDBarcodeFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_barcodes, id: barcode.id, content: barcode)
             }
-            await grocyVM.postLog("Barcode \(barcode.barcode) successful.", type: .info)
+            grocyVM.postLog("Barcode \(barcode.barcode) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Barcode \(barcode.barcode) failed. \(error)", type: .error)
+            grocyVM.postLog("Barcode \(barcode.barcode) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

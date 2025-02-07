@@ -41,7 +41,7 @@ struct ShoppingListFormView: View {
     }
     
     func saveShoppingList() async {
-        let id = await shoppingListDescription == nil ? grocyVM.findNextID(.shopping_lists) : shoppingListDescription!.id
+        let id = shoppingListDescription == nil ? grocyVM.findNextID(.shopping_lists) : shoppingListDescription!.id
         let timeStamp = shoppingListDescription == nil ? Date().iso8601withFractionalSeconds : shoppingListDescription!.rowCreatedTimestamp
         let shoppingListPOST = ShoppingListDescription(
             id: id,
@@ -55,11 +55,11 @@ struct ShoppingListFormView: View {
                     object: .shopping_lists,
                     content: shoppingListPOST
                 )
-                await grocyVM.postLog("Shopping list save successful.", type: .info)
+                grocyVM.postLog("Shopping list save successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                await grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+                grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
             }
         } else {
             do {
@@ -68,11 +68,11 @@ struct ShoppingListFormView: View {
                     id: id,
                     content: shoppingListPOST
                 )
-                await grocyVM.postLog("Shopping list edit successful.", type: .info)
+                grocyVM.postLog("Shopping list edit successful.", type: .info)
                 await updateData()
                 finishForm()
             } catch {
-                await grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+                grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
             }
         }
         isProcessing = false

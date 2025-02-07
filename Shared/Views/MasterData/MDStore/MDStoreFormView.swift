@@ -52,7 +52,7 @@ struct MDStoreFormView: View {
     
     private func saveStore() async {
         if store.id == 0 {
-            store.id = await grocyVM.findNextID(.shopping_locations)
+            store.id = grocyVM.findNextID(.shopping_locations)
         }
         isProcessing = true
         isSuccessful = nil
@@ -62,11 +62,11 @@ struct MDStoreFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: store.id, content: store)
             }
-            await grocyVM.postLog("Store \(store.name) successful.", type: .info)
+            grocyVM.postLog("Store \(store.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Store \(store.name) failed. \(error)", type: .error)
+            grocyVM.postLog("Store \(store.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

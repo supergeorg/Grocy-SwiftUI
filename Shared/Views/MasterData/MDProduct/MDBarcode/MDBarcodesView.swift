@@ -49,10 +49,10 @@ struct MDBarcodesView: View {
     private func deleteProductBarcode(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .product_barcodes, id: toDelID)
-            await grocyVM.postLog("Deleting barcode was successful.", type: .info)
+            grocyVM.postLog("Deleting barcode was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting barcode failed. \(error)", type: .error)
         }
     }
     

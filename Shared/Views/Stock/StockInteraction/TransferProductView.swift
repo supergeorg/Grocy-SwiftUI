@@ -94,11 +94,11 @@ struct TransferProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
-                await grocyVM.postLog("Transfer successful.", type: .info)
+                grocyVM.postLog("Transfer successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
             } catch {
-                await grocyVM.postLog("Transfer failed: \(error)", type: .error)
+                grocyVM.postLog("Transfer failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }

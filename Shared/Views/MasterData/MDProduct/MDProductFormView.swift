@@ -126,7 +126,7 @@ struct MDProductFormView: View {
     
     private func saveProduct() async {
         if product.id == 0 {
-            product.id = await grocyVM.findNextID(.products)
+            product.id = grocyVM.findNextID(.products)
         }
         isProcessing = true
         isSuccessful = nil
@@ -135,27 +135,27 @@ struct MDProductFormView: View {
                 _ = try await grocyVM.postMDObject(object: .products, content: product)
                 await grocyVM.requestData(objects: [.products])
                 if (openFoodFactsBarcode != nil) || (!queuedBarcode.isEmpty) {
-                    let newBarcode = await MDProductBarcode(
+                    let newBarcode = MDProductBarcode(
                         id: grocyVM.findNextID(.product_barcodes),
                         productID: product.id,
                         barcode: openFoodFactsBarcode ?? queuedBarcode,
                         rowCreatedTimestamp: Date().iso8601withFractionalSeconds
                     )
                     let _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                    await grocyVM.postLog("Barcode add successful.", type: .info)
+                    grocyVM.postLog("Barcode add successful.", type: .info)
                     await grocyVM.requestData(objects: [.product_barcodes])
                     //                    mdBarcodeReturn?.wrappedValue = newBarcode
                 }
-                await grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                grocyVM.postLog("Product \(product.name) successful.", type: .info)
                 isSuccessful = true
             } else {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: product)
-                await grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                grocyVM.postLog("Product \(product.name) successful.", type: .info)
                 await grocyVM.requestData(objects: [.products])
                 isSuccessful = true
             }
         } catch {
-            await grocyVM.postLog("Product \(product.name) failed. \(error)", type: .error)
+            grocyVM.postLog("Product \(product.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

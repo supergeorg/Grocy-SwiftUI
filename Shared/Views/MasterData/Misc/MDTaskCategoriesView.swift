@@ -56,10 +56,10 @@ struct MDTaskCategoriesView: View {
     private func deleteTaskCategory(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .task_categories, id: toDelID)
-            await grocyVM.postLog("Deleting task category was successful.", type: .info)
+            grocyVM.postLog("Deleting task category was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
         }
     }
     

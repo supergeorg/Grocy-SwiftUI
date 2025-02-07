@@ -86,7 +86,7 @@ struct MDQuantityUnitConversionFormView: View {
     
     private func saveQuantityUnitConversion() async {
         if quantityUnitConversion.id == 0 {
-            quantityUnitConversion.id = await grocyVM.findNextID(.quantity_unit_conversions)
+            quantityUnitConversion.id = grocyVM.findNextID(.quantity_unit_conversions)
         }
         isProcessing = true
         isSuccessful = nil
@@ -95,7 +95,7 @@ struct MDQuantityUnitConversionFormView: View {
                 _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversion)
                 if createInverseConversion {
                     do {
-                        let inverseQuantityUnitConversion = await MDQuantityUnitConversion(
+                        let inverseQuantityUnitConversion = MDQuantityUnitConversion(
                             id: grocyVM.findNextID(.quantity_unit_conversions) + 1,
                             fromQuID: quantityUnitConversion.toQuID,
                             toQuID: quantityUnitConversion.fromQuID,
@@ -104,21 +104,21 @@ struct MDQuantityUnitConversionFormView: View {
                             rowCreatedTimestamp: Date().iso8601withFractionalSeconds
                         )
                         _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: inverseQuantityUnitConversion)
-                        await grocyVM.postLog("Inverse quantity unit conversion add successful.", type: .info)
+                        grocyVM.postLog("Inverse quantity unit conversion add successful.", type: .info)
                     } catch {
-                        await grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
+                        grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
                     }
                 } else {
-                    await grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
+                    grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
                 }
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: quantityUnitConversion.id, content: quantityUnitConversion)
             }
-            await grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) successful.", type: .info)
+            grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) failed. \(error)", type: .error)
+            grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

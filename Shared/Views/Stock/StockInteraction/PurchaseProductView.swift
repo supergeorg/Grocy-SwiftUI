@@ -134,7 +134,7 @@ struct PurchaseProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
-                await grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
+                grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
                 if autoPurchase {
@@ -144,7 +144,7 @@ struct PurchaseProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                await grocyVM.postLog("Purchase failed: \(error)", type: .error)
+                grocyVM.postLog("Purchase failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }

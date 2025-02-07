@@ -36,7 +36,7 @@ struct StockEntriesView: View {
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await fetchData(ignoreCachedStock: false)
         } catch {
-            await grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
+            grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
         }
     }
     
@@ -46,7 +46,7 @@ struct StockEntriesView: View {
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await fetchData(ignoreCachedStock: false)
         } catch {
-            await grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
+            grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
         }
     }
     

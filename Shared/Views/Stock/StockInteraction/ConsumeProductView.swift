@@ -165,14 +165,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
-                await grocyVM.postLog("Opening successful.", type: .info)
+                grocyVM.postLog("Opening successful.", type: .info)
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
                 if self.actionFinished != nil {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                await grocyVM.postLog("Opening failed: \(error)", type: .error)
+                grocyVM.postLog("Opening failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }
@@ -184,14 +184,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
-                await grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
-                if let autoAddBelowMinStock = await userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = await userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+                grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
+                if let autoAddBelowMinStock = userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
-                        await grocyVM.postLog("SHLAction successful.", type: .info)
+                        grocyVM.postLog("SHLAction successful.", type: .info)
                         await grocyVM.requestData(objects: [.shopping_list])
                     } catch {
-                        await grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+                        grocyVM.postLog("SHLAction failed. \(error)", type: .error)
                     }
                 }
                 resetForm()
@@ -199,7 +199,7 @@ struct ConsumeProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                await grocyVM.postLog("Consume failed: \(error)", type: .error)
+                grocyVM.postLog("Consume failed: \(error)", type: .error)
             }
             isProcessingAction = false
         }

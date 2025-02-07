@@ -52,7 +52,7 @@ struct MDProductGroupFormView: View {
     
     private func saveProductGroup() async {
         if productGroup.id == 0 {
-            productGroup.id = await grocyVM.findNextID(.product_groups)
+            productGroup.id = grocyVM.findNextID(.product_groups)
         }
         isProcessing = true
         isSuccessful = nil
@@ -62,11 +62,11 @@ struct MDProductGroupFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_groups, id: productGroup.id, content: productGroup)
             }
-            await grocyVM.postLog("Product group \(productGroup.name) successful.", type: .info)
+            grocyVM.postLog("Product group \(productGroup.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Product group \(productGroup.name) failed. \(error)", type: .error)
+            grocyVM.postLog("Product group \(productGroup.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

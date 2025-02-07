@@ -72,10 +72,10 @@ struct StockEntryFormView: View {
         isProcessing = true
         do {
             _ = try await grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST)
-            await grocyVM.postLog("Stock entry edit successful.", type: .info)
+            grocyVM.postLog("Stock entry edit successful.", type: .info)
             finishForm()
         } catch {
-            await grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
+            grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
         }
         isProcessing = false
     }

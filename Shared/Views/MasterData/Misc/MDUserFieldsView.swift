@@ -57,10 +57,10 @@ struct MDUserFieldsView: View {
     private func deleteUserField(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .userfields, id: toDelID)
-            await grocyVM.postLog("Deleting userfield was successful.", type: .info)
+            grocyVM.postLog("Deleting userfield was successful.", type: .info)
             await updateData()
         } catch {
-            await grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
+            grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
         }
     }
     

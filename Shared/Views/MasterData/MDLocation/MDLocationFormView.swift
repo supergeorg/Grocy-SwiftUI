@@ -53,7 +53,7 @@ struct MDLocationFormView: View {
     
     private func saveLocation() async {
         if location.id == 0 {
-            location.id = await grocyVM.findNextID(.locations)
+            location.id = grocyVM.findNextID(.locations)
         }
         isProcessing = true
         isSuccessful = nil
@@ -63,11 +63,11 @@ struct MDLocationFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
             }
-            await grocyVM.postLog("Location \(location.name) successful.", type: .info)
+            grocyVM.postLog("Location \(location.name) successful.", type: .info)
             await updateData()
             isSuccessful = true
         } catch {
-            await grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
+            grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
             errorMessage = error.localizedDescription
             isSuccessful = false
         }
