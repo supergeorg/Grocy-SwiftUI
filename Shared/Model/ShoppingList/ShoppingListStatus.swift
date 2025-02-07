@@ -17,7 +17,7 @@ enum ShoppingListStatus: String {
     func getDescription(amount: Int) -> LocalizedStringKey {
         switch self {
         case .all:
-            return "no description"
+            return "No description"
         case .belowMinStock:
             return "\(amount) products are below min. defined stock amount"
         case .done:

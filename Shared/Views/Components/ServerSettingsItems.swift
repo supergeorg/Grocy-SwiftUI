@@ -16,8 +16,8 @@ struct ServerSettingsToggle: View {
     @State private var isFirstShown: Bool = true
     
     let settingKey: String
-    let description: String
-    var descriptionInfo: String? = nil
+    let description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
     
     var toggleFeedback: Binding<Bool>? = nil
@@ -68,8 +68,8 @@ struct ServerSettingsIntStepper: View {
     @State private var isFirstShown: Bool = true
     
     let settingKey: String
-    let description: String
-    var descriptionInfo: String? = nil
+    let description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
     
     func getSetting() async {
@@ -116,8 +116,8 @@ struct ServerSettingsDoubleStepper: View {
     @State private var isFirstShown: Bool = true
     
     let settingKey: String
-    let description: String
-    var descriptionInfo: String? = nil
+    let description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
     
     func getSetting() async {
@@ -172,7 +172,7 @@ struct ServerSettingsObjectPicker: View {
     }
     
     let settingKey: String
-    let description: String
+    let description: LocalizedStringKey
     var icon: String? = nil
     let objects: Objects
     

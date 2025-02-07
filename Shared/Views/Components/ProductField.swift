@@ -54,7 +54,7 @@ struct ProductField: View {
     @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     
     @Binding var productID: Int?
-    var description: String
+    var description: LocalizedStringKey
     
     @State private var searchTerm: String = ""
 #if os(iOS)
@@ -99,7 +99,7 @@ struct ProductField: View {
     }
     var pickerView: some View {
         Picker(selection: $productID,
-               label: Label(LocalizedStringKey(description), systemImage: MySymbols.product).foregroundStyle(.primary),
+               label: Label(description, systemImage: MySymbols.product).foregroundStyle(.primary),
                content: {
             HStack {
                 SearchBar(text: $searchTerm)
@@ -149,7 +149,7 @@ struct ProductField: View {
     }
 #elseif os(macOS)
     var body: some View {
-        Picker(selection: $productID, label: Label(LocalizedStringKey(description), systemImage: MySymbols.product), content: {
+        Picker(selection: $productID, label: Label(description, systemImage: MySymbols.product), content: {
             Text("").tag(nil as Int?)
             ForEach(filteredProducts, id: \.id) { productElement in
                 Text(productElement.name).tag(productElement.id as Int?)

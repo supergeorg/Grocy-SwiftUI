@@ -11,12 +11,12 @@ struct OnboardingDevicesView: View {
     var body: some View {
         HStack{
 #if os(macOS)
-            Image(systemName: "desktopcomputer")
-            Image(systemName: "laptopcomputer")
+            Image(systemName: "macbook")
             Image(systemName: "macmini")
+            Image(systemName: "desktopcomputer")
 #elseif os(iOS)
-            Image(systemName: "iphone.homebutton")
             Image(systemName: "iphone")
+            Image(systemName: "iphone.homebutton")
             Image(systemName: "ipad")
             Image(systemName: "ipad.homebutton")
 #endif
@@ -32,12 +32,12 @@ struct OnboardingCardView: View {
                 .resizable()
                 .scaledToFit()
             Spacer()
-            Text(LocalizedStringKey(card.title)).font(.largeTitle)
-            if card.subtitle.isEmpty{
+            Text(card.title).font(.largeTitle)
+            if card.subtitle == "" {
                 OnboardingDevicesView()
                     .font(.largeTitle)
             } else {
-                Text(LocalizedStringKey(card.subtitle))
+                Text(card.subtitle)
             }
             Spacer()
         }
@@ -96,7 +96,7 @@ public enum OnboardingCards: CaseIterable {
     case ERP_BEYOND
     case IOS_MACOS
     
-    public var title: String {
+    public var title: LocalizedStringKey {
         switch self {
         case .GROCY:
             return "Grocy"
@@ -107,7 +107,7 @@ public enum OnboardingCards: CaseIterable {
         }
     }
     
-    public var subtitle: String {
+    public var subtitle: LocalizedStringKey {
         switch self {
         case .GROCY:
             return ""

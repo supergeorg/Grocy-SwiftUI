@@ -27,11 +27,11 @@ struct MDProductRowView: View {
                     .foregroundStyle(product.active ? .primary : .secondary)
                 HStack(alignment: .top){
                     if let locationID = mdLocations.firstIndex(where: { $0.id == product.locationID }) {
-                        Text("Location: \(mdLocations[locationID].name)")
+                        Text("Location") + Text(": \(mdLocations[locationID].name)")
                             .font(.caption)
                     }
                     if let productGroup = mdProductGroups.firstIndex(where: { $0.id == product.productGroupID }) {
-                        Text("Product group: \(mdProductGroups[productGroup].name)")
+                        Text("Product group") + Text(": \(mdProductGroups[productGroup].name)")
                             .font(.caption)
                     }
                 }

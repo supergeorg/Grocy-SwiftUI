@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MyToggle: View {
     @Binding var isOn: Bool
-    var description: String
-    var descriptionInfo: String?
+    var description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey?
     var icon: String?
     
     @State private var showInfo: Bool = false

@@ -238,7 +238,7 @@ struct StockView: View {
                     Label("Consume", systemImage: MySymbols.consume)
                 }
                 NavigationLink(value: StockInteraction.purchaseProduct) {
-                    Label("Buy", systemImage: MySymbols.purchase)
+                    Label("Purchase", systemImage: MySymbols.purchase)
                 }
 #elseif os(macOS)
                 RefreshButton(updateData: { Task { await updateData() } })

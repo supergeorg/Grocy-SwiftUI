@@ -102,7 +102,7 @@ struct MDUserFieldFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveUserField() } }, label: {
-                        Label("Save userfield", systemImage: MySymbols.save)
+                        Label("Save", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)

@@ -88,14 +88,14 @@ struct StockJournalRowView: View {
                 }
             }
             Group {
-                Text("Amount: \(journalEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: journalEntry.amount) ?? "")")
-                Text("Transaction time: \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
-                Text("Transaction type: \(journalEntry.transactionType.formatTransactionType())")
+                Text("Amount") + Text(": \(journalEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: journalEntry.amount) ?? "")")
+                Text("Transaction time") + Text(": \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
+                Text("Transaction type") + Text(": \(journalEntry.transactionType.formatTransactionType())")
                     .font(.caption)
-                Text("Location: \(location?.name ?? "Location Error")")
-                Text("Done by: \(grocyUser?.displayName ?? "Username Error")")
+                Text("Location") + Text(": \(location?.name ?? "Location Error")")
+                Text("Done by") + Text(": \(grocyUser?.displayName ?? "Username Error")")
                 if let note = journalEntry.note {
-                    Text("Note: \(note)")
+                    Text("Note") + Text(": \(note)")
                 }
             }
             .foregroundStyle(journalEntry.undone == 1 ? Color.gray : Color.primary)

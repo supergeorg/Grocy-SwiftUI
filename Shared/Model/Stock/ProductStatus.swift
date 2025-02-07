@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum ProductStatus: String {
+enum ProductStatus: LocalizedStringKey {
     case all = "All"
     case expiringSoon = "Due soon"
     case overdue = "Overdue"
@@ -18,7 +18,7 @@ enum ProductStatus: String {
     func getDescription(amount: Int, dueSoonDays: Int? = 5) -> String {
         switch self {
         case .all:
-            return "no description"
+            return "No description"
         case .expiringSoon:
             return "\(amount) products are due within the next \(dueSoonDays ?? 5) days"
         case .overdue:

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MyLabelWithSubtitle: View {
-    var title: String
-    var subTitle: String? = nil
+    var title: LocalizedStringKey
+    var subTitle: LocalizedStringKey? = nil
     var systemImage: String? = nil
     var isProblem: Bool = false
     var isSubtitleProblem: Bool = false
@@ -22,11 +22,11 @@ struct MyLabelWithSubtitle: View {
                     .foregroundStyle(.primary)
             }
             VStack(alignment: .leading) {
-                Text(LocalizedStringKey(title))
+                Text(title)
                     .foregroundStyle(isProblem ? Color.red : Color.primary)
                 if !hideSubtitle {
                     if let subTitle = subTitle {
-                        Text(LocalizedStringKey(subTitle))
+                        Text(subTitle)
                             .font(.caption)
                             .foregroundStyle(isSubtitleProblem ? Color.red : Color.primary)
                     }

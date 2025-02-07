@@ -28,21 +28,21 @@ struct StockProductInfoView: View {
         List {
             if let productDetails = productDetails {
                 Group {
-                    Text("Stock amount: ").bold()
+                    (Text("Stock amount") + Text(": ")).bold()
                     +
                     Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock?.getName(amount: productDetails.stockAmount) ?? "")")
                     
-                    Text("Stock value: ").bold()
+                    (Text("Stock value") + Text(": ")).bold()
                     +
                     Text(grocyVM.getFormattedCurrency(amount: productDetails.stockValue ?? 0.0))
                     
-                    Text("Default location: ").bold()
+                    (Text("Default location") + Text(": ")).bold()
                     +
                     Text(productDetails.location?.name ?? "")
                 }
                 
                 Group {
-                    Text("Last purchased: ").bold()
+                    (Text("Last purchased") + Text(": ")).bold()
                     +
                     Text(LocalizedStringKey(formatDateAsString(productDetails.lastPurchased, localizationKey: localizationKey) ?? "Never"))
                     +
@@ -52,7 +52,7 @@ struct StockProductInfoView: View {
                         .font(.caption)
                         .italic()
                     
-                    Text("Last used: ").bold()
+                    (Text("Last used") + Text(": ")).bold()
                     +
                     Text(LocalizedStringKey(formatDateAsString(productDetails.lastUsed, localizationKey: localizationKey) ?? "Never"))
                     +
@@ -64,21 +64,21 @@ struct StockProductInfoView: View {
                 }
                 
                 Group {
-                    Text("Last price: ").bold()
+                    (Text("Last price") + Text(": ")).bold()
                     +
                     Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                     
-                    Text("Average price: ").bold()
+                    (Text("Average price") + Text(": ")).bold()
                     +
                     Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                 }
                 
                 Group {
-                    Text("Average shelf life: ").bold()
+                    (Text("Average shelf life") + Text(": ")).bold()
                     +
                     Text(productDetails.averageShelfLifeDays  > 0 ? formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown" : "Unknown")
                     
-                    Text("Spoil rate: ").bold()
+                    (Text("Spoil rate") + Text(": ")).bold()
                     +
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }

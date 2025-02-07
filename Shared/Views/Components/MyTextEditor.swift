@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyTextEditor: View {
     @Binding var textToEdit: String
-    var description: String
+    var description: LocalizedStringKey
     var leadingIcon: String?
     
     var body: some View {

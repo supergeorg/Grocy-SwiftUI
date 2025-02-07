@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RowInteractionButton: View {
-    var title: String?
+    var title: LocalizedStringKey?
     var image: String
     
     var backgroundColor: Color
@@ -26,7 +26,7 @@ struct RowInteractionButton: View {
             Image(systemName: image)
                 .font(Font.system(size: fontSizeValue, weight: .bold))
             if let title = title {
-                Text(LocalizedStringKey(title))
+                Text(title)
                     .font(Font.system(size: fontSizeValue, weight: .regular))
                     .lineLimit(1)
                     .fixedSize()

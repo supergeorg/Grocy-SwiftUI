@@ -179,7 +179,7 @@ struct TransferProductView: View {
                             Text("").tag(nil as String?)
                             ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
                                 Group {
-                                    Text("Amount: \(stockProduct.amount, specifier: "%.2f"); ")
+                                    Text("Amount") + Text(": \(stockProduct.amount, specifier: "%.2f"); ")
                                     +
                                     Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
                                     +

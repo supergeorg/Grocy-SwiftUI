@@ -14,9 +14,9 @@ struct MDUserFieldRowView: View {
         VStack(alignment: .leading) {
             Text(userField.caption)
                 .font(.title)
-            Text("Name: \(userField.name)")
-            Text("Entity: \(userField.entity)")
-            Text("Type: \("")")
+            Text("Name") + Text(": \(userField.name)")
+            Text("Entity") + Text(": \(userField.entity)")
+            Text("Type") + Text(": \("")")
             +
             Text(LocalizedStringKey(UserFieldType(rawValue: userField.type)?.getDescription() ?? userField.type))
         }

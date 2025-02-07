@@ -96,7 +96,7 @@ struct MDUserEntityFormView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: { Task { await saveUserEntity() } }, label: {
-                        Label("Save userentity", systemImage: MySymbols.save)
+                        Label("Save", systemImage: MySymbols.save)
                             .labelStyle(.titleAndIcon)
                     })
                     .disabled(!isNameCorrect || isProcessing)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FieldDescription: View {
-    var description: String
+    var description: LocalizedStringKey
 
     @State private var showDescription: Bool = false
     

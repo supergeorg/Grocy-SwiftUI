@@ -146,7 +146,7 @@ struct StockEntryFormView: View {
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction, content: {
                 Button(action: { Task { await editEntryForm() } }, label: {
-                    Label("Save entry", systemImage: MySymbols.save)
+                    Label("Save", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isFormValid || isProcessing)

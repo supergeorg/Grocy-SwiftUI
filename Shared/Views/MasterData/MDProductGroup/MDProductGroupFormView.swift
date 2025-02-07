@@ -95,7 +95,7 @@ struct MDProductGroupFormView: View {
                     }
                 }, label: {
                     if isProcessing == false {
-                        Label("Save product group", systemImage: MySymbols.save)
+                        Label("Save", systemImage: MySymbols.save)
                     } else {
                         ProgressView()
                     }

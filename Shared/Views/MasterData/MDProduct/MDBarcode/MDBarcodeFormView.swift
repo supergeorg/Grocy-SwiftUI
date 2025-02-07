@@ -131,7 +131,7 @@ struct MDBarcodeFormView: View {
                         await saveBarcode()
                     }
                 }, label: {
-                    Label("Save barcode", systemImage: MySymbols.save)
+                    Label("Save", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isBarcodeCorrect || isProcessing)

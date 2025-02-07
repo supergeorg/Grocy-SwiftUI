@@ -18,14 +18,14 @@ struct MyDoubleStepper: View {
     
     @Binding var amount: Double
     
-    var description: String
-    var descriptionInfo: String? = nil
+    var description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey? = nil
     var minAmount: Double? = 0.0
     var maxAmount: Double? = nil
     var amountStep: Double? = 1.0
     var amountName: String? = nil
 
-    var errorMessageMax: String? = nil
+    var errorMessageMax: LocalizedStringKey? = nil
     
     var systemImage: String? = nil
     
@@ -55,7 +55,7 @@ struct MyDoubleStepper: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
-                Text(LocalizedStringKey(description))
+                Text(description)
                 if let descriptionU = descriptionInfo {
                     FieldDescription(description: descriptionU)
                 }
@@ -80,13 +80,13 @@ struct MyDoubleStepper: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount {
-                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.0f") and needs to be a valid number with max.  \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
+                Text("This cannot be lower than \(smallestValidAmount, specifier: "%.2f") and needs to be a valid number with max.  \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places")
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, amount > maxAmount, let errorMessageMax = errorMessageMax {
-                Text(LocalizedStringKey(errorMessageMax))
+                Text(errorMessageMax)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -106,14 +106,14 @@ struct MyDoubleStepperOptional: View {
     
     @Binding var amount: Double?
     
-    var description: String
-    var descriptionInfo: String? = nil
+    var description: LocalizedStringKey
+    var descriptionInfo: LocalizedStringKey? = nil
     var minAmount: Double? = 0.0
     var maxAmount: Double? = nil
     var amountStep: Double? = 1.0
     var amountName: String? = nil
 
-    var errorMessageMax: String? = nil
+    var errorMessageMax: LocalizedStringKey? = nil
     
     var systemImage: String? = nil
     
@@ -143,7 +143,7 @@ struct MyDoubleStepperOptional: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
-                Text(LocalizedStringKey(description))
+                Text(description)
                 if let descriptionU = descriptionInfo {
                     FieldDescription(description: descriptionU)
                 }
@@ -192,7 +192,7 @@ struct MyDoubleStepperOptional: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
-                Text(LocalizedStringKey(errorMessageMax))
+                Text(errorMessageMax)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)

@@ -128,7 +128,7 @@ struct LoginDemoServerView: View {
                     Menu {
                         Picker(selection: $demoServerURL, label: CardView{
                             HStack(alignment: .center){
-                                Text("Demo server: \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
+                                Text("Demo server") + Text(": \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                                 Image(systemName: MySymbols.menuPick)
                             }
                         }, content: {
@@ -139,7 +139,7 @@ struct LoginDemoServerView: View {
                         .labelsHidden()
                     } label: {
                         HStack(alignment: .center){
-                            Text("Demo server: \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
+                            Text("Demo server") + Text(": \(GrocyAPP.DemoServers.init(rawValue: demoServerURL)?.description ?? demoServerURL)")
                             Image(systemName: MySymbols.menuPick)
                         }
                     }
@@ -349,7 +349,7 @@ struct LoginStatusView: View {
                     .buttonStyle(BorderButtonStyle())
                 }
             case .success:
-                Text("success")
+                Text("Success")
             case .fail:
                 VStack{
                     CardView{

@@ -10,19 +10,19 @@ import SwiftUI
 struct MyIntStepper: View {
     @Binding var amount: Int
     
-    var description: String
-    var helpText: String?
+    var description: LocalizedStringKey
+    var helpText: LocalizedStringKey?
     var minAmount: Int? = 0
-    var amountName: String? = nil
+    var amountName: LocalizedStringKey? = nil
     
-    var errorMessage: String?
+    var errorMessage: LocalizedStringKey?
     
     var systemImage: String?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
-                Text(LocalizedStringKey(description))
+                Text(description)
                 if let helpText = helpText {
                     FieldDescription(description: helpText)
                 }
@@ -42,7 +42,7 @@ struct MyIntStepper: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
-                Text(LocalizedStringKey(errorMessage))
+                Text(errorMessage)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
@@ -54,19 +54,19 @@ struct MyIntStepper: View {
 struct MyIntStepperOptional: View {
     @Binding var amount: Int?
     
-    var description: String
-    var helpText: String?
+    var description: LocalizedStringKey
+    var helpText: LocalizedStringKey?
     var minAmount: Int? = 0
     var amountName: String? = nil
     
-    var errorMessage: String?
+    var errorMessage: LocalizedStringKey?
     
     var systemImage: String?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 1){
             HStack{
-                Text(LocalizedStringKey(description))
+                Text(description)
                 if let helpTextU = helpText {
                     FieldDescription(description: helpTextU)
                 }
@@ -105,7 +105,7 @@ struct MyIntStepperOptional: View {
                     .fixedSize()
             }
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
-                Text(LocalizedStringKey(errorMessage))
+                Text(errorMessage)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)

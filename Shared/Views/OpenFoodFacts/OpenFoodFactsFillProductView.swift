@@ -157,7 +157,7 @@ struct OpenFoodFactsFillProductView: View {
                     }
                 }
             } else if let errorMessage = offVM.errorMessage {
-                Text("Error: \(errorMessage)")
+                Text("Error") + Text(": \(errorMessage)")
                     .foregroundStyle(.red)
             }
 #if os(macOS)

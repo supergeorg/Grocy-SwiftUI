@@ -27,6 +27,9 @@ struct GrocyAPP {
         case chinese_hant = "https://zh-tw.demo.grocy.info"
         case portuguese_pt = "https://pt-pt.demo.grocy.info"
         case portuguese_br = "https://pt-br.demo.grocy.info"
+        case finish = "https://fi.demo.grocy.info"
+        case japanese = "https://ja.demo.grocy.info"
+        case ukranian = "https://uk.demo.grocy.info"
         case develop = "https://test-iwz5eqdtrrwco5or26tvo.demo.grocy.info"
         case developOld = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
@@ -66,6 +69,12 @@ struct GrocyAPP {
                 return "🇵🇹 Português (Portuguese Portugal) Grocy Server"
             case .portuguese_br:
                 return "🇧🇷 Português Brasileiro (Portuguese Brazil) Grocy Server"
+            case .finish:
+                return "🇫🇮 Finnish Grocy server"
+            case .japanese:
+                return "🇯🇵 Japanese Grocy server"
+            case .ukranian:
+                return "🇺🇦 Ukranian Grocy server"
             case .develop:
                 return "Private demo instance used for development"
             case .developOld:

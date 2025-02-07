@@ -57,24 +57,24 @@ struct StockEntryRowView: View {
             StockEntryFormView(stockEntry: stockEntry)
         }, label: {
             VStack(alignment: .leading) {
-                Text("Product: \(product?.name ?? "")")
+                Text("Product") + Text(": \(product?.name ?? "")")
                     .font(.headline)
                 
-                Text("Amount: \(stockEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: stockEntry.amount) ?? "")")
+                Text("Amount") + Text(": \(stockEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: stockEntry.amount) ?? "")")
                 +
                 Text(" ")
                 +
-                Text(LocalizedStringKey(stockEntry.stockEntryOpen == true ? "Opened" : ""))
+                Text(stockEntry.stockEntryOpen == true ? "Opened" : "")
                     .font(.caption)
                     .italic()
                 
                 if stockEntry.bestBeforeDate == getNeverOverdueDate() {
-                    Text("Due date: \("")")
+                    Text("Due date") + Text(": \("")")
                     +
                     Text("Never overdue")
                         .italic()
                 } else {
-                    Text("Due date: \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")")
+                    Text("Due date") + Text(": \(formatDateAsString(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")")
                     +
                     Text(" ")
                     +
@@ -84,18 +84,18 @@ struct StockEntryRowView: View {
                 }
                 
                 if let locationID = stockEntry.locationID, let location = mdLocations.first(where: { $0.id == locationID }) {
-                    Text("Location: \(location.name)")
+                    Text("Location") + Text(": \(location.name)")
                 }
                 
                 if let storeID = stockEntry.storeID, let store = mdStores.first(where: { $0.id == storeID }) {
-                    Text("Store: \(store.name)")
+                    Text("Store") + Text(": \(store.name)")
                 }
                 
                 if let price = stockEntry.price, price > 0 {
-                    Text("Price: \(price.formattedAmount) \(systemConfigList.first?.currency ?? "")")
+                    Text("Price") + Text(": \(price.formattedAmount) \(systemConfigList.first?.currency ?? "")")
                 }
                 
-                Text("Purchased date: \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")")
+                Text("Purchased date") + Text(": \(formatDateAsString(stockEntry.purchasedDate, localizationKey: localizationKey) ?? "")")
                 +
                 Text(" ")
                 +
@@ -104,7 +104,7 @@ struct StockEntryRowView: View {
                     .italic()
                 
                 if let note = stockEntry.note {
-                    Text("Note: \(note)")
+                    Text("Note") + Text(": \(note)")
                 }
             }
         })

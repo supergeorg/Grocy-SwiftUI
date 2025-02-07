@@ -38,7 +38,7 @@ struct ServerProblemView: View {
         return .other
     }
     
-    private var serverErrorInfo: (String, String) {
+    private var serverErrorInfo: (String, LocalizedStringKey) {
         switch serverErrorState {
         case .connection:
             return (MySymbols.offline, "No connection to server.")
@@ -70,7 +70,7 @@ struct ServerProblemView: View {
                 .font(.system(size: 100))
             if serverErrorState != .none {
                 VStack(alignment: .center) {
-                    Text(LocalizedStringKey(serverErrorInfo.1))
+                    Text(serverErrorInfo.1)
                     Text("Please check the log to determine the problem.")
                         .font(.caption)
                 }
@@ -106,7 +106,7 @@ struct ServerProblemView: View {
         HStack(alignment: .center) {
             Image(systemName: serverErrorInfo.0)
             VStack(alignment: .leading) {
-                Text(LocalizedStringKey(serverErrorInfo.1))
+                Text(serverErrorInfo.1)
                 Text("Please check the log to determine the problem.")
                     .font(.caption)
             }

@@ -22,10 +22,10 @@ struct MDBarcodeRowView: View {
                 .font(.title)
             HStack{
                 if let amount = barcode.amount {
-                    Text("Amount: \(amount.formattedAmount) \(mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name ?? String(barcode.quID ?? 0))")
+                    Text("Amount") + Text(": \(amount.formattedAmount) \(mdQuantityUnits.first(where: {$0.id == barcode.quID})?.name ?? String(barcode.quID ?? 0))")
                 }
                 if let storeName = mdStores.first(where: {$0.id == barcode.storeID})?.name {
-                    Text("Store: \(storeName)")
+                    Text("Store") + Text(": \(storeName)")
                 }
             }.font(.caption)
         }

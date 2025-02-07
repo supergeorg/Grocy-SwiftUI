@@ -8,13 +8,13 @@ import SwiftUI
 
 struct MyTextField: View {
     @Binding var textToEdit: String
-    var description: String
+    var description: LocalizedStringKey
     @Binding var isCorrect: Bool
     @FocusState private var isFocused: Bool
     var leadingIcon: String?
-    var emptyMessage: String?
-    var errorMessage: String?
-    var helpText: String?
+    var emptyMessage: LocalizedStringKey?
+    var errorMessage: LocalizedStringKey?
+    var helpText: LocalizedStringKey?
     
     var body: some View {
         TextField(text: $textToEdit, prompt: Text(emptyMessage ?? description)) {

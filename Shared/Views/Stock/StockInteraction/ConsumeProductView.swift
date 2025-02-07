@@ -255,7 +255,7 @@ struct ConsumeProductView: View {
                                 Text("").tag(nil as String?)
                                 ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
                                     Group {
-                                        Text("Amount: \(stockProduct.amount.formattedAmount); ")
+                                        Text("Amount") + Text(": \(stockProduct.amount.formattedAmount); ")
                                         +
                                         Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?"); ")
                                         +

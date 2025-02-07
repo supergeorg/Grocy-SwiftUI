@@ -87,18 +87,18 @@ struct StockFilterBar: View {
 #if os(iOS)
             Menu {
                 Picker("", selection: $filteredStatus, content: {
-                    Text(LocalizedStringKey(ProductStatus.all.rawValue))
+                    Text(ProductStatus.all.rawValue)
                         .tag(ProductStatus.all)
-                    Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
+                    Text(ProductStatus.expiringSoon.rawValue)
                         .tag(ProductStatus.expiringSoon)
                         .background(Color(.GrocyColors.grocyYellowBackground))
-                    Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
+                    Text(ProductStatus.overdue.rawValue)
                         .tag(ProductStatus.overdue)
                         .background(Color(.GrocyColors.grocyGrayBackground))
-                    Text(LocalizedStringKey(ProductStatus.expired.rawValue))
+                    Text(ProductStatus.expired.rawValue)
                         .tag(ProductStatus.expired)
                         .background(Color(.GrocyColors.grocyRedBackground))
-                    Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
+                    Text(ProductStatus.belowMinStock.rawValue)
                         .tag(ProductStatus.belowMinStock)
                         .background(Color(.GrocyColors.grocyBlueBackground))
                 })
@@ -109,7 +109,7 @@ struct StockFilterBar: View {
                     VStack{
                         Text("Status")
                         if filteredStatus != ProductStatus.all {
-                            Text(LocalizedStringKey(filteredStatus.rawValue))
+                            Text(filteredStatus.rawValue)
                                 .font(.caption)
                         }
                     }
@@ -119,19 +119,19 @@ struct StockFilterBar: View {
             Picker(selection: $filteredStatus,
                    label: Label("Status", systemImage: MySymbols.filter),
                    content: {
-                Text(LocalizedStringKey(ProductStatus.all.rawValue))
+                Text(ProductStatus.all.rawValue)
                     .tag(ProductStatus.all)
-                Text(LocalizedStringKey(ProductStatus.expiringSoon.rawValue))
+                Text(ProductStatus.expiringSoon.rawValue)
                     .tag(ProductStatus.expiringSoon)
                     .background(Color(.GrocyColors.grocyYellowBackground))
-                Text(LocalizedStringKey(ProductStatus.overdue.rawValue))
+                Text(ProductStatus.overdue.rawValue)
                     .tag(ProductStatus.overdue)
                     .background(Color(.GrocyColors.grocyGrayBackground))
-                Text(LocalizedStringKey(ProductStatus.expired.rawValue))
+                Text(ProductStatus.expired.rawValue)
                     .tag(ProductStatus.expired)
 //                    .background(Color.grocyRedLight)
                     .background(Color(.GrocyColors.grocyRed))
-                Text(LocalizedStringKey(ProductStatus.belowMinStock.rawValue))
+                Text(ProductStatus.belowMinStock.rawValue)
                     .tag(ProductStatus.belowMinStock)
                     .background(Color(.GrocyColors.grocyBlueBackground))
             })

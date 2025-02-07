@@ -106,7 +106,7 @@ struct MDStoreFormView: View {
                            }
                        },
                        label: {
-                           Label("Save store", systemImage: MySymbols.save)
+                           Label("Save", systemImage: MySymbols.save)
                        })
                        .disabled(!isNameCorrect || isProcessing)
                        .keyboardShortcut(.defaultAction)

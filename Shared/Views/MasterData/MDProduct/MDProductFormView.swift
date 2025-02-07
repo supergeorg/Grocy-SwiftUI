@@ -225,7 +225,7 @@ struct MDProductFormView: View {
         .toolbar(content: {
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: { Task { await saveProduct() } }, label: {
-                    Label("Save product", systemImage: MySymbols.save)
+                    Label("Save", systemImage: MySymbols.save)
                         .labelStyle(.titleAndIcon)
                 })
                 .disabled(!isNameCorrect || isProcessing || !isBarcodeCorrect)
