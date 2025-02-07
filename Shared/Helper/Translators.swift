@@ -162,7 +162,6 @@ struct Translators {
             "Moltivie Denied <major2015usa@gmail.com>, 2022",
         ]
     )
-    
     static let chinese_simplified = Language(
         name: "Chinese (Simplified)",
         flag: "🇨🇳",
@@ -179,7 +178,6 @@ struct Translators {
             "石磊, 2023",
         ]
     )
-    
     static let portuguese_PT = Language(
         name: "Portuguese (Portugal)",
         flag: "🇵🇹",
@@ -196,7 +194,6 @@ struct Translators {
             "Cesar Veloso, 2023",
         ]
     )
-    
     static let portuguese_BR = Language(
         name: "Portuguese (Brazil)",
         flag: "🇧🇷",
@@ -221,7 +218,6 @@ struct Translators {
             "Aurelio Barreto <aurelio@aureliobarreto.com>, 2023",
         ]
     )
-    
     static let norwegian_bokmal = Language(
         name: "Norwegian Bokmål",
         flag: "🇳🇴",
@@ -236,6 +232,31 @@ struct Translators {
             "Vegard Fladby <vegard.fladby@gmail.com>, 2023",
         ]
     )
-    
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal]
+    static let finnish = Language(name: "Finnish", flag: "🇫🇮", maintainers: "", contributors: [
+        "oskari uusitalo <osku78@gmail.com>, 2019",
+        "Niko Granö <niko9911@ironlions.fi>, 2019",
+        "Kalle Laakso <rogueshadow@keemail.me>, 2020",
+        "Tuomas Yrjölä <yrski@pm.me>, 2020",
+        "jarkko hämäläinen <zeik@iki.fi>, 2020",
+        "Jukka-Pekka Kokkonen <jukkapekka.kokkonen@gmail.com>, 2020",
+        "Matias Käkelä <matias.kakela@gmail.com>, 2020",
+        "Matti Koskimies <matti@apulanta.fi>, 2021",
+        "Lauri Niskanen <ape3000@gmail.com>, 2021",
+        "Markus Laaksonen, 2022",
+        "'t <trajahan@gmail.com>, 2022",
+        "Sami Kiviniemi, 2024",
+    ])
+    static let japanese = Language(name: "Japanese", flag: "🇯🇵", maintainers: "", contributors: [
+        "EbXpJ6bp <ebxpj6bp@outlook.jp>, 2020",
+        "Cisco Benjamin <metallica@vivaldi.net>, 2020",
+        "Tatsuya Ueda <ml@tatsuya.info>, 2020",
+        "KATSUHIKO SHIGEYAMA <kshigeyama@gmail.com>, 2020",
+        "鳥山 陽平 <kagemomiji@gmail.com>, 2022",
+    ])
+    static let ukrainian = Language(name: "Ukrainian", flag: "🇺🇦", maintainers: "", contributors: [
+        "Ivan Gavryliuk <igavryliuk@solusvm.com>, 2020",
+        "Oleksii Filonenko <brightone@protonmail.com>, 2020",
+        "Aleksey Zaremskiy, 2022",
+    ])
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal, finnish, japanese, ukrainian]
 }

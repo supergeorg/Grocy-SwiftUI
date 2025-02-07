@@ -46,13 +46,14 @@ struct SettingsAppView: View {
                         Text("🇵🇹 Português (Portuguese Portugal)").tag("pt-PT")
                         Text("🇧🇷 Português Brasileiro (Portuguese Brazil)").tag("pt-BR")
                         Text("🇳🇴 Norsk (Norwegian Bokmål)").tag("nb")
+                        Text("🇩🇰 Dansk (Danish)").tag("da")
+                        Text("🇭🇺 Magyar (Hungarian)").tag("hu")
+                        Text("🇹🇼 漢文 (Chinese Traditional)").tag("zh-Hant")
                     }
-                    if devMode {
-                        Group {
-                            Text("🇩🇰 Dansk (Danish)").tag("da")
-                            Text("🇭🇺 Magyar (Hungarian)").tag("hu")
-                            Text("🇹🇼 漢文 (Chinese Traditional)").tag("zh-Hant")
-                        }
+                    Group {
+                        Text("🇫🇮 Suomi (Finnish)").tag("fi")
+                        Text("🇯🇵 日本語 (Japanese)").tag("ja")
+                        Text("🇺🇦 Українська (Ukrainian)").tag("uk")
                     }
                 })
             MyDoubleStepper(
