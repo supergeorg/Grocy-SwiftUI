@@ -66,6 +66,7 @@
 		781E97E327834C43004E9798 /* GrocyUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781E97DF27834C43004E9798 /* GrocyUserSettings.swift */; };
 		782219A425F2520900DCDB2E /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
 		782219A925F2520A00DCDB2E /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB75A5255EA5A900319108 /* DateFormatter.swift */; };
+		7823DAF32CFA4D23001AB90C /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7823DAF22CFA4D23001AB90C /* CodeScanner.swift */; };
 		78244C4525A60CB90093D691 /* QuickScanModeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */; };
 		782626F0256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
 		782626F1256E824C00ECED03 /* StockProductDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */; };
@@ -171,7 +172,6 @@
 		786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6EB825640396004D8DE0 /* MDTaskCategoriesView.swift */; };
 		786F6EC025640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6EBF25640562004D8DE0 /* MDQuantityUnitFormView.swift */; };
 		786F6EC125640562004D8DE0 /* MDQuantityUnitFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786F6EBF25640562004D8DE0 /* MDQuantityUnitFormView.swift */; };
-		78780D792AD46A5900F34993 /* StockTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAC6255EEDD1007D2E8B /* StockTableView.swift */; };
 		787880F02AE2E68E00313EE3 /* StockJournalFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787880EF2AE2E68E00313EE3 /* StockJournalFilterBar.swift */; };
 		787880F12AE2E68E00313EE3 /* StockJournalFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787880EF2AE2E68E00313EE3 /* StockJournalFilterBar.swift */; };
 		787880F32AE2E6BA00313EE3 /* StockJournalRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787880F22AE2E6BA00313EE3 /* StockJournalRowView.swift */; };
@@ -386,7 +386,6 @@
 		78D7A04E25ED063E00132ACC /* GrocySupportedServers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789D167725DE7996006FC33F /* GrocySupportedServers.swift */; };
 		78D98F6F2577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
 		78D98F702577AFC800199688 /* ShoppingListEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */; };
-		78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */; };
 		78DB1BCE268CEE85005448F3 /* CodeTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */; };
 		78DB1BD1268CEE9F005448F3 /* Barcodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB1BD0268CEE9F005448F3 /* Barcodes.swift */; };
 		78DD0DA5286F5ED300BD8AC2 /* StringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DD0DA4286F5ED300BD8AC2 /* StringFormatter.swift */; };
@@ -428,7 +427,6 @@
 		78F0DAC92599FF2C0001AF68 /* StockTableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0DAC72599FF2C0001AF68 /* StockTableRow.swift */; };
 		78F1FAC0255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
 		78F1FAC1255EE6AC007D2E8B /* StockTableConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */; };
-		78F1FAC8255EEDD1007D2E8B /* StockTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAC6255EEDD1007D2E8B /* StockTableView.swift */; };
 		78F1FADB255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
 		78F1FADC255EFE73007D2E8B /* MDLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */; };
 		78F1FAFE255F06F9007D2E8B /* MasterDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */; };
@@ -444,7 +442,6 @@
 		78FA6A952567D40500941460 /* StockJournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A932567D40500941460 /* StockJournalModel.swift */; };
 		78FA6A9B2567D4E000941460 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
 		78FA6A9C2567D4E000941460 /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA6A9A2567D4E000941460 /* TransactionType.swift */; };
-		78FCD97A272ED0A400002E8F /* StockTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F1FAC6255EEDD1007D2E8B /* StockTableView.swift */; };
 		78FDCD8D25BAD2720089CB5E /* GrocyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7579255EA39900319108 /* GrocyAPI.swift */; };
 		78FDCD9225BAD2730089CB5E /* GrocyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB7579255EA39900319108 /* GrocyAPI.swift */; };
 		78FDCD9725BAD27A0089CB5E /* GrocyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CB756E255EA39200319108 /* GrocyViewModel.swift */; };
@@ -551,6 +548,7 @@
 		781DD5B42578F74B00A30ECA /* MDBarcodeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodeFormView.swift; sourceTree = "<group>"; };
 		781DD5C62579028800A30ECA /* MDBarcodesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBarcodesView.swift; sourceTree = "<group>"; };
 		781E97DF27834C43004E9798 /* GrocyUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrocyUserSettings.swift; sourceTree = "<group>"; };
+		7823DAF22CFA4D23001AB90C /* CodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		78244C4425A60CB90093D691 /* QuickScanModeInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScanModeInputView.swift; sourceTree = "<group>"; };
 		782626EF256E824C00ECED03 /* StockProductDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockProductDetailsModel.swift; sourceTree = "<group>"; };
 		782626F6256E82EF00ECED03 /* MDProductBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDProductBarcodeModel.swift; sourceTree = "<group>"; };
@@ -695,7 +693,6 @@
 		78D75D6225DE9B71009F2C15 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		78D7975A25B6FB4800550C58 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		78D98F6E2577AFC800199688 /* ShoppingListEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntryFormView.swift; sourceTree = "<group>"; };
-		78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTypeSelectionView.swift; sourceTree = "<group>"; };
 		78DB1BD0268CEE9F005448F3 /* Barcodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Barcodes.swift; sourceTree = "<group>"; };
 		78DD0DA4286F5ED300BD8AC2 /* StringFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatter.swift; sourceTree = "<group>"; };
@@ -714,7 +711,6 @@
 		78EC760326AC6C2C006D82AB /* CameraTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTools.swift; sourceTree = "<group>"; };
 		78F0DAC72599FF2C0001AF68 /* StockTableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableRow.swift; sourceTree = "<group>"; };
 		78F1FABF255EE6AC007D2E8B /* StockTableConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableConfigView.swift; sourceTree = "<group>"; };
-		78F1FAC6255EEDD1007D2E8B /* StockTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableView.swift; sourceTree = "<group>"; };
 		78F1FADA255EFE73007D2E8B /* MDLocationsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MDLocationsView.swift; sourceTree = "<group>"; };
 		78F1FAFD255F06F9007D2E8B /* MasterDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterDataView.swift; sourceTree = "<group>"; };
 		78F348ED2735986600C24710 /* RefreshButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshButton.swift; sourceTree = "<group>"; };
@@ -836,21 +832,6 @@
 			path = StockEntries;
 			sourceTree = "<group>";
 		};
-		78780D772AD46A2F00F34993 /* TableView */ = {
-			isa = PBXGroup;
-			children = (
-				78F1FAC6255EEDD1007D2E8B /* StockTableView.swift */,
-			);
-			path = TableView;
-			sourceTree = "<group>";
-		};
-		78780D782AD46A3900F34993 /* ListView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ListView;
-			sourceTree = "<group>";
-		};
 		787880EE2AE2E66A00313EE3 /* StockJournal */ = {
 			isa = PBXGroup;
 			children = (
@@ -942,9 +923,9 @@
 				786F6EA32564035C004D8DE0 /* MDChoresView.swift */,
 				786F6EB125640383004D8DE0 /* MDBatteriesView.swift */,
 				786F6EB825640396004D8DE0 /* MDTaskCategoriesView.swift */,
+				78855F7725FB8EB4007F69AF /* MDTaskCategoryFormView.swift */,
 				782A7F1225838C3E0010472F /* MDUserFieldsView.swift */,
 				78CECD1525879364007780B2 /* MDUserEntitiesView.swift */,
-				78855F7725FB8EB4007F69AF /* MDTaskCategoryFormView.swift */,
 				789C2DC5258A118E00D3A3B9 /* MDUserFieldFormView.swift */,
 				78FDCE2A25BAEA630089CB5E /* MDUserEntityFormView.swift */,
 			);
@@ -1051,7 +1032,7 @@
 			children = (
 				78CB749D255E9EF800319108 /* Info.plist */,
 				7812FFA625BB0B6900377773 /* ActivitiesView.swift */,
-				78DAC8A1259B47A0002DC0D0 /* CodeScanner.swift */,
+				7823DAF22CFA4D23001AB90C /* CodeScanner.swift */,
 				783454EB25A74E100024F556 /* QuickScan */,
 				78DB1BCD268CEE85005448F3 /* CodeTypeSelectionView.swift */,
 				78EC760326AC6C2C006D82AB /* CameraTools.swift */,
@@ -1223,8 +1204,6 @@
 			isa = PBXGroup;
 			children = (
 				787880EE2AE2E66A00313EE3 /* StockJournal */,
-				78780D782AD46A3900F34993 /* ListView */,
-				78780D772AD46A2F00F34993 /* TableView */,
 				7885B8B92567F70E003439F5 /* StockInteraction */,
 				78CB762C255EBA3F00319108 /* StockView.swift */,
 				78F0DAC72599FF2C0001AF68 /* StockTableRow.swift */,
@@ -1406,7 +1385,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					78CB7499255E9EF800319108 = {
 						CreatedOnToolsVersion = 12.2;
@@ -1434,7 +1413,6 @@
 				pl,
 				"fr-FR",
 				nl,
-				"sv-SE",
 				cs,
 				it,
 				es,
@@ -1446,6 +1424,22 @@
 				"pt-PT",
 				"pt-BR",
 				Base,
+				ja,
+				fi,
+				uk,
+				ca,
+				"en-GB",
+				he,
+				ko,
+				lt,
+				ro,
+				sk,
+				sv,
+				et,
+				sl,
+				tr,
+				ta,
+				el,
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
@@ -1541,7 +1535,6 @@
 				78855F6F25FB89CD007F69AF /* MDTaskCategoriesModel.swift in Sources */,
 				78CB7635255EBA3F00319108 /* StockView.swift in Sources */,
 				78C67CAB2AFAD95B00BCDF4B /* CurrencySymbol.swift in Sources */,
-				78DAC8A2259B47A0002DC0D0 /* CodeScanner.swift in Sources */,
 				786F6E9225640332004D8DE0 /* MDProductsView.swift in Sources */,
 				78CB74D6255EA01600319108 /* AppSidebarNavigation.swift in Sources */,
 				7853A4CF25DBE74300AF9986 /* LogView.swift in Sources */,
@@ -1567,7 +1560,6 @@
 				786A13A62943B1420011BCAF /* RecipeFulfillmentModel.swift in Sources */,
 				785A31D72AD9C9F600D0C057 /* OverviewTest.swift in Sources */,
 				78E04A3B2ABA52FE00603A41 /* Navigation.swift in Sources */,
-				78780D792AD46A5900F34993 /* StockTableView.swift in Sources */,
 				78B88B452B02D60400EB7E5F /* StockProductModel.swift in Sources */,
 				788C6288293A7AA40081A5BD /* RecipesView.swift in Sources */,
 				78CB74E1255EA04A00319108 /* AppTabNavigation.swift in Sources */,
@@ -1629,6 +1621,7 @@
 				78FDCE1E25BAE7E30089CB5E /* MDUserEntitiesModel.swift in Sources */,
 				78CB7586255EA3D000319108 /* SystemDBChangedTimeModel.swift in Sources */,
 				78FA6A942567D40500941460 /* StockJournalModel.swift in Sources */,
+				7823DAF32CFA4D23001AB90C /* CodeScanner.swift in Sources */,
 				7848A0E9256BE3EF004EAF18 /* InventoryProductView.swift in Sources */,
 				7826271E256E884F00ECED03 /* ProductTransferModel.swift in Sources */,
 				78F0DAC82599FF2C0001AF68 /* StockTableRow.swift in Sources */,
@@ -1834,7 +1827,6 @@
 				786F6EBA25640396004D8DE0 /* MDTaskCategoriesView.swift in Sources */,
 				78CB7590255EA53F00319108 /* GenericResponses.swift in Sources */,
 				78512068256FF0E400171390 /* UserFormView.swift in Sources */,
-				78F1FAC8255EEDD1007D2E8B /* StockTableView.swift in Sources */,
 				7848A0E3256BE3E3004EAF18 /* TransferProductView.swift in Sources */,
 				78C67CAC2AFAD95B00BCDF4B /* CurrencySymbol.swift in Sources */,
 				7853A4D025DBE74300AF9986 /* LogView.swift in Sources */,
@@ -1977,7 +1969,6 @@
 				788C629B293A7D960081A5BD /* RecipeRowView.swift in Sources */,
 				78FDCDD525BAD2DE0089CB5E /* MDProductModel.swift in Sources */,
 				78FDCE1625BAD2F50089CB5E /* ShoppingListDescriptionModel.swift in Sources */,
-				78FCD97A272ED0A400002E8F /* StockTableView.swift in Sources */,
 				786A13A92943B1420011BCAF /* RecipeFulfillmentModel.swift in Sources */,
 				78855F7B25FB8EB4007F69AF /* MDTaskCategoryFormView.swift in Sources */,
 				78FDCE0325BAD2F00089CB5E /* ProductBuyModel.swift in Sources */,
@@ -2112,7 +2103,9 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -2171,7 +2164,9 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -2241,7 +2236,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2255,7 +2250,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
@@ -2272,7 +2267,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2287,7 +2282,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
@@ -2300,7 +2295,6 @@
 		78CB74CB255E9EF800319108 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4CZEVM6X98;
 				INFOPLIST_FILE = "Tests iOS/Info.plist";
@@ -2322,7 +2316,6 @@
 		78CB74CC255E9EF800319108 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4CZEVM6X98;
 				INFOPLIST_FILE = "Tests iOS/Info.plist";
@@ -2345,7 +2338,6 @@
 		78CB74CE255E9EF800319108 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -2368,7 +2360,6 @@
 		78CB74CF255E9EF800319108 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -2450,7 +2441,9 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Test;
 		};
@@ -2490,7 +2483,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 42;
@@ -2508,7 +2501,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = "3.0.0-alpha0";
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "Grocy Mobile";
@@ -2521,7 +2514,6 @@
 		78D7A05C25ED07E400132ACC /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4CZEVM6X98;
 				INFOPLIST_FILE = "Tests iOS/Info.plist";
@@ -2543,7 +2535,6 @@
 		78D7A05D25ED07E400132ACC /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;

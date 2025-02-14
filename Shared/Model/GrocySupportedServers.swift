@@ -30,6 +30,16 @@ struct GrocyAPP {
         case finish = "https://fi.demo.grocy.info"
         case japanese = "https://ja.demo.grocy.info"
         case ukranian = "https://uk.demo.grocy.info"
+        case catalan = "https://ca.demo.grocy.info"
+        case greek = "https://el.demo.grocy.info"
+        case estonian = "https://et.demo.grocy.info"
+        case korean = "https://ko.demo.grocy.info"
+        case romanian = "https://ro.demo.grocy.info"
+        case slovak = "https://sk.demo.grocy.info"
+        case slovenian = "https://sl.demo.grocy.info"
+        case turkish = "https://tr.demo.grocy.info"
+        case lithuanian = "https://lt.demo.grocy.info"
+        case tamil = "https://ta.demo.grocy.info"
         case develop = "https://test-iwz5eqdtrrwco5or26tvo.demo.grocy.info"
         case developOld = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
         
@@ -75,6 +85,26 @@ struct GrocyAPP {
                 return "🇯🇵 Japanese Grocy server"
             case .ukranian:
                 return "🇺🇦 Ukranian Grocy server"
+            case .catalan:
+                return "🏴󠁥󠁳󠁣󠁴󠁿 Catalan Grocy server"
+            case .greek:
+                return "🇬🇷 Greek Grocy server"
+            case .estonian:
+                return "🇪🇪 Estonian Grocy server"
+            case .korean:
+                return "🇰🇷 Korean Grocy server"
+            case .romanian:
+                return "🇷🇴 Romanian Grocy server"
+            case .slovak:
+                return "🇸🇰 Slovak Grocy server"
+            case .slovenian:
+                return "🇸🇮 Slovenian Grocy server"
+            case .turkish:
+                return "🇹🇷 Turkish Grocy server"
+            case .lithuanian:
+                return "🇱🇹 Lithuanian Grocy server"
+            case .tamil:
+                return "🇮🇳 Tamil Grocy server"
             case .develop:
                 return "Private demo instance used for development"
             case .developOld:

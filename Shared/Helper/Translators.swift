@@ -258,5 +258,82 @@ struct Translators {
         "Oleksii Filonenko <brightone@protonmail.com>, 2020",
         "Aleksey Zaremskiy, 2022",
     ])
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal, finnish, japanese, ukrainian]
+    static let catalan = Language(name: "Catalan", flag: "🏴󠁥󠁳󠁣󠁴󠁿", maintainers: "", contributors: [
+        "Joan Rodas <joanrc93@gmail.com>, 2020",
+        "Carles Riera <blauigris@gmail.com>, 2021",
+        "jorclaret, 2022",
+        "Martí Gombau, 2023",
+        "Auri, 2024",
+        "Pau Nofuentes Sendra, 2024",
+        "Roger Solé Vilajuliu, 2024",
+    ])
+    static let greek = Language(name: "Greek", flag: "🇬🇷", maintainers: "", contributors: [
+        "Stathis Stamoulis <sstamoulis2010@gmail.com>, 2020",
+        "Dionysios Gkotsis <bloodsak4@yahoo.gr>, 2020",
+        "ByteGet, 2020",
+        "Thodoris Kalatzis <teo.kal@hotmail.com>, 2021",
+        "Bernd Bestel <bernd@berrnd.de>, 2022",
+        "emmker kats, 2022",
+        "Dimitris, 2022",
+        "Lefteris Garyfalakis, 2022",
+        "Vasilis Mourtzis, 2023",
+    ])
+    static let britishEnglish = Language(name: "English (United Kingdom)", flag: "🇬🇧", maintainers: "", contributors: [
+        "Jonathan Adams <jonathan@connockadams.uk>, 2020",
+        "Ben Fayers <ben.fayers@gmail.com>, 2020",
+        "duck. <me@duck.me.uk>, 2020",
+        "John Coles <john@johncoles.com>, 2020",
+        "w ralb <g.frcy.trnsfx@barlowhome.org>, 2021",
+        "George Aston, 2024",
+        "Andi Chandler <andi@gowling.com>, 2025",
+    ])
+    static let estonian = Language(name: "Estonian", flag: "🇪🇪", maintainers: "", contributors: [
+        "Mario Loik <mariomobla@gmail.com>, 2020",
+        "Lauri Lepik, 2023",
+        "aylamz, 2023",
+    ])
+    static let hebrew = Language(name: "Hebrew", flag: "🇮🇱", maintainers: "", contributors: [
+        "Yaron Shahrabani <sh.yaron@gmail.com>, 2025",
+    ])
+    static let korean = Language(name: "Korean", flag: "🇰🇷", maintainers: "", contributors: [
+        "신강수 <idaksha@outlook.com>, 2020",
+        "CW kim <cw2002.kim@gmail.com>, 2021",
+        "Junsu Jeong, 2023",
+        "YS Lee, 2024",
+    ])
+    static let romanian = Language(name: "Romanian", flag: "🇷🇴", maintainers: "", contributors: [
+        "Stefan Petrea <stefan@garage-coding.com>, 2020",
+        "Pwnisher <ciprian420@gmail.com>, 2021",
+        "Gabriel Andreescu <gabone01@gmail.com>, 2022",
+        "Adi B, 2022",
+        "rathantara Tase, 2022",
+        "Mădălin Pătrăşcanu <mada.patrascanu@gmail.com>, 2022",
+        "Marian-Bogdan Muntean, 2022",
+        "Dorin JOREA <dorin.jorea@gmail.com>, 2023",
+    ])
+    static let slovak = Language(name: "Slovak", flag: "🇸🇰", maintainers: "", contributors: [
+        "Juraj Smieško <juraj.smiesko@gmail.com>, 2020",
+        "Miroslav Ďurian, 2022",
+        "Bernd Bestel <bernd@berrnd.de>, 2022",
+        "Jose Riha <jose1711@gmail.com>, 2023",
+    ])
+    static let slovenian = Language(name: "Slovenian", flag: "🇸🇮", maintainers: "", contributors: [
+        "bostjo g, 2022",
+        "Anže Pintar <anze.pintar2@gmail.com>, 2023",
+    ])
+    static let turkish = Language(name: "Turkish", flag: "🇹🇷", maintainers: "", contributors: [
+        "Bernd Bestel <bernd@berrnd.de>, 2019",
+        "Tuğberk Kaan Duman <kaan@dumanmail.com>, 2019",
+        "Yigit Sever <yigit@ceng.metu.edu.tr>, 2021",
+        "Burak ER, 2023",
+    ])
+    static let lithuanian = Language(name: "Lithuanian", flag: "🇱🇹", maintainers: "", contributors: [
+        "Bernd Bestel <bernd@berrnd.de>, 2022",
+        "Vytautas Barkauskas, 2023",
+    ])
+    static let tamil = Language(name: "Tamil", flag: "🇮🇳", maintainers: "", contributors: [
+        "Sathish K <sathishkk@sathishkumark.com>, 2019",
+        "Aswin Kumar, 2022",
+    ])
+    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal, finnish, japanese, ukrainian, catalan, greek, britishEnglish, estonian, hebrew, korean, romanian, slovak, slovenian, turkish, lithuanian, tamil]
 }

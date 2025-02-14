@@ -33,7 +33,7 @@ struct SettingsAppView: View {
                 label: Label("App language",systemImage: MySymbols.language).foregroundStyle(.primary),
                 content: {
                     Group {
-                        Text("🇬🇧 English").tag("en")
+                        Text("🇺🇸 English").tag("en")
                         Text("🇩🇪 Deutsch (German)").tag("de")
                         Text("🇫🇷 Français (French)").tag("fr-FR")
                         Text("🇳🇱 Nederlands (Dutch)").tag("nl")
@@ -54,6 +54,22 @@ struct SettingsAppView: View {
                         Text("🇫🇮 Suomi (Finnish)").tag("fi")
                         Text("🇯🇵 日本語 (Japanese)").tag("ja")
                         Text("🇺🇦 Українська (Ukrainian)").tag("uk")
+                        Text("🏴󠁥󠁳󠁣󠁴󠁿 Català (Catalan)").tag("ca")
+                        Text("🇬🇷 Ellinika (Greek)").tag("el")
+                        Text("🇬🇧 British English").tag("en-GB")
+                        Text("🇪🇪 Eesti Keel (Estonian)").tag("et")
+                    }
+                    Group {
+                        Text("🇮🇱 עִבְרִית (Hebrew)").tag("he")
+                        Text("🇰🇷 한국어 (Korean)").tag("ko")
+                        Text("🇷🇴 Românește (Romanian)").tag("ro")
+                        Text("🇸🇰 Slovenčina (Slovak)").tag("sk")
+                        Text("🇸🇮 Slovenščina (Slovenian)").tag("sl")
+                        Text("🇹🇷 Türkçe (Turkish)").tag("tr")
+                        Text("🇱🇹 Lietuvių (Lithuanian)").tag("lt")
+                    }
+                    Group {
+                        Text("🇮🇳 தமிழ் (Tamil)").tag("ta")
                     }
                 })
             MyDoubleStepper(
@@ -65,9 +81,9 @@ struct SettingsAppView: View {
                 amountName: "s",
                 systemImage: MySymbols.timeout
             )
-            .onChange(of: timeoutInterval) {
-                grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
-            }
+//            .onChange(of: timeoutInterval) {
+//                grocyVM.grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
+//            }
 #if os(iOS)
             NavigationLink(
                 destination: CodeTypeSelectionView(),

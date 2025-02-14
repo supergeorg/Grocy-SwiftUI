@@ -34,13 +34,6 @@ struct TranslatorLineView: View {
                     Text(languageFlag).font(.title)
                 }
             }
-//            HStack {
-//                Text(languageFlag).font(.title)
-//                VStack(alignment: .leading) {
-//                    Text(languageName).font(.title3)
-//                    Text(languageMaintainers).font(.body)
-//                }
-//            }
         })
     }
 }
