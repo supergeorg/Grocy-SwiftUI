@@ -13,6 +13,12 @@ struct ShoppingListItemWrapped {
     let product: MDProduct?
 }
 
+enum ShoppingListInteraction: Hashable {
+    case newShoppingList
+    case editShoppingList
+    case newShoppingListEntry
+}
+
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
@@ -272,14 +278,22 @@ struct ShoppingListView: View {
                 sortGroupMenu
             }
             ToolbarItem(placement: .primaryAction, content: {
-                Button(action: {
-//                    activeSheet = .newShoppingListEntry
-                }, label: {
+                NavigationLink(value: ShoppingListInteraction.newShoppingListEntry) {
                     Label("Add item", systemImage: MySymbols.new)
-                })
+                }
                 .help("Add item")
             })
         }
+        .navigationDestination(for: ShoppingListInteraction.self, destination: { interaction in
+            switch interaction {
+            case ShoppingListInteraction.newShoppingList:
+                ShoppingListFormView(isNewShoppingListDescription: true)
+            case ShoppingListInteraction.editShoppingList:
+                ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
+            case ShoppingListInteraction.newShoppingListEntry:
+                ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+            }
+        })
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -319,22 +333,6 @@ struct ShoppingListView: View {
                 }
             }
         }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-//        .sheet(item: $activeSheet, content: { item in
-//            switch item {
-//            case .newShoppingList:
-//                NavigationView {
-//                    ShoppingListFormView(isNewShoppingListDescription: true)
-//                }
-//            case .editShoppingList:
-//                NavigationView {
-//                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
-//                }
-//            case .newShoppingListEntry:
-//                NavigationView {
-//                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
-//                }
-//            }
-//        })
     }
     
     
@@ -347,17 +345,13 @@ struct ShoppingListView: View {
             })
             .help("Shopping list")
             Divider()
-            Button(action: {
-//                activeSheet = .newShoppingList
-            }, label: {
+            NavigationLink(value: ShoppingListInteraction.newShoppingList) {
                 Label("New shopping list", systemImage: MySymbols.shoppingList)
-            })
+            }
             .help("New shopping list")
-            Button(action: {
-//                activeSheet = .editShoppingList
-            }, label: {
+            NavigationLink(value: ShoppingListInteraction.editShoppingList) {
                 Label("Edit shopping list", systemImage: MySymbols.edit)
-            })
+            }
             .help("Edit shopping list")
             Button(role: .destructive, action: {
                 showSHLDeleteAlert.toggle()

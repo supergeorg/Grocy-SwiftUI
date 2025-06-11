@@ -124,18 +124,14 @@ struct ShoppingListEntryFormView: View {
             .navigationTitle(isNewShoppingListEntry ? "Create shopping list item" : "Edit shopping list item")
 #if os(iOS)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if isNewShoppingListEntry {
-                        Button("Cancel", role: .cancel, action: finishForm)
-                            .keyboardShortcut(.cancelAction)
-                    }
-                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button(action: {
                         Task {
                             await saveShoppingListEntry()
                         }
-                    }
+                    }, label: {
+                        Image(systemName: MySymbols.save)
+                    })
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isFormValid)
                 }
