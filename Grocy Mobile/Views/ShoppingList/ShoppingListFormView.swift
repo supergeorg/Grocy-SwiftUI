@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct ShoppingListFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -56,11 +55,11 @@ struct ShoppingListFormView: View {
                     object: .shopping_lists,
                     content: shoppingListPOST
                 )
-                grocyVM.postLog("Shopping list save successful.", type: .info)
+                GrocyLogger.info("Shopping list save successful.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list save failed. \(error)", type: .error)
+                GrocyLogger.error("Shopping list save failed. \(error)")
             }
         } else {
             do {
@@ -69,11 +68,11 @@ struct ShoppingListFormView: View {
                     id: id,
                     content: shoppingListPOST
                 )
-                grocyVM.postLog("Shopping list edit successful.", type: .info)
+                GrocyLogger.info("Shopping list edit successful.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list edit failed. \(error)", type: .error)
+                GrocyLogger.error("Shopping list edit failed. \(error)")
             }
         }
         isProcessing = false

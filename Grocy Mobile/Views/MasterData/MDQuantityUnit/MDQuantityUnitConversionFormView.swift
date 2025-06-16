@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct MDQuantityUnitConversionFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -105,21 +104,21 @@ struct MDQuantityUnitConversionFormView: View {
                             rowCreatedTimestamp: Date().iso8601withFractionalSeconds
                         )
                         _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: inverseQuantityUnitConversion)
-                        grocyVM.postLog("Inverse quantity unit conversion add successful.", type: .info)
+                        GrocyLogger.info("Inverse quantity unit conversion add successful.")
                     } catch {
-                        grocyVM.postLog("Inverse quantity unit conversion add failed. \(error)", type: .error)
+                        GrocyLogger.error("Inverse quantity unit conversion add failed. \(error)")
                     }
                 } else {
-                    grocyVM.postLog("Quantity unit conversion added successfully.", type: .info)
+                    GrocyLogger.info("Quantity unit conversion added successfully.")
                 }
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_unit_conversions, id: quantityUnitConversion.id, content: quantityUnitConversion)
             }
-            grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) successful.", type: .info)
+            GrocyLogger.info("Quantity unit conversion add for \(quantityUnit.name) successful.")
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Quantity unit conversion add for \(quantityUnit.name) failed. \(error)", type: .error)
+            GrocyLogger.error("Quantity unit conversion add for \(quantityUnit.name) failed. \(error)")
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

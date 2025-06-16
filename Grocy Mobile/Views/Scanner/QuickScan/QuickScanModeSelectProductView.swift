@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct QuickScanModeSelectProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -57,12 +56,12 @@ struct QuickScanModeSelectProductView: View {
             )
             do {
                 _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                grocyVM.postLog("Add barcode successful.", type: .info)
+                GrocyLogger.info("Add barcode successful.")
                 await grocyVM.requestData(objects: [.product_barcodes])
                 newRecognizedBarcode = newBarcode
                 finishForm()
             } catch {
-                grocyVM.postLog("Add barcode failed. \(error)", type: .error)
+                GrocyLogger.error("Add barcode failed. \(error)")
             }
         }
     }

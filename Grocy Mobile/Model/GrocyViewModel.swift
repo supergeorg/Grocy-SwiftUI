@@ -34,8 +34,6 @@ class GrocyViewModel {
     @ObservationIgnored @AppStorage("useHassIngress") var useHassIngress: Bool = false
     @ObservationIgnored @AppStorage("hassToken") var hassToken: String = ""
     
-    let grocyLog = Logger(subsystem: "Grocy-Mobile", category: "APIAccess")
-    
     var systemInfo: SystemInfo?
     var systemDBChangedTime: SystemDBChangedTime?
     var systemConfig: SystemConfig?
@@ -117,7 +115,7 @@ class GrocyViewModel {
                 }
             }
         } else {
-            self.postLog("Not logged in", type: .info)
+            GrocyLogger.info("Not logged in")
         }
     }
     
@@ -127,7 +125,7 @@ class GrocyViewModel {
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isLoggedIn = true
         self.setUpdateTimer()
-        self.postLog("Switched to demo modus", type: .info)
+        GrocyLogger.info("Switched to demo modus")
     }
     
     func setLoginModus() async {
@@ -139,7 +137,7 @@ class GrocyViewModel {
         isDemoModus = false
         isLoggedIn = true
         self.setUpdateTimer()
-        self.postLog("Switched to login modus", type: .info)
+        GrocyLogger.info("Switched to login modus")
     }
     
     func logout() {
@@ -188,11 +186,11 @@ class GrocyViewModel {
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         let systemInfo = try await grocyApi.getSystemInfo()
         if !systemInfo.grocyVersion.version.isEmpty {
-            self.postLog("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").", type: .info)
+            GrocyLogger.info("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").")
             self.systemInfo = systemInfo
             return
         } else {
-            self.postLog("Selected server doesn't respond.", type: .error)
+            GrocyLogger.error("Selected server doesn't respond.")
             throw APIError.invalidResponse
         }
     }
@@ -225,7 +223,7 @@ class GrocyViewModel {
         case .userentities:
             ints = self.mdUserEntities.map{ $0.id }
         default:
-            self.postLog("Find next ID not implemented for \(object.rawValue).", type: .error)
+            GrocyLogger.error("Find next ID not implemented for \(object.rawValue).")
         }
         var startvar = 1
         while ints.contains(startvar) { startvar += 1 }
@@ -237,7 +235,7 @@ class GrocyViewModel {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
             await self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
         } catch {
-            self.postLog("Getting timestamp failed. Message: \("\(error)")", type: .error)
+            GrocyLogger.error("Getting timestamp failed. Message: \("\(error)")")
         }
     }
     
@@ -270,7 +268,7 @@ class GrocyViewModel {
             
             return objects
         } catch {
-            self.postLog("\(error)", type: .error)
+            GrocyLogger.error("\(error)")
             throw error
         }
     }
@@ -307,14 +305,14 @@ class GrocyViewModel {
                         case .stock_log:
                             self.stockJournal = try await self.getObjectAndSaveSwiftData(object: object)
                         default:
-                            self.postLog("Object not implemented", type: .error)
+                            GrocyLogger.error("Object not implemented")
                         }
                         self.timeStampsObjects[object] = timeStamp
                         self.loadingObjectEntities.remove(object)
                         self.failedToLoadObjects.remove(object)
                     }
                 } catch {
-                    self.postLog("Data request failed for \(object). Message: \("\(error)")", type: .error)
+                    GrocyLogger.error("Data request failed for \(object). Message: \("\(error)")")
                     self.failedToLoadObjects.insert(object)
                     self.failedToLoadErrors.append(error)
                 }
@@ -390,7 +388,7 @@ class GrocyViewModel {
                         self.failedToLoadAdditionalObjects.remove(additionalObject)
                     }
                 } catch {
-                    self.postLog("Data request failed for \(additionalObject). Message: \("\(error)")", type: .error)
+                    GrocyLogger.error("Data request failed for \(additionalObject). Message: \("\(error)")")
                     self.failedToLoadAdditionalObjects.insert(additionalObject)
                     self.failedToLoadErrors.append(error)
                 }
@@ -404,7 +402,7 @@ class GrocyViewModel {
     }
     
     func updateData() async {
-        self.postLog("Update triggered", type: .debug)
+        GrocyLogger.debug("Update triggered")
         await self.requestData(objects: Array(self.timeStampsObjects.keys), additionalObjects: Array(self.timeStampsAdditionalObjects.keys))
     }
     
@@ -474,25 +472,10 @@ class GrocyViewModel {
             try modelContext.delete(model: StockProduct.self)
             try modelContext.delete(model: Recipe.self)
         } catch {
-            self.postLog("\(error)", type: .error)
+            GrocyLogger.error("\(error)")
         }
         
-        self.postLog("Deleted all cached data from the viewmodel.", type: .info)
-    }
-    
-    func postLog(_ message: String, type: OSLogType) {
-        switch type {
-        case .error:
-            self.grocyLog.error("\(message, privacy: .public)")
-        case .info:
-            self.grocyLog.info("\(message, privacy: .public)")
-        case .debug:
-            self.grocyLog.debug("\(message, privacy: .public)")
-        case .fault:
-            self.grocyLog.fault("\(message, privacy: .public)")
-        default:
-            self.grocyLog.log("\(message, privacy: .public)")
-        }
+        GrocyLogger.info("Deleted all cached data from the viewmodel.")
     }
     
     func getLogEntries() {
@@ -514,7 +497,7 @@ class GrocyViewModel {
             
             self.logEntries = logEntriesFiltered
         } catch {
-            self.postLog("Error getting log entries", type: .error)
+            GrocyLogger.error("Error getting log entries")
         }
     }
     
@@ -544,13 +527,13 @@ class GrocyViewModel {
                             id: entry.id,
                             content: shoppingListEntryNew
                         )
-                        self.postLog("Shopping entry edited successfully.", type: .info)
+                        GrocyLogger.info("Shopping entry edited successfully.")
                     } catch {
-                        self.postLog("Shopping entry edit failed. \(error)", type: .error)
+                        GrocyLogger.error("Shopping entry edit failed. \(error)")
                     }
                 }
             } else {
-                self.postLog("Found no matching product for the shopping list entry \(name).", type: .info)
+                GrocyLogger.info("Found no matching product for the shopping list entry \(name).")
             }
         }
     }

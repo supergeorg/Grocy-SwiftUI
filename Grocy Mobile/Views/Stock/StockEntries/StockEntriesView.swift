@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct StockEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -37,7 +36,7 @@ struct StockEntriesView: View {
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await fetchData(ignoreCachedStock: false)
         } catch {
-            grocyVM.postLog("Consume stock entry failed. \(error)", type: .error)
+            GrocyLogger.error("Consume stock entry failed. \(error)")
         }
     }
     
@@ -47,7 +46,7 @@ struct StockEntriesView: View {
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await fetchData(ignoreCachedStock: false)
         } catch {
-            grocyVM.postLog("Open stock entry failed. \(error)", type: .error)
+            GrocyLogger.error("Open stock entry failed. \(error)")
         }
     }
     

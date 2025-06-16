@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct MDUserFieldFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -76,21 +75,21 @@ struct MDUserFieldFormView: View {
             if isNewUserField {
                 do {
                     _ = try await grocyVM.postMDObject(object: .userfields, content: userFieldPOST)
-                    grocyVM.postLog("Userfield add successful.", type: .info)
+                    GrocyLogger.info("Userfield add successful.")
                     resetForm()
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Userfield add failed. \(error)", type: .error)
+                    GrocyLogger.error("Userfield add failed. \(error)")
                 }
             } else {
                 do {
                     _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
-                    grocyVM.postLog("Userfield edit successful.", type: .info)
+                    GrocyLogger.info("Userfield edit successful.")
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Userfield edit failed. \(error)", type: .error)
+                    GrocyLogger.error("Userfield edit failed. \(error)")
                 }
             }
             isProcessing = true

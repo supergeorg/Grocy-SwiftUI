@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 enum MDProductFormPart: Hashable {
     case optional
@@ -143,20 +142,20 @@ struct MDProductFormView: View {
                         rowCreatedTimestamp: Date().iso8601withFractionalSeconds
                     )
                     let _ = try await grocyVM.postMDObject(object: .product_barcodes, content: newBarcode)
-                    grocyVM.postLog("Barcode add successful.", type: .info)
+                    GrocyLogger.info("Barcode add successful.")
                     await grocyVM.requestData(objects: [.product_barcodes])
                     //                    mdBarcodeReturn?.wrappedValue = newBarcode
                 }
-                grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                GrocyLogger.info("Product \(product.name) successful.")
                 isSuccessful = true
             } else {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: product)
-                grocyVM.postLog("Product \(product.name) successful.", type: .info)
+                GrocyLogger.info("Product \(product.name) successful.")
                 await grocyVM.requestData(objects: [.products])
                 isSuccessful = true
             }
         } catch {
-            grocyVM.postLog("Product \(product.name) failed. \(error)", type: .error)
+            GrocyLogger.error("Product \(product.name) failed. \(error)")
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

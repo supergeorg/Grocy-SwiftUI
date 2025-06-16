@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct ConsumeProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -166,14 +165,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
-                grocyVM.postLog("Opening successful.", type: .info)
+                GrocyLogger.info("Opening successful.")
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
                 if self.actionFinished != nil {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Opening failed: \(error)", type: .error)
+                GrocyLogger.error("Opening failed: \(error)")
             }
             isProcessingAction = false
         }
@@ -185,14 +184,14 @@ struct ConsumeProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
-                grocyVM.postLog("Consume \(amount.formattedAmount) \(productName) successful.", type: .info)
+                GrocyLogger.info("Consume \(amount.formattedAmount) \(productName) successful.")
                 if let autoAddBelowMinStock = userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
-                        grocyVM.postLog("SHLAction successful.", type: .info)
+                        GrocyLogger.info("SHLAction successful.")
                         await grocyVM.requestData(objects: [.shopping_list])
                     } catch {
-                        grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+                        GrocyLogger.error("SHLAction failed. \(error)")
                     }
                 }
                 resetForm()
@@ -200,7 +199,7 @@ struct ConsumeProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Consume failed: \(error)", type: .error)
+                GrocyLogger.error("Consume failed: \(error)")
             }
             isProcessingAction = false
         }

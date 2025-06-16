@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct PurchaseProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -135,7 +134,7 @@ struct PurchaseProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .add, content: purchaseInfo)
-                grocyVM.postLog("Purchase \(product?.name ?? String(productID)) successful.", type: .info)
+                GrocyLogger.info("Purchase \(product?.name ?? String(productID)) successful.")
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
                 if autoPurchase {
@@ -145,7 +144,7 @@ struct PurchaseProductView: View {
                     self.actionFinished?.wrappedValue = true
                 }
             } catch {
-                grocyVM.postLog("Purchase failed: \(error)", type: .error)
+                GrocyLogger.error("Purchase failed: \(error)")
             }
             isProcessingAction = false
         }

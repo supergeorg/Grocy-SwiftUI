@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct UserFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -61,22 +60,22 @@ struct UserFormView: View {
             let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date().iso8601withFractionalSeconds)
             do {
                 try await grocyVM.postUser(user: userPost)
-                grocyVM.postLog("Successfully saved user.", type: .info)
+                GrocyLogger.info("Successfully saved user.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Saving user failed. \(error)", type: .error)
+                GrocyLogger.error("Saving user failed. \(error)")
             }
         } else {
             if let intID = user?.id {
                 let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
                 do {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
-                    grocyVM.postLog("Successfully edited user.", type: .info)
+                    GrocyLogger.info("Successfully edited user.")
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Editing user failed. \(error)", type: .error)
+                    GrocyLogger.error("Editing user failed. \(error)")
                 }
             }
         }

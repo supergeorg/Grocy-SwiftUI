@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct UserRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -22,10 +21,10 @@ struct UserRowActionsView: View {
     private func deleteUser() async {
         do {
             try await grocyVM.deleteUser(id: user.id)
-            grocyVM.postLog("Delete user successful.", type: .info)
+            GrocyLogger.info("Delete user successful.")
             await grocyVM.requestData(additionalObjects: [.users])
         } catch {
-            grocyVM.postLog("Delete user failed. \(error)", type: .error)
+            GrocyLogger.error("Delete user failed. \(error)")
         }
     }
     
@@ -33,12 +32,12 @@ struct UserRowActionsView: View {
         HStack(spacing: 2){
             RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Edit this item")
                 .onTapGesture {
-                    grocyVM.postLog("Edit user not implemented", type: .info)
+                    GrocyLogger.info("Edit user not implemented")
                 }
                 .disabled(true)
             RowInteractionButton(image: "lock.fill", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Configure user permissions")
                 .onTapGesture {
-                    grocyVM.postLog("Edit permissions not implemented", type: .info)
+                    GrocyLogger.info("Edit permissions not implemented")
                 }
                 .disabled(true)
             RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color(.GrocyColors.grocyDeleteLocked) : Color(.GrocyColors.grocyDelete), helpString: "Delete this item")

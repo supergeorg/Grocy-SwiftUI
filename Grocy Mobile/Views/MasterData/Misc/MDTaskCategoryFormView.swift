@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct MDTaskCategoryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -67,21 +66,21 @@ struct MDTaskCategoryFormView: View {
         if isNewTaskCategory {
             do {
                 _ = try await grocyVM.postMDObject(object: .task_categories, content: taskCategoryPOST)
-                grocyVM.postLog("Task category add successful.", type: .info)
+                GrocyLogger.info("Task category add successful.")
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Task category add failed. \(error)", type: .error)
+                GrocyLogger.error("Task category add failed. \(error)")
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .task_categories, id: id, content: taskCategoryPOST)
-                grocyVM.postLog("Task category edit successful.", type: .info)
+                GrocyLogger.info("Task category edit successful.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Task category edit failed. \(error)", type: .error)
+                GrocyLogger.error("Task category edit failed. \(error)")
             }
         }
         isProcessing = false

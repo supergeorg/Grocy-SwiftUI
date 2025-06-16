@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct InventoryProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -110,11 +109,11 @@ struct InventoryProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .inventory, content: productInventory)
-                grocyVM.postLog("Inventory successful.", type: .info)
+                GrocyLogger.info("Inventory successful.")
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 resetForm()
             } catch {
-                grocyVM.postLog("Inventory failed: \(error)", type: .error)
+                GrocyLogger.error("Inventory failed: \(error)")
             }
             isProcessingAction = false
         }

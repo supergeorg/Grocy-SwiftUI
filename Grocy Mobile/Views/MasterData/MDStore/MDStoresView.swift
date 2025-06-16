@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -57,10 +56,10 @@ struct MDStoresView: View {
     private func deleteStore(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_locations, id: toDelID)
-            grocyVM.grocyLog.info("Deleting store was successful.")
+            GrocyLogger.info("Deleting store was successful.")
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting store failed. \(error)", type: .error)
+            GrocyLogger.error("Deleting store failed. \(error)")
         }
     }
     

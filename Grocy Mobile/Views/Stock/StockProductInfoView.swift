@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct StockProductInfoView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -96,7 +95,7 @@ struct StockProductInfoView: View {
             do {
                 try await grocyVM.requestStockInfo(stockModeGet: .details, productID: stockElement.productID)
             } catch {
-                grocyVM.postLog("Get stock detail failed. \(error)", type: .error)
+                GrocyLogger.error("Get stock detail failed. \(error)")
             }
         }
     }

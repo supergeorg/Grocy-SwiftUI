@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct MDUserFieldRowView: View {
     var userField: MDUserField
@@ -58,10 +57,10 @@ struct MDUserFieldsView: View {
     private func deleteUserField(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .userfields, id: toDelID)
-            grocyVM.postLog("Deleting userfield was successful.", type: .info)
+            GrocyLogger.info("Deleting userfield was successful.")
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting userfield failed. \(error)", type: .error)
+            GrocyLogger.error("Deleting userfield failed. \(error)")
         }
     }
     

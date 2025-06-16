@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct TransferProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -95,11 +94,11 @@ struct TransferProductView: View {
             isProcessingAction = true
             do {
                 try await grocyVM.postStockObject(id: productID, stockModePost: .transfer, content: transferInfo)
-                grocyVM.postLog("Transfer successful.", type: .info)
+                GrocyLogger.info("Transfer successful.")
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
             } catch {
-                grocyVM.postLog("Transfer failed: \(error)", type: .error)
+                GrocyLogger.error("Transfer failed: \(error)")
             }
             isProcessingAction = false
         }

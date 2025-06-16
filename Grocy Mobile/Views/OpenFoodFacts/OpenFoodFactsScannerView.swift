@@ -21,7 +21,7 @@ struct OpenFoodFactsScannerView: View {
             isShowingResult = true
         case .failure(let error):
             print("Scanning open food facts barcode failed. \(error)")
-//            grocyVM.postLog("Scanning open food facts barcode failed. \(error)", type: .error)
+//            GrocyLogger.error("Scanning open food facts barcode failed. \(error)")
         }
     }
     #endif

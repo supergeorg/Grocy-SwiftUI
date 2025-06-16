@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct StockEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -73,10 +72,10 @@ struct StockEntryFormView: View {
         isProcessing = true
         do {
             _ = try await grocyVM.putStockProductEntry(id: stockEntry.id, content: entryFormPOST)
-            grocyVM.postLog("Stock entry edit successful.", type: .info)
+            GrocyLogger.info("Stock entry edit successful.")
             finishForm()
         } catch {
-            grocyVM.postLog("Stock entry edit failed. \(error)", type: .error)
+            GrocyLogger.error("Stock entry edit failed. \(error)")
         }
         isProcessing = false
     }

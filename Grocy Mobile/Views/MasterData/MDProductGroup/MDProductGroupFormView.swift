@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct MDProductGroupFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -63,11 +62,11 @@ struct MDProductGroupFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_groups, id: productGroup.id, content: productGroup)
             }
-            grocyVM.postLog("Product group \(productGroup.name) successful.", type: .info)
+            GrocyLogger.info("Product group \(productGroup.name) successful.")
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Product group \(productGroup.name) failed. \(error)", type: .error)
+            GrocyLogger.error("Product group \(productGroup.name) failed. \(error)")
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

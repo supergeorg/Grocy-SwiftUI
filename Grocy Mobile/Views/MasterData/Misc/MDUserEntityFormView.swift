@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct MDUserEntityFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -71,21 +70,21 @@ struct MDUserEntityFormView: View {
         if isNewUserEntity {
             do {
                 _ = try await grocyVM.postMDObject(object: .userentities, content: userEntityPOST)
-                grocyVM.postLog("User entity add successful.", type: .info)
+                GrocyLogger.info("User entity add successful.")
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("User entity add failed. \(error)", type: .error)
+                GrocyLogger.error("User entity add failed. \(error)")
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
-                grocyVM.postLog("User entity edit successful.", type: .info)
+                GrocyLogger.info("User entity edit successful.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("User entity edit failed. \(error)", type: .error)
+                GrocyLogger.error("User entity edit failed. \(error)")
             }
         }
         isProcessing = false

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct ShoppingListRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -113,10 +112,10 @@ struct ShoppingListEntriesView: View {
         )
         do {
             try await grocyVM.putMDObjectWithID(object: .shopping_list, id: shoppingListItem.id, content: doneChangedShoppingListItem)
-            grocyVM.postLog("Done status changed successfully.", type: .info)
+            GrocyLogger.info("Done status changed successfully.")
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Shopping list done status change failed. \(error)", type: .error)
+            GrocyLogger.error("Shopping list done status change failed. \(error)")
         }
     }
     
@@ -128,10 +127,10 @@ struct ShoppingListEntriesView: View {
     private func deleteSHLItem(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
-            grocyVM.postLog("Deleting shopping list item was successful.", type: .info)
+            GrocyLogger.info("Deleting shopping list item was successful.")
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("Deleting shopping list item failed. \(error)", type: .error)
+            GrocyLogger.error("Deleting shopping list item failed. \(error)")
         }
     }
     

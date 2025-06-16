@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 enum ConsumeAmountMode {
     case standard, barcode, custom, all
@@ -185,7 +184,7 @@ struct QuickScanModeInputView: View {
                     do {
                         try await grocyVM.getStockProductEntries(productID: productID)
                     } catch {
-                        grocyVM.postLog("Get stock product entries failed. \(error)", type: .error)
+                        GrocyLogger.error("Get stock product entries failed. \(error)")
                     }
                 }
                 firstOpen = false

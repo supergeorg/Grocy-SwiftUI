@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct StockJournalView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -118,10 +117,10 @@ struct StockJournalView: View {
     private func undoTransaction(stockJournalEntry: StockJournalEntry) async {
         do {
             try await grocyVM.undoBookingWithID(id: stockJournalEntry.id)
-            grocyVM.postLog("Undo transaction \(stockJournalEntry.id) successful.", type: .info)
+            GrocyLogger.info("Undo transaction \(stockJournalEntry.id) successful.")
             await grocyVM.requestData(objects: [.stock_log])
         } catch {
-            grocyVM.postLog("Undo transaction failed. \(error)", type: .error)
+            GrocyLogger.error("Undo transaction failed. \(error)")
         }
     }
     

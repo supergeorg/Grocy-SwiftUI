@@ -63,11 +63,11 @@ struct MDStoreFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: store.id, content: store)
             }
-            grocyVM.postLog("Store \(store.name) successful.", type: .info)
+            GrocyLogger.info("Store \(store.name) successful.")
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Store \(store.name) failed. \(error)", type: .error)
+            GrocyLogger.error("Store \(store.name) failed. \(error)")
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

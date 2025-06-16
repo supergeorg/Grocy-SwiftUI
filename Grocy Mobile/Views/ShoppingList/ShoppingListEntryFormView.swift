@@ -76,11 +76,11 @@ struct ShoppingListEntryFormView: View {
             )
             do {
                 try await grocyVM.addShoppingListItem(content: newShoppingListEntry)
-                grocyVM.postLog("Shopping list entry saved successfully.", type: .info)
+                GrocyLogger.info("Shopping list entry saved successfully.")
                 await updateData()
                 finishForm()
             } catch {
-                grocyVM.postLog("Shopping list entry save failed. \(error)", type: .error)
+                GrocyLogger.error("Shopping list entry save failed. \(error)")
                 showFailToast = true
             }
         } else {
@@ -101,11 +101,11 @@ struct ShoppingListEntryFormView: View {
                         id: entry.id,
                         content: editedShoppingListEntry
                     )
-                    grocyVM.postLog("Shopping entry edited successfully.", type: .info)
+                    GrocyLogger.info("Shopping entry edited successfully.")
                     await updateData()
                     finishForm()
                 } catch {
-                    grocyVM.postLog("Shopping entry edit failed. \(error)", type: .error)
+                    GrocyLogger.error("Shopping entry edit failed. \(error)")
                     showFailToast = true
                 }
             }

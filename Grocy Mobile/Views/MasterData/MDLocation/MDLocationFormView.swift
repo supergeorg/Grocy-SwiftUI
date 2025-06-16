@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct MDLocationFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -64,11 +63,11 @@ struct MDLocationFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
             }
-            grocyVM.postLog("Location \(location.name) successful.", type: .info)
+            GrocyLogger.info("Location \(location.name) successful.")
             await updateData()
             isSuccessful = true
         } catch {
-            grocyVM.postLog("Location \(location.name) failed. \(error)", type: .error)
+            GrocyLogger.error("Location \(location.name) failed. \(error)")
             errorMessage = error.localizedDescription
             isSuccessful = false
         }

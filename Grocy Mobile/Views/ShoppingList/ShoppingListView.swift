@@ -7,8 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
-internal import os
 
 struct ShoppingListItemWrapped {
     let shoppingListItem: ShoppingListItem
@@ -172,10 +170,10 @@ struct ShoppingListView: View {
     func deleteShoppingList() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
-            grocyVM.postLog("Deleting shopping list was successful.", type: .info)
+            GrocyLogger.info("Deleting shopping list was successful.")
             await grocyVM.requestData(objects: [.shopping_lists])
         } catch {
-            grocyVM.postLog("Deleting shopping list failed. \(error)", type: .error)
+            GrocyLogger.error("Deleting shopping list failed. \(error)")
         }
     }
     
@@ -188,10 +186,10 @@ struct ShoppingListView: View {
             } else {
                 try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: selectedShoppingListID), actionType: actionType)
             }
-            grocyVM.postLog("SHLAction \(actionType) successful.", type: .info)
+            GrocyLogger.info("SHLAction \(actionType) successful.")
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
-            grocyVM.postLog("SHLAction failed. \(error)", type: .error)
+            GrocyLogger.error("SHLAction failed. \(error)")
         }
     }
     

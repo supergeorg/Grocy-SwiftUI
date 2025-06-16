@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-internal import os
 
 struct StockTableRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -38,7 +37,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.productID, stockModePost: .consume, content: ProductConsume(amount: stockElement.product?.quickConsumeAmount ?? 1.0, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Consume \(stockElement.product?.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            GrocyLogger.error("Consume \(stockElement.product?.quickConsumeAmount ?? 1.0) item failed. \(error)")
         }
     }
     
@@ -48,7 +47,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.productID, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Consume all items failed. \(error)", type: .error)
+            GrocyLogger.error("Consume all items failed. \(error)")
         }
     }
     
@@ -58,7 +57,7 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(id: stockElement.productID, stockModePost: .open, content: ProductConsume(amount: stockElement.product?.quickConsumeAmount ?? 1.0, transactionType: .productOpened, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            grocyVM.postLog("Open \(stockElement.product?.quickConsumeAmount ?? 1.0) item failed. \(error)", type: .error)
+            GrocyLogger.error("Open \(stockElement.product?.quickConsumeAmount ?? 1.0) item failed. \(error)")
         }
     }
     

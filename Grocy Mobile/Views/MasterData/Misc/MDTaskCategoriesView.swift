@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-internal import os
 
 struct MDTaskCategoryRowView: View {
     var taskCategory: MDTaskCategory
@@ -57,10 +56,10 @@ struct MDTaskCategoriesView: View {
     private func deleteTaskCategory(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .task_categories, id: toDelID)
-            grocyVM.postLog("Deleting task category was successful.", type: .info)
+            GrocyLogger.info("Deleting task category was successful.")
             await updateData()
         } catch {
-            grocyVM.postLog("Deleting task category failed. \(error)", type: .error)
+            GrocyLogger.error("Deleting task category failed. \(error)")
         }
     }
     
