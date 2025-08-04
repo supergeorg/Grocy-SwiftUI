@@ -19,33 +19,46 @@ struct Grocy_MobileApp: App {
     let modelContainer: ModelContainer
     
     init() {
+        let schema = Schema([
+            StockElement.self,
+            ShoppingListItem.self,
+            ShoppingListDescription.self,
+            MDLocation.self,
+            MDStore.self,
+            MDQuantityUnit.self,
+            MDQuantityUnitConversion.self,
+            MDProductGroup.self,
+            MDProduct.self,
+            MDProductBarcode.self,
+            StockJournalEntry.self,
+            GrocyUser.self,
+            StockEntry.self,
+            GrocyUserSettings.self,
+            StockProductDetails.self,
+            StockProduct.self,
+            VolatileStock.self,
+            Recipe.self,
+            StockLocation.self,
+            SystemConfig.self
+        ])
+        
+        let config = ModelConfiguration()
         do {
-            modelContainer = try ModelContainer(for:
-                                                    StockElement.self,
-                                                ShoppingListItem.self,
-                                                ShoppingListDescription.self,
-                                                MDLocation.self,
-                                                MDStore.self,
-                                                MDQuantityUnit.self,
-                                                MDQuantityUnitConversion.self,
-                                                MDProductGroup.self,
-                                                MDProduct.self,
-                                                MDProductBarcode.self,
-                                                StockJournalEntry.self,
-                                                GrocyUser.self,
-                                                StockEntry.self,
-                                                GrocyUserSettings.self,
-                                                StockProductDetails.self,
-                                                StockProduct.self,
-                                                VolatileStock.self,
-                                                Recipe.self,
-                                                StockLocation.self,
-                                                SystemConfig.self
-            )
+            modelContainer = try ModelContainer(for: schema, configurations: config)
             let modelContext = ModelContext(modelContainer)
             _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
         } catch {
-            fatalError("Failed to create ModelContainer.")
+            // Reset store if there's a migration error
+            ModelContainer.resetStore()
+            
+            // Try creating the container again
+            do {
+                modelContainer = try ModelContainer(for: schema, configurations: config)
+                let modelContext = ModelContext(modelContainer)
+                _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
+            } catch {
+                fatalError("Failed to create ModelContainer after reset: \(error)")
+            }
         }
     }
     
@@ -82,5 +95,12 @@ struct Grocy_MobileApp: App {
             }
         }
 #endif
+    }
+}
+
+extension ModelContainer {
+    static func resetStore() {
+        let storePath = URL.applicationSupportDirectory.appending(component: "default.store")
+        try? FileManager.default.removeItem(at: storePath)
     }
 }
