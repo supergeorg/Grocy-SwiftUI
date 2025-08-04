@@ -274,9 +274,7 @@ struct PurchaseProductView: View {
                     }
                 }
             }
-            if #available(iOS 26, macOS 26, *) {
-                ToolbarSpacer(.fixed)
-            }
+            ToolbarSpacer(.fixed)
             ToolbarItem(id: "purchase", placement: .primaryAction) {
                 Button(action: {
                     Task {

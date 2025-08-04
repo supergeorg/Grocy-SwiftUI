@@ -208,9 +208,7 @@ struct InventoryProductView: View {
                     .keyboardShortcut("r", modifiers: [.command])
                 }
             }
-            if #available(iOS 26, macOS 26, *) {
-                ToolbarSpacer(.fixed)
-            }
+            ToolbarSpacer(.fixed)
             ToolbarItem(id: "inventory", placement: .primaryAction) {
                 Button(action: {
                     Task {

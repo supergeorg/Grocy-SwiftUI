@@ -321,9 +321,7 @@ struct ConsumeProductView: View {
                     }
                 }
             }
-            if #available(iOS 26, macOS 26, *) {
-                ToolbarSpacer(.fixed)
-            }
+            ToolbarSpacer(.fixed)
             if (consumeType == .open) || (consumeType == .both) {
                 ToolbarItem(id: "open", placement: .primaryAction) {
                     Button(action: {
