@@ -33,11 +33,13 @@ enum ProductStatus: LocalizedStringKey {
     func getIconName() -> String {
         switch self {
         case .expiringSoon:
-            return "clock.fill"
-        case .overdue, .expired:
-            return "xmark.circle.fill"
+            return MySymbols.expiringSoon
+        case .overdue:
+            return MySymbols.overdue
+        case .expired:
+            return MySymbols.expired
         case .belowMinStock:
-            return "exclamationmark.circle.fill"
+            return MySymbols.belowMinStock
         default:
             return "tag.fill"
         }
