@@ -13,7 +13,19 @@ struct MyTextEditor: View {
     var leadingIcon: String?
     
     var body: some View {
-        TextEditor(text: $textToEdit)
+        LabeledContent(content: {
+            TextEditor(text: $textToEdit)
+        }, label: {
+            HStack {
+                if let leadingIcon = leadingIcon {
+                    Label(description, systemImage: leadingIcon)
+                        .foregroundStyle(.primary)
+                } else {
+                    Text(description)
+                }
+            }
+        })
+        
     }
 }
 
