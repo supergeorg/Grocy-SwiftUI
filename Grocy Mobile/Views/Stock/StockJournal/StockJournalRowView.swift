@@ -88,14 +88,14 @@ struct StockJournalRowView: View {
                 }
             }
             Group {
-                Text("Amount") + Text(": \(journalEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: journalEntry.amount) ?? "")")
-                Text("Transaction time") + Text(": \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
-                Text("Transaction type") + Text(": \(journalEntry.transactionType.formatTransactionType())")
+                Text("\(Text(LocalizedStringKey("Amount"))): \(journalEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: journalEntry.amount) ?? "")")
+                Text("\(Text(LocalizedStringKey("Transaction time"))): \(formatTimestampOutput(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")")
+                Text("\(Text(LocalizedStringKey("Transaction type"))): \(journalEntry.transactionType.formatTransactionType())")
                     .font(.caption)
-                Text("Location") + Text(": \(location?.name ?? "Location Error")")
-                Text("Done by") + Text(": \(grocyUser?.displayName ?? "Username Error")")
+                Text("\(Text(LocalizedStringKey("Location"))): \(location?.name ?? "Location Error")")
+                Text("\(Text(LocalizedStringKey("Done by"))): \(grocyUser?.displayName ?? "Username Error")")
                 if let note = journalEntry.note {
-                    Text("Note") + Text(": \(note)")
+                    Text("\(Text(LocalizedStringKey("Note"))): \(note)")
                 }
             }
             .foregroundStyle(journalEntry.undone == 1 ? Color.gray : Color.primary)

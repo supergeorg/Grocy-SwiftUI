@@ -18,6 +18,7 @@ struct StockJournalView: View {
     @State private var filteredLocationID: Int?
     @State private var filteredTransactionType: TransactionType?
     @State private var filteredUserID: Int?
+    @State private var showingFilterSheet = false
     
     // Fetch the data with a dynamic predicate
     var stockJournal: StockJournal {
@@ -25,15 +26,15 @@ struct StockJournalView: View {
         // Find matching product IDs for search string
         var matchingProductIDs: [Int]? {
             let productPredicate = searchString.isEmpty ? nil :
-                #Predicate<MDProduct> { product in
-                    product.name.localizedStandardContains(searchString)
-                }
+            #Predicate<MDProduct> { product in
+                product.name.localizedStandardContains(searchString)
+            }
             let productDescriptor = FetchDescriptor<MDProduct>(predicate: productPredicate)
             let matchingProducts = try? modelContext.fetch(productDescriptor)
             return matchingProducts?.map(\.id) ?? []
         }
         var predicates: [Predicate<StockJournalEntry>] = []
-
+        
         // Product search predicate
         if !searchString.isEmpty, let productIDs = matchingProductIDs {
             let searchPredicate = #Predicate<StockJournalEntry> { entry in
@@ -60,10 +61,36 @@ struct StockJournalView: View {
         
         // Transaction type predicate
         if let transactionType: TransactionType = filteredTransactionType {
-            let typePredicate = #Predicate<StockJournalEntry> { (entry: StockJournalEntry) in
-                entry.transactionType == transactionType
+            print("🔍 Creating predicate for type: \(transactionType)")
+            
+            // Debug: Print all entries before filtering
+            do {
+                let allEntries = try modelContext.fetch(FetchDescriptor<StockJournalEntry>())
+                print("📝 All entries before filtering: \(allEntries.count)")
+                allEntries.forEach { entry in
+                    print("Entry ID: \(entry.id), Type: \(entry.transactionType), Raw Value: \(String(describing: entry.transactionType))")
+                }
+                
+                // Create predicate with single expression
+                let typePredicate = #Predicate<StockJournalEntry> { entry in
+                    entry.transactionTypeRaw == transactionType.rawValue
+                }
+                predicates.append(typePredicate)
+                
+                // Debug: Test predicate results
+                let testDescriptor = FetchDescriptor<StockJournalEntry>(predicate: typePredicate)
+                do {
+                    let filteredEntries = try modelContext.fetch(testDescriptor)
+                    print("🎯 Filtered entries count: \(filteredEntries.count)")
+                    filteredEntries.forEach { entry in
+                        print("Matched entry ID: \(entry.id), Type: \(entry.transactionType)")
+                    }
+                } catch {
+                    print("❌ Failed to fetch filtered entries with error: \(error)")
+                }
+            } catch {
+                print("❌ Failed to fetch all entries with error: \(error)")
             }
-            predicates.append(typePredicate)
         }
         
         // User predicate
@@ -125,36 +152,66 @@ struct StockJournalView: View {
     }
     
     var body: some View {
-        VStack {
-            StockJournalFilterBar(filteredProductID: $filteredProductID, filteredTransactionType: $filteredTransactionType, filteredLocationID: $filteredLocationID, filteredUserID: $filteredUserID)
-            List {
-                if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                    ServerProblemView()
-                } else if stockJournalCount == 0 {
-                    ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
-                } else if stockJournal.isEmpty {
-                    ContentUnavailableView.search
-                }
-                ForEach(stockJournal, id: \.id) { (journalEntry: StockJournalEntry) in
-                    StockJournalRowView(journalEntry: journalEntry)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                            Button(action: {
-                                Task {
-                                    await undoTransaction(stockJournalEntry: journalEntry)
-                                }
-                            }, label: {
-                                Label("Undo transaction", systemImage: MySymbols.undo)
-                            })
-                            .disabled(journalEntry.undone == 1)
+        List {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            } else if stockJournalCount == 0 {
+                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
+            } else if stockJournal.isEmpty {
+                ContentUnavailableView.search
+            }
+            ForEach(stockJournal, id: \.id) { (journalEntry: StockJournalEntry) in
+                StockJournalRowView(journalEntry: journalEntry)
+                    .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                        Button(action: {
+                            Task {
+                                await undoTransaction(stockJournalEntry: journalEntry)
+                            }
+                        }, label: {
+                            Label("Undo transaction", systemImage: MySymbols.undo)
                         })
-                }
+                        .disabled(journalEntry.undone == 1)
+                    })
             }
         }
         .navigationTitle("Stock journal")
-        .searchable(
-            text: $searchString,
-            prompt: "Search"
-        )
+        .searchable(text: $searchString)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { showingFilterSheet = true }) {
+                    Image(systemName: MySymbols.filter)
+                }
+            }
+        }
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                StockJournalFilterView(
+                    filteredProductID: $filteredProductID,
+                    filteredTransactionType: $filteredTransactionType,
+                    filteredLocationID: $filteredLocationID,
+                    filteredUserID: $filteredUserID
+                )
+                .navigationTitle("Filter")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction, content: {
+                        Button(role: .confirm, action: {
+                            showingFilterSheet = false
+                        })
+                    })
+                    ToolbarItem(placement: .cancellationAction, content: {
+                        Button(role: .destructive, action: {
+                            filteredProductID = nil
+                            filteredTransactionType = nil
+                            filteredLocationID = nil
+                            filteredUserID = nil
+                            showingFilterSheet = false
+                        })
+                    })
+                }
+            }
+            .presentationDetents([.medium])
+        }
         .refreshable {
             await updateData()
         }
