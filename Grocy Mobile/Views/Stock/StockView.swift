@@ -42,7 +42,7 @@ struct StockView: View {
     @Query var stockProductLocations: [StockLocation]
     
     @State private var searchString: String = ""
-    @State private var showFilter: Bool = false
+    @State private var showingFilterSheet = false
     
     private enum StockGrouping: Identifiable {
         case none, productGroup, nextDueDate, lastPurchased, minStockAmount, parentProduct, defaultLocation
@@ -184,10 +184,8 @@ struct StockView: View {
     
     var body: some View{
         List {
-            Section {
                 StockFilterActionsView(filteredStatus: $filteredStatus, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-                StockFilterBar(filteredLocation: $filteredLocationID, filteredProductGroup: $filteredProductGroupID, filteredStatus: $filteredStatus)
-            }
+            
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if stock.isEmpty {
@@ -223,6 +221,9 @@ struct StockView: View {
         }
         .toolbar(content: {
             ToolbarItemGroup(placement: .automatic) {
+                Button(action: { showingFilterSheet = true }) {
+                    Image(systemName: MySymbols.filter)
+                }
                 sortMenu
                 NavigationLink(value: StockInteraction.stockJournal) {
                     Label("Stock journal", systemImage: MySymbols.stockJournal)
@@ -279,6 +280,29 @@ struct StockView: View {
         .navigationDestination(for: StockElement.self, destination: { stockElement in
             StockEntriesView(stockElement: stockElement)
         })
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                StockFilterView(filteredLocationID: $filteredLocationID, filteredProductGroupID: $filteredProductGroupID, filteredStatus: $filteredStatus)
+                    .navigationTitle("Filter")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            Button(role: .confirm, action: {
+                                showingFilterSheet = false
+                            })
+                        })
+                        ToolbarItem(placement: .cancellationAction, content: {
+                            Button(role: .destructive, action: {
+                                filteredLocationID = nil
+                                filteredProductGroupID = nil
+                                filteredStatus = .all
+                                showingFilterSheet = false
+                            })
+                        })
+                    }
+            }
+        }
+        .presentationDetents([.medium])
     }
     
     var sortMenu: some View {
