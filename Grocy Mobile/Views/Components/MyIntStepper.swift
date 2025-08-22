@@ -9,114 +9,142 @@ import SwiftUI
 
 struct MyIntStepper: View {
     @Binding var amount: Int
-    
+
     var description: LocalizedStringKey
     var helpText: LocalizedStringKey?
     var minAmount: Int? = 0
     var amountName: LocalizedStringKey? = nil
-    
+
     var errorMessage: LocalizedStringKey?
-    
+
     var systemImage: String?
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 1){
-            HStack{
-                Text(description)
-                if let helpText = helpText {
-                    FieldDescription(description: helpText)
+        Stepper(
+            value: $amount,
+            in: ((minAmount ?? 0)...(Int.max - 1)),
+            step: 1,
+            label: {
+                HStack {
+                    if let systemImage = systemImage {
+                        Image(systemName: systemImage)
+                    }
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(description)
+                            if let helpText = helpText {
+                                FieldDescription(description: helpText)
+                            }
+                        }
+                        HStack {
+                            TextField("", value: $amount, formatter: NumberFormatter())
+                                #if os(macOS)
+                                    .frame(width: 90)
+                                #elseif os(iOS)
+                                    .keyboardType(.numbersAndPunctuation)
+                                    .submitLabel(.done)
+                                #endif
+                            if let amountName = amountName {
+                                Text(amountName)
+                            }
+                        }
+                        if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
+                            Text(errorMessage)
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
                 }
             }
-            HStack{
-                if let systemImage = systemImage {
-                    Image(systemName: systemImage)
-                }
-                TextField("", value: $amount, formatter: NumberFormatter())
-#if os(macOS)
-                    .frame(width: 90)
-#elseif os(iOS)
-                    .keyboardType(.decimalPad)
-//                    .keyboardType(.numberPad)
-#endif
-                Stepper(amountName ?? "", value: $amount, in: ((minAmount ?? 0)...(Int.max - 1)), step: 1)
-                    .fixedSize()
-            }
-            if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
+        )
     }
 }
 
 struct MyIntStepperOptional: View {
     @Binding var amount: Int?
-    
+
     var description: LocalizedStringKey
     var helpText: LocalizedStringKey?
     var minAmount: Int? = 0
-    var amountName: String? = nil
-    
+    var amountName: LocalizedStringKey? = nil
+
     var errorMessage: LocalizedStringKey?
-    
+
     var systemImage: String?
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 1){
-            HStack{
-                Text(description)
-                if let helpTextU = helpText {
-                    FieldDescription(description: helpTextU)
+        Stepper(
+            onIncrement: {
+                if let previousAmount = amount {
+                    amount = previousAmount + 1
+                } else {
+                    amount = 1
                 }
-            }
-            HStack{
-                if systemImage != nil {
-                    Image(systemName: systemImage!)
-                }
-                TextField("", value: $amount, formatter: NumberFormatter())
-#if os(macOS)
-                    .frame(width: 90)
-#elseif os(iOS)
-                    .keyboardType(.decimalPad)
-#endif
-                Stepper(LocalizedStringKey(amountName ?? ""), onIncrement: {
-                    if let previousAmount = amount {
-                        amount = previousAmount + 1
-                    } else {
-                        amount = 1
-                    }
-                }, onDecrement: {
-                    if let previousAmount = amount {
-                        if let minAmount = minAmount {
-                            if previousAmount > minAmount {
-                                amount = previousAmount - 1
-                            } else {
-                                amount = nil
-                            }
-                        } else {
+            },
+            onDecrement: {
+                if let previousAmount = amount {
+                    if let minAmount = minAmount {
+                        if previousAmount > minAmount {
                             amount = previousAmount - 1
+                        } else {
+                            amount = nil
                         }
                     } else {
-                        amount = minAmount
+                        amount = previousAmount - 1
                     }
-                })
-                    .fixedSize()
+                } else {
+                    amount = minAmount
+                }
+            },
+            label: {
+                HStack {
+                    if let systemImage = systemImage {
+                        Image(systemName: systemImage)
+                    }
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(description)
+                            if let helpText = helpText {
+                                FieldDescription(description: helpText)
+                            }
+                        }
+                        HStack {
+                            TextField("", value: $amount, formatter: NumberFormatter())
+                                #if os(macOS)
+                                    .frame(width: 90)
+                                #elseif os(iOS)
+                                    .keyboardType(.numbersAndPunctuation)
+                                    .submitLabel(.done)
+                                #endif
+                            if let amountName = amountName {
+                                Text(amountName)
+                            }
+                        }
+                        if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
+                            Text(errorMessage)
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
             }
-            if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
+        )
     }
 }
 
-struct MyIntStepper_Previews: PreviewProvider {
-    static var previews: some View {
-        MyIntStepper(amount: Binding.constant(1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit")
-            .padding()
-    }
+#Preview("Default") {
+    @Previewable @State var amount: Int = 1
+
+    MyIntStepper(amount: $amount, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: "tag")
+}
+#Preview("Optional") {
+    @Previewable @State var amount: Int? = nil
+
+    MyIntStepperOptional(amount: $amount, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: "tag")
+}
+
+#Preview("Default Error") {
+    MyIntStepper(amount: .constant(-1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", errorMessage: "Error Message", systemImage: "tag")
 }
