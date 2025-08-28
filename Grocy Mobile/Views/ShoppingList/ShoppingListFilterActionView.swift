@@ -9,12 +9,12 @@ import SwiftUI
 
 private struct ShoppingListFilterItemView: View {
     @Binding var filteredStatus: ShoppingListStatus
-    
+
     var ownFilteredStatus: ShoppingListStatus
     var num: Int
     var color: Color
     var backgroundColor: Color
-    
+
     var body: some View {
         VStack(spacing: 0.0) {
             Divider()
@@ -48,34 +48,34 @@ private struct ShoppingListFilterItemView: View {
 
 struct ShoppingListFilterActionView: View {
     @Binding var filteredStatus: ShoppingListStatus
-    
+
     var numBelowStock: Int
+    var numDone: Int
     var numUndone: Int
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 if numUndone > 0 {
                     // Undone items
-                    ShoppingListFilterItemView(
-                        filteredStatus: $filteredStatus,
-                        ownFilteredStatus: ShoppingListStatus.undone,
-                        num: numUndone,
-                        color: Color(.GrocyColors.grocyGray),
-                        backgroundColor: Color(.GrocyColors.grocyGrayBackground)
-                    )
-                    .animation(.default, value: numUndone > 0)
+                    ShoppingListFilterCapsuleView(num: numUndone, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.undone, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground))
+                        .animation(.default, value: numUndone)
+                }
+                if numDone > 0 {
+                    // Done items
+                    ShoppingListFilterCapsuleView(num: numDone, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.done, color: .white, backgroundColor: Color(.GrocyColors.grocyGreen))
+                        .animation(.default, value: numUndone)
                 }
                 if numBelowStock > 0 {
                     // Below stock
-                    ShoppingListFilterItemView(
+                    ShoppingListFilterCapsuleView(
+                        num: numBelowStock,
                         filteredStatus: $filteredStatus,
                         ownFilteredStatus: ShoppingListStatus.belowMinStock,
-                        num: numBelowStock,
-                        color: Color(.GrocyColors.grocyBlue),
+                        color: .white,
                         backgroundColor: Color(.GrocyColors.grocyBlueBackground)
                     )
-                    .animation(.default, value: numUndone > 0)
+                    .animation(.default, value: numBelowStock)
                 }
             }
         }
@@ -83,5 +83,5 @@ struct ShoppingListFilterActionView: View {
 }
 
 #Preview {
-    ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1, numUndone: 1)
+    ShoppingListFilterActionView(filteredStatus: Binding.constant(.all), numBelowStock: 1, numDone: 1, numUndone: 1)
 }

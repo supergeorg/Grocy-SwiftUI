@@ -5,8 +5,8 @@
 //  Created by Georg Meissner on 26.11.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ShoppingListItemWrapped {
     let shoppingListItem: ShoppingListItem
@@ -21,17 +21,17 @@ enum ShoppingListInteraction: Hashable {
 
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
-    
+
     @State private var selectedShoppingListID: Int = 1
-    
+
     @State private var firstAppear: Bool = true
-    
+
     @State private var searchString: String = ""
     @State private var filteredStatus: ShoppingListStatus = .all
     private enum ShoppingListGrouping: Identifiable {
@@ -43,18 +43,20 @@ struct ShoppingListView: View {
     @State private var shoppingListGrouping: ShoppingListGrouping = .productGroup
     @State private var sortSetting = [KeyPathComparator(\ShoppingListItemWrapped.product?.name)]
     @State private var sortOrder: SortOrder = .forward
-    
+
+    @State private var showingFilterSheet = false
+
     @State private var showSHLDeleteAlert: Bool = false
     @State private var showClearListAlert: Bool = false
     @State private var showClearDoneAlert: Bool = false
-    
+
     private enum InteractionSheet: Identifiable {
         case newShoppingList, editShoppingList, newShoppingListEntry
         var id: Int {
             hashValue
         }
     }
-    
+
     private let dataToUpdate: [ObjectEntities] = [
         .products,
         .product_groups,
@@ -66,7 +68,7 @@ struct ShoppingListView: View {
     func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
+
     func checkBelowStock(item: ShoppingListItem) -> Bool {
         if let product = mdProducts.first(where: { $0.id == item.productID }) {
             if product.minStockAmount > item.amount {
@@ -75,7 +77,7 @@ struct ShoppingListView: View {
         }
         return false
     }
-    
+
     var selectedShoppingList: ShoppingListDescription? {
         shoppingListDescriptions
             .filter {
@@ -83,14 +85,14 @@ struct ShoppingListView: View {
             }
             .first
     }
-    
+
     var selectedShoppingListItems: [ShoppingListItem] {
         shoppingList
             .filter {
                 $0.shoppingListID == selectedShoppingListID
             }
     }
-    
+
     var filteredShoppingListItems: [ShoppingListItem] {
         selectedShoppingListItems
             .filter { shLItem in
@@ -117,7 +119,7 @@ struct ShoppingListView: View {
                 }
             }
     }
-    
+
     var groupedShoppingList: [String: [ShoppingListItemWrapped]] {
         var dict: [String: [ShoppingListItemWrapped]] = [:]
         for listItem in filteredShoppingListItems {
@@ -150,7 +152,7 @@ struct ShoppingListView: View {
         }
         return dict
     }
-    
+
     var numBelowStock: Int {
         selectedShoppingListItems
             .filter { shLItem in
@@ -158,7 +160,7 @@ struct ShoppingListView: View {
             }
             .count
     }
-    
+
     var numUndone: Int {
         selectedShoppingListItems
             .filter { shLItem in
@@ -166,7 +168,15 @@ struct ShoppingListView: View {
             }
             .count
     }
-    
+
+    var numDone: Int {
+        selectedShoppingListItems
+            .filter { shLItem in
+                shLItem.done == 1
+            }
+            .count
+    }
+
     func deleteShoppingList() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_lists, id: selectedShoppingListID)
@@ -176,7 +186,7 @@ struct ShoppingListView: View {
             GrocyLogger.error("Deleting shopping list failed. \(error)")
         }
     }
-    
+
     private func slAction(_ actionType: ShoppingListActionType) async {
         do {
             if actionType == .clearDone {
@@ -192,183 +202,259 @@ struct ShoppingListView: View {
             GrocyLogger.error("SHLAction failed. \(error)")
         }
     }
-    
+
     var body: some View {
-        if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
-            bodyContent
-        } else {
-            ServerProblemView()
-                .navigationTitle("Shopping list")
-        }
-    }
-    
-    var bodyContent: some View {
         List {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
+                ServerProblemView()
+            }
             Section {
                 if numBelowStock > 0 || numUndone > 0 {
                     ShoppingListFilterActionView(
                         filteredStatus: $filteredStatus,
                         numBelowStock: numBelowStock,
+                        numDone: numDone,
                         numUndone: numUndone
                     )
                 }
-                Picker(selection: $filteredStatus, content: {
-                    Text("All")
-                        .tag(ShoppingListStatus.all)
-                    Text("Below min. stock amount")
-                        .tag(ShoppingListStatus.belowMinStock)
-                    Text("Only done items")
-                        .tag(ShoppingListStatus.done)
-                    Text("Only undone items")
-                        .tag(ShoppingListStatus.undone)
-                }, label: {
-                    Label("Status", systemImage: MySymbols.filter)
-                        .foregroundStyle(.primary)
-                })
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
-#if os(macOS)
-                DisclosureGroup(
-                    isExpanded: Binding.constant(true),
-                    content: {
-                        ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
-                            ShoppingListEntriesView(
-                                shoppingListItem: element.shoppingListItem,
-                                selectedShoppingListID: $selectedShoppingListID
+                #if os(macOS)
+                    DisclosureGroup(
+                        isExpanded: Binding.constant(true),
+                        content: {
+                            ForEach(
+                                groupElements.sorted(using: sortSetting),
+                                id: \.shoppingListItem.id,
+                                content: { element in
+                                    ShoppingListEntriesView(
+                                        shoppingListItem: element.shoppingListItem,
+                                        selectedShoppingListID: $selectedShoppingListID
+                                    )
+                                }
                             )
-                        })
-                    }, label: {
-                        if shoppingListGrouping == .productGroup, groupName.isEmpty {
-                            Text("Ungrouped").italic()
-                        } else if shoppingListGrouping == .none {
-                            EmptyView()
-                        } else {
-                            Text(groupName).bold()
+                        },
+                        label: {
+                            if shoppingListGrouping == .productGroup, groupName.isEmpty {
+                                Text("Ungrouped").italic()
+                            } else if shoppingListGrouping == .none {
+                                EmptyView()
+                            } else {
+                                Text(groupName).bold()
+                            }
                         }
-                    }
-                )
-#else
-                Section(content: {
-                    ForEach(groupElements.sorted(using: sortSetting), id: \.shoppingListItem.id, content: { element in
-                        ShoppingListEntriesView(
-                            shoppingListItem: element.shoppingListItem,
-                            selectedShoppingListID: $selectedShoppingListID
-                        )
-                    })
-                }, header: {
-                    if shoppingListGrouping == .productGroup, groupName.isEmpty {
-                        Text("Ungrouped")
-                            .italic()
-                    } else if shoppingListGrouping == .none {
-                        EmptyView()
-                    } else {
-                        Text(groupName).bold()
-                    }
-                })
-#endif
+                    )
+                #else
+                    Section(
+                        content: {
+                            ForEach(
+                                groupElements.sorted(using: sortSetting),
+                                id: \.shoppingListItem.id,
+                                content: { element in
+                                    ShoppingListEntriesView(
+                                        shoppingListItem: element.shoppingListItem,
+                                        selectedShoppingListID: $selectedShoppingListID
+                                    )
+                                }
+                            )
+                        },
+                        header: {
+                            if shoppingListGrouping == .productGroup, groupName.isEmpty {
+                                Text("Ungrouped")
+                                    .italic()
+                            } else if shoppingListGrouping == .none {
+                                EmptyView()
+                            } else {
+                                Text(groupName).bold()
+                            }
+                        }
+                    )
+                #endif
             }
         }
         .navigationTitle(selectedShoppingList?.name ?? "Shopping list")
         .toolbar {
+            ToolbarItemGroup(
+                placement: .navigation,
+                content: {
+                    Button(action: { showingFilterSheet = true }) {
+                        Image(systemName: MySymbols.filter)
+                    }
+                    sortGroupMenu
+                }
+            )
             ToolbarTitleMenu {
                 shoppingListActionContent
                 Divider()
                 shoppingListItemActionContent
-                Divider()
-                sortGroupMenu
             }
-            ToolbarItem(placement: .primaryAction, content: {
-                NavigationLink(value: ShoppingListInteraction.newShoppingListEntry) {
-                    Label("Add item", systemImage: MySymbols.new)
+            ToolbarItem(
+                placement: .primaryAction,
+                content: {
+                    NavigationLink(value: ShoppingListInteraction.newShoppingListEntry) {
+                        Label("Add item", systemImage: MySymbols.new)
+                    }
+                    .help("Add item")
                 }
-                .help("Add item")
-            })
+            )
         }
-        .navigationDestination(for: ShoppingListInteraction.self, destination: { interaction in
-            switch interaction {
-            case ShoppingListInteraction.newShoppingList:
-                ShoppingListFormView(isNewShoppingListDescription: true)
-            case ShoppingListInteraction.editShoppingList:
-                ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
-            case ShoppingListInteraction.newShoppingListEntry:
-                ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+        .navigationDestination(
+            for: ShoppingListInteraction.self,
+            destination: { interaction in
+                switch interaction {
+                case ShoppingListInteraction.newShoppingList:
+                    ShoppingListFormView(isNewShoppingListDescription: true)
+                case ShoppingListInteraction.editShoppingList:
+                    ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
+                case ShoppingListInteraction.newShoppingListEntry:
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                }
             }
-        })
-#if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-#endif
+        )
+        #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+        #endif
         .task {
             if firstAppear {
                 await updateData()
                 firstAppear = false
             }
         }
-        .searchable(text: $searchString,
-                    prompt: "Search")
+        .searchable(
+            text: $searchString,
+            prompt: "Search"
+        )
         .refreshable {
             await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
-        .confirmationDialog("Do you really want to delete this shopping list?", isPresented: $showSHLDeleteAlert, actions: {
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
-                Task {
-                    await deleteShoppingList()
-                }
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                ShoppingListFilterView(filteredStatus: $filteredStatus)
+                    .navigationTitle("Filter")
+                    #if os(iOS)
+                        .navigationBarTitleDisplayMode(.inline)
+                    #endif
+                    .toolbar {
+                        ToolbarItem(
+                            placement: .confirmationAction,
+                            content: {
+                                Button(
+                                    role: .confirm,
+                                    action: {
+                                        showingFilterSheet = false
+                                    }
+                                )
+                            }
+                        )
+                        ToolbarItem(
+                            placement: .cancellationAction,
+                            content: {
+                                Button(
+                                    role: .destructive,
+                                    action: {
+                                        filteredStatus = .all
+                                        showingFilterSheet = false
+                                    }
+                                )
+                            }
+                        )
+                    }
             }
-        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .confirmationDialog("Do your really want to clear this shopping list?", isPresented: $showClearListAlert, actions: {
-            Button("Cancel", role: .cancel) {}
-            Button("Confirm", role: .destructive) {
-                Task {
-                    await slAction(.clear)
+        }
+        .presentationDetents([.medium])
+        .confirmationDialog(
+            "Do you really want to delete this shopping list?",
+            isPresented: $showSHLDeleteAlert,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    Task {
+                        await deleteShoppingList()
+                    }
                 }
-            }
-        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
-        .confirmationDialog("Do you really want to clear all done items?", isPresented: $showClearDoneAlert, actions: {
-            Button("Cancel", role: .cancel) {}
-            Button("Confirm", role: .destructive) {
-                Task {
-                    await slAction(.clearDone)
+            },
+            message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") }
+        )
+        .confirmationDialog(
+            "Do your really want to clear this shopping list?",
+            isPresented: $showClearListAlert,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                Button("Confirm", role: .destructive) {
+                    Task {
+                        await slAction(.clear)
+                    }
                 }
-            }
-        }, message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") })
+            },
+            message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") }
+        )
+        .confirmationDialog(
+            "Do you really want to clear all done items?",
+            isPresented: $showClearDoneAlert,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                Button("Confirm", role: .destructive) {
+                    Task {
+                        await slAction(.clearDone)
+                    }
+                }
+            },
+            message: { Text(shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID })?.name ?? "Name not found") }
+        )
     }
-    
-    
+
     var shoppingListActionContent: some View {
         Group {
-            Picker(selection: $selectedShoppingListID, label: Text(""), content: {
-                ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
-                    Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+            Picker(
+                selection: $selectedShoppingListID,
+                label: Text(""),
+                content: {
+                    ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
+                        Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+                    }
                 }
-            })
+            )
             .help("Shopping list")
             Divider()
-            NavigationLink(value: ShoppingListInteraction.newShoppingList) {
-                Label("New shopping list", systemImage: MySymbols.shoppingList)
-            }
+            NavigationLink(
+                value: ShoppingListInteraction.newShoppingList,
+                label: {
+                    Label("New shopping list", systemImage: MySymbols.new)
+                }
+            )
             .help("New shopping list")
-            NavigationLink(value: ShoppingListInteraction.editShoppingList) {
-                Label("Edit shopping list", systemImage: MySymbols.edit)
-            }
+            NavigationLink(
+                value: ShoppingListInteraction.editShoppingList,
+                label: {
+                    Label("Edit shopping list", systemImage: MySymbols.edit)
+                }
+            )
             .help("Edit shopping list")
-            Button(role: .destructive, action: {
-                showSHLDeleteAlert.toggle()
-            }, label: {
-                Label("Delete shopping list", systemImage: MySymbols.delete)
-            })
+            Button(
+                role: .destructive,
+                action: {
+                    showSHLDeleteAlert.toggle()
+                },
+                label: {
+                    Label("Delete shopping list", systemImage: MySymbols.delete)
+                }
+            )
             .help("Delete shopping list")
         }
     }
-    
+
     var shoppingListItemActionContent: some View {
         Group {
-            Button(role: .destructive, action: {
-                showClearListAlert.toggle()
-            }, label: {
-                Label("Clear list", systemImage: MySymbols.clear)
-            })
+            Button(
+                role: .destructive,
+                action: {
+                    showClearListAlert.toggle()
+                },
+                label: {
+                    Label("Clear list", systemImage: MySymbols.clear)
+                }
+            )
             .help("Clear list")
             //            Button(action: {
             //                print("Not implemented")
@@ -377,94 +463,122 @@ struct ShoppingListView: View {
             //            })
             //            .help("Add all list items to stock")
             //                .disabled(true)
-            Button(role: .destructive, action: {
-                showClearDoneAlert.toggle()
-            }, label: {
-                Label("Clear done items", systemImage: MySymbols.done)
-            })
+            Button(
+                role: .destructive,
+                action: {
+                    showClearDoneAlert.toggle()
+                },
+                label: {
+                    Label("Clear done items", systemImage: MySymbols.done)
+                }
+            )
             .help("Clear done items")
-            Button(action: {
-                Task {
-                    await slAction(.addMissing)
+            Button(
+                action: {
+                    Task {
+                        await slAction(.addMissing)
+                    }
+                },
+                label: {
+                    Label("Add products that are below defined min. stock amount", systemImage: MySymbols.addToShoppingList)
                 }
-            }, label: {
-                Label("Add products that are below defined min. stock amount", systemImage: MySymbols.addToShoppingList)
-            })
+            )
             .help("Add products that are below defined min. stock amount")
-            Button(action: {
-                Task {
-                    await slAction(.addExpired)
-                    await slAction(.addOverdue)
+            Button(
+                action: {
+                    Task {
+                        await slAction(.addExpired)
+                        await slAction(.addOverdue)
+                    }
+                },
+                label: {
+                    Label("Add overdue/expired products", systemImage: MySymbols.addToShoppingList)
                 }
-            }, label: {
-                Label("Add overdue/expired products", systemImage: MySymbols.addToShoppingList)
-            })
+            )
             .help("Add overdue/expired products")
         }
     }
-    
+
     var sortGroupMenu: some View {
-        Menu(content: {
-            Picker("Group by", selection: $shoppingListGrouping, content: {
-                Label("None", systemImage: MySymbols.product)
-                    .labelStyle(.titleAndIcon)
-                    .tag(ShoppingListGrouping.none)
-                Label("Product group", systemImage: MySymbols.amount)
-                    .labelStyle(.titleAndIcon)
-                    .tag(ShoppingListGrouping.productGroup)
-                Label("Store", systemImage: MySymbols.amount)
-                    .labelStyle(.titleAndIcon)
-                    .tag(ShoppingListGrouping.defaultStore)
-            })
-#if os(iOS)
-            .pickerStyle(.menu)
-#else
-            .pickerStyle(.inline)
-#endif
-            Picker("Sort category", selection: $sortSetting, content: {
-                if sortOrder == .forward {
-                    Label("Product name", systemImage: MySymbols.product)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .forward)])
-                    Label("Amount", systemImage: MySymbols.amount)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .forward)])
-                } else {
-                    Label("Product name", systemImage: MySymbols.product)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .reverse)])
-                    Label("Amount", systemImage: MySymbols.amount)
-                        .labelStyle(.titleAndIcon)
-                        .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .reverse)])
+        Menu(
+            content: {
+                Picker(
+                    "Group by",
+                    systemImage: MySymbols.groupBy,
+                    selection: $shoppingListGrouping,
+                    content: {
+                        Label("None", systemImage: MySymbols.product)
+                            .labelStyle(.titleAndIcon)
+                            .tag(ShoppingListGrouping.none)
+                        Label("Product group", systemImage: MySymbols.amount)
+                            .labelStyle(.titleAndIcon)
+                            .tag(ShoppingListGrouping.productGroup)
+                        Label("Store", systemImage: MySymbols.amount)
+                            .labelStyle(.titleAndIcon)
+                            .tag(ShoppingListGrouping.defaultStore)
+                    }
+                )
+                #if os(iOS)
+                    .pickerStyle(.menu)
+                #else
+                    .pickerStyle(.inline)
+                #endif
+                Picker(
+                    "Sort category",
+                    systemImage: MySymbols.sortCategory,
+                    selection: $sortSetting,
+                    content: {
+                        if sortOrder == .forward {
+                            Label("Product name", systemImage: MySymbols.product)
+                                .labelStyle(.titleAndIcon)
+                                .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .forward)])
+                            Label("Amount", systemImage: MySymbols.amount)
+                                .labelStyle(.titleAndIcon)
+                                .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .forward)])
+                        } else {
+                            Label("Product name", systemImage: MySymbols.product)
+                                .labelStyle(.titleAndIcon)
+                                .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .reverse)])
+                            Label("Amount", systemImage: MySymbols.amount)
+                                .labelStyle(.titleAndIcon)
+                                .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .reverse)])
+                        }
+                    }
+                )
+                #if os(iOS)
+                    .pickerStyle(.menu)
+                #else
+                    .pickerStyle(.inline)
+                #endif
+                Picker(
+                    "Sort order",
+                    systemImage: MySymbols.sortCategory,
+                    selection: $sortOrder,
+                    content: {
+                        Label("Ascending", systemImage: MySymbols.sortForward)
+                            .labelStyle(.titleAndIcon)
+                            .tag(SortOrder.forward)
+                        Label("Descending", systemImage: MySymbols.sortReverse)
+                            .labelStyle(.titleAndIcon)
+                            .tag(SortOrder.reverse)
+                    }
+                )
+                #if os(iOS)
+                    .pickerStyle(.menu)
+                #else
+                    .pickerStyle(.inline)
+                #endif
+                .onChange(of: sortOrder) {
+                    if var sortElement = sortSetting.first {
+                        sortElement.order = sortOrder
+                        sortSetting = [sortElement]
+                    }
                 }
-            })
-#if os(iOS)
-            .pickerStyle(.menu)
-#else
-            .pickerStyle(.inline)
-#endif
-            Picker("Sort order", selection: $sortOrder, content: {
-                Label("Ascending", systemImage: MySymbols.sortForward)
-                    .labelStyle(.titleAndIcon)
-                    .tag(SortOrder.forward)
-                Label("Descending", systemImage: MySymbols.sortReverse)
-                    .labelStyle(.titleAndIcon)
-                    .tag(SortOrder.reverse)
-            })
-#if os(iOS)
-            .pickerStyle(.menu)
-#else
-            .pickerStyle(.inline)
-#endif
-            .onChange(of: sortOrder) {
-                if var sortElement = sortSetting.first {
-                    sortElement.order = sortOrder
-                    sortSetting = [sortElement]
-                }
+            },
+            label: {
+                Label("Sort", systemImage: MySymbols.sort)
             }
-        }, label: {
-            Label("Sort", systemImage: MySymbols.sort)
-        })
+        )
     }
 }
 

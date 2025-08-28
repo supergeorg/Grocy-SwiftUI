@@ -26,4 +26,16 @@ enum ShoppingListStatus: String {
             return "\(amount) entries are undone"
         }
     }
+    func getIcon() -> String {
+        switch self {
+        case .all:
+            return "list.bullet"
+        case .belowMinStock:
+            return "exclamationmark.triangle"
+        case .done:
+            return "checkmark.circle"
+        case .undone:
+            return "circle"
+        }
+    }
 }

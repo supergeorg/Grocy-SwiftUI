@@ -120,17 +120,13 @@ struct ShoppingListFormView: View {
         .onAppear(perform: resetForm)
         .navigationTitle(shoppingListDescription == nil ? "Create shopping list" : "Edit shopping list")
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    Task {
-                        await saveShoppingList()
-                    }
-                }, label: {
-                    Image(systemName: MySymbols.save)
-                })
-                .keyboardShortcut(.defaultAction)
-                .disabled(isProcessing)
-            }
+            Button(role: .confirm, action: {
+                Task {
+                    await saveShoppingList()
+                }
+            })
+            .keyboardShortcut(.defaultAction)
+            .disabled(isProcessing)
         }
     }
 }

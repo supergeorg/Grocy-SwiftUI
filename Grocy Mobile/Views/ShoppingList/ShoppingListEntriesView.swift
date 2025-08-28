@@ -5,39 +5,39 @@
 //  Created by Georg Meissner on 26.11.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ShoppingListRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
-    
+
     @Environment(\.colorScheme) var colorScheme
-    
+
     var shoppingListItem: ShoppingListItem
     var isBelowStock: Bool
-    
+
     var product: MDProduct? {
         mdProducts.first(where: { $0.id == shoppingListItem.productID })
     }
-    
+
     var quantityUnit: MDQuantityUnit? {
         mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
     }
-    
+
     private var quantityUnitConversions: [MDQuantityUnitConversion] {
         mdQuantityUnitConversions.filter { $0.toQuID == shoppingListItem.quID }
     }
-    
+
     private var factoredAmount: Double {
         shoppingListItem.amount * (quantityUnitConversions.first(where: { $0.fromQuID == shoppingListItem.quID })?.factor ?? 1)
     }
-    
+
     var amountString: String {
         if let quantityUnit = quantityUnit {
             return "\(factoredAmount.formattedAmount) \(quantityUnit.getName(amount: factoredAmount))"
@@ -45,17 +45,17 @@ struct ShoppingListRowView: View {
             return "\(factoredAmount.formattedAmount)"
         }
     }
-    
+
     var body: some View {
         HStack {
-#if os(macOS)
-            ShoppingListRowActionsView(shoppingListItem: shoppingListItem)
-#endif
+            #if os(macOS)
+                ShoppingListRowActionsView(shoppingListItem: shoppingListItem)
+            #endif
             VStack(alignment: .leading) {
                 Text(product?.name ?? shoppingListItem.note ?? "?")
                     .font(.headline)
                     .strikethrough(shoppingListItem.done == 1)
-                Text("Amount") + Text(": \(amountString)")
+                Text("\(Text("Amount")): \(amountString)")
                     .strikethrough(shoppingListItem.done == 1)
             }
             .foregroundStyle(shoppingListItem.done == 1 ? Color.gray : Color.primary)
@@ -65,23 +65,23 @@ struct ShoppingListRowView: View {
 
 struct ShoppingListEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
         userSettingsList.first
     }
-    
+
     @Environment(\.colorScheme) var colorScheme
-    
+
     let shoppingListItem: ShoppingListItem
     @Binding var selectedShoppingListID: Int
-    
+
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var showEntryDeleteAlert: Bool = false
     @State private var showPurchase: Bool = false
     @State private var showAutoPurchase: Bool = false
-    
+
     var isBelowStock: Bool {
         if let product = mdProducts.first(where: { $0.id == shoppingListItem.productID }) {
             if product.minStockAmount > shoppingListItem.amount {
@@ -90,7 +90,7 @@ struct ShoppingListEntriesView: View {
         }
         return false
     }
-    
+
     var backgroundColor: Color {
         if isBelowStock {
             return Color(.GrocyColors.grocyBlueBackground)
@@ -98,7 +98,7 @@ struct ShoppingListEntriesView: View {
             return Color(.GrocyColors.grocyGrayBackground)
         }
     }
-    
+
     private func changeDoneStatus(shoppingListItem: ShoppingListItem) async {
         let doneChangedShoppingListItem = ShoppingListItem(
             id: shoppingListItem.id,
@@ -118,12 +118,12 @@ struct ShoppingListEntriesView: View {
             GrocyLogger.error("Shopping list done status change failed. \(error)")
         }
     }
-    
+
     private func deleteItem(itemToDelete: ShoppingListItem) {
         shlItemToDelete = itemToDelete
         showEntryDeleteAlert.toggle()
     }
-    
+
     private func deleteSHLItem(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: toDelID)
@@ -133,82 +133,125 @@ struct ShoppingListEntriesView: View {
             GrocyLogger.error("Deleting shopping list item failed. \(error)")
         }
     }
-    
+
     var body: some View {
-#if os(iOS)
-        NavigationLink(destination: ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem, selectedShoppingListID: selectedShoppingListID)) {
-            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
-        }
-        .listRowBackground(backgroundColor)
-        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-            Button(role: .destructive,
-                   action: { deleteItem(itemToDelete: shoppingListItem) },
-                   label: { Label("Delete", systemImage: MySymbols.delete) })
-        })
-        .swipeActions(edge: .leading, allowsFullSwipe: shoppingListItem.done != 1, content: {
-            Group {
-                Button(action: {
-                    Task {
-                        await changeDoneStatus(shoppingListItem: shoppingListItem)
-                    }
-                    if shoppingListItem.done != 1,
-                       userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
-                    {
-                        showAutoPurchase.toggle()
-                    }
-                },
-                       label: { Image(systemName: MySymbols.done) })
-                .tint(.green)
-                Button(action: {
-                    showPurchase.toggle()
-                }, label: { Image(systemName: "shippingbox") })
-                .tint(.blue)
+        #if os(iOS)
+            NavigationLink(destination: ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem, selectedShoppingListID: selectedShoppingListID)) {
+                ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
             }
-        })
-        .sheet(isPresented: $showPurchase, content: {
-            NavigationView {
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
-            }
-        })
-        .sheet(isPresented: $showAutoPurchase, content: {
-            NavigationView {
-                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
-            }
-        })
-        .confirmationDialog("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
-                if let deleteID = shlItemToDelete?.id {
-                    Task {
-                        await deleteSHLItem(toDelID: deleteID)
+            .listRowBackground(backgroundColor)
+            .swipeActions(
+                edge: .trailing,
+                allowsFullSwipe: true,
+                content: {
+                    Button(
+                        role: .destructive,
+                        action: { deleteItem(itemToDelete: shoppingListItem) },
+                        label: { Label("Delete", systemImage: MySymbols.delete) }
+                    )
+                }
+            )
+            .swipeActions(
+                edge: .leading,
+                allowsFullSwipe: shoppingListItem.done != 1,
+                content: {
+                    Group {
+                        Button(
+                            action: {
+                                Task {
+                                    await changeDoneStatus(shoppingListItem: shoppingListItem)
+                                }
+                                if shoppingListItem.done != 1,
+                                    userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
+                                {
+                                    showAutoPurchase.toggle()
+                                }
+                            },
+                            label: { Image(systemName: MySymbols.done) }
+                        )
+                        .tint(.green)
+                        Button(
+                            action: {
+                                showPurchase.toggle()
+                            },
+                            label: { Image(systemName: "shippingbox") }
+                        )
+                        .tint(.blue)
                     }
                 }
-            }
-        }, message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
-#else
-        ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
-            .listRowBackground(backgroundColor)
-            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                Button(role: .destructive,
-                       action: { deleteItem(itemToDelete: shoppingListItem) },
-                       label: { Label("Delete", systemImage: MySymbols.delete) })
-            })
-            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                Button(action: { Task { await changeDoneStatus(shoppingListItem: shoppingListItem) } },
-                       label: { Image(systemName: MySymbols.done) })
-                .tint(.green)
-            })
-            .confirmationDialog("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    if let deleteID = shlItemToDelete?.id {
-                        Task {
-                            await deleteSHLItem(toDelID: deleteID)
+            )
+            .sheet(
+                isPresented: $showPurchase,
+                content: {
+                    NavigationView {
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                    }
+                }
+            )
+            .sheet(
+                isPresented: $showAutoPurchase,
+                content: {
+                    NavigationView {
+                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                    }
+                }
+            )
+            .confirmationDialog(
+                "Do you really want to delete this item?",
+                isPresented: $showEntryDeleteAlert,
+                actions: {
+                    Button("Cancel", role: .cancel) {}
+                    Button("Delete", role: .destructive) {
+                        if let deleteID = shlItemToDelete?.id {
+                            Task {
+                                await deleteSHLItem(toDelID: deleteID)
+                            }
                         }
                     }
-                }
-            }, message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") })
-#endif
+                },
+                message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") }
+            )
+        #else
+            ShoppingListRowView(shoppingListItem: shoppingListItem, isBelowStock: isBelowStock)
+                .listRowBackground(backgroundColor)
+                .swipeActions(
+                    edge: .trailing,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            role: .destructive,
+                            action: { deleteItem(itemToDelete: shoppingListItem) },
+                            label: { Label("Delete", systemImage: MySymbols.delete) }
+                        )
+                    }
+                )
+                .swipeActions(
+                    edge: .leading,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            action: { Task { await changeDoneStatus(shoppingListItem: shoppingListItem) } },
+                            label: { Image(systemName: MySymbols.done) }
+                        )
+                        .tint(.green)
+                    }
+                )
+                .confirmationDialog(
+                    "Do you really want to delete this item?",
+                    isPresented: $showEntryDeleteAlert,
+                    actions: {
+                        Button("Cancel", role: .cancel) {}
+                        Button("Delete", role: .destructive) {
+                            if let deleteID = shlItemToDelete?.id {
+                                Task {
+                                    await deleteSHLItem(toDelID: deleteID)
+                                }
+                            }
+                        }
+                    },
+                    message: { Text(mdProducts.first(where: { $0.id == shlItemToDelete?.productID })?.name ?? "Name not found") }
+                )
+        #endif
     }
 }
 
