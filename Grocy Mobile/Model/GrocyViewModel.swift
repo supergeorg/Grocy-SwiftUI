@@ -244,28 +244,31 @@ class GrocyViewModel {
             let objects: [T] = try await grocyApi.getObject(object: object)
             let fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.id)])
             let existingObjects = try modelContext.fetch(fetchDescriptor)
-            
+
+            // Process any pending changes before proceeding
+            modelContext.processPendingChanges()
+
             // Convert to sets for O(1) lookups
             let newObjectsSet = Set(objects)
-            let existingObjectsSet = Set(existingObjects)
-            
-            // Batch delete
-            let objectsToDelete = existingObjectsSet.subtracting(newObjectsSet)
-            for obsoleteObject in objectsToDelete {
-                self.modelContext.delete(obsoleteObject)
+
+            // First delete all existing objects that match IDs in the new set
+            // This ensures we don't have any pending changes for these IDs
+            for newObject in newObjectsSet {
+                if let id = Mirror(reflecting: newObject).children.first(where: { $0.label == "id" })?.value as? Int {
+                    if let existingObject = existingObjects.first(where: {
+                        Mirror(reflecting: $0).children.first(where: { $0.label == "id" })?.value as? Int == id
+                    }) {
+                        modelContext.delete(existingObject)
+                    }
+                }
             }
-            
-            // Batch insert
-            let objectsToInsert = newObjectsSet.subtracting(existingObjectsSet)
-            for newObject in objectsToInsert {
-                self.modelContext.insert(newObject)
+
+            // Then insert all new objects
+            for newObject in newObjectsSet {
+                modelContext.insert(newObject)
             }
-            
-            // Single save after all operations
-            if !objectsToDelete.isEmpty || !objectsToInsert.isEmpty {
-                try self.modelContext.save()
-            }
-            
+
+            try modelContext.save()
             return objects
         } catch {
             GrocyLogger.error("\(error)")
