@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MDStoreRowView: View {
     var store: MDStore
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(store.name)
