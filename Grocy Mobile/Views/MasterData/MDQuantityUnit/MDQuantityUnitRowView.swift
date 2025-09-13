@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MDQuantityUnitRowView: View {
     var quantityUnit: MDQuantityUnit
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center) {

@@ -5,27 +5,27 @@
 //  Created by Georg Meissner on 04.02.22.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MDQuantityUnitConversionFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
-    @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
-    
+    @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
-    
+
     var quantityUnit: MDQuantityUnit
     var existingQuantityUnitConversion: MDQuantityUnitConversion?
     @State var quantityUnitConversion: MDQuantityUnitConversion
-    
+
     @State private var createInverseConversion: Bool = true
-    
+
     @State private var conversionCorrect: Bool = false
     private func checkConversionExists() -> Bool {
         let foundQuantityUnitConversionsForQU = mdQuantityUnitConversions.filter({ $0.fromQuID == quantityUnitConversion.fromQuID })
@@ -52,26 +52,28 @@ struct MDQuantityUnitConversionFormView: View {
     private func checkConversionCorrect() -> Bool {
         return quantityUnitConversion.factor > 0 && !checkConversionExists() && !(createInverseConversion && checkReverseConversionExists())
     }
-    
+
     init(quantityUnit: MDQuantityUnit, existingQuantityUnitConversion: MDQuantityUnitConversion? = nil) {
         self.quantityUnit = quantityUnit
         self.existingQuantityUnitConversion = existingQuantityUnitConversion
-        let initialQuantityUnitConversion = existingQuantityUnitConversion ?? MDQuantityUnitConversion(
-            id: 0,
-            fromQuID: quantityUnit.id,
-            toQuID: 0,
-            factor: 1,
-            productID: nil,
-            rowCreatedTimestamp: Date().iso8601withFractionalSeconds
-        )
+        let initialQuantityUnitConversion =
+            existingQuantityUnitConversion
+            ?? MDQuantityUnitConversion(
+                id: 0,
+                fromQuID: quantityUnit.id,
+                toQuID: 0,
+                factor: 1,
+                productID: nil,
+                rowCreatedTimestamp: Date().iso8601withFractionalSeconds
+            )
         _quantityUnitConversion = State(initialValue: initialQuantityUnitConversion)
     }
-    
+
     private let dataToUpdate: [ObjectEntities] = [.quantity_unit_conversions]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
+
     private func getQUString(amount: Double, qu: MDQuantityUnit?) -> String {
         if let qu = qu {
             return "\(amount.formattedAmount) \(qu.getName(amount: amount))"
@@ -79,11 +81,11 @@ struct MDQuantityUnitConversionFormView: View {
             return amount.formattedAmount
         }
     }
-    
+
     private func finishForm() {
         self.dismiss()
     }
-    
+
     private func saveQuantityUnitConversion() async {
         if quantityUnitConversion.id == 0 {
             quantityUnitConversion.id = grocyVM.findNextID(.quantity_unit_conversions)
@@ -124,32 +126,40 @@ struct MDQuantityUnitConversionFormView: View {
         }
         isProcessing = false
     }
-    
+
     var body: some View {
         Form {
             if isSuccessful == false, let errorMessage = errorMessage {
                 ErrorMessageView(errorMessage: errorMessage)
             }
-            Picker(selection: $quantityUnitConversion.fromQuID, label: Label("Quantity unit from", systemImage: MySymbols.quantityUnit), content: {
-                Text("")
-                    .tag(0)
-                ForEach(mdQuantityUnits, id:\.id) { grocyQuantityUnit in
-                    Text(grocyQuantityUnit.name)
-                        .tag(grocyQuantityUnit.id)
-                }
-            })
-            .disabled(true)
-            
-            VStack(alignment: .leading) {
-                Picker(selection: $quantityUnitConversion.toQuID, label: Label("Quantity unit to", systemImage: MySymbols.quantityUnit), content: {
+            Picker(
+                selection: $quantityUnitConversion.fromQuID,
+                label: Label("Quantity unit from", systemImage: MySymbols.quantityUnit),
+                content: {
                     Text("")
                         .tag(0)
-                    ForEach(mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id:\.id) { grocyQuantityUnit in
+                    ForEach(mdQuantityUnits, id: \.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id)
                     }
-                })
-                
+                }
+            )
+            .disabled(true)
+
+            VStack(alignment: .leading) {
+                Picker(
+                    selection: $quantityUnitConversion.toQuID,
+                    label: Label("Quantity unit to", systemImage: MySymbols.quantityUnit),
+                    content: {
+                        Text("")
+                            .tag(0)
+                        ForEach(mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id: \.id) { grocyQuantityUnit in
+                            Text(grocyQuantityUnit.name)
+                                .tag(grocyQuantityUnit.id)
+                        }
+                    }
+                )
+
                 if checkConversionExists() {
                     Text("Such a conversion already exists")
                         .font(.caption)
@@ -158,13 +168,13 @@ struct MDQuantityUnitConversionFormView: View {
                 Text("This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: quantityUnitConversion.factor, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID })))")
                     .font(.caption)
             }
-            
+
             MyDoubleStepper(amount: $quantityUnitConversion.factor, description: "Factor", minAmount: 0.0001, amountStep: 1, amountName: "", systemImage: MySymbols.amount)
-            
+
             if existingQuantityUnitConversion == nil {
                 VStack(alignment: .leading) {
                     MyToggle(isOn: $createInverseConversion, description: "Create inverse QU conversion", icon: MySymbols.transfer)
-                    
+
                     if checkReverseConversionExists() {
                         Text("Such a conversion already exists")
                             .font(.caption)
@@ -190,10 +200,29 @@ struct MDQuantityUnitConversionFormView: View {
         }
         .navigationTitle(existingQuantityUnitConversion == nil ? "Create QU conversion" : "Edit QU conversion")
         .toolbar(content: {
+            if existingQuantityUnitConversion == nil {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: {
+                        Button(
+                            role: .cancel,
+                            action: {
+                                finishForm()
+                            }
+                        )
+                        .keyboardShortcut(.cancelAction)
+                    }
+                )
+            }
             ToolbarItem(placement: .confirmationAction) {
-                Button(action: { Task { await saveQuantityUnitConversion() } }, label: {
-                    Label("Save", systemImage: MySymbols.save)
-                })
+                Button(
+                    role: .confirm,
+                    action: {
+                        Task {
+                            await saveQuantityUnitConversion()
+                        }
+                    }
+                )
                 .disabled(!conversionCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }
