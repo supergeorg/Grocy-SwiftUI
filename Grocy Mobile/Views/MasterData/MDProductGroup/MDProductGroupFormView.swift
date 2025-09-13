@@ -5,51 +5,53 @@
 //  Created by Georg Meissner on 19.11.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MDProductGroupFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
-    
+
     var existingProductGroup: MDProductGroup?
-    @State var productGroup: MDProductGroup    
-    
+    @State var productGroup: MDProductGroup
+
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-        let foundProductGroup = mdProductGroups.first(where: {$0.name == productGroup.name})
+        let foundProductGroup = mdProductGroups.first(where: { $0.name == productGroup.name })
         return !(productGroup.name.isEmpty || (foundProductGroup != nil && foundProductGroup!.id != productGroup.id))
     }
-    
+
     init(existingProductGroup: MDProductGroup? = nil) {
         self.existingProductGroup = existingProductGroup
-        let initialProductGroup = existingProductGroup ?? MDProductGroup(
-            id: 0,
-            name: "",
-            active: true,
-            mdProductGroupDescription: "",
-            rowCreatedTimestamp: Date().iso8601withFractionalSeconds
-        )
+        let initialProductGroup =
+            existingProductGroup
+            ?? MDProductGroup(
+                id: 0,
+                name: "",
+                active: true,
+                mdProductGroupDescription: "",
+                rowCreatedTimestamp: Date().iso8601withFractionalSeconds
+            )
         _productGroup = State(initialValue: initialProductGroup)
         _isNameCorrect = State(initialValue: true)
     }
-    
+
     private let dataToUpdate: [ObjectEntities] = [.product_groups]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
+
     private func finishForm() {
         self.dismiss()
     }
-    
+
     private func saveProductGroup() async {
         if productGroup.id == 0 {
             productGroup.id = grocyVM.findNextID(.product_groups)
@@ -72,15 +74,30 @@ struct MDProductGroupFormView: View {
         }
         isProcessing = false
     }
-    
+
     var body: some View {
         Form {
             if isSuccessful == false, let errorMessage = errorMessage {
                 ErrorMessageView(errorMessage: errorMessage)
             }
-            MyTextField(textToEdit: $productGroup.name, description: "Product group name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
-            MyToggle(isOn: $productGroup.active, description: "Active")
-            MyTextField(textToEdit: $productGroup.mdProductGroupDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(
+                textToEdit: $productGroup.name,
+                description: "Name",
+                isCorrect: $isNameCorrect,
+                leadingIcon: MySymbols.name,
+                emptyMessage: "A name is required",
+                errorMessage: "Name already exists"
+            )
+            MyToggle(
+                isOn: $productGroup.active,
+                description: "Active",
+                icon: MySymbols.active
+            )
+            MyTextEditor(
+                textToEdit: $productGroup.mdProductGroupDescription,
+                description: "Description",
+                leadingIcon: MySymbols.description
+            )
         }
         .formStyle(.grouped)
         .onChange(of: productGroup.name) {
@@ -88,18 +105,36 @@ struct MDProductGroupFormView: View {
         }
         .navigationTitle(existingProductGroup == nil ? "Create product group" : "Edit product group")
         .toolbar(content: {
+            if existingProductGroup == nil {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: {
+                        Button(
+                            role: .cancel,
+                            action: {
+                                finishForm()
+                            }
+                        )
+                        .keyboardShortcut(.cancelAction)
+                    }
+                )
+            }
             ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    Task {
-                        await saveProductGroup()
+                Button(
+                    role: .confirm,
+                    action: {
+                        Task {
+                            await saveProductGroup()
+                        }
+                    },
+                    label: {
+                        if isProcessing == false {
+                            Image(systemName: MySymbols.save)
+                        } else {
+                            ProgressView()
+                        }
                     }
-                }, label: {
-                    if isProcessing == false {
-                        Label("Save", systemImage: MySymbols.save)
-                    } else {
-                        ProgressView()
-                    }
-                })
+                )
                 .disabled(!isNameCorrect || isProcessing)
                 .keyboardShortcut(.defaultAction)
             }

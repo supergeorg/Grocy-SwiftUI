@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MDProductGroupRowView: View {
     var productGroup: MDProductGroup
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(productGroup.name)
