@@ -5,21 +5,21 @@
 //  Created by Georg Meissner on 16.02.21.
 //
 
+import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
-import OSLog
 
 struct LogView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @AppStorage("localizationKey") var localizationKey: String = "en"
-    
+
     @State private var exportLog: ExportLog = ExportLog(content: Data())
     @State private var isExporting: Bool = false
-    
+
     struct ExportLog: FileDocument {
         static var readableContentTypes: [UTType] { [.plainText] }
-        
+
         var content: Data
         init(content: Data) {
             self.content = content
@@ -35,16 +35,16 @@ struct LogView: View {
             return FileWrapper(regularFileWithContents: content)
         }
     }
-    
+
     func shareFile() {
-//        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
-//            exportLog = ExportLog(content: logData)
-//            isExporting = true
-//        } else {
+        if let logData = grocyVM.logEntries.map({ "\(formatDateAsString($0.date, showTime: true, localizationKey: localizationKey) ?? ""): \($0.composedMessage)" }).joined(separator: "\n").data(using: .utf8) {
+            exportLog = ExportLog(content: logData)
+            isExporting = true
+        } else {
             print("Error exporting log")
-//        }
+        }
     }
-    
+
     var body: some View {
         List {
             if grocyVM.logEntries.isEmpty {
@@ -59,15 +59,21 @@ struct LogView: View {
             }
         }
         .navigationTitle("App log")
-#if os(iOS)
-        .toolbar(content: {
-            ToolbarItemGroup(placement: .automatic, content: {
-                Button(action: {
-                    shareFile()
-                }, label: { Image(systemName: MySymbols.share) })
+        #if os(iOS)
+            .toolbar(content: {
+                ToolbarItemGroup(
+                    placement: .automatic,
+                    content: {
+                        Button(
+                            action: {
+                                shareFile()
+                            },
+                            label: { Image(systemName: MySymbols.share) }
+                        )
+                    }
+                )
             })
-        })
-#endif
+        #endif
         .onAppear(perform: { grocyVM.getLogEntries() })
         .refreshable {
             grocyVM.getLogEntries()
@@ -89,12 +95,12 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-#if os(iOS)
-        NavigationView{
+        #if os(iOS)
+            NavigationView {
+                LogView()
+            }
+        #else
             LogView()
-        }
-#else
-        LogView()
-#endif
+        #endif
     }
 }

@@ -9,12 +9,12 @@ import SwiftUI
 
 struct GrocyInfoView: View {
     var systemInfo: SystemInfo? = nil
-    
+
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("isDemoModus") var isDemoModus: Bool = false
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
-    
+
     var isSupportedServer: Bool {
         if let systemInfo = systemInfo {
             return GrocyAPP.supportedVersions.contains(systemInfo.grocyVersion.version)
@@ -29,17 +29,23 @@ struct GrocyInfoView: View {
             return ""
         }
     }
-    
+
     var body: some View {
         Form {
             if isDemoModus {
-                Link(destination: URL(string: demoServerURL)!, label: {
-                    Label("Grocy Server Demo URL: \(demoServerURL)", systemImage: "safari")
-                })
+                Link(
+                    destination: URL(string: demoServerURL)!,
+                    label: {
+                        Label("Grocy Server Demo URL: \(demoServerURL)", systemImage: "safari")
+                    }
+                )
             } else {
-                Link(destination: URL(string: grocyServerURL)!, label: {
-                    Label("Grocy Server URL: \(grocyServerURL)", systemImage: "safari")
-                })
+                Link(
+                    destination: URL(string: grocyServerURL)!,
+                    label: {
+                        Label("Grocy Server URL: \(grocyServerURL)", systemImage: "safari")
+                    }
+                )
             }
             if let systemInfo = systemInfo {
                 if isSupportedServer {

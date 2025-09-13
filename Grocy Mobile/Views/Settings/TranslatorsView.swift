@@ -12,43 +12,50 @@ struct TranslatorLineView: View {
     var languageFlag: String
     var languageMaintainers: String
     var languageContributors: [String]
-    
+
     var body: some View {
-        DisclosureGroup(content: {
-            Group {
-                ForEach(languageContributors, id: \.self) { contributor in
-                    Text(contributor)
-                        .font(.caption)
+        DisclosureGroup(
+            content: {
+                Group {
+                    ForEach(languageContributors, id: \.self) { contributor in
+                        Text(contributor)
+                            .font(.caption)
+                    }
+                }
+            },
+            label: {
+                Label {
+                    VStack(alignment: .leading) {
+                        Text(languageName)
+                            .font(.title)
+                        Text(languageMaintainers)
+                            .font(.body)
+                    }
+                } icon: {
+                    VStack {
+                        Text(languageFlag).font(.title)
+                    }
                 }
             }
-        }, label: {
-            Label {
-                VStack(alignment: .leading) {
-                    Text(languageName)
-                        .font(.title)
-                    Text(languageMaintainers)
-                        .font(.body)
-                }
-            } icon: {
-                VStack {
-                    Text(languageFlag).font(.title)
-                }
-            }
-        })
+        )
     }
 }
 
 struct TranslatorsView: View {
     var body: some View {
         Form {
-            ForEach(Array(Translators.languages).sorted { $0.name < $1.name }, id: \.self, content: { language in
-                TranslatorLineView(
-                    languageName: language.name,
-                    languageFlag: language.flag,
-                    languageMaintainers: language.maintainers,
-                    languageContributors: language.contributors
-                )
-            })
+            ForEach(
+                Array(Translators.languages).sorted { $0.name < $1.name },
+                id: \.self,
+                content: { language in
+                    TranslatorLineView(
+                        languageName: language.name,
+                        languageFlag: language.flag,
+                        languageMaintainers: language.maintainers,
+                        languageContributors: language.contributors
+                    )
+                }
+            )
         }
         .navigationTitle("Translators")
     }

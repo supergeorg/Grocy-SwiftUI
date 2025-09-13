@@ -19,17 +19,17 @@ enum SettingsNavigationItem: Hashable {
 
 struct SettingsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var selection: SettingsNavigationItem? = nil
     @State private var path = NavigationPath()
-    
+
     @AppStorage("isDemoModus") var isDemoModus: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("grocyServerURL") var grocyServerURL: String = ""
     @AppStorage("grocyAPIKey") var grocyAPIKey: String = ""
-    
+
     var body: some View {
         NavigationStack(path: $path) {
             List {
@@ -45,21 +45,27 @@ struct SettingsView: View {
                                     .foregroundStyle(.primary)
                             }
                         }
-                        Button(action: {
-                            grocyVM.deleteAllCachedData()
-                        }, label: {
-                            Label("Reset cache", systemImage: MySymbols.delete)
-                                .foregroundStyle(.primary)
-                        })
-                        Button(action: {
-                            grocyVM.logout()
-                        }, label: {
-                            Label("Logout from server", systemImage: MySymbols.logout)
-                                .foregroundStyle(.red)
-                        })
+                        Button(
+                            action: {
+                                grocyVM.deleteAllCachedData()
+                            },
+                            label: {
+                                Label("Reset cache", systemImage: MySymbols.delete)
+                                    .foregroundStyle(.primary)
+                            }
+                        )
+                        Button(
+                            action: {
+                                grocyVM.logout()
+                            },
+                            label: {
+                                Label("Logout from server", systemImage: MySymbols.logout)
+                                    .foregroundStyle(.red)
+                            }
+                        )
                     }
                 }
-                
+
                 Section("Grocy settings") {
                     NavigationLink(value: SettingsNavigationItem.appSettings) {
                         Label("App settings", systemImage: MySymbols.app)
@@ -74,7 +80,7 @@ struct SettingsView: View {
                             .foregroundStyle(.primary)
                     }
                 }
-                
+
                 Section("App") {
                     NavigationLink(value: SettingsNavigationItem.appLog) {
                         Label("App log", systemImage: MySymbols.logFile)

@@ -9,14 +9,14 @@ import SwiftUI
 
 struct SettingsStockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @AppStorage("devMode") private var devMode: Bool = false
-    
+
     @State private var useQuickConsume: Bool = false
     @State private var isFirst: Bool = true
-    
+
     private let dataToUpdate: [ObjectEntities] = [.locations, .product_groups, .quantity_units]
-    
+
     var body: some View {
         Form {
             Section("Presets for new products") {
@@ -94,7 +94,7 @@ struct SettingsStockView: View {
                     toggleFeedback: $useQuickConsume
                 )
             }
-            
+
             Section("Common") {
                 ServerSettingsIntStepper(
                     settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesAmounts.rawValue,
