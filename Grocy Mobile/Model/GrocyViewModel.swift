@@ -250,22 +250,25 @@ class GrocyViewModel {
 
             // Convert to sets for O(1) lookups
             let newObjectsSet = Set(objects)
-
-            // First delete all existing objects that match IDs in the new set
-            // This ensures we don't have any pending changes for these IDs
+            let existingObjectsSet = Set(existingObjects)
+            
+            // Find objects that exist in storage but not in new data (deleted objects)
+            let deletedObjects = existingObjectsSet.subtracting(newObjectsSet)
+            for deletedObject in deletedObjects {
+                modelContext.delete(deletedObject)
+            }
+            
+            // Update or insert new objects
             for newObject in newObjectsSet {
                 if let id = Mirror(reflecting: newObject).children.first(where: { $0.label == "id" })?.value as? Int {
                     if let existingObject = existingObjects.first(where: {
                         Mirror(reflecting: $0).children.first(where: { $0.label == "id" })?.value as? Int == id
                     }) {
+                        // Delete and re-insert to ensure we have the latest data
                         modelContext.delete(existingObject)
                     }
+                    modelContext.insert(newObject)
                 }
-            }
-
-            // Then insert all new objects
-            for newObject in newObjectsSet {
-                modelContext.insert(newObject)
             }
 
             try modelContext.save()
