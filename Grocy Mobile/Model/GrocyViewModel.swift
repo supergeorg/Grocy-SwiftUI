@@ -258,23 +258,29 @@ class GrocyViewModel {
                 modelContext.delete(deletedObject)
             }
             
-            // Update or insert new objects
-            for newObject in newObjectsSet {
-                if let id = Mirror(reflecting: newObject).children.first(where: { $0.label == "id" })?.value as? Int {
+            // Find objects that need to be inserted (completely new objects)
+            let newObjects = newObjectsSet.subtracting(existingObjectsSet)
+            for newObject in newObjects {
+                modelContext.insert(newObject)
+            }
+            
+            // Find objects that need to be updated (existing objects with potential changes)
+            let objectsToUpdate = newObjectsSet.intersection(existingObjectsSet)
+            for objectToUpdate in objectsToUpdate {
+                if let id = Mirror(reflecting: objectToUpdate).children.first(where: { $0.label == "id" })?.value {
                     if let existingObject = existingObjects.first(where: {
-                        Mirror(reflecting: $0).children.first(where: { $0.label == "id" })?.value as? Int == id
+                        Mirror(reflecting: $0).children.first(where: { $0.label == "id" })?.value as? Int == id as? Int
                     }) {
-                        // Delete and re-insert to ensure we have the latest data
                         modelContext.delete(existingObject)
+                        modelContext.insert(objectToUpdate)
                     }
-                    modelContext.insert(newObject)
                 }
             }
 
             try modelContext.save()
             return objects
         } catch {
-            GrocyLogger.error("\(error)")
+            GrocyLogger.error("Failed to save data: \(error)")
             throw error
         }
     }
