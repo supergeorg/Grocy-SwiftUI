@@ -5,52 +5,54 @@
 //  Created by Georg Meissner on 16.11.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MDLocationFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
-    
+
     var existingLocation: MDLocation?
     @State var location: MDLocation
-    
+
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
         let foundLocation = mdLocations.first(where: { $0.name == location.name })
         return !(location.name.isEmpty || (foundLocation != nil && foundLocation!.id != location.id))
     }
-    
+
     init(existingLocation: MDLocation? = nil) {
         self.existingLocation = existingLocation
-        let initialLocation = existingLocation ?? MDLocation(
-            id: 0,
-            name: "",
-            active: true,
-            mdLocationDescription: "",
-            isFreezer: false,
-            rowCreatedTimestamp: Date().iso8601withFractionalSeconds
-        )
+        let initialLocation =
+            existingLocation
+            ?? MDLocation(
+                id: 0,
+                name: "",
+                active: true,
+                mdLocationDescription: "",
+                isFreezer: false,
+                rowCreatedTimestamp: Date().iso8601withFractionalSeconds
+            )
         _location = State(initialValue: initialLocation)
         _isNameCorrect = State(initialValue: true)
     }
-    
+
     private let dataToUpdate: [ObjectEntities] = [.locations]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
+
     private func finishForm() {
         dismiss()
     }
-    
+
     private func saveLocation() async {
         if location.id == 0 {
             location.id = grocyVM.findNextID(.locations)
@@ -73,7 +75,7 @@ struct MDLocationFormView: View {
         }
         isProcessing = false
     }
-    
+
     var body: some View {
         Form {
             if isSuccessful == false, let errorMessage = errorMessage {
@@ -82,6 +84,7 @@ struct MDLocationFormView: View {
             MyTextField(
                 textToEdit: $location.name,
                 description: "Name",
+                prompt: "Required",
                 isCorrect: $isNameCorrect,
                 leadingIcon: MySymbols.name,
                 emptyMessage: "A name is required",
@@ -106,21 +109,42 @@ struct MDLocationFormView: View {
         }
         .navigationTitle(existingLocation == nil ? "Create location" : "Edit location")
         .toolbar(content: {
-            ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    Task {
-                        await saveLocation()
+            if existingLocation == nil {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: {
+                        Button(
+                            role: .cancel,
+                            action: {
+                                finishForm()
+                            }
+                        )
+                        .keyboardShortcut(.cancelAction)
                     }
-                }, label: {
-                    if isProcessing == false {
-                        Image(systemName: MySymbols.save)
-                    } else {
-                        ProgressView()
-                    }
-                })
-                .disabled(!isNameCorrect || isProcessing)
-                .keyboardShortcut(.defaultAction)
+                )
             }
+            ToolbarItem(
+                placement: .confirmationAction,
+                content: {
+                    Button(
+                        role: .confirm,
+                        action: {
+                            Task {
+                                await saveLocation()
+                            }
+                        },
+                        label: {
+                            if isProcessing == false {
+                                Image(systemName: MySymbols.save)
+                            } else {
+                                ProgressView()
+                            }
+                        }
+                    )
+                    .disabled(!isNameCorrect || isProcessing)
+                    .keyboardShortcut(.defaultAction)
+                }
+            )
         })
         .onChange(of: isSuccessful) {
             if isSuccessful == true {

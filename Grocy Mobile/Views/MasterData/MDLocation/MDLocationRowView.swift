@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MDLocationRowView: View {
     var location: MDLocation
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center) {
@@ -17,7 +17,7 @@ struct MDLocationRowView: View {
                     .font(.title)
                     .foregroundStyle(location.active ? .primary : .secondary)
                 if location.isFreezer {
-                    Image(systemName: "thermometer.snowflake")
+                    Image(systemName: MySymbols.freezing)
                         .font(.title)
                 }
             }

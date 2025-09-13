@@ -11,48 +11,50 @@ import SwiftUI
 struct MDLocationsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var searchString: String = ""
     @State private var showAddLocation: Bool = false
     @State private var locationToDelete: MDLocation? = nil
     @State private var showDeleteConfirmation: Bool = false
-    
+
     // Fetch the data with a dynamic predicate
     var mdLocations: MDLocations {
         let sortDescriptor = SortDescriptor<MDLocation>(\.name)
-        let predicate = searchString.isEmpty ? nil :
-        #Predicate<MDLocation> { location in
-            searchString == "" ? true : location.name.localizedStandardContains(searchString)
-        }
-        
+        let predicate =
+            searchString.isEmpty
+            ? nil
+            : #Predicate<MDLocation> { location in
+                searchString == "" ? true : location.name.localizedStandardContains(searchString)
+            }
+
         let descriptor = FetchDescriptor<MDLocation>(
             predicate: predicate,
             sortBy: [sortDescriptor]
         )
-        
+
         return (try? modelContext.fetch(descriptor)) ?? []
     }
-    
+
     // Get the unfiltered count without fetching any data
     var mdLocationsCount: Int {
         var descriptor = FetchDescriptor<MDLocation>(
             sortBy: []
         )
         descriptor.fetchLimit = 0
-        
+
         return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
-    
+
     private let dataToUpdate: [ObjectEntities] = [.locations]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
+
     private func deleteItem(itemToDelete: MDLocation) {
         locationToDelete = itemToDelete
         showDeleteConfirmation.toggle()
     }
-    
+
     private func deleteLocation(toDelID: Int) async {
         do {
             try await grocyVM.deleteMDObject(object: .locations, id: toDelID)
@@ -62,7 +64,7 @@ struct MDLocationsView: View {
             GrocyLogger.error("Deleting location failed. \(error)")
         }
     }
-    
+
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
             content
@@ -70,7 +72,7 @@ struct MDLocationsView: View {
             ServerProblemView()
         }
     }
-    
+
     var content: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
@@ -85,20 +87,24 @@ struct MDLocationsView: View {
                     MDLocationRowView(location: location)
                 }
                 .swipeActions(
-                    edge: .trailing, allowsFullSwipe: true,
+                    edge: .trailing,
+                    allowsFullSwipe: true,
                     content: {
                         Button(
                             role: .destructive,
                             action: { deleteItem(itemToDelete: location) },
                             label: { Label("Delete", systemImage: MySymbols.delete) }
                         )
-                    })
+                    }
+                )
             }
         }
-        .navigationDestination(
+        .sheet(
             isPresented: $showAddLocation,
-            destination: {
-                MDLocationFormView()
+            content: {
+                NavigationStack {
+                    MDLocationFormView()
+                }
             }
         )
         .navigationDestination(
@@ -143,17 +149,19 @@ struct MDLocationsView: View {
             ToolbarItemGroup(
                 placement: .primaryAction,
                 content: {
-#if os(macOS)
-                    RefreshButton(updateData: { Task { await updateData() } })
-#endif
+                    #if os(macOS)
+                        RefreshButton(updateData: { Task { await updateData() } })
+                    #endif
                     Button(
                         action: {
                             showAddLocation.toggle()
                         },
                         label: {
                             Label("New location", systemImage: MySymbols.new)
-                        })
-                })
+                        }
+                    )
+                }
+            )
         })
         .navigationTitle("Locations")
     }
