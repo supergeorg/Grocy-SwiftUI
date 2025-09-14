@@ -14,9 +14,7 @@ struct ShoppingListItemWrapped {
 }
 
 enum ShoppingListInteraction: Hashable {
-    case newShoppingList
     case editShoppingList
-    case newShoppingListEntry
 }
 
 struct ShoppingListView: View {
@@ -44,18 +42,13 @@ struct ShoppingListView: View {
     @State private var sortSetting = [KeyPathComparator(\ShoppingListItemWrapped.product?.name)]
     @State private var sortOrder: SortOrder = .forward
 
-    @State private var showingFilterSheet = false
+    @State private var showFilterSheet: Bool = false
+    @State private var showNewShoppingList: Bool = false
+    @State private var showNewShoppingListEntry: Bool = false
 
     @State private var showSHLDeleteAlert: Bool = false
     @State private var showClearListAlert: Bool = false
     @State private var showClearDoneAlert: Bool = false
-
-    private enum InteractionSheet: Identifiable {
-        case newShoppingList, editShoppingList, newShoppingListEntry
-        var id: Int {
-            hashValue
-        }
-    }
 
     private let dataToUpdate: [ObjectEntities] = [
         .products,
@@ -216,6 +209,7 @@ struct ShoppingListView: View {
                         numDone: numDone,
                         numUndone: numUndone
                     )
+                    .listRowInsets(EdgeInsets())
                 }
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
@@ -277,7 +271,7 @@ struct ShoppingListView: View {
             ToolbarItemGroup(
                 placement: .navigation,
                 content: {
-                    Button(action: { showingFilterSheet = true }) {
+                    Button(action: { showFilterSheet = true }) {
                         Image(systemName: MySymbols.filter)
                     }
                     sortGroupMenu
@@ -291,9 +285,13 @@ struct ShoppingListView: View {
             ToolbarItem(
                 placement: .primaryAction,
                 content: {
-                    NavigationLink(value: ShoppingListInteraction.newShoppingListEntry) {
-                        Label("Add item", systemImage: MySymbols.new)
-                    }
+                    Button(
+                        "Add item",
+                        systemImage: MySymbols.new,
+                        action: {
+                            showNewShoppingListEntry.toggle()
+                        }
+                    )
                     .help("Add item")
                 }
             )
@@ -302,12 +300,8 @@ struct ShoppingListView: View {
             for: ShoppingListInteraction.self,
             destination: { interaction in
                 switch interaction {
-                case ShoppingListInteraction.newShoppingList:
-                    ShoppingListFormView(isNewShoppingListDescription: true)
                 case ShoppingListInteraction.editShoppingList:
                     ShoppingListFormView(isNewShoppingListDescription: false, shoppingListDescription: shoppingListDescriptions.first(where: { $0.id == selectedShoppingListID }))
-                case ShoppingListInteraction.newShoppingListEntry:
-                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
                 }
             }
         )
@@ -328,7 +322,7 @@ struct ShoppingListView: View {
             await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
-        .sheet(isPresented: $showingFilterSheet) {
+        .sheet(isPresented: $showFilterSheet) {
             NavigationStack {
                 ShoppingListFilterView(filteredStatus: $filteredStatus)
                     .navigationTitle("Filter")
@@ -342,7 +336,7 @@ struct ShoppingListView: View {
                                 Button(
                                     role: .confirm,
                                     action: {
-                                        showingFilterSheet = false
+                                        showFilterSheet = false
                                     }
                                 )
                             }
@@ -354,15 +348,31 @@ struct ShoppingListView: View {
                                     role: .destructive,
                                     action: {
                                         filteredStatus = .all
-                                        showingFilterSheet = false
+                                        showFilterSheet = false
                                     }
                                 )
                             }
                         )
                     }
             }
+            .presentationDetents([.medium])
         }
-        .presentationDetents([.medium])
+        .sheet(
+            isPresented: $showNewShoppingListEntry,
+            content: {
+                NavigationStack {
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, selectedShoppingListID: selectedShoppingListID)
+                }
+            }
+        )
+        .sheet(
+            isPresented: $showNewShoppingList,
+            content: {
+                NavigationStack {
+                    ShoppingListFormView(isNewShoppingListDescription: true)
+                }
+            }
+        )
         .confirmationDialog(
             "Do you really want to delete this shopping list?",
             isPresented: $showSHLDeleteAlert,
@@ -417,8 +427,10 @@ struct ShoppingListView: View {
             )
             .help("Shopping list")
             Divider()
-            NavigationLink(
-                value: ShoppingListInteraction.newShoppingList,
+            Button(
+                action: {
+                    showNewShoppingList.toggle()
+                },
                 label: {
                     Label("New shopping list", systemImage: MySymbols.new)
                 }

@@ -64,7 +64,7 @@ struct ShoppingListFilterActionView: View {
                 if numDone > 0 {
                     // Done items
                     ShoppingListFilterCapsuleView(num: numDone, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.done, color: .white, backgroundColor: Color(.GrocyColors.grocyGreen))
-                        .animation(.default, value: numUndone)
+                        .animation(.default, value: numDone)
                 }
                 if numBelowStock > 0 {
                     // Below stock
@@ -72,7 +72,7 @@ struct ShoppingListFilterActionView: View {
                         num: numBelowStock,
                         filteredStatus: $filteredStatus,
                         ownFilteredStatus: ShoppingListStatus.belowMinStock,
-                        color: .white,
+                        color: Color(.GrocyColors.grocyGray),
                         backgroundColor: Color(.GrocyColors.grocyBlueBackground)
                     )
                     .animation(.default, value: numBelowStock)

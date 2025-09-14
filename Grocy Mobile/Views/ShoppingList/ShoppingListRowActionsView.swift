@@ -5,34 +5,34 @@
 //  Created by Georg Meissner on 07.12.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ShoppingListRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
         userSettingsList.first
     }
-    
+
     var shoppingListItem: ShoppingListItem
-    
+
     @State private var showEdit: Bool = false
     @State private var showPurchase: Bool = false
     @State private var showAutoPurchase: Bool = false
     @State private var showEntryDeleteAlert: Bool = false
-    
+
     var quantityUnit: MDQuantityUnit? {
         mdQuantityUnits.first(where: { $0.id == shoppingListItem.quID })
     }
-    
+
     var productName: String {
         mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Productname error"
     }
-    
+
     private func changeDoneStatus() async {
         let doneChangedShoppingListItem = ShoppingListItem(
             id: shoppingListItem.id,
@@ -56,11 +56,11 @@ struct ShoppingListRowActionsView: View {
             GrocyLogger.error("Done status change failed. \(error)")
         }
     }
-    
+
     private func deleteItem() {
         showEntryDeleteAlert.toggle()
     }
-    
+
     private func deleteSHLItem() async {
         do {
             try await grocyVM.deleteMDObject(object: .shopping_list, id: shoppingListItem.id)
@@ -70,7 +70,7 @@ struct ShoppingListRowActionsView: View {
             GrocyLogger.error("Deleting shopping list item failed. \(error)")
         }
     }
-    
+
     var body: some View {
         HStack(spacing: 2) {
             RowInteractionButton(image: "checkmark", backgroundColor: Color(.GrocyColors.grocyGreen), helpString: "Mark this item as done")
@@ -86,57 +86,80 @@ struct ShoppingListRowActionsView: View {
                 .onTapGesture {
                     showEdit.toggle()
                 }
-#if os(macOS)
-                .popover(isPresented: $showEdit, content: {
-                    ScrollView {
-                        ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
-                            .frame(width: 500, height: 400)
-                            .padding()
-                    }
-                })
-#else
-                .sheet(isPresented: $showEdit, content: {
-                    ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
-                })
-#endif
+                #if os(macOS)
+                    .popover(
+                        isPresented: $showEdit,
+                        content: {
+                            ScrollView {
+                                ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
+                                    .frame(width: 500, height: 400)
+                                    .padding()
+                            }
+                        }
+                    )
+                #else
+                    .sheet(
+                        isPresented: $showEdit,
+                        content: {
+                            ShoppingListEntryFormView(isNewShoppingListEntry: false, shoppingListEntry: shoppingListItem)
+                        }
+                    )
+                #endif
             RowInteractionButton(image: "trash.fill", backgroundColor: Color(.GrocyColors.grocyDelete), helpString: "Delete this item")
                 .onTapGesture {
                     deleteItem()
                 }
-                .alert("Do you really want to delete this item?", isPresented: $showEntryDeleteAlert, actions: {
-                    Button("Cancel", role: .cancel) {}
-                    Button("Delete", role: .destructive) {
-                        Task {
-                            await deleteSHLItem()
+                .alert(
+                    "Do you really want to delete this item?",
+                    isPresented: $showEntryDeleteAlert,
+                    actions: {
+                        Button("Cancel", role: .cancel) {}
+                        Button("Delete", role: .destructive) {
+                            Task {
+                                await deleteSHLItem()
+                            }
                         }
-                    }
-                }, message: { Text(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") })
-            
+                    },
+                    message: { Text(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found") }
+                )
+
             RowInteractionButton(image: "shippingbox", backgroundColor: Color.blue, helpString: "Add \(shoppingListItem.amount, specifier: "%.2f") \(quantityUnit?.getName(amount: shoppingListItem.amount) ?? "") \(productName) to stock")
                 .onTapGesture {
                     showPurchase.toggle()
                 }
-#if os(macOS)
-                .popover(isPresented: $showPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
-                        .padding()
-                })
-                .popover(isPresented: $showAutoPurchase, content: {
-                    PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
-                        .padding()
-                })
-#elseif os(iOS)
-                .sheet(isPresented: $showPurchase, content: {
-                    NavigationView {
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
-                    }
-                })
-                .sheet(isPresented: $showAutoPurchase, content: {
-                    NavigationView {
-                        PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
-                    }
-                })
-#endif
+                #if os(macOS)
+                    .popover(
+                        isPresented: $showPurchase,
+                        content: {
+                            PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                                .padding()
+                        }
+                    )
+                    .popover(
+                        isPresented: $showAutoPurchase,
+                        content: {
+                            PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                                .padding()
+                        }
+                    )
+                #elseif os(iOS)
+                    .sheet(
+                        isPresented: $showPurchase,
+                        content: {
+                            NavigationStack {
+                                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
+                            }
+                        }
+                    )
+                    .sheet(
+                        isPresented: $showAutoPurchase,
+                        content: {
+                            NavigationStack {
+                                PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
+                            }
+                        }
+                    )
+                #endif
         }
     }
 }

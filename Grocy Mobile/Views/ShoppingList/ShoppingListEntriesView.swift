@@ -8,61 +8,6 @@
 import SwiftData
 import SwiftUI
 
-struct ShoppingListRowView: View {
-    @Environment(GrocyViewModel.self) private var grocyVM
-
-    @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
-    @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
-    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
-    @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
-    @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
-
-    @Environment(\.colorScheme) var colorScheme
-
-    var shoppingListItem: ShoppingListItem
-    var isBelowStock: Bool
-
-    var product: MDProduct? {
-        mdProducts.first(where: { $0.id == shoppingListItem.productID })
-    }
-
-    var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: { $0.id == product?.quIDPurchase })
-    }
-
-    private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        mdQuantityUnitConversions.filter { $0.toQuID == shoppingListItem.quID }
-    }
-
-    private var factoredAmount: Double {
-        shoppingListItem.amount * (quantityUnitConversions.first(where: { $0.fromQuID == shoppingListItem.quID })?.factor ?? 1)
-    }
-
-    var amountString: String {
-        if let quantityUnit = quantityUnit {
-            return "\(factoredAmount.formattedAmount) \(quantityUnit.getName(amount: factoredAmount))"
-        } else {
-            return "\(factoredAmount.formattedAmount)"
-        }
-    }
-
-    var body: some View {
-        HStack {
-            #if os(macOS)
-                ShoppingListRowActionsView(shoppingListItem: shoppingListItem)
-            #endif
-            VStack(alignment: .leading) {
-                Text(product?.name ?? shoppingListItem.note ?? "?")
-                    .font(.headline)
-                    .strikethrough(shoppingListItem.done == 1)
-                Text("\(Text("Amount")): \(amountString)")
-                    .strikethrough(shoppingListItem.done == 1)
-            }
-            .foregroundStyle(shoppingListItem.done == 1 ? Color.gray : Color.primary)
-        }
-    }
-}
-
 struct ShoppingListEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
@@ -162,10 +107,10 @@ struct ShoppingListEntriesView: View {
                                     await changeDoneStatus(shoppingListItem: shoppingListItem)
                                 }
                                 if shoppingListItem.productID != nil {
-                                if shoppingListItem.done != 1,
-                                    userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
-                                {
-                                    showAutoPurchase.toggle()
+                                    if shoppingListItem.done != 1,
+                                        userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
+                                    {
+                                        showAutoPurchase.toggle()
                                     }
                                 }
                             },
@@ -173,13 +118,13 @@ struct ShoppingListEntriesView: View {
                         )
                         .tint(.green)
                         if shoppingListItem.productID != nil {
-                        Button(
-                            action: {
-                                showPurchase.toggle()
-                            },
-                            label: { Image(systemName: "shippingbox") }
-                        )
-                        .tint(.blue)
+                            Button(
+                                action: {
+                                    showPurchase.toggle()
+                                },
+                                label: { Image(systemName: "shippingbox") }
+                            )
+                            .tint(.blue)
                         }
                     }
                 }
@@ -187,7 +132,7 @@ struct ShoppingListEntriesView: View {
             .sheet(
                 isPresented: $showPurchase,
                 content: {
-                    NavigationView {
+                    NavigationStack {
                         PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount)
                     }
                 }
@@ -195,7 +140,7 @@ struct ShoppingListEntriesView: View {
             .sheet(
                 isPresented: $showAutoPurchase,
                 content: {
-                    NavigationView {
+                    NavigationStack {
                         PurchaseProductView(directProductToPurchaseID: shoppingListItem.productID, productToPurchaseAmount: shoppingListItem.amount, autoPurchase: true)
                     }
                 }
@@ -259,11 +204,9 @@ struct ShoppingListEntriesView: View {
     }
 }
 
-//struct ShoppingListRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        List {
-//            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, infoString: Binding.constant(nil))
-//            ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false, infoString: Binding.constant(nil))
-//        }
-//    }
-//}
+#Preview {
+    List {
+        ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 1, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false)
+        ShoppingListRowView(shoppingListItem: ShoppingListItem(id: 1, productID: 1, note: "note", amount: 2, shoppingListID: 1, done: 0, quID: 1, rowCreatedTimestamp: "ts"), isBelowStock: false)
+    }
+}
