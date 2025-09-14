@@ -497,16 +497,17 @@ class GrocyViewModel {
             
             // Get all the logs from the last hour.
             let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
-            
+
             // Fetch log objects.
             let allEntries = try logStore.getEntries(at: oneHourAgo)
-            
+
             // Filter the log to be relevant for our specific subsystem
             // and remove other elements (signposts, etc).
-            let logEntriesFiltered =  allEntries
+            let logEntriesFiltered =
+                allEntries
                 .compactMap { $0 as? OSLogEntryLog }
-                .filter { $0.subsystem == "Grocy-Mobile" }
-            
+                .filter { $0.subsystem == "georgappdev.Grocy" }
+
             self.logEntries = logEntriesFiltered
         } catch {
             GrocyLogger.error("Error getting log entries")
