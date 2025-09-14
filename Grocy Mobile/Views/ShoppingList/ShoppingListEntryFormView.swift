@@ -114,7 +114,7 @@ struct ShoppingListEntryFormView: View {
 
     private func resetForm() {
         shoppingListID = shoppingListEntry?.shoppingListID ?? selectedShoppingListID ?? 1
-        productID = shoppingListEntry?.productID ?? product?.id
+        productID = shoppingListEntry?.productID ?? product?.id ?? productIDToSelect
         amount = shoppingListEntry?.amount ?? (product != nil ? 1.0 : 0.0)
         quantityUnitID = shoppingListEntry?.quID ?? product?.quIDPurchase
         note = shoppingListEntry?.note ?? ""

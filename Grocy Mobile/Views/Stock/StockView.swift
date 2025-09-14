@@ -18,7 +18,7 @@ enum StockInteraction: Hashable {
     case transferProduct
     case inventoryProduct
     case stockJournal
-    case addToShL(StockElement)
+    case addToShL(stockElement: StockElement)
     case productPurchase(stockElement: StockElement)
     case productConsume(stockElement: StockElement)
     case productTransfer(stockElement: StockElement)
@@ -320,8 +320,8 @@ struct StockView: View {
                     StockProductInfoView(stockElement: stockElement)
                 case .productJournal(let stockElement):
                     StockJournalView(stockElement: stockElement)
-                default:
-                    Text("TEST")
+                case .addToShL(let stockElement):
+                    ShoppingListEntryFormView(isNewShoppingListEntry: true, productIDToSelect: stockElement.productID)
                 }
             }
         )

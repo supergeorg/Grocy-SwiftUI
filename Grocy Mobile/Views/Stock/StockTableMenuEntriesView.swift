@@ -32,8 +32,13 @@ struct StockTableMenuEntriesView: View {
     }
     
     var body: some View {
+        NavigationLink(
+            value: StockInteraction.addToShL(stockElement: stockElement),
+            label: {
         Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
             .labelStyle(.titleAndIcon)
+            }
+        )
         Divider()
         Group{
             NavigationLink(value: StockInteraction.productPurchase(stockElement: stockElement), label: {
