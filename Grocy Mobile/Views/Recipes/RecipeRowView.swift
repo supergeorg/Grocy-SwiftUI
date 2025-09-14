@@ -9,15 +9,17 @@ import SwiftUI
 
 struct RecipeRowView: View {
     var recipe: Recipe
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Group {
                 if let pictureFileName = recipe.pictureFileName {
-                    PictureView(pictureFileName: pictureFileName, pictureType: .recipePictures, maxWidth: 200.0, maxHeight: 200.0)
+                    PictureView(pictureFileName: pictureFileName, pictureType: .recipePictures)
+                        .clipShape(.rect(cornerRadius: 5.0))
+                        .frame(maxWidth: 200.0, maxHeight: 200.0)
                 } else {
                     ProgressView()
-                        .frame(width: 200.0, height: 200.0)
+                        .frame(maxWidth: 200.0, maxHeight: 200.0)
                 }
             }
             Group {

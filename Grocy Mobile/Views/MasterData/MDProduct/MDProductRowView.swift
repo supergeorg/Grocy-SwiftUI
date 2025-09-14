@@ -19,7 +19,9 @@ struct MDProductRowView: View {
     var body: some View {
         HStack {
             if let pictureFileName = product.pictureFileName {
-                PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 75.0, maxHeight: 75.0)
+                PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
+                    .clipShape(.rect(cornerRadius: 5.0))
+                    .frame(maxWidth: 75.0, maxHeight: 75.0)
             }
             VStack(alignment: .leading) {
                 Text(product.name)

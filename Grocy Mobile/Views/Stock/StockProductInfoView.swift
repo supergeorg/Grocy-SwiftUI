@@ -82,10 +82,13 @@ struct StockProductInfoView: View {
                     +
                     Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                 }
-                //
-                //                if let pictureFileName = stockElement?.product.pictureFileName {
-                //                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 200.0)
-                //                }
+                }
+
+                if let pictureFileName = stockElement.product?.pictureFileName {
+                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
+                        .clipShape(.rect(cornerRadius: 5.0))
+                        .aspectRatio(contentMode: .fill)
+                }
             } else {
                 Text("Retrieving Details failed.")
             }

@@ -11,7 +11,7 @@ import SwiftUI
 struct MDProductPictureFormViewNew: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
-    var product: MDProduct?
+    var existingProduct: MDProduct?
 
     @Binding var pictureFileName: String?
 
@@ -36,28 +36,28 @@ struct MDProductPictureFormViewNew: View {
 
     private func uploadPicture() async {
         if let productImageData = productImageData, let productImageFilename = productImageFilename {
-            //#if os(iOS)
-            //            let imagePicture = UIImage(data: productImageData)
-            //#elseif os(macOS)
-            //            let imagePicture = NSImage(data: productImageData)
-            //#endif
-            //            if let pictureFileNameData = productImageFilename.data(using: .utf8), let jpegData = imagePicture?.jpegData(compressionQuality: 0.8) {
-            //                let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-            //                isProcessing = true
-            //                do {
-            //                    try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
-            //                    GrocyLogger.info("Picture successfully uploaded.")
-            //                    //                await changeProductPicture(newPictureFileName: newPictureFileName)
-            //                } catch {
-            //                    GrocyLogger.error("Picture upload failed. \(error)")
-            //                    isProcessing = false
-            //                }
-            //            }
+            #if os(iOS)
+                let imagePicture = UIImage(data: productImageData)
+            #elseif os(macOS)
+                let imagePicture = NSImage(data: productImageData)
+            #endif
+            if let pictureFileNameData = productImageFilename.data(using: .utf8), let jpegData = imagePicture?.jpegData(compressionQuality: 0.8) {
+                let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+                isProcessing = true
+                do {
+                    try await grocyVM.uploadFileData(fileData: jpegData, groupName: "productpictures", fileName: base64Encoded)
+                    GrocyLogger.info("Picture successfully uploaded.")
+                    await changeProductPicture(newPictureFileName: productImageFilename)
+                } catch {
+                    GrocyLogger.error("Picture upload failed. \(error)")
+                    isProcessing = false
+                }
+            }
         }
     }
 
     private func changeProductPicture(newPictureFileName: String?) async {
-        if let product = product {
+        if let product = existingProduct {
             let updatedProduct = product
             updatedProduct.pictureFileName = newPictureFileName
             do {
@@ -80,7 +80,9 @@ struct MDProductPictureFormViewNew: View {
         Form {
             if let pictureFileName = pictureFileName, !pictureFileName.isEmpty {
                 Section("Existing product picture") {
-                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 300.0, maxHeight: 300.0)
+                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
+                        .clipShape(.rect(cornerRadius: 5.0))
+                        .frame(maxWidth: 300.0, maxHeight: 300.0)
                     Text(pictureFileName)
                         .font(.caption)
                     if let pictureFileNameData = pictureFileName.data(using: .utf8) {
@@ -134,7 +136,7 @@ struct MDProductPictureFormViewNew: View {
         .onChange(of: productImageItem) {
             Task {
                 if let data = try? await productImageItem?.loadTransferable(type: Data.self) {
-                    if let product = product {
+                    if let product = existingProduct {
                         productImageFilename = "\(UUID())_\(product.name.cleanedFileName).jpg"
                     } else {
                         productImageFilename = "\(UUID()).jpg"
@@ -226,7 +228,7 @@ struct MDProductPictureFormView: View {
 
     private func changeProductPicture(newPictureFileName: String?) async {
         if let product = product {
-            var productPOST = product
+            let productPOST = product
             productPOST.pictureFileName = newPictureFileName
             do {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: productPOST)
@@ -245,7 +247,8 @@ struct MDProductPictureFormView: View {
         Form {
             Section {
                 if let pictureFileName = pictureFileName, !pictureFileName.isEmpty {
-                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures, maxWidth: 100.0, maxHeight: 100.0)
+                    PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
+                        .frame(maxWidth: 100.0, maxHeight: 100.0)
                     Text(pictureFileName)
                         .font(.caption)
                     if let pictureFileNameData = pictureFileName.data(using: .utf8) {
@@ -366,10 +369,11 @@ struct MDProductPictureFormView: View {
     }
 }
 
-struct MDProductPictureFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            //            MDProductPictureFormView(product: MDProduct(id: "1", name: "Product name", mdProductDescription: "Product description", productGroupID: "1", active: "1", locationID: "1", storeID: "1", quIDPurchase: "1", quIDStock: "1", minStockAmount: "1", defaultBestBeforeDays: "1", defaultBestBeforeDaysAfterOpen: "1", defaultBestBeforeDaysAfterFreezing: "1", defaultBestBeforeDaysAfterThawing: "1", pictureFileName: "cookies.jpg", enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "1", parentProductID: "1", calories: "1", cumulateMinStockAmountOfSubProducts: "0", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "TS", hideOnStockOverview: nil, userfields: nil), selectedPictureURL: Binding.constant(nil), selectedPictureFileName: Binding.constant(nil))
-        }
+#Preview {
+    @Previewable @State var pictureFileName: String? = nil
+    NavigationStack {
+        MDProductPictureFormView(
+            pictureFileName: $pictureFileName
+        )
     }
 }

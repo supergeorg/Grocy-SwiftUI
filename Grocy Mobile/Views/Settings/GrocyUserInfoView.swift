@@ -19,6 +19,7 @@ struct GrocyUserInfoView: View {
             HStack {
                 if let pictureFileName = grocyUser.pictureFileName {
                     PictureView(pictureFileName: pictureFileName, pictureType: .userPictures)
+                        .clipShape(.rect(cornerRadius: 5.0))
                 }
                 VStack(alignment: .leading) {
                     Text(grocyUser.username)
