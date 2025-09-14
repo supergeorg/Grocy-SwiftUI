@@ -161,15 +161,18 @@ struct ShoppingListEntriesView: View {
                                 Task {
                                     await changeDoneStatus(shoppingListItem: shoppingListItem)
                                 }
+                                if shoppingListItem.productID != nil {
                                 if shoppingListItem.done != 1,
                                     userSettings?.shoppingListToStockWorkflowAutoSubmitWhenPrefilled == true
                                 {
                                     showAutoPurchase.toggle()
+                                    }
                                 }
                             },
                             label: { Image(systemName: MySymbols.done) }
                         )
                         .tint(.green)
+                        if shoppingListItem.productID != nil {
                         Button(
                             action: {
                                 showPurchase.toggle()
@@ -177,6 +180,7 @@ struct ShoppingListEntriesView: View {
                             label: { Image(systemName: "shippingbox") }
                         )
                         .tint(.blue)
+                        }
                     }
                 }
             )
