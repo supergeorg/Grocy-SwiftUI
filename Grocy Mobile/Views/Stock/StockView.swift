@@ -366,8 +366,8 @@ struct StockView: View {
                         )
                     }
             }
+            .presentationDetents([.medium])
         }
-        .presentationDetents([.medium])
     }
 
     var sortMenu: some View {
