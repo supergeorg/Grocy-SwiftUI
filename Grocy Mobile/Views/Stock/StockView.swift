@@ -44,6 +44,11 @@ struct StockView: View {
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
 
+    #if os(iOS)
+        @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = true
+        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
+
     private enum StockGrouping: Identifiable {
         case none, productGroup, nextDueDate, lastPurchased, minStockAmount, parentProduct, defaultLocation
         var id: Int {
@@ -275,6 +280,16 @@ struct StockView: View {
                 sortMenu
             }
             ToolbarSpacer(.fixed)
+            #if os(iOS)
+                if horizontalSizeClass == .compact && iPhoneTabNavigation {
+                    ToolbarItem(placement: .automatic) {
+                        NavigationLink(value: StockInteraction.stockJournal) {
+                            Label("Stock journal", systemImage: MySymbols.stockJournal)
+                        }
+                    }
+                    ToolbarSpacer(.fixed)
+                }
+            #endif
             #if os(iOS)
                 ToolbarItemGroup(placement: .primaryAction) {
                     NavigationLink(value: StockInteraction.inventoryProduct) {
