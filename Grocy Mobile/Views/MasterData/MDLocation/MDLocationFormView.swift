@@ -60,6 +60,7 @@ struct MDLocationFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try location.modelContext?.save()
             if existingLocation == nil {
                 _ = try await grocyVM.postMDObject(object: .locations, content: location)
             } else {

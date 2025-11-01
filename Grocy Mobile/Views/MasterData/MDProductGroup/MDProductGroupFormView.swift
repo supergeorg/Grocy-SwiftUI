@@ -59,6 +59,7 @@ struct MDProductGroupFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try productGroup.modelContext?.save()
             if existingProductGroup == nil {
                 _ = try await grocyVM.postMDObject(object: .product_groups, content: productGroup)
             } else {

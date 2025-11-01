@@ -26,14 +26,14 @@ struct MDTaskCategoryFormView: View {
     
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {
-//        let foundTaskCategory = grocyVM.mdTaskCategories.first(where: {$0.name == name})
-//        if isNewTaskCategory {
-//            return !(name.isEmpty || foundTaskCategory != nil)
-//        } else {
-//            if let taskCategory = taskCategory, let foundTaskCategory = foundTaskCategory {
-//                return !(name.isEmpty || (foundTaskCategory.id != taskCategory.id))
-//            } else { return false }
-//        }
+        //        let foundTaskCategory = grocyVM.mdTaskCategories.first(where: {$0.name == name})
+        //        if isNewTaskCategory {
+        //            return !(name.isEmpty || foundTaskCategory != nil)
+        //        } else {
+        //            if let taskCategory = taskCategory, let foundTaskCategory = foundTaskCategory {
+        //                return !(name.isEmpty || (foundTaskCategory.id != taskCategory.id))
+        //            } else { return false }
+        //        }
         return false
     }
     
@@ -91,9 +91,12 @@ struct MDTaskCategoryFormView: View {
             .navigationTitle(isNewTaskCategory ? "Create task category" : "Edit task category")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: { Task { await saveTaskCategory() } }, label: {
-                        Label("Save task category", systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
+                    Button(role: .confirm, action: {
+                        Task {
+                            await saveTaskCategory()
+                        }
+                    }, label: {
+                        Image(systemName: MySymbols.save)
                     })
                     .disabled(!isNameCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)

@@ -59,6 +59,7 @@ struct MDStoreFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try store.modelContext?.save()
             if existingStore == nil {
                 _ = try await grocyVM.postMDObject(object: .shopping_locations, content: store)
             } else {

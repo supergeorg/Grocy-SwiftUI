@@ -140,10 +140,12 @@ struct MDProductsView: View {
             )
         })
         .navigationTitle("Products")
-        .navigationDestination(
+        .sheet(
             isPresented: $showAddProduct,
-            destination: {
-                MDProductFormView(userSettings: userSettings)
+            content: {
+                NavigationStack {
+                    MDProductFormView(userSettings: userSettings)
+                }
             }
         )
         .navigationDestination(

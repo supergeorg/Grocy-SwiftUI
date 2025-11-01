@@ -5,28 +5,31 @@
 //  Created by Georg Meissner on 19.10.23.
 //
 
+//import SwiftData
 import SwiftUI
 
 struct MDQuantityUnitRowView: View {
     var quantityUnit: MDQuantityUnit
 
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .center) {
-                Text(quantityUnit.name)
-                    .font(.title)
-                if !quantityUnit.namePlural.isEmpty {
-                    Text("(\(quantityUnit.namePlural))")
-                        .font(.title3)
-                }
+        HStack(alignment: .center) {
+            Text(quantityUnit.name)
+                .font(.title)
+            if !quantityUnit.namePlural.isEmpty {
+                Text("(\(quantityUnit.namePlural))")
+                    .font(.title3)
             }
-            .foregroundStyle(quantityUnit.active ? .primary : .secondary)
-            if !quantityUnit.mdQuantityUnitDescription.isEmpty {
-                Text(quantityUnit.mdQuantityUnitDescription)
-                    .font(.caption)
-            }
+            //            if quantityUnit.hasChanges {
+            //                Image(systemName: MySymbols.notSaved)
+            //                    .foregroundStyle(.orange)
+            //            }
         }
-        .multilineTextAlignment(.leading)
+        .foregroundStyle(quantityUnit.active ? .primary : .secondary)
+        if !quantityUnit.mdQuantityUnitDescription.isEmpty {
+            Text(quantityUnit.mdQuantityUnitDescription)
+                .font(.caption)
+                .multilineTextAlignment(.leading)
+        }
     }
 }
 

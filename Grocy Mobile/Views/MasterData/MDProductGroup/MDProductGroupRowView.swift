@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 19.10.23.
 //
 
+import SwiftData
 import SwiftUI
 
 struct MDProductGroupRowView: View {
@@ -12,9 +13,15 @@ struct MDProductGroupRowView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(productGroup.name)
-                .font(.title)
-                .foregroundColor(productGroup.active ? .primary : .gray)
+            HStack {
+                Text(productGroup.name)
+                    .font(.title)
+                    .foregroundColor(productGroup.active ? .primary : .gray)
+                //                if productGroup.hasChanges {
+                //                    Image(systemName: MySymbols.notSaved)
+                //                        .foregroundStyle(.orange)
+                //                }
+            }
             if !productGroup.mdProductGroupDescription.isEmpty {
                 Text(productGroup.mdProductGroupDescription)
                     .font(.caption)

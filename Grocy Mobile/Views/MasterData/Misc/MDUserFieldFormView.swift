@@ -101,9 +101,12 @@ struct MDUserFieldFormView: View {
             .navigationTitle(isNewUserField ? "Create userfield" : "Edit userfield")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: { Task { await saveUserField() } }, label: {
-                        Label("Save", systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
+                    Button(role: .confirm, action: {
+                        Task {
+                            await saveUserField()
+                        }
+                    }, label: {
+                        Image(systemName: MySymbols.save)
                     })
                     .disabled(!isNameCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)

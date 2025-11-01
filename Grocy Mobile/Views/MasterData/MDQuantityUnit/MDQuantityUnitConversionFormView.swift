@@ -93,6 +93,7 @@ struct MDQuantityUnitConversionFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try quantityUnitConversion.modelContext?.save()
             if existingQuantityUnitConversion == nil {
                 _ = try await grocyVM.postMDObject(object: .quantity_unit_conversions, content: quantityUnitConversion)
                 if createInverseConversion {

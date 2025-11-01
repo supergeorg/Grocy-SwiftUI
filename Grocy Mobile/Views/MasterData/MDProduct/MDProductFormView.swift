@@ -88,7 +88,7 @@ struct MDProductFormView: View {
                 parentProductID: nil,
                 calories: nil,
                 cumulateMinStockAmountOfSubProducts: false,
-                dueType: 0,
+                dueType: 1,
                 quickConsumeAmount: nil,
                 quickOpenAmount: nil,
                 hideOnStockOverview: false,
@@ -133,6 +133,7 @@ struct MDProductFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try product.modelContext?.save()
             if existingProduct == nil {
                 _ = try await grocyVM.postMDObject(object: .products, content: product)
                 await grocyVM.requestData(objects: [.products])
@@ -229,6 +230,20 @@ struct MDProductFormView: View {
         }
         .navigationTitle(existingProduct == nil ? "Create product" : "Edit product")
         .toolbar(content: {
+            if existingProduct == nil {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: {
+                        Button(
+                            role: .cancel,
+                            action: {
+                                finishForm()
+                            }
+                        )
+                        .keyboardShortcut(.cancelAction)
+                    }
+                )
+            }
             ToolbarItem(placement: .confirmationAction) {
                 Button(
                     role: .confirm,
@@ -259,7 +274,7 @@ struct MDProductFormView: View {
                 case .barcode:
                     barcodePropertiesView
                 case .productPicture:
-                    MDProductPictureFormViewNew(pictureFileName: $product.pictureFileName)
+                    MDProductPictureFormViewNew(existingProduct: existingProduct, pictureFileName: $product.pictureFileName)
                 }
             }
         )

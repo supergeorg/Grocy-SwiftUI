@@ -68,7 +68,7 @@ struct MDBarcodeScanner: View {
                 }, alignment: .topTrailing)
         }
 #else
-        Text("Not implemented on this platform.")
+        Text("Not available on this platform.")
 #endif
     }
 }

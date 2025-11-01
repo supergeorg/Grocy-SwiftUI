@@ -41,7 +41,25 @@ struct MDProductPictureFormViewNew: View {
             #elseif os(macOS)
                 let imagePicture = NSImage(data: productImageData)
             #endif
-            if let pictureFileNameData = productImageFilename.data(using: .utf8), let jpegData = imagePicture?.jpegData(compressionQuality: 0.8) {
+            if let pictureFileNameData = productImageFilename.data(using: .utf8) {
+                #if os(iOS)
+                    let jpegData = imagePicture?.jpegData(compressionQuality: 0.8)
+                    guard let jpegData = jpegData else {
+                        isProcessing = false
+                        return
+                    }
+                #elseif os(macOS)
+                    guard let cgImage = imagePicture?.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                        isProcessing = false
+                        return
+                    }
+                    let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+                    let jpegData = bitmapRep.representation(using: .jpeg, properties: [.compressionFactor: 0.8])
+                    guard let jpegData = jpegData else {
+                        isProcessing = false
+                        return
+                    }
+                #endif
                 let base64Encoded = pictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
                 isProcessing = true
                 do {

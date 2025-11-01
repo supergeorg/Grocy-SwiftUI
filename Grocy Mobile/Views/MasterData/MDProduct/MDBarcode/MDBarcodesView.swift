@@ -5,43 +5,57 @@
 //  Created by Georg Meissner on 03.12.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MDBarcodesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
-    @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
-    
+    @Environment(\.modelContext) private var modelContext
+
     @State private var searchString: String = ""
-    
+
     var product: MDProduct
-    
+
     @State private var productBarcodeToDelete: MDProductBarcode? = nil
     @State private var showDeleteConfirmation: Bool = false
-    
+
     @State private var showAddBarcode: Bool = false
-    
+
+    // Fetch the data with a dynamic predicate
+    var mdProductBarcodes: MDProductBarcodes {
+        let sortDescriptor = SortDescriptor<MDProductBarcode>(\.barcode)
+        let predicate =
+            #Predicate<MDProductBarcode> { barcode in
+                barcode.productID == product.id && (searchString.isEmpty ? true : barcode.barcode.contains(searchString))
+            }
+
+        let descriptor = FetchDescriptor<MDProductBarcode>(
+            predicate: predicate,
+            sortBy: [sortDescriptor],
+        )
+
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    var mdProductBarcodesCount: Int {
+        var descriptor = FetchDescriptor<MDProductBarcode>(
+            predicate: #Predicate<MDProductBarcode> { barcode in
+                barcode.productID == product.id
+            },
+            sortBy: []
+        )
+        descriptor.fetchLimit = 0
+        descriptor.includePendingChanges = false
+
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
+
     private let dataToUpdate: [ObjectEntities] = [.product_barcodes]
-    
+
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
-    
-    var productBarcodes: MDProductBarcodes {
-        mdProductBarcodes
-            .filter {
-                $0.productID == product.id
-            }
-            .sorted(by: { $0.id < $1.id })
-    }
-    var filteredBarcodes: MDProductBarcodes {
-        productBarcodes
-            .filter {
-                searchString == "" || $0.barcode.contains(searchString)
-            }
-    }
-    
+
     private func deleteItem(itemToDelete: MDProductBarcode) {
         productBarcodeToDelete = itemToDelete
         showDeleteConfirmation.toggle()
@@ -55,26 +69,34 @@ struct MDBarcodesView: View {
             GrocyLogger.error("Deleting barcode failed. \(error)")
         }
     }
-    
+
     var body: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if productBarcodes.isEmpty {
+            } else if mdProductBarcodesCount == 0 {
                 ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
-            } else if filteredBarcodes.isEmpty {
+            } else if mdProductBarcodes.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredBarcodes, id:\.id) { productBarcode in
-                NavigationLink(value: productBarcode, label: {
-                    MDBarcodeRowView(barcode: productBarcode)
-                })
-                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                    Button(role: .destructive,
-                           action: { deleteItem(itemToDelete: productBarcode) },
-                           label: { Label("Delete", systemImage: MySymbols.delete) }
-                    )
-                })
+            ForEach(mdProductBarcodes, id: \.id) { productBarcode in
+                NavigationLink(
+                    value: productBarcode,
+                    label: {
+                        MDBarcodeRowView(barcode: productBarcode)
+                    }
+                )
+                .swipeActions(
+                    edge: .trailing,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            role: .destructive,
+                            action: { deleteItem(itemToDelete: productBarcode) },
+                            label: { Label("Delete", systemImage: MySymbols.delete) }
+                        )
+                    }
+                )
             }
         }
         .navigationTitle("Barcodes")
@@ -85,32 +107,50 @@ struct MDBarcodesView: View {
             await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")
-        .animation(.default, value: filteredBarcodes.count)
+        .animation(.default, value: mdProductBarcodes.count)
         .toolbar(content: {
-            ToolbarItem(placement: .automatic, content: {
-                Button(action: {
-                    showAddBarcode.toggle()
-                }, label: {
-                    Label("Add barcode", systemImage: "plus")
-                        .labelStyle(.titleAndIcon)
-                })
-            })
+            ToolbarItem(
+                placement: .automatic,
+                content: {
+                    Button(
+                        action: {
+                            showAddBarcode.toggle()
+                        },
+                        label: {
+                            Image(systemName: MySymbols.new)
+                        }
+                    )
+                }
+            )
         })
-        .alert("Do you really want to delete this barcode?", isPresented: $showDeleteConfirmation, actions: {
-            Button("Cancel", role: .cancel) { }
-            Button("Delete", role: .destructive) {
-                if let toDelID = productBarcodeToDelete?.id {
-                    Task {
-                        await deleteProductBarcode(toDelID: toDelID)
+        .alert(
+            "Do you really want to delete this barcode?",
+            isPresented: $showDeleteConfirmation,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    if let toDelID = productBarcodeToDelete?.id {
+                        Task {
+                            await deleteProductBarcode(toDelID: toDelID)
+                        }
                     }
                 }
+            },
+            message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") }
+        )
+        .sheet(
+            isPresented: $showAddBarcode,
+            content: {
+                NavigationStack {
+                    MDBarcodeFormView(product: product)
+                }
             }
-        }, message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") })
-        .navigationDestination(isPresented: $showAddBarcode, destination: {
-            MDBarcodeFormView(product: product)
-        })
-        .navigationDestination(for: MDProductBarcode.self, destination: { productBarcode in
-            MDBarcodeFormView(product: product, existingBarcode: productBarcode)
-        })
+        )
+        .navigationDestination(
+            for: MDProductBarcode.self,
+            destination: { productBarcode in
+                MDBarcodeFormView(product: product, existingBarcode: productBarcode)
+            }
+        )
     }
 }

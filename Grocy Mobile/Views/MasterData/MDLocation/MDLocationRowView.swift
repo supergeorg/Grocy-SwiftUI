@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 19.10.23.
 //
 
+// import SwiftData
 import SwiftUI
 
 struct MDLocationRowView: View {
@@ -16,6 +17,10 @@ struct MDLocationRowView: View {
                 Text(location.name)
                     .font(.title)
                     .foregroundStyle(location.active ? .primary : .secondary)
+                //                if location.hasChanges {
+                //                    Image(systemName: MySymbols.notSaved)
+                //                        .foregroundStyle(.orange)
+                //                }
                 if location.isFreezer {
                     Image(systemName: MySymbols.freezing)
                         .font(.title)

@@ -20,12 +20,9 @@ struct MDLocationsView: View {
     // Fetch the data with a dynamic predicate
     var mdLocations: MDLocations {
         let sortDescriptor = SortDescriptor<MDLocation>(\.name)
-        let predicate =
-            searchString.isEmpty
-            ? nil
-            : #Predicate<MDLocation> { location in
-                searchString == "" ? true : location.name.localizedStandardContains(searchString)
-            }
+        let predicate = #Predicate<MDLocation> { location in
+            searchString.isEmpty || location.name.localizedStandardContains(searchString)
+        }
 
         let descriptor = FetchDescriptor<MDLocation>(
             predicate: predicate,

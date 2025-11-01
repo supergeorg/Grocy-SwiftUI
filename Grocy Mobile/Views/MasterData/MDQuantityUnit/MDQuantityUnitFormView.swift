@@ -88,6 +88,7 @@ struct MDQuantityUnitFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try quantityUnit.modelContext?.save()
             if existingQuantityUnit == nil {
                 _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnit)
             } else {
@@ -224,13 +225,6 @@ struct MDQuantityUnitFormView: View {
                     action: {
                         Task {
                             await saveQuantityUnit()
-                        }
-                    },
-                    label: {
-                        if isProcessing == false {
-                            Image(systemName: MySymbols.save)
-                        } else {
-                            ProgressView()
                         }
                     }
                 )

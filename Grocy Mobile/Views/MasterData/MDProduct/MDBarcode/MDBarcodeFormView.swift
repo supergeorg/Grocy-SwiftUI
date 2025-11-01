@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MDBarcodeFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \MDProductBarcode.id, order: .forward) var mdProductBarcodes: MDProductBarcodes
     @Query(filter: #Predicate<MDStore> { $0.active }, sort: \MDStore.name, order: .forward) var mdStores: MDStores
@@ -68,6 +69,7 @@ struct MDBarcodeFormView: View {
         isProcessing = true
         isSuccessful = nil
         do {
+            try barcode.modelContext?.save()
             if existingBarcode == nil {
                 _ = try await grocyVM.postMDObject(object: .product_barcodes, content: barcode)
             } else {
@@ -88,8 +90,14 @@ struct MDBarcodeFormView: View {
         Form {
             HStack {
                 MyTextField(
-                    textToEdit: $barcode.barcode, description: "Barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, emptyMessage: "A barcode is required", errorMessage: "The barcode is invalid or already in use.",
-                    helpText: nil)
+                    textToEdit: $barcode.barcode,
+                    description: "Barcode",
+                    isCorrect: $isBarcodeCorrect,
+                    leadingIcon: MySymbols.barcode,
+                    emptyMessage: "A barcode is required",
+                    errorMessage: "The barcode is invalid or already in use.",
+                    helpText: nil
+                )
                 #if os(iOS)
                     MDBarcodeScanner(barcode: $barcode.barcode)
                 #endif
@@ -98,7 +106,12 @@ struct MDBarcodeFormView: View {
             Section("Amount") {
                 MyDoubleStepperOptional(amount: $barcode.amount, description: "Amount", minAmount: 0, amountName: "", systemImage: MySymbols.amount)
                 Picker(
-                    selection: $barcode.quID, label: Label("Quantity unit", systemImage: "scalemass"),
+                    selection: $barcode.quID,
+                    label: HStack {
+                        Image(systemName: "scalemass")
+                            .foregroundStyle(.primary)
+                        Text("Quantity unit")
+                    },
                     content: {
                         Text("")
                             .tag(nil as Int?)
@@ -111,11 +124,16 @@ struct MDBarcodeFormView: View {
                                     .tag(pickerQU.id as Int?)
                             }
                         }
-                    })
+                    }
+                )
             }
 
             Picker(
-                selection: $barcode.storeID, label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
+                selection: $barcode.storeID,
+                label: HStack {
+                    Image(systemName: MySymbols.store).foregroundStyle(.primary)
+                    Text("Store")
+                },
                 content: {
                     Text("")
                         .tag(nil as Int?)
@@ -123,9 +141,10 @@ struct MDBarcodeFormView: View {
                         Text(grocyStore.name)
                             .tag(grocyStore.id as Int?)
                     }
-                })
+                }
+            )
 
-            MyTextField(textToEdit: $barcode.note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextEditor(textToEdit: $barcode.note, description: "Note", leadingIcon: MySymbols.description)
 
         }
         .onChange(of: barcode.barcode) {
@@ -133,6 +152,20 @@ struct MDBarcodeFormView: View {
         }
         .navigationTitle(existingBarcode == nil ? "Add barcode" : "Edit barcode")
         .toolbar(content: {
+            if existingBarcode == nil {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: {
+                        Button(
+                            role: .cancel,
+                            action: {
+                                finishForm()
+                            }
+                        )
+                        .keyboardShortcut(.cancelAction)
+                    }
+                )
+            }
             ToolbarItem(placement: .confirmationAction) {
                 Button(
                     role: .confirm,

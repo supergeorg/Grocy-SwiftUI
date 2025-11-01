@@ -24,9 +24,15 @@ struct MDProductRowView: View {
                     .frame(maxWidth: 75.0, maxHeight: 75.0)
             }
             VStack(alignment: .leading) {
-                Text(product.name)
-                    .font(.title)
-                    .foregroundStyle(product.active ? .primary : .secondary)
+                HStack {
+                    Text(product.name)
+                        .font(.title)
+                        .foregroundStyle(product.active ? .primary : .secondary)
+                    //                    if product.hasChanges {
+                    //                        Image(systemName: MySymbols.notSaved)
+                    //                            .foregroundStyle(.orange)
+                    //                    }
+                }
                 if let locationID = mdLocations.firstIndex(where: { $0.id == product.locationID }) {
                     Text("\(Text("Location")): \(Text(mdLocations[locationID].name).font(.caption))")
                 }

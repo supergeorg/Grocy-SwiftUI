@@ -28,8 +28,8 @@ struct MDUserEntityFormView: View {
     
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
-//        let foundUserEntity = grocyVM.mdUserEntities.first(where: {$0.name == name})
-//        return isNewUserEntity ? !(name.isEmpty || foundUserEntity != nil) : !(name.isEmpty || (foundUserEntity != nil && foundUserEntity!.id != foundUserEntity!.id))
+        //        let foundUserEntity = grocyVM.mdUserEntities.first(where: {$0.name == name})
+        //        return isNewUserEntity ? !(name.isEmpty || foundUserEntity != nil) : !(name.isEmpty || (foundUserEntity != nil && foundUserEntity!.id != foundUserEntity!.id))
         return false
     }
     
@@ -95,9 +95,12 @@ struct MDUserEntityFormView: View {
             .navigationTitle(isNewUserEntity ? "New userentity" : "Edit userentity")
             .toolbar(content: {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: { Task { await saveUserEntity() } }, label: {
-                        Label("Save", systemImage: MySymbols.save)
-                            .labelStyle(.titleAndIcon)
+                    Button(role: .confirm, action: {
+                        Task {
+                            await saveUserEntity()
+                        }
+                    }, label: {
+                        Image(systemName: MySymbols.save)
                     })
                     .disabled(!isNameCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)
