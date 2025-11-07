@@ -18,6 +18,9 @@ struct MySymbols {
     static let shoppingList = "cart.fill"
     static let masterData = "folder"
     static let settings = "gear"
+    static let chores = "house"
+    static let batteries = "battery.25percent"
+    static let tasks = "point.fill.topleft.down.curvedto.point.fill.bottomright.up"
 
     static let stockOverview = "archivebox"
     static let product = "tag"
@@ -83,6 +86,7 @@ struct MySymbols {
     static let active = "checkmark.circle.fill"
     static let warning = "exclamationmark.triangle.fill"
     static let error = "xmark.circle.fill"
+    static let notSaved = "square.and.arrow.down.badge.clock"
 
     static let qrScan = "qrcode.viewfinder"
     static let barcodeScan = "barcode.viewfinder"
