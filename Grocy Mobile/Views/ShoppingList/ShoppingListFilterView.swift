@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ShoppingListFilterView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.colorScheme) var colorScheme
 
     @Binding var filteredStatus: ShoppingListStatus
 
@@ -32,6 +33,22 @@ struct ShoppingListFilterView: View {
                         .foregroundStyle(.primary)
                 }
             )
+            #if os(iOS)
+                .listRowBackground(
+                    Group {
+                        switch filteredStatus {
+                        case .all:
+                            colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground)
+                        case .done:
+                            Color(.GrocyColors.grocyGreen)
+                        case .undone:
+                            Color(.GrocyColors.grocyGrayBackground)
+                        case .belowMinStock:
+                            Color(.GrocyColors.grocyBlueBackground)
+                        }
+                    }
+                )
+            #endif
         }
     }
 }
