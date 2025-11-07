@@ -15,7 +15,14 @@ struct ConsumeProductView: View {
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
-    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
+//    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
+    var stockProductEntries: StockEntries {
+        if let productID = productID {
+            return grocyVM.stockProductEntries[productID] ?? []
+        } else {
+            return []
+        }
+    }
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
         userSettingsList.first
@@ -63,7 +70,7 @@ struct ConsumeProductView: View {
     @State private var showRecipeInfo: Bool = false
 
     private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .locations]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.user_settings]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.user_settings, .stock]
 
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -99,16 +106,12 @@ struct ConsumeProductView: View {
     }
 
     private var filteredLocations: MDLocations {
-        var locIDs: Set<Int> = Set<Int>()
         if let productID = productID {
-            for entry in stockProductEntries.filter({ $0.productID == productID }) {
-                if let locID = entry.locationID {
-                    locIDs.insert(locID)
-                }
+            return mdLocations.filter { location in
+                stockProductEntries.contains(where: { 
+                    $0.productID == productID && $0.locationID == location.id
+                })
             }
-            return
-                mdLocations
-                .filter { locIDs.contains($0.id) }
         } else {
             return mdLocations
         }
@@ -177,8 +180,8 @@ struct ConsumeProductView: View {
                 GrocyLogger.info("Opening successful.")
                 await grocyVM.requestData(additionalObjects: [.stock])
                 resetForm()
-                if self.actionFinished != nil {
-                    self.actionFinished?.wrappedValue = true
+                if quickScan == true {
+                    self.dismiss()
                 }
             } catch {
                 GrocyLogger.error("Opening failed: \(error)")
@@ -222,21 +225,20 @@ struct ConsumeProductView: View {
                 }
             }
 
-            if !quickScan {
-                ProductField(productID: $productID, description: "Product")
-                    .onChange(of: productID) {
-                        if let productID = productID {
-                            Task {
-                                try await grocyVM.getStockProductEntries(productID: productID)
-                            }
-                            if let product = product {
-                                locationID = product.locationID
-                                quantityUnitID = product.quIDStock
-                                amount = userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
-                            }
+            ProductField(productID: $productID, description: "Product")
+                .disabled(quickScan)
+                .onChange(of: productID) {
+                    if let productID = productID {
+                        Task {
+                            try await grocyVM.getStockProductEntries(productID: productID)
+                        }
+                        if let product = product {
+                            locationID = product.locationID
+                            quantityUnitID = product.quIDStock
+                            amount = userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
                         }
                     }
-            }
+                }
 
             if productID != nil {
 
@@ -328,8 +330,15 @@ struct ConsumeProductView: View {
                 }
             }
         }
-        .navigationTitle("Consume")
+        .navigationTitle(consumeType == .open ? "Open" : "Consume")
         .formStyle(.grouped)
+        .task {
+            if firstAppear {
+                await updateData()
+                resetForm()
+                firstAppear = false
+            }
+        }
         .toolbar(content: {
             if directProductToConsumeID == nil {
                 ToolbarItem(id: "clear", placement: .cancellationAction) {
@@ -365,6 +374,7 @@ struct ConsumeProductView: View {
             if (consumeType == .open) || (consumeType == .both) {
                 ToolbarItem(id: "open", placement: .primaryAction) {
                     Button(
+                        role: .confirm,
                         action: {
                             Task {
                                 await openProduct()
@@ -382,6 +392,7 @@ struct ConsumeProductView: View {
             if (consumeType == .consume) || (consumeType == .both) {
                 ToolbarItem(id: "consume", placement: .primaryAction) {
                     Button(
+                        role: .confirm,
                         action: {
                             Task {
                                 await consumeProduct()

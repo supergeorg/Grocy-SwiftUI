@@ -145,8 +145,8 @@ struct PurchaseProductView: View {
                 if autoPurchase {
                     self.dismiss()
                 }
-                if self.actionFinished != nil {
-                    self.actionFinished?.wrappedValue = true
+                if quickScan == true {
+                    self.dismiss()
                 }
             } catch {
                 GrocyLogger.error("Purchase failed: \(error)")
@@ -163,23 +163,22 @@ struct PurchaseProductView: View {
                 }
             }
 
-            if !quickScan {
-                ProductField(productID: $productID, description: "Product")
-                    .onChange(of: productID) {
-                        if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
-                            if locationID == nil { locationID = selectedProduct.locationID }
-                            if storeID == nil { storeID = selectedProduct.storeID }
-                            quantityUnitID = selectedProduct.quIDPurchase
-                            if product?.defaultDueDays == -1 {
-                                productDoesntSpoil = true
-                                dueDate = Calendar.current.startOfDay(for: Date())
-                            } else {
-                                productDoesntSpoil = false
-                                dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date())
-                            }
+            ProductField(productID: $productID, description: "Product")
+                .disabled(quickScan)
+                .onChange(of: productID) {
+                    if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
+                        if locationID == nil { locationID = selectedProduct.locationID }
+                        if storeID == nil { storeID = selectedProduct.storeID }
+                        quantityUnitID = selectedProduct.quIDPurchase
+                        if product?.defaultDueDays == -1 {
+                            productDoesntSpoil = true
+                            dueDate = Calendar.current.startOfDay(for: Date())
+                        } else {
+                            productDoesntSpoil = false
+                            dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date())
                         }
                     }
-            }
+                }
 
             if productID != nil {
 
@@ -309,8 +308,9 @@ struct PurchaseProductView: View {
                     }
                 )
             }
-            ToolbarItem(id: "purchase", placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button(
+                    role: .confirm,
                     action: {
                         Task {
                             await purchaseProduct()
@@ -318,7 +318,6 @@ struct PurchaseProductView: View {
                     },
                     label: {
                         Label("Purchase product", systemImage: MySymbols.purchase)
-                            .labelStyle(.titleAndIcon)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)
