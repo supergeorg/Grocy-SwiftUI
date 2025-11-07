@@ -10,6 +10,10 @@ import SwiftData
 
 @Model
 class StockJournalEntry: Codable, Equatable {
+    var transactionType: TransactionType {
+        TransactionType(rawValue: transactionTypeRaw) ?? .purchase
+    }
+    
     @Attribute(.unique) var id: Int
     var productID: Int
     var amount: Double
@@ -18,7 +22,7 @@ class StockJournalEntry: Codable, Equatable {
     var usedDate: String?
     var spoiled: Int
     var stockID: String
-    var transactionType: TransactionType
+    @Attribute var transactionTypeRaw: String
     var price: Double?
     var undone: Int
     var undoneTimestamp: String?
@@ -42,7 +46,7 @@ class StockJournalEntry: Codable, Equatable {
         case usedDate = "used_date"
         case spoiled
         case stockID = "stock_id"
-        case transactionType = "transaction_type"
+        case transactionTypeRaw = "transaction_type"
         case price
         case undone
         case undoneTimestamp = "undone_timestamp"
@@ -69,7 +73,7 @@ class StockJournalEntry: Codable, Equatable {
             self.usedDate = try? container.decodeIfPresent(String.self, forKey: .usedDate) ?? nil
             do { self.spoiled = try container.decode(Int.self, forKey: .spoiled) } catch { self.spoiled = try Int(container.decode(String.self, forKey: .spoiled))! }
             do { self.stockID = try container.decode(String.self, forKey: .stockID) } catch { self.stockID = try String(container.decode(Int.self, forKey: .stockID)) }
-            self.transactionType = try container.decode(TransactionType.self, forKey: .transactionType)
+            self.transactionTypeRaw = try container.decode(String.self, forKey: .transactionTypeRaw)
             do { self.price = try container.decodeIfPresent(Double.self, forKey: .price) } catch { self.price = try? Double(container.decodeIfPresent(String.self, forKey: .price) ?? "") }
             do { self.undone = try container.decode(Int.self, forKey: .undone) } catch { self.undone = try Int(container.decode(String.self, forKey: .undone))! }
             self.undoneTimestamp = try? container.decodeIfPresent(String.self, forKey: .undoneTimestamp) ?? nil
@@ -98,7 +102,7 @@ class StockJournalEntry: Codable, Equatable {
         try container.encode(usedDate, forKey: .usedDate)
         try container.encode(spoiled, forKey: .spoiled)
         try container.encode(stockID, forKey: .stockID)
-        try container.encode(transactionType, forKey: .transactionType)
+        try container.encode(transactionTypeRaw, forKey: .transactionTypeRaw)
         try container.encode(price, forKey: .price)
         try container.encode(undone, forKey: .undone)
         try container.encode(undoneTimestamp, forKey: .undoneTimestamp)
@@ -123,7 +127,7 @@ class StockJournalEntry: Codable, Equatable {
         lhs.usedDate == rhs.usedDate &&
         lhs.spoiled == rhs.spoiled &&
         lhs.stockID == rhs.stockID &&
-        lhs.transactionType == rhs.transactionType &&
+        lhs.transactionTypeRaw == rhs.transactionTypeRaw &&
         lhs.price == rhs.price &&
         lhs.undone == rhs.undone &&
         lhs.undoneTimestamp == rhs.undoneTimestamp &&

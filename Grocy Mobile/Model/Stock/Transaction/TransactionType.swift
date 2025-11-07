@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 
 enum TransactionType: String, Codable, CaseIterable {
-    case consume
+    case consume = "consume"
     case inventoryCorrection = "inventory-correction"
     case productOpened = "product-opened"
-    case purchase
+    case purchase = "purchase"
     case selfProduction = "self-production"
     case stockEditNew = "stock-edit-new"
     case stockEditOld = "stock-edit-old"
