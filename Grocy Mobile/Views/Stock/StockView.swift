@@ -38,9 +38,6 @@ struct StockView: View {
     var volatileStock: VolatileStock? {
         return volatileStockList.first
     }
-    @Query var stockProductDetails: [StockProductDetails]
-    @Query var stockProductLocations: [StockLocation]
-
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
 
@@ -111,44 +108,31 @@ struct StockView: View {
         return missingStockList
     }
 
-    var stockWithMissing: Stock {
-        stock + missingStock
-    }
+    var filteredAndSearchedStock: [StockElement] {
+        // First use predicate for simple conditions
+        let simplePredicate = #Predicate<StockElement> { stockElement in
+            !(stockElement.product?.hideOnStockOverview ?? false)
+                && (searchString.isEmpty || stockElement.product?.name.localizedStandardContains(searchString) ?? false)
+                && (filteredProductGroupID == nil || stockElement.product?.productGroupID == filteredProductGroupID)
+        }
 
-    var filteredStock: Stock {
-        stockWithMissing
-            //            .filter {
-            //                filteredStatus == .expiringSoon ? volatileStock?.dueProducts.map({$0.productID}).contains($0.productID) ?? false : true
-            //            }
-            //            .filter {
-            //                filteredStatus == .overdue ? (volatileStock?.overdueProducts.map({$0.productID}).contains($0.productID) ?? false) && !(volatileStock?.expiredProducts.map({$0.productID}).contains($0.productID) ?? false) : true
-            //            }
-            //            .filter {
-            //                filteredStatus == .expired ? volatileStock?.expiredProducts.map({$0.productID}).contains($0.productID) ?? false : true
-            //            }
-            .filter {
-                filteredStatus == .belowMinStock ? volatileStock?.missingProducts.map({ $0.productID }).contains($0.productID) ?? false : true
+        // Then apply complex filters using Swift
+        return (stock + missingStock)
+            .filter { (try? simplePredicate.evaluate($0)) ?? false }
+            .filter { stockElement in
+                // Location filter
+                filteredLocationID == nil || stockElement.product?.locationID == filteredLocationID
+                || ((grocyVM.stockProductLocations[stockElement.productID]?.contains(where: {
+                    $0.locationID == filteredLocationID
+                })) != nil)
             }
-            .filter { se in
-                filteredLocationID != nil
-                    ? ((se.product?.locationID == filteredLocationID)
-                        || (stockProductLocations.first(where: { loc in
-                            se.productID == loc.productID && loc.locationID == filteredLocationID
-                        }) != nil)) : true
-            }
-            .filter {
-                filteredProductGroupID != nil ? $0.product?.productGroupID == filteredProductGroupID : true
-            }
-    }
-
-    var searchedStock: Stock {
-        return
-            filteredStock
-            .filter {
-                !searchString.isEmpty ? $0.product?.name.localizedCaseInsensitiveContains(searchString) ?? true : true
-            }
-            .filter {
-                $0.product?.hideOnStockOverview == false
+            .filter { stockElement in
+                // Status filters
+                filteredStatus == .all || (filteredStatus == .belowMinStock && volatileStock?.missingProducts.contains(where: { $0.productID == stockElement.productID }) ?? false)
+                    || (filteredStatus == .expiringSoon && volatileStock?.dueProducts.contains(where: { $0.productID == stockElement.productID }) ?? false)
+                    || (filteredStatus == .overdue && (volatileStock?.overdueProducts.contains(where: { $0.productID == stockElement.productID }) ?? false)
+                        && !(volatileStock?.expiredProducts.contains(where: { $0.productID == stockElement.productID }) ?? false))
+                    || (filteredStatus == .expired && volatileStock?.expiredProducts.contains(where: { $0.productID == stockElement.productID }) ?? false)
             }
             .sorted(using: sortSetting)
     }
@@ -157,14 +141,14 @@ struct StockView: View {
         switch stockGrouping {
         case .none:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     ""
                 }
             )
         case .productGroup:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     mdProductGroups.first(where: { productGroup in
                         productGroup.id == element.product?.productGroupID
@@ -174,28 +158,28 @@ struct StockView: View {
             )
         case .nextDueDate:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     element.bestBeforeDate?.iso8601withFractionalSeconds ?? ""
                 }
             )
         case .lastPurchased:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
-                    stockProductDetails.first(where: { $0.productID == element.productID })?.lastPurchased?.iso8601withFractionalSeconds ?? ""
+                    grocyVM.stockProductDetails[element.productID]?.lastPurchased?.iso8601withFractionalSeconds ?? ""
                 }
             )
         case .minStockAmount:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     element.product?.minStockAmount.formattedAmount ?? ""
                 }
             )
         case .parentProduct:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     mdProducts.first(where: { product in
                         product.id == element.productID
@@ -205,7 +189,7 @@ struct StockView: View {
             )
         case .defaultLocation:
             return Dictionary(
-                grouping: searchedStock,
+                grouping: filteredAndSearchedStock,
                 by: { element in
                     mdLocations.first(where: { location in
                         location.id == element.product?.locationID
@@ -236,7 +220,7 @@ struct StockView: View {
                 ServerProblemView()
             } else if stock.isEmpty {
                 ContentUnavailableView("Stock is empty.", systemImage: MySymbols.quantityUnit)
-            } else if searchedStock.isEmpty {
+            } else if filteredAndSearchedStock.isEmpty {
                 ContentUnavailableView.search
             }
             ForEach(groupedStock.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
@@ -273,7 +257,7 @@ struct StockView: View {
             await updateData()
         }
         .toolbar(content: {
-            ToolbarItemGroup(placement: .automatic) {
+            ToolbarItemGroup(placement: .navigation) {
                 Button(action: { showingFilterSheet = true }) {
                     Image(systemName: MySymbols.filter)
                 }
@@ -488,11 +472,9 @@ struct StockView: View {
     }
 }
 
-struct StockView_Previews: PreviewProvider {
-    static var previews: some View {
-        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
-            StockView()
-                .preferredColorScheme(scheme)
-        }
+#Preview {
+    ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+        StockView()
+            .preferredColorScheme(scheme)
     }
 }
