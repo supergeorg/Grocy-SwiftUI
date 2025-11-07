@@ -1,172 +1,89 @@
 {
   "images" : [
     {
-      "filename" : "icon_40pt.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "icon_20pt@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "icon_29pt@2x-1.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "icon_29pt@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "icon_40pt@2x-1.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "icon_40pt@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "icon_60pt@2x.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "icon_60pt@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "icon_20pt.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "icon_20pt@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "icon_29pt.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "icon_29pt@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "icon_40pt-1.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "icon_40pt@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "icon_76pt.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "76x76"
-    },
-    {
-      "filename" : "icon_76pt@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "76x76"
-    },
-    {
-      "filename" : "icon_83.5@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "83.5x83.5"
-    },
-    {
-      "filename" : "Icon.png",
-      "idiom" : "ios-marketing",
-      "scale" : "1x",
+      "filename" : "Icons-iOS-Default-1024x1024@1x.png",
+      "idiom" : "universal",
+      "platform" : "ios",
       "size" : "1024x1024"
     },
     {
-      "filename" : "icon-16.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Icons-iOS-Dark-1024x1024@1x.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "Icons-iOS-TintedLight-1024x1024@1x.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "icon-33.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "icon-32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "icon-64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "icon-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "icon-257.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "icon-256.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "icon-513.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "icon-512.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "icon-1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
+    },
+    {
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "size" : "1024x1024"
     }
   ],
   "info" : {
