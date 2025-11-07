@@ -12,7 +12,7 @@ public enum APIError: Error, Equatable {
         return String(describing: self).components(separatedBy: "(").first
     }
     public static func == (lhs: APIError, rhs: APIError) -> Bool {
-       lhs.value == rhs.value
+        lhs.value == rhs.value
     }
     case internalError
     case serverError(error: Error)
@@ -29,7 +29,8 @@ public enum APIError: Error, Equatable {
 }
 
 public enum ObjectEntities: String, CaseIterable {
-    case products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_nestings, tasks, task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
+    case products, product_barcodes, chores, batteries, locations, quantity_units, quantity_unit_conversions, shopping_list, shopping_lists, shopping_locations, recipes, recipes_pos, recipes_pos_resolved, recipes_nestings, tasks,
+        task_categories, product_groups, equipment, userfields, userentities, userobjects, meal_plan, stock_log
 }
 
 public enum AdditionalEntities: String, CaseIterable {
@@ -56,7 +57,7 @@ public enum ResponseCodes: Int {
 }
 
 struct EmptyResponse: Codable {
-    
+
 }
 
 protocol GrocyAPI {
@@ -89,7 +90,7 @@ protocol GrocyAPI {
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
     func getBookingWithID(id: Int) async throws -> StockJournalEntry
     func undoBookingWithID(id: Int) async throws
-    func getPictureURL(groupName: String, fileName: String)async throws -> String?
+    func getPictureURL(groupName: String, fileName: String) async throws -> String?
     // MARK: - Shopping List
     func shoppingListAddItem(content: Data) async throws
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws
@@ -108,36 +109,36 @@ protocol GrocyAPI {
 
 public class GrocyApi: GrocyAPI {
     var hassAuthenticator: HomeAssistantAuthenticator?
-    
+
     private var timeoutInterval: Double = 60.0
-    
+
     private var baseURL: String = ""
     private var apiKey: String = ""
-    
+
     func setLoginData(baseURL: String, apiKey: String) {
         self.baseURL = baseURL
         self.apiKey = apiKey
     }
-    
+
     func setHassData(hassURL: String, hassToken: String) {
         self.hassAuthenticator = HomeAssistantAuthenticator(hassURL: hassURL, hassToken: hassToken)
     }
-    
+
     func clearHassData() {
         self.hassAuthenticator = nil
     }
-    
+
     func setTimeoutInterval(timeoutInterval: Double) {
         self.timeoutInterval = timeoutInterval
     }
-    
+
     private enum Method: String {
         case GET
         case POST
         case DELETE
         case PUT
     }
-    
+
     private func callGetFileData(
         _ endPoint: Endpoint,
         fileName: String? = nil,
@@ -149,7 +150,7 @@ public class GrocyApi: GrocyAPI {
         var queries = ["force_serve_as=picture"]
         if let bestFitHeight = bestFitHeight { queries.append("best_fit_height=\(bestFitHeight)") }
         if let bestFitWidth = bestFitWidth { queries.append("best_fit_width=\(bestFitWidth)") }
-        
+
         let urlRequest = request(
             for: endPoint,
             method: .GET,
@@ -179,7 +180,7 @@ public class GrocyApi: GrocyAPI {
             throw APIError.internalError
         }
     }
-    
+
     private func callUploadFileData(
         _ endPoint: Endpoint,
         fileData: Data,
@@ -203,7 +204,7 @@ public class GrocyApi: GrocyAPI {
             throw APIError.internalError
         }
     }
-    
+
     private func callUploadFile(
         _ endPoint: Endpoint,
         fileURL: URL,
@@ -227,7 +228,7 @@ public class GrocyApi: GrocyAPI {
             throw APIError.internalError
         }
     }
-    
+
     private func callEmptyResponse(
         _ endPoint: Endpoint,
         method: Method,
@@ -264,7 +265,7 @@ public class GrocyApi: GrocyAPI {
             )
         }
     }
-    
+
     private func callAPIEmptyResponse(
         _ endPoint: Endpoint,
         method: Method,
@@ -301,7 +302,7 @@ public class GrocyApi: GrocyAPI {
             throw APIError.internalError
         }
     }
-    
+
     private func call<T: Codable>(
         _ endPoint: Endpoint,
         method: Method,
@@ -317,7 +318,7 @@ public class GrocyApi: GrocyAPI {
             return try await self.callAPI(endPoint, method: method, object: object, id: id, content: content, queries: queries)
         }
     }
-    
+
     private func callAPI<T: Codable>(
         _ endPoint: Endpoint,
         method: Method,
@@ -356,7 +357,7 @@ public class GrocyApi: GrocyAPI {
         }
         throw APIError.internalError
     }
-    
+
     private func request(
         for endpoint: Endpoint,
         method: Method,
@@ -394,24 +395,26 @@ public class GrocyApi: GrocyAPI {
             let query = queries.joined(separator: "&")
             path += "?\(query)"
         }
-        
+
         guard let url = URL(string: path)
         else { preconditionFailure("Bad URL") }
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields = ["Content-Type": isOctet ? "application/octet-stream" : "application/json",
-                                       "Accept": "application/json",
-                                       "GROCY-API-KEY": self.apiKey]
-        
+        request.allHTTPHeaderFields = [
+            "Content-Type": isOctet ? "application/octet-stream" : "application/json",
+            "Accept": "application/json",
+            "GROCY-API-KEY": self.apiKey,
+        ]
+
         if let hassIngressToken = hassIngressToken {
             request.addValue("ingress_session=\(hassIngressToken)", forHTTPHeaderField: "Cookie")
         }
         if content != nil {
             request.httpBody = content
         }
-        
+
         print(url.absoluteString)
-        
+
         request.timeoutInterval = self.timeoutInterval
         return request
     }
@@ -501,7 +504,7 @@ extension GrocyApi {
 
 extension GrocyApi {
     // MARK: - System
-    
+
     func getSystemInfo() async throws -> SystemInfo {
         return try await call(.systemInfo, method: .GET)
     }
@@ -509,65 +512,65 @@ extension GrocyApi {
     func getSystemDBChangedTime() async throws -> SystemDBChangedTime {
         return try await call(.systemDBChangedTime, method: .GET)
     }
-    
+
     func getSystemConfig() async throws -> SystemConfig {
         return try await call(.systemConfig, method: .GET)
     }
-    
+
     // MARK: - User management
-    
+
     func getUsers() async throws -> GrocyUsers {
         return try await call(.users, method: .GET)
     }
-    
+
     func getUserSettings() async throws -> GrocyUserSettings {
         return try await call(.userSettings, method: .GET)
     }
-    
+
     func getUserSettingKey<T: Codable>(settingKey: String) async throws -> T {
         return try await call(.userSettingsWithKey, method: .GET, id: settingKey)
     }
-    
+
     func putUserSettingKey(settingKey: String, content: Data) async throws {
         return try await callEmptyResponse(.userSettingsWithKey, method: .PUT, id: settingKey, content: content)
     }
-    
+
     func postUser(user: Data) async throws {
         return try await callEmptyResponse(.users, method: .POST, content: user)
     }
-    
+
     func putUserWithID(id: Int, user: Data) async throws {
         return try await callEmptyResponse(.usersWithID, method: .PUT, id: String(id), content: user)
     }
-    
+
     func deleteUserWithID(id: Int) async throws {
         return try await callEmptyResponse(.usersWithID, method: .DELETE, id: String(id))
     }
-    
+
     // MARK: - Recipes
     func getRecipeFulfillments() async throws -> RecipeFulfilments {
         return try await call(.recipesFulfillment, method: .GET)
     }
-    
+
     // MARK: - Current user
     func getUser() async throws -> GrocyUsers {
         return try await call(.user, method: .GET)
     }
-    
+
     // MARK: - Stock
-    
+
     func getStock() async throws -> [StockElement] {
         return try await call(.stock, method: .GET)
     }
-    
+
     func getStockJournal() async throws -> StockJournal {
         return try await call(.objectsEntity, method: .GET, object: .stock_log)
     }
-    
+
     func getVolatileStock(dueSoonDays: Int) async throws -> VolatileStock {
         return try await call(.stockVolatile, method: .GET, queries: ["due_soon_days=\(dueSoonDays)"])
     }
-    
+
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]? = nil) async throws -> T {
         switch stockModeGet {
         case .details:
@@ -580,11 +583,11 @@ extension GrocyApi {
             return try await call(.stockProductWithIdPriceHistory, method: .GET, id: String(id))
         }
     }
-    
+
     func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal {
         return try await call(.stockEntryWithID, method: .PUT, id: String(entryID), content: content)
     }
-    
+
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T {
         switch stockModePost {
         case .add:
@@ -599,15 +602,15 @@ extension GrocyApi {
             return try await call(.stockProductWithIDTransfer, method: .POST, id: String(id), content: content)
         }
     }
-    
+
     func getBookingWithID(id: Int) async throws -> StockJournalEntry {
         return try await call(.stockBookingWithId, method: .GET)
     }
-    
+
     func undoBookingWithID(id: Int) async throws {
         return try await callEmptyResponse(.stockBookingWithIdUndo, method: .POST, id: String(id))
     }
-    
+
     func getPictureURL(groupName: String, fileName: String) -> String? {
         let filepath = request(for: .filesGroupFilename, method: .GET, fileName: fileName, groupName: groupName, queries: ["force_serve_as=picture"]).url?.absoluteString
         if groupName == "userfiles" || groupName == "userpictures" {
@@ -616,13 +619,13 @@ extension GrocyApi {
             return filepath
         }
     }
-    
+
     // MARK: - SHOPPING LIST
-    
+
     func shoppingListAddItem(content: Data) async throws {
         try await callEmptyResponse(.objectsEntity, method: .POST, object: .shopping_list, content: content)
     }
-    
+
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws {
         switch actionType {
         case .clear:
@@ -637,34 +640,34 @@ extension GrocyApi {
             return try await callEmptyResponse(.stockShoppingListAddOverdue, method: .POST, content: content)
         }
     }
-    
+
     // MARK: - Master Data
-    
+
     func getObject<T: Codable>(object: ObjectEntities) async throws -> T {
         return try await call(.objectsEntity, method: .GET, object: object)
     }
-    
+
     func postObject<T: Codable>(object: ObjectEntities, content: Data) async throws -> T {
         return try await call(.objectsEntity, method: .POST, object: object, content: content)
     }
-    
+
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) async throws -> T {
         return try await call(.objectsEntityWithID, method: .GET, object: object, id: String(id))
     }
-    
+
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws {
         return try await callEmptyResponse(.objectsEntityWithID, method: .PUT, object: object, id: String(id), content: content)
     }
-    
+
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws {
         return try await callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
     }
-    
+
     // MARK: - Files
     func getFile(fileName: String, groupName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data {
         return try await callGetFileData(.filesGroupFilename, fileName: fileName, groupName: groupName, bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
     }
-    
+
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws {
         return try await callUploadFile(.filesGroupFilename, fileURL: fileURL, fileName: fileName, groupName: groupName)
     }
