@@ -30,5 +30,7 @@ struct MyTextEditor: View {
 }
 
 #Preview {
-    MyTextEditor(textToEdit: Binding.constant("TEST"), description: "DESCRIPTION")
+    @Previewable @State var text: String = "TEST"
+    
+    MyTextEditor(textToEdit: $text, description: "DESCRIPTION")
 }

@@ -16,31 +16,23 @@ struct MyToggle: View {
     @State private var showInfo: Bool = false
     
     var body: some View {
-        HStack{
-            Toggle(isOn: $isOn, label: {
+        Toggle(isOn: $isOn, label: {
+            HStack {
                 if let icon = icon {
-                    HStack {
-                        Label(description, systemImage: icon)
-                            .foregroundStyle(.primary)
-#if os(macOS)
-                        if let descriptionInfo = descriptionInfo {
-                            FieldDescription(description: descriptionInfo)
-                        }
-#endif
+                    Label(description, systemImage: icon)
+                        .foregroundStyle(.primary)
+                    if let descriptionInfo = descriptionInfo {
+                        FieldDescription(description: descriptionInfo)
                     }
                 } else {
                     Text(description)
                 }
-            })
-#if os(iOS)
-            if let descriptionInfo = descriptionInfo {
-                FieldDescription(description: descriptionInfo)
             }
-#endif
-        }
+        })
     }
 }
 
 #Preview {
-    MyToggle(isOn: Binding.constant(true), description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
+    @Previewable @State var isOn: Bool = true
+    MyToggle(isOn: $isOn, description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
 }

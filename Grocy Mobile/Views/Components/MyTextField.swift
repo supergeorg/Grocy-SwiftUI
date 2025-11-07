@@ -11,6 +11,7 @@ struct MyTextField: View {
     @Binding var textToEdit: String
     var description: LocalizedStringKey
     var subtitle: LocalizedStringKey?
+    var prompt: String = ""
     @Binding var isCorrect: Bool
     @FocusState private var isFocused: Bool
     var leadingIcon: String?
@@ -21,18 +22,19 @@ struct MyTextField: View {
     var body: some View {
         LabeledContent {
             VStack(alignment: .leading, spacing: 0) {
-                TextField(description, text: $textToEdit)
+                TextField(prompt, text: $textToEdit)
                     .padding(.vertical, 8)
                     .background(
                         VStack {
                             Spacer()
-                            Color(!isCorrect && !textToEdit.isEmpty && errorMessage != nil ? .systemRed : .systemGray4)
+                            Color(!isCorrect && !textToEdit.isEmpty && errorMessage != nil ? .systemRed : .systemGray)
                                 .frame(height: 2)
                         }
                     )
                 
                 if !isCorrect && !textToEdit.isEmpty, let errorMessage = errorMessage {
                     Text(errorMessage)
+                        .lineLimit(nil)
                         .font(.caption)
                         .foregroundStyle(.red)
                         .padding(.top, 4)
@@ -51,14 +53,13 @@ struct MyTextField: View {
                     }
                     if let subtitle = subtitle {
                         Text(subtitle)
+                            .lineLimit(nil)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
                 if let helpText = helpText {
-                    Image(systemName: "info.circle")
-                        .foregroundStyle(.secondary)
-                        .help(helpText)
+                    FieldDescription(description: helpText)
                 }
             }
         }
