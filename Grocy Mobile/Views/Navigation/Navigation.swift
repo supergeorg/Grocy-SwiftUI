@@ -43,13 +43,13 @@ enum NavigationItem: Hashable {
 
 struct Navigation: View {
     @Binding var selection: NavigationItem?
-    
+
     var body: some View {
         switch selection ?? .stockOverview {
-#if os(iOS)
-        case .quickScan:
-            QuickScanModeView()
-#endif
+        #if os(iOS)
+            case .quickScan:
+                QuickScanModeView()
+        #endif
         case .stockOverview:
             StockView()
         case .stockJournal:

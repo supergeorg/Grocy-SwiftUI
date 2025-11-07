@@ -47,23 +47,23 @@ struct MasterDataView: View {
 
             if devMode {
                 NavigationLink(value: MasterDataItem.chores) {
-                    Label("Chores", systemImage: "house")
+                    Label("Chores", systemImage: MySymbols.chores)
                 }
 
                 NavigationLink(value: MasterDataItem.batteries) {
-                    Label("Batteries", systemImage: "battery.25")
+                    Label("Batteries", systemImage: MySymbols.batteries)
                 }
 
                 NavigationLink(value: MasterDataItem.taskCategories) {
-                    Label("Task categories", systemImage: "point.fill.topleft.down.curvedto.point.fill.bottomright.up")
+                    Label("Task categories", systemImage: MySymbols.tasks)
                 }
 
                 NavigationLink(value: MasterDataItem.userFields) {
-                    Label("Userfields", systemImage: "bookmark.fill")
+                    Label("Userfields", systemImage: "questionmark")
                 }
 
                 NavigationLink(value: MasterDataItem.userEntities) {
-                    Label("User entities", systemImage: "bookmark")
+                    Label("User entities", systemImage: "questionmark")
                 }
             }
         }
