@@ -74,7 +74,7 @@ struct LogView: View {
                 )
             })
         #endif
-        .onAppear(perform: { grocyVM.getLogEntries() })
+        .task { grocyVM.getLogEntries() }
         .refreshable {
             grocyVM.getLogEntries()
         }
@@ -93,14 +93,12 @@ struct LogView: View {
     }
 }
 
-struct LogView_Previews: PreviewProvider {
-    static var previews: some View {
-        #if os(iOS)
-            NavigationView {
-                LogView()
-            }
-        #else
+#Preview {
+    #if os(iOS)
+        NavigationStack {
             LogView()
-        #endif
-    }
+        }
+    #else
+        LogView()
+    #endif
 }
