@@ -8,6 +8,7 @@
 import AVFoundation
 import SwiftData
 import SwiftUI
+import Vision
 
 enum QuickScanMode {
     case consume, markAsOpened, purchase
@@ -29,6 +30,9 @@ struct QuickScanModeView: View {
 
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
+    #if os(iOS)
+        @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
+    #endif
 
     @State private var isTorchOn: Bool = false
     @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
@@ -87,7 +91,7 @@ struct QuickScanModeView: View {
         }
     }
     #if os(iOS)
-        func searchForBarcode(barcode: CodeScannerView.ScanResult) -> MDProductBarcode? {
+        func searchForBarcodeLegacy(barcode: CodeScannerViewLegacy.ScanResult) -> MDProductBarcode? {
             if barcode.type == .ean13 {
                 return mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.string) })
             } else {
@@ -95,14 +99,14 @@ struct QuickScanModeView: View {
             }
         }
 
-        func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
+        func handleScanLegacy(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
             switch result {
             case .success(let barcode):
                 if let grocyCode = searchForGrocyCode(barcodeString: barcode.string) {
                     recognizedBarcode = nil
                     recognizedGrocyCode = grocyCode
                     qsActiveSheet = .grocyCode
-                } else if let foundBarcode = searchForBarcode(barcode: barcode) {
+                } else if let foundBarcode = searchForBarcodeLegacy(barcode: barcode) {
                     recognizedBarcode = foundBarcode
                     recognizedGrocyCode = nil
                     qsActiveSheet = .barcode
@@ -114,8 +118,31 @@ struct QuickScanModeView: View {
                 GrocyLogger.error("Barcode scan failed. \(error)")
             }
         }
+
+        func searchForBarcode(barcode: CodeResult) -> MDProductBarcode? {
+            if barcode.type == .ean13 {
+                return mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.value) })
+            } else {
+                return mdProductBarcodes.first(where: { $0.barcode == barcode.value })
+            }
+        }
+
+        func handleScan(result: CodeResult) {
+            if let grocyCode = searchForGrocyCode(barcodeString: result.value) {
+                recognizedBarcode = nil
+                recognizedGrocyCode = grocyCode
+                qsActiveSheet = .grocyCode
+            } else if let foundBarcode = searchForBarcode(barcode: result) {
+                recognizedBarcode = foundBarcode
+                recognizedGrocyCode = nil
+                qsActiveSheet = .barcode
+            } else {
+                notRecognizedBarcode = result.value
+                qsActiveSheet = .selectProduct
+            }
+        }
     #endif
-    
+
     var product: MDProduct? {
         if let grocyCode = recognizedGrocyCode {
             return mdProducts.first(where: { $0.id == grocyCode.entityID })
@@ -138,94 +165,113 @@ struct QuickScanModeView: View {
         }
     }
 
+    #if os(iOS)
+        @ViewBuilder
+        private func barcodeScanner() -> some View {
+            if useLegacyScanner {
+                CodeScannerViewLegacy(
+                    codeTypes: getSavedCodeTypesLegacy().map { $0.type },
+                    scanMode: .continuous,
+                    simulatedData: showDemoGrocyCode ? "grcy:p:1:62596f7263051" : "5901234123457",
+                    isTorchOn: $isTorchOn,
+                    isPaused: $isScanPaused,
+                    isFrontCamera: $isFrontCamera,
+                    completion: self.handleScanLegacy
+                )
+            } else {
+                CodeScannerView(isPaused: $isScanPaused, onCodeFound: handleScan)
+            }
+        }
+    #endif
+
     var bodyContent: some View {
         #if os(iOS)
-            CodeScannerView(
-                codeTypes: getSavedCodeTypes().map { $0.type },
-                scanMode: .continuous,
-                simulatedData: showDemoGrocyCode ? "grcy:p:1:62596f7263051" : "5901234123457",
-                isTorchOn: $isTorchOn,
-                isPaused: $isScanPaused,
-                isFrontCamera: $isFrontCamera,
-                completion: self.handleScan
-            )
-            .sheet(item: $qsActiveSheet) { item in
-                NavigationStack {
-                    sheetContent(for: item)
+            barcodeScanner()
+                .sheet(item: $qsActiveSheet) { item in
+                    NavigationStack {
+                        sheetContent(for: item)
+                    }
                 }
-            }
-            .task {
-                Task {
-                    await updateData()
+                .task {
+                    Task {
+                        await updateData()
+                    }
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Picker(
-                        selection: $quickScanMode,
-                        label: Label("Quick-Scan Mode", systemImage: MySymbols.menuPick),
-                        content: {
-                            Label("Consume", systemImage: MySymbols.consume)
-                                .labelStyle(.titleAndIcon)
-                                .tag(QuickScanMode.consume)
-                            Label("Open", systemImage: MySymbols.open)
-                                .labelStyle(.titleAndIcon)
-                                .tag(QuickScanMode.markAsOpened)
-                            Label("Purchase", systemImage: MySymbols.purchase)
-                                .labelStyle(.titleAndIcon)
-                                .tag(QuickScanMode.purchase)
-                        }
-                    )
-                    .pickerStyle(.menu)
-                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Picker(
+                            selection: $quickScanMode,
+                            label: Label("Quick-Scan Mode", systemImage: MySymbols.menuPick),
+                            content: {
+                                Label("Consume", systemImage: MySymbols.consume)
+                                    .labelStyle(.titleAndIcon)
+                                    .tag(QuickScanMode.consume)
+                                Label("Open", systemImage: MySymbols.open)
+                                    .labelStyle(.titleAndIcon)
+                                    .tag(QuickScanMode.markAsOpened)
+                                Label("Purchase", systemImage: MySymbols.purchase)
+                                    .labelStyle(.titleAndIcon)
+                                    .tag(QuickScanMode.purchase)
+                            }
+                        )
+                        .pickerStyle(.menu)
+                    }
 
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button(
-                        action: {
-                            isTorchOn.toggle()
-                        },
-                        label: {
-                            Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        Button(
+                            action: {
+                                isTorchOn.toggle()
+                            },
+                            label: {
+                                Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
+                            }
+                        )
+                        .disabled(!checkForTorch() || isFrontCamera)
+                        if getFrontCameraAvailable() && useLegacyScanner {
+                            Button(
+                                action: {
+                                    isFrontCamera.toggle()
+                                },
+                                label: {
+                                    Image(systemName: MySymbols.changeCamera)
+                                }
+                            )
+                            .disabled(isTorchOn)
                         }
-                    )
-                    .disabled(!checkForTorch() || isFrontCamera)
-                    if getFrontCameraAvailable() {
-                        Button(
-                            action: {
-                                isFrontCamera.toggle()
-                            },
-                            label: {
-                                Image(systemName: MySymbols.changeCamera)
-                            }
-                        )
-                        .disabled(isTorchOn)
-                    }
-                    if isScanPaused {
-                        Button(
-                            action: {
-                                qsActiveSheet = nil
-                            },
-                            label: {
-                                Image(systemName: "pause.rectangle")
-                            }
-                        )
+                        if isScanPaused {
+                            Button(
+                                action: {
+                                    qsActiveSheet = nil
+                                },
+                                label: {
+                                    Image(systemName: "pause.rectangle")
+                                }
+                            )
+                        }
                     }
                 }
-            }
-            .onChange(of: newRecognizedBarcode?.id) {
-                DispatchQueue.main.async {
-                    if quickScanActionAfterAdd {
-                        recognizedBarcode = newRecognizedBarcode
-                        qsActiveSheet = .barcode
+                .onChange(of: newRecognizedBarcode?.id) {
+                    DispatchQueue.main.async {
+                        if quickScanActionAfterAdd {
+                            recognizedBarcode = newRecognizedBarcode
+                            qsActiveSheet = .barcode
+                            checkScanPause()
+                        }
+                    }
+                }
+                .onChange(of: qsActiveSheet) {
+                    DispatchQueue.main.async {
                         checkScanPause()
                     }
                 }
-            }
-            .onChange(of: qsActiveSheet) {
-                DispatchQueue.main.async {
-                    checkScanPause()
-                }
-            }
+                .onChange(
+                    of: isTorchOn,
+                    {
+                        if !useLegacyScanner {
+                            toggleTorch(state: isTorchOn)
+                        }
+                    }
+                )
         #else
             Text("Not available on this platform.")
         #endif

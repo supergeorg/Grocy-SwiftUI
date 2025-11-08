@@ -17,7 +17,7 @@ struct MDBarcodeScanner: View {
     @State private var isShowingScanner = false
     
 #if os(iOS)
-    func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
+    func handleScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
         self.isShowingScanner = false
         switch result {
         case .success(let code):
@@ -37,8 +37,8 @@ struct MDBarcodeScanner: View {
             Image(systemName: MySymbols.barcodeScan)
         })
         .sheet(isPresented: $isShowingScanner) {
-            CodeScannerView(
-                codeTypes: getSavedCodeTypes().map{$0.type},
+            CodeScannerViewLegacy(
+                codeTypes: getSavedCodeTypesLegacy().map{$0.type},
                 scanMode: .once,
                 simulatedData: "5901234123457",
                 isTorchOn: $isTorchOn,

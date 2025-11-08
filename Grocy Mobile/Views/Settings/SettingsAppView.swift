@@ -14,7 +14,8 @@ struct SettingsAppView: View {
 
     @AppStorage("devMode") private var devMode: Bool = false
     #if os(iOS)
-        @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = false
+        @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = true
+        @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
@@ -95,8 +96,19 @@ struct SettingsAppView: View {
                             .foregroundStyle(.primary)
                     }
                 )
+                MyToggle(isOn: $useLegacyScanner, description: "Legacy Barcode Scanner", icon: MySymbols.barcode)
+                if useLegacyScanner {
+                    NavigationLink(
+                        destination: CodeTypeSelectionViewLegacy(),
+                        label: {
+                            Label("Barcode settings (legacy)", systemImage: MySymbols.barcodeScan)
+                                .foregroundStyle(.primary)
+                        }
+                    )
+                }
+
                 if horizontalSizeClass == .compact {
-                    MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: classic tab navigation (deprecated)", icon: "platter.filled.bottom.iphone")
+                    MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: Tab navigation", icon: "platter.filled.bottom.iphone")
                 }
             #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)

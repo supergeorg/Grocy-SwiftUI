@@ -61,7 +61,7 @@ struct ProductField: View {
         @State private var isTorchOn = false
         @State private var isFrontCamera = false
         @State private var isShowingScanner: Bool = false
-        func handleScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
+        func handleScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
             self.isShowingScanner = false
             switch result {
             case .success(let code):
@@ -118,8 +118,8 @@ struct ProductField: View {
                             }
                         )
                         .sheet(isPresented: $isShowingScanner) {
-                            CodeScannerView(
-                                codeTypes: getSavedCodeTypes().map { $0.type },
+                            CodeScannerViewLegacy(
+                                codeTypes: getSavedCodeTypesLegacy().map { $0.type },
                                 scanMode: .once,
                                 simulatedData: "5901234123457",
                                 isFrontCamera: $isFrontCamera,

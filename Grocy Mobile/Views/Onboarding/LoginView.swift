@@ -146,7 +146,7 @@ struct LoginOwnServerView: View {
         @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 
         @State private var isShowingGrocyScanner: Bool = false
-        func handleGrocyScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
+        func handleGrocyScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
             self.isShowingGrocyScanner = false
             switch result {
             case .success(let code):
@@ -168,7 +168,7 @@ struct LoginOwnServerView: View {
         }
 
         @State private var isShowingTokenScanner: Bool = false
-        func handleTokenScan(result: Result<CodeScannerView.ScanResult, CodeScannerView.ScanError>) {
+        func handleTokenScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
             self.isShowingTokenScanner = false
             switch result {
             case .success(let scannedHassToken):
@@ -217,7 +217,7 @@ struct LoginOwnServerView: View {
                     .sheet(
                         isPresented: $isShowingGrocyScanner,
                         content: {
-                            CodeScannerView(
+                            CodeScannerViewLegacy(
                                 codeTypes: [.qr],
                                 scanMode: .once,
                                 simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p",
@@ -251,7 +251,7 @@ struct LoginOwnServerView: View {
                             .sheet(
                                 isPresented: $isShowingTokenScanner,
                                 content: {
-                                    CodeScannerView(
+                                    CodeScannerViewLegacy(
                                         codeTypes: [.qr],
                                         scanMode: .once,
                                         simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d",
@@ -492,90 +492,92 @@ struct LoginView: View {
             }
         )
         .toolbar(content: {
-            ToolbarItem(
-                placement: .topBarLeading,
-                content: {
-                    Link(
-                        destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
-                        label: {
-                            Image(systemName: MySymbols.api)
-                        }
-                    )
-                }
-            )
-            ToolbarItem(
-                placement: .topBarLeading,
-                content: {
-                    Link(
-                        destination: URL(string: "https://www.grocy.info")!,
-                        label: {
-                            Image(systemName: "network")
-                                .glassEffect()
-                        }
-                    )
-                }
-            )
-            ToolbarItem(
-                placement: .topBarTrailing,
-                content: {
-                    Image(systemName: MySymbols.info)
-                        .onTapGesture {
-                            showAbout.toggle()
-                        }
-                        .sheet(
-                            isPresented: $showAbout,
-                            content: {
-                                NavigationStack {
-                                    AboutView()
-                                        .toolbar(content: {
-                                            ToolbarItem(
-                                                placement: .cancellationAction,
-                                                content: {
-                                                    Button(
-                                                        role: .cancel,
-                                                        action: {
-                                                            showAbout = false
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        })
-                                }
+            #if os(iOS)
+                ToolbarItem(
+                    placement: .topBarLeading,
+                    content: {
+                        Link(
+                            destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
+                            label: {
+                                Image(systemName: MySymbols.api)
                             }
                         )
-                }
-            )
-            ToolbarItem(
-                placement: .topBarTrailing,
-                content: {
-                    Image(systemName: MySymbols.settings)
+                    }
+                )
+                ToolbarItem(
+                    placement: .topBarLeading,
+                    content: {
+                        Link(
+                            destination: URL(string: "https://www.grocy.info")!,
+                            label: {
+                                Image(systemName: "network")
+                                    .glassEffect()
+                            }
+                        )
+                    }
+                )
+                ToolbarItem(
+                    placement: .topBarTrailing,
+                    content: {
+                        Image(systemName: MySymbols.info)
+                            .onTapGesture {
+                                showAbout.toggle()
+                            }
+                            .sheet(
+                                isPresented: $showAbout,
+                                content: {
+                                    NavigationStack {
+                                        AboutView()
+                                            .toolbar(content: {
+                                                ToolbarItem(
+                                                    placement: .cancellationAction,
+                                                    content: {
+                                                        Button(
+                                                            role: .cancel,
+                                                            action: {
+                                                                showAbout = false
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            })
+                                    }
+                                }
+                            )
+                    }
+                )
+                ToolbarItem(
+                    placement: .topBarTrailing,
+                    content: {
+                        Image(systemName: MySymbols.settings)
 
-                        .onTapGesture {
-                            showSettings.toggle()
-                        }
-                        .sheet(
-                            isPresented: $showSettings,
-                            content: {
-                                NavigationStack {
-                                    SettingsView()
-                                        .toolbar(content: {
-                                            ToolbarItem(
-                                                placement: .cancellationAction,
-                                                content: {
-                                                    Button(
-                                                        role: .cancel,
-                                                        action: {
-                                                            showSettings = false
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        })
-                                }
+                            .onTapGesture {
+                                showSettings.toggle()
                             }
-                        )
-                }
-            )
+                            .sheet(
+                                isPresented: $showSettings,
+                                content: {
+                                    NavigationStack {
+                                        SettingsView()
+                                            .toolbar(content: {
+                                                ToolbarItem(
+                                                    placement: .cancellationAction,
+                                                    content: {
+                                                        Button(
+                                                            role: .cancel,
+                                                            action: {
+                                                                showSettings = false
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            })
+                                    }
+                                }
+                            )
+                    }
+                )
+            #endif
         })
     }
 }
