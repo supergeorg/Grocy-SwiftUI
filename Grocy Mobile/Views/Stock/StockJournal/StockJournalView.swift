@@ -164,8 +164,10 @@ struct StockJournalView: View {
                     Image(systemName: MySymbols.filter)
                 }
             }
-            ToolbarSpacer(.flexible, placement: .bottomBar)
-            DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            #if os(iOS)
+                ToolbarSpacer(.flexible, placement: .bottomBar)
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            #endif
         }
         .searchable(
             text: $searchString,
