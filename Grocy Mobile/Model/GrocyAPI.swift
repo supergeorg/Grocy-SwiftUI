@@ -60,6 +60,7 @@ struct EmptyResponse: Codable {
 
 }
 
+@MainActor
 protocol GrocyAPI {
     func setLoginData(baseURL: String, apiKey: String)
     func setHassData(hassURL: String, hassToken: String) async
