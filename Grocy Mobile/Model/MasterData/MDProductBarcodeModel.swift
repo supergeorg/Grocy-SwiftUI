@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-class MDProductBarcode: Codable, Equatable {
-    var id: Int
+class MDProductBarcode: Codable, Equatable, Identifiable, CustomStringConvertible {
+    @Attribute(.unique) var id: Int
     var productID: Int
     var barcode: String
     var quID: Int?
@@ -19,7 +19,21 @@ class MDProductBarcode: Codable, Equatable {
     var lastPrice: Double?
     var note: String
     var rowCreatedTimestamp: String
-    
+
+    var description: String {
+        return """
+            MDProductBarcode(id: \(id), 
+                    productID: \(productID), 
+                    barcode: \(barcode), 
+                    quID: \(quID, default: "?"), 
+                    amount: \(amount, default: "?"), 
+                    storeID: \(storeID, default: "?"), 
+                    lastPrice: \(lastPrice, default: "?"), 
+                    note: \(note), 
+                    created: \(rowCreatedTimestamp))
+            """
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -31,7 +45,7 @@ class MDProductBarcode: Codable, Equatable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case note
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -48,7 +62,7 @@ class MDProductBarcode: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -61,7 +75,7 @@ class MDProductBarcode: Codable, Equatable {
         try container.encode(note, forKey: .note)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(
         id: Int,
         productID: Int,
@@ -83,17 +97,10 @@ class MDProductBarcode: Codable, Equatable {
         self.note = note
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDProductBarcode, rhs: MDProductBarcode) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.productID == rhs.productID &&
-        lhs.barcode == rhs.barcode &&
-        lhs.quID == rhs.quID &&
-        lhs.amount == rhs.amount &&
-        lhs.storeID == rhs.storeID &&
-        lhs.lastPrice == rhs.lastPrice &&
-        lhs.note == rhs.note &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.barcode == rhs.barcode && lhs.quID == rhs.quID && lhs.amount == rhs.amount && lhs.storeID == rhs.storeID && lhs.lastPrice == rhs.lastPrice && lhs.note == rhs.note
+            && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

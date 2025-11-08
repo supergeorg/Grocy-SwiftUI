@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MDProductGroup: Codable, Equatable {
+class MDProductGroup: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
@@ -43,7 +43,7 @@ class MDProductGroup: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -66,13 +66,9 @@ class MDProductGroup: Codable, Equatable {
         self.mdProductGroupDescription = mdProductGroupDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDProductGroup, rhs: MDProductGroup) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.active == rhs.active &&
-        lhs.mdProductGroupDescription == rhs.mdProductGroupDescription &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdProductGroupDescription == rhs.mdProductGroupDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

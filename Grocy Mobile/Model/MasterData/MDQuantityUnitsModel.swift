@@ -9,14 +9,14 @@ import Foundation
 import SwiftData
 
 @Model
-class MDQuantityUnit: Codable, Equatable {
+class MDQuantityUnit: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var name: String
     var namePlural: String
     var active: Bool
     var mdQuantityUnitDescription: String
     var rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -25,7 +25,7 @@ class MDQuantityUnit: Codable, Equatable {
         case mdQuantityUnitDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -47,7 +47,7 @@ class MDQuantityUnit: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -57,7 +57,7 @@ class MDQuantityUnit: Codable, Equatable {
         try container.encode(mdQuantityUnitDescription.isEmpty ? nil : mdQuantityUnitDescription, forKey: .mdQuantityUnitDescription)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(
         id: Int,
         name: String,
@@ -73,16 +73,11 @@ class MDQuantityUnit: Codable, Equatable {
         self.mdQuantityUnitDescription = mdQuantityUnitDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDQuantityUnit, rhs: MDQuantityUnit) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.namePlural == rhs.namePlural &&
-        lhs.active == rhs.active &&
-        lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.namePlural == rhs.namePlural && lhs.active == rhs.active && lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
-    
+
     func getName(amount: Double) -> String {
         return amount == 1 ? self.name : (self.namePlural.isEmpty ? self.name : self.namePlural)
     }

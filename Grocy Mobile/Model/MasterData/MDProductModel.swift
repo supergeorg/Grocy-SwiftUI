@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MDProduct: Codable, Equatable {
+class MDProduct: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var name: String
     var mdProductDescription: String
@@ -107,8 +107,12 @@ class MDProduct: Codable, Equatable {
             do { self.minStockAmount = try container.decode(Double.self, forKey: .minStockAmount) } catch { self.minStockAmount = try Double(container.decode(String.self, forKey: .minStockAmount))! }
             do { self.defaultDueDays = try container.decode(Int.self, forKey: .defaultDueDays) } catch { self.defaultDueDays = try Int(container.decode(String.self, forKey: .defaultDueDays))! }
             do { self.defaultDueDaysAfterOpen = try container.decode(Int.self, forKey: .defaultDueDaysAfterOpen) } catch { self.defaultDueDaysAfterOpen = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterOpen))! }
-            do { self.defaultDueDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultDueDaysAfterFreezing) } catch { self.defaultDueDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterFreezing))! }
-            do { self.defaultDueDaysAfterThawing = try container.decode(Int.self, forKey: .defaultDueDaysAfterThawing) } catch { self.defaultDueDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterThawing))! }
+            do { self.defaultDueDaysAfterFreezing = try container.decode(Int.self, forKey: .defaultDueDaysAfterFreezing) } catch {
+                self.defaultDueDaysAfterFreezing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterFreezing))!
+            }
+            do { self.defaultDueDaysAfterThawing = try container.decode(Int.self, forKey: .defaultDueDaysAfterThawing) } catch {
+                self.defaultDueDaysAfterThawing = try Int(container.decode(String.self, forKey: .defaultDueDaysAfterThawing))!
+            }
             self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
             do {
                 self.enableTareWeightHandling = try container.decode(Bool.self, forKey: .enableTareWeightHandling)
@@ -152,7 +156,9 @@ class MDProduct: Codable, Equatable {
                     self.hideOnStockOverview = ["1", "true"].contains(try? container.decode(String.self, forKey: .hideOnStockOverview))
                 }
             }
-            do { self.defaultStockLabelType = try container.decodeIfPresent(Int.self, forKey: .defaultStockLabelType) } catch { self.defaultStockLabelType = try? Int(container.decodeIfPresent(String.self, forKey: .defaultStockLabelType) ?? "") }
+            do { self.defaultStockLabelType = try container.decodeIfPresent(Int.self, forKey: .defaultStockLabelType) } catch {
+                self.defaultStockLabelType = try? Int(container.decodeIfPresent(String.self, forKey: .defaultStockLabelType) ?? "")
+            }
             do {
                 self.shouldNotBeFrozen = try container.decode(Bool.self, forKey: .shouldNotBeFrozen)
             } catch {
@@ -180,7 +186,9 @@ class MDProduct: Codable, Equatable {
                     self.noOwnStock = ["1", "true"].contains(try? container.decode(String.self, forKey: .noOwnStock))
                 }
             }
-            do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch { self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "") }
+            do { self.defaultConsumeLocationID = try container.decodeIfPresent(Int.self, forKey: .defaultConsumeLocationID) } catch {
+                self.defaultConsumeLocationID = try? Int(container.decodeIfPresent(String.self, forKey: .defaultConsumeLocationID) ?? "")
+            }
             do {
                 self.moveOnOpen = try container.decode(Bool.self, forKey: .moveOnOpen)
             } catch {
@@ -206,7 +214,7 @@ class MDProduct: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -319,43 +327,17 @@ class MDProduct: Codable, Equatable {
         self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDProduct, rhs: MDProduct) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.mdProductDescription == rhs.mdProductDescription &&
-        lhs.productGroupID == rhs.productGroupID &&
-        lhs.active == rhs.active &&
-        lhs.locationID == rhs.locationID &&
-        lhs.storeID == rhs.storeID &&
-        lhs.quIDPurchase == rhs.quIDPurchase &&
-        lhs.quIDStock == rhs.quIDStock &&
-        lhs.minStockAmount == rhs.minStockAmount &&
-        lhs.defaultDueDays == rhs.defaultDueDays &&
-        lhs.defaultDueDaysAfterOpen == rhs.defaultDueDaysAfterOpen &&
-        lhs.defaultDueDaysAfterFreezing == rhs.defaultDueDaysAfterFreezing &&
-        lhs.defaultDueDaysAfterThawing == rhs.defaultDueDaysAfterThawing &&
-        lhs.pictureFileName == rhs.pictureFileName &&
-        lhs.enableTareWeightHandling == rhs.enableTareWeightHandling &&
-        lhs.tareWeight == rhs.tareWeight &&
-        lhs.notCheckStockFulfillmentForRecipes == rhs.notCheckStockFulfillmentForRecipes &&
-        lhs.parentProductID == rhs.parentProductID &&
-        lhs.calories == rhs.calories &&
-        lhs.cumulateMinStockAmountOfSubProducts == rhs.cumulateMinStockAmountOfSubProducts &&
-        lhs.dueType == rhs.dueType &&
-        lhs.quickConsumeAmount == rhs.quickConsumeAmount &&
-        lhs.quickOpenAmount == rhs.quickOpenAmount &&
-        lhs.hideOnStockOverview == rhs.hideOnStockOverview &&
-        lhs.defaultStockLabelType == rhs.defaultStockLabelType &&
-        lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen &&
-        lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock &&
-        lhs.noOwnStock == rhs.noOwnStock &&
-        lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID &&
-        lhs.moveOnOpen == rhs.moveOnOpen &&
-        lhs.quIDConsume == rhs.quIDConsume &&
-        lhs.autoReprintStockLabel == rhs.autoReprintStockLabel &&
-        lhs.quIDPrice == rhs.quIDPrice &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdProductDescription == rhs.mdProductDescription && lhs.productGroupID == rhs.productGroupID && lhs.active == rhs.active && lhs.locationID == rhs.locationID
+            && lhs.storeID == rhs.storeID && lhs.quIDPurchase == rhs.quIDPurchase && lhs.quIDStock == rhs.quIDStock && lhs.minStockAmount == rhs.minStockAmount && lhs.defaultDueDays == rhs.defaultDueDays
+            && lhs.defaultDueDaysAfterOpen == rhs.defaultDueDaysAfterOpen && lhs.defaultDueDaysAfterFreezing == rhs.defaultDueDaysAfterFreezing && lhs.defaultDueDaysAfterThawing == rhs.defaultDueDaysAfterThawing
+            && lhs.pictureFileName == rhs.pictureFileName && lhs.enableTareWeightHandling == rhs.enableTareWeightHandling && lhs.tareWeight == rhs.tareWeight
+            && lhs.notCheckStockFulfillmentForRecipes == rhs.notCheckStockFulfillmentForRecipes && lhs.parentProductID == rhs.parentProductID && lhs.calories == rhs.calories
+            && lhs.cumulateMinStockAmountOfSubProducts == rhs.cumulateMinStockAmountOfSubProducts && lhs.dueType == rhs.dueType && lhs.quickConsumeAmount == rhs.quickConsumeAmount && lhs.quickOpenAmount == rhs.quickOpenAmount
+            && lhs.hideOnStockOverview == rhs.hideOnStockOverview && lhs.defaultStockLabelType == rhs.defaultStockLabelType && lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen && lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock
+            && lhs.noOwnStock == rhs.noOwnStock && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID && lhs.moveOnOpen == rhs.moveOnOpen && lhs.quIDConsume == rhs.quIDConsume
+            && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

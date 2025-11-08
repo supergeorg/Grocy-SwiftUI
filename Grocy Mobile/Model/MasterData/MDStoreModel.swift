@@ -9,20 +9,20 @@ import Foundation
 import SwiftData
 
 @Model
-class MDStore: Codable, Equatable {
+class MDStore: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
     var mdStoreDescription: String
     var rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case active
         case mdStoreDescription = "description"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -43,7 +43,7 @@ class MDStore: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -52,7 +52,7 @@ class MDStore: Codable, Equatable {
         try container.encode(mdStoreDescription, forKey: .mdStoreDescription)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(
         id: Int,
         name: String,
@@ -66,13 +66,9 @@ class MDStore: Codable, Equatable {
         self.mdStoreDescription = mdStoreDescription
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDStore, rhs: MDStore) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.active == rhs.active &&
-        lhs.mdStoreDescription == rhs.mdStoreDescription &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdStoreDescription == rhs.mdStoreDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

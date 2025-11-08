@@ -9,14 +9,25 @@ import Foundation
 import SwiftData
 
 @Model
-class MDLocation: Codable, Equatable {
+class MDLocation: Codable, Equatable, Identifiable, CustomStringConvertible {
     @Attribute(.unique) var id: Int
     var name: String
     var active: Bool
     var mdLocationDescription: String
     var isFreezer: Bool
     var rowCreatedTimestamp: String
-    
+
+    var description: String {
+        return """
+            Location(id: \(id), 
+                    name: \(name), 
+                    active: \(active), 
+                    description: \(mdLocationDescription), 
+                    isFreezer: \(isFreezer), 
+                    created: \(rowCreatedTimestamp))
+            """
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case active
@@ -24,7 +35,7 @@ class MDLocation: Codable, Equatable {
         case rowCreatedTimestamp = "row_created_timestamp"
         case isFreezer = "is_freezer"
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -54,7 +65,7 @@ class MDLocation: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -64,7 +75,7 @@ class MDLocation: Codable, Equatable {
         try container.encode(isFreezer, forKey: .isFreezer)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(id: Int, name: String, active: Bool, mdLocationDescription: String = "", isFreezer: Bool, rowCreatedTimestamp: String) {
         self.id = id
         self.name = name
@@ -73,14 +84,9 @@ class MDLocation: Codable, Equatable {
         self.isFreezer = isFreezer
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDLocation, rhs: MDLocation) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.active == rhs.active &&
-        lhs.mdLocationDescription == rhs.mdLocationDescription &&
-        lhs.isFreezer == rhs.isFreezer &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdLocationDescription == rhs.mdLocationDescription && lhs.isFreezer == rhs.isFreezer && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

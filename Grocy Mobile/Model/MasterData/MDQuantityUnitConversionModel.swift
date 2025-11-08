@@ -9,14 +9,14 @@ import Foundation
 import SwiftData
 
 @Model
-class MDQuantityUnitConversion: Codable, Equatable {
+class MDQuantityUnitConversion: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var fromQuID: Int
     var toQuID: Int
     var factor: Double
     var productID: Int?
     var rowCreatedTimestamp: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case fromQuID = "from_qu_id"
@@ -25,7 +25,7 @@ class MDQuantityUnitConversion: Codable, Equatable {
         case productID = "product_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -39,7 +39,7 @@ class MDQuantityUnitConversion: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -49,7 +49,7 @@ class MDQuantityUnitConversion: Codable, Equatable {
         try container.encode(productID, forKey: .productID)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(
         id: Int,
         fromQuID: Int,
@@ -65,14 +65,9 @@ class MDQuantityUnitConversion: Codable, Equatable {
         self.productID = productID
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: MDQuantityUnitConversion, rhs: MDQuantityUnitConversion) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.fromQuID == rhs.fromQuID &&
-        lhs.toQuID == rhs.toQuID &&
-        lhs.factor == rhs.factor &&
-        lhs.productID == rhs.productID &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.fromQuID == rhs.fromQuID && lhs.toQuID == rhs.toQuID && lhs.factor == rhs.factor && lhs.productID == rhs.productID && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 
