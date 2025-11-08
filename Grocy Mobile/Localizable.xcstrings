@@ -7,32 +7,6 @@
     " " : {
       "shouldTranslate" : false
     },
-    "; " : {
-      "shouldTranslate" : false
-    },
-    ": " : {
-      "shouldTranslate" : false
-    },
-    ": %.2f; " : {
-      "shouldTranslate" : false
-    },
-    ": %@" : {
-      "shouldTranslate" : false
-    },
-    ": %@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : ": %1$@ %2$@"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
-    ": %@; " : {
-      "shouldTranslate" : false
-    },
     "(%@)" : {
       "localizations" : {
         "de" : {
@@ -43,6 +17,26 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "(in plural form)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(in Mehrzahl)"
+          }
+        }
+      }
+    },
+    "(in singular form)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(in Einzahl)"
+          }
+        }
+      }
     },
     "%@" : {
       "shouldTranslate" : false
@@ -592,6 +586,64 @@
         }
       }
     },
+    "%@: " : {
+      "shouldTranslate" : false
+    },
+    "%@: %.2f" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$.2f"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@: %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ %3$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@: %@ %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ %3$@ %4$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@: %@; " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@; "
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "%@s" : {
       "shouldTranslate" : false
     },
@@ -792,6 +844,42 @@
         }
       }
     },
+    "%lld products are due within the next %lld days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Produkte sind in den nächsten %2$lld Tagen fällig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld products are due within the next %2$lld days"
+          }
+        }
+      }
+    },
+    "%lld products are expired" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Produkte sind abgelaufen"
+          }
+        }
+      }
+    },
+    "%lld products are overdue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Produkte sind überfällig"
+          }
+        }
+      }
+    },
     "🇧🇷 Português Brasileiro (Portuguese Brazil)" : {
       "localizations" : {
         "de" : {
@@ -848,7 +936,7 @@
       "shouldTranslate" : false
     },
     "🇪🇪 Eesti Keel (Estonian)" : {
-
+      "shouldTranslate" : false
     },
     "🇫🇮 Suomi (Finnish)" : {
       "shouldTranslate" : false
@@ -865,10 +953,10 @@
       "shouldTranslate" : false
     },
     "🇬🇧 British English" : {
-
+      "shouldTranslate" : false
     },
     "🇬🇷 Ellinika (Greek)" : {
-
+      "shouldTranslate" : false
     },
     "🇭🇺 Magyar (Hungarian)" : {
       "localizations" : {
@@ -882,10 +970,10 @@
       "shouldTranslate" : false
     },
     "🇮🇱 עִבְרִית (Hebrew)" : {
-
+      "shouldTranslate" : false
     },
     "🇮🇳 தமிழ் (Tamil)" : {
-
+      "shouldTranslate" : false
     },
     "🇮🇹 Italiano (Italian)" : {
       "localizations" : {
@@ -902,10 +990,10 @@
       "shouldTranslate" : false
     },
     "🇰🇷 한국어 (Korean)" : {
-
+      "shouldTranslate" : false
     },
     "🇱🇹 Lietuvių (Lithuanian)" : {
-
+      "shouldTranslate" : false
     },
     "🇳🇱 Nederlands (Dutch)" : {
       "shouldTranslate" : false
@@ -920,16 +1008,16 @@
       "shouldTranslate" : false
     },
     "🇷🇴 Românește (Romanian)" : {
-
+      "shouldTranslate" : false
     },
     "🇸🇮 Slovenščina (Slovenian)" : {
-
+      "shouldTranslate" : false
     },
     "🇸🇰 Slovenčina (Slovak)" : {
-
+      "shouldTranslate" : false
     },
     "🇹🇷 Türkçe (Turkish)" : {
-
+      "shouldTranslate" : false
     },
     "🇹🇼 漢文 (Chinese Traditional)" : {
       "shouldTranslate" : false
@@ -938,10 +1026,10 @@
       "shouldTranslate" : false
     },
     "🇺🇸 English" : {
-
+      "shouldTranslate" : false
     },
     "🏴󠁥󠁳󠁣󠁴󠁿 Català (Catalan)" : {
-
+      "shouldTranslate" : false
     },
     "1 %@ is the same as..." : {
       "localizations" : {
@@ -1132,6 +1220,9 @@
           }
         }
       }
+    },
+    "2D Matrix codes" : {
+      "shouldTranslate" : false
     },
     "A barcode is required" : {
       "localizations" : {
@@ -2484,71 +2575,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟用"
-          }
-        }
-      }
-    },
-    "Activities" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktivity"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktivitäten"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activités"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attività"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktiviteter"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activiteiten"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktywności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atividades"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atividades"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "活动"
           }
         }
       }
@@ -5653,6 +5679,16 @@
         }
       }
     },
+    "Barcode settings (legacy)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcode Einstellungen (alt)"
+          }
+        }
+      }
+    },
     "Barcodes" : {
       "localizations" : {
         "ca" : {
@@ -5842,6 +5878,9 @@
           }
         }
       }
+    },
+    "Basic Barcodes" : {
+      "shouldTranslate" : false
     },
     "Batteries" : {
       "localizations" : {
@@ -6039,6 +6078,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batterie-Verwaltung ist noch nicht implementiert"
+          }
+        }
+      }
+    },
+    "Batteries overview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batterienübersicht"
+          }
+        }
+      }
+    },
+    "Battery tracking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batterie-Ladezyklus"
           }
         }
       }
@@ -6419,6 +6478,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "賞味期限"
+          }
+        }
+      }
+    },
+    "Calendar" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalender"
           }
         }
       }
@@ -7057,6 +7126,16 @@
         }
       }
     },
+    "Chore tracking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hausarbeit-Ausführung"
+          }
+        }
+      }
+    },
     "Chores" : {
       "localizations" : {
         "ca" : {
@@ -7253,6 +7332,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hausarbeiten sind noch nicht implementiert"
+          }
+        }
+      }
+    },
+    "Chores overview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hausarbeitenübersicht"
           }
         }
       }
@@ -7837,195 +7926,8 @@
         }
       }
     },
-    "Close" : {
-      "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tancar"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zavřít"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Luk"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schließen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Κλείσε"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cerrar"
-          }
-        },
-        "et" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sulge"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sulje"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "סגירה"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bezár"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiudi"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "閉じる"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "닫기"
-          }
-        },
-        "lt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uždaryti"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lukk"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sluit"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zamknij"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fechar"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fechar"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Închide"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zatvoriť"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zapri"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stäng"
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stäng"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "மூடு"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kapat"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Закрити"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "关闭"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "結束"
-          }
-        }
-      }
+    "Code 39 / Code 93 / Codabar family" : {
+      "shouldTranslate" : false
     },
     "Common" : {
       "localizations" : {
@@ -9759,64 +9661,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增位置"
-          }
-        }
-      }
-    },
-    "Create new product with Open Food Facts" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vytvoř nový produkt s Open Food Facts"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neues Produkt mit Open Food Facts erstellen"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crea un nuovo prodotto con Open Food Facts"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opprett nytt produkt med Open Food Facts"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voeg nieuw product toe met behulp van Open Food Facts"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Criar novo produto com o Open Food Facts"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Criar novo produto com o Open Food Facts"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 Open Food Facts 新增物品"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 Open Food Facts 新增物品"
           }
         }
       }
@@ -17474,12 +17318,12 @@
         }
       }
     },
-    "Due on %@; " : {
+    "Due on %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fällig am %@; "
+            "value" : "Fällig am %@"
           }
         }
       }
@@ -21138,12 +20982,12 @@
         }
       }
     },
-    "Error" : {
+    "Equipment" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fehler"
+            "value" : "Ausstattung"
           }
         }
       }
@@ -21746,6 +21590,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erinnerungen lesen fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Filter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtern"
           }
         }
       }
@@ -22685,6 +22539,9 @@
         }
       }
     },
+    "GS1 family" : {
+      "shouldTranslate" : false
+    },
     "Guide (English)" : {
       "localizations" : {
         "de" : {
@@ -22694,6 +22551,9 @@
           }
         }
       }
+    },
+    "Home Assistant Ingress" : {
+      "shouldTranslate" : false
     },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
@@ -22829,12 +22689,25 @@
         }
       }
     },
+    "Industrial codes" : {
+      "shouldTranslate" : false
+    },
     "Information about Grocy Server" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Information zum Grocy-Server"
+          }
+        }
+      }
+    },
+    "Ingredients" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zutaten"
           }
         }
       }
@@ -23032,12 +22905,12 @@
         }
       }
     },
-    "iPhone: classic tab navigation (deprecated)" : {
+    "iPhone: Tab navigation" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iPhone: klassische Tab-Navigation"
+            "value" : "iPhone: Tab-Navigation"
           }
         }
       }
@@ -23992,6 +23865,16 @@
         }
       }
     },
+    "Legacy Barcode Scanner" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alter Barcode Scanner"
+          }
+        }
+      }
+    },
     "Let's get started!" : {
       "localizations" : {
         "cs" : {
@@ -24572,196 +24455,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "以%@身份登录"
-          }
-        }
-      }
-    },
-    "Login" : {
-      "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar sessió"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Přihlásit se"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Log ind"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anmelden"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Σύνδεση"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar sesión"
-          }
-        },
-        "et" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logi sisse"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kirjaudu"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "כניסה"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bejelentkezés"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accesso"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ログイン"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "로그인"
-          }
-        },
-        "lt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prisijungti"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logg inn"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaloguj"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conectare"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prihlásiť sa"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prijava"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logga in"
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logga in"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "புகுபதிகையிடு"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Giriş yap"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Логін"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登入"
           }
         }
       }
@@ -25562,6 +25255,16 @@
         }
       }
     },
+    "Meal plan" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speiseplan"
+          }
+        }
+      }
+    },
     "means %@ per %@" : {
       "localizations" : {
         "ca" : {
@@ -25949,7 +25652,14 @@
       }
     },
     "Min. stock, Quick consume, Factor, Tare weight" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minimaler Bestand, Schnell-Verbrauchen, Faktoren, Tara-Gewicht"
+          }
+        }
+      }
     },
     "Minimum stock amount " : {
       "localizations" : {
@@ -26587,146 +26297,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名稱"
-          }
-        }
-      }
-    },
-    "Name (in plural form)" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jméno (v množném čísle):"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name (plural)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nom (pluriel)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (in forma plurale)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Navn (flertall)"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Naam (meervoudig)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nazwa (l. mnoga)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (no plural)"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (no plural)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名称（复数形式）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "複數名稱"
-          }
-        }
-      }
-    },
-    "Name (in singular form)" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jméno (v jednotném čísle)"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name (singular)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nom (singulier)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (in forma singola)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Navn (entall)"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Naam (enkelvoudig)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nazwa (l. pojedyncza)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (no singular)"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome (no singular)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名称（单数形式）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "單數名稱"
           }
         }
       }
@@ -28085,9 +27655,6 @@
         }
       }
     },
-    "NO OFF DATA FOUND" : {
-      "shouldTranslate" : false
-    },
     "No product group defined. Please create one." : {
       "localizations" : {
         "de" : {
@@ -28301,7 +27868,6 @@
       }
     },
     "No task categories found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -28430,7 +27996,6 @@
       }
     },
     "No userentities found." : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -28749,7 +28314,14 @@
       }
     },
     "Not available on this platform." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht auf dieser Plattform verfügbar."
+          }
+        }
+      }
     },
     "Not implemented" : {
       "localizations" : {
@@ -28760,9 +28332,6 @@
           }
         }
       }
-    },
-    "Not implemented on this platform." : {
-
     },
     "Not opened" : {
       "localizations" : {
@@ -29140,64 +28709,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "備註"
-          }
-        }
-      }
-    },
-    "Note: %@" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poznámka: %@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notiz: %@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nota: %@"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notat: %@"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aantekening: %@"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Observação: %@"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Observação: %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "备注：%@"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "備註：%@"
           }
         }
       }
@@ -30027,6 +29538,7 @@
       }
     },
     "Open Food Facts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -30035,9 +29547,6 @@
           }
         }
       },
-      "shouldTranslate" : false
-    },
-    "OPEN FOOD FACTS" : {
       "shouldTranslate" : false
     },
     "Opened" : {
@@ -31534,6 +31043,16 @@
         }
       }
     },
+    "Preparation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorbereitung"
+          }
+        }
+      }
+    },
     "Presets for new products" : {
       "localizations" : {
         "ca" : {
@@ -32358,76 +31877,6 @@
         }
       }
     },
-    "Product group name" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jméno skupiny produktů"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name der Produktgruppe"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nom du groupe de produits"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome gruppo di prodotto"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produktgruppenavn"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Productcategorienaam"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nazwa grupy produktu"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome do grupo de produto"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome do grupo de produto"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "物品分类名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "物品分類名稱"
-          }
-        }
-      }
-    },
     "Product groups" : {
       "localizations" : {
         "ca" : {
@@ -32619,7 +32068,14 @@
       }
     },
     "Product is not on server" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt ist nicht auf dem Server"
+          }
+        }
+      }
     },
     "Product name" : {
       "localizations" : {
@@ -36329,9 +35785,6 @@
         }
       }
     },
-    "Save task category" : {
-
-    },
     "Search" : {
       "localizations" : {
         "ca" : {
@@ -36518,76 +35971,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜尋"
-          }
-        }
-      }
-    },
-    "Select a demo server:" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Výběr demo serveru:"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle einen Demo-Server aus:"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionner un serveur de démonstration :"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleziona un server demo:"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Velg en demoserver:"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies een uitprobeerserver:"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaznacz serwer demo:"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecione um servidor de demonstração:"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecione um servidor de demonstração:"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择一个测试服务器："
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選擇測試伺服器："
           }
         }
       }
@@ -36844,6 +36227,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自产"
+          }
+        }
+      }
+    },
+    "Server" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server"
           }
         }
       }
@@ -39950,6 +39343,16 @@
         }
       }
     },
+    "Stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestand"
+          }
+        }
+      }
+    },
     "Stock amount" : {
       "localizations" : {
         "ca" : {
@@ -40136,22 +39539,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "庫存數量"
-          }
-        }
-      }
-    },
-    "Stock amount: %@ %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestandsmenge: %1$@ %2$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Stock amount: %1$@ %2$@"
           }
         }
       }
@@ -40536,8 +39923,15 @@
         }
       }
     },
-    "Stock Interaction" : {
-
+    "Stock interaction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestands-Aktionen"
+          }
+        }
+      }
     },
     "Stock is empty." : {
       "localizations" : {
@@ -41310,7 +40704,14 @@
       }
     },
     "Stock, Purchase" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestand, Einkauf"
+          }
+        }
+      }
     },
     "Store" : {
       "localizations" : {
@@ -42283,6 +41684,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "任務分類名稱"
+          }
+        }
+      }
+    },
+    "Tasks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufgaben"
           }
         }
       }
@@ -43410,6 +42821,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieses Gerät erlaubt keinen Zugriff auf Erinnerungen."
+          }
+        }
+      }
+    },
+    "This is a companion app and requires access to a running Grocy instance (for example on your server). If you just want to try the app, use one of the demo servers provided by the Grocy developer. Do not use demo servers for your personal data — they are not persistent." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies ist eine Begleiter-App, das heißt du musst Zugriff zu einer laufenden Grocy-Instanz haben.\\n Wenn du diese App nur kurz ausprobieren willst, kannst du einen der vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden könnten."
           }
         }
       }
@@ -47974,6 +47395,16 @@
         }
       }
     },
+    "Use your own server" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigenen Server verwenden"
+          }
+        }
+      }
+    },
     "User" : {
       "localizations" : {
         "ca" : {
@@ -49144,12 +48575,12 @@
         }
       }
     },
-    "Welcome to Grocy Mobile! This is a companion app, meaning you need to have access to a running Grocy instance (e.g. on your server). If you just want to try out this app, you can use one of the demo servers provided by Grocy developer Bernd Bestel. But don't use the demo server for your data, since it is not persistent." : {
+    "Welcome to Grocy Mobile" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Willkommen bei Grocy Mobile!\\n\\n Dies ist eine Begleiter-App, das heißt du musst Zugriff zu einer laufenden Grocy-Instanz haben.\\n Wenn du diese App nur kurz ausprobieren willst, kannst du einen der vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden könnten."
+            "value" : "Willkommen bei Grocy Mobile!"
           }
         }
       }
