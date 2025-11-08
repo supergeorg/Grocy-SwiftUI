@@ -895,7 +895,7 @@
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld products are expired"
+            "value" : "%lld produits sont périmés"
           }
         }
       }
@@ -911,7 +911,7 @@
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld products are overdue"
+            "value" : "%lld produits sont dépassés"
           }
         }
       }
