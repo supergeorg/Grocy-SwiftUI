@@ -30,10 +30,10 @@ struct ShoppingListFilterView: View {
                 },
                 label: {
                     Label("Status", systemImage: MySymbols.filter)
-                        .foregroundStyle(.primary)
                 }
             )
             #if os(iOS)
+                .foregroundStyle(filteredStatus != .done ? .primary : Color.white)
                 .listRowBackground(
                     Group {
                         switch filteredStatus {
