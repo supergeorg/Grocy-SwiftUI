@@ -14,13 +14,8 @@ struct RecipesView: View {
     
     @Query(sort: \Recipe.name, order: .forward) var recipes: Recipes
     
-    //#if os(iOS)
-    //    private var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
-    //#endif
-    
     @State private var searchString: String = ""
     @State private var sortOrder = [KeyPathComparator(\Recipe.name)]
-    //    @State private var selection: Recipe.ID?
     
     private let dataToUpdate: [ObjectEntities] = [.recipes, .products]
     private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]

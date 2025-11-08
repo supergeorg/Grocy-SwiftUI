@@ -33,6 +33,21 @@ class Recipe: Codable, Identifiable {
         case productID = "product_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
+
+    init(id: Int, name: String, recipeDescription: String = "", pictureFileName: String? = nil,
+         baseServings: Int = 4, desiredServings: Int = 4, notCheckShoppinglist: Int = 0,
+         type: RecipeType, productID: Int? = nil) {
+        self.id = id
+        self.name = name
+        self.recipeDescription = recipeDescription
+        self.pictureFileName = pictureFileName
+        self.baseServings = baseServings
+        self.desiredServings = desiredServings
+        self.notCheckShoppinglist = notCheckShoppinglist
+        self.type = type
+        self.productID = productID
+        self.rowCreatedTimestamp = String(Date().timeIntervalSince1970)
+    }
     
     required init(from decoder: Decoder) throws {
         do {
