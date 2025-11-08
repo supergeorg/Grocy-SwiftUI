@@ -11,13 +11,13 @@ import SwiftUI
 @main
 struct Grocy_MobileApp: App {
     @State private var grocyVM: GrocyViewModel
-    
+
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-    
+
     let modelContainer: ModelContainer
-    
+
     init() {
         let schema = Schema([
             StockElement.self,
@@ -39,18 +39,19 @@ struct Grocy_MobileApp: App {
             VolatileStock.self,
             Recipe.self,
             StockLocation.self,
-            SystemConfig.self
+            SystemConfig.self,
+            RecipePosResolvedElement.self,
         ])
-        
+
         let config = ModelConfiguration()
         do {
-            modelContainer = try ModelContainer(for: schema, configurations: config)
+            modelContainer = try ModelContainer(for: schema, migrationPlan: .none, configurations: config)
             let modelContext = ModelContext(modelContainer)
             _grocyVM = State(initialValue: GrocyViewModel(modelContext: modelContext))
         } catch {
             // Reset store if there's a migration error
             ModelContainer.resetStore()
-            
+
             // Try creating the container again
             do {
                 modelContainer = try ModelContainer(for: schema, configurations: config)
@@ -61,7 +62,7 @@ struct Grocy_MobileApp: App {
             }
         }
     }
-    
+
     var body: some Scene {
         WindowGroup {
             if onboardingNeeded {
@@ -69,9 +70,11 @@ struct Grocy_MobileApp: App {
                     .environment(\.locale, Locale(identifier: localizationKey))
             } else {
                 if !isLoggedIn {
-                    LoginView()
-                        .environment(\.locale, Locale(identifier: localizationKey))
-                        .environment(grocyVM)
+                    NavigationStack {
+                        LoginView()
+                            .environment(\.locale, Locale(identifier: localizationKey))
+                            .environment(grocyVM)
+                    }
                 } else {
                     ContentView()
                         .environment(\.locale, Locale(identifier: localizationKey))
@@ -86,15 +89,15 @@ struct Grocy_MobileApp: App {
             //            AppCommands()
             //            #endif
         }
-#if os(macOS)
-        Settings {
-            if !onboardingNeeded, isLoggedIn {
-                SettingsView()
-                    .environment(grocyVM)
-                    .modelContainer(modelContainer)
+        #if os(macOS)
+            Settings {
+                if !onboardingNeeded, isLoggedIn {
+                    SettingsView()
+                        .environment(grocyVM)
+                        .modelContainer(modelContainer)
+                }
             }
-        }
-#endif
+        #endif
     }
 }
 
