@@ -25,6 +25,12 @@
             "state" : "translated",
             "value" : "(in Mehrzahl)"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(au pluriel)"
+          }
         }
       }
     },
@@ -34,6 +40,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "(in Einzahl)"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(au singulier)"
           }
         }
       }
@@ -672,6 +684,12 @@
             "value" : "%lld Eintrage sind erledigt"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld entries are done"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -857,6 +875,12 @@
             "state" : "new",
             "value" : "%1$lld products are due within the next %2$lld days"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld produits sont dus dans les %2$lld jours à venir"
+          }
         }
       }
     },
@@ -867,6 +891,12 @@
             "state" : "translated",
             "value" : "%lld Produkte sind abgelaufen"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld products are expired"
+          }
         }
       }
     },
@@ -876,6 +906,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Produkte sind überfällig"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld products are overdue"
           }
         }
       }
@@ -2056,6 +2092,12 @@
             "state" : "translated",
             "value" : "Eine Erinnerung hat kein Fälligkeitsdatum."
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un rappel n'a pas de date d'échéance."
+          }
         }
       }
     },
@@ -2592,6 +2634,12 @@
             "state" : "new",
             "value" : "Add %1$.2f %2$@ %3$@ to stock"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter %1$.2f %2$@ %3$@ au stock"
+          }
         }
       }
     },
@@ -2607,6 +2655,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Add %1$@ %2$@ %3$@ to stock"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter %1$@ %2$@ %3$@ au stock"
           }
         }
       }
@@ -4290,6 +4344,12 @@
             "state" : "translated",
             "value" : "Ein unbekannter Fehler ist aufgetreten."
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une erreur inconnue s'est produite."
+          }
         }
       }
     },
@@ -4427,6 +4487,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application"
           }
         }
       }
@@ -4578,6 +4644,12 @@
             "state" : "translated",
             "value" : "App-Einstellungen"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres de l'application"
+          }
         }
       }
     },
@@ -4593,6 +4665,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aufsteigend"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascendante"
           }
         },
         "it" : {
@@ -5019,6 +5097,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buchung automatisch ausführen, wenn das Produkt Standardfälligkeitstage hinterlegt hat (als Preis wird der letzte Preis verwendet)"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effectuer automatiquement la réservation en utilisant le dernier prix et le montant de l'article de la liste d'achats, si l'option \"Jours d'échéance par défaut\" est activée pour le produit."
           }
         }
       }
@@ -5686,6 +5770,12 @@
             "state" : "translated",
             "value" : "Barcode Einstellungen (alt)"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres du code-barres (ancien)"
+          }
         }
       }
     },
@@ -6079,6 +6169,12 @@
             "state" : "translated",
             "value" : "Batterie-Verwaltung ist noch nicht implementiert"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batteries non mises en œuvre"
+          }
         }
       }
     },
@@ -6089,6 +6185,12 @@
             "state" : "translated",
             "value" : "Batterienübersicht"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu des piles"
+          }
         }
       }
     },
@@ -6098,6 +6200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batterie-Ladezyklus"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivi de la batterie"
           }
         }
       }
@@ -6488,6 +6596,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kalender"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendrier"
           }
         }
       }
@@ -7133,6 +7247,12 @@
             "state" : "translated",
             "value" : "Hausarbeit-Ausführung"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivi des tâches"
+          }
         }
       }
     },
@@ -7333,6 +7453,12 @@
             "state" : "translated",
             "value" : "Hausarbeiten sind noch nicht implementiert"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corvées non effectuées"
+          }
         }
       }
     },
@@ -7342,6 +7468,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hausarbeitenübersicht"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu des corvées"
           }
         }
       }
@@ -7922,6 +8054,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Client-Informationen: %@"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations sur le client : %@"
           }
         }
       }
@@ -8836,6 +8974,12 @@
             "state" : "new",
             "value" : "Consume %1$@ %2$@ %3$@"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consommer %1$@ %2$@ %3$@"
+          }
         }
       }
     },
@@ -9435,6 +9579,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inverse Mengeneinheits-Umrechnung erstellen"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer une conversion QU inverse"
           }
         },
         "it" : {
@@ -11191,6 +11341,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einstellungen für den Datenabruf"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres de collecte des données"
           }
         }
       }
@@ -15099,6 +15255,12 @@
             "value" : "Absteigend"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descente"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15796,6 +15958,12 @@
             "value" : "Ausgewählte Aktion nach Zuweisen des Barcodes durchführen"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effectuer l'action sélectionnée après l'attribution d'un code-barres"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15840,6 +16008,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Möchtest du wirklich alle erledigten Einträge löschen?"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voulez-vous vraiment effacer tous les éléments effectués ?"
           }
         }
       }
@@ -17324,6 +17498,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fällig am %@"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échéance le %@"
           }
         }
       }
@@ -20989,6 +21169,12 @@
             "state" : "translated",
             "value" : "Ausstattung"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equipement"
+          }
         }
       }
     },
@@ -20998,6 +21184,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Existierendes Produktbild"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image du produit existant"
           }
         }
       }
@@ -21580,6 +21772,12 @@
             "state" : "translated",
             "value" : "Kalendereintrag lesen fehlgeschlagen"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la lecture d'un élément du calendrier."
+          }
         }
       }
     },
@@ -21591,6 +21789,12 @@
             "state" : "translated",
             "value" : "Erinnerungen lesen fehlgeschlagen"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N'a pas lu les rappels."
+          }
         }
       }
     },
@@ -21600,6 +21804,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtern"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtre"
           }
         }
       }
@@ -22549,6 +22759,12 @@
             "state" : "translated",
             "value" : "Anleitung (Englisch)"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guide (anglais)"
+          }
         }
       }
     },
@@ -22699,6 +22915,12 @@
             "state" : "translated",
             "value" : "Information zum Grocy-Server"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations sur le serveur Grocy"
+          }
         }
       }
     },
@@ -22708,6 +22930,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zutaten"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingrédients"
           }
         }
       }
@@ -22911,6 +23139,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iPhone: Tab-Navigation"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone : Navigation par onglets"
           }
         }
       }
@@ -23872,6 +24106,12 @@
             "state" : "translated",
             "value" : "Alter Barcode Scanner"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecteur de code-barres patrimonial"
+          }
         }
       }
     },
@@ -24612,6 +24852,12 @@
             "state" : "new",
             "value" : "Mark %1$@ %2$@ %3$@ as open"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer %1$@ %2$@ %3$@ comme ouvert"
+          }
         }
       }
     },
@@ -25262,6 +25508,12 @@
             "state" : "translated",
             "value" : "Speiseplan"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan de repas"
+          }
         }
       }
     },
@@ -25657,6 +25909,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "minimaler Bestand, Schnell-Verbrauchen, Faktoren, Tara-Gewicht"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock minimum, Consommation rapide, Facteur, Poids de tare"
           }
         }
       }
@@ -26772,6 +27030,12 @@
             "state" : "translated",
             "value" : "Neue Produktgruppe"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau groupe de produits"
+          }
         }
       }
     },
@@ -26851,6 +27115,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neue Mengenumwandlung"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversion de la nouvelle unité de quantité"
           }
         }
       }
@@ -27440,6 +27710,12 @@
             "state" : "translated",
             "value" : "Keine Barcodes gefunden."
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun code-barres n'a été trouvé."
+          }
         }
       }
     },
@@ -27514,6 +27790,12 @@
             "state" : "translated",
             "value" : "Keine Beschreibung"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune description"
+          }
         }
       }
     },
@@ -27523,6 +27805,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Standort definiert. Bitte erstelle einen."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun lieu n'a été défini. Veuillez en créer un."
           }
         }
       }
@@ -27661,6 +27949,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Produktgruppe definiert. Bitte erstelle eine."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun groupe de produits n'a été défini. Veuillez en créer un."
           }
         }
       }
@@ -27863,6 +28157,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Geschäft definiert. Bitte erstelle eines."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun magasin n'a été défini. Veuillez en créer un."
           }
         }
       }
@@ -28320,6 +28620,12 @@
             "state" : "translated",
             "value" : "Nicht auf dieser Plattform verfügbar."
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non disponible sur cette plateforme."
+          }
         }
       }
     },
@@ -28329,6 +28635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nicht implementiert"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas de mise en œuvre"
           }
         }
       }
@@ -29536,18 +29848,6 @@
           }
         }
       }
-    },
-    "Open Food Facts" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Food Fa"
-          }
-        }
-      },
-      "shouldTranslate" : false
     },
     "Opened" : {
       "localizations" : {
@@ -31050,6 +31350,12 @@
             "state" : "translated",
             "value" : "Vorbereitung"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préparation"
+          }
         }
       }
     },
@@ -32073,6 +32379,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produkt ist nicht auf dem Server"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le produit n'est pas sur le serveur"
           }
         }
       }
@@ -34880,6 +35192,12 @@
             "state" : "translated",
             "value" : "Quick-Scan"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan rapide"
+          }
         }
       }
     },
@@ -34954,6 +35272,12 @@
             "state" : "translated",
             "value" : "Quick-Scan-Modus"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode Quick-Scan"
+          }
         }
       }
     },
@@ -34969,6 +35293,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "QuickScan-Einstellungen"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres de QuickScan"
           }
         },
         "it" : {
@@ -35399,6 +35729,12 @@
             "state" : "translated",
             "value" : "Veröffentlichungsdatum: %@"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de sortie : %@"
+          }
         }
       }
     },
@@ -35414,6 +35750,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aktualisierungsintervall"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalle de rechargement"
           }
         },
         "it" : {
@@ -35591,6 +35933,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Details abfragen fehlgeschlagen."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'extraction des détails a échoué."
           }
         }
       }
@@ -36238,6 +36586,12 @@
             "state" : "translated",
             "value" : "Server"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur"
+          }
         }
       }
     },
@@ -36253,6 +36607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Server-Timeout-Intervall"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalle d'attente du serveur"
           }
         },
         "it" : {
@@ -36439,6 +36799,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Server: %1$@ %2$@"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur : %1$@ %2$@"
           }
         }
       }
@@ -38360,6 +38726,12 @@
             "value" : "Sortieren"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38410,6 +38782,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortier-Kategorie"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par catégorie"
           }
         },
         "it" : {
@@ -38652,6 +39030,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortier-Reihenfolge"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordre de tri"
           }
         },
         "it" : {
@@ -39350,6 +39734,12 @@
             "state" : "translated",
             "value" : "Bestand"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock"
+          }
         }
       }
     },
@@ -39930,6 +40320,12 @@
             "state" : "translated",
             "value" : "Bestands-Aktionen"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interaction des stocks"
+          }
         }
       }
     },
@@ -39939,6 +40335,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bestand ist leer."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le stock est vide."
           }
         }
       }
@@ -40710,6 +41112,12 @@
             "state" : "translated",
             "value" : "Bestand, Einkauf"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock, achat"
+          }
         }
       }
     },
@@ -41100,6 +41508,12 @@
             "state" : "translated",
             "value" : "Erfolgreich"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Succès"
+          }
         }
       }
     },
@@ -41115,6 +41529,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Es gibt schon eine solche Umwandlung"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une telle conversion existe déjà"
           }
         },
         "it" : {
@@ -41161,6 +41581,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unterstützte Server-Version: %@"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version du serveur prise en charge : %@"
           }
         }
       }
@@ -41695,6 +42121,12 @@
             "state" : "translated",
             "value" : "Aufgaben"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tâches"
+          }
         }
       }
     },
@@ -41708,6 +42140,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die App hat keine Berechtigungen, Erinnerungen zu lesen."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'application n'a pas l'autorisation de lire les rappels."
           }
         }
       }
@@ -41858,6 +42296,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die ausgewählte Menge ist gleich der Bestandsmenge."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le montant sélectionné est égal au montant du stock."
           }
         },
         "it" : {
@@ -42519,6 +42963,12 @@
             "state" : "new",
             "value" : "This cannot be lower than %1$.0f and needs to be a valid number with max.  %2$lld decimal places"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce chiffre ne peut être inférieur à %1$.0f et doit être un nombre valide avec un maximum de %2$lld décimales."
+          }
         }
       }
     },
@@ -42535,6 +42985,12 @@
             "state" : "new",
             "value" : "This cannot be lower than %1$.2f and needs to be a valid number with max.  %2$lld decimal places"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce chiffre ne peut être inférieur à %1$.2f et doit être un nombre valide avec un maximum de %2$lld décimales."
+          }
         }
       }
     },
@@ -42550,6 +43006,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "This cannot be lower than %1$@ and needs to be a valid number with max.  %2$lld decimal places"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce chiffre ne peut être inférieur à %1$@ et doit être un nombre valide avec un maximum de %2$lld décimales."
           }
         }
       }
@@ -42822,6 +43284,12 @@
             "state" : "translated",
             "value" : "Dieses Gerät erlaubt keinen Zugriff auf Erinnerungen."
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce dispositif ne permet pas d'accéder aux rappels."
+          }
         }
       }
     },
@@ -42831,6 +43299,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dies ist eine Begleiter-App, das heißt du musst Zugriff zu einer laufenden Grocy-Instanz haben.\\n Wenn du diese App nur kurz ausprobieren willst, kannst du einen der vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden könnten."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il s'agit d'une application d'accompagnement qui nécessite l'accès à une instance de Grocy en cours d'exécution (par exemple sur votre serveur). Si vous souhaitez simplement essayer l'application, utilisez l'un des serveurs de démonstration fournis par le développeur de Grocy. N'utilisez pas les serveurs de démonstration pour vos données personnelles - ils ne sont pas persistants."
           }
         }
       }
@@ -44082,6 +44556,12 @@
             "state" : "new",
             "value" : "This means %1$@ %2$@ will be added to stock"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela signifie que %1$@ %2$@ sera ajouté au stock."
+          }
         }
       }
     },
@@ -44097,6 +44577,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "This means %1$@ %2$@ will be removed from stock"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela signifie que %1$@ %2$@ sera retiré du stock."
           }
         }
       }
@@ -44119,6 +44605,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "This means %1$@ is the same as %2$@"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela signifie que %1$@ est identique à %2$@"
           }
         },
         "it" : {
@@ -46988,6 +47480,12 @@
             "state" : "translated",
             "value" : "Nicht unterstützte Server-Version: %@"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version du serveur non prise en charge : %@"
+          }
         }
       }
     },
@@ -47392,6 +47890,12 @@
             "state" : "translated",
             "value" : "Die Schnell-Verbrauchs-Menge des Produkts verwenden"
           }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser les produits \"Quantité à consommer rapidement\""
+          }
         }
       }
     },
@@ -47401,6 +47905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eigenen Server verwenden"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez votre propre serveur"
           }
         }
       }
@@ -47601,6 +48111,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benutzerentitäten"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entités utilisatrices"
           }
         }
       }
@@ -48581,6 +49097,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Willkommen bei Grocy Mobile!"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue à Grocy Mobile"
           }
         }
       }
