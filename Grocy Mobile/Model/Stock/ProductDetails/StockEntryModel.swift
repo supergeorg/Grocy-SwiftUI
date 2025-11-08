@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class StockEntry: Codable, Equatable {
+class StockEntry: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var productID: Int
     var amount: Double

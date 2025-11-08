@@ -11,8 +11,6 @@ import SwiftData
 struct StockEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     
-    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
-    
     var stockElement: StockElement
     
     @State private var selectedStockElement: StockElement? = nil

@@ -5,61 +5,77 @@
 //  Created by Georg Meissner on 07.12.20.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct StockTableMenuEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @State private var navPath = NavigationPath()
-    
+
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
-    
+
     var stockElement: StockElement
     @Binding var selectedStockElement: StockElement?
-    
+
     var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: {$0.id == stockElement.product?.quIDStock})
+        mdQuantityUnits.first(where: { $0.id == stockElement.product?.quIDStock })
     }
-    
+
     func consumeAsSpoiled() async {
         do {
-            try await grocyVM.postStockObject(id: stockElement.productID, stockModePost: .consume, content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil))
+            try await grocyVM.postStockObject(
+                id: stockElement.productID,
+                stockModePost: .consume,
+                content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: true, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)
+            )
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
             GrocyLogger.error("Consume all as spoiled failed. \(error)")
         }
     }
-    
+
     var body: some View {
         NavigationLink(
             value: StockInteraction.addToShL(stockElement: stockElement),
             label: {
-        Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
-            .labelStyle(.titleAndIcon)
+                Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
+                    .labelStyle(.titleAndIcon)
             }
         )
         Divider()
-        Group{
-            NavigationLink(value: StockInteraction.productPurchase(stockElement: stockElement), label: {
-                Label("Purchase", systemImage: MySymbols.purchase)
-                    .labelStyle(.titleAndIcon)
-            })
-            NavigationLink(value: StockInteraction.productConsume(stockElement: stockElement), label: {
-                Label("Consume", systemImage: MySymbols.consume)
-                    .labelStyle(.titleAndIcon)
-            })
-            NavigationLink(value: StockInteraction.productTransfer(stockElement: stockElement), label: {
-                Label("Transfer", systemImage: MySymbols.transfer)
-                    .labelStyle(.titleAndIcon)
-            })
-            NavigationLink(value: StockInteraction.productInventory(stockElement: stockElement), label: {
-                Label("Inventory", systemImage: MySymbols.inventory)
-                    .labelStyle(.titleAndIcon)
-            })
+        Group {
+            NavigationLink(
+                value: StockInteraction.productPurchase(stockElement: stockElement),
+                label: {
+                    Label("Purchase", systemImage: MySymbols.purchase)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
+            NavigationLink(
+                value: StockInteraction.productConsume(stockElement: stockElement),
+                label: {
+                    Label("Consume", systemImage: MySymbols.consume)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
+            NavigationLink(
+                value: StockInteraction.productTransfer(stockElement: stockElement),
+                label: {
+                    Label("Transfer", systemImage: MySymbols.transfer)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
+            NavigationLink(
+                value: StockInteraction.productInventory(stockElement: stockElement),
+                label: {
+                    Label("Inventory", systemImage: MySymbols.inventory)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
         }
         Divider()
-        Group{
+        Group {
             //            Button(role: .destructive, action: {
             //                Task {
             //                    await consumeAsSpoiled()
@@ -67,7 +83,7 @@ struct StockTableMenuEntriesView: View {
             //            }, label: {
             //                Label("Consume \(stockElement.amount.formattedAmount) \(quString)", systemImage: MySymbols.clear)
             //            })
-            
+
             //                Button(action: {
             //                    print("recip")
             //                }, label: {
@@ -75,20 +91,26 @@ struct StockTableMenuEntriesView: View {
             //                })
         }
         Divider()
-        Group{
-            NavigationLink(value: StockInteraction.productOverview(stockElement: stockElement), label: {
-                Label("Product overview", systemImage: MySymbols.info)
-                    .labelStyle(.titleAndIcon)
-            })
+        Group {
+            NavigationLink(
+                value: StockInteraction.productOverview(stockElement: stockElement),
+                label: {
+                    Label("Product overview", systemImage: MySymbols.info)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
             //            //                Button(action: {
             //            //                    print("Stock entries are not accessed here")
             //            //                }, label: {
             //            //                    Text("Stock entries")
             //            //                })
-            NavigationLink(value: StockInteraction.productJournal(stockElement: stockElement), label: {
-                Label("Stock journal", systemImage: MySymbols.stockJournal)
-                    .labelStyle(.titleAndIcon)
-            })
+            NavigationLink(
+                value: StockInteraction.productJournal(stockElement: stockElement),
+                label: {
+                    Label("Stock journal", systemImage: MySymbols.stockJournal)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
             //            //                Button(action: {
             //            //                    print("Stock Journal summary is not available yet")
             //            //                }, label: {

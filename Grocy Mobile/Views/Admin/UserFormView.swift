@@ -95,11 +95,11 @@ struct UserFormView: View {
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
-                    Button("Save") {
+                    Button(role: .confirm, action: {
                         Task {
                             await saveUser()
                         }
-                    }
+                    })
                     .keyboardShortcut(.defaultAction)
                     .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)
                 }

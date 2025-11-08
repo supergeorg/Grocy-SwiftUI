@@ -92,6 +92,7 @@ struct AboutView: View {
             .foregroundStyle(.primary)
             Button(
                 "Replay app onboarding",
+                systemImage: MySymbols.reset,
                 action: {
                     self.onboardingNeeded = true
                 }
