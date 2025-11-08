@@ -275,7 +275,7 @@ struct StockView: View {
                 }
             #endif
             #if os(iOS)
-                ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItemGroup(placement: horizontalSizeClass == .compact ? .secondaryAction : .primaryAction) {
                     NavigationLink(value: StockInteraction.inventoryProduct) {
                         Label("Inventory", systemImage: MySymbols.inventory)
                     }
