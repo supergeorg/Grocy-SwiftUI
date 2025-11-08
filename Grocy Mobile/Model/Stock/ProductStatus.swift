@@ -15,7 +15,7 @@ enum ProductStatus: LocalizedStringKey {
     case expired = "Expired"
     case belowMinStock = "Below min. stock amount"
 
-    func getDescription(amount: Int, dueSoonDays: Int? = 5) -> String {
+    func getDescription(amount: Int, dueSoonDays: Int? = 5) -> LocalizedStringKey {
         switch self {
         case .all:
             return "No description"
