@@ -19,11 +19,11 @@ enum ShoppingListStatus: String {
         case .all:
             return "No description"
         case .belowMinStock:
-            return "\(amount) products are below min. defined stock amount"
+            return "\(amount) products are below defined min. stock amount"
         case .done:
-            return "\(amount) entries are done"
+            return "\(amount) items are done"
         case .undone:
-            return "\(amount) entries are undone"
+            return "\(amount) items are undone"
         }
     }
     func getIcon() -> String {

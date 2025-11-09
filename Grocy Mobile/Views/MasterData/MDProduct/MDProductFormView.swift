@@ -183,19 +183,19 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.optional,
                     label: {
-                        MyLabelWithSubtitle(title: "Optional properties", subTitle: "State, Parent product, Description, Product group, Energy, Picture", systemImage: MySymbols.description)
+                        MyLabelWithSubtitle(title: "Optional properties", subTitle: "\(Text("Status")), \(Text("Parent product")), \(Text("Description")), \(Text("Product group")), \(Text("Energy")), \(Text("Picture"))", systemImage: MySymbols.description)
                     }
                 )
                 NavigationLink(
                     value: MDProductFormPart.location,
                     label: {
-                        MyLabelWithSubtitle(title: "Default locations", subTitle: "Location, Store", systemImage: MySymbols.location, isProblem: product.locationID == 0)
+                        MyLabelWithSubtitle(title: "Default locations", subTitle: "\(Text("Location")), \(Text("Store"))", systemImage: MySymbols.location, isProblem: product.locationID == 0)
                     }
                 )
                 NavigationLink(
                     value: MDProductFormPart.dueDate,
                     label: {
-                        MyLabelWithSubtitle(title: "Due date", subTitle: "Type, Default days; after opening, freezing, thawing", systemImage: MySymbols.date)
+                        MyLabelWithSubtitle(title: "Due date", subTitle: "\(Text("Type")), \(Text("Default due days"))", systemImage: MySymbols.date)
                     }
                 )
                 NavigationLink(
@@ -212,7 +212,7 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.amount,
                     label: {
-                        MyLabelWithSubtitle(title: "Amounts", subTitle: "Min. stock, Quick consume, Factor, Tare weight", systemImage: MySymbols.amount)
+                        MyLabelWithSubtitle(title: "Amount", subTitle: "\(Text("Min. stock amount")), \(Text("Quick consume amount")), \(Text("Factor")), \(Text("Tare weight"))", systemImage: MySymbols.amount)
                     }
                 )
                 NavigationLink(

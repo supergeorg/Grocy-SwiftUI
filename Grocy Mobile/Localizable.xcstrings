@@ -571,38 +571,8 @@
       },
       "shouldTranslate" : false
     },
-    "%lld entries are done" : {
+    "%lld items are done" : {
       "localizations" : {
-        "cs" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld položek zaškrtnuto"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld položek zaškrtnuto"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld položek zaškrtnuto"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld položek zaškrtnuto"
-                }
-              }
-            }
-          }
-        },
         "de" : {
           "variations" : {
             "plural" : {
@@ -627,13 +597,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld entry is done"
+                  "value" : "%lld item is done"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "new",
-                  "value" : "%lld entries are done"
+                  "value" : "%lld items are done"
                 }
               }
             }
@@ -644,116 +614,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entries are done"
+                  "state" : "translated",
+                  "value" : "%lld élément est fait"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld entries are done"
-                }
-              }
-            }
-          }
-        },
-        "it" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld inserimenti sono stati eseguiti"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld inserimenti sono stati eseguiti"
-                }
-              }
-            }
-          }
-        },
-        "nb" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld oppføringer er ferdige"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld oppføringer er ferdige"
-                }
-              }
-            }
-          }
-        },
-        "nl" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Je hebt %lld taken afgerond"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Je hebt %lld taken afgerond"
-                }
-              }
-            }
-          }
-        },
-        "pt-BR" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entradas estão concluídas"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld entradas estão concluídas"
-                }
-              }
-            }
-          }
-        },
-        "pt-PT" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entradas estão concluídas"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld entradas estão concluídas"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld 项条目已完成"
+                  "value" : "%lld éléments sont fait"
                 }
               }
             }
@@ -761,51 +629,21 @@
         }
       }
     },
-    "%lld entries are undone" : {
+    "%lld items are undone" : {
       "localizations" : {
-        "cs" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Stav %lld položek byl vrácen zpět"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Stav %lld položek byl vrácen zpět"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Stav %lld položek byl vrácen zpět"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Stav %lld položek byl vrácen zpět"
-                }
-              }
-            }
-          }
-        },
         "de" : {
           "variations" : {
             "plural" : {
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld Eintrag ist noch nicht erledigt"
+                  "value" : "%lld Eintrag ist unerledigt"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld Einträge sind noch nicht erledigt"
+                  "value" : "%lld Einträge sind unerledigt"
                 }
               }
             }
@@ -817,13 +655,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld entry is undone"
+                  "value" : "%lld item is undone"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "new",
-                  "value" : "%lld entries are undone"
+                  "value" : "%lld items are undone"
                 }
               }
             }
@@ -834,146 +672,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entrées sont faites"
+                  "state" : "translated",
+                  "value" : "%lld élément est annulée"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld entrées sont faites"
-                }
-              }
-            }
-          }
-        },
-        "it" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld inserimenti non eseguiti"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld inserimenti non eseguiti"
-                }
-              }
-            }
-          }
-        },
-        "nb" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld oppføringer er ikke ferdige"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld oppføringer er ikke ferdige"
-                }
-              }
-            }
-          }
-        },
-        "nl" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Je hebt %lld taken niet afgerond"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Je hebt %lld taken niet afgerond"
-                }
-              }
-            }
-          }
-        },
-        "pl" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld wpisów zostało cofniętych"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld wpisów zostało cofniętych"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld wpisów zostało cofniętych"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld wpisów zostało cofniętych"
-                }
-              }
-            }
-          }
-        },
-        "pt-BR" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entradas não estão concluídas"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld entradas não estão concluídas"
-                }
-              }
-            }
-          }
-        },
-        "pt-PT" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld entradas não estão concluídas"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld entradas não estão concluídas"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld 项条目已撤消"
+                  "value" : "%lld éléments sont annulés"
                 }
               }
             }
@@ -1018,6 +724,24 @@
               }
             }
           }
+        },
+        "fr-FR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produit est en quantité inférieure à la limite définie"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produits sont en quantité inférieure à la limite définie"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1058,11 +782,47 @@
               }
             }
           }
+        },
+        "fr-FR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produit est périmé"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produits seront périmés"
+                }
+              }
+            }
+          }
         }
       }
     },
     "%lld products are expired" : {
       "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkt ist abgelaufen"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkte sind abgelaufen"
+                }
+              }
+            }
+          }
+        },
         "en" : {
           "variations" : {
             "plural" : {
@@ -1084,12 +844,6 @@
         "fr-FR" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld produits sont périmés"
-                }
-              },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -1108,14 +862,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "new",
-                  "value" : ""
+                  "state" : "translated",
+                  "value" : "%lld Produkt ist überfällig"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "new",
-                  "value" : ""
+                  "state" : "translated",
+                  "value" : "%lld Produkte sind überfällig"
                 }
               }
             }
@@ -1142,12 +896,6 @@
         "fr-FR" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld produits sont dépassés"
-                }
-              },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -28496,6 +28244,12 @@
             "value" : "Opened"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvert"
+          }
+        },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
@@ -47303,6 +47057,24 @@
                 "stringUnit" : {
                   "state" : "new",
                   "value" : "within the next %lld days"
+                }
+              }
+            }
+          }
+        },
+        "fr-FR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "dans les 24 heures"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "dans les %lld jours"
                 }
               }
             }

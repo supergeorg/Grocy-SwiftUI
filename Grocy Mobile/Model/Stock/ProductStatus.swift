@@ -20,13 +20,13 @@ enum ProductStatus: LocalizedStringKey {
         case .all:
             return "No description"
         case .expiringSoon:
-            return "\(amount) products are due within the next \(dueSoonDays ?? 5) days"
+            return "\(Text("\(amount) products are due")) \(Text("within the next \(dueSoonDays ?? 5) days"))"
         case .overdue:
             return "\(amount) products are overdue"
         case .expired:
             return "\(amount) products are expired"
         case .belowMinStock:
-            return "\(amount) products are below min. defined stock amount"
+            return "\(amount) products are below defined min. stock amount"
         }
     }
 

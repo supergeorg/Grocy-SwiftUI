@@ -255,7 +255,7 @@ struct ConsumeProductView: View {
                         Text("")
                             .tag(nil as Int?)
                         ForEach(filteredLocations, id: \.id) { location in
-                            Text(product?.locationID == location.id ? "\(location.name) (Default location)" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
+                            Text(product?.locationID == location.id ? "\(location.name) (\(Text("Default location")))" : "\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
                                 .tag(location.id as Int?)
                         }
                     }

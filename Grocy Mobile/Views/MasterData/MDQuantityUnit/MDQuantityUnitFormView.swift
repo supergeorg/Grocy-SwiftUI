@@ -113,7 +113,7 @@ struct MDQuantityUnitFormView: View {
             MyTextField(
                 textToEdit: $quantityUnit.name,
                 description: "Name",
-                subtitle: "(in singular form)",
+                subtitle: "(\(Text("in singular form")))",
                 isCorrect: $isNameCorrect,
                 leadingIcon: "tag",
                 emptyMessage: "A name is required",
@@ -122,7 +122,7 @@ struct MDQuantityUnitFormView: View {
             MyTextField(
                 textToEdit: $quantityUnit.namePlural,
                 description: "Name",
-                subtitle: "(in plural form)",
+                subtitle: "(\(Text("in plural form")))",
                 isCorrect: Binding.constant(true),
                 leadingIcon: "tag"
             )
