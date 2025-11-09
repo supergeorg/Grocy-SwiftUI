@@ -43,7 +43,7 @@ struct AppTabNavigation: View {
                 }
             }
 
-            Tab("Stock", systemImage: MySymbols.stockOverview, value: TabNavigationItem.stockOverview) {
+            Tab("Stock overview", systemImage: MySymbols.stockOverview, value: TabNavigationItem.stockOverview) {
                 NavigationStack {
                     StockView()
                 }

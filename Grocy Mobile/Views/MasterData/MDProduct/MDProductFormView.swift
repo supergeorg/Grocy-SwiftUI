@@ -203,7 +203,7 @@ struct MDProductFormView: View {
                     label: {
                         MyLabelWithSubtitle(
                             title: "Quantity units",
-                            subTitle: "Stock, Purchase",
+                            subTitle: "\(Text("Stock")), \(Text("Purchase"))",
                             systemImage: MySymbols.quantityUnit,
                             isProblem: (product.quIDStock == 0 || product.quIDPurchase == 0 || product.quIDConsume == 0 || product.quIDPrice == 0)
                         )
