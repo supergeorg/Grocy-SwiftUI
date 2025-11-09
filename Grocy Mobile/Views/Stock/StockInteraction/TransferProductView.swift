@@ -15,6 +15,10 @@ struct TransferProductView: View {
     @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(filter: #Predicate<MDLocation> { $0.active }, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query var allStockProductEntries: StockEntries
+    var stockProductEntries: StockEntries {
+        allStockProductEntries.filter({ $0.productID == productID })
+    }
 
     @AppStorage("localizationKey") var localizationKey: String = "en"
 
@@ -122,7 +126,9 @@ struct TransferProductView: View {
             ProductField(productID: $productID, description: "Product")
                 .onChange(of: productID) {
                     Task {
-                        try await grocyVM.getStockProductEntries(productID: productID ?? 0)
+                        if let productID {
+                            await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
+                        }
                         if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
                             locationIDFrom = selectedProduct.locationID
                             quantityUnitID = selectedProduct.quIDStock
@@ -209,7 +215,7 @@ struct TransferProductView: View {
                             },
                             content: {
                                 Text("").tag(nil as String?)
-                                ForEach(grocyVM.stockProductEntries[productID ?? 0] ?? [], id: \.stockID) { stockProduct in
+                                ForEach(stockProductEntries, id: \.stockID) { stockProduct in
                                     VStack(alignment: .leading) {
                                         Text("\(Text("Amount")): \(stockProduct.amount, specifier: "%.2f")")
                                         Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?")")

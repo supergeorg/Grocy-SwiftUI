@@ -611,11 +611,11 @@ class GrocyViewModel {
     }
 
     // MARK: - Stock management
-    func requestStockInfo(stockModeGet: StockProductGet, productID: Int) async {
+    func requestStockInfo(stockModeGet: StockProductGet, productID: Int, queries: [String]? = nil) async {
         do {
             switch stockModeGet {
             case .details:
-                let stockDetails: StockProductDetails = try await grocyApi.getStockProductInfo(stockModeGet: .details, productID: productID, queries: nil)
+                let stockDetails: StockProductDetails = try await grocyApi.getStockProductInfo(stockModeGet: .details, productID: productID, queries: queries)
                 self.stockProductDetails[productID] = stockDetails
                 let fetchDescriptor = FetchDescriptor<StockProductDetails>(
                     predicate: #Predicate { details in
@@ -644,7 +644,7 @@ class GrocyViewModel {
             case .locations:
                 print("not implemented")
             case .entries:
-                let stockEntries: StockEntries = try await grocyApi.getStockProductInfo(stockModeGet: .entries, productID: productID, queries: nil)
+                let stockEntries: StockEntries = try await grocyApi.getStockProductInfo(stockModeGet: .entries, productID: productID, queries: queries)
                 self.stockProductEntries[productID] = stockEntries
                 
                 // Process any pending changes before proceeding
@@ -693,10 +693,6 @@ class GrocyViewModel {
 
     func getStockProductLocations(productID: Int) async throws {
         self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, productID: productID, queries: nil)
-    }
-
-    func getStockProductEntries(productID: Int) async throws {
-        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
     }
 
     func putStockProductEntry(id: Int, content: StockEntry) async throws -> StockJournal {

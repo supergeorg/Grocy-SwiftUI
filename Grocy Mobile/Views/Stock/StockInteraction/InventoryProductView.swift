@@ -229,7 +229,7 @@ struct InventoryProductView: View {
         .onChange(of: productID) {
             if let productID = productID {
                 Task {
-                    try await grocyVM.getStockProductEntries(productID: productID)
+                    await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
                 }
             }
             if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {

@@ -15,13 +15,9 @@ struct ConsumeProductView: View {
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
-//    @Query(sort: \StockEntry.id, order: .forward) var stockProductEntries: StockEntries
+    @Query var allStockProductEntries: StockEntries
     var stockProductEntries: StockEntries {
-        if let productID = productID {
-            return grocyVM.stockProductEntries[productID] ?? []
-        } else {
-            return []
-        }
+        allStockProductEntries.filter({ $0.productID == productID })
     }
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
@@ -108,7 +104,7 @@ struct ConsumeProductView: View {
     private var filteredLocations: MDLocations {
         if let productID = productID {
             return mdLocations.filter { location in
-                stockProductEntries.contains(where: { 
+                stockProductEntries.contains(where: {
                     $0.productID == productID && $0.locationID == location.id
                 })
             }
@@ -230,7 +226,7 @@ struct ConsumeProductView: View {
                 .onChange(of: productID) {
                     if let productID = productID {
                         Task {
-                            try await grocyVM.getStockProductEntries(productID: productID)
+                            await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
                         }
                         if let product = product {
                             locationID = product.locationID
