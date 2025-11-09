@@ -18,38 +18,6 @@
       },
       "shouldTranslate" : false
     },
-    "(in plural form)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(in Mehrzahl)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(au pluriel)"
-          }
-        }
-      }
-    },
-    "(in singular form)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(in Einzahl)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(au singulier)"
-          }
-        }
-      }
-    },
     "%@" : {
       "shouldTranslate" : false
     },
@@ -63,76 +31,6 @@
         }
       },
       "shouldTranslate" : false
-    },
-    "%@ (Default location)" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@(Výchozí umístění)"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Standard-Standort)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Localisation par défaut)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Posizione predefinita)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (standardplassering)"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (standaardlocatie)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Domyślne miejsce)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Localização padrão)"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (Localização padrão)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@（默认位置）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ （預設位置）"
-          }
-        }
-      }
     },
     "%@ %@" : {
       "localizations" : {
@@ -424,18 +322,6 @@
             "value" : "%@ per ogni %@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -466,22 +352,10 @@
             "value" : "%@ por %@"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ per %@"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -500,12 +374,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ per %@"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -598,6 +466,39 @@
         }
       }
     },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@, %@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@, %3$@, %4$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@, %@, %@, %@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@, %3$@, %4$@, %5$@, %6$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "%@: " : {
       "shouldTranslate" : false
     },
@@ -673,57 +574,189 @@
     "%lld entries are done" : {
       "localizations" : {
         "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld položek zaškrtnuto"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld položek zaškrtnuto"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld položek zaškrtnuto"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld položek zaškrtnuto"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld položek zaškrtnuto"
+                }
+              }
+            }
           }
         },
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Eintrage sind erledigt"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Eintrag ist erledigt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Einträge sind erledigt"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entry is done"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld entries are done"
+                }
+              }
+            }
           }
         },
         "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entries are done"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entries are done"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entries are done"
+                }
+              }
+            }
           }
         },
         "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld inserimenti sono stati eseguiti"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld inserimenti sono stati eseguiti"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld inserimenti sono stati eseguiti"
+                }
+              }
+            }
           }
         },
         "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld oppføringer er ferdige"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld oppføringer er ferdige"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld oppføringer er ferdige"
+                }
+              }
+            }
           }
         },
         "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Je hebt %lld taken afgerond"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Je hebt %lld taken afgerond"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Je hebt %lld taken afgerond"
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entradas estão concluídas"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entradas estão concluídas"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entradas estão concluídas"
+                }
+              }
+            }
           }
         },
         "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entradas estão concluídas"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entradas estão concluídas"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entradas estão concluídas"
+                }
+              }
+            }
           }
         },
         "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld 项条目已完成"
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld 项条目已完成"
+                }
+              }
+            }
           }
         }
       }
@@ -731,171 +764,339 @@
     "%lld entries are undone" : {
       "localizations" : {
         "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stav %lld položek byl vrácen zpět"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Stav %lld položek byl vrácen zpět"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Stav %lld položek byl vrácen zpět"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Stav %lld položek byl vrácen zpět"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Stav %lld položek byl vrácen zpět"
+                }
+              }
+            }
           }
         },
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Einträge sind noch nicht erledigt"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entrées sont faites"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld inserimenti non eseguiti"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld oppføringer er ikke ferdige"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Je hebt %lld taken niet afgerond"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld wpisów zostało cofniętych"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entradas não estão concluídas"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entradas não estão concluídas"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld 项条目已撤消"
-          }
-        }
-      }
-    },
-    "%lld products are below min. defined stock amount" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produkt je pod minimální definovanou skladovou zásobou."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Produkte sind unter Mindestbestand"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produits ont un stock inférieur à la quantité minimum définie"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld prodotti sono sotto la soglia minima di magazzino definita"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produkter er under minimumbeholdning"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld producten zijn onder de min. voorraadhoeveelheid"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produktów jest poniżej min. ilości zapasów"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produtos estão abaixo da quantidade mínima definida no estoque"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produtos estão abaixo da quantidade mínima definida no estoque"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld 项物品数量小于最低库存数量"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld 項物品數量小於最低庫存數量"
-          }
-        }
-      }
-    },
-    "%lld products are due within the next %lld days" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld Produkte sind in den nächsten %2$lld Tagen fällig"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Eintrag ist noch nicht erledigt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Einträge sind noch nicht erledigt"
+                }
+              }
+            }
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld products are due within the next %2$lld days"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entry is undone"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld entries are undone"
+                }
+              }
+            }
           }
         },
         "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld produits sont dus dans les %2$lld jours à venir"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entrées sont faites"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entrées sont faites"
+                }
+              }
+            }
+          }
+        },
+        "it" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld inserimenti non eseguiti"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld inserimenti non eseguiti"
+                }
+              }
+            }
+          }
+        },
+        "nb" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld oppføringer er ikke ferdige"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld oppføringer er ikke ferdige"
+                }
+              }
+            }
+          }
+        },
+        "nl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Je hebt %lld taken niet afgerond"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Je hebt %lld taken niet afgerond"
+                }
+              }
+            }
+          }
+        },
+        "pl" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld wpisów zostało cofniętych"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld wpisów zostało cofniętych"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld wpisów zostało cofniętych"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld wpisów zostało cofniętych"
+                }
+              }
+            }
+          }
+        },
+        "pt-BR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entradas não estão concluídas"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entradas não estão concluídas"
+                }
+              }
+            }
+          }
+        },
+        "pt-PT" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld entradas não estão concluídas"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld entradas não estão concluídas"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld 项条目已撤消"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld products are below defined min. stock amount" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkt ist unter Mindestbestand"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkte sind unter Mindestbestand"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld product is below defined min. stock amount"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld products are below defined min. stock amount"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld products are due" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkte ist fällig"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Produkte sind fällig"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld product is due"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld products are due"
+                }
+              }
+            }
           }
         }
       }
     },
     "%lld products are expired" : {
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Produkte sind abgelaufen"
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld product is expired"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld products are expired"
+                }
+              }
+            }
           }
         },
         "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produits sont périmés"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld produits sont périmés"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produits sont périmés"
+                }
+              }
+            }
           }
         }
       }
@@ -903,15 +1104,57 @@
     "%lld products are overdue" : {
       "localizations" : {
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Produkte sind überfällig"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : ""
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : ""
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld product is overdue"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld products are overdue"
+                }
+              }
+            }
           }
         },
         "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld produits sont dépassés"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%lld produits sont dépassés"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld produits sont dépassés"
+                }
+              }
+            }
           }
         }
       }
@@ -1145,12 +1388,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 %@ è uguale a ..."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "ko" : {
@@ -2761,12 +2998,6 @@
             "value" : "Dezimaltrennzeichen für Preis-Eingabefelder automatisch hinzufügen"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2815,18 +3046,6 @@
             "value" : "Aggiungi automaticamente il separatore decimale per l'inserimento dei prezzi"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2857,24 +3076,6 @@
             "value" : "Adicionar separador decimal automaticamente para entradas de preço"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2893,22 +3094,10 @@
             "value" : "Lägg till decimalseparator automatiskt för priser"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiyat girişleri için otomatik olarak ondalık ayırıcı ekleyin"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -3141,12 +3330,6 @@
             "value" : "Überfällige/Abgelaufene Produkte hinzufügen"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3195,12 +3378,6 @@
             "value" : "Aggiungi prodotti scaduti"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3237,28 +3414,10 @@
             "value" : "Adicionar produtos vencidos/estragados"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pridať trvanlivosť/expiráciu výrobku"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -3271,12 +3430,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lägg till produkter med utgångna bäst-före-datum/sista förbrukningsdatum"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -3525,12 +3678,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lägg till produkter som är under det angivna minsta lagerantalet"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -4915,22 +5062,10 @@
             "value" : "Automaticky vkládat produkty pod min. množstvím zásoby do nákupního seznamu:"
           }
         },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produkte unter Mindestbestand automatisch zum Einkaufszettel hinzufügen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -4981,18 +5116,6 @@
             "value" : "Aggiungi automaticamente alla lista della spesa i prodotti che sono al di sotto della loro quantià minima definita"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5029,22 +5152,10 @@
             "value" : "Adicionar automaticamente produtos que estejam abaixo do seu stock mínimo definido à lista de compras"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automaticky pridávať výrobky, ktorých zásoba je pod minimálnym skladovým množstvom do nákupného zoznamu"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -5059,22 +5170,10 @@
             "value" : "Lägg automatiskt till produkter som ligger under deras definierade minsta lagermängd i inköpslistan"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tanımlanan minimum değerin altında olan ürünleri otomatik olarak ekleyin. alışveriş listesine eklenecek stok tutarı"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -7606,12 +7705,6 @@
             "value" : "Limpar"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7670,12 +7763,6 @@
     },
     "Clear done items" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7692,12 +7779,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erledigte Einträge löschen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -7748,28 +7829,10 @@
             "value" : "Pulisci oggetti completati"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Išvalyti atliktus dalykus"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -7790,70 +7853,16 @@
             "value" : "Excluir itens selecionados"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tamamlanan öğeleri temizle"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除已购买的"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -8093,12 +8102,6 @@
             "value" : "Allgemein"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8147,18 +8150,6 @@
             "value" : "Usuale"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8193,18 +8184,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comum"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -8283,12 +8262,6 @@
             "value" : "Benutzerberechtigungen konfigurieren"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8337,18 +8310,6 @@
             "value" : "Configura i permessi dell'utente"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8377,18 +8338,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Configurar permissões de usuário"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -9323,12 +9272,6 @@
             "value" : "Consuma questa voce di dispensa"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9363,18 +9306,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Consumir esse item do estoque"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -10351,12 +10282,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skapa konvertering för mängdenhet"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -11431,18 +11356,6 @@
             "value" : "Giorno"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11483,12 +11396,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zi"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -11637,12 +11544,6 @@
             "value" : "Erlaubte Nachkommastellen für Mengen"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11691,18 +11592,6 @@
             "value" : "Posizioni decimali consentite per gli importi"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11737,12 +11626,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casas decimais permitidas para quantidades"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -11827,12 +11710,6 @@
             "value" : "Erlaubte Nachkommastellen für Preise (Anzeige)"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11881,28 +11758,10 @@
             "value" : "Numeri decimali consentiti per i prezzi (display)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leidžiamos kainos po kablelio (parodymas)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -11927,42 +11786,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casas decimais permitidas para preços (exibição)"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -12017,12 +11840,6 @@
             "value" : "Erlaubte Nachkommastellen für Preise (Eingabe)"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12071,28 +11888,10 @@
             "value" : "Numeri decimali consentiti per i prezzi (input)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leidžiamos kainos po kablelio (įvestis)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -12117,42 +11916,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casas decimais permitidas para preços (entrada)"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -12587,12 +12350,6 @@
             "value" : "Standardverbrauchsstandort"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12641,18 +12398,6 @@
             "value" : "Location di consumo predefinita"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12687,42 +12432,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Local de consumo predefinido"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -12967,12 +12676,6 @@
             "value" : "Standardfälligkeitstage"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13021,18 +12724,6 @@
             "value" : "Giorni di scadenza predefiniti"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13063,28 +12754,10 @@
             "value" : "Dias de validade (padrão)"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Predvolený počet dní na spotrebu"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -13097,12 +12770,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard datumstämpel"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -13155,12 +12822,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standardfälligkeitstage nach dem Einfrieren"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -13217,12 +12878,6 @@
             "value" : "デフォルトの冷凍後の期限"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13253,28 +12908,10 @@
             "value" : "Dias de validade após colocar no congelador (padrão)"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Predvolený počet dní na spotrebu po zmrazení"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -13287,12 +12924,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard datumstämpel efter infrysning"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -13345,12 +12976,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standardfälligkeitstage nach dem Öffnen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -13407,12 +13032,6 @@
             "value" : "デフォルトの開封後の期限"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13443,28 +13062,10 @@
             "value" : "Dias de validade depois de aberto (padrão)"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Predvolený počet dní na spotrebu po otvorení"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -13477,12 +13078,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard datumstämpel efter öppnandet"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -13535,12 +13130,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standardfälligkeitstage nach dem Auftauen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -13597,12 +13186,6 @@
             "value" : "デフォルトの解凍後の期限"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13633,28 +13216,10 @@
             "value" : "Dias de validade após descongelar (padrão)"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Predvolený počet dní na spotrebu po rozmrazení"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -13667,12 +13232,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard datumstämpel efter upptining"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -13987,12 +13546,6 @@
             "value" : "Standardverbrauchsmengeneinheit"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14041,28 +13594,10 @@
             "value" : "Unità di quantità di consumo predefinita"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Numatytasis suvartojamo kiekio vienetas"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -14083,70 +13618,16 @@
             "value" : "Unidade padrão de consumo"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Varsayılan miktar birimi tüketimi"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "默认消耗数量单位"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -14175,12 +13656,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standardeinkaufsmengeneinheit"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -14307,12 +13782,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard inköpsmängd"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -15590,12 +15059,6 @@
             "value" : "Eigenen Bestand deaktivieren"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15644,18 +15107,6 @@
             "value" : "Disabilita il proprio magazzino"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15692,52 +15143,10 @@
             "value" : "Desativar próprio stock"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kendi stokunu devre dışı bırak"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -15910,12 +15319,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inaktivera kontroll av lageruppfyllelse för denna ingrediens"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -17138,12 +16541,6 @@
             "value" : "Fälligkeitsdatum"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17192,18 +16589,6 @@
             "value" : "Data di scadenza"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17234,12 +16619,6 @@
             "value" : "Validade"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17250,12 +16629,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dátum spotreby"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -17328,12 +16701,6 @@
             "value" : "Art des Fälligkeitsdatums"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17388,12 +16755,6 @@
             "value" : "期限日のタイプ"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17422,18 +16783,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tipo de Validade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -17510,12 +16859,6 @@
     },
     "Due score" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17532,12 +16875,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fällig.-Punkte"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -17588,18 +16925,6 @@
             "value" : "Punteggio scadenza"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17636,52 +16961,10 @@
             "value" : "Contagem prevista"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Son tarih skoru"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -17914,12 +17197,6 @@
             "value" : "\"Bald fällig\" Tage"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17968,18 +17245,6 @@
             "value" : "Scade tra pochi giorni"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18010,46 +17275,10 @@
             "value" : "Vence nos próximos dias"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Počet dní do blížiaceho sa konca záruky"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -18946,12 +18175,6 @@
             "value" : "Redigera konvertering för mängdenhet"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19246,12 +18469,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifica la lista della spesa"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "ko" : {
@@ -20056,12 +19273,6 @@
             "value" : "Editar este item"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20436,22 +19647,10 @@
             "value" : "Editar entidade de utilizador"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Upraviť používateľskú entitu"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -20476,12 +19675,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kullanıcı varoluşunu düzenle"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -20768,12 +19961,6 @@
             "value" : "Abilita la gestione della tara"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20846,12 +20033,6 @@
             "value" : "Aktivera hantering av förpackningsvikt"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20874,6 +20055,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟用皮重處理"
+          }
+        }
+      }
+    },
+    "Energy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energie"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Énergie"
           }
         }
       }
@@ -21280,12 +20477,6 @@
             "value" : "消費期限"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21314,18 +20505,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Data de validade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -21464,18 +20643,6 @@
             "value" : "Scaduto"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21510,12 +20677,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estragado"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -22585,12 +21746,6 @@
             "value" : "Gruppieren nach"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22639,18 +21794,6 @@
             "value" : "Raggruppato per"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22681,22 +21824,10 @@
             "value" : "Agrupar por"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grupeaza ca"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -22715,12 +21846,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gruppera efter"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -22901,6 +22026,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟用後，子物品的最小庫存數量將累計到該物品中，這代表子物品將永遠不會「不足」"
+          }
+        }
+      }
+    },
+    "in plural form" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in der Mehrzahl"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au pluriel"
+          }
+        }
+      }
+    },
+    "in singular form" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in der Einzahl"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au singulier"
           }
         }
       }
@@ -23275,12 +22432,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "É congelador"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -24375,76 +23526,6 @@
         }
       }
     },
-    "Location, Store" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umístění, Prodejna"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standort, Geschäft"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localisation, Magasin"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posizione, Negozio"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plassering, Butikk"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Locatie, winkel"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Miejsce, Sklep"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localização, Loja"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localização, Loja"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "位置，商店"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "位置，店家"
-          }
-        }
-      }
-    },
     "Locations" : {
       "localizations" : {
         "ca" : {
@@ -25131,12 +24212,6 @@
             "value" : "Segna questo elemento come fatto"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25171,18 +24246,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecionar item"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -25321,12 +24384,6 @@
             "value" : "Segna questa voce di dispensa come aperta"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25361,18 +24418,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Marcar como aberto"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sk" : {
@@ -25603,12 +24648,6 @@
             "value" : "si intende %@ fino a %@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25645,22 +24684,10 @@
             "value" : "significa dizer %@ para cada %@"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "înseamnă %@ per %@"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -25903,22 +24930,6 @@
         }
       }
     },
-    "Min. stock, Quick consume, Factor, Tare weight" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minimaler Bestand, Schnell-Verbrauchen, Faktoren, Tara-Gewicht"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stock minimum, Consommation rapide, Facteur, Poids de tare"
-          }
-        }
-      }
-    },
     "Minimum stock amount " : {
       "localizations" : {
         "cs" : {
@@ -26015,12 +25026,6 @@
             "value" : "Beim Öffnen umlagern"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26069,18 +25074,6 @@
             "value" : "Muovi all'apertura"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26117,42 +25110,6 @@
             "value" : "Mover quando aberto"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26181,12 +25138,6 @@
     },
     "Multiple Userfields will be ordered by that number on the input form" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26203,12 +25154,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mehrere Benutzerfelder werden nach dieser Nummer auf dem Eingabeformular sortiert"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -26259,18 +25204,6 @@
             "value" : "I campi utente multipli saranno ordinati in base a quel numero nel modulo di input"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26301,58 +25234,10 @@
             "value" : "Múltiplos campos de usuário serão ordenados pelo número no formulário de entrada"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Giriş formunda bu numaraya göre birden fazla Kullanıcı Alanı sıralanacaktır"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -26719,12 +25604,6 @@
             "value" : "Nie überfällig"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26815,28 +25694,10 @@
             "value" : "Nunca vence"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nekazí sa"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -26849,12 +25710,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Går aldrig ut"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -27539,12 +26394,6 @@
             "value" : "Nächstes Fälligkeitsdatum"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27599,12 +26448,6 @@
             "value" : "次の期日"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27635,12 +26478,6 @@
             "value" : "Validade"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27651,12 +26488,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nasledujúci dátum spotreby"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -28449,12 +27280,6 @@
             "value" : "Keine"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28503,18 +27328,6 @@
             "value" : "Nessuno"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28543,24 +27356,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhum"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -29051,12 +27846,6 @@
             "value" : "Wenn dieses Produkt von einem Gefrierstandort umgelagert (sprich aufgetaut) wird, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29111,12 +27900,6 @@
             "value" : "製品を冷凍庫から移したら(解凍したら)、消費期限はその日から指定した日数分を経過した日付に変更される"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29147,12 +27930,6 @@
             "value" : "Ao retirar este produto de um local de congelamento (portanto, ao descongelá-lo), a data de validade  será substituída por hoje + esta quantidade de dias"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29165,40 +27942,10 @@
             "value" : "Presunutím tohto výrobku z mrazničky (a teda jeho rozmrazením), bude jeho dátum spotreby nahradený dnešným dátumom + tento počet dní"
           }
         },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu ürün dondurucu bir yerden taşındığında (yani çözdürüldüğünde), son tarih bugün + buradaki gün sayısı olarak değiştirilecektir"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -29239,12 +27986,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn dieses Produkt zu einem Gefrierstandort umgelagert (sprich eingefroren) wird, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -29295,18 +28036,6 @@
             "value" : "Quando si sposta questo prodotto in un luogo di congelamento (quindi quando lo si congela), la data di scadenza verrà sostituita da oggi + questo numero di giorni"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29337,12 +28066,6 @@
             "value" : "Ao mover este produto para um local de congelamento (portanto, ao congelá-lo), a data de validade será substituída por hoje + esta quantidade de dias"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29355,40 +28078,10 @@
             "value" : "Presunutím tohto výrobku do mrazničky (a teda jeho zazmrazením), bude jeho dátum spotreby nahradený dnešným dátumom + tento počet dní"
           }
         },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu ürün dondurucuya taşındığında (yani dondurulduğunda), son tarih bugün + buradaki gün sayısı olarak değiştirilecektir"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -29429,12 +28122,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nur erledigte Einträge"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -29485,18 +28172,6 @@
             "value" : "Solo oggetti finiti"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29527,30 +28202,6 @@
             "value" : "Somente Itens selecionados"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29561,12 +28212,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endast klara föremål"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -29597,12 +28242,6 @@
     },
     "Only undone items" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29723,22 +28362,10 @@
             "value" : "Apenas items revertidos"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Iba zrušené položky"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -29851,22 +28478,10 @@
     },
     "Opened" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otevřeno"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "de" : {
@@ -29875,40 +28490,10 @@
             "value" : "Geöffnet"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opened"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "et" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "he" : {
@@ -29917,124 +28502,10 @@
             "value" : "נפתח"
           }
         },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "atidaryta"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -31094,12 +29565,6 @@
             "value" : "Unità quantitativa per dispensa"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31142,22 +29607,10 @@
             "value" : "Unidade de medida por stock"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Na jednotku množstva zásoby"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -31182,12 +29635,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stok miktarı birimi başına"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -31278,6 +29725,22 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Picture" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo"
+          }
+        }
+      }
     },
     "Please check the log to determine the problem." : {
       "localizations" : {
@@ -33793,12 +32256,6 @@
     },
     "Quantity unit for prices" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33815,12 +32272,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mengeneinheit für Preise"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -33871,28 +32322,10 @@
             "value" : "Unità di quantità per i prezzi"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kiekio vienetas kainoms"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -33913,30 +32346,6 @@
             "value" : "Unidade para preços"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33949,34 +32358,16 @@
             "value" : "Mängdenhet för priser"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiyatlar için miktar birimi"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "价格数量单位"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -34831,12 +33222,6 @@
             "value" : "Schnell-Verbrauch Menge"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -34885,18 +33270,6 @@
             "value" : "Quantità di consumo rapida"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -34931,18 +33304,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quantidade de consumo rápido"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -34997,12 +33358,6 @@
     },
     "Quick open amount" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -35019,12 +33374,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnell-Öffnen Menge"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -35075,28 +33424,10 @@
             "value" : "Quantità per consumo rapido"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Greitai atidarymo kiekis"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -35117,70 +33448,16 @@
             "value" : "Valor de abertura rápida"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hızlı açılış miktarı"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "快速开封数量"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -37522,12 +35799,6 @@
             "value" : "Nákupný zoznam do výberu zásob"
           }
         },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37652,12 +35923,6 @@
             "value" : "Non dovrebbe essere congelato"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37694,24 +35959,6 @@
             "value" : "Não deve ser congelado"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37728,12 +35975,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bör ej frysas"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -37788,12 +36029,6 @@
             "value" : "Eine Warnung anzeigen, wenn das Fälligkeitsdatum des gekauften Produkts vor dem nächsten Fälligkeitsdatum von bereits vorrätigen Bestandseinträgen liegt"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37842,18 +36077,6 @@
             "value" : "Mostra un avviso quando la data di scadenza del prodotto acquistato è precedente alla successiva data di scadenza in dispensa"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37884,22 +36107,10 @@
             "value" : "Avisar quando a validade do produto comprado for inferior ao já contido no estoque"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Afișeaza un avertisment atunci când termenul produsului achiziționat este înaintea termenului produsului din stoc"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sl" : {
@@ -37918,12 +36129,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visa en varning när datumstämpeln på den inköpta produkten är tidigare än datumstämpeln på samma produkt i lager"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -38032,12 +36237,6 @@
             "value" : "Mostra un'icona se il prodotto è già nella lista della spesa"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38074,12 +36273,6 @@
             "value" : "Mostrar ícone se já estiver lista de compras"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38110,22 +36303,10 @@
             "value" : "Visa en ikon om produkten redan finns i inköpslistan"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ürün zaten alışveriş listesindeyse bir simge göster"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -38490,22 +36671,10 @@
             "value" : "Visa i sidofältet"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yan bar menüsünde göster"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -38524,12 +36693,6 @@
     },
     "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38546,12 +36709,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einkaufsdatum auf der Einkauf- und Inventur-Seite anzeigen (ansonsten wird heute als Einkaufsdatum verwendet)"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -38602,18 +36759,6 @@
             "value" : "Mostra la data di acquisto sulla pagina acquisti ed inventario (altrimenti la data di acquisto predefinita è quella odierna)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38656,46 +36801,10 @@
             "value" : "Afișați data achiziției pe pagina de achiziție și de inventar (în caz contrar, data achiziției este implicită astăzi)"
           }
         },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Satın alma tarihini satın alma ve envanter sayfasında göster (aksi takdirde satın alma tarihi varsayılan olarak bugün olur)"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -38854,12 +36963,6 @@
             "value" : "Sortiernummer"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38908,18 +37011,6 @@
             "value" : "Ordinamento numerico"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38950,18 +37041,6 @@
             "value" : "Ordem"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38984,12 +37063,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortera nummer"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -39467,76 +37540,6 @@
       },
       "shouldTranslate" : false
     },
-    "State, Parent product, Description, Product group, Energy, Picture" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stav, Nadřazený produkt, Popis, Skupina produktů, Energie, Obrázek"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status, übergeordnetes Produkt, Beschreibung, Produktgruppe, Energie, Bild"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "État, Produit parent, Description, Groupe de produits, Énergie, Image"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stato, Categoria prodotto, Descrizione, Gruppo prodotto, Energia, Immagine"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tilstand, hovedprodukt, beskrivelse, produktgruppe, energi, bilde"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status, hoofdproduct, beschrijving, productcategorie, energie, foto"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status, Produkt nadrzędny, Opis, Grupa produktu, Energia, Zdjęcie"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estado, produto principal, descrição, grupo de produtos, energia, imagem"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estado, produto principal, descrição, grupo de produtos, energia, imagem"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状态，主物品，说明，物品分类，能量，图片"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "狀態、母物品、說明、物品分類、熱量、圖片"
-          }
-        }
-      }
-    },
     "Status" : {
       "localizations" : {
         "ca" : {
@@ -39959,12 +37962,6 @@
             "value" : "Bestandseinträge an diesem Standort werden zuerst verbraucht"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40013,18 +38010,6 @@
             "value" : "Le entrate di riserva in questa location saranno le prime ad essere consumate"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40059,42 +38044,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entradas do stock nesta localização serão consumidas primeiro"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -40147,12 +38096,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bestandseintrag"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -40209,12 +38152,6 @@
             "value" : "在庫エントリー"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40245,24 +38182,6 @@
             "value" : "Entrada no estoque"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40279,12 +38198,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lagerpost"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -40995,12 +38908,6 @@
             "value" : "Valore della dispensa"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -41035,12 +38942,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Valor do estoque"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "ro" : {
@@ -42480,12 +40381,6 @@
             "value" : "A página de visão geral do estoque lista todos os produtos que estão atualmente em estoque ou abaixo da quantidade mínima de estoque - ative isso para ocultar este produto sempre"
           }
         },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -42524,12 +40419,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diese Menge wird für den \"Schnell-Verbrauch Button\" auf der Bestandsübersicht benutzt (bezieht sich auf die Bestandsmengeneinheit)"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -42580,18 +40469,6 @@
             "value" : "Questa quantità è utilizzata per i \"pulsanti di consumo rapido/apertura\" nella pagina di panoramica della dispensa (correlato all'unità quantitativa della dispensa)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -42622,70 +40499,16 @@
             "value" : "Esse valor é usado para o \"botão de consumo rápido\" na página de 'Visão Geral' de estoque (relacionado à quantidade de estoque da unidade)"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu miktar, stok genel bakış sayfasındaki \"hızlı tüket düğmesi\" için kullanılır (miktar birim stokla ilgili)"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "此数量用于库存总览页面上的“快速消耗”按钮（使用库存数量单位）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -42714,12 +40537,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diese Menge wird für den \"Schnell-Öffnen Button\" auf der Bestandsübersicht benutzt (bezieht sich auf die Bestandsmengeneinheit)"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -42770,28 +40587,10 @@
             "value" : "Questa quantità è utilizzata per i \"pulsanti di consumo rapido/apertura\" nella pagina di panoramica della dispensa (correlato all'unità quantitativa della dispensa)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ši suma naudojama atsargų apžvalgos puslapyje esančiam „greito atidarymo mygtukui“ (susijusiam su atsargų kiekio vienetais)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -42800,58 +40599,10 @@
             "value" : "Deze hoeveelheid wordt gebruikt voor de \"snel openen knop\" op de voorraadoverzichtspagina (gerelateerd aan hoeveelheidsvoorraad)"
           }
         },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esse valor é usado para o \"botão de abertura rápida\" na página de 'Visão Geral' de estoque (relacionado à quantidade de estoque da unidade)"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -42860,22 +40611,10 @@
             "value" : "Bu tutar, stok genel bakış sayfasındaki \"hızlı açma düğmesi\" için kullanılır (miktar birim stokla ilgili)"
           }
         },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "此数量用于库存总览页面上的“快速打开”按钮（使用库存数量单位）"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -43214,12 +40953,6 @@
             "value" : "Não poderá ser o mesmo que a localização \"De\""
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43242,12 +40975,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kan ej vara samma som \"Från\" platsen"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -43657,12 +41384,6 @@
             "value" : "Detta är obligatoriskt och kan bara innehålla bokstäver och siffror"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43797,22 +41518,10 @@
             "value" : "Měrná jednotka produktu při kliknutí na tlačítko Spotřebovat"
           }
         },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dies ist die Standardmengeneinheit, die bei Verbrauch dieses Produkts verwendet wird"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -43863,28 +41572,10 @@
             "value" : "È l'unità di quantità predefinita utilizzata per il consumo di questo prodotto"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tai yra numatytasis kiekio vienetas, naudojamas vartojant šį produktą"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -43905,30 +41596,6 @@
             "value" : "Esta é a unidade padrão usada ao consumir este produto"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43941,22 +41608,10 @@
             "value" : "Standard kvantitetsenhet som använd när denna produkt konsumeras"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu, bu ürünü tüketirken kullanılan varsayılan miktar birimidir"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -43964,23 +41619,11 @@
             "state" : "translated",
             "value" : "这是消耗此产品时使用的默认数量单位"
           }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
         }
       }
     },
     "This is the internal field name, e. g. for the API" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43997,12 +41640,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dies ist der interne Feldname, z. B. für die API"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -44053,18 +41690,6 @@
             "value" : "Questo è il campo del nome interno, ad esempio per l'API"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44095,30 +41720,6 @@
             "value" : "Este é o nome do campo interno, por exemplo para a API"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44129,12 +41730,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detta är det interna fältnamnet, t.ex. för API:et"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -44165,12 +41760,6 @@
     },
     "This is used to display the field on the frontend" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44187,12 +41776,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dies wird verwendet wenn das Feld auf der Oberfläche angezeigt wird"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -44243,18 +41826,6 @@
             "value" : "Questo è utilizzato per visualizzare il campo sul frontend"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44285,58 +41856,10 @@
             "value" : "Isso é usado para mostrar o campo no frontend"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu, alanı ön uçta görüntülemek için kullanılır"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -44433,12 +41956,6 @@
             "value" : "Questo è utile ad es. per la farina in barattoli: all'acquisto / consumo / inventario si pesa sempre l'intero barattolo, la quantità da registrare viene quindi calcolata automaticamente in base a ciò che è in dispensa ed al peso della tara definito di seguito"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44475,28 +41992,10 @@
             "value" : "Isso é útil, por exemplo para farinha em frascos - na compra/consumo/inventário, você sempre pesa todo o frasco, o valor a ser lançado é calculado automaticamente com base no que está em estoque e no peso da tara definido abaixo"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toto je užitočné pri výrobkoch vo vlastných nádobách, ktoré sa vážia vrátane nádoby. Ich hmotnosť je automaticky odpočítaná podľa nižšie definovanej tary."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -44509,12 +42008,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detta är användbart t.ex. för mjöl i burkar - vid köp/konsumtion/inventering väger du alltid hela burken, den mängd som ska läggas till beräknas sedan automatiskt baserat på vad som finns i lager och förpackningsvikten som anges nedan"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -44807,18 +42300,6 @@
             "value" : "Questo prodotto non deve essere congelato"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44855,18 +42336,6 @@
             "value" : "Este produto não deve ser congelado"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44885,22 +42354,10 @@
             "value" : "Denna produkt bör ej frysas"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu ürün dondurulmamalıdır"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -45137,12 +42594,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detta kommer att användas som standardinställning när du lägger till denna produkt som receptkomponent"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -45631,18 +43082,6 @@
             "value" : "Tempo transizione"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45671,12 +43110,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Data da transação"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "ro" : {
@@ -45821,18 +43254,6 @@
             "value" : "Tipo di transizione"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45861,12 +43282,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tipo de transação"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "ro" : {
@@ -46281,12 +43696,6 @@
             "value" : "Geöffnete als nicht vorrätig behandeln"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46341,12 +43750,6 @@
             "value" : "開封したら在庫から減らす"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46377,30 +43780,6 @@
             "value" : "Se 'aberto', remover do estoque"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46411,12 +43790,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Behandla öppnad som slut i lager"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -46705,76 +44078,6 @@
         }
       }
     },
-    "Type, Default days; after opening, freezing, thawing" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Typ, výchozí dny; po otevření, zmrazení, rozmrazení"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Art, Standard; nach öffnen, einfrieren, auftauen"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type, Jours par défaut ; après ouverture, congélation, décongélation "
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo, Giorni predefiniti; post-apertura, congelamento, scongelamento"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type, Standard dager; etter åpning, frysing, tining"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soort, standaarddagen; na openen, bevriezen, ontdooien"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Typ, Domyślna ilość dni po; otwarciu; zamrożeniu; rozmrożeniu"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo, dias padrão; após abrir, congelar, descongelar"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo, dias padrão; após abrir, congelar, descongelar"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "种类、预设天数；开封、冷冻、解冻后"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "種類、預設天數；開封、冷凍、解凍後"
-          }
-        }
-      }
-    },
     "Undo transaction" : {
       "localizations" : {
         "ca" : {
@@ -46853,18 +44156,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annulla transizione"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "lt" : {
@@ -48319,22 +45610,10 @@
             "value" : "Entidades do utilizador"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Používateľské entity"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "sv" : {
@@ -48359,12 +45638,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kullanici"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -48987,12 +46260,6 @@
             "value" : "値"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49133,12 +46400,6 @@
             "value" : "Wenn Preise für dieses Produkt angezeigt werden, beziehen sie sich auf diese Mengeneinheit"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49187,28 +46448,10 @@
             "value" : "Quando verranno visualizzati i prezzi per questo prodotto, saranno correlati a questa unità di quantità"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kai pateikiamos šios prekės kainos, jos bus susietos su šiuo kiekio vienetu"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "nl" : {
@@ -49229,30 +46472,6 @@
             "value" : "Ao exibir os preços deste produto, eles serão relacionados a esta unidade de quantidade"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49265,22 +46484,10 @@
             "value" : "När priser visas för denna produkt kommer de att relateras till denna kvantitetsenhet"
           }
         },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu ürünün fiyatları görüntülenirken bu miktar birimiyle ilişkili olacaktır"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -49288,45 +46495,21 @@
             "state" : "translated",
             "value" : "显示此产品价格时，将此产品数量单位做为产品价格的计算单位"
           }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
         }
       }
     },
     "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Označíte-li produkt jako otevřený, automaticky se přesune z Obvyklého umístění do Spotřebovávat z umístění. Abyste mohli funkci použít, musíte pro obě umístění vybrat různá místa."
           }
         },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn aktiviert, wird wenn das Produkt als geöffnet markiert wurde, die entsprechende Menge an den Standardverbrauchsstandort umgelagert"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -49377,18 +46560,6 @@
             "value" : "Quando abilitato, selezionando questo prodotto come aperto, la rispettiva quantità verrà spostata nella location di consumo predefinita"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49423,42 +46594,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quando ativado, ao assinalar este produto como aberto, a quantidade correspondente será movida para o local padrão de consumo"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -49513,12 +46648,6 @@
             "value" : "Wenn aktiviert und wenn dieses Produkt zu einem Gefrierstandort umgelagert (sprich eingefroren) wird, wird eine entsprechende Warnung angezeigt"
           }
         },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49567,18 +46696,6 @@
             "value" : "Se abilitato, quando si sposta questo prodotto in un congelatore (quindi quando lo si congela), verrà mostrato un avviso"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49609,58 +46726,10 @@
             "value" : "Quando ativado, ao mover este produto para um local de congelamento (portanto, ao congelá-lo), um aviso será exibido"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Etkinleştirildiğinde, bu ürün dondurucuya taşınırken (yani dondurulurken) bir uyarı gösterilecektir."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -49691,22 +46760,10 @@
             "value" : "Otevřená balení tedy nebudou započítána do zásob. To lze využít pro plánování nákupů."
           }
         },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn aktiviert, werden geöffnete Bestandseinträge für die Ermittlung des Mindestbestands als bereits verbraucht betrachtet"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -49757,18 +46814,6 @@
             "value" : "Se abilitato, gli articoli aperti saranno conteggiati come mancanti per calcolare se questo prodotto è inferiore alla sua quantità minima in dispensa "
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49799,58 +46844,10 @@
             "value" : "Quando ativado, os itens abertos serão contados como ausentes para calcular se este produto está abaixo do estoque mínimo"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Etkinleştirildiğinde, bu ürünün minimum stok miktarının altında olup olmadığı hesaplanırken açılan ürünler eksik sayılacaktır."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -49891,12 +46888,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn aktiviert, kann dieses Produkt keinen eigenen Bestand haben, bedeutet es ist unter \"Einkauf\" nicht auswählbar (nützlich für übergeordnete Produkte, die nur als Zusammenfassung/Gesamtansicht der untergeordneten Produkte verwendet werden)"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -49947,18 +46938,6 @@
             "value" : "Quando abilitato, questo prodotto non puo' avere una propria scorta, significa che non verra' selezionato per gli acquisti (utile per i prodotti principali i quali vengono solo usati come riepilogo del sommario/totale dei sottoprodotti)"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49995,24 +46974,6 @@
             "value" : "Quando ativado, este produto não pode ter stock próprio, significa que não será selecionável na compra (útil para produtos pai que são usados apenas como resumo/total dos produtos filhos)"
           }
         },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50023,12 +46984,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "När aktiverad kan denna produkt inte ha eget lager, vilket innebär att den inte kommer att kunna väljas vid inköp (användbart för huvudprodukter som endast används som en summering/totalvy av underprodukterna)"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "tr" : {
@@ -50059,12 +47014,6 @@
     },
     "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places" : {
       "localizations" : {
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50081,12 +47030,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn aktiviert, müssen Preiseingaben immer inkl. Nachkommastellen erfolgen, das Dezimaltrennzeichen wird automatisch entsprechend der Anzahl der erlaubten Nachkommastellen hinzugefügt"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "en-GB" : {
@@ -50137,18 +47080,6 @@
             "value" : "Quando abilitato, devi sempre inserire il valore con le cifre decimali, il separatore decimale verrà aggiunto automaticamente in base alla quantità di cifre decimali consentite"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "lt" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50179,58 +47110,10 @@
             "value" : "Quando ativado, você sempre deve inserir o valor incluindo casas decimais, o separador decimal será adicionado automaticamente com base na quantidade de casas decimais permitidas"
           }
         },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Etkinleştirildiğinde, her zaman değeri ondalık basamaklar dahil girmeniz gerekir; ondalık ayırıcı, izin verilen ondalık basamak miktarına göre otomatik olarak eklenecektir"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         },
         "zh-Hans" : {
@@ -50383,6 +47266,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "當此物品被標記為已開封時，到期日期將由今天加上此天數代替（0 表示停用此功能）"
+          }
+        }
+      }
+    },
+    "within the next %lld days" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "innerhalb des nächsten Tages"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "innerhalb der nächsten %lld Tage"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "within the next day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "within the next %lld days"
+                }
+              }
+            }
           }
         }
       }
