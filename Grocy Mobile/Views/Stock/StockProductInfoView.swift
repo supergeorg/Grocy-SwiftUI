@@ -15,7 +15,7 @@ struct StockProductInfoView: View {
     var productDetails: StockProductDetails? {
         return detailsList.first(where: { $0.productID == stockElement.productID })
     }
-    @Query() var productList: [MDProduct]
+    @Query var productList: [MDProduct]
     var product: MDProduct? {
         productList.first(where: { $0.id == stockElement.productID })
     }
@@ -129,11 +129,7 @@ struct StockProductInfoView: View {
         }
         .navigationTitle(product?.name ?? "Product overview")
         .task {
-            do {
-                try await grocyVM.requestStockInfo(stockModeGet: .details, productID: stockElement.productID)
-            } catch {
-                GrocyLogger.error("Get stock detail failed. \(error)")
-            }
+            await grocyVM.requestStockInfo(stockModeGet: .details, productID: stockElement.productID)
         }
     }
 }

@@ -611,15 +611,11 @@ class GrocyViewModel {
     }
 
     // MARK: - Stock management
-    func getStockProductInfo<T: Codable>(mode: StockProductGet, productID: Int, queries: [String]? = nil) async throws -> T {
-        return try await grocyApi.getStockProductInfo(stockModeGet: mode, id: productID, queries: queries)
-    }
-
-    func requestStockInfo(stockModeGet: StockProductGet, productID: Int, ignoreCached: Bool = true) async throws {
-        switch stockModeGet {
-        case .details:
-            if stockProductDetails.isEmpty || ignoreCached {
-                let stockDetails: StockProductDetails = try await getStockProductInfo(mode: stockModeGet, productID: productID)
+    func requestStockInfo(stockModeGet: StockProductGet, productID: Int) async {
+        do {
+            switch stockModeGet {
+            case .details:
+                let stockDetails: StockProductDetails = try await grocyApi.getStockProductInfo(stockModeGet: .details, productID: productID, queries: nil)
                 self.stockProductDetails[productID] = stockDetails
                 let fetchDescriptor = FetchDescriptor<StockProductDetails>(
                     predicate: #Predicate { details in
@@ -645,24 +641,62 @@ class GrocyViewModel {
                 ).first
                 self.modelContext.insert(stockDetails)
                 try self.modelContext.save()
+            case .locations:
+                print("not implemented")
+            case .entries:
+                let stockEntries: StockEntries = try await grocyApi.getStockProductInfo(stockModeGet: .entries, productID: productID, queries: nil)
+                self.stockProductEntries[productID] = stockEntries
+                
+                // Process any pending changes before proceeding
+                modelContext.processPendingChanges()
+                
+                let fetchDescriptor = FetchDescriptor<StockEntry>(
+                    predicate: #Predicate { entry in
+                        entry.productID == productID
+                    }
+                )
+                let existingObjects = try modelContext.fetch(fetchDescriptor)
+                
+                // Build lookup dictionaries
+                let existingById = Dictionary(uniqueKeysWithValues: existingObjects.map { ($0.id, $0) })
+                let incomingById = Dictionary(uniqueKeysWithValues: stockEntries.map { ($0.id, $0) })
+                
+                // Delete removed objects
+                for (id, existingObject) in existingById {
+                    if incomingById[id] == nil {
+                        modelContext.delete(existingObject)
+                    }
+                }
+                
+                // Insert new or updated objects
+                for (id, newObject) in incomingById {
+                    if let existing = existingById[id] {
+                        if existing != newObject {
+                            modelContext.delete(existing)
+                            modelContext.insert(newObject)
+                        }
+                        // else: identical, skip
+                    } else {
+                        modelContext.insert(newObject)
+                    }
+                }
+                
+                try modelContext.save()
+            case .priceHistory:
+                print("not implemented")
             }
-        case .locations:
-            print("not implemented")
-        case .entries:
-            if stockProductEntries[productID]?.isEmpty ?? true || ignoreCached {
-                self.stockProductEntries[productID] = try await getStockProductInfo(mode: stockModeGet, productID: productID)
-            }
-        case .priceHistory:
-            print("not implemented")
+        } catch {
+            GrocyLogger.error("Data request failed for \(stockModeGet). Message: \("\(error)")")
+            self.failedToLoadErrors.append(error)
         }
     }
 
     func getStockProductLocations(productID: Int) async throws {
-        self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, id: productID, queries: nil)
+        self.stockProductLocations[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .locations, productID: productID, queries: nil)
     }
 
     func getStockProductEntries(productID: Int) async throws {
-        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, id: productID, queries: ["include_sub_products=true"])
+        self.stockProductEntries[productID] = try await grocyApi.getStockProductInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
     }
 
     func putStockProductEntry(id: Int, content: StockEntry) async throws -> StockJournal {

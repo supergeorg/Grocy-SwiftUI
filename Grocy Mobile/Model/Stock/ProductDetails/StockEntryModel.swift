@@ -13,7 +13,7 @@ class StockEntry: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var productID: Int
     var amount: Double
-    var bestBeforeDate: Date?
+    var bestBeforeDate: Date
     var purchasedDate: Date?
     var stockID: String
     var price: Double?
@@ -46,11 +46,7 @@ class StockEntry: Codable, Equatable, Identifiable {
             do { self.id = try container.decode(Int.self, forKey: .id) } catch { self.id = Int(try container.decode(String.self, forKey: .id))! }
             do { self.productID = try container.decode(Int.self, forKey: .productID) } catch { self.productID = try Int(container.decode(String.self, forKey: .productID))! }
             do { self.amount = try container.decode(Double.self, forKey: .amount) } catch { self.amount = try Double(container.decode(String.self, forKey: .amount))! }
-            if let bestBeforeDateString = try? container.decode(String.self, forKey: .bestBeforeDate) {
-                self.bestBeforeDate = getDateFromString(bestBeforeDateString)
-            } else {
-                self.bestBeforeDate = nil
-            }
+            self.bestBeforeDate = getDateFromString(try container.decode(String.self, forKey: .bestBeforeDate))!
 
             let purchasedDateString = try? container.decodeIfPresent(String.self, forKey: .purchasedDate)
             self.purchasedDate = getDateFromString(purchasedDateString ?? "")
@@ -105,7 +101,7 @@ class StockEntry: Codable, Equatable, Identifiable {
         self.storeID = storeID
         self.note = note
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

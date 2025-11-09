@@ -86,7 +86,7 @@ protocol GrocyAPI {
     func getStock() async throws -> Stock
     func getStockJournal() async throws -> StockJournal
     func getVolatileStock(dueSoonDays: Int) async throws -> VolatileStock
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]?) async throws -> T
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, productID: Int, queries: [String]?) async throws -> T
     func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
     func getBookingWithID(id: Int) async throws -> StockJournalEntry
@@ -572,16 +572,16 @@ extension GrocyApi {
         return try await call(.stockVolatile, method: .GET, queries: ["due_soon_days=\(dueSoonDays)"])
     }
 
-    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, id: Int, queries: [String]? = nil) async throws -> T {
+    func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, productID: Int, queries: [String]? = nil) async throws -> T {
         switch stockModeGet {
         case .details:
-            return try await call(.stockProductWithId, method: .GET, id: String(id))
+            return try await call(.stockProductWithId, method: .GET, id: String(productID))
         case .entries:
-            return try await call(.stockProductWithIdEntries, method: .GET, id: String(id), queries: queries)
+            return try await call(.stockProductWithIdEntries, method: .GET, id: String(productID), queries: queries)
         case .locations:
-            return try await call(.stockProductWithIdLocations, method: .GET, id: String(id))
+            return try await call(.stockProductWithIdLocations, method: .GET, id: String(productID))
         case .priceHistory:
-            return try await call(.stockProductWithIdPriceHistory, method: .GET, id: String(id))
+            return try await call(.stockProductWithIdPriceHistory, method: .GET, id: String(productID))
         }
     }
 

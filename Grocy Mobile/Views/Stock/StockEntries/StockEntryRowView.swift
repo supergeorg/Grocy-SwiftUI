@@ -9,8 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct StockEntryRowView: View {
-    @Environment(GrocyViewModel.self) private var grocyVM
-
     @Query var systemConfigList: [SystemConfig]
     @Query var userSettingsList: GrocyUserSettingsList
     var userSettings: GrocyUserSettings? {
@@ -29,16 +27,14 @@ struct StockEntryRowView: View {
     var dueType: Int
     var productID: Int
 
-    @Binding var stockEntries: StockEntries
-
     var backgroundColor: Color {
-        if (0..<(userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 {
+        if (0..<(userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate) ?? 100 {
             return Color(.GrocyColors.grocyYellowBackground)
         }
-        if dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false {
+        if dueType == 1 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate) ?? 100 < 0) : false {
             return Color(.GrocyColors.grocyGrayBackground)
         }
-        if dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate ?? Date()) ?? 100 < 0) : false {
+        if dueType == 2 ? (getTimeDistanceFromNow(date: stockEntry.bestBeforeDate) ?? 100 < 0) : false {
             return Color(.GrocyColors.grocyRedBackground)
         }
         return colorScheme == .light ? Color.white : Color.black
@@ -54,7 +50,7 @@ struct StockEntryRowView: View {
     var body: some View {
         NavigationLink(
             destination: {
-                StockEntryFormView(stockEntry: stockEntry)
+                StockEntryFormView(existingStockEntry: stockEntry)
             },
             label: {
                 VStack(alignment: .leading) {
