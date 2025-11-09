@@ -30,7 +30,7 @@ enum StockInteraction: Hashable {
 struct StockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
-    @Query var stock: [StockElement]
+    @Query(filter: #Predicate<StockElement> { $0.amount > 0 }) var stock: [StockElement]
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
@@ -88,7 +88,7 @@ struct StockView: View {
         var missingStockList: Stock = []
         for missingProduct in volatileStock?.missingProducts ?? [] {
             if !(missingProduct.isPartlyInStock) {
-                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.id }) {
+                if let foundProduct = mdProducts.first(where: { $0.id == missingProduct.productID }) {
                     let missingStockElement = StockElement(
                         amount: 0,
                         amountAggregated: 0,
@@ -122,9 +122,9 @@ struct StockView: View {
             .filter { stockElement in
                 // Location filter
                 filteredLocationID == nil || stockElement.product?.locationID == filteredLocationID
-                || ((grocyVM.stockProductLocations[stockElement.productID]?.contains(where: {
-                    $0.locationID == filteredLocationID
-                })) != nil)
+                    || ((grocyVM.stockProductLocations[stockElement.productID]?.contains(where: {
+                        $0.locationID == filteredLocationID
+                    })) != nil)
             }
             .filter { stockElement in
                 // Status filters
@@ -275,7 +275,7 @@ struct StockView: View {
                 }
             #endif
             #if os(iOS)
-            ToolbarItemGroup(placement: horizontalSizeClass == .compact ? .secondaryAction : .primaryAction) {
+                ToolbarItemGroup(placement: horizontalSizeClass == .compact ? .secondaryAction : .primaryAction) {
                     NavigationLink(value: StockInteraction.inventoryProduct) {
                         Label("Inventory", systemImage: MySymbols.inventory)
                     }
