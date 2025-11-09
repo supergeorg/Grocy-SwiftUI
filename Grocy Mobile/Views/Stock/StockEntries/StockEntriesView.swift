@@ -13,14 +13,14 @@ struct StockEntriesView: View {
 
     var stockElement: StockElement
 
-    @Query(sort: \StockEntry.bestBeforeDate, order: .forward) var stockEntries: StockEntries
+    @Query var stockEntries: StockEntries
 
     init(stockElement: StockElement) {
         self.stockElement = stockElement
         let predicate = #Predicate<StockEntry> { item in
             item.productID == stockElement.productID
         }
-        _stockEntries = Query(filter: predicate)
+        _stockEntries = Query(filter: predicate, sort: [SortDescriptor(\StockEntry.bestBeforeDate, order: .forward), SortDescriptor(\StockEntry.purchasedDate, order: .forward)])
     }
 
     private func updateData() async {

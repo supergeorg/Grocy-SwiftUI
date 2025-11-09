@@ -22,7 +22,6 @@ struct StockEntryFormView: View {
     var existingStockEntry: StockEntry?
     @State var stockEntry: StockEntry
 
-    @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
@@ -60,9 +59,11 @@ struct StockEntryFormView: View {
                 storeID: nil,
                 note: nil
             )
+        _productDoesntSpoil = State(initialValue: (existingStockEntry?.bestBeforeDate == getNeverOverdueDate()))
+        _note = State(initialValue: existingStockEntry?.note ?? "")
         _stockEntry = State(initialValue: initialStockEntry)
     }
-    
+
     private func updateData() async {
         await grocyVM.requestStockInfo(stockModeGet: .entries, productID: stockEntry.productID)
     }
@@ -89,18 +90,6 @@ struct StockEntryFormView: View {
             isSuccessful = false
         }
         isProcessing = false
-    }
-
-    private func resetForm() {
-        stockEntry.amount = existingStockEntry?.amount ?? 1.0
-        stockEntry.bestBeforeDate = existingStockEntry?.bestBeforeDate ?? Date()
-        productDoesntSpoil = (existingStockEntry?.bestBeforeDate == getNeverOverdueDate())
-        stockEntry.purchasedDate = existingStockEntry?.purchasedDate ?? nil
-        stockEntry.price = existingStockEntry?.price ?? nil
-        stockEntry.stockEntryOpen = existingStockEntry?.stockEntryOpen ?? false
-        stockEntry.locationID = existingStockEntry?.locationID
-        stockEntry.storeID = existingStockEntry?.storeID
-        note = existingStockEntry?.note ?? ""
     }
 
     var body: some View {
@@ -180,13 +169,6 @@ struct StockEntryFormView: View {
             }
         }
         .navigationTitle("Edit entry")
-        .task {
-            if firstAppear {
-                resetForm()
-                await grocyVM.requestData(additionalObjects: [.system_info])
-                firstAppear = false
-            }
-        }
     }
 }
 
