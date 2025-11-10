@@ -412,7 +412,7 @@ struct StockView: View {
                     selection: $sortSetting,
                     content: {
                         if sortOrder == .forward {
-                            Label("Product name", systemImage: MySymbols.product)
+                            Label("Name", systemImage: MySymbols.product)
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\StockElement.product?.name, order: .forward)])
                             Label("Due date", systemImage: MySymbols.date)
@@ -422,7 +422,7 @@ struct StockView: View {
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\StockElement.amount, order: .forward)])
                         } else {
-                            Label("Product name", systemImage: MySymbols.product)
+                            Label("Name", systemImage: MySymbols.product)
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\StockElement.product?.name, order: .reverse)])
                             Label("Due date", systemImage: MySymbols.date)

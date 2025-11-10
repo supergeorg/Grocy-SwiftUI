@@ -541,14 +541,14 @@ struct ShoppingListView: View {
                     selection: $sortSetting,
                     content: {
                         if sortOrder == .forward {
-                            Label("Product name", systemImage: MySymbols.product)
+                            Label("Name", systemImage: MySymbols.product)
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .forward)])
                             Label("Amount", systemImage: MySymbols.amount)
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\ShoppingListItemWrapped.shoppingListItem.amount, order: .forward)])
                         } else {
-                            Label("Product name", systemImage: MySymbols.product)
+                            Label("Name", systemImage: MySymbols.product)
                                 .labelStyle(.titleAndIcon)
                                 .tag([KeyPathComparator(\ShoppingListItemWrapped.product?.name, order: .reverse)])
                             Label("Amount", systemImage: MySymbols.amount)

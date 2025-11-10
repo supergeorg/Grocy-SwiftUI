@@ -41,7 +41,7 @@ struct SettingsShoppingListView: View {
             Section("Shopping list to stock workflow") {
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.shoppingListToStockWorkflowAutoSubmitWhenPrefilled.rawValue,
-                    description: "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set ",
+                    description: "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set",
                     icon: MySymbols.stockOverview
                 )
             }

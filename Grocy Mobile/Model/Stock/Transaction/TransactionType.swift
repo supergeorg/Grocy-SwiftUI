@@ -24,17 +24,17 @@ enum TransactionType: String, Codable, CaseIterable {
         case .consume:
             return "Consume"
         case .inventoryCorrection:
-            return "Inventory"
+            return "Inventory correction"
         case .productOpened:
-            return "Opened"
+            return "Product opened"
         case .purchase:
             return "Purchase"
         case .selfProduction:
             return "Self-production"
         case .stockEditNew:
-            return "Stock edit (new)"
+            return "Stock entry edited (new values)"
         case .stockEditOld:
-            return "Stock edit (old)"
+            return "Stock entry edited (old values)"
         case .transferFrom:
             return "Transfer from"
         case .transferTo:

@@ -89,7 +89,7 @@ struct SettingsStockView: View {
                 .disabled(useQuickConsume)
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.stockDefaultConsumeAmountUseQuickConsumeAmount.rawValue,
-                    description: "Use the products \"Quick consume amount\" ",
+                    description: "Use the products \"Quick consume amount\"",
                     icon: MySymbols.amount,
                     toggleFeedback: $useQuickConsume
                 )

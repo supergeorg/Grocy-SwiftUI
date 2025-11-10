@@ -59,7 +59,7 @@ struct SettingsView: View {
                                 grocyVM.logout()
                             },
                             label: {
-                                Label("Logout from server", systemImage: MySymbols.logout)
+                                Label("Logout", systemImage: MySymbols.logout)
                                     .foregroundStyle(.red)
                             }
                         )

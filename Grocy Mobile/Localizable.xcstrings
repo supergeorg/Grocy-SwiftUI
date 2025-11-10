@@ -32,6 +32,9 @@
       },
       "shouldTranslate" : false
     },
+    "%@ (kcal)" : {
+      "shouldTranslate" : false
+    },
     "%@ %@" : {
       "localizations" : {
         "en" : {
@@ -4266,12 +4269,24 @@
         }
       }
     },
-    "Accumulate sub products min. stock amount " : {
+    "Accumulate sub products min. stock amount" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acumular existències min. de subproductes"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Akumulace dílčích produktů min. množství zásob "
+            "value" : "Sčítat minimální počet skladových zásob podřízených produktů"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akkumuler underordnede varers minimumbeholdning"
           }
         },
         "de" : {
@@ -4280,52 +4295,130 @@
             "value" : "Mindestbestände von untergeordneten Produkten aufsummieren"
           }
         },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Συσσώρευση υποπροϊόντων ελάχ. ποσό αποθέματος"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accumulate sub products min. stock amount"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acumular mínimos de existencias de subproductos"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kogu alamtoodete minimaalne varude kogus"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää alatuotteiden varaston minimimäärät"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accumuler le stock minimum de sous-produits "
+            "value" : "Accumuler le stock minimal des sous produits"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "צבירת תת־מוצרים עם כמות מלאי מזערית"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al-termékek minimális készlet mennyiségének halmozása"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accumulare quantità minima di magazzino dei sottoprodotti"
+            "value" : "Quantità in dispensa minima di sottoprodotti accumulati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下位物品を合算して最低ストック数量を算出"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accumulate sub products min. stock amount"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sukaupti subproduktus min. atsargų kiekis"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Akkumuler underprodukters minimumsbeholdning"
+            "value" : "Akkumuler underordnede produkter i minimum beholdningsnivå"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bijkomende producten ook meetellen in minimale voorraad"
+            "value" : "Verzamel minimale voorraad sub producten"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zgromadź półprodukty w minimalną ilość zapasu"
+            "value" : "Sumuj min. ilość dla produktów podrzędnych"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acumular quantidade mínima de subprodutos "
+            "value" : "Acumula a quant mínima do estoque dos subprodutos"
           }
         },
-        "pt-PT" : {
+        "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acumular quantidade mínima de subprodutos "
+            "value" : "Sčítavať min. skladové množstvá podriadených výrobkov"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seštej min. količine podizdelkov"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ackumulera minsta lagersumma för underprodukt"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alt ürünün minimum stok miktarını biriktir"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "累计子物品的最小库存数量"
+            "value" : "累计子产品的安全库存"
           }
         },
         "zh-Hant" : {
@@ -6888,18 +6981,132 @@
         }
       }
     },
-    "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set " : {
+    "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Má-li produkt vyplněno výchozí datum min. trvanlivosti, pak přidej produkt do stavu zásob automaticky s vyplněním počtu balení podle nákupního seznamu a ceny podle posledního nákupu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisk opdatering ved brug af den sidste pris og antallet i indkøbsliste, hvis varen har \"Standard bedst før dage\" markeret"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buchung automatisch ausführen, wenn das Produkt Standardfälligkeitstage hinterlegt hat (als Preis wird der letzte Preis verwendet)"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar automáticamente usando el último precio y la cantidad del artículo de la lista de la compra, si el producto tiene definido \"Número predeterminado de días hasta la fecha límite\""
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tehke broneering automaatselt, kasutades ostunimekirja kauba viimast hinda ja summat, kui tootele on määratud \"Vaikimisi tähtpäevad\""
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tee varaus automaattisesti käyttäen viimeisintä hintaa sekä määrää ostoslistalla, jos tuotteella on \"Oletusmäärä päiviä vanhenemiseen\" asetettuna"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Effectuer automatiquement la réservation en utilisant le dernier prix et le montant de l'article de la liste d'achats, si l'option \"Jours d'échéance par défaut\" est activée pour le produit."
+            "value" : "Réaliser automatiquement les achats en utilisant le dernier prix connu et la quantité indiquée dans la liste, si le premier a une date de péremption par défaut renseignée"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לבצע את ההזמנה אוטומטית עם המחיר האחרון ועם כמות הפריט לקנייה, אם למוצר מוגדרים „ימי תוקף כבררת מחדל”"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatán készletezze a termékeket az utolsó ismert ár és bevásárlólistán szereplő mennyiség alapján, ha a termék \"Alapértelmezett lejárati ideje\" be van állítva"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effettua automaticamente la prenotazione utilizzando l'ultimo prezzo e l'importo dell'articolo della lista della spesa, se il prodotto ha impostato \"Giorni di scadenza predefiniti\""
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "物品に「既定の期限日数」を設定している場合、直近の数量と価格で買い物リストに自動追加"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatiškai atlikti užsakymą naudojant paskutinę pirkinių sąrašo prekės kainą ir sumą, jei prekei nustatytas „Numatytosios mokėjimo dienos“"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjør gjennomføringen automatisk med den siste prisen og beløpet på handlelistpunktet, hvis produktet er satt til \"Standard forfallsdato\""
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voer de boeking automatisch uit met behulp van de vorige prijs en het hoeveelheid van het artikel op de boodschappenlijst, als voor het product 'standaard vervaldagen' is ingesteld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie dokonaj rezerwacji przy użyciu ostatniej ceny i kwoty pozycji listy zakupów, jeśli produkt ma ustawioną opcję „Domyślna ilość dni minimalnej trwałości”"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faça automaticamente a reserva usando o último preço e o valor do item da lista de compras, se o produto tiver \"Dias de validade (padrão)\" definido"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efectuați automat rezervarea folosind ultimul preț și cantitatea produsului din lista de cumpărături, dacă produsul are setat „Termen implicit”"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üründe \"Varsayılan vade günleri\" ayarlanmışsa, alışveriş listesi öğesinin son fiyatını ve tutarını kullanarak rezervasyonu otomatik olarak yapın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果产品设置了“默认到期日”，则使用最新价格和购物清单项目的数量自动进行预订"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果物品設定了“預設到期天數”，則使用上次價格和購物清單項目的數量自動進行預訂"
           }
         }
       }
@@ -16093,76 +16300,6 @@
         }
       }
     },
-    "Default locations" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Výchozí umístění"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standart-Orte"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emplacements par défaut"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posizioni predefinite"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standardplasseringer"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standaardlocaties"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Domyślne miejsca"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localizações padrão"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localizações padrão"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "默认位置"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "預設位置"
-          }
-        }
-      }
-    },
     "Default quantity unit consume" : {
       "localizations" : {
         "ca" : {
@@ -22931,100 +23068,6 @@
         }
       }
     },
-    "Energy (kcal)" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energie (kcal)"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energi (kcal)"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energie (kcal)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energía (kcal)"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Énergie (kcal)"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energia (kcal)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energia (kcal)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energi (kcal)"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energie (in kcal)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energia (kcal)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energia (kcal)"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energia (kcal)"
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energi (kcal)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "能量(千卡)"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "熱量(大卡)"
-          }
-        }
-      }
-    },
     "Entity" : {
       "localizations" : {
         "ca" : {
@@ -27323,66 +27366,180 @@
         }
       }
     },
-    "Logout from server" : {
+    "Logout" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tancar sessió"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odhlásit ze serveru"
+            "value" : "Odhlásit se"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log ud"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Von Server abmelden"
+            "value" : "Abmelden"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αποσύνδεση"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar sesión"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logi välja"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kirjaudu ulos"
           }
         },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Déconnexion du serveur"
+            "value" : "Se déconnecter"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "יציאה"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kijelentkezés"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Logout dal server"
+            "value" : "Disconnetti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atsijungti"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Logg av server"
+            "value" : "Logg ut"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log uit op server"
+            "value" : "Uitloggen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyloguj z serwera"
+            "value" : "Wyloguj"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sair do servidor"
+            "value" : "Sair"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sair do servidor"
+            "value" : "Logout"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deconectare"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odhlásiť"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjava"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logga ut"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "வெளியேறு"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çıkış yap"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вийти"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "退出登录"
+            "value" : "注销"
           }
         },
         "zh-Hant" : {
@@ -28659,12 +28816,24 @@
         }
       }
     },
-    "Minimum stock amount " : {
+    "Minimum stock amount" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantitat mínima d'existències"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minimální skladová zásoba"
+            "value" : "Minimální zásoba"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimumsbeholdning"
           }
         },
         "de" : {
@@ -28673,52 +28842,154 @@
             "value" : "Mindestbestand"
           }
         },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ελάχιστο ποσό αποθέματος"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum stock amount"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mínimo de existencias"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimaalne kogus varudes"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varaston minimimäärä"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quantité minimum en stock"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כמות מזערית במלאי"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimális készlet mennyiség"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantità minima magazzino"
+            "value" : "Quantità minima in dispensa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最低ストック数量"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최소 재고 수량"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimalus atsargų kiekis"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minimumbeholdning"
+            "value" : "Minimumsbeholdning"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Min. voorraadhoeveelheid"
+            "value" : "Minimale voorraadhoeveelheid"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minimalna ilość zapasów"
+            "value" : "Minimalna ilość"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantidade mínima em estoque "
+            "value" : "Total mínimo"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantidade mínima em estoque "
+            "value" : "Quantidade mínima de stock"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoc minim"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimálna zásoba"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najmanjša količina zaloge"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minsta lagersaldo"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "குறைந்தபட்ச இருப்பு அளவு"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum stok miktarı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мінімальна кількість у наявності"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最小库存数量"
+            "value" : "安全库存"
           }
         },
         "zh-Hant" : {
@@ -29497,66 +29768,144 @@
         }
       }
     },
-    "Never show on stock overview " : {
+    "Never show on stock overview" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No mostrar mai a la revisió d'existències"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nikdy se nezobrazí v přehledu zásob"
+            "value" : "Nezobrazovat v Přehledu zásob"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vis aldrig på lageroversigten"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie auf der Bestand-Seite anzeigen"
+            "value" : "Nie auf der Bestandsübersicht anzeigen"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never show on stock overview"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nunca mostrar en el resumen de inventario"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ärge kunagi kuvage varude ülevaates"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Älä koskaan näytä varastosivulla"
           }
         },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ne s'affiche jamais sur l'aperçu des stocks"
+            "value" : "Ne jamais afficher dans l'aperçu du stock"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לא להציג בסקירת המלאי"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne mutassa a készlet áttekintésnél"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Non mostrare mai nel riepilogo di magazzino"
+            "value" : "Non mostrare mai nel riepilogo della dispensa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ストック一覧に表示しない"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niekada nerodyti atsargų apžvalgoje"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ikke vis i beholdningsoversikt"
+            "value" : "Vis aldri på beholdningsoversikt"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toon niet op voorraadoverzicht"
+            "value" : "Niet weergeven op voorraadoverzicht"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nigdy nie pokazuj na przeglądzie zapasów"
+            "value" : "Nigdy nie pokazuj na przeglądzie magazynowym"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nunca mostrar na visão geral do estoque"
+            "value" : "Nunca mostrar na 'Visão Geral' de estoque"
           }
         },
-        "pt-PT" : {
+        "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nunca mostrar na visão geral do estoque"
+            "value" : "Nikoli ne pokaži na pregledu zaloge"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visa aldrig i lagersaldoöversikt"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stok genel görünümünde hiçbir zaman gösterme"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ніколи не відображати у інвентарі"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "永不显示在库存总览"
+            "value" : "不在库存总览显示"
           }
         },
         "zh-Hant" : {
@@ -32866,76 +33215,6 @@
         }
       }
     },
-    "Parent product " : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nadřazený produkt"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übergeordnetes Produkt"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produit parent"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Categoria prodotto"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hovedprodukt"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hoofdproduct"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produkt nadrzędny"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produto principal"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produto principal"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "主物品"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "母物品"
-          }
-        }
-      }
-    },
     "Password" : {
       "localizations" : {
         "ca" : {
@@ -35027,76 +35306,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le produit n'est pas sur le serveur"
-          }
-        }
-      }
-    },
-    "Product name" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jméno produktu"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produktname"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nom produit"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome prodotto"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produktnavn"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Productnaam"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nazwa produktu"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome do Produto"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nome do Produto"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "物品名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "物品名稱"
           }
         }
       }
@@ -38997,10 +39206,22 @@
     },
     "Self-production" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Producció_pròpia"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vlastní výroba"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "selvproduktion"
           }
         },
         "de" : {
@@ -39009,16 +39230,76 @@
             "value" : "Eigenproduktion"
           }
         },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "αυτοπαραγωγή"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Self-production"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Producción propia"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kodune-toodang"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itsevalmistettu"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autoproduction"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפקה עצמית"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sajátkészítés"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto-produzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自家製"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "자채 생산"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "self-production"
           }
         },
         "nb" : {
@@ -39051,10 +39332,58 @@
             "value" : "Produção própria"
           }
         },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "producție-proprie"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "samoprodukcia"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "samoprodukcija"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "egentillverkning"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "சுய-தயாரிப்பு"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kendi üretimi"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Самостійно приготовано"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "自产"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自產物品"
           }
         }
       }
@@ -49649,18 +49978,150 @@
         }
       }
     },
-    "Use the products \"Quick consume amount\" " : {
+    "Use the products \"Quick consume amount\"" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Použij množství pro tlačítka Spotřebovat z parametrů produktu"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brug varens værdi for ‘hurtig nedskrivning’"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Schnell-Verbrauchs-Menge des Produkts verwenden"
+            "value" : "Die Schnellverbrauchsmenge des Produkts verwenden"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the products \"Quick consume amount\""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar los productos \"Cantidad de consumo rápido\""
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kasuta toote \"kiirtarbimise kogus\""
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käytä tuotteen \"Pikakulutusmäärää\""
           }
         },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Utiliser les produits \"Quantité à consommer rapidement\""
+            "value" : "Utiliser les produits \"Quantité de consommation rapide\""
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "להשתמש ב„כמות לצריכה מהירה” של המוצר"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Használja a termékek \"gyors felhasználási mennyiségét\""
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilizza i prodotti \"Quantità di rapido consumo\""
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「クイック消費数量」で指定した数量の物品を消費"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naudokite produktus „Greitas suvartojimo kiekis“"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruk produktets \"Hurtigkonsumer\""
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruik het products \"Snel verbruikshoeveelheid\""
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Używa \"Ilość szybkiego spożycia\" produktu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar a \"Quantidade de consumo rápida\" do produto"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar a \"Quantidade de consumo rápido\" do produto"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uporabi izdelkov \"Hitro porabi količino\""
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Använd produktens \"Snabbkonsumera värde\""
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Hızlı tüketim miktarı\" ürünlerini kullanın"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Використати \"Кілкість швидкого вживання\" продукту"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用产品的“快速消耗数量”"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用物品的「快速消耗數量」"
           }
         }
       }

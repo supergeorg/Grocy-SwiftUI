@@ -32,7 +32,7 @@ struct StockProductInfoView: View {
                         Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock?.getName(amount: productDetails.stockAmount) ?? "")")
                     },
                     label: {
-                        Label("\(Text("Stock amount")): ", systemImage: MySymbols.amount)
+                        Label("Stock amount", systemImage: MySymbols.amount)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -41,7 +41,7 @@ struct StockProductInfoView: View {
                         Text(grocyVM.getFormattedCurrency(amount: productDetails.stockValue ?? 0.0))
                     },
                     label: {
-                        Label("\(Text("Stock value")): ", systemImage: MySymbols.price)
+                        Label("Stock value", systemImage: MySymbols.price)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -50,7 +50,7 @@ struct StockProductInfoView: View {
                         Text(productDetails.location?.name ?? "")
                     },
                     label: {
-                        Label("\(Text("Default location")): ", systemImage: MySymbols.location)
+                        Label("Default location", systemImage: MySymbols.location)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -64,7 +64,7 @@ struct StockProductInfoView: View {
                         }
                     },
                     label: {
-                        Label("\(Text("Last purchased")): ", systemImage: MySymbols.date)
+                        Label("Last purchased", systemImage: MySymbols.date)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -78,7 +78,7 @@ struct StockProductInfoView: View {
                         }
                     },
                     label: {
-                        Label("\(Text("Last used")): ", systemImage: MySymbols.date)
+                        Label("Last used", systemImage: MySymbols.date)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -87,7 +87,7 @@ struct StockProductInfoView: View {
                         Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                     },
                     label: {
-                        Label("\(Text("Last price")): ", systemImage: MySymbols.price)
+                        Label("Last price", systemImage: MySymbols.price)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -96,7 +96,7 @@ struct StockProductInfoView: View {
                         Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
                     },
                     label: {
-                        Label("\(Text("Average price")): ", systemImage: MySymbols.price)
+                        Label("Average price", systemImage: MySymbols.price)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -105,7 +105,7 @@ struct StockProductInfoView: View {
                         Text(productDetails.averageShelfLifeDays > 0 ? formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown" : "Unknown")
                     },
                     label: {
-                        Label("\(Text("Average shelf life")): ", systemImage: MySymbols.date)
+                        Label("Average shelf life", systemImage: MySymbols.date)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -114,7 +114,7 @@ struct StockProductInfoView: View {
                         Text("\(productDetails.spoilRatePercent.formattedAmount) %")
                     },
                     label: {
-                        Label("\(Text("Spoil rate")): ", systemImage: MySymbols.spoiled)
+                        Label("Spoil rate", systemImage: MySymbols.spoiled)
                             .foregroundStyle(.primary)
                     }
                 )

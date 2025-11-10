@@ -167,7 +167,7 @@ struct MDProductFormView: View {
 
     var body: some View {
         List {
-            MyTextField(textToEdit: $product.name, description: "Product name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
+            MyTextField(textToEdit: $product.name, description: "Name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
                 .onChange(of: product.name) {
                     isNameCorrect = checkNameCorrect()
                 }
@@ -189,7 +189,7 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.location,
                     label: {
-                        MyLabelWithSubtitle(title: "Default locations", subTitle: "\(Text("Location")), \(Text("Store"))", systemImage: MySymbols.location, isProblem: product.locationID == 0)
+                        MyLabelWithSubtitle(title: "Default location", subTitle: "\(Text("Location")), \(Text("Store"))", systemImage: MySymbols.location, isProblem: product.locationID == 0)
                     }
                 )
                 NavigationLink(
@@ -293,7 +293,7 @@ struct MDProductFormView: View {
             MyToggle(isOn: $product.active, description: "Active", descriptionInfo: nil, icon: "checkmark.circle")
 
             // Parent Product
-            ProductField(productID: $product.parentProductID, description: "Parent product ")
+            ProductField(productID: $product.parentProductID, description: "Parent product")
 
             // Product Description
             MyTextField(textToEdit: $product.mdProductDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
@@ -315,12 +315,12 @@ struct MDProductFormView: View {
             )
 
             // Energy
-            MyDoubleStepperOptional(amount: $product.calories, description: "Energy (kcal)", descriptionInfo: "Per stock quantity unit", minAmount: 0, amountStep: 1, amountName: "kcal", systemImage: MySymbols.energy)
+            MyDoubleStepperOptional(amount: $product.calories, description: "\(Text("Energy")) (kcal)", descriptionInfo: "Per stock quantity unit", minAmount: 0, amountStep: 1, amountName: "kcal", systemImage: MySymbols.energy)
 
             // Don't show on stock overview
             MyToggle(
                 isOn: $product.hideOnStockOverview,
-                description: "Never show on stock overview ",
+                description: "Never show on stock overview",
                 descriptionInfo: "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always",
                 icon: MySymbols.stockOverview
             )
@@ -402,7 +402,7 @@ struct MDProductFormView: View {
                 }
             )
         }
-        .navigationTitle("Default locations")
+        .navigationTitle("Default location")
     }
 
     var dueDatePropertiesView: some View {
@@ -555,12 +555,12 @@ struct MDProductFormView: View {
     var amountPropertiesView: some View {
         Form {
             // Min Stock amount
-            MyDoubleStepper(amount: $product.minStockAmount, description: "Minimum stock amount ", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
+            MyDoubleStepper(amount: $product.minStockAmount, description: "Minimum stock amount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
 
             // Accumulate sub products min stock amount
             MyToggle(
                 isOn: $product.cumulateMinStockAmountOfSubProducts,
-                description: "Accumulate sub products min. stock amount ",
+                description: "Accumulate sub products min. stock amount",
                 descriptionInfo: "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product",
                 icon: MySymbols.accumulate
             )
