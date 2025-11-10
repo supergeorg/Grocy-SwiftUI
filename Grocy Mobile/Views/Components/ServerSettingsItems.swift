@@ -164,7 +164,7 @@ struct ServerSettingsObjectPicker: View {
     @Query(filter: #Predicate<MDQuantityUnit>{$0.active}, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     
-    @State private var objectID: Int? = nil
+    @State private var objectID: Int? = -1
     @State private var isFirstShown: Bool = true
     
     enum Objects {
@@ -200,7 +200,7 @@ struct ServerSettingsObjectPicker: View {
     
     var body: some View {
         Picker(selection: $objectID, content: {
-            Text("").tag(nil as Int?)
+            Text("").tag(-1 as Int?)
             Group {
                 switch objects {
                 case .location:
