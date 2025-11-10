@@ -55,7 +55,7 @@ struct StockJournalFilterView: View {
             
             Picker(selection: $filteredUserID, content: {
                 Text("All").tag(nil as Int?)
-                ForEach(grocyVM.users, id: \.id) { user in
+                ForEach(grocyUsers, id: \.id) { user in
                     Text(user.displayName).tag(user.id as Int?)
                 }
             }, label: {

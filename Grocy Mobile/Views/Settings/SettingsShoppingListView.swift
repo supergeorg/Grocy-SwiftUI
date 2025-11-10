@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    
+    @Query var mdProducts: MDProducts
 
     @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
@@ -78,7 +81,7 @@ struct SettingsShoppingListView: View {
                         action: {
                             do {
                                 for shoppingListItem in grocyVM.shoppingList {
-                                    let title = "\(shoppingListItem.amount.formattedAmount) \(grocyVM.mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "\(shoppingListItem.productID ?? 0)")"
+                                    let title = "\(shoppingListItem.amount.formattedAmount) \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "\(shoppingListItem.productID ?? 0)")"
                                     try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done == 1))
                                 }
                             } catch {
