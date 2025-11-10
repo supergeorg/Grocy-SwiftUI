@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AboutLineView: View {
     var iconName: String
-    var caption: String
+    var caption: LocalizedStringKey
     var content: String? = nil
 
     var body: some View {
@@ -23,10 +23,8 @@ struct AboutLineView: View {
                 }
             }
         } icon: {
-            VStack {
-                Image(systemName: iconName)
-                    .font(.title2)
-            }
+            Image(systemName: iconName)
+                .font(.title2)
         }
     }
 }

@@ -10620,6 +10620,9 @@
     "Code 39 / Code 93 / Codabar family" : {
       "shouldTranslate" : false
     },
+    "CodeScanner" : {
+      "shouldTranslate" : false
+    },
     "Common" : {
       "localizations" : {
         "ca" : {
@@ -17685,6 +17688,9 @@
       },
       "shouldTranslate" : false
     },
+    "Developer" : {
+      "shouldTranslate" : false
+    },
     "Disable own stock" : {
       "localizations" : {
         "ca" : {
@@ -24448,6 +24454,9 @@
           }
         }
       }
+    },
+    "Github" : {
+      "shouldTranslate" : false
     },
     "Grocy" : {
       "localizations" : {
@@ -50829,6 +50838,9 @@
           }
         }
       }
+    },
+    "Version" : {
+      "shouldTranslate" : false
     },
     "Welcome to Grocy Mobile" : {
       "localizations" : {
