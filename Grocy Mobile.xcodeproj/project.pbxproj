@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7872297A2F66D5FC005394C6 /* InfomaniakRichHTMLEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 787229792F66D5FC005394C6 /* InfomaniakRichHTMLEditor */; };
 		789BAF392EE444FB00C82475 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1D2EE444AC00C82475 /* WidgetKit.framework */; };
 		789BAF3A2EE444FB00C82475 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1F2EE444AC00C82475 /* SwiftUI.framework */; };
 		789BAF472EE444FB00C82475 /* Grocy WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 789BAF382EE444FB00C82475 /* Grocy WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -121,6 +122,7 @@
 		78B01C1C2DFF826D0080C814 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				7872297A2F66D5FC005394C6 /* InfomaniakRichHTMLEditor in Frameworks */,
 			);
 		};
 		78B01C2A2DFF826F0080C814 /* Frameworks */ = {
@@ -207,6 +209,9 @@
 				789BE5692E00C31A002FF935 /* Grocy Mobile */,
 			);
 			name = "Grocy Mobile";
+			packageProductDependencies = (
+				787229792F66D5FC005394C6 /* InfomaniakRichHTMLEditor */,
+			);
 			productName = "Grocy Mobile";
 			productReference = 78B01C1F2DFF826D0080C814 /* Grocy Mobile.app */;
 			productType = "com.apple.product-type.application";
@@ -318,6 +323,7 @@
 			);
 			mainGroup = 78CB748D255E9EF600319108;
 			packageReferences = (
+				787229782F66D5FC005394C6 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 78CB749B255E9EF800319108 /* Products */;
@@ -1181,6 +1187,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		787229782F66D5FC005394C6 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Infomaniak/swift-rich-html-editor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		787229792F66D5FC005394C6 /* InfomaniakRichHTMLEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 787229782F66D5FC005394C6 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */;
+			productName = InfomaniakRichHTMLEditor;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 78CB748E255E9EF600319108 /* Project object */;
 }
