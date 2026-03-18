@@ -81,6 +81,7 @@ class TextViewCoordinator: NSObject, UITextViewDelegate, ObservableObject {
 struct WYSIWYGEditorView: View {
     @Binding var htmlContent: String
     @State private var editorProxy: RichHTMLEditorProxy?
+    @StateObject private var proxyObserver = RichHTMLEditorProxy(editor: RichHTMLEditorView())
     @State private var showLinkDialog = false
     @State private var selectedColor: Color = .black
     @State private var selectedBackgroundColor: Color = .white
@@ -88,90 +89,120 @@ struct WYSIWYGEditorView: View {
     @State private var linkText = ""
 
     var body: some View {
-        RichHTMLEditorViewRepresentable(html: $htmlContent, proxy: $editorProxy)
+        RichHTMLEditorViewRepresentable(html: $htmlContent, proxy: $editorProxy, proxyObserver: proxyObserver)
             .editorScrollable(true)
-            .safeAreaInset(edge: .bottom, spacing: -70) {
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4) {
-                        // Text Formatting
-                        Menu {
-                            Button(action: { editorProxy?.bold() }) {
-                                Label("Bold", systemImage: "bold")
-                            }
-                            Button(action: { editorProxy?.italic() }) {
-                                Label("Italic", systemImage: "italic")
-                            }
-                            Button(action: { editorProxy?.underline() }) {
-                                Label("Underline", systemImage: "underline")
-                            }
-                            Button(action: { editorProxy?.strikethrough() }) {
-                                Label("Strikethrough", systemImage: "strikethrough")
-                            }
-                        } label: {
-                            Label("Format", systemImage: "character.textbox")
-                                .labelStyle(.iconOnly)
+                    HStack(spacing: 8) {
+                        // Bold
+                        Button(action: { editorProxy?.bold() }) {
+                            Image(systemName: "bold")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasBold))
+
+                        // Italic
+                        Button(action: { editorProxy?.italic() }) {
+                            Image(systemName: "italic")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasItalic))
+
+                        // Underline
+                        Button(action: { editorProxy?.underline() }) {
+                            Image(systemName: "underline")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnderline))
+
+                        // Strikethrough
+                        Button(action: { editorProxy?.strikethrough() }) {
+                            Image(systemName: "strikethrough")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasStrikethrough))
+
+                        Divider()
+
+                        // Bullet List
+                        Button(action: { editorProxy?.unorderedList() }) {
+                            Image(systemName: "list.bullet")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnorderedList))
+
+                        // Numbered List
+                        Button(action: { editorProxy?.orderedList() }) {
+                            Image(systemName: "list.number")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasOrderedList))
+
+                        Divider()
+
+                        // Align Left
+                        Button(action: { editorProxy?.justify(.left) }) {
+                            Image(systemName: "text.alignleft")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .left))
+
+                        // Align Center
+                        Button(action: { editorProxy?.justify(.center) }) {
+                            Image(systemName: "text.aligncenter")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .center))
+
+                        // Align Right
+                        Button(action: { editorProxy?.justify(.right) }) {
+                            Image(systemName: "text.alignright")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .right))
+
+                        // Justify
+                        Button(action: { editorProxy?.justify(.full) }) {
+                            Image(systemName: "text.justify")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .full))
+
+                        Divider()
+
+                        // Indent
+                        Button(action: { editorProxy?.indent() }) {
+                            Image(systemName: "increase.indent")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
 
-                        Divider()
-
-                        // Lists
-                        Menu {
-                            Button(action: { editorProxy?.unorderedList() }) {
-                                Label("Bullet List", systemImage: "list.bullet")
-                            }
-                            Button(action: { editorProxy?.orderedList() }) {
-                                Label("Numbered List", systemImage: "list.number")
-                            }
-                        } label: {
-                            Label("Lists", systemImage: "list.bullet")
-                                .labelStyle(.iconOnly)
+                        // Outdent
+                        Button(action: { editorProxy?.outdent() }) {
+                            Image(systemName: "decrease.indent")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
 
-                        Divider()
-
-                        // Alignment
-                        Menu {
-                            Button(action: { editorProxy?.justify(.left) }) {
-                                Label("Left", systemImage: "text.alignleft")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .tint(.primary)
-                            
-                            Button(action: { editorProxy?.justify(.center) }) {
-                                Label("Center", systemImage: "text.aligncenter")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .tint(.primary)
-                            
-                            Button(action: { editorProxy?.justify(.right) }) {
-                                Label("Right", systemImage: "text.alignright")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .tint(.primary)
-                            
-                            Button(action: { editorProxy?.justify(.full) }) {
-                                Label("Justify", systemImage: "text.justify")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .tint(.primary)
-                        } label: {
-                            Label("Aligment", systemImage: "text.alignleft")
-                                .labelStyle(.iconOnly)
-                        }
-                        .foregroundStyle(.primary)
-
-                        Divider()
-
-                        // Colors
-                        ColorPicker("Text Color", selection: $selectedColor)
+                        // Foreground Color
+                        ColorPicker("", selection: $selectedColor)
                             .onChange(of: selectedColor) {
                                 editorProxy?.setForegroundColor(UIColor(selectedColor))
                             }
                             .labelsHidden()
 
-                        ColorPicker("Background", selection: $selectedBackgroundColor)
+                        // Background Color
+                        ColorPicker("", selection: $selectedBackgroundColor)
                             .onChange(of: selectedBackgroundColor) {
                                 editorProxy?.setBackgroundColor(UIColor(selectedBackgroundColor))
                             }
@@ -179,44 +210,32 @@ struct WYSIWYGEditorView: View {
 
                         Divider()
 
-                        // Indent/Outdent
-                        Button(action: { editorProxy?.indent() }) {
-                            Label("Indent", systemImage: "increase.indent")
-                                .labelStyle(.iconOnly)
-                        }
-                        .tint(.primary)
-
-                        Button(action: { editorProxy?.outdent() }) {
-                            Label("Outdent", systemImage: "decrease.indent")
-                                .labelStyle(.iconOnly)
-                        }
-                        .tint(.primary)
-
-                        Divider()
-
                         // Link
                         Button(action: { showLinkDialog = true }) {
-                            Label("Link", systemImage: "link")
-                                .labelStyle(.iconOnly)
+                            Image(systemName: "link")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
+                        .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasLink))
 
-                        // Undo/Redo
+                        // Undo
                         Button(action: { editorProxy?.undo() }) {
-                            Label("Undo", systemImage: "arrow.uturn.left")
-                                .labelStyle(.iconOnly)
+                            Image(systemName: "arrow.uturn.left")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
 
+                        // Redo
                         Button(action: { editorProxy?.redo() }) {
-                            Label("Redo", systemImage: "arrow.uturn.right")
-                                .labelStyle(.iconOnly)
+                            Image(systemName: "arrow.uturn.right")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
 
+                        // Clear Format
                         Button(action: { editorProxy?.removeFormat() }) {
-                            Label("Clear Format", systemImage: "text.badge.x")
-                                .labelStyle(.iconOnly)
+                            Image(systemName: "text.badge.x")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                         .tint(.primary)
 
@@ -246,10 +265,25 @@ struct WYSIWYGEditorView: View {
     }
 }
 
+// MARK: - Formatting Button Style
+struct FormattingButtonStyle: ButtonStyle {
+    let isSelected: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(height: 40)
+            .frame(minWidth: 40)
+            .background(isSelected ? Color.blue.opacity(0.2) : Color(.secondarySystemBackground))
+            .cornerRadius(6)
+            .opacity(configuration.isPressed ? 0.6 : 1.0)
+    }
+}
+
 // MARK: - RichHTMLEditor UIViewRepresentable
 struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
     @Binding var html: String
     @Binding var proxy: RichHTMLEditorProxy?
+    var proxyObserver: RichHTMLEditorProxy
 
     class Coordinator: NSObject {
         var parent: RichHTMLEditorViewRepresentable
@@ -265,12 +299,11 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> RichHTMLEditorView {
-        let editor = RichHTMLEditorView()
-        
-        let editorProxy = RichHTMLEditorProxy(editor: editor)
-        context.coordinator.editorProxy = editorProxy
-        self.proxy = editorProxy
-        
+        let editor = proxyObserver.editor
+
+        context.coordinator.editorProxy = proxyObserver
+        self.proxy = proxyObserver
+
         return editor
     }
 
@@ -282,41 +315,119 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
 }
 
 // MARK: - RichHTMLEditor Proxy
-class RichHTMLEditorProxy {
-    private let editor: RichHTMLEditorView
+class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegate {
+    let editor: RichHTMLEditorView
+    @Published var hasBold = false
+    @Published var hasItalic = false
+    @Published var hasUnderline = false
+    @Published var hasStrikethrough = false
+    @Published var hasOrderedList = false
+    @Published var hasUnorderedList = false
+    @Published var hasLink = false
+    @Published var currentJustification: TextJustification? = nil
 
     init(editor: RichHTMLEditorView) {
         self.editor = editor
+        super.init()
+        self.editor.delegate = self
+        updateTextAttributes()
     }
 
-    func bold() { editor.bold() }
-    func italic() { editor.italic() }
-    func underline() { editor.underline() }
-    func strikethrough() { editor.strikethrough() }
-    func orderedList() { editor.orderedList() }
-    func unorderedList() { editor.unorderedList() }
-    func indent() { editor.indent() }
-    func outdent() { editor.outdent() }
-    func undo() { editor.undo() }
-    func redo() { editor.redo() }
-    func removeFormat() { editor.removeFormat() }
-    func toggleSubscript() { editor.toggleSubscript() }
-    func toggleSuperscript() { editor.toggleSuperscript() }
+    // MARK: - RichHTMLEditorViewDelegate
+    func richHTMLEditorViewDidLoad(_ richHTMLEditorView: RichHTMLEditorView) {
+        _ = richHTMLEditorView.becomeFirstResponder()
+    }
+
+    func richHTMLEditorView(_ richHTMLEditorView: RichHTMLEditorView, selectedTextAttributesDidChange textAttributes: UITextAttributes) {
+        updateTextAttributes(with: textAttributes)
+    }
+
+    func bold() { 
+        editor.bold()
+        updateTextAttributes()
+    }
+    func italic() { 
+        editor.italic()
+        updateTextAttributes()
+    }
+    func underline() { 
+        editor.underline()
+        updateTextAttributes()
+    }
+    func strikethrough() { 
+        editor.strikethrough()
+        updateTextAttributes()
+    }
+    func orderedList() { 
+        editor.orderedList()
+        updateTextAttributes()
+    }
+    func unorderedList() { 
+        editor.unorderedList()
+        updateTextAttributes()
+    }
+    func indent() { 
+        editor.indent()
+        updateTextAttributes()
+    }
+    func outdent() { 
+        editor.outdent()
+        updateTextAttributes()
+    }
+    func undo() { 
+        editor.undo()
+        updateTextAttributes()
+    }
+    func redo() { 
+        editor.redo()
+        updateTextAttributes()
+    }
+    func removeFormat() { 
+        editor.removeFormat()
+        updateTextAttributes()
+    }
+    func toggleSubscript() { 
+        editor.toggleSubscript()
+        updateTextAttributes()
+    }
+    func toggleSuperscript() { 
+        editor.toggleSuperscript()
+        updateTextAttributes()
+    }
 
     func justify(_ alignment: TextJustification) {
         editor.justify(alignment)
+        updateTextAttributes()
     }
 
     func setForegroundColor(_ color: UIColor) {
         editor.setForegroundColor(color)
+        updateTextAttributes()
     }
 
     func setBackgroundColor(_ color: UIColor) {
         editor.setBackgroundColor(color)
+        updateTextAttributes()
     }
 
     func addLink(url: URL, text: String?) {
         editor.addLink(url: url, text: text)
+        updateTextAttributes()
+    }
+
+    // MARK: - Update Text Attributes
+    private func updateTextAttributes(with textAttributes: UITextAttributes? = nil) {
+        DispatchQueue.main.async {
+            let attributes = textAttributes ?? self.editor.selectedTextAttributes
+            self.hasBold = attributes.hasBold
+            self.hasItalic = attributes.hasItalic
+            self.hasUnderline = attributes.hasUnderline
+            self.hasStrikethrough = attributes.hasStrikeThrough
+            self.hasOrderedList = attributes.hasOrderedList
+            self.hasUnorderedList = attributes.hasUnorderedList
+            self.hasLink = attributes.hasLink
+            self.currentJustification = attributes.textJustification
+        }
     }
 }
 
@@ -337,7 +448,7 @@ struct RawEditorView: View {
 
     var body: some View {
         HTMLTextEditor(html: $htmlContent, coordinator: coordinator)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+            .safeAreaInset(edge: .bottom) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         // Text Formatting
