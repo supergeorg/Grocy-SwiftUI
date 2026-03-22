@@ -42,7 +42,7 @@ struct RecipePreparationEditorView: View {
                         Label("Raw HTML", systemImage: "chevron.left.slash.chevron.right")
                     }
 
-                PreviewTabView(convertedHTML: $temporaryHTML)
+                PreviewTabView(html: $temporaryHTML)
                     .tag(TabSelection.preview)
                     .tabItem {
                         Label("Preview", systemImage: "eye")
@@ -67,16 +67,6 @@ struct RecipePreparationEditorView: View {
     }
 }
 
-// MARK: - Text View Coordinator for Selection Access
-class TextViewCoordinator: NSObject, UITextViewDelegate, ObservableObject {
-    weak var textView: UITextView?
-    @Published var isEditing = false
-
-    func textViewDidChange(_ textView: UITextView) {
-        // Update parent binding through the editor
-    }
-}
-
 // MARK: - WYSIWYG Editor View
 struct WYSIWYGEditorView: View {
     @Binding var htmlContent: String
@@ -88,11 +78,16 @@ struct WYSIWYGEditorView: View {
     @State private var linkURL = ""
     @State private var linkText = ""
 
+    let bottomAreaHeight: CGFloat = 200
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            RichHTMLEditorViewRepresentable(html: $htmlContent, proxy: $editorProxy, proxyObserver: proxyObserver)
-                .editorScrollable(true)
-                .padding(.horizontal)
+            ScrollView(.vertical) {
+                RichHTMLEditorViewRepresentable(html: $htmlContent, proxy: $editorProxy, proxyObserver: proxyObserver)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .contentMargins(.bottom, bottomAreaHeight, for: .scrollContent)
 
             Rectangle()
                 .glassEffect(.regular, in: .rect)
@@ -106,7 +101,8 @@ struct WYSIWYGEditorView: View {
                         endPoint: .bottom
                     )
                 }
-                .frame(height: 120)
+                .frame(height: bottomAreaHeight)
+                .ignoresSafeArea(edges: .bottom)
                 .allowsHitTesting(false)
             ScrollView(.horizontal, showsIndicators: false) {
                 formattingBar
@@ -114,8 +110,9 @@ struct WYSIWYGEditorView: View {
             }
             .scrollClipDisabled()
             .padding(.top, 16)
-            .padding(.bottom, 35)
+            .padding(.bottom, 100)
         }
+        .ignoresSafeArea(edges: .bottom)
         .sheet(isPresented: $showLinkDialog) {
             LinkDialog(
                 linkURL: $linkURL,
@@ -356,34 +353,43 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
     @Binding var proxy: RichHTMLEditorProxy?
     var proxyObserver: RichHTMLEditorProxy
 
-    class Coordinator: NSObject {
-        var parent: RichHTMLEditorViewRepresentable
-        var editorProxy: RichHTMLEditorProxy?
+    class Coordinator: NSObject, RichHTMLEditorViewDelegate {
+        var htmlBinding: Binding<String> // ← hold the binding directly, not the parent
 
-        init(_ parent: RichHTMLEditorViewRepresentable) {
-            self.parent = parent
+        init(html: Binding<String>) {
+            self.htmlBinding = html
+        }
+
+        func richEditorDidChange(_ editor: RichHTMLEditorView) {
+            guard htmlBinding.wrappedValue != editor.html else { return }
+            htmlBinding.wrappedValue = editor.html // ← writes to the live binding ✓
         }
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(html: $html) // ← pass binding at creation
     }
+
 
     func makeUIView(context: Context) -> RichHTMLEditorView {
         let editor = proxyObserver.editor
+        editor.html = html           // ← init once on startup ✓
+        editor.delegate = context.coordinator // ← wire up the delegate
 
-        context.coordinator.editorProxy = proxyObserver
         self.proxy = proxyObserver
 
         return editor
     }
 
     func updateUIView(_ uiView: RichHTMLEditorView, context: Context) {
-        if uiView.html != html {
+        // Only push down if the change originated externally (e.g. undo, toolbar action)
+        // Never push down if the editor itself is the source, to avoid cursor reset
+        if uiView.html != html, !uiView.isFirstResponder {
             uiView.html = html
         }
     }
 }
+
 
 // MARK: - RichHTMLEditor Proxy
 class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegate {
@@ -619,65 +625,14 @@ struct VideoDialog: View {
 
 // MARK: - Preview Tab
 struct PreviewTabView: View {
-    @Binding var convertedHTML: String
+    @Binding var html: String
 
     var body: some View {
         ScrollView {
-            Text(convertedHTML.htmlToAttributedString())
+            Text(html.htmlToAttributedString())
+                .id(html)
                 .padding()
         }
-    }
-}
-
-// MARK: - HTML Text Editor
-struct HTMLTextEditor: UIViewRepresentable {
-    @Binding var html: String
-    var coordinator: TextViewCoordinator
-
-    class Delegate: NSObject, UITextViewDelegate {
-        var parent: HTMLTextEditor
-        var textViewCoordinator: TextViewCoordinator
-
-        init(parent: HTMLTextEditor, coordinator: TextViewCoordinator) {
-            self.parent = parent
-            self.textViewCoordinator = coordinator
-        }
-
-        func textViewDidChange(_ textView: UITextView) {
-            parent.html = textView.text
-            textViewCoordinator.isEditing = true
-        }
-
-        func textViewDidEndEditing(_ textView: UITextView) {
-            textViewCoordinator.isEditing = false
-        }
-    }
-
-    func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-        textView.isEditable = true
-        textView.text = html
-        textView.font = .systemFont(ofSize: 16)
-        textView.backgroundColor = .systemBackground
-        textView.delegate = context.coordinator
-        coordinator.textView = textView
-        return textView
-    }
-
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        // Always sync the text if the binding changed externally
-        if uiView.text != html && !coordinator.isEditing {
-            let selectedRange = uiView.selectedRange
-            uiView.text = html
-            // Restore cursor position if it's valid
-            if selectedRange.location <= uiView.text.count {
-                uiView.selectedRange = selectedRange
-            }
-        }
-    }
-
-    func makeCoordinator() -> Delegate {
-        Delegate(parent: self, coordinator: coordinator)
     }
 }
 
