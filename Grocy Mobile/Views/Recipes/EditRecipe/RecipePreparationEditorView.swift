@@ -9,6 +9,7 @@ internal import Combine
 import InfomaniakRichHTMLEditor
 import SwiftUI
 import UIKit
+import WebKit
 
 struct RecipePreparationEditorView: View {
     @Binding var htmlContent: String
@@ -39,7 +40,7 @@ struct RecipePreparationEditorView: View {
                 RawEditorView(htmlContent: $temporaryHTML)
                     .tag(TabSelection.rawEditor)
                     .tabItem {
-                        Label("Raw HTML", systemImage: "chevron.left.slash.chevron.right")
+                        Label("HTML", systemImage: "chevron.left.slash.chevron.right")
                     }
 
                 PreviewTabView(html: $temporaryHTML)
@@ -353,29 +354,22 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
     @Binding var proxy: RichHTMLEditorProxy?
     var proxyObserver: RichHTMLEditorProxy
 
-    class Coordinator: NSObject, RichHTMLEditorViewDelegate {
-        var htmlBinding: Binding<String> // ← hold the binding directly, not the parent
+    class Coordinator: NSObject {
+        var parent: RichHTMLEditorViewRepresentable
 
-        init(html: Binding<String>) {
-            self.htmlBinding = html
-        }
-
-        func richEditorDidChange(_ editor: RichHTMLEditorView) {
-            guard htmlBinding.wrappedValue != editor.html else { return }
-            htmlBinding.wrappedValue = editor.html // ← writes to the live binding ✓
+        init(_ parent: RichHTMLEditorViewRepresentable) {
+            self.parent = parent
         }
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(html: $html) // ← pass binding at creation
+        Coordinator(self)
     }
-
 
     func makeUIView(context: Context) -> RichHTMLEditorView {
         let editor = proxyObserver.editor
-        editor.html = html           // ← init once on startup ✓
-        editor.delegate = context.coordinator // ← wire up the delegate
-
+        editor.html = html
+        proxyObserver.htmlBinding = $html
         self.proxy = proxyObserver
 
         return editor
@@ -383,17 +377,16 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
 
     func updateUIView(_ uiView: RichHTMLEditorView, context: Context) {
         // Only push down if the change originated externally (e.g. undo, toolbar action)
-        // Never push down if the editor itself is the source, to avoid cursor reset
         if uiView.html != html, !uiView.isFirstResponder {
             uiView.html = html
         }
     }
 }
 
-
 // MARK: - RichHTMLEditor Proxy
 class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegate {
     let editor: RichHTMLEditorView
+    var htmlBinding: Binding<String>?
     @Published var hasBold = false
     @Published var hasItalic = false
     @Published var hasUnderline = false
@@ -417,6 +410,13 @@ class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegat
 
     func richHTMLEditorView(_ richHTMLEditorView: RichHTMLEditorView, selectedTextAttributesDidChange textAttributes: UITextAttributes) {
         updateTextAttributes(with: textAttributes)
+    }
+
+    // Detect content changes and sync to binding
+    func richHTMLEditorViewDidChange(_ richHTMLEditorView: RichHTMLEditorView) {
+        if htmlBinding?.wrappedValue != richHTMLEditorView.html {
+            htmlBinding?.wrappedValue = richHTMLEditorView.html
+        }
     }
 
     func bold() {
@@ -628,11 +628,25 @@ struct PreviewTabView: View {
     @Binding var html: String
 
     var body: some View {
-        ScrollView {
-            Text(html.htmlToAttributedString())
-                .id(html)
-                .padding()
-        }
+        HTMLPreviewView(htmlContent: $html)
+            .padding(.horizontal)
+    }
+}
+
+// MARK: - HTML Preview WebView
+
+struct HTMLPreviewView: View {
+    @Binding var htmlContent: String
+    @State private var page = WebPage()
+
+    var body: some View {
+        WebView(page)
+            .onAppear {
+                page.load(html: htmlContent, baseURL: URL(string: "about:blank")!)
+            }
+            .onChange(of: htmlContent) { _, newValue in
+                page.load(html: newValue, baseURL: URL(string: "about:blank")!)
+            }
     }
 }
 
