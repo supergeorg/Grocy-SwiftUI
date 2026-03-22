@@ -9,7 +9,6 @@ internal import Combine
 import InfomaniakRichHTMLEditor
 import SwiftUI
 import UIKit
-import WebKit
 
 struct RecipePreparationEditorView: View {
     @Binding var htmlContent: String
@@ -76,8 +75,8 @@ struct WYSIWYGEditorView: View {
     @State private var showLinkDialog = false
     @State private var selectedColor: Color = .black
     @State private var selectedBackgroundColor: Color = .white
-    @State private var linkURL = ""
-    @State private var linkText = ""
+    @State private var linkURL: String = ""
+    @State private var linkText: String = ""
 
     let bottomAreaHeight: CGFloat = 200
 
@@ -129,7 +128,6 @@ struct WYSIWYGEditorView: View {
                 }
             )
         }
-
     }
 
     var formattingBar: some View {
@@ -552,77 +550,6 @@ struct LinkDialog: View {
     }
 }
 
-// MARK: - Image Dialog Sheet
-struct ImageDialog: View {
-    @Binding var imageURL: String
-    @Binding var altText: String
-    @Binding var isPresented: Bool
-    var onInsert: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Image Details") {
-                    TextField("Image URL", text: $imageURL, prompt: Text("https://example.com/image.png"))
-                        .keyboardType(.URL)
-                    TextField("Alt Text", text: $altText, prompt: Text("Description of image"))
-                }
-            }
-            .navigationTitle("Insert Image")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        isPresented = false
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Insert") {
-                        onInsert()
-                    }
-                    .disabled(imageURL.isEmpty)
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Video Dialog Sheet
-struct VideoDialog: View {
-    @Binding var videoURL: String
-    @Binding var isPresented: Bool
-    var onInsert: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Video Details") {
-                    TextField("Video URL", text: $videoURL, prompt: Text("https://youtube.com/watch?v=..."))
-                        .keyboardType(.URL)
-                    Text("Supports YouTube, Vimeo, and other video platforms")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-            }
-            .navigationTitle("Insert Video")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        isPresented = false
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Insert") {
-                        onInsert()
-                    }
-                    .disabled(videoURL.isEmpty)
-                }
-            }
-        }
-    }
-}
-
 // MARK: - Preview Tab
 struct PreviewTabView: View {
     @Binding var html: String
@@ -630,23 +557,6 @@ struct PreviewTabView: View {
     var body: some View {
         HTMLPreviewView(htmlContent: $html)
             .padding(.horizontal)
-    }
-}
-
-// MARK: - HTML Preview WebView
-
-struct HTMLPreviewView: View {
-    @Binding var htmlContent: String
-    @State private var page = WebPage()
-
-    var body: some View {
-        WebView(page)
-            .onAppear {
-                page.load(html: htmlContent, baseURL: URL(string: "about:blank")!)
-            }
-            .onChange(of: htmlContent) { _, newValue in
-                page.load(html: newValue, baseURL: URL(string: "about:blank")!)
-            }
     }
 }
 
