@@ -9,8 +9,8 @@ import Foundation
 
 struct GrocyAPP {
     //    The app plans to support the newest Grocy version as well as the version included in Home Assistant
-    static let supportedVersions: [String] = ["4.5.0"]
-    
+    static let supportedVersions: [String] = ["4.4.0", "4.5.0", "4.6.0"]
+
     enum DemoServers: String, CaseIterable, Identifiable {
         case noLanguage = "https://demo.grocy.info"
         case english = "https://en.demo.grocy.info"
@@ -42,11 +42,11 @@ struct GrocyAPP {
         case tamil = "https://ta.demo.grocy.info"
         case develop = "https://test-iwz5eqdtrrwco5or26tvo.demo.grocy.info"
         case developOld = "https://test-xjixc1minhzshgy6o142.demo.grocy.info"
-        
+
         var id: Int {
             self.hashValue
         }
-        
+
         var description: String {
             switch self {
             case .noLanguage:
@@ -113,4 +113,3 @@ struct GrocyAPP {
         }
     }
 }
-
