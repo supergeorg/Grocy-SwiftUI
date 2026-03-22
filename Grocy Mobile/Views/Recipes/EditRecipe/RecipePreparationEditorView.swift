@@ -33,7 +33,7 @@ struct RecipePreparationEditorView: View {
                 WYSIWYGEditorView(htmlContent: $temporaryHTML)
                     .tag(TabSelection.wysiwygEditor)
                     .tabItem {
-                        Label("WYSIWYG", systemImage: "doc.richtext")
+                        Label("WYSIWYG", systemImage: MySymbols.richText)
                     }
 
                 RawEditorView(htmlContent: $temporaryHTML)
@@ -526,9 +526,9 @@ struct LinkDialog: View {
         NavigationStack {
             Form {
                 Section("Link Details") {
-                    TextField("URL", text: $linkURL, prompt: Text("https://example.com"))
+                    TextField("URL", text: $linkURL)
                         .keyboardType(.URL)
-                    TextField("Link Text", text: $linkText, prompt: Text("Click here"))
+                    TextField("Link Text", text: $linkText)
                 }
             }
             .navigationTitle("Insert Link")

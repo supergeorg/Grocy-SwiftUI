@@ -86,6 +86,12 @@ struct AboutView: View {
                         AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
                     }
                 )
+                Link(
+                    destination: URL(string: "https://github.com/Infomaniak/swift-rich-html-editor")!,
+                    label: {
+                        AboutLineView(iconName: MySymbols.richText, caption: "Infomaniak Rich HTML Editor", content: "Copyright (Apache 2.0 License) Infomaniak")
+                    }
+                )
             }
             .foregroundStyle(.primary)
             Button(

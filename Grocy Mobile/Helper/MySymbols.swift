@@ -55,6 +55,7 @@ nonisolated struct MySymbols {
     static let decimalPlaces = "00.square"
     static let hint = "questionmark.circle.fill"
     static let language = "flag"
+    static let richText = "doc.richtext"
 
     static let new = "plus"
     static let edit = "square.and.pencil"
