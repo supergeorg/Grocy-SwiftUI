@@ -80,6 +80,8 @@ protocol GrocyAPI {
     func deleteUserWithID(id: Int) async throws
     // MARK: - Recipes
     func getRecipeFulfillments() async throws -> RecipeFulfilments
+    func recipeConsume(id: Int) async throws
+    func recipeCopy(id: Int) async throws
     // MARK: - Chores
     func getChores() async throws -> Chores
     func getChoreDetails(id: Int) async throws -> ChoreDetails
@@ -496,6 +498,7 @@ extension GrocyApi {
         case recipeWithIDFulfillment = "/recipes/{recipeId}/fulfillment"
         case recipeWithIDConsume = "/recipes/{recipeId}/consume"
         case recipesFulfillment = "/recipes/fulfillment"
+        case recipeWithIDCopy = "/recipes/{recipeId}/copy"
         //        Chores
         case chores = "/chores"
         case choreWithID = "/chores/{choreId}"
@@ -567,6 +570,12 @@ extension GrocyApi {
     // MARK: - Recipes
     func getRecipeFulfillments() async throws -> RecipeFulfilments {
         return try await call(.recipesFulfillment, method: .GET)
+    }
+    func recipeConsume(id: Int) async throws {
+        try await callEmptyResponse(.recipeWithIDConsume, method: .POST, id: String(id))
+    }
+    func recipeCopy(id: Int) async throws {
+        try await callEmptyResponse(.recipeWithIDCopy, method: .POST, id: String(id))
     }
 
     // MARK: - Chores

@@ -98,7 +98,7 @@ class GrocyViewModel {
     var recipePictures: [String: Data] = [:]
 
     var cancellables = Set<AnyCancellable>()
-    
+
     var jsonEncoder: JSONEncoder
 
     var selectedServerProfile: ServerProfile? {
@@ -806,5 +806,14 @@ class GrocyViewModel {
 
     func undoTask(taskID: Int) async throws {
         return try await grocyApi.taskUndo(taskID: taskID)
+    }
+
+    // MARK: - Recipes
+    func consumeRecipe(recipeID: Int) async throws {
+        try await grocyApi.recipeConsume(id: recipeID)
+    }
+
+    func copyRecipe(recipeID: Int) async throws {
+        try await grocyApi.recipeCopy(id: recipeID)
     }
 }

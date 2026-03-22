@@ -70,6 +70,16 @@ struct RecipesView: View {
         }
     }
 
+    private func copyRecipe(recipeID: Int) async {
+        do {
+            try await grocyVM.copyRecipe(recipeID: recipeID)
+            GrocyLogger.info("Copying recipe \(recipeID) was successful.")
+            await updateData()
+        } catch {
+            GrocyLogger.error("Copying recipe failed. \(error)")
+        }
+    }
+
     private func getFilteredRecipes(for status: RecipeStatus) -> Recipes {
         recipes
             .filter({ $0.type == .normal })
@@ -169,7 +179,9 @@ struct RecipesView: View {
                             )
                             Button(
                                 action: {
-                                    //                                    recipeInteractionRouter.present(.copyRecipe(recipe: recipe))
+                                    Task {
+                                        await copyRecipe(recipeID: recipe.id)
+                                    }
                                 },
                                 label: {
                                     Label("Copy recipe", systemImage: "document.on.document")
