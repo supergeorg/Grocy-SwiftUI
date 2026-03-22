@@ -27,6 +27,7 @@ struct RecipeFormView: View {
 
     @State private var showAddRecipeIngredient: Bool = false
     @State private var showAddNestedRecipe: Bool = false
+    @State private var showPreparationEditor: Bool = false
 
     var existingRecipe: Recipe?
     @State var recipe: Recipe
@@ -223,7 +224,7 @@ struct RecipeFormView: View {
                     DisclosureGroup(
                         isExpanded: $isPictureExpanded,
                         content: {
-                                RecipePictureView(existingRecipe: recipe, pictureFileName: $recipe.pictureFileName)
+                            RecipePictureView(existingRecipe: recipe, pictureFileName: $recipe.pictureFileName)
                         },
                         label: {
                             Label("Picture", systemImage: MySymbols.picture)
@@ -237,7 +238,19 @@ struct RecipeFormView: View {
                 DisclosureGroup(
                     isExpanded: $isPreparationExpanded,
                     content: {
-                        MyTextEditor(textToEdit: $recipe.recipeDescription, description: "")
+                        List {
+                            ScrollView(.vertical) {
+                                HTMLPreviewView(htmlContent: $recipe.recipeDescription)
+                                    .frame(height: 300)
+                            }
+
+                            Button(action: {
+                                showPreparationEditor.toggle()
+                            }) {
+                                Label("Edit", systemImage: "pencil.and.scribble")
+                            }
+
+                        }
                     },
                     label: {
                         Label("Preparation", systemImage: MySymbols.description)
@@ -266,6 +279,12 @@ struct RecipeFormView: View {
                 NavigationStack {
                     NestedRecipeFormView(recipeID: recipe.id)
                 }
+            }
+        )
+        .sheet(
+            isPresented: $showPreparationEditor,
+            content: {
+                RecipePreparationEditorView(htmlContent: $recipe.recipeDescription)
             }
         )
         .toolbar(content: {
