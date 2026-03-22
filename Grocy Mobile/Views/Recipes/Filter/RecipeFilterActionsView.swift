@@ -23,6 +23,7 @@ struct RecipeFilterActionsView: View {
             }
             .padding(.horizontal)
         }
+        .scrollClipDisabled()
     }
 }
 

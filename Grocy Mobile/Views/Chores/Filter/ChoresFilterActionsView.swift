@@ -31,6 +31,7 @@ struct ChoresFilterActionsView: View {
             }
             .padding(.horizontal)
         }
+        .scrollClipDisabled()
     }
 }
 

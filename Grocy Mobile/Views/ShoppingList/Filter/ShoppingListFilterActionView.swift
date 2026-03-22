@@ -79,6 +79,7 @@ struct ShoppingListFilterActionView: View {
                 }
             }
         }
+        .scrollClipDisabled()
     }
 }
 

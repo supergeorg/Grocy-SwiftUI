@@ -31,6 +31,7 @@ struct StockFilterActionsView: View {
             }
             .padding(.horizontal)
         }
+        .scrollClipDisabled()
     }
 }
 

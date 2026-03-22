@@ -31,6 +31,7 @@ struct TasksFilterActionsView: View {
             }
             .padding(.horizontal)
         }
+        .scrollClipDisabled()
     }
 }
 
