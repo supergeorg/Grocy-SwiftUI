@@ -17,9 +17,29 @@ enum RecipeInteraction: Hashable, Identifiable {
     var id: Self { self }
 }
 
-enum RecipeSortOption: Hashable {
+enum RecipeSortOption: Hashable, RawRepresentable {
     case name
     case dueScore
+
+    var rawValue: String {
+        switch self {
+        case .name:
+            return "name"
+        case .dueScore:
+            return "dueScore"
+        }
+    }
+
+    init?(rawValue: String) {
+        switch rawValue {
+        case "name":
+            self = .name
+        case "dueScore":
+            self = .dueScore
+        default:
+            return nil
+        }
+    }
 }
 
 @Observable
@@ -43,9 +63,19 @@ struct RecipesView: View {
     @State private var showAddRecipe: Bool = false
     @State private var recipeToDelete: Recipe? = nil
     @State private var showDeleteConfirmation: Bool = false
-    @State private var sortOption: RecipeSortOption = .dueScore
-    @State private var sortOrder: SortOrder = .reverse
+    @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
+    @AppStorage("RecipesView.sortOrder") private var sortOrderKey: String = "reverse"
     @State private var filteredStatus: RecipeStatus = .all
+
+    private var sortOrder: SortOrder {
+        sortOrderKey == "forward" ? .forward : .reverse
+    }
+
+    private var setSortOrder: ((SortOrder) -> Void) {
+        { newValue in
+            sortOrderKey = newValue == .forward ? "forward" : "reverse"
+        }
+    }
 
     private let dataToUpdate: [ObjectEntities] = [.recipes, .products]
     private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]
@@ -294,7 +324,10 @@ struct RecipesView: View {
                 Picker(
                     "Sort order",
                     systemImage: MySymbols.sortOrder,
-                    selection: $sortOrder,
+                    selection: Binding(
+                        get: { sortOrder },
+                        set: { setSortOrder($0) }
+                    ),
                     content: {
                         Label("Ascending", systemImage: MySymbols.sortForward)
                             .labelStyle(.titleAndIcon)
