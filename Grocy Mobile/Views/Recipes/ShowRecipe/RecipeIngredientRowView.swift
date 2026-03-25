@@ -9,15 +9,20 @@ import SwiftUI
 
 struct RecipeIngredientRowView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     var recipePos: RecipePosResolvedElement
     var quantityUnit: MDQuantityUnit?
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
-                Text("\(recipePos.recipeAmount.formattedAmount) \(quantityUnit?.getName(amount: recipePos.recipeAmount) ?? "") \(recipePos.productName)")
-                    .font(.title2)
+            VStack(alignment: .leading, spacing: 5.0) {
+                if !recipePos.recipeVariableAmount.isEmpty {
+                    Text(recipePos.recipeVariableAmount)
+                        .font(.title2)
+                } else {
+                    Text("\(recipePos.recipeAmount.formattedAmount) \(quantityUnit?.getName(amount: recipePos.recipeAmount) ?? "") \(recipePos.productName)")
+                        .font(.title2)
+                }
                 if recipePos.missingAmount == 0.0 {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
@@ -39,6 +44,11 @@ struct RecipeIngredientRowView: View {
                             .italic()
                             .font(.caption)
                     }
+                }
+                if !recipePos.recipeVariableAmount.isEmpty {
+                    Text("Variable amount")
+                        .italic()
+                        .font(.caption2)
                 }
                 if recipePos.note.isEmpty == false {
                     Text(recipePos.note)
