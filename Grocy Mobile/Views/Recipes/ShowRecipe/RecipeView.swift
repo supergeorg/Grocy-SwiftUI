@@ -14,6 +14,7 @@ struct RecipeView: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query var mdQuantityUnits: MDQuantityUnits
+    @Query var mdProducts: MDProducts
 
     var initialRecipe: Recipe
     @State private var recipe: Recipe
@@ -26,7 +27,7 @@ struct RecipeView: View {
 
     @State private var desiredServings: Double = 1.0
 
-    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .recipes_pos_resolved]
+    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .recipes_pos_resolved, .products]
     private let additionalDataToUpdate: [AdditionalEntities] = []
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -37,7 +38,7 @@ struct RecipeView: View {
         self.recipe = initialRecipe
     }
 
-    var recipes: [RecipePosResolvedElement] {
+    var ingredientsAll: [RecipePosResolvedElement] {
         let sortDescriptor = SortDescriptor<RecipePosResolvedElement>(\.ingredientGroup)
         let predicate = #Predicate<RecipePosResolvedElement> { recipePos in
             recipePos.recipeID == recipe.id
@@ -51,16 +52,16 @@ struct RecipeView: View {
         return (try? modelContext.fetch(descriptor)) ?? []
     }
 
-    var groupedRecipes: [String: [RecipePosResolvedElement]] {
-        var groupedRecipes: [String: [RecipePosResolvedElement]] = [:]
-        for recipePos in recipes {
+    var groupedIngredients: [String: [RecipePosResolvedElement]] {
+        var groupedIngredients: [String: [RecipePosResolvedElement]] = [:]
+        for recipePos in ingredientsAll {
             let ingredientGroup = recipePos.ingredientGroup ?? ""
-            if groupedRecipes[ingredientGroup] == nil {
-                groupedRecipes[ingredientGroup] = []
+            if groupedIngredients[ingredientGroup] == nil {
+                groupedIngredients[ingredientGroup] = []
             }
-            groupedRecipes[ingredientGroup]?.append(recipePos)
+            groupedIngredients[ingredientGroup]?.append(recipePos)
         }
-        return groupedRecipes
+        return groupedIngredients
     }
 
     var posResCount: Int {
@@ -75,7 +76,7 @@ struct RecipeView: View {
     var summedCalories: Double {
         var sumOfCalories: Double = 0
 
-        for recipe in recipes {
+        for recipe in ingredientsAll {
             sumOfCalories += recipe.calories
         }
 
@@ -85,7 +86,7 @@ struct RecipeView: View {
     var summedPrice: Double {
         var sumOfPrice: Double = 0
 
-        for recipe in recipes {
+        for recipe in ingredientsAll {
             sumOfPrice += recipe.costs
         }
 
@@ -93,7 +94,7 @@ struct RecipeView: View {
     }
     var noPriceForOne: Bool {
         var noPrice: Bool = false
-        for recipe in recipes {
+        for recipe in ingredientsAll {
             if recipe.costs.isZero {
                 noPrice = true
             }
@@ -192,10 +193,10 @@ struct RecipeView: View {
                 }
             }
             Section("Ingredients") {
-                ForEach(groupedRecipes.sorted(by: { $0.key < $1.key }), id: \.key) { (groupName, recipes) in
+                ForEach(groupedIngredients.sorted(by: { $0.key < $1.key }), id: \.key) { (groupName, ingredients) in
                     Section {
-                        ForEach(recipes, id: \.id) { recipe in
-                            RecipeIngredientRowView(recipePos: recipe, quantityUnit: mdQuantityUnits.first(where: { $0.id == recipe.quID }))
+                        ForEach(ingredients.sorted(by: { $0.productName < $1.productName }), id: \.id) { ingredient in
+                            RecipeIngredientRowView(recipePos: ingredient, quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == ingredient.productID })?.quIDStock }))
                         }
                     } header: {
                         if !groupName.isEmpty {
