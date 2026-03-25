@@ -29,7 +29,7 @@ final class RecipePosResolvedElement: Codable {
     var recipeType: RecipeType
     var childRecipeID: Int
     var note: String
-    var recipeVariableAmount: Int?
+    var recipeVariableAmount: String
     var onlyCheckSingleUnitInStock: Bool
     var calories: Double
     var productActive: Bool
@@ -87,7 +87,7 @@ final class RecipePosResolvedElement: Codable {
         recipeType = try container.decode(RecipeType.self, forKey: .recipeType)
         childRecipeID = try container.decodeFlexibleInt(forKey: .childRecipeID)
         note = try container.decodeIfPresent(String.self, forKey: .note) ?? ""
-        recipeVariableAmount = try container.decodeFlexibleIntIfPresent(forKey: .recipeVariableAmount)
+        recipeVariableAmount = try container.decodeIfPresent(String.self, forKey: .recipeVariableAmount) ?? ""
         onlyCheckSingleUnitInStock = try container.decodeFlexibleBool(forKey: .onlyCheckSingleUnitInStock)
         calories = try container.decodeFlexibleDouble(forKey: .calories)
         productActive = try container.decodeFlexibleBool(forKey: .productActive)
@@ -115,7 +115,7 @@ final class RecipePosResolvedElement: Codable {
         recipeType: RecipeType = .normal,
         childRecipeID: Int = -1,
         note: String = "",
-        recipeVariableAmount: Int? = nil,
+        recipeVariableAmount: String = "",
         onlyCheckSingleUnitInStock: Bool = false,
         calories: Double = 0.0,
         productActive: Bool = true,
