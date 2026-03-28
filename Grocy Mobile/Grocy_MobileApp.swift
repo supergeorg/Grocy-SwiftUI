@@ -47,32 +47,14 @@ extension ModelContainer {
     }
 
     static func ensureStorePath() throws {
-        let storeURL = sharedModelContainerURL()
-        let storeDirectory = storeURL.deletingLastPathComponent()
+        let storeDirectory = sharedModelContainerURL().deletingLastPathComponent()
         let fileManager = FileManager.default
-
-        // Create directory if it doesn't exist
         if !fileManager.fileExists(atPath: storeDirectory.path) {
-            do {
-                try fileManager.createDirectory(at: storeDirectory, withIntermediateDirectories: true, attributes: nil)
-                GrocyLogger.info("Created store directory at \(storeDirectory.path)")
-            } catch {
-                GrocyLogger.error("Failed to create store directory: \(error)")
-                throw error
-            }
-        }
-
-        // If store file exists but might be corrupted, verify it's valid
-        if fileManager.fileExists(atPath: storeURL.path) {
-            do {
-                let attributes = try fileManager.attributesOfItem(atPath: storeURL.path)
-                if let fileSize = attributes[.size] as? Int, fileSize == 0 {
-                    GrocyLogger.warning("Store file is empty, will be deleted and recreated")
-                    try fileManager.removeItem(at: storeURL)
-                }
-            } catch {
-                GrocyLogger.error("Error checking store file: \(error)")
-            }
+            try fileManager.createDirectory(
+                at: storeDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
         }
     }
 }
@@ -140,7 +122,8 @@ struct Grocy_MobileApp: App {
 
         let mainConfig = ModelConfiguration(
             schema: mainSchema,
-            groupContainer: .identifier("group.georgappdev.Grocy"),
+            url: sharedModelContainerURL(),
+            allowsSave: true,
             cloudKitDatabase: .none
         )
         let profileConfig = ModelConfiguration(
