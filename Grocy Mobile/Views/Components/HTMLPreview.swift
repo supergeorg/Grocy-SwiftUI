@@ -125,7 +125,7 @@ struct HTMLPreviewView: View {
 
                     Spacer()
 
-                    Text("\(Int(fontScale * 100))%")
+                    Text(fontScale * 100, format: .percent)
                         .font(.caption)
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
