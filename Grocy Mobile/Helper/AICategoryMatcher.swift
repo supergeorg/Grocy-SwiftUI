@@ -34,13 +34,6 @@ public actor AICategoryMatcher {
         case lowConfidence(word: String, confidence: Double, threshold: Double)
     }
 
-    // MARK: - Static Properties
-
-    /// Check if Apple Intelligence is available on this device (SwiftUI-friendly)
-    public static var isAppleIntelligenceAvailable: Bool {
-        SystemLanguageModel.default.isAvailable
-    }
-
     // MARK: - Configuration
 
     public struct Configuration: Sendable {

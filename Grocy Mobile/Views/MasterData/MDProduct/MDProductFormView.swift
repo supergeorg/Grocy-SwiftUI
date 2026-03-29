@@ -207,7 +207,7 @@ struct MDProductFormView: View {
                     isNameCorrect = checkNameCorrect()
                 }
 
-            if useAppleIntelligence && AICategoryMatcher.isAppleIntelligenceAvailable {
+            if useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
                 Button(
                     action: {
                         Task {

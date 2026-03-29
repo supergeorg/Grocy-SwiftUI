@@ -158,7 +158,7 @@ class GrocyViewModel {
         } else {
             GrocyLogger.info("Not logged in")
         }
-        if useAppleIntelligence && AICategoryMatcher.isAppleIntelligenceAvailable {
+        if useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
             self.aiCategoryMatcher = AICategoryMatcher()
         }
     }

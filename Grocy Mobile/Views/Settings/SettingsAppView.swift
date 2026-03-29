@@ -169,7 +169,7 @@ struct SettingsAppView: View {
                     }
                 }
             #endif
-            if AICategoryMatcher.isAppleIntelligenceAvailable {
+            if AppleIntelligenceStatus.isAppleIntelligenceAvailable {
                 Section("Apple Intelligence") {
                     MyToggle(isOn: $useAppleIntelligence, description: "Apple Intelligence", icon: "apple.intelligence")
                 }
