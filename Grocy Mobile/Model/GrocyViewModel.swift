@@ -809,6 +809,11 @@ class GrocyViewModel {
     }
 
     // MARK: - Recipes
+    func addNotFulfilledProductsToShoppinglist(recipeID: Int, content: RecipeAddToShLModel) async throws {
+        let jsonContent = try! jsonEncoder.encode(content)
+        try await grocyApi.addNotFulfilledProductsToShoppinglist(id: recipeID, content: jsonContent)
+    }
+    
     func consumeRecipe(recipeID: Int) async throws {
         try await grocyApi.recipeConsume(id: recipeID)
     }

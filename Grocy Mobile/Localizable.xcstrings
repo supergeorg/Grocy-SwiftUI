@@ -21,6 +21,17 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@\n\n%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@\n\n%2$@"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "%@ (%@ %@)" : {
       "localizations" : {
         "en" : {
@@ -11384,6 +11395,9 @@
         }
       }
     },
+    "Appearance" : {
+
+    },
     "Apple Intelligence" : {
       "shouldTranslate" : false
     },
@@ -11523,6 +11537,100 @@
         }
       }
     },
+    "Are you sure you want to consume all ingredients needed by recipe \"%@\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přejete se spotřebovat všechny ingredience receptu „%@“? Ingredience označené „Zkontrolovat pouze zda je v zásobě jakékoliv množství“ budou ignorovány."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicher, dass alle Zutaten, die vom Rezept \"%@\" benötigt werden, aus dem Bestand entfernt werden sollen (Zutaten markiert mit \"Nur prüfen, ob eine beliebige Menge im Bestand verfügbar ist\" werden ignoriert)?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to consume all ingredients needed by this recipe \"%@\"? (Ingredients marked with \"only check if any amount is in stock\" will be ignored)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haluatko varmasti kuluttaa kaikki reseptin \"%@\" tarvitsemat ainekset (aineksia, jotka on merkitty \"tarkista vain onko varastossa\" ei huomioida)?"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir consommer tous les ingrédients requis par la recette \"%@\" (les ingrédients marqués \"Vérifier seulement qu'une quantité non-nulle est en stock\" seront ignorés) ?"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לצרוך את כל הפריטים שנחוצים למתכון „%@” (רכיבים שמסומנים ב„לסמן רק אם יש כמות כלשהי במלאי” לא יוכללו)?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sei sicuro di voler consumare tutti gli ingredienti necessari per la ricetta \"%@\"(gli ingredienti contrassegnati con \"controlla solo se disponibile in magazzino\" verranno ignorati)?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ「%@」の全材料を消費してもよろしいですか？(「ストック確認のみ」にチェックを入れた物品は無視されます)"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar tikrai norite suvartoti visus ingredientus, kurių reikia pagal receptą \"%@\" (ingredientai, pažymėti „tik jeigu yra sandėlyje“, bus ignoruojami)?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weet je zeker dat je alle ingrediënten wilt gebruiken die nodig zijn voor het recept \"%@\"? (Ingrediënten gemarkeerd met \"controleer alleen als een enkele eenheid op voorraad is\" worden genegeerd)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy na pewno chcesz zużyć wszystkie składniki wymagane przez przepis \"%@\" (składniki z opcją \"Zaznacz tylko w przypadku, gdy w zapasach znajduje się jedna jednostka\" zostaną zignorowane)?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem certeza que deseja consumir todos os ingredientes necessários pela receita \"%@\" (ingredientes marcados com \"Apenas verificar se tem quantidade em estoque\" serão ignorados)?"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ali res želiš porabiti vse sestavine potrebne za recept \"%@\" (sestavine označene z \"samo preveri če je količina na zalogi\" bodo ignorirane)?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vill du förbruka alla ingredienser som behövs för receptet \"%@\" (ingredienser märkta med \"kontrollera endast om någon enhet finns i lager\" kommer att ignoreras)?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要消耗菜谱“%@”中需要的全部食材吗？（忽略被标记为“仅检查是否有库存”的食材）"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete chore \"%@\"?" : {
       "localizations" : {
         "cs" : {
@@ -11579,6 +11687,12 @@
             "value" : "Ar tikrai norite ištrinti darbą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je klusje \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11601,6 +11715,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera sysslan \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除家务%@？"
           }
         }
       }
@@ -11667,6 +11787,12 @@
             "value" : "Ar tikrai norite ištrinti vietą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je locatie \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11695,6 +11821,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"%@\" konumu silmek istediğinizden emin misiniz?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除位置“%@”？"
           }
         }
       }
@@ -11761,6 +11893,12 @@
             "value" : "Ar tikrai norite ištrinti produktą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je product \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11789,6 +11927,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"%@\" ürününü silmek istediğinizden emin misiniz?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除产品%@？"
           }
         }
       }
@@ -11849,6 +11993,12 @@
             "value" : "Ar tikrai norite ištrinti produktų grupę \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weet je zeker dat je productcategorie \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11871,6 +12021,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera produktgruppen \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除产品组\"%@\"吗?"
           }
         }
       }
@@ -11913,6 +12069,12 @@
             "value" : "למחוק את יחידת הכמות „%@”?"
           }
         },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biztosan szeretnéd törölni a következő mennyiségi egységet: \"%@\"?"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11929,6 +12091,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ar tikrai norite ištrinti kiekio vienetą \"%@\"?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je hoeveelheid type \"%@\" wilt verwijderen?"
           }
         },
         "pl" : {
@@ -11953,6 +12121,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera mängdenheten \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除数量单位%@？"
           }
         }
       }
@@ -12019,6 +12193,12 @@
             "value" : "Ar tikrai norite ištrinti receptą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je recept\"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12041,6 +12221,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera receptet \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除菜谱“%@”吗？"
           }
         }
       }
@@ -12101,6 +12287,18 @@
             "value" : "Ar tikrai norite ištrinti pirkinių sąrašą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weet je zeker dat je boodschappenlijst \"%@\" wilt verwijderen?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy jesteś pewien, że chcesz usunąć listę zakupów \"%@\"?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12117,6 +12315,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera inköpslistan \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除购物清单 “%@” 吗？"
           }
         }
       }
@@ -12183,6 +12387,12 @@
             "value" : "Ar tikrai norite ištrinti parduotuvę \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je winkel \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12205,6 +12415,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera affären \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除商店%@"
           }
         }
       }
@@ -12265,6 +12481,12 @@
             "value" : "Ar tikrai norite ištrinti užduotį \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weet je zeker dat \"\" verwijderd mag worden?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12287,6 +12509,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera uppgiften \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除任务 “%@” 吗？"
           }
         }
       }
@@ -12353,6 +12581,12 @@
             "value" : "Ar tikrai norite ištrinti naudotoją \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je gebruiker \"%@\" wilt verwijderen?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12375,6 +12609,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill radera användaren \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除用户 “%@” 吗？"
           }
         }
       }
@@ -12433,6 +12673,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ar tikrai norite ištrinti vartotojo lauką \"%@\"?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weet je zeker dat je gebruikersveld \"%@\" wilt verwijderen?"
           }
         },
         "pt-BR" : {
@@ -12511,6 +12757,12 @@
             "value" : "Ar tikrai norite ištrinti naudotojo tapatybę \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je gebruikersentiteit \"%@\" wilt verwijderen?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12521,6 +12773,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ali res želiš izbrisati uporabniško entiteto \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除自定义项目\"%@\"吗?"
           }
         }
       }
@@ -12587,6 +12845,12 @@
             "value" : "Ar tikrai norite ištuštinti pirkinių sąrašą \"%@\"?"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je de boodschappenlijst \"%@\" leeg wilt maken?"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12609,6 +12873,112 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Är du säker på att du vill tömma inköpslistan \"%@\"?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要清空购物清单“%@”吗？"
+          }
+        }
+      }
+    },
+    "Are you sure you want to put all missing ingredients for recipe \"%@\" on the shopping list?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chcete přidat všechny chybějící ingredience z receptu „%@“ do nákupního seznamu?"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er du sikker på du vil sætte alle manglende ingredienser til \"%@\" på indkøbslisten?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle fehlenden Zutaten für Rezept \"%@\" wirklich auf den Einkaufszettel setzen?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to put all missing ingredients for recipe \"%@\" on the shopping list?"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haluatko varmasti lisätä kaikki reseptin \"%@\" puuttuvat ainesosat ostoslistalle?"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir ajouter tous les ingrédients manquants de la recette \"%@\" dans la liste de courses ?"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "להוסיף את כל הרכיבים החסרים למתכון „%@” ברשימת הקניות?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sei sicuro di voler inserire tutti gli ingredienti mancanti per la ricetta \"%@\" sulla lista della spesa?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レシピ「%@」の不足材料をすべて買い物リストに追加してもよろしいですか？"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar tikrai norite į pirkinių sąrašą įtraukti visus recepto \"%@\" trūkstamus ingredientus?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je alle ontbrekende ingrediënten voor recept \"%@\" op de boodschappenlijst wilt zetten?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy na pewno chcesz dodać wszystkie brakujące składniki przepisu \"%@\" do listy zakupów?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem certeza que deseja colocar todos os ingredientes faltantes da receita \"%@\" na lista de compras?"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Res želiš dodati vse manjkajoče sestavine za recept \"%@\" na nakupovalni seznam"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vill du lägga tilll alla saknade ingredienser för receptet \"%@\" på inköpslistan?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要将菜谱“%@”中缺少的全部食材加入购物清单吗？"
           }
         }
       }
@@ -14982,6 +15352,7 @@
       }
     },
     "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -15041,6 +15412,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Com base nos preços da regra de consumo padrão (aberto primeiro, próximo a vencer, primeiro a entrar é o primeiro a sair) para ingredientes em estoque e no último preço para os que faltam"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基于在库食材默认消耗规则的价格(先开封、先到期、先进先出)，缺货食材的最近价格"
           }
         }
       }
@@ -20060,6 +20437,190 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "消耗庫存中全部的 %@"
+          }
+        }
+      }
+    },
+    "Consume all ingredients needed by this recipe" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir tots els ingredients requerits per aquesta recepta"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotřebovat všechny ingredience použité v tomto receptu"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forbrug alle nødvendige ingredienser til denne opskrift"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Zutaten, die von diesem Rezept benötigt werden, aus dem Bestand entfernen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Καταναλώστε όλα τα συστατικά που απαιτούνται από αυτήν τη συνταγή"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consume all ingredients needed by this recipe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir todos los ingredientes necesarios para esta receta"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarbi kõik selle retsepti jaoks vajalikud koostisosad"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuluta kaikki tämän reseptin ainesosat"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consommer tous les ingrédients requis par cette recette"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לצרוך את כל המצרכים שהמתכון הזה דורש"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A recept minden alapanyagának felhasználása"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consuma tutti gli ingredienti necessari per questa ricetta"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このレシピの全材料を消費"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 조리법에 필요한 모든 재료를 소모"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suvartokite visus pagal šį receptą reikalingus ingredientus"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forbruk alle ingredienser for denne oppskriften"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbruik alle ingrediënten die voor dit recept nodig zijn"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użyj wszystkich składników wymaganych do tego przepisu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir todos os ingredientes necessários para esta receita"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir todos os ingredientes necessários nesta receita"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumă toate ingredientele necesare acestei rețete"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotrebovať všetky suroviny použité v tomto recepte"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porabi vse sestavine potrebne za ta recept"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konsumera alla ingredienser som behövs för detta recept"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "சமையல் குறிப்பிலுள்ள அனைத்து பொருட்களையும் உண்"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu tarif için gereken tüm malzemeleri tüket"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вжити всі інгрідієнти цього рецепту"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消耗此菜谱所需的全部食材"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消耗此食譜所需的所有食材"
           }
         }
       }
@@ -28248,6 +28809,184 @@
         }
       }
     },
+    "Desired servings" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racions desitjades"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počet porcí"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antal portioner"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gewünschte Portionen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Επιθυμητές μερίδες"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desired servings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raciones deseadas"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soovitud serveeringuid"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toivottu annosmäärä"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "portions souhaitées"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "גודל מנה מבוקשת"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kívánt adagok"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porzioni desiderate"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分量"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원하는 인원분량"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pageidaujamos porcijos"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ønskede porsjoner"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gewenst aantal porties"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pożądana ilość porcji"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porções desejadas"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porção desejada"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Požadované porcie"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Željene porcije"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önskat antal portioner"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "விருப்பமான பரிமாறல்கள்"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Istenen porsiyon"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Потрібно порцій"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所需份量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要份數"
+          }
+        }
+      }
+    },
     "Details" : {
       "localizations" : {
         "cs" : {
@@ -35020,6 +35759,12 @@
             "value" : "Fout bij het uitvoeren van de plugin voor het opzoeken van streepjescodes"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Błąd wyszukiwania kodu kreskowego w zewnętrznej aplikacji"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -35458,6 +36203,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Išorinė brūkšninio kodo paieška"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe barcode opzoeken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyszukanie kodu kreskowego w zewnętrznej aplikacji"
           }
         },
         "pt-BR" : {
@@ -35900,6 +36657,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名"
+          }
+        }
+      }
+    },
+    "For ingredients that are only partially in stock, the in stock amount will be consumed." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U ingrediencí, kde není v zásobě celé jejich množství se spotřebuje jejich aktuální zásoba."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für Zutaten, die nur teilweise vorrätig sind, wird die vorrätige Menge verbraucht."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For ingredients that are only partially in stock, the in stock amount will be consumed."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vain osittain varastossa olevia ainesosia kulutetaan varastossa oleva määrä."
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour les ingrédients qui ne sont que partiellement en stock, le montant en stock sera consommé."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לרכיבים שנמצאים חלקית במלאי, הכמות במלאי תיצרך."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per gli ingredienti che sono solo parzialmente disponibili in magazzino, verrà consumata la quantità disponibile in magazzino."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ストック不足の材料はストック分のみ消費されます。"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudedamųjų dalių, kurių sandėlyje yra tik iš dalies, kiekis bus sunaudotas."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voor ingredienten die alleen gedeeltelijk in voorraad zijn, de hoeveelheid in voorraad zal gebruikt worden."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para ingredientes que estão apenas parcialmente em estoque, a quantidade em estoque será consumida."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "För de ingredienser som endast delvis finns i lager kommer det tillgängliga lagersaldot att förbrukas."
           }
         }
       }
@@ -37181,6 +38014,9 @@
         }
       }
     },
+    "HTML" : {
+
+    },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
         "cs" : {
@@ -37314,6 +38150,12 @@
           }
         }
       }
+    },
+    "Image" : {
+
+    },
+    "Import Recipe" : {
+
     },
     "In alphabetical order" : {
       "localizations" : {
@@ -38070,6 +38912,9 @@
     "Industrial codes" : {
       "shouldTranslate" : false
     },
+    "Infomaniak Rich HTML Editor" : {
+      "shouldTranslate" : false
+    },
     "Information about Grocy Server" : {
       "localizations" : {
         "de" : {
@@ -38456,6 +39301,15 @@
     },
     "INIT CALENDAR" : {
       "shouldTranslate" : false
+    },
+    "Insert" : {
+
+    },
+    "Insert Link" : {
+
+    },
+    "Intelligenz aktiv..." : {
+
     },
     "Inventory" : {
       "localizations" : {
@@ -40227,6 +41081,178 @@
           }
         }
       }
+    },
+    "Link" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enllaç"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odkaz"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lænke"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σύνδεση"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlace"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linkki"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lien"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "קישור"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hivatkozás"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンク"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuoroda"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiperligação"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povezava"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Länk"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "இணைப்பு"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlantı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Посилання"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "链接"
+          }
+        }
+      }
+    },
+    "Link Details" : {
+
+    },
+    "Link Text" : {
+
     },
     "Location" : {
       "localizations" : {
@@ -44740,6 +45766,190 @@
         }
       }
     },
+    "No" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nej"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nein"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Οχι"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לא"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nem"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いいえ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아니오"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nei"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nee"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nej"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "இல்லை"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hayır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ні"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
+          }
+        }
+      }
+    },
     "No assignment" : {
       "localizations" : {
         "ca" : {
@@ -45210,6 +46420,12 @@
             "value" : "Hintatieto puuttuu ainakin yhdeltä ainesosalta"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prix manquant pour un ingrédient au moins"
+          }
+        },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45232,6 +46448,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nėra informacijos apie bent vienos sudedamosios dalies kainą"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen prijs informatie beschikbaar voor minstens één ingrediënt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak informacji o cenie dla co najmniej jednego ze składników"
           }
         },
         "pt-BR" : {
@@ -49050,6 +50278,12 @@
             "value" : "atidaryta"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geopend"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49961,6 +51195,7 @@
 
     },
     "per serving" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ca" : {
           "stringUnit" : {
@@ -51390,6 +52625,9 @@
           }
         }
       }
+    },
+    "Preview" : {
+
     },
     "Price" : {
       "localizations" : {
@@ -53801,6 +55039,190 @@
         }
       }
     },
+    "Put missing products on shopping list" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afegeix els productes que falten a la llista de la compra"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vložit produkty pod min. stavem zásoby"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sæt manglende varer på en indkøbsliste"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Produkte auf den Einkaufszettel setzen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Βάλτε τα προϊόντα που λείπουν στη λίστα αγορών"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put missing products on shopping list"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir productos faltantes a la lista de la compra"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pane puuduvad tooted ostunimekirja"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää puuttuvat tuotteet ostoslistalle"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter les produits manquants dans la liste de courses"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הוספת מוצרים חסרים לרשימת הקניות"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiányzó termékek hozzáadása a bevásárlólistához"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metti i prodotti mancanti nella lista della spesa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不足物品を買い物リストに追加"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "누락제품 구매목록 등록"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Į pirkinių sąrašą įtraukite trūkstamus produktus"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legg manglende produkter til handlelisten"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voeg ontbrekende producten toe aan boodschappenlijst"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj brakujące produkty do listy zakupów"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colocar a quantidade faltante na lista de compras"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colocar produtos em falta na lista de compras"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pune produsele lipsă pe lista de cumpărături"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pridať chýbajúce výrobky do nákupného zoznamu"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj manjkajoče izdelke na nakupovalni seznam"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lägg saknade produkter i inköpslista"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "காலியாகிய பொருட்களினை வாங்கும் பட்டியலில் இணை"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik malzemeleri alışveriş listesine ekle"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додати відсутні продукти до списку покупок"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将缺少的产品加入购物清单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將不足的物品加入購物清單"
+          }
+        }
+      }
+    },
     "QR-Scan" : {
       "localizations" : {
         "cs" : {
@@ -55636,6 +57058,9 @@
     "Recipe parsing" : {
 
     },
+    "Recipe Preparation" : {
+
+    },
     "Recipes" : {
       "localizations" : {
         "ca" : {
@@ -56239,6 +57664,18 @@
             "value" : "Kiekis suapvalinamas iki artimiausio sveikojo skaičiaus"
           }
         },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rond de hoeveelheid af naar het dichtstbijzijnde gehele getal"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaokrąglij ilość w góre "
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -56647,6 +58084,12 @@
             "value" : "Ajoitettu seuranta-aika"
           }
         },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de suivi prévu"
+          }
+        },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
@@ -56669,6 +58112,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suplanuotas sekimo laikas"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaplanowany czas wykonania czynności"
           }
         },
         "pt-BR" : {
@@ -63448,6 +64897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sukeisti takelio kitą tvarkaraštį / sekti dabar mygtukus"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zamień przyciski wykonania czynności"
           }
         },
         "pt-BR" : {
@@ -71901,6 +73356,12 @@
             "value" : "Voer klusje nu uit"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wykonaj czynność teraz"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -74327,6 +75788,184 @@
         }
       }
     },
+    "Uncheck ingredients to not put them on the shopping list" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desmarcar ingredients per a no afegir-los a la llista de la compra"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odznačte, co se přidat nemá"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fjern markeringen fra ingredienser der ikke skal på indkøbslisten"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entferne den Haken einer Zutat, um diese nicht auf den Einkaufszettel zu übernehmen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΜικροδουλειέςΚαταργήστε την επιλογή των συστατικών για να μην τα βάλετε στη λίστα αγορών"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uncheck ingredients to not put them on the shopping list"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desmarca ingredientes para no añadirlos a la lista de la compra"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eemalda märge koostisosadelt, et neid mitte ostunimekirja panna"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poista merkintä ainesosista joita et halua lisätä"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Décocher des ingrédients pour ne pas les ajouter à la liste de courses"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "יש לבטל רכיבים כדי שלא יתווספו לרשימת הקניות"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vedd ki a pipát a hozzávalók mellől, amelyeket nem szeretnél a bevásárlólistához adni:"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deseleziona gli ingredienti per non inserirli nella lista della spesa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買い物リストに追加しない材料はチェックを外してください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매 목록에 넣지 않으려면 재료 선택을 취소하십시오."
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panaikinkite ingredientų žymėjimą, kad neįtrauktumėte jų į pirkinių sąrašą"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fjern huk for å ikke legge produktet i handlelisten"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zet het vinkje uit om ingrediënten niet op de boodschappenlijst te zetten"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odznacz składniki, których nie chcesz dodać na listę zakupów"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desmarque os ingredientes para não colocá-los na lista de compra"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desmarcar ingredientes para não os colocar na lista de compras"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debifați ingredientele pentru a nu le pune pe lista de cumpărături"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odznačte suroviny, ktoré nechcete pridať do nákupného zoznamu"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odznači vse sestavine ki naj ne bodo na nakupovalnem seznamu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avmarkera ingredienser för att inte lägga dem på inköpslistan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alışveriş listesine malzemeleri eklememek için işareti kaldırın"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зніміть відмітку з інгрідієнтів, щоб не додавати їх до списку покупок"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消勾选的食材不会加入购物清单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消勾選不加入購物清單的食材"
+          }
+        }
+      }
+    },
     "Undo" : {
       "localizations" : {
         "ca" : {
@@ -75762,6 +77401,9 @@
           }
         }
       }
+    },
+    "URL" : {
+      "shouldTranslate" : false
     },
     "Use a specific stock item" : {
       "localizations" : {
@@ -80280,6 +81922,9 @@
         }
       }
     },
+    "WYSIWYG" : {
+      "shouldTranslate" : false
+    },
     "Yearly" : {
       "localizations" : {
         "ca" : {
@@ -80460,6 +82105,190 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "每年"
+          }
+        }
+      }
+    },
+    "Yes" : {
+      "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ano"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ναί"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jah"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kyllä"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oui"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כן"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Igen"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sì"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "はい"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taip"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tak"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sim"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sim"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Áno"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ஆமாம்"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evet"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Так"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
           }
         }
       }
