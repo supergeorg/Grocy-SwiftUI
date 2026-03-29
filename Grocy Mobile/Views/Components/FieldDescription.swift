@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FieldDescription: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     var description: LocalizedStringKey
 
     @State private var showDescription: Bool = false
@@ -19,14 +21,23 @@ struct FieldDescription: View {
                 .onTapGesture {
                     showDescription.toggle()
                 }
-                .popover(
-                    isPresented: $showDescription,
-                    content: {
-                        Text(description)
+                .popover(isPresented: $showDescription) {
+                    if horizontalSizeClass == .compact {
+                        ScrollView {
+                            Text(description)
                             .padding()
+                            .frame(minWidth: 200, maxWidth: 400)
                             .fixedSize(horizontal: false, vertical: true)
+                            .padding(.vertical, 4)
+                        }
+                        .presentationCompactAdaptation(.popover)
+                        .presentationSizing(.fitted)
+                    } else {
+                        Text(description)
+                        .padding()
+                        .fixedSize(horizontal: false, vertical: true)
                     }
-                )
+                }
             #endif
     }
 }
