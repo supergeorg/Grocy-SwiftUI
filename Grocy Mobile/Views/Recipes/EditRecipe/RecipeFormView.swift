@@ -241,7 +241,6 @@ struct RecipeFormView: View {
                         List {
                             ScrollView(.vertical) {
                                 HTMLPreviewView(htmlContent: $recipe.recipeDescription)
-                                    .frame(height: 300)
                             }
 
                             Button(action: {
