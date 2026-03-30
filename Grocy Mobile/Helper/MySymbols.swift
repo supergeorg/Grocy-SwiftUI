@@ -14,7 +14,7 @@ nonisolated struct MySymbols {
     static let transfer = "arrow.left.arrow.right"
     static let inventory = "list.bullet"
     static let stockJournal = "list.bullet.rectangle"
-    static let addToShoppingList = "note.text.badge.plus"
+    static let addToShoppingList = "cart.fill.badge.plus"
     static let shoppingList = "cart.fill"
     static let masterData = "folder"
     static let settings = "gear"
@@ -123,4 +123,7 @@ nonisolated struct MySymbols {
     static let darkMode = "moon.stars.fill"
     static let lightMode = "sun.horizon.fill"
     static let systemDarkMode = "circle.lefthalf.filled.inverse"
+    static let dismissKeyboard = "keyboard.chevron.compact.down"
+    static let htmlCode = "chevron.left.slash.chevron.right"
+    static let preview = "eye"
 }

@@ -29,24 +29,26 @@ struct RecipePreparationEditorView: View {
 
     var body: some View {
         NavigationStack {
-            TabView(selection: $selectedTab) {
-                WYSIWYGEditorView(htmlContent: $temporaryHTML)
-                    .tag(TabSelection.wysiwygEditor)
-                    .tabItem {
-                        Label("WYSIWYG", systemImage: MySymbols.richText)
-                    }
+            VStack(spacing: 0) {
+                // Top tab bar — stays visible above keyboard at all times
+                EditorTabBar(selectedTab: $selectedTab)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
 
-                RawEditorView(htmlContent: $temporaryHTML)
-                    .tag(TabSelection.rawEditor)
-                    .tabItem {
-                        Label("HTML", systemImage: "chevron.left.slash.chevron.right")
-                    }
+                Divider()
 
-                PreviewTabView(html: $temporaryHTML)
-                    .tag(TabSelection.preview)
-                    .tabItem {
-                        Label("Preview", systemImage: "eye")
+                // Content area — switches between the three editor modes
+                Group {
+                    switch selectedTab {
+                    case .wysiwygEditor:
+                        WYSIWYGEditorView(htmlContent: $temporaryHTML)
+                    case .rawEditor:
+                        RawEditorView(htmlContent: $temporaryHTML)
+                    case .preview:
+                        PreviewTabView(html: $temporaryHTML)
                     }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Recipe Preparation")
             .navigationBarTitleDisplayMode(.inline)
@@ -67,7 +69,41 @@ struct RecipePreparationEditorView: View {
     }
 }
 
+// MARK: - Top Tab Bar
+
+/// A segmented tab bar that lives at the top of the editor sheet,
+/// so it is never obscured by the system keyboard.
+struct EditorTabBar: View {
+    @Binding var selectedTab: RecipePreparationEditorView.TabSelection
+
+    private func buildPickerElementView(title: LocalizedStringKey, icon: String) -> some View {
+        HStack {
+            Image(systemName: icon)
+            Text(title)
+        }
+    }
+
+    var body: some View {
+        Picker("", selection: $selectedTab) {
+            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "WYSIWYG", icon: MySymbols.richText)).uiImage {
+                Image(uiImage: wysiwygImage)
+                    .tag(RecipePreparationEditorView.TabSelection.wysiwygEditor)
+            }
+            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "HTML", icon: MySymbols.htmlCode)).uiImage {
+                Image(uiImage: wysiwygImage)
+                    .tag(RecipePreparationEditorView.TabSelection.rawEditor)
+            }
+            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "Preview", icon: MySymbols.preview)).uiImage {
+                Image(uiImage: wysiwygImage)
+                    .tag(RecipePreparationEditorView.TabSelection.preview)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+}
+
 // MARK: - WYSIWYG Editor View
+
 struct WYSIWYGEditorView: View {
     @Binding var htmlContent: String
     @State private var editorProxy: RichHTMLEditorProxy?
@@ -77,42 +113,55 @@ struct WYSIWYGEditorView: View {
     @State private var selectedBackgroundColor: Color = .white
     @State private var linkURL: String = ""
     @State private var linkText: String = ""
+    /// True while the keyboard is visible. Drives toolbar visibility.
+    @State private var keyboardVisible: Bool = false
 
-    let bottomAreaHeight: CGFloat = 200
+    private let formattingBarHeight: CGFloat = 50
+    private let formattingButtonSize: CGFloat = 40.0
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            ScrollView(.vertical) {
-                RichHTMLEditorViewRepresentable(html: $htmlContent, proxy: $editorProxy, proxyObserver: proxyObserver)
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .contentMargins(.bottom, bottomAreaHeight, for: .scrollContent)
-
-            Rectangle()
-                .glassEffect(.regular, in: .rect)
-                .mask {
-                    LinearGradient(
-                        stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: Color(.systemBackground).opacity(0.6), location: 0.4),
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
-                .frame(height: bottomAreaHeight)
-                .ignoresSafeArea(edges: .bottom)
-                .allowsHitTesting(false)
-            ScrollView(.horizontal, showsIndicators: false) {
-                formattingBar
-                    .padding(.horizontal)
-            }
-            .scrollClipDisabled()
-            .padding(.top, 16)
-            .padding(.bottom, 100)
+        // Wrapping the WKWebView-backed editor in a native SwiftUI ScrollView is
+        // the key insight: SwiftUI's scroll view handles keyboard avoidance itself
+        // (shrinking its frame, not the window), so the tab bar above is unaffected.
+        // safeAreaInset pins the formatting bar just above the keyboard automatically.
+        ScrollView(.vertical) {
+            RichHTMLEditorViewRepresentable(
+                html: $htmlContent,
+                proxy: $editorProxy,
+                proxyObserver: proxyObserver
+            )
+            .padding(.horizontal)
+            // Give the editor a tall minimum so it fills the visible area.
+            // The ScrollView will expand it further as content grows.
+            .frame(minHeight: 400)
+            .frame(maxWidth: .infinity)
         }
-        .ignoresSafeArea(edges: .bottom)
+        // The formatting bar attaches to the bottom safe area inset of the
+        // ScrollView. SwiftUI automatically lifts this inset when the keyboard
+        // appears, so the bar travels with the keyboard for free.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if keyboardVisible {
+                GlassEffectContainer {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        formattingBar
+                    }
+                }
+                .padding()
+                .background(.bar)
+                .overlay(alignment: .top) { Divider() }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+        ) { _ in
+            withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+        ) { _ in
+            withAnimation(.easeIn(duration: 0.2)) { keyboardVisible = false }
+        }
         .sheet(isPresented: $showLinkDialog) {
             LinkDialog(
                 linkURL: $linkURL,
@@ -120,7 +169,10 @@ struct WYSIWYGEditorView: View {
                 isPresented: $showLinkDialog,
                 onInsert: {
                     if !linkURL.isEmpty {
-                        editorProxy?.addLink(url: URL(string: linkURL) ?? URL(fileURLWithPath: ""), text: linkText.isEmpty ? nil : linkText)
+                        editorProxy?.addLink(
+                            url: URL(string: linkURL) ?? URL(fileURLWithPath: ""),
+                            text: linkText.isEmpty ? nil : linkText
+                        )
                         linkURL = ""
                         linkText = ""
                         showLinkDialog = false
@@ -132,6 +184,23 @@ struct WYSIWYGEditorView: View {
 
     var formattingBar: some View {
         HStack(spacing: 8) {
+            Button {
+                UIApplication.shared.sendAction(
+                    #selector(UIResponder.resignFirstResponder),
+                    to: nil,
+                    from: nil,
+                    for: nil
+                )
+            } label: {
+                Image(systemName: MySymbols.dismissKeyboard)
+                    .font(.system(size: 16, weight: .semibold))
+            }
+            .tint(.secondary)
+            .buttonStyle(FormattingButtonStyleAdditional())
+
+            Divider()
+                .frame(height: 20)
+
             // Bold
             Button(action: { editorProxy?.bold() }) {
                 Image(systemName: "bold")
@@ -291,8 +360,6 @@ struct WYSIWYGEditorView: View {
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
-
-            Spacer()
         }
     }
 }
@@ -354,21 +421,21 @@ struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
 
     class Coordinator: NSObject {
         var parent: RichHTMLEditorViewRepresentable
-
         init(_ parent: RichHTMLEditorViewRepresentable) {
             self.parent = parent
         }
     }
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
 
     func makeUIView(context: Context) -> RichHTMLEditorView {
         let editor = proxyObserver.editor
         editor.html = html
         proxyObserver.htmlBinding = $html
-        self.proxy = proxyObserver
+
+        DispatchQueue.main.async {
+            self.proxy = proxyObserver
+        }
 
         return editor
     }
@@ -512,6 +579,23 @@ struct RawEditorView: View {
 
     var body: some View {
         TextEditor(text: $htmlContent)
+            .font(.system(.body, design: .monospaced))
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Button {
+                        UIApplication.shared.sendAction(
+                            #selector(UIResponder.resignFirstResponder),
+                            to: nil,
+                            from: nil,
+                            for: nil
+                        )
+                    } label: {
+                        Image(systemName: MySymbols.dismissKeyboard)
+                    }
+                    .tint(.secondary)
+                    Spacer()
+                }
+            }
     }
 }
 
