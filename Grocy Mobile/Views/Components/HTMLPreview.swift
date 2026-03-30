@@ -29,6 +29,8 @@ struct HTMLPreviewView: View {
     var minHeight: CGFloat = 300
     var idealHeight: CGFloat = 500
     var showControlBar: Bool = true
+    var minFontScale: Double = 0.5
+    var maxFontScale: Double = 2.0
 
     @State private var page = WebPage()
     @State private var fontScale: Double = 1.0
@@ -125,7 +127,7 @@ struct HTMLPreviewView: View {
 
                     Spacer()
 
-                    Text(fontScale * 100, format: .percent)
+                    Text(fontScale, format: .percent)
                         .font(.caption)
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
@@ -141,24 +143,24 @@ struct HTMLPreviewView: View {
             GlassEffectContainer(spacing: 10) {
                 HStack(spacing: 10) {
                     Button {
-                        fontScale = max(0.8, (fontScale - 0.1).rounded(toPlaces: 1))
+                        fontScale = max(minFontScale, (fontScale - 0.1).rounded(toPlaces: 1))
                     } label: {
                         Image(systemName: "textformat.size.smaller")
                             .frame(width: 36, height: 36)
                     }
                     .glassEffect(.regular.interactive(), in: .circle)
-                    .disabled(fontScale <= 0.8)
+                    .disabled(fontScale <= minFontScale)
 
-                    Slider(value: $fontScale, in: 0.8...2.0, step: 0.1)
+                    Slider(value: $fontScale, in: minFontScale...maxFontScale, step: 0.1)
 
                     Button {
-                        fontScale = min(2.0, (fontScale + 0.1).rounded(toPlaces: 1))
+                        fontScale = min(maxFontScale, (fontScale + 0.1).rounded(toPlaces: 1))
                     } label: {
                         Image(systemName: "textformat.size.larger")
                             .frame(width: 36, height: 36)
                     }
                     .glassEffect(.regular.interactive(), in: .circle)
-                    .disabled(fontScale >= 2.0)
+                    .disabled(fontScale >= maxFontScale)
                 }
                 .padding(.vertical, 4)
             }
