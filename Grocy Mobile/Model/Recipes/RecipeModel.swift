@@ -80,6 +80,7 @@ class Recipe: Codable, Identifiable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
+        try container.encode(recipeDescription, forKey: .recipeDescription)
         try container.encode(pictureFileName, forKey: .pictureFileName)
         try container.encode(baseServings, forKey: .baseServings)
         try container.encode(desiredServings, forKey: .desiredServings)
