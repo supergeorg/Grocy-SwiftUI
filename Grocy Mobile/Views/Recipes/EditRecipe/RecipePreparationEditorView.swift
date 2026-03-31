@@ -31,9 +31,20 @@ struct RecipePreparationEditorView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Top tab bar — stays visible above keyboard at all times
-                EditorTabBar(selectedTab: $selectedTab)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
+                Picker("", selection: $selectedTab) {
+                    Label("WYSIWYG", systemImage: MySymbols.richText)
+                        .labelStyle(.titleAndIcon)
+                        .tag(RecipePreparationEditorView.TabSelection.wysiwygEditor)
+                    Label("HTML", systemImage: MySymbols.htmlCode)
+                        .labelStyle(.titleAndIcon)
+                        .tag(RecipePreparationEditorView.TabSelection.rawEditor)
+                    Label("Preview", systemImage: MySymbols.preview)
+                        .labelStyle(.titleAndIcon)
+                        .tag(RecipePreparationEditorView.TabSelection.preview)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
 
                 Divider()
 
@@ -66,39 +77,6 @@ struct RecipePreparationEditorView: View {
                 }
             }
         }
-    }
-}
-
-// MARK: - Top Tab Bar
-
-/// A segmented tab bar that lives at the top of the editor sheet,
-/// so it is never obscured by the system keyboard.
-struct EditorTabBar: View {
-    @Binding var selectedTab: RecipePreparationEditorView.TabSelection
-
-    private func buildPickerElementView(title: LocalizedStringKey, icon: String) -> some View {
-        HStack {
-            Image(systemName: icon)
-            Text(title)
-        }
-    }
-
-    var body: some View {
-        Picker("", selection: $selectedTab) {
-            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "WYSIWYG", icon: MySymbols.richText)).uiImage {
-                Image(uiImage: wysiwygImage)
-                    .tag(RecipePreparationEditorView.TabSelection.wysiwygEditor)
-            }
-            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "HTML", icon: MySymbols.htmlCode)).uiImage {
-                Image(uiImage: wysiwygImage)
-                    .tag(RecipePreparationEditorView.TabSelection.rawEditor)
-            }
-            if let wysiwygImage = ImageRenderer(content: buildPickerElementView(title: "Preview", icon: MySymbols.preview)).uiImage {
-                Image(uiImage: wysiwygImage)
-                    .tag(RecipePreparationEditorView.TabSelection.preview)
-            }
-        }
-        .pickerStyle(.segmented)
     }
 }
 
