@@ -11,8 +11,6 @@ import SwiftUI
 enum RecipeInteraction: Hashable, Identifiable {
     case showRecipe(recipe: Recipe)
     case editRecipe(recipe: Recipe)
-    case editIngredient(ingredient: RecipePos, recipe: Recipe)
-    case editNesting(nesting: RecipeNesting, recipeID: Int)
 
     var id: Self { self }
 }
@@ -42,22 +40,13 @@ enum RecipeSortOption: Hashable, RawRepresentable {
     }
 }
 
-@Observable
-final class RecipeInteractionNavigationRouter {
-    var path: [RecipeInteraction] = []
-
-    func present(_ interaction: RecipeInteraction) {
-        path.append(interaction)
-    }
-}
-
 struct RecipesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @Query(sort: \Recipe.name, order: .forward) var recipes: Recipes
     @Query var recipeFulfilments: RecipeFulfilments
 
-    @State private var recipeInteractionRouter = RecipeInteractionNavigationRouter()
+    @AppStorage("devMode") private var devMode: Bool = false
 
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
@@ -82,8 +71,6 @@ struct RecipesView: View {
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
-
-    //    private var gridLayout = [GridItem(.flexible()), GridItem(.flexible())]
 
     private func deleteItem(itemToDelete: Recipe) {
         recipeToDelete = itemToDelete
@@ -167,30 +154,28 @@ struct RecipesView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $recipeInteractionRouter.path) {
-            ScrollView {
-                VStack(spacing: 8) {
-                    Section {
-                        RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
-                            .listRowInsets(EdgeInsets())
-                    }
-                    ForEach(filteredRecipes, id: \.id) { recipe in
+        ScrollView {
+            VStack(spacing: 8) {
+                Section {
+                    RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
+                        .listRowInsets(EdgeInsets())
+                }
+                ForEach(filteredRecipes, id: \.id) { recipe in
+                    NavigationLink(
+                        value: RecipeInteraction.showRecipe(recipe: recipe),
+                        label: {
+                            RecipeRowView(recipe: recipe, fulfillment: recipeFulfilments.first(where: { $0.recipeID == recipe.id }))
+                                .foregroundStyle(.foreground)
+                        }
+                    )
+                    .contextMenu(menuItems: {
                         NavigationLink(
-                            value: RecipeInteraction.showRecipe(recipe: recipe),
+                            value: RecipeInteraction.editRecipe(recipe: recipe),
                             label: {
-                                RecipeRowView(recipe: recipe, fulfillment: recipeFulfilments.first(where: { $0.recipeID == recipe.id }))
-                                    .foregroundStyle(.foreground)
+                                Label("Edit this item", systemImage: MySymbols.edit)
                             }
                         )
-                        .contextMenu(menuItems: {
-                            Button(
-                                action: {
-                                    recipeInteractionRouter.present(.editRecipe(recipe: recipe))
-                                },
-                                label: {
-                                    Label("Edit this item", systemImage: MySymbols.edit)
-                                }
-                            )
+                        if devMode {
                             Button(
                                 action: {
                                 },
@@ -198,104 +183,96 @@ struct RecipesView: View {
                                     Label("Add to meal plan", systemImage: MySymbols.new)
                                 }
                             )
-                            Button(
-                                role: .destructive,
-                                action: {
-                                    deleteItem(itemToDelete: recipe)
-                                },
-                                label: {
-                                    Label("Delete this item", systemImage: MySymbols.delete)
-                                }
-                            )
-                            Button(
-                                action: {
-                                    Task {
-                                        await copyRecipe(recipeID: recipe.id)
-                                    }
-                                },
-                                label: {
-                                    Label("Copy recipe", systemImage: "document.on.document")
-                                }
-                            )
-                        })
-                    }
-                }
-                .padding(8)
-            }
-            .navigationTitle("Recipes")
-            .navigationDestination(for: RecipeInteraction.self) { interaction in
-                switch interaction {
-                case .showRecipe(let recipe):
-                    RecipeView(initialRecipe: recipe)
-                        .environment(recipeInteractionRouter)
-                case .editRecipe(let recipe):
-                    RecipeFormView(existingRecipe: recipe)
-                        .environment(recipeInteractionRouter)
-                case .editIngredient(let ingredient, let recipe):
-                    RecipeIngredientFormView(existingIngredient: ingredient, recipe: recipe)
-                        .environment(recipeInteractionRouter)
-                case .editNesting(let nesting, let recipeID):
-                    NestedRecipeFormView(existingRecipeNesting: nesting, recipeID: recipeID)
-                }
-            }
-            .alert(
-                "Are you sure you want to delete recipe \"\(recipeToDelete?.name ?? "")\"?",
-                isPresented: $showDeleteConfirmation,
-                actions: {
-                    Button("Cancel", role: .cancel) {}
-                    Button("Delete", role: .destructive) {
-                        if let toDelID = recipeToDelete?.id {
-                            Task {
-                                await deleteRecipe(toDelID: toDelID)
+                        }
+                        Button(
+                            role: .destructive,
+                            action: {
+                                deleteItem(itemToDelete: recipe)
+                            },
+                            label: {
+                                Label("Delete this item", systemImage: MySymbols.delete)
                             }
+                        )
+                        Button(
+                            action: {
+                                Task {
+                                    await copyRecipe(recipeID: recipe.id)
+                                }
+                            },
+                            label: {
+                                Label("Copy recipe", systemImage: "document.on.document")
+                            }
+                        )
+                    })
+                }
+            }
+            .padding(8)
+        }
+        .navigationTitle("Recipes")
+        .navigationDestination(for: RecipeInteraction.self) { interaction in
+            switch interaction {
+            case .showRecipe(let recipe):
+                RecipeView(initialRecipe: recipe)
+            case .editRecipe(let recipe):
+                RecipeFormView(existingRecipe: recipe)
+            }
+        }
+        .alert(
+            "Are you sure you want to delete recipe \"\(recipeToDelete?.name ?? "")\"?",
+            isPresented: $showDeleteConfirmation,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    if let toDelID = recipeToDelete?.id {
+                        Task {
+                            await deleteRecipe(toDelID: toDelID)
                         }
                     }
                 }
-            )
-            .sheet(isPresented: $showAddRecipe) {
-                NavigationStack {
-                    RecipeFormView()
-                        .environment(recipeInteractionRouter)
+            }
+        )
+        .sheet(isPresented: $showAddRecipe) {
+            NavigationStack {
+                RecipeFormView()
+            }
+        }
+        .refreshable(action: {
+            await updateData()
+        })
+        .task {
+            await updateData()
+        }
+        .searchable(text: $searchString, prompt: "Search")
+        .animation(.default, value: recipes.count)
+        .toolbar {
+            ToolbarItem(
+                placement: .topBarLeading,
+                content: {
+                    sortMenu
                 }
-            }
-            .refreshable(action: {
-                await updateData()
-            })
-            .task {
-                await updateData()
-            }
-            .searchable(text: $searchString, prompt: "Search")
-            .animation(.default, value: recipes.count)
-            .toolbar {
-                ToolbarItem(
-                    placement: .topBarLeading,
-                    content: {
-                        sortMenu
-                    }
-                )
-                ToolbarItem(
-                    placement: .automatic,
-                    content: {
-                        #if os(macOS)
-                            RefreshButton(updateData: { Task { await updateData() } })
-                        #endif
-                    }
-                )
-                ToolbarSpacer(.fixed)
-                ToolbarItem(
-                    placement: .primaryAction,
-                    content: {
-                        Button(
-                            action: {
-                                showAddRecipe = true
-                            },
-                            label: {
-                                Label("Create recipe", systemImage: MySymbols.new)
-                            }
-                        )
-                    }
-                )
-            }
+            )
+            ToolbarItem(
+                placement: .automatic,
+                content: {
+                    #if os(macOS)
+                        RefreshButton(updateData: { Task { await updateData() } })
+                    #endif
+                }
+            )
+            ToolbarSpacer(.fixed)
+            ToolbarItem(
+                placement: .primaryAction,
+                content: {
+                    Button(
+                        action: {
+                            showAddRecipe = true
+                        },
+                        label: {
+                            Label("Create recipe", systemImage: MySymbols.new)
+                        }
+                    )
+                }
+            )
         }
     }
 

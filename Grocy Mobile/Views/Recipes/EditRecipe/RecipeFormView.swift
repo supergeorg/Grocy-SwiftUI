@@ -8,6 +8,13 @@
 import SwiftData
 import SwiftUI
 
+enum RecipeFormInteraction: Hashable, Identifiable {
+    case editIngredient(ingredient: RecipePos, recipe: Recipe)
+    case editNesting(nesting: RecipeNesting, recipeID: Int)
+
+    var id: Self { self }
+}
+
 struct RecipeFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
@@ -17,7 +24,9 @@ struct RecipeFormView: View {
     @Query var recipes: Recipes
 
     @Environment(\.dismiss) var dismiss
-    @Environment(RecipeInteractionNavigationRouter.self) private var recipeInteractionNavigationRouter
+
+    @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
+    @AppStorage("devMode") private var devMode: Bool = false
 
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
@@ -152,13 +161,19 @@ struct RecipeFormView: View {
             ProductField(productID: $recipe.productID, description: "Produces product", descriptionInfo: "When a product is selected, one unit (per serving in stock quantity unit) will be added to stock on consuming this recipe")
 
             if existingRecipe != nil {
+                if devMode && useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
+                    Section("Import Recipe") {
+
+                    }
+                }
+
                 Section(
                     content: {
                         ForEach(groupedRecipes.sorted(by: { $0.key < $1.key }), id: \.key) { (groupName, ingredients) in
                             Section {
                                 ForEach(ingredients, id: \.id) { ingredient in
                                     NavigationLink(
-                                        value: RecipeInteraction.editIngredient(ingredient: ingredient, recipe: recipe),
+                                        value: RecipeFormInteraction.editIngredient(ingredient: ingredient, recipe: recipe),
                                         label: {
                                             RecipeFormIngredientRowView(recipePos: ingredient, product: mdProducts.first(where: { $0.id == ingredient.productID }), quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }))
                                         }
@@ -195,7 +210,7 @@ struct RecipeFormView: View {
                     content: {
                         ForEach(nestedRecipes.sorted(by: { $0.recipeID < $1.recipeID }), id: \.id) { nesting in
                             NavigationLink(
-                                value: RecipeInteraction.editNesting(nesting: nesting, recipeID: nesting.includesRecipeID),
+                                value: RecipeFormInteraction.editNesting(nesting: nesting, recipeID: nesting.includesRecipeID),
                                 label: {
                                     NestedRecipeRowView(nesting: nesting, recipe: recipes.first(where: { $0.id == nesting.includesRecipeID }))
                                 }
@@ -248,7 +263,6 @@ struct RecipeFormView: View {
                             }) {
                                 Label("Edit", systemImage: "pencil.and.scribble")
                             }
-
                         }
                     },
                     label: {
@@ -259,6 +273,14 @@ struct RecipeFormView: View {
             }
         }
         .formStyle(.grouped)
+        .navigationDestination(for: RecipeFormInteraction.self) { interaction in
+            switch interaction {
+            case .editIngredient(let ingredient, let recipe):
+                RecipeIngredientFormView(existingIngredient: ingredient, recipe: recipe)
+            case .editNesting(let nesting, let recipeID):
+                NestedRecipeFormView(existingRecipeNesting: nesting, recipeID: recipeID)
+            }
+        }
         .task {
             await updateData()
             self.isFormCorrect = checkFormCorrect()
