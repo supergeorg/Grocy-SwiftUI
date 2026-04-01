@@ -16,15 +16,22 @@ private struct StatChip: View {
     let title: LocalizedStringKey
     let value: String
     var warning: LocalizedStringKey? = nil
+    var info: LocalizedStringKey
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
+
             Label(title, systemImage: icon)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(value)
-                .font(.headline.monospacedDigit())
-                .foregroundStyle(.primary)
+
+            HStack {
+                Text(value)
+                    .font(.headline.monospacedDigit())
+                    .foregroundStyle(.primary)
+                Spacer()
+                FieldDescription(description: info)
+            }
             if let warning {
                 Text(warning)
                     .font(.caption2)
@@ -70,7 +77,8 @@ private struct SettingsCard: View {
                 StatChip(
                     icon: MySymbols.energy,
                     title: "Energy",
-                    value: "\(summedCalories.formattedAmount) kcal"
+                    value: "\(summedCalories.formattedAmount) kcal",
+                    info: "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones"
                 )
                 StatChip(
                     icon: MySymbols.price,
@@ -78,7 +86,8 @@ private struct SettingsCard: View {
                     value: summedPrice,
                     warning: noPriceForOne
                         ? "No price information is available for at least one ingredient"
-                        : nil
+                        : nil,
+                    info: "per serving"
                 )
             }
         }
@@ -221,26 +230,30 @@ struct RecipeView: View {
                 groupedIngredients.sorted(by: { $0.key < $1.key }),
                 id: \.key
             ) { groupName, ingredients in
-                Section(groupName.isEmpty ? "Ingredients" : groupName) {
+                Section {
                     ForEach(
                         ingredients.sorted(by: { $0.productName < $1.productName }),
                         id: \.id
                     ) { ingredient in
                         RecipeIngredientRowView(
                             recipePos: ingredient,
-                            quantityUnit: mdQuantityUnits.first(where: {
-                                $0.id
-                                    == mdProducts.first(where: {
-                                        $0.id == ingredient.productID
-                                    })?.quIDStock
-                            })
+                            quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == ingredient.productID })?.quIDStock })
                         )
+                    }
+                } header: {
+                    if groupName.isEmpty {
+                        Text("Ingredients")
+                            .font(.title)
+                    } else {
+                        Text(groupName)
                     }
                 }
             }
-
-            Section("Preparation") {
+            Section {
                 HTMLPreviewView(htmlContent: $recipe.recipeDescription)
+            } header: {
+                Text("Preparation")
+                    .font(.title)
             }
         }
         .listStyle(.insetGrouped)
@@ -262,7 +275,9 @@ struct RecipeView: View {
             }
         }
         .alert(
-            Text("\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"),
+            Text(
+                "\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"
+            ),
             isPresented: $showConsumeAllNeeded,
             actions: {
                 Button("No", role: .cancel) {}

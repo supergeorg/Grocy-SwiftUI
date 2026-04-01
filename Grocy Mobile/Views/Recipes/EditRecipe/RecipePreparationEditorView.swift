@@ -61,7 +61,7 @@ struct RecipePreparationEditorView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .navigationTitle("Recipe Preparation")
+            .navigationTitle("Preparation")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

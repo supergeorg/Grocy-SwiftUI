@@ -11396,7 +11396,14 @@
       }
     },
     "Appearance" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aussehen"
+          }
+        }
+      }
     },
     "Apple Intelligence" : {
       "shouldTranslate" : false
@@ -15352,7 +15359,6 @@
       }
     },
     "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones" : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -36232,10 +36238,24 @@
       }
     },
     "Extract Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept extrahieren"
+          }
+        }
+      }
     },
     "Extracting recipe..." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrahiere Rezept…"
+          }
+        }
+      }
     },
     "Factor" : {
       "localizations" : {
@@ -38015,7 +38035,7 @@
       }
     },
     "HTML" : {
-
+      "shouldTranslate" : false
     },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
@@ -38152,10 +38172,24 @@
       }
     },
     "Image" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild"
+          }
+        }
+      }
     },
     "Import Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept importieren"
+          }
+        }
+      }
     },
     "In alphabetical order" : {
       "localizations" : {
@@ -39303,10 +39337,24 @@
       "shouldTranslate" : false
     },
     "Insert" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen"
+          }
+        }
+      }
     },
     "Insert Link" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link einfügen"
+          }
+        }
+      }
     },
     "Intelligenz aktiv..." : {
 
@@ -41249,10 +41297,24 @@
       }
     },
     "Link Details" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link Details"
+          }
+        }
+      }
     },
     "Link Text" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link-Text"
+          }
+        }
+      }
     },
     "Location" : {
       "localizations" : {
@@ -51192,10 +51254,16 @@
       }
     },
     "Paste recipe URL" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept-URL einfügen"
+          }
+        }
+      }
     },
     "per serving" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ca" : {
           "stringUnit" : {
@@ -52627,7 +52695,14 @@
       }
     },
     "Preview" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschau"
+          }
+        }
+      }
     },
     "Price" : {
       "localizations" : {
@@ -57056,10 +57131,14 @@
       }
     },
     "Recipe parsing" : {
-
-    },
-    "Recipe Preparation" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept-Verarbeitung"
+          }
+        }
+      }
     },
     "Recipes" : {
       "localizations" : {
