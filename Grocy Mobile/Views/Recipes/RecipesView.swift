@@ -243,7 +243,10 @@ struct RecipesView: View {
             await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")
-        .animation(.default, value: recipes.count)
+        .animation(.default, value: filteredStatus)
+        .animation(.default, value: sortOption)
+        .animation(.default, value: sortOrderKey)
+        .animation(.default, value: searchString)
         .toolbar {
             ToolbarItem(
                 placement: .topBarLeading,
