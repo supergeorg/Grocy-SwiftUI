@@ -160,9 +160,7 @@ struct SettingsAppView: View {
                         MyToggle(isOn: $enableQuickScan, description: "Quick Scan", icon: MySymbols.barcodeScan)
                         MyToggle(isOn: $enableStockOverview, description: "Stock overview", icon: MySymbols.stockOverview)
                         MyToggle(isOn: $enableShoppingList, description: "Shopping list", icon: MySymbols.shoppingList)
-                        if devMode {
-                            MyToggle(isOn: $enableRecipes, description: "Recipes", icon: MySymbols.recipe)
-                        }
+                        MyToggle(isOn: $enableRecipes, description: "Recipes", icon: MySymbols.recipe)
                         MyToggle(isOn: $enableChores, description: "Chores overview", icon: MySymbols.chores)
                         MyToggle(isOn: $enableTasks, description: "Tasks", icon: MySymbols.tasks)
                         MyToggle(isOn: $enableMasterData, description: "Master data", icon: MySymbols.masterData)

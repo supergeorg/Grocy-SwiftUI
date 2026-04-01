@@ -83,15 +83,13 @@ struct AppTabNavigation: View {
             .customizationID("georgappdev.Grocy.shoppingList")
             .hidden(systemConfig?.featureFlagShoppinglist == false || !enableShoppingList)
 
-            if devMode {
-                Tab("Recipes", systemImage: MySymbols.recipe, value: TabNavigationItem.recipes) {
-                    NavigationStack {
-                        RecipesView()
-                    }
+            Tab("Recipes", systemImage: MySymbols.recipe, value: TabNavigationItem.recipes) {
+                NavigationStack {
+                    RecipesView()
                 }
-                .customizationID("georgappdev.Grocy.recipes")
-                .hidden(systemConfig?.featureFlagRecipes == false || !enableRecipes)
             }
+            .customizationID("georgappdev.Grocy.recipes")
+            .hidden(systemConfig?.featureFlagRecipes == false || !enableRecipes)
 
             Tab("Chores overview", systemImage: MySymbols.chores, value: TabNavigationItem.chores) {
                 NavigationStack {

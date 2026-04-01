@@ -44,11 +44,11 @@ struct Sidebar: View {
 
             Section {
                 if !(systemConfig?.featureFlagRecipes == false) {
-                    if devMode {
-                        NavigationLink(value: NavigationItem.recipes) {
-                            Label("Recipes", systemImage: MySymbols.recipe)
-                        }
+                    NavigationLink(value: NavigationItem.recipes) {
+                        Label("Recipes", systemImage: MySymbols.recipe)
+                    }
 
+                    if devMode {
                         NavigationLink(value: NavigationItem.mealPlan) {
                             Label("Meal plan", systemImage: MySymbols.date)
                         }
