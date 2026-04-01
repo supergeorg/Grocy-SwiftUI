@@ -135,6 +135,26 @@ struct RecipeFormView: View {
         isProcessing = false
     }
 
+    private func deleteNesting(nestingToDelete: RecipeNesting) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .recipes_nestings, id: nestingToDelete.id)
+            GrocyLogger.info("Deleting recipe nesting was successful.")
+            await updateData()
+        } catch {
+            GrocyLogger.error("Deleting recipe nesting failed. \(error)")
+        }
+    }
+
+    private func deleteIngredient(ingredientToDelete: RecipePos) async {
+        do {
+            try await grocyVM.deleteMDObject(object: .recipes_pos, id: ingredientToDelete.id)
+            GrocyLogger.info("Deleting ingredient was successful.")
+            await updateData()
+        } catch {
+            GrocyLogger.error("Deleting ingredient failed. \(error)")
+        }
+    }
+
     var body: some View {
         Form {
             if isSuccessful == false, let errorMessage = errorMessage {
@@ -182,6 +202,21 @@ struct RecipeFormView: View {
                                             RecipeFormIngredientRowView(recipePos: ingredient, product: mdProducts.first(where: { $0.id == ingredient.productID }), quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }))
                                         }
                                     )
+                                    .swipeActions(
+                                        edge: .trailing,
+                                        allowsFullSwipe: true,
+                                        content: {
+                                            Button(
+                                                role: .destructive,
+                                                action: {
+                                                    Task {
+                                                        await deleteIngredient(ingredientToDelete: ingredient)
+                                                    }
+                                                },
+                                                label: { Label("Delete", systemImage: MySymbols.delete) }
+                                            )
+                                        }
+                                    )
                                 }
                             } header: {
                                 if !groupName.isEmpty {
@@ -217,6 +252,21 @@ struct RecipeFormView: View {
                                 value: RecipeFormInteraction.editNesting(nesting: nesting, recipeID: nesting.includesRecipeID),
                                 label: {
                                     NestedRecipeRowView(nesting: nesting, recipe: recipes.first(where: { $0.id == nesting.includesRecipeID }))
+                                }
+                            )
+                            .swipeActions(
+                                edge: .trailing,
+                                allowsFullSwipe: true,
+                                content: {
+                                    Button(
+                                        role: .destructive,
+                                        action: {
+                                            Task {
+                                                await deleteNesting(nestingToDelete: nesting)
+                                            }
+                                        },
+                                        label: { Label("Delete", systemImage: MySymbols.delete) }
+                                    )
                                 }
                             )
                         }
