@@ -34,12 +34,15 @@ struct RecipeFormView: View {
     @State private var isPictureExpanded: Bool = false
     @State private var isPreparationExpanded: Bool = false
 
+    @State private var continueEditing: Bool = false
+
     @State private var showAddRecipeIngredient: Bool = false
     @State private var showAddNestedRecipe: Bool = false
     @State private var showPreparationEditor: Bool = false
 
-    var existingRecipe: Recipe?
-    @State var recipe: Recipe
+    @State private var existingRecipe: Recipe?
+    @State private var recipe: Recipe
+    @State private var createdRecipeID: Int? = nil
 
     var groupedRecipes: [String: [RecipePos]] {
         let sortDescriptor = SortDescriptor<RecipePos>(\.ingredientGroup)
@@ -85,8 +88,8 @@ struct RecipeFormView: View {
     }
 
     init(existingRecipe: Recipe? = nil) {
-        self.existingRecipe = existingRecipe
-        self.recipe = existingRecipe ?? Recipe()
+        _existingRecipe = State(initialValue: existingRecipe)
+        _recipe = State(initialValue: existingRecipe ?? Recipe())
     }
 
     private let dataToUpdate: [ObjectEntities] = [.products, .recipes_nestings, .recipes_pos, .quantity_units]
@@ -112,7 +115,8 @@ struct RecipeFormView: View {
         do {
             try recipe.modelContext?.save()
             if existingRecipe == nil {
-                _ = try await grocyVM.postMDObject(object: .recipes, content: recipe)
+                let successfulCreationMessage = try await grocyVM.postMDObject(object: .recipes, content: recipe)
+                createdRecipeID = successfulCreationMessage.createdObjectID
             } else {
                 try await grocyVM.putMDObjectWithID(object: .recipes, id: recipe.id, content: recipe)
             }
@@ -309,7 +313,7 @@ struct RecipeFormView: View {
             }
         )
         .toolbar(content: {
-            if existingRecipe == nil {
+            if existingRecipe == nil || continueEditing == true {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {
@@ -323,19 +327,20 @@ struct RecipeFormView: View {
                     }
                 )
             }
-            ToolbarItem(
+            ToolbarItemGroup(
                 placement: .confirmationAction,
                 content: {
                     Button(
                         role: .confirm,
                         action: {
+                            continueEditing = false
                             Task {
                                 await saveRecipe()
                             }
                         },
                         label: {
                             if !isProcessing {
-                                Label("Save", systemImage: MySymbols.save)
+                                Label("Save & return to recipes", systemImage: MySymbols.save)
                                     .labelStyle(.titleAndIcon)
                             } else {
                                 ProgressView().progressViewStyle(.circular)
@@ -344,11 +349,39 @@ struct RecipeFormView: View {
                     )
                     .disabled(!isFormCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)
+
+                    if existingRecipe == nil {
+                        Button(
+                            role: .confirm,
+                            action: {
+                                continueEditing = true
+                                Task {
+                                    await saveRecipe()
+                                }
+                            },
+                            label: {
+                                if !isProcessing {
+                                    Label("Save & continue", systemImage: MySymbols.forward)
+                                        .labelStyle(.titleAndIcon)
+                                } else {
+                                    ProgressView().progressViewStyle(.circular)
+                                }
+                            }
+                        )
+                        .disabled(!isFormCorrect || isProcessing)
+                    }
                 }
             )
         })
         .onChange(of: isSuccessful) {
-            if isSuccessful == true {
+            guard isSuccessful == true else { return }
+            if continueEditing,
+                let createdID = createdRecipeID,
+                let found = recipes.first(where: { $0.id == createdID })
+            {
+                existingRecipe = found
+                recipe = found
+            } else if !continueEditing {
                 finishForm()
             }
         }

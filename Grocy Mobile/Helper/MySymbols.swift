@@ -126,4 +126,5 @@ nonisolated struct MySymbols {
     static let dismissKeyboard = "keyboard.chevron.compact.down"
     static let htmlCode = "chevron.left.slash.chevron.right"
     static let preview = "eye"
+    static let forward = "arrow.forward"
 }
