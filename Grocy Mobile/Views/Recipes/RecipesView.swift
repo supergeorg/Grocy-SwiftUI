@@ -48,6 +48,7 @@ struct RecipesView: View {
 
     @AppStorage("devMode") private var devMode: Bool = false
 
+    @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
     @State private var recipeToDelete: Recipe? = nil
@@ -241,6 +242,11 @@ struct RecipesView: View {
         })
         .task {
             await updateData()
+            initialLoadDone = true
+        }
+        .onAppear {
+            guard !initialLoadDone else { return }
+            Task { await updateData() }
         }
         .searchable(text: $searchString, prompt: "Search")
         .animation(.default, value: filteredStatus)
