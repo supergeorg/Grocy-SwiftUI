@@ -26,4 +26,14 @@ struct ProductOpen: Codable {
         case stockEntryID = "stock_entry_id"
         case allowSubproductSubstitution = "allow_subproduct_substitution"
     }
+
+    init(
+        amount: Double,
+        stockEntryID: String? = nil,
+        allowSubproductSubstitution: Bool? = nil
+    ) {
+        self.amount = amount
+        self.stockEntryID = stockEntryID
+        self.allowSubproductSubstitution = allowSubproductSubstitution
+    }
 }

@@ -50,4 +50,24 @@ struct ProductConsume: Codable {
         case exactAmount = "exact_amount"
         case allowSubproductSubstitution = "allow_subproduct_substitution"
     }
+
+    init(
+        amount: Double,
+        transactionType: TransactionType = .consume,
+        spoiled: Bool = false,
+        stockEntryID: String? = nil,
+        recipeID: Int? = nil,
+        locationID: Int? = nil,
+        exactAmount: Bool? = nil,
+        allowSubproductSubstitution: Bool? = nil
+    ) {
+        self.amount = amount
+        self.transactionType = transactionType
+        self.spoiled = spoiled
+        self.stockEntryID = stockEntryID
+        self.recipeID = recipeID
+        self.locationID = locationID
+        self.exactAmount = exactAmount
+        self.allowSubproductSubstitution = allowSubproductSubstitution
+    }
 }

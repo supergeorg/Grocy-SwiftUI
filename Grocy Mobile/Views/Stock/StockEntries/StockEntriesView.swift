@@ -45,7 +45,12 @@ struct StockEntriesView: View {
             try await grocyVM.postStockObject(
                 id: stockEntry.productID,
                 stockModePost: .consume,
-                content: ProductConsume(amount: stockEntry.amount, transactionType: .consume, spoiled: false, stockEntryID: stockEntry.stockID, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)
+                content: ProductConsume(
+                    amount: mdProducts.first(where: { $0.id == stockEntry.productID })?.quickConsumeAmount ?? stockEntry.amount,
+                    transactionType: .consume,
+                    spoiled: false,
+                    stockEntryID: stockEntry.stockID
+                )
             )
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await updateData()
@@ -56,7 +61,14 @@ struct StockEntriesView: View {
 
     private func openEntry(stockEntry: StockEntry) async {
         do {
-            try await grocyVM.postStockObject(id: stockEntry.productID, stockModePost: .open, content: ProductOpen(amount: stockEntry.amount, stockEntryID: stockEntry.stockID, allowSubproductSubstitution: nil))
+            try await grocyVM.postStockObject(
+                id: stockEntry.productID,
+                stockModePost: .open,
+                content: ProductOpen(
+                    amount: mdProducts.first(where: { $0.id == stockEntry.productID })?.quickOpenAmount ?? stockEntry.amount,
+                    stockEntryID: stockEntry.stockID,
+                )
+            )
             await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
             await updateData()
         } catch {
@@ -80,43 +92,43 @@ struct StockEntriesView: View {
                     currency: systemConfig?.currency,
                     userSettings: userSettings
                 )
-                    .swipeActions(
-                        edge: .leading,
-                        allowsFullSwipe: true,
-                        content: {
-                            Button(
-                                action: {
-                                    Task {
-                                        await openEntry(stockEntry: stockEntry)
-                                    }
-                                },
-                                label: {
-                                    Label("Open", systemImage: MySymbols.open)
+                .swipeActions(
+                    edge: .leading,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            action: {
+                                Task {
+                                    await openEntry(stockEntry: stockEntry)
                                 }
-                            )
-                            .tint(Color(.GrocyColors.grocyBlue))
-                            .help("Mark this stock entry as open")
-                            .disabled(stockEntry.stockEntryOpen)
-                        }
-                    )
-                    .swipeActions(
-                        edge: .trailing,
-                        allowsFullSwipe: true,
-                        content: {
-                            Button(
-                                action: {
-                                    Task {
-                                        await consumeEntry(stockEntry: stockEntry)
-                                    }
-                                },
-                                label: {
-                                    Label("Consume", systemImage: MySymbols.consume)
+                            },
+                            label: {
+                                Label("Open", systemImage: MySymbols.open)
+                            }
+                        )
+                        .tint(Color(.GrocyColors.grocyBlue))
+                        .help("Mark this stock entry as open")
+                        .disabled(stockEntry.stockEntryOpen)
+                    }
+                )
+                .swipeActions(
+                    edge: .trailing,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            action: {
+                                Task {
+                                    await consumeEntry(stockEntry: stockEntry)
                                 }
-                            )
-                            .tint(Color(.GrocyColors.grocyDelete))
-                            .help("Consume this stock entry")
-                        }
-                    )
+                            },
+                            label: {
+                                Label("Consume", systemImage: MySymbols.consume)
+                            }
+                        )
+                        .tint(Color(.GrocyColors.grocyDelete))
+                        .help("Consume this stock entry")
+                    }
+                )
             }
         }
         #if os(macOS)
