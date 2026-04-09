@@ -43,7 +43,7 @@ class StockElement: Codable, Equatable {
             self.value = try container.decodeFlexibleDouble(forKey: .value)
             self.bestBeforeDate = getDateFromString(try container.decodeIfPresent(String.self, forKey: .bestBeforeDate)) ?? Date.neverOverdue
             self.amountOpened = try container.decodeFlexibleDouble(forKey: .amountOpened)
-            self.amountOpenedAggregated = try container.decodeFlexibleDouble(forKey: .amountAggregated)
+            self.amountOpenedAggregated = try container.decodeFlexibleDouble(forKey: .amountOpenedAggregated)
             self.isAggregatedAmount = try container.decodeFlexibleBool(forKey: .isAggregatedAmount)
             self.dueType = DueType(rawValue: try container.decodeFlexibleInt(forKey: .dueType))!
             self.productID = try container.decodeFlexibleInt(forKey: .productID)
