@@ -31,6 +31,7 @@ nonisolated struct MySymbols {
     static let picture = "photo"
     static let gallery = "photo.on.rectangle.angled"
     static let user = "person"
+    static let parentProduct = "rectangle.stack"
 
     static let amount = "number.circle"
     static let price = "banknote"

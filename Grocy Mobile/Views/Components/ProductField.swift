@@ -56,6 +56,7 @@ struct ProductField: View {
     @Binding var productID: Int?
     var description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey?
+    var icon: String = MySymbols.product
 
     @State private var searchTerm: String = ""
     #if os(iOS)
@@ -101,7 +102,7 @@ struct ProductField: View {
             Picker(
                 selection: $productID,
                 label: HStack {
-                    Label(description, systemImage: MySymbols.product).foregroundStyle(.primary)
+                    Label(description, systemImage: icon).foregroundStyle(.primary)
                     if let descriptionInfo {
                         FieldDescription(description: descriptionInfo)
                     }

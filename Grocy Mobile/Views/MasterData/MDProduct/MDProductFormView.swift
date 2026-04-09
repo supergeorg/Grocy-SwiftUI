@@ -468,7 +468,7 @@ struct MDProductFormView: View {
             MyToggle(isOn: $product.active, description: "Active", descriptionInfo: nil, icon: "checkmark.circle")
 
             // Parent Product
-            ProductField(productID: $product.parentProductID, description: "Parent product")
+            ProductField(productID: $product.parentProductID, description: "Parent product", icon: MySymbols.parentProduct)
 
             // Product Description
             MyTextField(textToEdit: $product.mdProductDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
