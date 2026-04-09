@@ -384,6 +384,7 @@ struct StockView: View {
                             shoppingList: shoppingList,
                             mdProductGroups: mdProductGroups,
                             volatileStock: volatileStock,
+                            parentProduct: mdProducts.first(where: { $0.id == stockElement.product?.parentProductID }),
                             userSettings: userSettings
                         )
                     }

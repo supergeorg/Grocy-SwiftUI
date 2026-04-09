@@ -24,6 +24,7 @@ struct StockTableRow: View {
     let shoppingList: [ShoppingListItem]
     let mdProductGroups: MDProductGroups
     let volatileStock: VolatileStock?
+    let parentProduct: MDProduct?
     let userSettings: GrocyUserSettings?
 
     @State private var showDetailView: Bool = false
@@ -123,12 +124,25 @@ struct StockTableRow: View {
     }
 
     var stockElementDetails: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 5.0) {
+            // Product group
             if let productGroup = mdProductGroups.first(where: { $0.id == stockElement.product?.productGroupID }) {
-                Text(productGroup.name)
-                    .font(.caption)
-            } else {
-                Text("")
+                HStack {
+                    Image(systemName: MySymbols.productGroup)
+                    Text(productGroup.name)
+                }
+                .font(.caption)
+                .foregroundStyle(.primary)
+            }
+
+            // Parent product
+            if let parentProduct {
+                HStack {
+                    Image(systemName: MySymbols.parentProduct)
+                    Text(parentProduct.name)
+                }
+                .font(.caption)
+                .foregroundStyle(.primary)
             }
 
             HStack {
