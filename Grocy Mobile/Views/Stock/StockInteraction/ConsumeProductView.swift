@@ -29,6 +29,27 @@ struct ConsumeProductView: View {
         allRecipes.filter { $0.type == .normal }
     }
 
+    // Child products of the selected product
+    var childProducts: MDProducts {
+        guard let productID else { return [] }
+        return mdProducts.filter { $0.parentProductID == productID }
+    }
+
+    // All consumable products: the parent product and its children
+    var consumableProducts: MDProducts {
+        var products = [product].compactMap { $0 }
+        products.append(contentsOf: childProducts)
+        return products
+    }
+
+    // Stock entries for all consumable products
+    var stockEntriesForConsumableProducts: StockEntries {
+        guard let productID else { return [] }
+        return allStockProductEntries.filter { entry in
+            entry.productID == productID || childProducts.contains { $0.id == entry.productID }
+        }
+    }
+
     @Environment(\.dismiss) var dismiss
 
     @AppStorage("localizationKey") var localizationKey: String = "en"
@@ -110,15 +131,15 @@ struct ConsumeProductView: View {
     }
 
     private var maxAmount: Double? {
-        var maxAmount: Double = 0
-        let filtEntries =
-            stockProductEntries
-            .filter({ $0.productID == productID })
-            .filter({ $0.locationID == locationID })
-        for filtEntry in filtEntries {
-            maxAmount += filtEntry.amount
+        var totalAmount: Double = 0
+        let childProductIDs = childProducts.map { $0.id }
+        let filtEntries = allStockProductEntries.filter { entry in
+            (entry.productID == productID || childProductIDs.contains(entry.productID)) && entry.locationID == locationID
         }
-        return maxAmount
+        for filtEntry in filtEntries {
+            totalAmount += filtEntry.amount
+        }
+        return totalAmount
     }
 
     private let priceFormatter = NumberFormatter()
@@ -127,24 +148,33 @@ struct ConsumeProductView: View {
         return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != -1) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
     }
 
-    private var stockEntriesForLocation: StockEntries {
-        if let productID = productID {
-            if locationID != -1 {
-                return
-                    stockProductEntries
-                    .filter({ $0.productID == productID })
-                    .filter({ $0.locationID == locationID })
-            } else {
-                return stockProductEntries.filter({ $0.productID == productID })
+    /// Determines the actual product ID for the transaction
+    /// When a specific stock entry is selected from a child product, returns the child product ID
+    /// Otherwise returns the selected product ID
+    private var transactionProductID: Int? {
+        if useSpecificStockEntry, let stockEntryID = stockEntryID {
+            // Find which product owns this stock entry
+            if let stockEntry = allStockProductEntries.first(where: { $0.stockID == stockEntryID }) {
+                return stockEntry.productID
             }
-        } else {
-            return []
         }
+        return productID
+    }
+
+    private var stockEntriesForLocation: StockEntries {
+        let entries =
+            locationID != -1
+            ? stockEntriesForConsumableProducts.filter { $0.locationID == locationID }
+            : stockEntriesForConsumableProducts
+        return entries
     }
 
     private func getAmountForLocation(lID: Int) -> Double {
         var maxAmount: Double = 0
-        let filtEntries = stockProductEntries.filter({ $0.productID == productID }).filter { $0.locationID == lID }
+        let childProductIDs = childProducts.map { $0.id }
+        let filtEntries = allStockProductEntries.filter { entry in
+            (entry.productID == productID || childProductIDs.contains(entry.productID)) && entry.locationID == lID
+        }
         for filtEntry in filtEntries {
             maxAmount += filtEntry.amount
         }
@@ -164,12 +194,12 @@ struct ConsumeProductView: View {
     }
 
     private func openProduct() async {
-        if let productID = productID {
-            let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: nil)
+        if let transactionProductID = transactionProductID {
+            let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: true)
             isProcessingAction = true
             isSuccessful = nil
             do {
-                try await grocyVM.postStockObject(id: productID, stockModePost: .open, content: openInfo)
+                try await grocyVM.postStockObject(id: transactionProductID, stockModePost: .open, content: openInfo)
                 GrocyLogger.info("Opening successful.")
                 await grocyVM.requestData(additionalObjects: [.stock])
                 isSuccessful = true
@@ -192,21 +222,21 @@ struct ConsumeProductView: View {
     }
 
     private func consumeProduct() async {
-        if let productID = productID {
-            let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: nil)
+        if let transactionProductID = transactionProductID {
+            let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: true)
             isProcessingAction = true
             isSuccessful = nil
             var shlActionSuccessful: Bool = false
             do {
-                try await grocyVM.postStockObject(id: productID, stockModePost: .consume, content: consumeInfo)
+                try await grocyVM.postStockObject(id: transactionProductID, stockModePost: .consume, content: consumeInfo)
                 GrocyLogger.info("Consume \(amount.formattedAmount) \(productName) successful.")
                 if let autoAddBelowMinStock = userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
-                        GrocyLogger.info("SHLAction successful.")
+                        GrocyLogger.info("Consume product successful.")
                         await grocyVM.requestData(objects: [.shopping_list])
                     } catch {
-                        GrocyLogger.error("SHLAction failed. \(error)")
+                        GrocyLogger.error("Consume product failed. \(error)")
                         shlActionSuccessful = false
                         if let apiError = error as? APIError {
                             errorMessage = apiError.displayMessage
@@ -260,6 +290,9 @@ struct ConsumeProductView: View {
                             amount = userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
                         }
                     }
+                    // Clear specific stock entry when product changes
+                    stockEntryID = nil
+                    useSpecificStockEntry = false
                 }
 
             if productID != nil {
@@ -280,8 +313,8 @@ struct ConsumeProductView: View {
                             let isDisabled =
                                 useSpecificStockEntry
                                 && productID != nil
-                                && !stockProductEntries.contains(where: {
-                                    $0.productID == productID && $0.locationID == location.id
+                                && !stockEntriesForConsumableProducts.contains(where: {
+                                    $0.locationID == location.id
                                 })
 
                             if location.id == product?.defaultConsumeLocationID {
@@ -328,6 +361,12 @@ struct ConsumeProductView: View {
                             descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
                             icon: "tag"
                         )
+                        .onChange(of: useSpecificStockEntry) {
+                            // Clear stockEntryID when toggling off
+                            if !useSpecificStockEntry {
+                                stockEntryID = nil
+                            }
+                        }
                     }
                 }
 
@@ -339,9 +378,21 @@ struct ConsumeProductView: View {
                             content: {
                                 Text("").tag(nil as String?)
                                 ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
-                                    VStack(alignment: .leading) {
-                                        Text("\(Text("Amount")): \(stockProduct.amount.formattedAmount); ")
-                                        Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?")")
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        // Show product name if entry is from a child product
+                                        if childProducts.contains(where: { $0.id == stockProduct.productID }) {
+                                            if let childProductName = mdProducts.first(where: { $0.id == stockProduct.productID })?.name {
+                                                Text(childProductName)
+                                                    .font(.title2)
+                                                    .foregroundStyle(.primary)
+                                            }
+                                        }
+                                        Text("\(Text("Amount")): \(stockProduct.amount.formattedAmount)")
+                                        if stockProduct.bestBeforeDate == Date.neverOverdue {
+                                            Text("Never overdue")
+                                        } else {
+                                            Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?")")
+                                        }
                                         Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
                                         if !stockProduct.note.isEmpty {
                                             Text("\(Text("Note")): \(stockProduct.note)")
