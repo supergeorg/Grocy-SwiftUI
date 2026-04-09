@@ -250,6 +250,7 @@ struct StockView: View {
         let sortSetting = self.sortSetting
         let stock = self.stock
         let missingStock = self.missingStock
+        let productNamesByID = Dictionary(uniqueKeysWithValues: mdProducts.map { ($0.id, $0.name) })
 
         filterComputationTask = Task {
             // Run computation on main thread to avoid Sendable/ModelContext issues
@@ -263,10 +264,13 @@ struct StockView: View {
                 guard !(element.product?.hideOnStockOverview ?? false) else { continue }
 
                 // Search filter
-                if !searchString.isEmpty,
-                    !(element.product?.name.localizedStandardContains(searchString) ?? false)
-                {
-                    continue
+                if !searchString.isEmpty {
+                    let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
+                    let parentProductNameMatches = element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
+                    
+                    if !productNameMatches && !parentProductNameMatches {
+                        continue
+                    }
                 }
 
                 // Product group filter
