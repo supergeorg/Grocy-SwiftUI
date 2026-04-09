@@ -183,7 +183,7 @@ struct StockJournalView: View {
         }
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.stock_log, .products, .locations]
+    private let dataToUpdate: [ObjectEntities] = [.stock_log, .products, .locations, .quantity_units]
     private let additionalDataToUpdate: [AdditionalEntities] = [.users]
 
     private func updateData() async {
@@ -214,7 +214,7 @@ struct StockJournalView: View {
                     journalEntry: journalEntry,
                     product: mdProducts.first(where: { $0.id == journalEntry.productID }),
                     location: mdLocations.first(where: { $0.id == journalEntry.locationID }),
-                    quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == journalEntry.productID })?.locationID }),
+                    quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == journalEntry.productID })?.quIDStock }),
                     grocyUser: grocyUsers.first(where: { $0.id == journalEntry.userID })
                 )
                 .swipeActions(
