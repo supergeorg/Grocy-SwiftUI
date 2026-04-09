@@ -109,18 +109,6 @@ struct ConsumeProductView: View {
         return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID && $0.toQuID == product?.quIDStock })?.factor ?? 1)
     }
 
-    private var filteredLocations: MDLocations {
-        if useSpecificStockEntry, let productID = productID {
-            return mdLocations.filter { location in
-                stockProductEntries.contains(where: {
-                    $0.productID == productID && $0.locationID == locationID
-                })
-            }
-        } else {
-            return mdLocations
-        }
-    }
-
     private var maxAmount: Double? {
         var maxAmount: Double = 0
         let filtEntries =
@@ -288,13 +276,22 @@ struct ConsumeProductView: View {
                     content: {
                         Text("")
                             .tag(-1 as Int)
-                        ForEach(filteredLocations, id: \.id) { location in
+                        ForEach(mdLocations, id: \.id) { location in
+                            let isDisabled =
+                                useSpecificStockEntry
+                                && productID != nil
+                                && !stockProductEntries.contains(where: {
+                                    $0.productID == productID && $0.locationID == location.id
+                                })
+
                             if location.id == product?.defaultConsumeLocationID {
                                 Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount)) (\(Text("Default consume location")))")
                                     .tag(location.id as Int)
+                                    .disabled(isDisabled)
                             } else {
                                 Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
                                     .tag(location.id as Int)
+                                    .disabled(isDisabled)
                             }
                         }
                     }
