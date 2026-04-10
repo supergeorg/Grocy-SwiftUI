@@ -534,9 +534,9 @@ struct MDProductFormView: View {
             Picker(
                 selection: $product.locationID,
                 content: {
-                    Text("").tag(-1 as Int?)
+                    Text("").tag(-1)
                     ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
-                        Text(grocyLocation.name).tag(grocyLocation.id as Int?)
+                        Text(grocyLocation.name).tag(grocyLocation.id)
                     }
                 },
                 label: {

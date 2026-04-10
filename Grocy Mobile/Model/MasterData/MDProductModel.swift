@@ -198,7 +198,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         shouldNotBeFrozen: Bool = false,
         treatOpenedAsOutOfStock: Bool = false,
         noOwnStock: Bool = false,
-        defaultConsumeLocationID: Int? = nil,
+        defaultConsumeLocationID: Int? = -1,
         moveOnOpen: Bool = false,
         autoReprintStockLabel: Bool = false,
         rowCreatedTimestamp: Date = Date()
