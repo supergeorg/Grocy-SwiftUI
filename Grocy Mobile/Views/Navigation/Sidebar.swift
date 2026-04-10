@@ -188,11 +188,12 @@ struct Sidebar: View {
         #if os(iOS)
             .toolbar(content: {
                 ToolbarItem(
-                    placement: .topBarLeading,
+                    placement: .principal,
                     content: {
                         Image("grocy-logo")
                             .resizable()
-                            .scaledToFit()
+                            .scaledToFill()
+                            .frame(height: 28)
                     }
                 )
             })
@@ -200,6 +201,8 @@ struct Sidebar: View {
         #if os(macOS)
             .navigationSplitViewColumnWidth(min: 200, ideal: 200)
         #endif
+        .navigationTitle("Grocy Mobile")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
