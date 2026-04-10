@@ -208,10 +208,11 @@ struct StockView: View {
         // Build product lookup on main thread
         let productsByID = Dictionary(uniqueKeysWithValues: mdProducts.map { ($0.id, $0) })
         let missingProducts = volatileStock?.missingProducts ?? []
+        let stockProductIDs = Set(stock.map { $0.productID })
 
         missingStockUpdateTask = Task {
             if !Task.isCancelled {
-                self.cachedMissingStock = missingProducts.filter { !$0.isPartlyInStock }.compactMap { missingProduct in
+                self.cachedMissingStock = missingProducts.filter { !$0.isPartlyInStock && !stockProductIDs.contains($0.productID) }.compactMap { missingProduct in
                     guard let product = productsByID[missingProduct.productID] else { return nil }
                     return StockElement(
                         amount: 0,
