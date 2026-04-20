@@ -164,9 +164,9 @@ class GrocyViewModel {
     }
 
     func setDemoModus() {
-        isDemoModus = true
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "", customHeaders: [:])
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
+        isDemoModus = true
         isLoggedIn = true
         self.setUpdateTimer()
         GrocyLogger.info("Switched to demo modus")
@@ -195,6 +195,7 @@ class GrocyViewModel {
     func logout() {
         self.stopUpdateTimer()
         grocyApi.clearHassData()
+        grocyApi.clearLoginData()
         self.deleteAllCachedData()
         isLoggedIn = false
     }
@@ -290,11 +291,14 @@ class GrocyViewModel {
     }
 
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
+        // Guard against calling API before initialization is complete
+        guard grocyApi.isLoggedIn else { return }
+
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
             await self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
         } catch {
-            GrocyLogger.error("Getting timestamp failed. Message: \("\(error)")")
+            GrocyLogger.error("Getting timestamp failed. Message: \(error)")
         }
     }
 
@@ -813,7 +817,7 @@ class GrocyViewModel {
         let jsonContent = try! jsonEncoder.encode(content)
         try await grocyApi.addNotFulfilledProductsToShoppinglist(id: recipeID, content: jsonContent)
     }
-    
+
     func consumeRecipe(recipeID: Int) async throws {
         try await grocyApi.recipeConsume(id: recipeID)
     }

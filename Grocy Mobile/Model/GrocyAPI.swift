@@ -65,7 +65,9 @@ struct EmptyResponse: Codable {
 
 @MainActor
 protocol GrocyAPI {
+    var isLoggedIn: Bool { get }
     func setLoginData(baseURL: String, apiKey: String, customHeaders: [String: String])
+    func clearLoginData()
     func setHassData(hassURL: String, hassToken: String) async
     func clearHassData()
     func setTimeoutInterval(timeoutInterval: Double)
@@ -132,10 +134,25 @@ public class GrocyApi: GrocyAPI {
     private var apiKey: String = ""
     private var customHeaders: [String: String] = [:]
 
+    var isLoggedIn: Bool = false
+
     func setLoginData(baseURL: String, apiKey: String, customHeaders: [String: String] = [:]) {
+        // Validate that baseURL is not empty and is a valid URL
+        guard !baseURL.trimmingCharacters(in: .whitespaces).isEmpty else {
+            GrocyLogger.error("setLoginData called with empty baseURL")
+            return
+        }
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.customHeaders = customHeaders
+        self.isLoggedIn = true
+    }
+
+    func clearLoginData() {
+        self.baseURL = ""
+        self.apiKey = ""
+        self.customHeaders.removeAll()
+        self.isLoggedIn = false
     }
 
     func setHassData(hassURL: String, hassToken: String) {
@@ -388,8 +405,26 @@ public class GrocyApi: GrocyAPI {
         queries: [String]? = nil,
         hassIngressToken: String? = nil
     ) -> URLRequest {
-        if self.baseURL.hasSuffix("/") { self.baseURL = String(self.baseURL.dropLast()) }
-        var path = "\(self.baseURL)\(self.baseURL.hasSuffix("/api") ? "" : "/api")\(endpoint.rawValue)"
+        // Normalize baseURL without mutating the property
+        var normalizedBaseURL = self.baseURL
+        if normalizedBaseURL.hasSuffix("/") { normalizedBaseURL = String(normalizedBaseURL.dropLast()) }
+
+        // Validate that baseURL is set and not empty to prevent relative URLs
+        if normalizedBaseURL.trimmingCharacters(in: .whitespaces).isEmpty {
+            GrocyLogger.error("GrocyAPI: baseURL is not set. Call setLoginData() first before making API requests.")
+            // Return a request with a placeholder URL to prevent silent failures
+            // This will fail gracefully when executed, rather than creating an invalid relative URL
+            var request = URLRequest(url: URL(string: "about:blank")!)
+            request.timeoutInterval = self.timeoutInterval
+            return request
+        }
+
+        // Build the complete path with proper URL construction
+        var path = normalizedBaseURL
+        if !path.hasSuffix("/api") {
+            path.append("/api")
+        }
+        path.append(endpoint.rawValue)
         if path.contains("{entity}") { path = path.replacingOccurrences(of: "{entity}", with: object!.rawValue) }
         if path.contains("{objectId}") { path = path.replacingOccurrences(of: "{objectId}", with: id!) }
         if path.contains("{userId}") { path = path.replacingOccurrences(of: "{userId}", with: id!) }
