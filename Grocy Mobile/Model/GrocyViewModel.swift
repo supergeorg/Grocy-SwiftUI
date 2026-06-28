@@ -450,7 +450,7 @@ class GrocyViewModel {
 
         case .volatileStock:
             let userSettingsFetch = FetchDescriptor<GrocyUserSettings>()
-            let dueSoonDays = try? modelContext.fetch(userSettingsFetch).first?.stockDueSoonDays ?? self.userSettings?.stockDueSoonDays ?? 5
+            let dueSoonDays = (try? modelContext.fetch(userSettingsFetch))?.first?.stockDueSoonDays ?? self.userSettings?.stockDueSoonDays ?? 5
             self.volatileStock = try await grocyApi.getVolatileStock(dueSoonDays: dueSoonDays)
             try? swiftDataSync.syncSingletonModel(VolatileStock.self, with: self.volatileStock)
         }

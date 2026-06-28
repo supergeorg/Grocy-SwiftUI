@@ -1,0 +1,24 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [fix/swiftdata-runtime-cache-fallback]
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build Configuration'
+        default: 'Debug'
+        type: choice
+        options:
+          - Debug
+          - Release
+
+jobs:
+  build:
+    name: Build Grocy Mobile
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build App
+        run: |
+          xcodebuild -project "Grocy Mobile.xcodeproj" -scheme "Grocy Mobile" -configuration Debug -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build 2>&1 | xcpretty
