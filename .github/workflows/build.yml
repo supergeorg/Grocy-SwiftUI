@@ -1,0 +1,45 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [fix/swiftdata-runtime-cache-fallback]
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build Configuration'
+        default: 'Debug'
+        type: choice
+        options:
+          - Debug
+          - Release
+
+jobs:
+  build:
+    name: Build Grocy Mobile
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer || true
+
+      - name: Build App
+        run: |
+          xcodebuild -project "Grocy Mobile.xcodeproj" -scheme "Grocy Mobile" -configuration ${CONFIGURATION:-Debug} -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build 2>&1 | xcpretty && exit $${PIPESTATUS[0]}
+        env:
+          CONFIGURATION: ${{ github.event.inputs.configuration || 'Debug' }}
+
+      - name: Build Archive
+        run: |
+          xcodebuild archive -project "Grocy Mobile.xcodeproj" -scheme "Grocy Mobile" -configuration ${CONFIGURATION:-Debug} -archivePath /tmp/Grocy.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGN_STYLE=Manual 2>&1 | xcpretty && exit $${PIPESTATUS[0]}
+        env:
+          CONFIGURATION: ${{ github.event.inputs.configuration || 'Debug' }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Grocy-Mobile-Build
+          path: |
+            /tmp/Grocy.xcarchive
+          compression-level: 9
+          retention-days: 7
