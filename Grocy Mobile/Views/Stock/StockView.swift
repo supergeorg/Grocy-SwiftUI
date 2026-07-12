@@ -362,7 +362,7 @@ struct StockView: View {
     }
 
     var summedValueStr: String {
-        return "\(summedValue.formatted(.number.precision(.fractionLength(0...2)))) \(getCurrencySymbol())"
+        return "\(summedValue.formatted(.number.precision(.fractionLength(0...2)))) \(grocyVM.getCurrencySymbol())"
     }
 
     var stockListContent: some View {

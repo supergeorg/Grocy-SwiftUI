@@ -588,10 +588,10 @@ class GrocyViewModel {
     }
 
     //MARK: - SYSTEM
-    //    func getCurrencySymbol() -> String {
-    //        let locale = NSLocale(localeIdentifier: localizationKey)
-    //        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
-    //    }
+    func getCurrencySymbol() -> String {
+        let locale = NSLocale(localeIdentifier: localizationKey)
+        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: self.systemConfig?.currency ?? "CURRENCY") ?? "CURRENCY"
+    }
 
     func getFormattedCurrency(amount: Double) -> String {
         let currencyFormatter = NumberFormatter()

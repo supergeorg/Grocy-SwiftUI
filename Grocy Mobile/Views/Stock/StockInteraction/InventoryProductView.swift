@@ -185,7 +185,7 @@ struct InventoryProductView: View {
                         amountStep: 1.0,
                         amountName: "",
                         systemImage: MySymbols.price,
-                        currencySymbol: getCurrencySymbol()
+                        currencySymbol: grocyVM.getCurrencySymbol()
                     )
                 }
 
