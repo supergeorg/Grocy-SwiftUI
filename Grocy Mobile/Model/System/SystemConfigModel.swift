@@ -48,7 +48,7 @@ class SystemConfig: Codable {
 //    let featureFlagStockProductOpenedTracking, featureFlagStockProductFreezing, featureFlagStockBestBeforeDateFieldNumberPad, featureFlagShoppinglistMultipleLists: Bool
 //    let featureFlagChoresAssignments, featureFlagThermalPrinter, featureSettingStockCountOpenedProductsAgainstMinimumStockAmount, featureFlagAutoTorchOnWithCamera: Bool
     var locale: String
-    var userUsername: String
+    var userUsername: String?
     var userPictureFileName: String?
 
     enum CodingKeys: String, CodingKey {
@@ -128,7 +128,7 @@ class SystemConfig: Codable {
             self.featureFlagCalendar = try container.decodeFlexibleBool(forKey: .featureFlagCalendar)
             
             self.locale = try container.decode(String.self, forKey: .locale)
-            self.userUsername = try container.decode(String.self, forKey: .userUsername)
+            self.userUsername = try? container.decodeIfPresent(String.self, forKey: .userUsername)
             self.userPictureFileName = try? container.decodeIfPresent(String.self, forKey: .userPictureFileName)
         } catch {
             throw APIError.decodingError(error: error)
