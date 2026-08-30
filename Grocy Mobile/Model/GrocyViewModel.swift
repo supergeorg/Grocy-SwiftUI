@@ -119,6 +119,7 @@ class GrocyViewModel {
         self.jsonEncoder = JSONEncoder()
         self.jsonEncoder.dateEncodingStrategy = .custom({ (date, encoder) in
             let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             if date.hasTimeComponent {
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             } else {
