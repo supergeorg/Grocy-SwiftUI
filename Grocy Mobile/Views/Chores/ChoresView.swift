@@ -78,6 +78,13 @@ struct ChoresView: View {
 
         return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
+    
+    private var numFilters: Int {
+        var filterCount = 0
+        if filteredStatus != .all { filterCount += 1 }
+        if filteredUserID != nil { filterCount += 1 }
+        return filterCount
+    }
 
     private let dataToUpdate: [ObjectEntities] = [.chores]
     private let additionalDataToUpdate: [AdditionalEntities] = [.chores, .current_user, .users]
@@ -322,8 +329,7 @@ struct ChoresView: View {
                         Label("Filter", systemImage: MySymbols.filter)
                     }
                 )
-                //                .badge((filteredStatus != .all || filteredUserID != nil)  ? "" : nil)
-                //                .badgeProminence(.decreased)
+                .badge(numFilters)
                 sortGroupMenu
             }
             ToolbarItem(placement: .primaryAction) {

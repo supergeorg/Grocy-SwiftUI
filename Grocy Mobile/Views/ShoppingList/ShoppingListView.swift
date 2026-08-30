@@ -106,6 +106,12 @@ struct ShoppingListView: View {
     @AppStorage("ShoppingListView.sortOption") private var sortOption: ShoppingListSortOption = .byName
     @AppStorage("ShoppingListView.sortOrder") private var storageSortOrder: ShoppingListSortOrderStorage = .forward
 
+    private var numFilters: Int {
+        var filterCount = 0
+        if filteredStatus != .all { filterCount += 1 }
+        return filterCount
+    }
+    
     private var sortOrder: SortOrder {
         storageSortOrder.sortOrder
     }
@@ -413,6 +419,7 @@ struct ShoppingListView: View {
                     Button(action: { showFilterSheet = true }) {
                         Label("Filter", systemImage: MySymbols.filter)
                     }
+                    .badge(numFilters)
                     sortGroupMenu
                 }
             )

@@ -153,6 +153,14 @@ struct StockView: View {
             set: { self.storageFilteredStatus = StockProductStatusStorage(from: $0) }
         )
     }
+    
+    private var numFilters: Int {
+        var filterCount = 0
+        if filteredStatus != .all { filterCount += 1 }
+        if filteredLocationID != nil { filterCount += 1 }
+        if filteredProductGroupID != nil { filterCount += 1 }
+        return filterCount
+    }
 
     var sortSetting: [KeyPathComparator<StockElement>] {
         let order = sortOrder
@@ -493,6 +501,7 @@ struct StockView: View {
                     Button(action: { showingFilterSheet = true }) {
                         Label("Filter", systemImage: MySymbols.filter)
                     }
+                    .badge(numFilters)
                     sortMenu
                 }
                 ToolbarSpacer(.fixed)

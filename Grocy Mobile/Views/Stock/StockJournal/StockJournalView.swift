@@ -41,6 +41,16 @@ struct StockJournalView: View {
 
     var stockElement: StockElement? = nil
     var isPopup: Bool = false
+    
+    private var numFilters: Int {
+        var filterCount = 0
+        if filteredProductID != nil { filterCount += 1 }
+        if filteredLocationID != nil { filterCount += 1 }
+        if filteredTransactionType != nil { filterCount += 1 }
+        if filteredUserID != nil { filterCount += 1 }
+        if filteredDateRangeMonths != 12 { filterCount += 1 }
+        return filterCount
+    }
 
     // Fetch the data with a dynamic predicate
     var stockJournal: StockJournal {
@@ -257,6 +267,7 @@ struct StockJournalView: View {
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
                 }
+                .badge(numFilters)
             }
             #if os(iOS)
                 ToolbarSpacer(.flexible, placement: .bottomBar)
@@ -302,6 +313,7 @@ struct StockJournalView: View {
                                     filteredTransactionType = nil
                                     filteredLocationID = nil
                                     filteredUserID = nil
+                                    filteredDateRangeMonths = 12
                                     showingFilterSheet = false
                                 }
                             )

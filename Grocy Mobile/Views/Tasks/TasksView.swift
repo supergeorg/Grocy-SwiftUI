@@ -61,6 +61,14 @@ struct TasksView: View {
 
         return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
+    
+    private var numFilters: Int {
+        var filterCount = 0
+        if filteredStatus != .all { filterCount += 1 }
+        if filteredTaskCategoryID != -1 { filterCount += 1 }
+        if filteredUserID != nil { filterCount += 1 }
+        return filterCount
+    }
 
     private let dataToUpdate: [ObjectEntities] = [.tasks, .task_categories]
     private let additionalDataToUpdate: [AdditionalEntities] = [.current_user, .users]
@@ -391,6 +399,7 @@ struct TasksView: View {
                         Label("Filter", systemImage: MySymbols.filter)
                     }
                 )
+                .badge(numFilters)
                 sortGroupMenu
                 Button(
                     action: { showDoneTasks.toggle() },
