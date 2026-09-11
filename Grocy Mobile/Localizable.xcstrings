@@ -7,6 +7,9 @@
     ":" : {
       "shouldTranslate" : false
     },
+    "·" : {
+
+    },
     "(%@)" : {
       "localizations" : {
         "de" : {
@@ -17,6 +20,12 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "/ %lld" : {
+
+    },
+    "%.1f" : {
+
     },
     "%@" : {
       "shouldTranslate" : false
@@ -5005,6 +5014,9 @@
           }
         }
       }
+    },
+    "%lld ratings" : {
+
     },
     "%lld tasks are assigned to me" : {
       "localizations" : {
@@ -38026,6 +38038,9 @@
     "HTML" : {
       "shouldTranslate" : false
     },
+    "https://example.com/recipe" : {
+
+    },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
         "cs" : {
@@ -39926,6 +39941,9 @@
     "kcal" : {
       "shouldTranslate" : false
     },
+    "Keywords" : {
+
+    },
     "Last done by" : {
       "localizations" : {
         "ca" : {
@@ -41301,6 +41319,15 @@
           }
         }
       }
+    },
+    "Load recipe" : {
+
+    },
+    "Load Recipe" : {
+
+    },
+    "Loading recipe…" : {
+
     },
     "Location" : {
       "localizations" : {
@@ -51239,6 +51266,9 @@
         }
       }
     },
+    "Paste a recipe URL above and tap load" : {
+
+    },
     "Paste recipe URL" : {
       "localizations" : {
         "de" : {
@@ -54674,6 +54704,9 @@
         }
       }
     },
+    "Published: %@" : {
+
+    },
     "Purchase" : {
       "localizations" : {
         "ca" : {
@@ -57122,6 +57155,9 @@
         }
       }
     },
+    "Recipe Import" : {
+
+    },
     "Recipe parsing" : {
       "localizations" : {
         "de" : {
@@ -57131,6 +57167,9 @@
           }
         }
       }
+    },
+    "Recipe URL" : {
+
     },
     "Recipes" : {
       "localizations" : {
@@ -65087,6 +65126,9 @@
           }
         }
       }
+    },
+    "Suitable for" : {
+
     },
     "Sunday" : {
       "localizations" : {
@@ -79640,6 +79682,9 @@
     },
     "Version" : {
       "shouldTranslate" : false
+    },
+    "View original recipe" : {
+
     },
     "Wednesday" : {
       "localizations" : {
