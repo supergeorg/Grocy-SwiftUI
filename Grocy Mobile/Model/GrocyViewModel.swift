@@ -35,7 +35,7 @@ class GrocyViewModel {
     @ObservationIgnored @AppStorage("selectedServerProfileID") private var selectedServerProfileID: UUID?
     @ObservationIgnored @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
 
-    @ObservationIgnored @State private var refreshTimer: Timer?
+    @ObservationIgnored var refreshTimer: Timer?
 
     var systemInfo: SystemInfo?
     var systemDBChangedTime: SystemDBChangedTime?

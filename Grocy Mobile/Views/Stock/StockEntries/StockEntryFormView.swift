@@ -40,9 +40,10 @@ struct StockEntryFormView: View {
     }
 
     init(existingStockEntry: StockEntry) {
+        _stockEntry = State(initialValue: existingStockEntry)
         self.existingStockEntry = existingStockEntry
         self.productDoesntSpoil = existingStockEntry.bestBeforeDate == Date.neverOverdue
-        self.stockEntry = existingStockEntry
+        
     }
 
     private func updateData() async {

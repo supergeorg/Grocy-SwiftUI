@@ -66,8 +66,9 @@ struct MDProductFormView: View {
     }
 
     init(existingProduct: MDProduct? = nil, userSettings: GrocyUserSettings? = nil, queuedBarcode: String? = nil, createBarcode: Bool = false, createdProductID: Binding<Int?> = .constant(nil)) {
+        _createdProductID = createdProductID
         self.existingProduct = existingProduct
-        self.queuedBarcode = queuedBarcode ?? ""
+        self._queuedBarcode = State(initialValue: queuedBarcode ?? "")
         self.createBarcode = createBarcode
         self.product =
             existingProduct
@@ -81,7 +82,6 @@ struct MDProductFormView: View {
                 defaultDueDays: userSettings?.productPresetsDefaultDueDays ?? 0,
                 treatOpenedAsOutOfStock: userSettings?.productPresetsTreatOpenedAsOutOfStock ?? false,
             )
-        _createdProductID = createdProductID
     }
 
     private var currentQUPurchase: MDQuantityUnit? {
