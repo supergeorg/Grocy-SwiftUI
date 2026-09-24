@@ -61,7 +61,7 @@ struct TasksView: View {
 
         return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
-    
+
     private var numFilters: Int {
         var filterCount = 0
         if filteredStatus != .all { filterCount += 1 }
@@ -379,9 +379,6 @@ struct TasksView: View {
             ToolbarItemGroup(
                 placement: .primaryAction,
                 content: {
-                    #if os(macOS)
-                        RefreshButton(updateData: { Task { await updateData() } })
-                    #endif
                     Button(
                         action: {
                             showCreateTask.toggle()

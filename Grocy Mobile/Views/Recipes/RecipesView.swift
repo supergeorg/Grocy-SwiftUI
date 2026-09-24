@@ -254,20 +254,21 @@ struct RecipesView: View {
         .animation(.default, value: sortOrderKey)
         .animation(.default, value: searchString)
         .toolbar {
-            ToolbarItem(
-                placement: .topBarLeading,
-                content: {
-                    sortMenu
-                }
-            )
-            ToolbarItem(
-                placement: .automatic,
-                content: {
-                    #if os(macOS)
-                        RefreshButton(updateData: { Task { await updateData() } })
-                    #endif
-                }
-            )
+            #if os(iOS)
+                ToolbarItem(
+                    placement: .topBarLeading,
+                    content: {
+                        sortMenu
+                    }
+                )
+            #else
+                ToolbarItem(
+                    placement: .automatic,
+                    content: {
+                        sortMenu
+                    }
+                )
+            #endif
             ToolbarSpacer(.fixed)
             ToolbarItem(
                 placement: .primaryAction,

@@ -130,9 +130,6 @@ struct MDProductGroupsView: View {
         )
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                #if os(macOS)
-                    RefreshButton(updateData: { Task { await updateData() } })
-                #endif
                 Button(
                     action: {
                         showAddProductGroup.toggle()

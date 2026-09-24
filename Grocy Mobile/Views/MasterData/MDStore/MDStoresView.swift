@@ -141,9 +141,6 @@ struct MDStoresView: View {
             ToolbarItemGroup(
                 placement: .primaryAction,
                 content: {
-                    #if os(macOS)
-                        RefreshButton(updateData: { Task { await updateData() } })
-                    #endif
                     Button(
                         action: {
                             showAddStore.toggle()

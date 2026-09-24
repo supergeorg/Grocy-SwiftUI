@@ -82,9 +82,6 @@ struct MDUserFieldsView: View {
         content
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
-                    #if os(macOS)
-                        RefreshButton(updateData: { Task { await updateData() } })
-                    #endif
                     Button(
                         action: {
                             showAddUserField.toggle()

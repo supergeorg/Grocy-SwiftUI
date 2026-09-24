@@ -587,7 +587,6 @@ struct StockView: View {
                             }
                         )
                         sortMenu
-                        RefreshButton(updateData: { Task { await updateData() } })
                     }
                 )
             #endif
