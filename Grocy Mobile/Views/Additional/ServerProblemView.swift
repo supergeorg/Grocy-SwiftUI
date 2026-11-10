@@ -65,11 +65,7 @@ struct ServerProblemView: View {
         if !isCompact {
             normalView
         } else {
-            #if os(macOS)
-                compactView
-            #else
-                compactView
-            #endif
+            compactView
         }
     }
 

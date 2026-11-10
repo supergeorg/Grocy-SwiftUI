@@ -49,13 +49,6 @@ struct UserManagementView: View {
                     ToolbarItem(
                         placement: .automatic,
                         content: {
-                            RefreshButton(updateData: { Task { await updateData() } })
-                        }
-                    )
-
-                    ToolbarItem(
-                        placement: .automatic,
-                        content: {
                             Button(
                                 action: {
                                     showAddUser.toggle()

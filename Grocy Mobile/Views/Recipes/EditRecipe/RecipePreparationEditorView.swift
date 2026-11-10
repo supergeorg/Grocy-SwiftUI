@@ -8,7 +8,10 @@
 internal import Combine
 import InfomaniakRichHTMLEditor
 import SwiftUI
-import UIKit
+
+#if os(iOS)
+    import UIKit
+#endif
 
 struct RecipePreparationEditorView: View {
     @Binding var htmlContent: String
@@ -62,7 +65,9 @@ struct RecipePreparationEditorView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Preparation")
-            .navigationBarTitleDisplayMode(.inline)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", role: .cancel) {
@@ -103,16 +108,18 @@ struct WYSIWYGEditorView: View {
         // (shrinking its frame, not the window), so the tab bar above is unaffected.
         // safeAreaInset pins the formatting bar just above the keyboard automatically.
         ScrollView(.vertical) {
-            RichHTMLEditorViewRepresentable(
-                html: $htmlContent,
-                proxy: $editorProxy,
-                proxyObserver: proxyObserver
-            )
-            .padding(.horizontal)
-            // Give the editor a tall minimum so it fills the visible area.
-            // The ScrollView will expand it further as content grows.
-            .frame(minHeight: 400)
-            .frame(maxWidth: .infinity)
+            #if os(iOS)
+                RichHTMLEditorViewRepresentable(
+                    html: $htmlContent,
+                    proxy: $editorProxy,
+                    proxyObserver: proxyObserver
+                )
+                .padding(.horizontal)
+                // Give the editor a tall minimum so it fills the visible area.
+                // The ScrollView will expand it further as content grows.
+                .frame(minHeight: 400)
+                .frame(maxWidth: .infinity)
+            #endif
         }
         // The formatting bar attaches to the bottom safe area inset of the
         // ScrollView. SwiftUI automatically lifts this inset when the keyboard
@@ -130,16 +137,18 @@ struct WYSIWYGEditorView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .onReceive(
-            NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
-        ) { _ in
-            withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
-        }
-        .onReceive(
-            NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
-        ) { _ in
-            withAnimation(.easeIn(duration: 0.2)) { keyboardVisible = false }
-        }
+        #if os(iOS)
+            .onReceive(
+                NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            ) { _ in
+                withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
+            }
+            .onReceive(
+                NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            ) { _ in
+                withAnimation(.easeIn(duration: 0.2)) { keyboardVisible = false }
+            }
+        #endif
         .sheet(isPresented: $showLinkDialog) {
             LinkDialog(
                 linkURL: $linkURL,
@@ -162,19 +171,21 @@ struct WYSIWYGEditorView: View {
 
     var formattingBar: some View {
         HStack(spacing: 8) {
-            Button {
-                UIApplication.shared.sendAction(
-                    #selector(UIResponder.resignFirstResponder),
-                    to: nil,
-                    from: nil,
-                    for: nil
-                )
-            } label: {
-                Image(systemName: MySymbols.dismissKeyboard)
-                    .font(.system(size: 16, weight: .semibold))
-            }
-            .tint(.secondary)
-            .buttonStyle(FormattingButtonStyleAdditional())
+            #if os(iOS)
+                Button {
+                    UIApplication.shared.sendAction(
+                        #selector(UIResponder.resignFirstResponder),
+                        to: nil,
+                        from: nil,
+                        for: nil
+                    )
+                } label: {
+                    Image(systemName: MySymbols.dismissKeyboard)
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                .tint(.secondary)
+                .buttonStyle(FormattingButtonStyleAdditional())
+            #endif
 
             Divider()
                 .frame(height: 20)
@@ -288,18 +299,20 @@ struct WYSIWYGEditorView: View {
                 .frame(height: 20)
 
             // Foreground Color
-            FormattingColorPicker(selection: $selectedColor, iconName: "paintbrush.pointed")
-                .onChange(of: selectedColor) {
-                    editorProxy?.setForegroundColor(UIColor(selectedColor))
-                }
-                .labelsHidden()
+            #if os(iOS)
+                FormattingColorPicker(selection: $selectedColor, iconName: "paintbrush.pointed")
+                    .onChange(of: selectedColor) {
+                        editorProxy?.setForegroundColor(UIColor(selectedColor))
+                    }
+                    .labelsHidden()
 
-            // Background Color
-            FormattingColorPicker(selection: $selectedBackgroundColor, iconName: "paint.bucket.classic")
-                .onChange(of: selectedBackgroundColor) {
-                    editorProxy?.setBackgroundColor(UIColor(selectedBackgroundColor))
-                }
-                .labelsHidden()
+                // Background Color
+                FormattingColorPicker(selection: $selectedBackgroundColor, iconName: "paint.bucket.classic")
+                    .onChange(of: selectedBackgroundColor) {
+                        editorProxy?.setBackgroundColor(UIColor(selectedBackgroundColor))
+                    }
+                    .labelsHidden()
+            #endif
 
             Divider()
                 .frame(height: 20)
@@ -392,39 +405,41 @@ struct FormattingColorPicker: View {
 }
 
 // MARK: - RichHTMLEditor UIViewRepresentable
-struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
-    @Binding var html: String
-    @Binding var proxy: RichHTMLEditorProxy?
-    var proxyObserver: RichHTMLEditorProxy
+#if os(iOS)
+    struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
+        @Binding var html: String
+        @Binding var proxy: RichHTMLEditorProxy?
+        var proxyObserver: RichHTMLEditorProxy
 
-    class Coordinator: NSObject {
-        var parent: RichHTMLEditorViewRepresentable
-        init(_ parent: RichHTMLEditorViewRepresentable) {
-            self.parent = parent
-        }
-    }
-
-    func makeCoordinator() -> Coordinator { Coordinator(self) }
-
-    func makeUIView(context: Context) -> RichHTMLEditorView {
-        let editor = proxyObserver.editor
-        editor.html = html
-        proxyObserver.htmlBinding = $html
-
-        DispatchQueue.main.async {
-            self.proxy = proxyObserver
+        class Coordinator: NSObject {
+            var parent: RichHTMLEditorViewRepresentable
+            init(_ parent: RichHTMLEditorViewRepresentable) {
+                self.parent = parent
+            }
         }
 
-        return editor
-    }
+        func makeCoordinator() -> Coordinator { Coordinator(self) }
 
-    func updateUIView(_ uiView: RichHTMLEditorView, context: Context) {
-        // Only push down if the change originated externally (e.g. undo, toolbar action)
-        if uiView.html != html, !uiView.isFirstResponder {
-            uiView.html = html
+        func makeUIView(context: Context) -> RichHTMLEditorView {
+            let editor = proxyObserver.editor
+            editor.html = html
+            proxyObserver.htmlBinding = $html
+
+            DispatchQueue.main.async {
+                self.proxy = proxyObserver
+            }
+
+            return editor
+        }
+
+        func updateUIView(_ uiView: RichHTMLEditorView, context: Context) {
+            // Only push down if the change originated externally (e.g. undo, toolbar action)
+            if uiView.html != html, !uiView.isFirstResponder {
+                uiView.html = html
+            }
         }
     }
-}
+#endif
 
 // MARK: - RichHTMLEditor Proxy
 class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegate {
@@ -520,15 +535,17 @@ class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegat
         updateTextAttributes()
     }
 
-    func setForegroundColor(_ color: UIColor) {
-        editor.setForegroundColor(color)
-        updateTextAttributes()
-    }
+    #if os(iOS)
+        func setForegroundColor(_ color: UIColor) {
+            editor.setForegroundColor(color)
+            updateTextAttributes()
+        }
 
-    func setBackgroundColor(_ color: UIColor) {
-        editor.setBackgroundColor(color)
-        updateTextAttributes()
-    }
+        func setBackgroundColor(_ color: UIColor) {
+            editor.setBackgroundColor(color)
+            updateTextAttributes()
+        }
+    #endif
 
     func addLink(url: URL, text: String?) {
         editor.addLink(url: url, text: text)
@@ -558,22 +575,24 @@ struct RawEditorView: View {
     var body: some View {
         TextEditor(text: $htmlContent)
             .font(.system(.body, design: .monospaced))
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button {
-                        UIApplication.shared.sendAction(
-                            #selector(UIResponder.resignFirstResponder),
-                            to: nil,
-                            from: nil,
-                            for: nil
-                        )
-                    } label: {
-                        Image(systemName: MySymbols.dismissKeyboard)
+            #if os(iOS)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Button {
+                            UIApplication.shared.sendAction(
+                                #selector(UIResponder.resignFirstResponder),
+                                to: nil,
+                                from: nil,
+                                for: nil
+                            )
+                        } label: {
+                            Image(systemName: MySymbols.dismissKeyboard)
+                        }
+                        .tint(.secondary)
+                        Spacer()
                     }
-                    .tint(.secondary)
-                    Spacer()
                 }
-            }
+            #endif
     }
 }
 
@@ -589,12 +608,16 @@ struct LinkDialog: View {
             Form {
                 Section("Link Details") {
                     TextField("URL", text: $linkURL)
-                        .keyboardType(.URL)
+                        #if os(iOS)
+                            .keyboardType(.URL)
+                        #endif
                     TextField("Link Text", text: $linkText)
                 }
             }
             .navigationTitle("Insert Link")
-            .navigationBarTitleDisplayMode(.inline)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

@@ -202,7 +202,9 @@ struct Sidebar: View {
             .navigationSplitViewColumnWidth(min: 200, ideal: 200)
         #endif
         .navigationTitle("Grocy Mobile")
-        .navigationBarTitleDisplayMode(.inline)
+        #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 

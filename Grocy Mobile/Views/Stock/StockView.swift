@@ -39,11 +39,11 @@ enum StockSortCategory: String, Codable, Sendable {
 
 enum StockSortOrderStorage: String, Codable, Sendable {
     case forward, reverse
-    
+
     var sortOrder: SortOrder {
         self == .forward ? .forward : .reverse
     }
-    
+
     init(from sortOrder: SortOrder) {
         self = sortOrder == .forward ? .forward : .reverse
     }
@@ -51,7 +51,7 @@ enum StockSortOrderStorage: String, Codable, Sendable {
 
 enum StockProductStatusStorage: String, Codable, Sendable {
     case all, belowMinStock, expiringSoon, overdue, expired
-    
+
     var productStatus: ProductStatus {
         switch self {
         case .all:
@@ -66,7 +66,7 @@ enum StockProductStatusStorage: String, Codable, Sendable {
             return .expired
         }
     }
-    
+
     init(from productStatus: ProductStatus) {
         switch productStatus {
         case .all:
@@ -153,7 +153,7 @@ struct StockView: View {
             set: { self.storageFilteredStatus = StockProductStatusStorage(from: $0) }
         )
     }
-    
+
     private var numFilters: Int {
         var filterCount = 0
         if filteredStatus != .all { filterCount += 1 }
@@ -276,7 +276,7 @@ struct StockView: View {
                 if !searchString.isEmpty {
                     let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
                     let parentProductNameMatches = element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
-                    
+
                     if !productNameMatches && !parentProductNameMatches {
                         continue
                     }
@@ -496,100 +496,59 @@ struct StockView: View {
             computeFilteredAndGroupedStock()
         }
         .toolbar(content: {
-            #if os(iOS)
-                ToolbarItemGroup(placement: .navigation) {
-                    Button(action: { showingFilterSheet = true }) {
-                        Label("Filter", systemImage: MySymbols.filter)
-                    }
-                    .badge(numFilters)
-                    sortMenu
+            ToolbarItemGroup(placement: .navigation) {
+                Button(action: { showingFilterSheet = true }) {
+                    Label("Filter", systemImage: MySymbols.filter)
                 }
-                ToolbarSpacer(.fixed)
-                ToolbarItem(placement: .automatic) {
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.stockJournal)
-                        },
-                        label: {
-                            Label("Stock journal", systemImage: MySymbols.stockJournal)
-                        }
-                    )
-                }
-                ToolbarSpacer(.fixed)
-                ToolbarItemGroup(placement: horizontalSizeClass == .compact ? .secondaryAction : .primaryAction) {
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.inventoryProduct)
-                        },
-                        label: {
-                            Label("Inventory", systemImage: MySymbols.inventory)
-                        }
-                    )
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.transferProduct)
-                        },
-                        label: {
-                            Label("Transfer", systemImage: MySymbols.transfer)
-                        }
-                    )
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.consumeProduct)
-                        },
-                        label: {
-                            Label("Consume", systemImage: MySymbols.consume)
-                        }
-                    )
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.purchaseProduct)
-                        },
-                        label: {
-                            Label("Purchase", systemImage: MySymbols.purchase)
-                        }
-                    )
-                }
-            #elseif os(macOS)
-                ToolbarItemGroup(
-                    placement: .automatic,
-                    content: {
-                        Button(action: { showingFilterSheet = true }) {
-                            Label("Filter", systemImage: MySymbols.filter)
-                        }
-                        .popover(
-                            isPresented: $showingFilterSheet,
-                            content: {
-                                VStack {
-                                    StockFilterView(filteredLocationID: $filteredLocationID, filteredProductGroupID: $filteredProductGroupID, filteredStatus: filteredStatusBinding)
-                                    HStack {
-                                        Button(
-                                            role: .destructive,
-                                            action: {
-                                                filteredLocationID = nil
-                                                filteredProductGroupID = nil
-                                                storageFilteredStatus = .all
-                                                showingFilterSheet = false
-                                            }
-                                        )
-                                        Spacer()
-                                        Button(
-                                            role: .confirm,
-                                            action: {
-                                                showingFilterSheet = false
-                                            }
-                                        )
-
-                                    }
-                                    .padding()
-                                }
-                                .frame(width: 400, height: 200)
-                            }
-                        )
-                        sortMenu
+                .badge(numFilters)
+                sortMenu
+            }
+            ToolbarSpacer(.fixed)
+            ToolbarItem(placement: .automatic) {
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.stockJournal)
+                    },
+                    label: {
+                        Label("Stock journal", systemImage: MySymbols.stockJournal)
                     }
                 )
-            #endif
+            }
+            ToolbarSpacer(.fixed)
+            ToolbarItemGroup {
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.inventoryProduct)
+                    },
+                    label: {
+                        Label("Inventory", systemImage: MySymbols.inventory)
+                    }
+                )
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.transferProduct)
+                    },
+                    label: {
+                        Label("Transfer", systemImage: MySymbols.transfer)
+                    }
+                )
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.consumeProduct)
+                    },
+                    label: {
+                        Label("Consume", systemImage: MySymbols.consume)
+                    }
+                )
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.purchaseProduct)
+                    },
+                    label: {
+                        Label("Purchase", systemImage: MySymbols.purchase)
+                    }
+                )
+            }
         })
         .environment(stockInteractionRouter)
         .sheet(item: $stockInteractionRouter.presentedInteraction) { interaction in

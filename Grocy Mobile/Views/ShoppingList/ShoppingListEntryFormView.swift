@@ -60,11 +60,7 @@ struct ShoppingListEntryFormView: View {
     }
 
     private func finishForm() {
-        #if os(iOS)
-            dismiss()
-        #elseif os(macOS)
-            NSApp.sendAction(#selector(NSPopover.performClose(_:)), to: nil, from: nil)
-        #endif
+        dismiss()
     }
 
     private func saveShoppingListEntry() async {
@@ -102,9 +98,6 @@ struct ShoppingListEntryFormView: View {
 
     var body: some View {
         Form {
-            #if os(macOS)
-                Text(existingShoppingListEntry == nil ? "Create shopping list item" : "Edit shopping list item").font(.headline)
-            #endif
             Picker(
                 selection: $shoppingListEntry.shoppingListID,
                 label: Label("Shopping list", systemImage: MySymbols.shoppingList),
@@ -134,22 +127,6 @@ struct ShoppingListEntryFormView: View {
                 TextEditor(text: $shoppingListEntry.note)
                     .frame(height: 50)
             }
-            #if os(macOS)
-                HStack {
-                    Button("Cancel") {
-                        finishForm()
-                    }
-                    .keyboardShortcut(.cancelAction)
-                    Spacer()
-                    Button("Save") {
-                        Task {
-                            await saveShoppingListEntry()
-                        }
-                    }
-                    .keyboardShortcut(.defaultAction)
-                    .disabled(!isFormValid)
-                }
-            #endif
         }
         .navigationTitle(existingShoppingListEntry == nil ? "Create shopping list item" : "Edit shopping list item")
         .task {

@@ -256,11 +256,15 @@ struct RecipeView: View {
                     .font(.title)
             }
         }
-        .listStyle(.insetGrouped)
+        #if os(iOS)
+            .listStyle(.insetGrouped)
+        #endif
         .navigationTitle(recipe.name)
-        .navigationBarTitleDisplayMode(.large)
+        #if os(iOS)
+            .navigationBarTitleDisplayMode(.large)
+        #endif
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .automatic) {
                 Button {
                     showConsumeAllNeeded.toggle()
                 } label: {

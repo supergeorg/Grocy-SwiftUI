@@ -32,15 +32,17 @@ struct DueDateScanner: View {
         .sheet(
             isPresented: $showDateScanner,
             content: {
-                CodeScannerView(isPaused: $isScanPaused, onCodeFound: self.handleDateScan, symbologies: [], recognizeDates: true)
-                    .onAppear { isScanPaused = false }
-                    .onDisappear { isScanPaused = true }
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                        isScanPaused = true
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                        isScanPaused = false
-                    }
+                #if os(iOS)
+                    CodeScannerView(isPaused: $isScanPaused, onCodeFound: self.handleDateScan, symbologies: [], recognizeDates: true)
+                        .onAppear { isScanPaused = false }
+                        .onDisappear { isScanPaused = true }
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                            isScanPaused = true
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                            isScanPaused = false
+                        }
+                #endif
             }
         )
     }

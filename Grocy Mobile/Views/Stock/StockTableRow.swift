@@ -81,13 +81,7 @@ struct StockTableRow: View {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], mdQuantityUnits: mdQuantityUnits)
             }
         }
-
-        #if os(macOS)
-            .listRowBackground(backgroundColor.clipped().cornerRadius(5))
-            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
-        #else
-            .listRowBackground(backgroundColor)
-        #endif
+        .listRowBackground(backgroundColor)
     }
 
     var content: some View {

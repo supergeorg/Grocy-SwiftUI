@@ -18,8 +18,10 @@ struct RecipeParserView: View {
     var body: some View {
         Form {
             TextField("Paste recipe URL", text: $urlInput)
-                .autocapitalization(.none)
-                .keyboardType(.URL)
+                #if os(iOS)
+                    .autocapitalization(.none)
+                    .keyboardType(.URL)
+                #endif
 
             Button("Extract Recipe") {
                 Task {
