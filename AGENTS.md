@@ -166,8 +166,28 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 
 - Build and run through Xcode, using the `BuildProject` / `RunProject` tools when available. The scheme is `Grocy Mobile`. For local testing without your own server, use **Demo mode**, which connects to `https://demo.grocy.info`.
 - Use `XcodeRefreshCodeIssuesInFile` for quick type-checking after edits, and `RenderPreview` to check views against the preview data.
-- Unit tests in `Grocy MobileTests/` currently use XCTest and check that the preview fixtures decode into SwiftData. **New tests should use Swift Testing** (`import Testing`, `@Test`, `#expect`). UI tests use XCUIAutomation.
+- Unit tests in `Grocy MobileTests/Model/` use XCTest and check that the preview fixtures decode into SwiftData. **New tests should use Swift Testing** (`import Testing`, `@Test`, `#expect`). UI tests use XCUIAutomation.
 - When adding a new entity, add a JSON fixture to `Model/Preview/TestData/`, named after the API path with `/` replaced by `__` (for example `objects__locations.json`), and load it in `PreviewContainer`.
+- The test target is hosted by the app (`TEST_HOST`) and builds in Swift 5 mode **without** default MainActor isolation, so mark suites that touch `GrocyViewModel` or SwiftData `@MainActor`. Keep its deployment targets equal to the app's, or `@testable import Grocy_Mobile` fails to compile.
+
+### Integration tests against a real Grocy server
+
+Integration tests live in `Grocy MobileTests/Integration/` and run against a throwaway Grocy server, built in Docker from a local clone of [grocy/grocy](https://github.com/grocy/grocy) (default `../grocy`, override with `GROCY_SOURCE_DIR`). Details are in `TestServer/README.md`.
+
+- **Run:** `TestServer/run-integration-tests.sh [destination]` starts the server, runs the `Grocy MobileTests` target with the server configured, and stops the server again (`KEEP_SERVER=1` keeps it running). Docker Desktop must be running.
+- **Server control:** `TestServer/grocy-test-server.sh start|stop|restart|status|logs`. It listens on `http://localhost:9290` with API key `grocy-mobile-integration-tests`. Every start creates an **empty database** (production mode, auth on); the only seeded data is what Grocy's migrations create (e.g. the location "Fridge").
+- **Configuration:** tests read `GROCY_TEST_SERVER_URL` / `GROCY_TEST_API_KEY` from the environment. With `xcodebuild`, pass them as `TEST_RUNNER_GROCY_TEST_SERVER_URL=…`; in Xcode, add them to the scheme's test environment. Without the URL, integration suites are **skipped**, so the normal test run stays offline.
+- **Shared helpers:** `GrocyTestServer.swift` provides the `.integration` tag, the `isConfigured` / `notConfiguredComment` gate, and `makeLoggedInViewModel()`, which creates a `GrocyViewModel` on empty in-memory stores (CloudKit disabled) and logs in via `checkServer`. Keep the returned `ModelContainer`s alive in the suite.
+
+Adding a suite for another entity (use `MDLocationIntegrationTests.swift` as the template):
+
+1. Create `Grocy MobileTests/Integration/<Thing>IntegrationTests.swift`, a `@MainActor struct` with
+   `@Suite("…", .tags(.integration), .serialized, .enabled(if: GrocyTestServer.isConfigured, GrocyTestServer.notConfiguredComment))`
+   and an `init() async throws` that calls `GrocyTestServer.makeLoggedInViewModel()`.
+2. Test the way the views do it: write through `grocyVM` (`findNextID`, `postMDObject`, `putMDObjectWithID`, `deleteMDObject`, …), resync with `requestData(objects:)`, then assert on the server (`grocyVM.grocyApi.getObject…`) **and** on SwiftData (`container.mainContext.fetch`).
+3. Before syncing after a write, clear the entity's cached timestamp (`grocyVM.timeStampsObjects[.<entity>] = nil`; see `syncLocations(forceReload:)`). Grocy's `db-changed-time` has one-second resolution, so writes in the same second as the last sync are otherwise skipped. This is a known app bug, pinned by `writeInSameSecondAsLastSyncIsPickedUp` with `withKnownIssue`. When it's fixed, that test fails; remove the `withKnownIssue` and the forced reset then.
+4. Make tests independent of each other and of the server's contents: use unique names (`UUID`), create your own fixtures, and delete them with the `withCleanup` pattern (it also runs when a test fails). Create the entities a test depends on (e.g. a location and quantity unit before a product) inside that test.
+5. Check the server's supported version still matches `GrocyAPP.supportedVersions` when updating the Grocy clone.
 
 ## Checklist: Adding a New Grocy Entity
 
