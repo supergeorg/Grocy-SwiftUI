@@ -16,22 +16,18 @@ struct StockFilterActionsView: View {
     var numBelowStock: Int?
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                StockFilterCapsuleView(num: numExpiringSoon, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expiringSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
-                StockFilterCapsuleView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.overdue, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground))
-                StockFilterCapsuleView(num: numExpired, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expired, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
-                StockFilterCapsuleView(
-                    num: numBelowStock,
-                    filteredStatus: $filteredStatus,
-                    ownFilteredStatus: ProductStatus.belowMinStock,
-                    color: Color(.GrocyColors.grocyBlue),
-                    backgroundColor: Color(.GrocyColors.grocyBlueBackground)
-                )
-            }
-            .padding(.horizontal)
+        FilterCapsuleBar {
+            StockFilterCapsuleView(num: numExpiringSoon, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expiringSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
+            StockFilterCapsuleView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.overdue, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground))
+            StockFilterCapsuleView(num: numExpired, filteredStatus: $filteredStatus, ownFilteredStatus: ProductStatus.expired, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
+            StockFilterCapsuleView(
+                num: numBelowStock,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: ProductStatus.belowMinStock,
+                color: Color(.GrocyColors.grocyBlue),
+                backgroundColor: Color(.GrocyColors.grocyBlueBackground)
+            )
         }
-        .scrollClipDisabled()
     }
 }
 

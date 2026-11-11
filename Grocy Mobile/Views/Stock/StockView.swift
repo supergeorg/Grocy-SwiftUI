@@ -430,12 +430,20 @@ struct StockView: View {
         }
     }
 
+    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
+    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    private var filterCapsules: some View {
+        StockFilterActionsView(filteredStatus: filteredStatusBinding, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+    }
+
     var body: some View {
         List {
-            Section {
-                StockFilterActionsView(filteredStatus: filteredStatusBinding, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
-                    .listRowInsets(EdgeInsets())
-            }
+            #if os(iOS)
+                Section {
+                    filterCapsules
+                        .listRowInsets(EdgeInsets())
+                }
+            #endif
 
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
@@ -446,11 +454,18 @@ struct StockView: View {
             }
             stockListContent
         }
+        #if os(macOS)
+            .safeAreaBar(edge: .top) {
+                filterCapsules
+                    .padding(.vertical, 8)
+            }
+        #endif
         .navigationTitle("Stock overview")
         .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
+        .animation(.default, value: filteredStatus)
         .task {
             await updateData()
             updateMissingStock()
@@ -712,8 +727,9 @@ struct StockView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .previewData) {
     NavigationStack {
         StockView()
     }
+    .environment(DeepLinkManager())
 }

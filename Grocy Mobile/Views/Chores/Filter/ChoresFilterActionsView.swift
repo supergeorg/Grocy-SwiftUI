@@ -22,16 +22,12 @@ struct ChoresFilterActionsView: View {
     var numAssignedToMe: Int?
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ChoresFilterCapsuleView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.overdue, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground), dueSoonDays: userSettings?.choresDueSoonDays)
-                ChoresFilterCapsuleView(num: numDueToday, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.dueToday, color: Color(.GrocyColors.grocyBlue), backgroundColor: Color(.GrocyColors.grocyBlueBackground), dueSoonDays: userSettings?.choresDueSoonDays)
-                ChoresFilterCapsuleView(num: numDueSoon, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.dueSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground), dueSoonDays: userSettings?.choresDueSoonDays)
-                ChoresFilterCapsuleView(num: numAssignedToMe, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.assignedToMe, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground), dueSoonDays: userSettings?.choresDueSoonDays)
-            }
-            .padding(.horizontal)
+        FilterCapsuleBar {
+            ChoresFilterCapsuleView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.overdue, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground), dueSoonDays: userSettings?.choresDueSoonDays)
+            ChoresFilterCapsuleView(num: numDueToday, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.dueToday, color: Color(.GrocyColors.grocyBlue), backgroundColor: Color(.GrocyColors.grocyBlueBackground), dueSoonDays: userSettings?.choresDueSoonDays)
+            ChoresFilterCapsuleView(num: numDueSoon, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.dueSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground), dueSoonDays: userSettings?.choresDueSoonDays)
+            ChoresFilterCapsuleView(num: numAssignedToMe, filteredStatus: $filteredStatus, ownFilteredStatus: ChoreStatus.assignedToMe, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground), dueSoonDays: userSettings?.choresDueSoonDays)
         }
-        .scrollClipDisabled()
     }
 }
 

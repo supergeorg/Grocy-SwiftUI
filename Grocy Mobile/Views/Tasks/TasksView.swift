@@ -225,18 +225,26 @@ struct TasksView: View {
         }
     }
 
+    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
+    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    private var filterCapsules: some View {
+        TasksFilterActionsView(
+            filteredStatus: $filteredStatus,
+            numOverdue: taskCounts[TaskStatus.overdue],
+            numDueToday: taskCounts[TaskStatus.dueToday],
+            numDueSoon: taskCounts[TaskStatus.dueSoon],
+            numAssignedToMe: taskCounts[TaskStatus.assignedToMe]
+        )
+    }
+
     var body: some View {
         List {
-            Section {
-                TasksFilterActionsView(
-                    filteredStatus: $filteredStatus,
-                    numOverdue: taskCounts[TaskStatus.overdue],
-                    numDueToday: taskCounts[TaskStatus.dueToday],
-                    numDueSoon: taskCounts[TaskStatus.dueSoon],
-                    numAssignedToMe: taskCounts[TaskStatus.assignedToMe]
-                )
-                .listRowInsets(EdgeInsets())
-            }
+            #if os(iOS)
+                Section {
+                    filterCapsules
+                        .listRowInsets(EdgeInsets())
+                }
+            #endif
 
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
@@ -335,6 +343,12 @@ struct TasksView: View {
                 }
             }
         }
+        #if os(macOS)
+            .safeAreaBar(edge: .top) {
+                filterCapsules
+                    .padding(.vertical, 8)
+            }
+        #endif
         .navigationTitle("Tasks")
         .task {
             await updateData()
@@ -350,6 +364,7 @@ struct TasksView: View {
             .default,
             value: grocyTasks.count
         )
+        .animation(.default, value: filteredStatus)
         .sheet(isPresented: $showCreateTask) {
             NavigationStack {
                 TaskFormView(isPopup: true)

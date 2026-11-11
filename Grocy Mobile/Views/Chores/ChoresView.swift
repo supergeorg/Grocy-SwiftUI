@@ -192,18 +192,26 @@ struct ChoresView: View {
         }
     }
 
+    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
+    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    private var filterCapsules: some View {
+        ChoresFilterActionsView(
+            filteredStatus: $filteredStatus,
+            numOverdue: choreCounts[ChoreStatus.overdue],
+            numDueToday: choreCounts[ChoreStatus.dueToday],
+            numDueSoon: choreCounts[ChoreStatus.dueSoon],
+            numAssignedToMe: choreCounts[ChoreStatus.assignedToMe]
+        )
+    }
+
     var body: some View {
         List {
-            Section {
-                ChoresFilterActionsView(
-                    filteredStatus: $filteredStatus,
-                    numOverdue: choreCounts[ChoreStatus.overdue],
-                    numDueToday: choreCounts[ChoreStatus.dueToday],
-                    numDueSoon: choreCounts[ChoreStatus.dueSoon],
-                    numAssignedToMe: choreCounts[ChoreStatus.assignedToMe]
-                )
-                .listRowInsets(EdgeInsets())
-            }
+            #if os(iOS)
+                Section {
+                    filterCapsules
+                        .listRowInsets(EdgeInsets())
+                }
+            #endif
 
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
@@ -298,6 +306,12 @@ struct ChoresView: View {
                 }
             }
         }
+        #if os(macOS)
+            .safeAreaBar(edge: .top) {
+                filterCapsules
+                    .padding(.vertical, 8)
+            }
+        #endif
         .task {
             await updateData()
         }
@@ -308,6 +322,7 @@ struct ChoresView: View {
             text: $searchString,
             prompt: "Search"
         )
+        .animation(.default, value: filteredStatus)
         .navigationTitle("Chores overview")
         .sheet(item: $choreInteractionRouter.presentedInteraction) { interaction in
             NavigationStack {

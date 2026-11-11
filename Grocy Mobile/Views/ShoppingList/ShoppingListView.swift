@@ -345,6 +345,20 @@ struct ShoppingListView: View {
         }
     }
 
+    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
+    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    @ViewBuilder
+    private var filterCapsules: some View {
+        if numBelowStock > 0 || numDone > 0 || numUndone > 0 {
+            ShoppingListFilterActionView(
+                filteredStatus: $filteredStatus,
+                numBelowStock: numBelowStock,
+                numDone: numDone,
+                numUndone: numUndone
+            )
+        }
+    }
+
     var body: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
@@ -352,17 +366,12 @@ struct ShoppingListView: View {
             } else if filteredShoppingListItems.isEmpty {
                 ContentUnavailableView("Shopping list is empty.", systemImage: MySymbols.shoppingList)
             }
-            Section {
-                if numBelowStock > 0 || numDone > 0 || numUndone > 0 {
-                    ShoppingListFilterActionView(
-                        filteredStatus: $filteredStatus,
-                        numBelowStock: numBelowStock,
-                        numDone: numDone,
-                        numUndone: numUndone
-                    )
-                    .listRowInsets(EdgeInsets())
+            #if os(iOS)
+                Section {
+                    filterCapsules
+                        .listRowInsets(EdgeInsets())
                 }
-            }
+            #endif
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 #if os(macOS)
                     DisclosureGroup(
@@ -411,6 +420,12 @@ struct ShoppingListView: View {
                 #endif
             }
         }
+        #if os(macOS)
+            .safeAreaBar(edge: .top) {
+                filterCapsules
+                    .padding(.vertical, 8)
+            }
+        #endif
         .navigationTitle(selectedShoppingList?.name ?? "Shopping list")
         .toolbar {
             ToolbarItemGroup(
@@ -476,6 +491,7 @@ struct ShoppingListView: View {
             await updateData()
         }
         .animation(.default, value: groupedShoppingList.count)
+        .animation(.default, value: filteredStatus)
         .sheet(isPresented: $showFilterSheet) {
             NavigationStack {
                 ShoppingListFilterView(filteredStatus: $filteredStatus)

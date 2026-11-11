@@ -16,6 +16,10 @@ struct ChoresFilterCapsuleView: View {
     var backgroundColor: Color
     var dueSoonDays: Int?
 
+    private var isSelected: Bool {
+        filteredStatus == ownFilteredStatus
+    }
+
     var body: some View {
         Button(action: {
             withAnimation {
@@ -28,21 +32,19 @@ struct ChoresFilterCapsuleView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: ownFilteredStatus.icon)
-                    .foregroundColor(color)
-                if filteredStatus == ownFilteredStatus {
+                if isSelected {
                     // Show full text
                     Text(ownFilteredStatus.getDescription(amount: num ?? 0, dueSoonDays: dueSoonDays ?? 5))
-                        .foregroundColor(color)
+                        .transition(.blurReplace)
                 } else {
                     // Show only number
                     Text(String(num ?? 0))
                         .bold()
-                        .foregroundColor(color)
+                        .transition(.blurReplace)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 12)
-            .glassEffect(.regular.tint(backgroundColor).interactive())
+            .foregroundStyle(color)
         }
+        .filterCapsuleStyle(tint: backgroundColor)
     }
 }

@@ -15,15 +15,11 @@ struct RecipeFilterActionsView: View {
     var notEnoughInStockCount: Int
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                RecipeFilterCapsuleView(num: enoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .enoughInStock, color: Color(.GrocyColors.grocyGreen), backgroundColor: Color(.GrocyColors.grocyGreenBackground))
-                RecipeFilterCapsuleView(num: alreadyOnShoppingListCount, filteredStatus: $filteredStatus, ownFilteredStatus: .alreadyOnShoppingList, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
-                RecipeFilterCapsuleView(num: notEnoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .notEnoughInStock, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
-            }
-            .padding(.horizontal)
+        FilterCapsuleBar {
+            RecipeFilterCapsuleView(num: enoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .enoughInStock, color: Color(.GrocyColors.grocyGreen), backgroundColor: Color(.GrocyColors.grocyGreenBackground))
+            RecipeFilterCapsuleView(num: alreadyOnShoppingListCount, filteredStatus: $filteredStatus, ownFilteredStatus: .alreadyOnShoppingList, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
+            RecipeFilterCapsuleView(num: notEnoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .notEnoughInStock, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
         }
-        .scrollClipDisabled()
     }
 }
 

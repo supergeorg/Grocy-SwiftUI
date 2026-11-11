@@ -15,6 +15,10 @@ struct RecipeFilterCapsuleView: View {
     var color: Color
     var backgroundColor: Color
 
+    private var isSelected: Bool {
+        filteredStatus == ownFilteredStatus
+    }
+
     var body: some View {
         Button(action: {
             withAnimation {
@@ -27,20 +31,17 @@ struct RecipeFilterCapsuleView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: ownFilteredStatus.getIconName())
-                    .foregroundColor(color)
                 Text(String(num ?? 0))
                     .bold()
-                    .foregroundColor(color)
-                if filteredStatus == ownFilteredStatus {
+                if isSelected {
                     // Show full text
                     Text(ownFilteredStatus.rawValue)
-                        .foregroundColor(color)
+                        .transition(.blurReplace)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 12)
-            .glassEffect(.regular.tint(backgroundColor).interactive())
+            .foregroundStyle(color)
         }
+        .filterCapsuleStyle(tint: backgroundColor)
     }
 }
 
