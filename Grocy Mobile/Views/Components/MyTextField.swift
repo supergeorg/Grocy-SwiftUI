@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MyTextField: View {
-    @Environment(\.isEnabled) var isEnabled: Bool
     @Binding var textToEdit: String
     var description: LocalizedStringKey
     var subtitle: LocalizedStringKey?
@@ -20,33 +19,23 @@ struct MyTextField: View {
     var errorMessage: LocalizedStringKey?
     var helpText: LocalizedStringKey?
 
+    /// Becomes true on the first edit, so a new, still empty form doesn't greet people with an error.
+    @State private var hasEdited: Bool = false
+
     var body: some View {
         LabeledContent {
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading) {
+                // Disabled styling and field appearance come from the system.
                 TextField(prompt, text: $textToEdit)
-                    .foregroundColor(isEnabled ? .primary : .gray)
-                    .padding(.vertical, 8)
-                    .background(
-                        VStack {
-                            Spacer()
-                            Color(!isCorrect && !textToEdit.isEmpty && errorMessage != nil ? .systemRed : .systemGray)
-                                .frame(height: 2)
-                        }
-                    )
+                    .onChange(of: textToEdit) {
+                        hasEdited = true
+                    }
 
                 if !isCorrect && !textToEdit.isEmpty, let errorMessage = errorMessage {
-                    Text(errorMessage)
-                        .lineLimit(nil)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(.top, 4)
+                    validationMessage(errorMessage)
                 }
-                if textToEdit.isEmpty, let emptyMessage = emptyMessage {
-                    Text(emptyMessage)
-                        .lineLimit(nil)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(.top, 4)
+                if textToEdit.isEmpty && hasEdited, let emptyMessage = emptyMessage {
+                    validationMessage(emptyMessage)
                 }
             }
         } label: {
@@ -80,6 +69,14 @@ struct MyTextField: View {
                     .lineLimit(nil)
             }
         }
+    }
+
+    private func validationMessage(_ message: LocalizedStringKey) -> some View {
+        Text(message)
+            .lineLimit(nil)
+            .font(.caption)
+            // Asset color with enough contrast for small text on the grouped row background.
+            .foregroundStyle(Color(.GrocyColors.grocyRed))
     }
 }
 

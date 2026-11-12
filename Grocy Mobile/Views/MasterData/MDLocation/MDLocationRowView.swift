@@ -13,21 +13,30 @@ struct MDLocationRowView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .center) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(location.name)
-                    .font(.title)
+                    .font(.headline)
                     .foregroundStyle(location.active ? .primary : .secondary)
                 if location.isFreezer {
                     Image(systemName: MySymbols.freezing)
-                        .font(.title)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(Text("Freezer"))
                 }
+            }
+            // Inactive is spelled out, not only shown by the dimmed color.
+            if !location.active {
+                Text("Inactive")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             if !location.mdLocationDescription.isEmpty {
                 Text(location.mdLocationDescription)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
         .multilineTextAlignment(.leading)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -35,5 +44,6 @@ struct MDLocationRowView: View {
     List {
         MDLocationRowView(location: MDLocation(id: 1, name: "Location", active: true, mdLocationDescription: "Description", isFreezer: false))
         MDLocationRowView(location: MDLocation(id: 2, name: "Freezer", active: true, mdLocationDescription: "Description", isFreezer: true))
+        MDLocationRowView(location: MDLocation(id: 3, name: "Cellar", active: false, mdLocationDescription: "", isFreezer: false))
     }
 }
