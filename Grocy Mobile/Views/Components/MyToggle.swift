@@ -13,40 +13,29 @@ struct MyToggle: View {
     var descriptionInfo: LocalizedStringKey?
     var icon: String?
 
-    @State private var showInfo: Bool = false
-
     var body: some View {
-        HStack(alignment: .center) {
+        // The label belongs to the Toggle itself, so VoiceOver announces what is switched.
+        Toggle(isOn: $isOn) {
             if let icon = icon {
                 Label {
-                    HStack {
-                        Text(description)
-                            .layoutPriority(1)
-                        if let descriptionInfo = descriptionInfo {
-                            FieldDescription(description: descriptionInfo)
-                                .fixedSize()
-                        }
-                    }
+                    labelText
                 } icon: {
                     Image(systemName: icon).foregroundStyle(.primary)
                 }
             } else {
-                HStack {
-                    Text(description)
-                        .layoutPriority(1)
-                    if let descriptionInfo = descriptionInfo {
-                        FieldDescription(description: descriptionInfo)
-                            .fixedSize()
-                    }
-                }
+                labelText
             }
-            
-            Spacer()
-            
-            // Toggle stays on the right
-            Toggle("", isOn: $isOn)
-                .labelsHidden()
-                .fixedSize()
+        }
+    }
+
+    private var labelText: some View {
+        HStack {
+            Text(description)
+                .layoutPriority(1)
+            if let descriptionInfo = descriptionInfo {
+                FieldDescription(description: descriptionInfo)
+                    .fixedSize()
+            }
         }
     }
 }
@@ -57,5 +46,6 @@ struct MyToggle: View {
     Form {
         MyToggle(isOn: $isOn, description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
         MyToggle(isOn: $isOn, description: "Enable tare weight handling", descriptionInfo: "Descriptioninfo", icon: "tag")
+        MyToggle(isOn: $isOn, description: "Without icon")
     }
 }

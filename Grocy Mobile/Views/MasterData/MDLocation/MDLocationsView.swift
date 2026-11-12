@@ -16,6 +16,7 @@ struct MDLocationsView: View {
     @State private var showAddLocation: Bool = false
     @State private var locationToDelete: MDLocation? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdLocations: MDLocations {
@@ -59,6 +60,11 @@ struct MDLocationsView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting location failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -72,10 +78,16 @@ struct MDLocationsView: View {
 
     var content: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if mdLocationsCount == 0 {
-                ContentUnavailableView("No location defined. Please create one.", systemImage: MySymbols.location)
+            if mdLocationsCount == 0 {
+                ContentUnavailableView {
+                    Label("No locations", systemImage: MySymbols.location)
+                } description: {
+                    Text("No location defined. Please create one.")
+                } actions: {
+                    Button("Create location") {
+                        showAddLocation = true
+                    }
+                }
             } else if mdLocations.isEmpty {
                 ContentUnavailableView.search
             }
@@ -106,7 +118,7 @@ struct MDLocationsView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddLocation, destination: { NavigationStack { MDLocationFormView() } })
+            .navigationDestination(isPresented: $showAddLocation, destination: { MDLocationFormView() })
         #endif
         .navigationDestination(
             for: MDLocation.self,
@@ -133,13 +145,30 @@ struct MDLocationsView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = locationToDelete?.id {
                         Task {
                             await deleteLocation(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Deleting location failed",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .toolbar(content: {

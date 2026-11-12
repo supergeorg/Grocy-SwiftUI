@@ -12,9 +12,15 @@ struct ErrorMessageView: View {
 
     var body: some View {
         Section {
-            Label(errorMessage, systemImage: MySymbols.error)
-                .foregroundStyle(.primary)
-                .listRowBackground(Color.red)
+            Label {
+                Text(errorMessage)
+                    .foregroundStyle(.primary)
+            } icon: {
+                Image(systemName: MySymbols.error)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
+            }
+            // Tinted background with primary text keeps the contrast above 4.5:1 in light and dark mode.
+            .listRowBackground(Color(.GrocyColors.grocyRedBackground))
         }
     }
 }

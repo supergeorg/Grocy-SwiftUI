@@ -28504,6 +28504,16 @@
         }
       }
     },
+    "Deleting location failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen des Standorts fehlgeschlagen"
+          }
+        }
+      }
+    },
     "Demo server" : {
       "localizations" : {
         "cs" : {
@@ -36828,6 +36838,16 @@
         }
       }
     },
+    "Freezer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gefrierschrank"
+          }
+        }
+      }
+    },
     "Friday" : {
       "localizations" : {
         "ca" : {
@@ -38743,6 +38763,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "單數形式"
+          }
+        }
+      }
+    },
+    "Inactive" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inaktiv"
           }
         }
       }
@@ -46337,6 +46367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun lieu n'a été défini. Veuillez en créer un."
+          }
+        }
+      }
+    },
+    "No locations" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Standorte"
           }
         }
       }
@@ -67028,6 +67068,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此数量用于库存总览页面上的“快速打开”按钮（使用库存数量单位）"
+          }
+        }
+      }
+    },
+    "This can't be undone." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies kann nicht rückgängig gemacht werden."
           }
         }
       }
