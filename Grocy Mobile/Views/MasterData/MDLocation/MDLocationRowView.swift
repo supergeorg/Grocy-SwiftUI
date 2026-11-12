@@ -23,9 +23,9 @@ struct MDLocationRowView: View {
                         .accessibilityLabel(Text("Freezer"))
                 }
             }
-            // Inactive is spelled out, not only shown by the dimmed color.
+            // Disabled is spelled out, not only shown by the dimmed color ("Disabled" matches the Grocy web app).
             if !location.active {
-                Text("Inactive")
+                Text("Disabled")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
