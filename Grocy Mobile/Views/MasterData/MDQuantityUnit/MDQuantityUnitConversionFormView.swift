@@ -22,7 +22,7 @@ struct MDQuantityUnitConversionFormView: View {
 
     var quantityUnit: MDQuantityUnit
     var existingQuantityUnitConversion: MDQuantityUnitConversion?
-    @State var quantityUnitConversion: MDQuantityUnitConversion
+    @State private var quantityUnitConversion: MDQuantityUnitConversion
 
     @State private var createInverseConversion: Bool = true
 
@@ -227,8 +227,8 @@ struct MDQuantityUnitConversionFormView: View {
                     },
                     label: {
                         if !isProcessing {
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                             Label("Save", systemImage: MySymbols.save)
-                                .labelStyle(.titleAndIcon)
                         } else {
                             ProgressView().progressViewStyle(.circular)
                         }

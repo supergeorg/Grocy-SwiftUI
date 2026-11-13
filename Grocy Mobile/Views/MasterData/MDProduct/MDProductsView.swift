@@ -23,6 +23,7 @@ struct MDProductsView: View {
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdProducts: MDProducts {
@@ -68,6 +69,11 @@ struct MDProductsView: View {
             await grocyVM.requestData(objects: [.products, .product_barcodes])
         } catch {
             GrocyLogger.error("Deleting product failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -76,7 +82,13 @@ struct MDProductsView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdProductsCount == 0 {
-                ContentUnavailableView("No products found.", systemImage: MySymbols.product)
+                ContentUnavailableView {
+                    Label("No products", systemImage: MySymbols.product)
+                } actions: {
+                    Button("Create product") {
+                        showAddProduct = true
+                    }
+                }
             } else if mdProducts.isEmpty {
                 ContentUnavailableView.search
             }
@@ -117,13 +129,30 @@ struct MDProductsView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = productToDelete?.id {
                         Task {
                             await deleteProduct(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(productToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .toolbar(content: {
@@ -152,7 +181,7 @@ struct MDProductsView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddProduct, destination: { NavigationStack { MDProductFormView(userSettings: userSettings) } })
+            .navigationDestination(isPresented: $showAddProduct, destination: { MDProductFormView(userSettings: userSettings) })
         #endif
         .navigationDestination(
             for: MDProduct.self,

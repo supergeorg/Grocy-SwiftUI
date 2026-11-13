@@ -13,17 +13,23 @@ struct MDProductGroupRowView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text(productGroup.name)
-                    .font(.title)
-                    .foregroundColor(productGroup.active ? .primary : .gray)
+            Text(productGroup.name)
+                .font(.headline)
+                .foregroundStyle(productGroup.active ? .primary : .secondary)
+            // Disabled is spelled out, not only shown by the dimmed color ("Disabled" matches the Grocy web app).
+            if !productGroup.active {
+                Text("Disabled")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             if !productGroup.mdProductGroupDescription.isEmpty {
                 Text(productGroup.mdProductGroupDescription)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
         .multilineTextAlignment(.leading)
+        .accessibilityElement(children: .combine)
     }
 }
 

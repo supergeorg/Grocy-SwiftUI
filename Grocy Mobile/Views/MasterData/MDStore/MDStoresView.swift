@@ -16,6 +16,7 @@ struct MDStoresView: View {
     @State private var showAddStore: Bool = false
     @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdStores: MDStores {
@@ -62,6 +63,11 @@ struct MDStoresView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting store failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -70,7 +76,15 @@ struct MDStoresView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdStoresCount == 0 {
-                ContentUnavailableView("No store defined. Please create one.", systemImage: MySymbols.store)
+                ContentUnavailableView {
+                    Label("No stores", systemImage: MySymbols.store)
+                } description: {
+                    Text("No store defined. Please create one.")
+                } actions: {
+                    Button("Create store") {
+                        showAddStore = true
+                    }
+                }
             } else if mdStores.isEmpty {
                 ContentUnavailableView.search
             }
@@ -101,7 +115,7 @@ struct MDStoresView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddStore, destination: { NavigationStack { MDStoreFormView() } })
+            .navigationDestination(isPresented: $showAddStore, destination: { MDStoreFormView() })
         #endif
         .navigationDestination(
             for: MDStore.self,
@@ -128,13 +142,30 @@ struct MDStoresView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = storeToDelete?.id {
                         Task {
                             await deleteStore(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(storeToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .toolbar(content: {

@@ -16,6 +16,7 @@ struct MDProductGroupsView: View {
     @State private var showAddProductGroup: Bool = false
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdProductGroups: MDProductGroups {
@@ -62,6 +63,11 @@ struct MDProductGroupsView: View {
                 await updateData()
             } catch {
                 GrocyLogger.error("Deleting product group failed. \(error)")
+                if let apiError = error as? APIError {
+                    deleteErrorMessage = apiError.displayMessage
+                } else {
+                    deleteErrorMessage = error.localizedDescription
+                }
             }
         }
     }
@@ -71,7 +77,15 @@ struct MDProductGroupsView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdProductGroupsCount == 0 {
-                ContentUnavailableView("No product group defined. Please create one.", systemImage: MySymbols.productGroup)
+                ContentUnavailableView {
+                    Label("No product groups", systemImage: MySymbols.productGroup)
+                } description: {
+                    Text("No product group defined. Please create one.")
+                } actions: {
+                    Button("Create product group") {
+                        showAddProductGroup = true
+                    }
+                }
             } else if mdProductGroups.isEmpty {
                 ContentUnavailableView.search
             }
@@ -105,7 +119,7 @@ struct MDProductGroupsView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddProductGroup, destination: { NavigationStack { MDProductGroupFormView() } })
+            .navigationDestination(isPresented: $showAddProductGroup, destination: { MDProductGroupFormView() })
         #endif
         .navigationDestination(
             for: MDProductGroup.self,
@@ -145,13 +159,30 @@ struct MDProductGroupsView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = productGroupToDelete?.id {
                         Task {
                             await deleteProductGroup(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(productGroupToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
     }

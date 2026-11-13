@@ -12,21 +12,30 @@ struct MDQuantityUnitRowView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .center) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(quantityUnit.name)
-                    .font(.title)
+                    .font(.headline)
                 if !quantityUnit.namePlural.isEmpty {
                     Text("(\(quantityUnit.namePlural))")
-                        .font(.title3)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
             }
             .foregroundStyle(quantityUnit.active ? .primary : .secondary)
+            // Disabled is spelled out, not only shown by the dimmed color ("Disabled" matches the Grocy web app).
+            if !quantityUnit.active {
+                Text("Disabled")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
             if !quantityUnit.mdQuantityUnitDescription.isEmpty {
                 Text(quantityUnit.mdQuantityUnitDescription)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
         .multilineTextAlignment(.leading)
+        .accessibilityElement(children: .combine)
     }
 }
 

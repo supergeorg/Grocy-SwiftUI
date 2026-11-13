@@ -23,7 +23,7 @@ struct MDChoreFormView: View {
     var existingChore: MDChore? = nil
     var isPopup: Bool
 
-    @State var chore: MDChore
+    @State private var chore: MDChore
 
     init(existingChore: MDChore? = nil, isPopup: Bool = false) {
         self.existingChore = existingChore
@@ -180,7 +180,7 @@ struct MDChoreFormView: View {
                     if [ChorePeriodType.manually, ChorePeriodType.adaptive].contains(chore.periodType) {
                         Text(periodIntervalInfoText)
                             .font(.caption)
-                            .foregroundStyle(.teal)
+                            .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
@@ -199,7 +199,7 @@ struct MDChoreFormView: View {
                         )
                         Text(periodIntervalInfoText)
                             .font(.caption)
-                            .foregroundStyle(.teal)
+                            .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
@@ -244,7 +244,7 @@ struct MDChoreFormView: View {
                     )
                     Text(assignmentTypeInfoText)
                         .font(.caption)
-                        .foregroundStyle(.teal)
+                        .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
@@ -302,8 +302,8 @@ struct MDChoreFormView: View {
                     },
                     label: {
                         if !isProcessing {
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                             Label("Save", systemImage: MySymbols.save)
-                                .labelStyle(.titleAndIcon)
                         } else {
                             ProgressView().progressViewStyle(.circular)
                         }

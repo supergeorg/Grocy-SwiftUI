@@ -22,6 +22,8 @@ struct MyTextEditor: View {
         LabeledContent(
             content: {
                 TextEditor(text: $textToEdit)
+                    // In a Form row, the content column is trailing-aligned on macOS; text reads from the leading edge.
+                    .multilineTextAlignment(.leading)
                     .accessibilityLabel(Text(description))
                     #if os(macOS)
                         .frame(minHeight: minEditorHeight)

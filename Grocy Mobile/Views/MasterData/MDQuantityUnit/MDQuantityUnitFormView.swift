@@ -21,7 +21,7 @@ struct MDQuantityUnitFormView: View {
     @State private var errorMessage: String? = nil
 
     var existingQuantityUnit: MDQuantityUnit?
-    @State var quantityUnit: MDQuantityUnit
+    @State private var quantityUnit: MDQuantityUnit
 
     @State private var showAddQuantityUnitConversion: Bool = false
 
@@ -231,11 +231,12 @@ struct MDQuantityUnitFormView: View {
             }
         })
         .alert(
-            "Delete",
+            "Are you sure you want to remove this conversion?",
             isPresented: $showConversionDeleteAlert,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let deleteID = conversionToDelete?.id {
                         Task {
                             await deleteQUConversion(toDelID: deleteID)

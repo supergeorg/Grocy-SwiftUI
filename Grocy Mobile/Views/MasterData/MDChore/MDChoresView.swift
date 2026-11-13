@@ -16,6 +16,7 @@ struct MDChoresView: View {
     @State private var showAddChore: Bool = false
     @State private var choreToDelete: MDChore? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     var mdChores: MDChores {
         let sortDescriptor = SortDescriptor<MDChore>(\.name)
@@ -57,6 +58,11 @@ struct MDChoresView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting chore failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -70,10 +76,16 @@ struct MDChoresView: View {
 
     var content: some View {
         List {
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
-                ServerProblemView()
-            } else if choresCount == 0 {
-                ContentUnavailableView("No chore defined. Please create one.", systemImage: MySymbols.chores)
+            if choresCount == 0 {
+                ContentUnavailableView {
+                    Label("No chores", systemImage: MySymbols.chores)
+                } description: {
+                    Text("No chore defined. Please create one.")
+                } actions: {
+                    Button("Create chore") {
+                        showAddChore = true
+                    }
+                }
             } else if mdChores.isEmpty {
                 ContentUnavailableView.search
             }
@@ -104,7 +116,7 @@ struct MDChoresView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddChore, destination: { NavigationStack { MDChoreFormView() } })
+            .navigationDestination(isPresented: $showAddChore, destination: { MDChoreFormView() })
         #endif
         .navigationDestination(
             for: MDChore.self,
@@ -127,13 +139,30 @@ struct MDChoresView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = choreToDelete?.id {
                         Task {
                             await deleteChore(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(choreToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .toolbar(content: {
