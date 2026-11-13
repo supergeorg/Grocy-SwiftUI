@@ -115,6 +115,30 @@ struct SwiftDataSynchronizer {
         }
     }
 
+    /// Links every stock element to its product. Needed when the stock was synced before the products.
+    func linkStockElementsToProducts() throws {
+        do {
+            let productsById = Dictionary(
+                try modelContext.fetch(FetchDescriptor<MDProduct>()).map { ($0.id, $0) },
+                uniquingKeysWith: { first, _ in first }
+            )
+            var changed = false
+            for element in try modelContext.fetch(FetchDescriptor<StockElement>()) {
+                let product = productsById[element.productID]
+                if element.product?.persistentModelID != product?.persistentModelID {
+                    element.product = product
+                    changed = true
+                }
+            }
+            if changed {
+                try modelContext.save()
+            }
+        } catch {
+            modelContext.rollback()
+            throw error
+        }
+    }
+
     /// Clears existing objects and inserts new ones atomically.
     private func clearAndInsertObjects<T: PersistentModel>(_ newObjects: [T]) throws {
         let fetchDescriptor = FetchDescriptor<T>()
@@ -165,8 +189,9 @@ struct SwiftDataSynchronizer {
             if let existingObject = existingById[newObject.id] {
                 // Check if object needs updating
                 if existingObject != newObject {
-                    // For SwiftData, update by deleting and re-inserting to ensure consistency
-                    modelContext.delete(existingObject)
+                    // Inserting an object whose unique id already exists updates the stored row (upsert).
+                    // The existing instance keeps its identity, so views and relationships that hold it stay valid.
+                    // Deleting and re-inserting would invalidate them and nullify relationships such as StockElement.product.
                     modelContext.insert(newObject)
                 }
             } else {

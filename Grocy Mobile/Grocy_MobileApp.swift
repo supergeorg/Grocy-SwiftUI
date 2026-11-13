@@ -76,43 +76,48 @@ struct Grocy_MobileApp: App {
     @AppStorage("useHassIngress") var useHassIngress: Bool = false
     @AppStorage("hassToken") var hassToken: String = ""
 
+    /// All types stored in the main (cache) store. `GrocyViewModel.deleteAllCachedData()` clears exactly these.
+    static let mainModelTypes: [any PersistentModel.Type] = [
+        StockElement.self,
+        ShoppingListItem.self,
+        ShoppingListDescription.self,
+        MDLocation.self,
+        MDStore.self,
+        MDQuantityUnit.self,
+        MDQuantityUnitConversion.self,
+        MDProductGroup.self,
+        MDProduct.self,
+        MDProductBarcode.self,
+        MDTaskCategory.self,
+        StockJournalEntry.self,
+        GrocyUser.self,
+        StockEntry.self,
+        GrocyUserSettings.self,
+        StockProductDetails.self,
+        StockProduct.self,
+        VolatileStock.self,
+        Recipe.self,
+        StockLocation.self,
+        SystemConfig.self,
+        RecipePos.self,
+        RecipePosResolvedElement.self,
+        RecipeFulfilment.self,
+        MDChore.self,
+        Chore.self,
+        ChoreLogEntry.self,
+        ChoreDetails.self,
+        GrocyTask.self,
+        RecipeNesting.self,
+        VolatileStockElement.self,
+        VolatileStockProductMissing.self,
+    ]
+
     var modelContainer: ModelContainer
     let profileModelContainer: ModelContainer
 
     init() {
         // Main container schema (all data except ServerProfile and LoginCustomHeader)
-        let mainSchema = Schema([
-            StockElement.self,
-            ShoppingListItem.self,
-            ShoppingListDescription.self,
-            MDLocation.self,
-            MDStore.self,
-            MDQuantityUnit.self,
-            MDQuantityUnitConversion.self,
-            MDProductGroup.self,
-            MDProduct.self,
-            MDProductBarcode.self,
-            MDTaskCategory.self,
-            StockJournalEntry.self,
-            GrocyUser.self,
-            StockEntry.self,
-            GrocyUserSettings.self,
-            StockProductDetails.self,
-            StockProduct.self,
-            VolatileStock.self,
-            Recipe.self,
-            StockLocation.self,
-            SystemConfig.self,
-            RecipePos.self,
-            RecipePosResolvedElement.self,
-            RecipeFulfilment.self,
-            MDChore.self,
-            Chore.self,
-            ChoreLogEntry.self,
-            ChoreDetails.self,
-            GrocyTask.self,
-            RecipeNesting.self,
-        ])
+        let mainSchema = Schema(Grocy_MobileApp.mainModelTypes)
 
         // Profile container schema (ServerProfile and LoginCustomHeader with iCloud sync)
         let profileSchema = Schema([
@@ -131,7 +136,7 @@ struct Grocy_MobileApp: App {
                     fatalError("Failed to create in-memory ModelContainers for UI tests: \(error)")
                 }
                 modelContainer = mainContainer
-                let vm = GrocyViewModel(modelContext: ModelContext(mainContainer), profileModelContext: ModelContext(profileModelContainer))
+                let vm = GrocyViewModel(modelContext: mainContainer.mainContext, profileModelContext: profileModelContainer.mainContext)
                 _grocyVM = State(initialValue: vm)
                 if let serverURL = UITestConfiguration.serverURL {
                     Task {
@@ -178,8 +183,9 @@ struct Grocy_MobileApp: App {
         func initializeMainContainer(profileContainer: ModelContainer) throws -> (ModelContainer, GrocyViewModel) {
             try ModelContainer.ensureStorePath()
             let container = try ModelContainer(for: mainSchema, configurations: mainConfig)
-            let modelContext = ModelContext(container)
-            let vm = GrocyViewModel(modelContext: modelContext, profileModelContext: ModelContext(profileContainer))
+            // The view model writes through the same main context the views read from, so @Query and
+            // modelContext.fetch in views see its saves immediately.
+            let vm = GrocyViewModel(modelContext: container.mainContext, profileModelContext: profileContainer.mainContext)
             return (container, vm)
         }
 
@@ -204,27 +210,22 @@ struct Grocy_MobileApp: App {
 
             // Retry after cleanup with fresh directory creation
             do {
-                // Force clean directory creation
-                let storeDirectory = storeURL.deletingLastPathComponent()
-                try? FileManager.default.removeItem(at: storeDirectory)
-                try ModelContainer.ensureStorePath()
-
                 let (container, vm) = try initializeMainContainer(profileContainer: profileModelContainer)
                 self.modelContainer = container
                 self._grocyVM = State(initialValue: vm)
                 GrocyLogger.info("Successfully recovered main ModelContainer after store deletion")
             } catch {
-                // Last resort: reset everything and start fresh
-                GrocyLogger.error("Failed to recover main ModelContainer, attempting full reset: \(error)")
+                // Last resort: try once more after deleting the store again. The profile store is left alone,
+                // because it's already open and holds the user's server profiles.
+                GrocyLogger.error("Failed to recover main ModelContainer, retrying once more: \(error)")
                 try? ModelContainer.deleteStore(at: storeURL)
-                ModelContainer.resetProfileStore()
 
                 do {
                     // Try one more time with clean slate
                     let (container, vm) = try initializeMainContainer(profileContainer: profileModelContainer)
                     self.modelContainer = container
                     self._grocyVM = State(initialValue: vm)
-                    GrocyLogger.info("Successfully recovered main ModelContainer after full reset")
+                    GrocyLogger.info("Successfully recovered main ModelContainer on the second retry")
                 } catch {
                     // Complete failure - this should not happen if the code is correct
                     fatalError("Failed to create main ModelContainer after all recovery attempts: \(error)")
@@ -233,7 +234,7 @@ struct Grocy_MobileApp: App {
         }
 
         // Do migration for old AppStorage based to profile
-        let profileModelContext = ModelContext(profileModelContainer)
+        let profileModelContext = profileModelContainer.mainContext
         var descriptor = FetchDescriptor<ServerProfile>()
         descriptor.fetchLimit = 0
 
@@ -242,6 +243,11 @@ struct Grocy_MobileApp: App {
             let profile = ServerProfile(name: "", grocyServerURL: grocyServerURL, grocyAPIKey: grocyAPIKey, useHassIngress: useHassIngress, hassToken: hassToken)
             selectedServerProfileID = profile.id
             profileModelContext.insert(profile)
+            do {
+                try profileModelContext.save()
+            } catch {
+                GrocyLogger.error("Saving the migrated server profile failed. \(error)")
+            }
             let vm = grocyVM
             Task {
                 await vm.setLoginModus()
@@ -272,7 +278,7 @@ struct Grocy_MobileApp: App {
         .modelContainer(modelContainer)
         .modelContainer(profileModelContainer)
         .environment(grocyVM)
-        .environment(\.profileModelContext, ModelContext(profileModelContainer))
+        .environment(\.profileModelContext, profileModelContainer.mainContext)
         .environment(\.profileModelContainer, profileModelContainer)
         .environment(\.locale, Locale(identifier: localizationKey))
         .commands {
@@ -290,7 +296,7 @@ struct Grocy_MobileApp: App {
                     .modelContainer(modelContainer)
                     .modelContainer(profileModelContainer)
                     .environment(grocyVM)
-                    .environment(\.profileModelContext, ModelContext(profileModelContainer))
+                    .environment(\.profileModelContext, profileModelContainer.mainContext)
                     .environment(\.profileModelContainer, profileModelContainer)
                     .environment(\.locale, Locale(identifier: localizationKey))
                 }
@@ -307,7 +313,7 @@ extension ModelContainer {
 
     static func resetProfileStore() {
         let storePath = URL.applicationSupportDirectory.appending(component: "profiles.store")
-        try? FileManager.default.removeItem(at: storePath)
+        try? ModelContainer.deleteStore(at: storePath)
     }
 }
 
