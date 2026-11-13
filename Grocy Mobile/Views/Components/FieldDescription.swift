@@ -21,12 +21,16 @@ struct FieldDescription: View {
         }
         // Borderless, so tapping the button doesn't trigger the whole Form row (e.g. a Toggle).
         .buttonStyle(.borderless)
+        // The glyph is smaller than the HIG minimum hit region (44x44 pt on iOS, 20x20 pt on macOS).
+        // Enlarge only the clickable area; the negative padding keeps the row layout unchanged.
         #if os(iOS)
-            // The glyph is much smaller than the 44x44 pt minimum hit region (HIG).
-            // Enlarge only the tappable area; the negative padding keeps the row layout unchanged.
             .padding(10)
             .contentShape(Rectangle())
             .padding(-10)
+        #else
+            .padding(4)
+            .contentShape(Rectangle())
+            .padding(-4)
         #endif
         .help(description)
         .accessibilityLabel(Text("Details"))

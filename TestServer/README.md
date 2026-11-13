@@ -23,6 +23,19 @@ The script builds the image (cached after the first run, which takes about 2–3
 2. In the "Grocy MobileTests" scheme, go to Test › Arguments › Environment Variables and add `GROCY_TEST_SERVER_URL` = `http://localhost:9290`
 3. Run the tests. Without `GROCY_TEST_SERVER_URL`, the integration suites are skipped and the other unit tests run as usual.
 
+## Run the UI tests
+
+UI tests in `Grocy MobileUITests/` (e.g. `MDLocationUITests`) use the same server. They create their own fixtures over the REST API, check the screens' design and accessibility rules, and attach screenshots to the test report, so the layout can be reviewed per platform.
+
+```sh
+TestServer/grocy-test-server.sh start
+TEST_RUNNER_GROCY_TEST_SERVER_URL=http://localhost:9290 \
+xcodebuild test -project "Grocy Mobile.xcodeproj" -scheme "Grocy MobileUITests" \
+    -destination "platform=macOS" -only-testing "Grocy MobileUITests/MDLocationUITests"
+```
+
+Any iOS simulator works as a destination, too. The app is launched with `GROCY_UITEST_SERVER_URL` in its environment, which turns on `UITestConfiguration` (debug builds only): both SwiftData stores stay in memory and the app logs in without creating a server profile, so the data, login and iCloud profiles of the installed app are never touched. Without `GROCY_TEST_SERVER_URL`, the UI tests are skipped. On macOS, the first run asks to allow UI automation; the Mac must be unlocked while the tests run.
+
 ## Server control
 
 ```sh

@@ -26,8 +26,18 @@ struct MyTextField: View {
         LabeledContent {
             VStack(alignment: .leading) {
                 // Disabled styling and field appearance come from the system.
-                TextField(prompt, text: $textToEdit)
-                    .onChange(of: textToEdit) {
+                // The description is the field's (hidden) label, so VoiceOver names the field, and the prompt
+                // stays a placeholder. Otherwise macOS shows the title as a second visible label in the Form row.
+                TextField(text: $textToEdit, prompt: Text(LocalizedStringKey(prompt))) {
+                    Text(description)
+                }
+                .labelsHidden()
+                #if os(iOS)
+                    // On iOS, hiding the label also removes it from accessibility.
+                    // (macOS keeps it; an extra label there would be read twice: "Name, Name".)
+                    .accessibilityLabel(Text(description))
+                #endif
+                .onChange(of: textToEdit) {
                         hasEdited = true
                     }
 

@@ -12,10 +12,20 @@ struct MyTextEditor: View {
     var description: LocalizedStringKey
     var leadingIcon: String?
 
+    #if os(macOS)
+        // In a macOS Form, an empty TextEditor collapses to a sliver of a line. Keep room for about three lines,
+        // scaled with the text size.
+        @ScaledMetric(relativeTo: .body) private var minEditorHeight: CGFloat = 54
+    #endif
+
     var body: some View {
         LabeledContent(
             content: {
                 TextEditor(text: $textToEdit)
+                    .accessibilityLabel(Text(description))
+                    #if os(macOS)
+                        .frame(minHeight: minEditorHeight)
+                    #endif
             },
             label: {
                 if let leadingIcon = leadingIcon {
