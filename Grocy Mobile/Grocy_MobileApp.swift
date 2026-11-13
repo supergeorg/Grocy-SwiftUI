@@ -120,6 +120,32 @@ struct Grocy_MobileApp: App {
             LoginCustomHeader.self,
         ])
 
+        #if DEBUG
+            if UITestConfiguration.isActive {
+                // UI tests run on in-memory stores, so the user's cache, login and iCloud profiles stay untouched.
+                let mainContainer: ModelContainer
+                do {
+                    mainContainer = try ModelContainer(for: mainSchema, configurations: ModelConfiguration(schema: mainSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                    profileModelContainer = try ModelContainer(for: profileSchema, configurations: ModelConfiguration(schema: profileSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                } catch {
+                    fatalError("Failed to create in-memory ModelContainers for UI tests: \(error)")
+                }
+                modelContainer = mainContainer
+                let vm = GrocyViewModel(modelContext: ModelContext(mainContainer), profileModelContext: ModelContext(profileModelContainer))
+                _grocyVM = State(initialValue: vm)
+                if let serverURL = UITestConfiguration.serverURL {
+                    Task {
+                        do {
+                            try await vm.checkServer(baseURL: serverURL, apiKey: UITestConfiguration.apiKey, isDemoMode: false)
+                        } catch {
+                            GrocyLogger.error("UI test login failed. \(error)")
+                        }
+                    }
+                }
+                return
+            }
+        #endif
+
         let mainConfig = ModelConfiguration(
             schema: mainSchema,
             url: sharedModelContainerURL(),

@@ -189,6 +189,12 @@ Adding a suite for another entity (use `MDLocationIntegrationTests.swift` as the
 4. Make tests independent of each other and of the server's contents: use unique names (`UUID`), create your own fixtures, and delete them with the `withCleanup` pattern (it also runs when a test fails). Create the entities a test depends on (e.g. a location and quantity unit before a product) inside that test.
 5. Check the server's supported version still matches `GrocyAPP.supportedVersions` when updating the Grocy clone.
 
+UI tests against the same server live in `Grocy MobileUITests/` (template: `MDLocationUITests.swift`, XCTest + XCUIAutomation; see `TestServer/README.md`):
+
+- The test passes `GROCY_UITEST_SERVER_URL` / `GROCY_UITEST_API_KEY` in the app's launch environment. That turns on `UITestConfiguration` (DEBUG only): in-memory stores and a direct login, so the installed app's data, login and iCloud profiles are never touched. Launch arguments like `-isLoggedIn YES -onboardingNeeded NO -localizationKey en` go to UserDefaults' argument domain and aren't persisted.
+- Run them on macOS **and** an iOS simulator. On macOS, use `click()` instead of `tap()` (taps don't trigger navigation there), and read static text from `value` (iOS uses `label`).
+- Attach screenshots (`XCTAttachment`, `.keepAlways`) of each screen, so the layout can be reviewed per platform from the result bundle (`xcrun xcresulttool export attachments`).
+
 ## Checklist: Adding a New Grocy Entity
 
 1. Create the `@Model` in `Model/<Area>/`, following the model conventions above (flexible decoding, `CodingKeys`, `==`, typealias).

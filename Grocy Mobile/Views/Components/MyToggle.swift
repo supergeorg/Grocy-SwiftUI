@@ -26,6 +26,9 @@ struct MyToggle: View {
                 labelText
             }
         }
+        // On macOS, a Form shows the label next to the switch without naming the switch itself,
+        // so VoiceOver would only announce "switch". The explicit label fixes that on every platform.
+        .accessibilityLabel(Text(description))
     }
 
     private var labelText: some View {
