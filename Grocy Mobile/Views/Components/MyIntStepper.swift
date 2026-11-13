@@ -29,23 +29,27 @@ struct MyIntStepper: View {
         VStack(alignment: .leading) {
             LabeledContent {
                 HStack {
-                    TextField("", value: $amount, formatter: formatter)
+                    TextField(description, value: $amount, formatter: formatter)
+                        // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
+                        .labelsHidden()
                         #if os(macOS)
                             .frame(width: 90)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
+                            .accessibilityLabel(Text(description))
                         #endif
                     if let amountName = amountName {
                         Text(amountName)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Stepper(
-                        "",
+                        description,
                         value: $amount,
                         in: ((minAmount ?? 0)...(Int.max - 1)),
                         step: 1
                     )
+                    // The title stays the stepper\'s accessibility label on both platforms.
                     .labelsHidden()
                 }
             } label: {
@@ -69,7 +73,7 @@ struct MyIntStepper: View {
             if let minAmount = minAmount, amount < minAmount, let errorMessage = errorMessage {
                 Text(errorMessage)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -99,12 +103,15 @@ struct MyIntStepperOptional: View {
         VStack(alignment: .leading) {
             LabeledContent {
                 HStack {
-                    TextField("", value: $amount, formatter: formatter)
+                    TextField(description, value: $amount, formatter: formatter)
+                        // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
+                        .labelsHidden()
                         #if os(macOS)
                             .frame(width: 90)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
+                            .accessibilityLabel(Text(description))
                         #endif
                     if let amountName = amountName {
                         Text(amountName)
@@ -112,7 +119,7 @@ struct MyIntStepperOptional: View {
                     }
 
                     Stepper(
-                        "",
+                        description,
                         onIncrement: {
                             if let previousAmount = amount {
                                 amount = previousAmount + 1
@@ -136,6 +143,7 @@ struct MyIntStepperOptional: View {
                             }
                         }
                     )
+                    // The title stays the stepper\'s accessibility label on both platforms.
                     .labelsHidden()
                 }
             } label: {
@@ -159,7 +167,7 @@ struct MyIntStepperOptional: View {
             if let minAmount = minAmount, let amount = amount, amount < minAmount, let errorMessage = errorMessage {
                 Text(errorMessage)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

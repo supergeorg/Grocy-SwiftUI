@@ -31,6 +31,7 @@ struct TasksView: View {
     @State private var showCreateTask: Bool = false
     @State private var taskToDelete: GrocyTask? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     @Query var mdTaskCategories: MDTaskCategories
     @Query var grocyUsers: GrocyUsers
@@ -201,6 +202,11 @@ struct TasksView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting task failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -381,13 +387,30 @@ struct TasksView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = taskToDelete?.id {
                         Task {
                             await deleteTask(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(taskToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .toolbar {

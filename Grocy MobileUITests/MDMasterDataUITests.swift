@@ -45,6 +45,10 @@ final class MDMasterDataUITests: GrocyUITestCase {
     func testChores() async throws {
         try await createObject("chores", ["name": entryName, "description": entryDescription, "period_type": "manually", "active": 0])
         checkDisabledEntry(inList: "Chores")
+
+        // The start date picker is named once (not "Start date, Start date").
+        let datePicker = XCUIApplication().datePickers.matching(NSPredicate(format: "label == %@", "Start date")).firstMatch
+        XCTAssertTrue(datePicker.waitForExistence(timeout: 5), "The start date picker isn't labeled \"Start date\".")
     }
 
     @MainActor
@@ -65,6 +69,7 @@ final class MDMasterDataUITests: GrocyUITestCase {
     private func checkDisabledEntry(inList listTitle: String, formSection: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
         let app = launchApp()
         openMasterData(listTitle, in: app)
+        search(for: entryName, in: app)
 
         let row = element(in: app, labelContaining: entryName)
         XCTAssertTrue(row.waitForExistence(timeout: 10), "The entry isn't listed in \(listTitle).", file: file, line: line)

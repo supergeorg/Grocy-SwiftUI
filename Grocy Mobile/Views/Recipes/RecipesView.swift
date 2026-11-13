@@ -53,6 +53,7 @@ struct RecipesView: View {
     @State private var showAddRecipe: Bool = false
     @State private var recipeToDelete: Recipe? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
     @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
     @AppStorage("RecipesView.sortOrder") private var sortOrderKey: String = "reverse"
     @State private var filteredStatus: RecipeStatus = .all
@@ -85,6 +86,11 @@ struct RecipesView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting recipe failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -223,13 +229,30 @@ struct RecipesView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = recipeToDelete?.id {
                         Task {
                             await deleteRecipe(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(recipeToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
         .sheet(isPresented: $showAddRecipe) {

@@ -87,9 +87,12 @@ struct ServerProblemView: View {
                 label: {
                     Label("Try again", systemImage: MySymbols.reload)
                         .symbolEffect(.rotate, isActive: isLoading)
+                        .frame(maxWidth: .infinity)
                 }
             )
-            .buttonStyle(MyGlassButtonStyle(backgroundColor: .blue))
+            // System glass style: handles pressed and disabled states and keeps the label legible.
+            .buttonStyle(.glassProminent)
+            .controlSize(.large)
             if devMode {
                 List {
                     ForEach(grocyVM.failedToLoadObjects.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { object in

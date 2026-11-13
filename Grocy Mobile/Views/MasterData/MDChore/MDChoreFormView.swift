@@ -210,7 +210,10 @@ struct MDChoreFormView: View {
 
                 LabeledContent(
                     content: {
-                        DatePicker("", selection: $chore.startDate)
+                        // Named by its (hidden) title, so VoiceOver says which date this is.
+                        // Unlike a TextField, a DatePicker keeps the hidden title as its accessibility label.
+                        DatePicker("Start date", selection: $chore.startDate)
+                            .labelsHidden()
                     },
                     label: {
                         Label {

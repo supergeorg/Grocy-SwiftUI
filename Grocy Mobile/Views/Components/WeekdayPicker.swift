@@ -83,13 +83,19 @@ struct WeekdaySelectButton: View {
     let action: () -> Void
 
     var body: some View {
-        Text(weekday.localizedName)
-            .font(.system(size: 15, weight: .medium, design: .rounded))
-            .foregroundStyle(isSelected ? .white : .primary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .glassEffect(.regular.tint(isSelected ? .accentColor : .secondary).interactive())
-            .onTapGesture(perform: action)
+        // A real button (not a tap gesture), so VoiceOver announces it, with the selection as a trait.
+        let button = Button(action: action) {
+            Text(weekday.localizedName)
+                .font(.subheadline.weight(.medium))
+                .fontDesign(.rounded)
+        }
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+
+        if isSelected {
+            button.buttonStyle(.glassProminent)
+        } else {
+            button.buttonStyle(.glass)
+        }
     }
 }
 

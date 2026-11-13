@@ -29,30 +29,48 @@ struct UserRowActionsView: View {
     }
     
     var body: some View {
-        HStack(spacing: 2){
-            RowInteractionButton(title: nil, image: "square.and.pencil", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Edit this item")
-                .onTapGesture {
-                    GrocyLogger.info("Edit user not implemented")
-                }
-                .disabled(true)
-            RowInteractionButton(image: "lock.fill", backgroundColor: Color(.GrocyColors.grocyTurquoise), helpString: "Configure user permissions")
-                .onTapGesture {
-                    GrocyLogger.info("Edit permissions not implemented")
-                }
-                .disabled(true)
-            RowInteractionButton(image: "trash.fill", backgroundColor: isCurrentUser ? Color(.GrocyColors.grocyDeleteLocked) : Color(.GrocyColors.grocyDelete), helpString: "Delete this item")
-                .onTapGesture {
-                    showDeleteAction.toggle()
-                }
-                .alert(isPresented:$showDeleteAction) {
-                    Alert(title: Text("Are you sure you want to delete user \"\(user.displayName)\"?"), message: Text(""), primaryButton: .destructive(Text("Delete")) {
-                        Task {
-                            await deleteUser()
-                        }
-                    }, secondaryButton: .cancel())
-                }
-                .disabled(isCurrentUser)
+        // Real buttons (not tap gestures), labeled for VoiceOver; the icon-only style keeps the row compact.
+        HStack {
+            Button {
+                GrocyLogger.info("Edit user not implemented")
+            } label: {
+                Label("Edit this item", systemImage: MySymbols.edit)
+            }
+            .help("Edit this item")
+            .disabled(true)
+            Button {
+                GrocyLogger.info("Edit permissions not implemented")
+            } label: {
+                Label("Configure user permissions", systemImage: MySymbols.permissions)
+            }
+            .help("Configure user permissions")
+            .disabled(true)
+            Button(role: .destructive) {
+                showDeleteAction.toggle()
+            } label: {
+                Label("Delete this item", systemImage: MySymbols.delete)
+            }
+            .help("Delete this item")
+            .disabled(isCurrentUser)
         }
+        .labelStyle(.iconOnly)
+        .buttonStyle(.borderless)
+        .alert(
+            "Are you sure you want to delete user \"\(user.displayName)\"?",
+            isPresented: $showDeleteAction,
+            actions: {
+                Button("Cancel", role: .cancel) {}
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
+                    Task {
+                        await deleteUser()
+                    }
+                }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
     }
 }
 
