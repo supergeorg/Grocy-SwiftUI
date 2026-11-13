@@ -11,6 +11,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import WebKit
+import WidgetKit
 
 @MainActor
 @Observable
@@ -36,6 +37,8 @@ class GrocyViewModel {
     @ObservationIgnored @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
 
     @ObservationIgnored var refreshTimer: Timer?
+    /// The automatic login started at launch. `requestData` waits for it, so the views' first `.task` doesn't run before the API is configured.
+    @ObservationIgnored private var loginTask: Task<Void, Never>?
 
     var systemInfo: SystemInfo?
     var systemDBChangedTime: SystemDBChangedTime?
@@ -131,7 +134,7 @@ class GrocyViewModel {
         })
         self.jsonEncoder.outputFormatting = .prettyPrinted
         if isLoggedIn {
-            Task {
+            loginTask = Task {
                 do {
                     if isDemoModus {
                         try await checkServer(
@@ -152,6 +155,7 @@ class GrocyViewModel {
                             customHeaders: profile.customHeaders ?? []
                         )
                     }
+                    self.setUpdateTimer()
                 } catch {
                     GrocyLogger.error("\(error)")
                 }
@@ -194,6 +198,8 @@ class GrocyViewModel {
     }
 
     func logout() {
+        self.loginTask?.cancel()
+        self.loginTask = nil
         self.stopUpdateTimer()
         grocyApi.clearHassData()
         grocyApi.clearLoginData()
@@ -231,13 +237,21 @@ class GrocyViewModel {
     }
 
     func checkServer(baseURL: String, apiKey: String?, useHassIngress: Bool = false, hassToken: String = "", isDemoMode: Bool, customHeaders: [LoginCustomHeader] = []) async throws {
-        self.grocyApi = GrocyApi()
+        // Configure the new API completely before swapping it in, so no request runs against a half-configured instance.
+        let api = GrocyApi()
         if useHassIngress && !isDemoMode, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: baseURL) {
-            await grocyApi.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
+            api.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
-        grocyApi.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "", customHeaders: Dictionary(uniqueKeysWithValues: customHeaders.map({ ($0.headerName, $0.headerValue) })))
-        grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
-        let systemInfo = try await grocyApi.getSystemInfo()
+        api.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "", customHeaders: Dictionary(uniqueKeysWithValues: customHeaders.map({ ($0.headerName, $0.headerValue) })))
+        api.setTimeoutInterval(timeoutInterval: timeoutInterval)
+        self.grocyApi = api
+        // The server may have changed, so reload everything and forget errors from the previous server.
+        self.timeStampsObjects.removeAll()
+        self.timeStampsAdditionalObjects.removeAll()
+        self.failedToLoadObjects.removeAll()
+        self.failedToLoadAdditionalObjects.removeAll()
+        self.failedToLoadErrors.removeAll()
+        let systemInfo = try await api.getSystemInfo()
         if !systemInfo.grocyVersion.version.isEmpty {
             GrocyLogger.info("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").")
             self.systemInfo = systemInfo
@@ -292,8 +306,14 @@ class GrocyViewModel {
     }
 
     func requestData(objects: [ObjectEntities]? = nil, additionalObjects: [AdditionalEntities]? = nil) async {
-        // Guard against calling API before initialization is complete
-        guard grocyApi.isLoggedIn else { return }
+        // Wait for the automatic login started at launch, then guard against calling the API before it's configured.
+        if !grocyApi.isLoggedIn, let loginTask {
+            await loginTask.value
+        }
+        guard grocyApi.isLoggedIn else {
+            GrocyLogger.debug("Skipping data request, because the API isn't configured yet.")
+            return
+        }
 
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
@@ -331,6 +351,8 @@ class GrocyViewModel {
                         case .products:
                             self.mdProducts = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdProducts)
+                            // Stock may have been synced before the products (for example on first launch), so link it now.
+                            try swiftDataSync.linkStockElementsToProducts()
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdQuantityUnitConversions)
@@ -454,6 +476,7 @@ class GrocyViewModel {
             let dueSoonDays = try modelContext.fetch(userSettingsFetch).first?.stockDueSoonDays ?? self.userSettings?.stockDueSoonDays ?? 5
             self.volatileStock = try await grocyApi.getVolatileStock(dueSoonDays: dueSoonDays)
             try swiftDataSync.syncSingletonModel(VolatileStock.self, with: self.volatileStock)
+            self.updateWidgetSummary()
         }
     }
 
@@ -523,38 +546,37 @@ class GrocyViewModel {
         self.recipePictures.removeAll()
 
         do {
-            try self.modelContext.delete(model: MDProduct.self)
-            try self.modelContext.delete(model: MDProductBarcode.self)
-            try self.modelContext.delete(model: MDLocation.self)
-            try self.modelContext.delete(model: MDStore.self)
-            try self.modelContext.delete(model: MDQuantityUnit.self)
-            try self.modelContext.delete(model: MDQuantityUnitConversion.self)
-            try self.modelContext.delete(model: MDProductGroup.self)
-            try self.modelContext.delete(model: ShoppingListItem.self)
-            try self.modelContext.delete(model: ShoppingListDescription.self)
-            try self.modelContext.delete(model: StockElement.self)
-            try self.modelContext.delete(model: VolatileStock.self)
-            try self.modelContext.delete(model: StockJournalEntry.self)
-            try self.modelContext.delete(model: GrocyUser.self)
-            try self.modelContext.delete(model: GrocyUserSettings.self)
-            try self.modelContext.delete(model: StockEntry.self)
-            try self.modelContext.delete(model: StockProduct.self)
-            try self.modelContext.delete(model: StockProductDetails.self)
-            try self.modelContext.delete(model: StockLocation.self)
-            try self.modelContext.delete(model: Recipe.self)
-            try self.modelContext.delete(model: RecipePos.self)
-            try self.modelContext.delete(model: RecipePosResolvedElement.self)
-            try self.modelContext.delete(model: StockLocation.self)
-            try self.modelContext.delete(model: SystemConfig.self)
-            try self.modelContext.delete(model: MDChore.self)
-            try self.modelContext.delete(model: Chore.self)
-            try self.modelContext.delete(model: ChoreDetails.self)
-            try self.modelContext.delete(model: GrocyTask.self)
+            for modelType in Grocy_MobileApp.mainModelTypes {
+                try deleteAllObjects(of: modelType)
+            }
+            // Autosave is off, so the deletions only reach the store with an explicit save.
+            try self.modelContext.save()
         } catch {
-            GrocyLogger.error("\(error)")
+            self.modelContext.rollback()
+            GrocyLogger.error("Deleting the cached data failed. \(error)")
         }
 
+        WidgetStockSummary.clear()
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetStockSummary.widgetKind)
+
         GrocyLogger.info("Deleted all cached data from the viewmodel.")
+    }
+
+    private func deleteAllObjects<T: PersistentModel>(of modelType: T.Type) throws {
+        try self.modelContext.delete(model: modelType)
+    }
+
+    /// Writes the counts shown by the widget to the App Group and reloads the widget.
+    private func updateWidgetSummary() {
+        guard let volatileStock else { return }
+        WidgetStockSummary(
+            dueSoon: volatileStock.dueProducts.count,
+            overdue: volatileStock.overdueProducts.count,
+            expired: volatileStock.expiredProducts.count,
+            belowMinStock: volatileStock.missingProducts.count,
+            updated: Date()
+        ).save()
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetStockSummary.widgetKind)
     }
 
     func getLogEntries() async {

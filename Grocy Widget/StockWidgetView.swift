@@ -5,7 +5,6 @@
 //  Created by Georg Meissner on 06.12.25.
 //
 
-import SwiftData
 import SwiftUI
 import WidgetKit
 
@@ -13,24 +12,20 @@ struct StockWidgetView: View {
     let entry: Provider.Entry
     @Environment(\.widgetFamily) var widgetFamily
 
-    var volatileStock: VolatileStock? {
-        entry.volatileStock
-    }
-
     var numExpiringSoon: Int {
-        volatileStock?.dueProducts.count ?? 0
+        entry.summary?.dueSoon ?? 0
     }
 
     var numOverdue: Int {
-        volatileStock?.overdueProducts.count ?? 0
+        entry.summary?.overdue ?? 0
     }
 
     var numExpired: Int {
-        volatileStock?.expiredProducts.count ?? 0
+        entry.summary?.expired ?? 0
     }
 
     var numBelowStock: Int {
-        volatileStock?.missingProducts.count ?? 0
+        entry.summary?.belowMinStock ?? 0
     }
 
     var body: some View {
@@ -224,23 +219,17 @@ struct StockWidgetView: View {
 #Preview("Small", as: .systemSmall) {
     Grocy_Widget()
 } timeline: {
-    let mockVolatileStock = VolatileStock()
-
-    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), modelContainer: nil, volatileStock: mockVolatileStock)
+    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), summary: WidgetStockSummary(dueSoon: 3, overdue: 1, expired: 2, belowMinStock: 4, updated: .now))
 }
 
 #Preview("Medium", as: .systemMedium) {
     Grocy_Widget()
 } timeline: {
-    let mockVolatileStock = VolatileStock()
-
-    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), modelContainer: nil, volatileStock: mockVolatileStock)
+    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), summary: WidgetStockSummary(dueSoon: 3, overdue: 1, expired: 2, belowMinStock: 4, updated: .now))
 }
 
 #Preview("Large", as: .systemLarge) {
     Grocy_Widget()
 } timeline: {
-    let mockVolatileStock = VolatileStock()
-
-    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), modelContainer: nil, volatileStock: mockVolatileStock)
+    SimpleEntry(date: .now, configuration: ConfigurationAppIntent(), summary: WidgetStockSummary(dueSoon: 3, overdue: 1, expired: 2, belowMinStock: 4, updated: .now))
 }
