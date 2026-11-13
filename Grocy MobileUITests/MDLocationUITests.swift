@@ -28,6 +28,7 @@ final class MDLocationUITests: GrocyUITestCase {
     func testListSpellsOutStatusInText() throws {
         let app = launchApp()
         openMasterData("Locations", in: app)
+        search(for: "UITest", in: app)
 
         // A disabled location says so in text, not only with a dimmed color.
         let disabledRow = element(in: app, labelContaining: disabledName)
@@ -46,6 +47,7 @@ final class MDLocationUITests: GrocyUITestCase {
     func testEditFormControlsAreLabeled() throws {
         let app = launchApp()
         openMasterData("Locations", in: app)
+        search(for: freezerName, in: app)
 
         let freezerRow = element(in: app, labelContaining: freezerName)
         XCTAssertTrue(freezerRow.waitForExistence(timeout: 10))

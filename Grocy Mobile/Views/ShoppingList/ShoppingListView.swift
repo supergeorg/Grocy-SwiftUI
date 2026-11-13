@@ -129,6 +129,12 @@ struct ShoppingListView: View {
 
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var activeAlert: AlertType?
+    /// A failed delete or list action, shown to the person instead of only being logged.
+    @State private var actionFailure: (title: LocalizedStringKey, message: String)?
+
+    private func reportFailure(_ title: LocalizedStringKey, _ error: Error) {
+        actionFailure = (title, (error as? APIError)?.displayMessage ?? error.localizedDescription)
+    }
 
     private let dataToUpdate: [ObjectEntities] = [
         .products,
@@ -175,6 +181,8 @@ struct ShoppingListView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             GrocyLogger.error("Deleting shopping list item failed. \(error)")
+            let itemName = mdProducts.first(where: { $0.id == item.productID })?.name ?? item.note
+            reportFailure("Couldn't delete \"\(itemName)\"", error)
         }
     }
 
@@ -306,6 +314,7 @@ struct ShoppingListView: View {
             await grocyVM.requestData(objects: [.shopping_lists])
         } catch {
             GrocyLogger.error("Deleting shopping list failed. \(error)")
+            reportFailure("Couldn't delete \"\(alertSHL.name)\"", error)
         }
     }
 
@@ -322,6 +331,7 @@ struct ShoppingListView: View {
             await grocyVM.requestData(objects: [.shopping_list])
         } catch {
             GrocyLogger.error("SHLAction failed. \(error)")
+            reportFailure("Couldn't update shopping list \"\(actionSHL.name)\"", error)
         }
     }
 
@@ -551,26 +561,28 @@ struct ShoppingListView: View {
             actions: {
                 Button("Cancel", role: .cancel) {}
                 switch activeAlert {
+                // No destructive roles: the person chose these actions, the buttons carry out their intent (HIG).
                 case .deleteItem(let shoppingListItem):
-                    Button("Delete", role: .destructive) {
+                    Button("Delete") {
                         Task {
                             await deleteSHLItem(item: shoppingListItem)
                         }
                     }
                 case .deleteShoppingList(let alertSHL):
-                    Button("Delete", role: .destructive) {
+                    Button("Delete") {
                         Task {
                             await deleteShoppingList(alertSHL: alertSHL)
                         }
                     }
                 case .clearShoppingList(let alertSHL):
-                    Button("Confirm", role: .destructive) {
+                    // Named after the result, as Grocy does, instead of a generic "Confirm".
+                    Button("Clear") {
                         Task {
                             await slAction(.clear, actionSHL: alertSHL)
                         }
                     }
                 case .clearAllDone(let alertSHL):
-                    Button("Confirm", role: .destructive) {
+                    Button("Clear") {
                         Task {
                             await slAction(.clearDone, actionSHL: alertSHL)
                         }
@@ -591,8 +603,23 @@ struct ShoppingListView: View {
                     Text(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found")
                 case .exportToReminders:
                     Text("Do you want to export this shopping list to Reminders? This may overwrite changes in the list.")
+                case .deleteShoppingList, .clearShoppingList, .clearAllDone:
+                    Text("This can't be undone.")
                 case _: Text("")
                 }
+            }
+        )
+        .alert(
+            actionFailure?.title ?? "",
+            isPresented: Binding(
+                get: { actionFailure != nil },
+                set: { if !$0 { actionFailure = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(actionFailure?.message ?? "")
             }
         )
     }

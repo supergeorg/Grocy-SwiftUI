@@ -33,23 +33,38 @@ struct StockTableRow: View {
         mdQuantityUnits.first(where: { $0.id == stockElement.product?.quIDStock })
     }
 
-    var backgroundColor: Color? {
+    /// The status the row is highlighted for. Same order as before: due soon wins over expired, overdue and below min. stock.
+    var productStatus: ProductStatus? {
         let productID = stockElement.productID
 
         if (volatileStock?.dueProducts ?? []).contains(where: { $0.productID == productID }) {
-            return Color(.GrocyColors.grocyYellowBackground)
+            return .expiringSoon
         }
         if (volatileStock?.expiredProducts ?? []).contains(where: { $0.productID == productID }) {
-            return Color(.GrocyColors.grocyRedBackground)
+            return .expired
         }
         if (volatileStock?.overdueProducts ?? []).contains(where: { $0.productID == productID }) {
-            return Color(.GrocyColors.grocyGrayBackground)
+            return .overdue
         }
         if (volatileStock?.missingProducts ?? []).contains(where: { $0.productID == productID }) {
-            return Color(.GrocyColors.grocyBlueBackground)
+            return .belowMinStock
         }
-
         return nil
+    }
+
+    var backgroundColor: Color? {
+        switch productStatus {
+        case .expiringSoon:
+            return Color(.GrocyColors.grocyYellowBackground)
+        case .expired:
+            return Color(.GrocyColors.grocyRedBackground)
+        case .overdue:
+            return Color(.GrocyColors.grocyGrayBackground)
+        case .belowMinStock:
+            return Color(.GrocyColors.grocyBlueBackground)
+        default:
+            return nil
+        }
     }
 
     var body: some View {
@@ -119,6 +134,19 @@ struct StockTableRow: View {
 
     var stockElementDetails: some View {
         VStack(alignment: .leading, spacing: 5.0) {
+            // The status is also spelled out, not only shown by the row's background color (HIG),
+            // with the same wording and symbols as the stock filter.
+            if let productStatus {
+                // An HStack instead of a Label: in a list row, a Label's icon gets its own wide, tinted column.
+                HStack(spacing: 4) {
+                    Image(systemName: productStatus.getIconName())
+                        .accessibilityHidden(true)
+                    Text(productStatus.rawValue)
+                }
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+            }
             // Product group
             if let productGroup = mdProductGroups.first(where: { $0.id == stockElement.product?.productGroupID }) {
                 HStack {
@@ -162,6 +190,7 @@ struct StockTableRow: View {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
                         .help("This product is currently on a shopping list.")
+                        .accessibilityLabel(Text("This product is currently on a shopping list."))
                 }
                 if stockElement.bestBeforeDate == Date.neverOverdue {
                     Text("Never overdue")

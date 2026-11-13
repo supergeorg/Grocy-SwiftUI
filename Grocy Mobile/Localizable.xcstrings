@@ -21888,6 +21888,16 @@
         }
       }
     },
+    "Couldn't update shopping list \"%@\"" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einkaufsliste \"%@\" konnte nicht aktualisiert werden"
+          }
+        }
+      }
+    },
     "Create API key" : {
       "localizations" : {
         "cs" : {

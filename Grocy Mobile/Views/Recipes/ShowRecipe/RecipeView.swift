@@ -278,18 +278,23 @@ struct RecipeView: View {
                 .disabled(enoughInStock)
             }
         }
+        // Short title, details in the message, buttons named after the result instead of "Yes"/"No" (HIG).
         .alert(
-            Text(
-                "\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"
-            ),
+            "Consume all ingredients needed by this recipe",
             isPresented: $showConsumeAllNeeded,
             actions: {
-                Button("No", role: .cancel) {}
-                Button("Yes", role: .destructive) {
+                Button("Cancel", role: .cancel) {}
+                // No destructive role: the person chose to consume, this button carries out their intent.
+                Button("Consume") {
                     Task {
                         await consumeAllIngredientsNeeded()
                     }
                 }
+            },
+            message: {
+                Text(
+                    "\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"
+                )
             }
         )
         .sheet(isPresented: $showAddToShLSelection) {

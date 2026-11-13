@@ -56,23 +56,27 @@ struct MyDoubleStepper: View {
         VStack(alignment: .leading) {
             LabeledContent {
                 HStack {
-                    TextField("", value: $amount, formatter: formatter)
+                    TextField(description, value: $amount, formatter: formatter)
+                        // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
+                        .labelsHidden()
                         #if os(macOS)
                             .frame(width: 90)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
+                            .accessibilityLabel(Text(description))
                         #endif
                     if let amountName = amountName {
                         Text(amountName)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Stepper(
-                        "",
+                        description,
                         value: $amount,
                         in: -Double.greatestFiniteMagnitude...Double.greatestFiniteMagnitude,
                         step: 1.0,
                     )
+                    // The title stays the stepper\'s accessibility label on both platforms.
                     .labelsHidden()
                 }
             } label: {
@@ -98,13 +102,13 @@ struct MyDoubleStepper: View {
                     "This cannot be lower than \(smallestValidAmount.formatted(.number.precision(.fractionLength(0...(userSettings?.stockDecimalPlacesAmounts ?? 4))))) and needs to be a valid number with max. \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places"
                 )
                 .font(.caption)
-                .foregroundStyle(.red)
+                .foregroundStyle(Color(.GrocyColors.grocyRed))
                 .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, amount > maxAmount, let errorMessageMax = errorMessageMax {
                 Text(errorMessageMax)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -159,12 +163,15 @@ struct MyDoubleStepperOptional: View {
         VStack(alignment: .leading, spacing: 4) {
             LabeledContent {
                 HStack {
-                    TextField("", value: $amount, formatter: formatter)
+                    TextField(description, value: $amount, formatter: formatter)
+                        // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
+                        .labelsHidden()
                         #if os(macOS)
                             .frame(width: 90)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
+                            .accessibilityLabel(Text(description))
                             .multilineTextAlignment(.trailing)
                         #endif
 
@@ -175,7 +182,7 @@ struct MyDoubleStepperOptional: View {
                     }
 
                     Stepper(
-                        "",
+                        description,
                         onIncrement: {
                             if let previousAmount = amount {
                                 amount = previousAmount + (amountStep ?? 1.0)
@@ -201,6 +208,7 @@ struct MyDoubleStepperOptional: View {
                             }
                         }
                     )
+                    // The title stays the stepper\'s accessibility label on both platforms.
                     .labelsHidden()
                 }
             } label: {
@@ -226,13 +234,13 @@ struct MyDoubleStepperOptional: View {
                     "This cannot be lower than \(smallestValidAmount.formatted(.number.precision(.fractionLength(0...(userSettings?.stockDecimalPlacesAmounts ?? 4))))) and needs to be a valid number with max. \(userSettings?.stockDecimalPlacesAmounts ?? 4) decimal places"
                 )
                 .font(.caption)
-                .foregroundStyle(.red)
+                .foregroundStyle(Color(.GrocyColors.grocyRed))
                 .fixedSize(horizontal: false, vertical: true)
             }
             if let maxAmount = maxAmount, let amount = amount, amount > maxAmount, let errorMessageMax = errorMessageMax {
                 Text(errorMessageMax)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

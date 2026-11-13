@@ -109,7 +109,7 @@ struct LoginView: View {
                         Link(
                             destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
                             label: {
-                                Image(systemName: MySymbols.api)
+                                Label("Github", systemImage: MySymbols.api)
                             }
                         )
                     }
@@ -120,8 +120,8 @@ struct LoginView: View {
                         Link(
                             destination: URL(string: "https://www.grocy.info")!,
                             label: {
-                                Image(systemName: "network")
-                                    .glassEffect()
+                                // The toolbar already draws the glass; a second glass effect inside it would stack.
+                                Label("Grocy", systemImage: MySymbols.website)
                             }
                         )
                     }
@@ -129,10 +129,12 @@ struct LoginView: View {
                 ToolbarItem(
                     placement: .topBarTrailing,
                     content: {
-                        Image(systemName: MySymbols.info)
-                            .onTapGesture {
-                                showAbout.toggle()
-                            }
+                        // A real button (not a tap gesture), so it has a proper hit area and a VoiceOver label.
+                        Button {
+                            showAbout.toggle()
+                        } label: {
+                            Label("About this app", systemImage: MySymbols.info)
+                        }
                             .sheet(
                                 isPresented: $showAbout,
                                 content: {
@@ -159,10 +161,11 @@ struct LoginView: View {
                 ToolbarItem(
                     placement: .topBarTrailing,
                     content: {
-                        Image(systemName: MySymbols.settings)
-                            .onTapGesture {
-                                showSettings.toggle()
-                            }
+                        Button {
+                            showSettings.toggle()
+                        } label: {
+                            Label("Settings", systemImage: MySymbols.settings)
+                        }
                             .sheet(
                                 isPresented: $showSettings,
                                 content: {

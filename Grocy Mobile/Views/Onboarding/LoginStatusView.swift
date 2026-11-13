@@ -94,9 +94,12 @@ struct LoginStatusView: View {
                             },
                             label: {
                                 Label("Cancel", systemImage: MySymbols.cancel)
+                                    .frame(maxWidth: .infinity)
                             }
                         )
-                        .buttonStyle(MyGlassButtonStyle(backgroundColor: .red))
+                        // Cancelling isn't destructive, so it uses the standard (not a red) glass style.
+                        .buttonStyle(.glass)
+                        .controlSize(.large)
                     }
                 )
         case .success:
@@ -124,9 +127,11 @@ struct LoginStatusView: View {
                         label: {
                             Label("Try again", systemImage: MySymbols.reload)
                                 .symbolEffect(.rotate, isActive: isLoading)
+                                .frame(maxWidth: .infinity)
                         }
                     )
-                    .buttonStyle(MyGlassButtonStyle(backgroundColor: .yellow))
+                    .buttonStyle(.glassProminent)
+                    .controlSize(.large)
                 }
             )
             .background(.red.opacity(colorScheme == .dark ? 0.3 : 1.0))
@@ -152,11 +157,14 @@ struct LoginStatusView: View {
                         label: {
                             HStack(alignment: .center) {
                                 Text("Continue anyway")
-                                Image(systemName: "arrow.forward")
+                                Image(systemName: MySymbols.forward)
+                                    .accessibilityHidden(true)
                             }
+                            .frame(maxWidth: .infinity)
                         }
                     )
-                    .buttonStyle(MyGlassButtonStyle(backgroundColor: .gray))
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
                 }
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)

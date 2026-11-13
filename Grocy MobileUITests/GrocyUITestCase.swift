@@ -106,6 +106,25 @@ class GrocyUITestCase: XCTestCase {
         #endif
     }
 
+    /// Types into the screen's search field, so an entry is found however many other entries the server holds
+    /// (lists load lazily, so entries far down aren't in the accessibility hierarchy).
+    @MainActor
+    func search(for text: String, in app: XCUIApplication) {
+        let field = app.searchFields.firstMatch
+        #if os(iOS)
+            // The search field sits in a drawer above the list until it's pulled down.
+            if !field.waitForExistence(timeout: 3) {
+                let list = app.collectionViews.firstMatch
+                if list.waitForExistence(timeout: 5) {
+                    list.swipeDown()
+                }
+            }
+        #endif
+        XCTAssertTrue(field.waitForExistence(timeout: 10), "No search field.")
+        press(field)
+        field.typeText(text)
+    }
+
     /// Clicks on macOS, taps elsewhere.
     @MainActor
     func press(_ element: XCUIElement) {
@@ -118,7 +137,11 @@ class GrocyUITestCase: XCTestCase {
 
     func element(in app: XCUIApplication, labelContaining text: String) -> XCUIElement {
         // macOS exposes static text as the value, iOS as the label.
-        app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", text, text)).firstMatch
+        // Input fields are skipped: after a search, the search field's value contains the text, too.
+        app.descendants(matching: .any).matching(NSPredicate(
+            format: "(label CONTAINS %@ OR value CONTAINS %@) AND elementType != %d AND elementType != %d",
+            text, text, XCUIElement.ElementType.searchField.rawValue, XCUIElement.ElementType.textField.rawValue
+        )).firstMatch
     }
 
     func toggle(in app: XCUIApplication, labeled title: String) -> XCUIElement {
@@ -163,6 +186,15 @@ class GrocyUITestCase: XCTestCase {
         let id = try JSONDecoder().decode(CreatedObject.self, from: data).createdObjectID
         createdObjects.append((entity, id))
         return id
+    }
+
+    /// Posts to any API endpoint, e.g. `stock/products/{id}/add`. Not cleaned up automatically.
+    @discardableResult
+    func callAPI(_ path: String, _ body: [String: Any]) async throws -> Data {
+        let (data, response) = try await URLSession.shared.data(for: request(path, method: "POST", body: body))
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        XCTAssertTrue((200..<300).contains(status), "POST \(path) failed: \(String(decoding: data, as: UTF8.self))")
+        return data
     }
 
     private struct CreatedObject: Decodable {
