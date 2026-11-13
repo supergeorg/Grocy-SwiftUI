@@ -12527,6 +12527,16 @@
         }
       }
     },
+    "Are you sure you want to delete task category \"%@\"?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufgabenkategorie \"%@\" wirklich löschen?"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete user \"%@\"?" : {
       "localizations" : {
         "cs" : {
@@ -12987,6 +12997,94 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "确定要将菜谱“%@”中缺少的全部食材加入购物清单吗？"
+          }
+        }
+      }
+    },
+    "Are you sure you want to remove this conversion?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odstranit tento převod?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Umrechnung wirklich löschen?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to remove this conversion?"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haluatko varmasti poistaa tämän muunnoksen?"
+          }
+        },
+        "fr-FR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir supprimer cette conversion ?"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "להסיר את ההמרה הזאת?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sei sicuro di voler rimuovere questa conversione?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この変換を削除してもよろしいですか？"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar tikrai norite pašalinti šį susirašinėjimą?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben je zeker dat je deze conversie wilt verwijderen?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy jesteś pewien, że chcesz usunąć to przeliczenie?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem certeza que deseja remover esta conversão?"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ali res želiš odstraniti to pretvorbo?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您确定要删除此转换吗?"
           }
         }
       }
@@ -21780,6 +21878,16 @@
         }
       }
     },
+    "Couldn't delete \"%@\"" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen von \"%@\" fehlgeschlagen"
+          }
+        }
+      }
+    },
     "Create API key" : {
       "localizations" : {
         "cs" : {
@@ -28504,16 +28612,6 @@
         }
       }
     },
-    "Deleting location failed" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Löschen des Standorts fehlgeschlagen"
-          }
-        }
-      }
-    },
     "Demo server" : {
       "localizations" : {
         "cs" : {
@@ -29944,76 +30042,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要刪除此項目嗎？"
-          }
-        }
-      }
-    },
-    "Do you really want to delete this task category?" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opravdu chcete smazat kategorii úkolů?"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Möchtest du wirklich diese Aufgabenkategorie löschen?"
-          }
-        },
-        "fr-FR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voulez-vous supprimer cette catégorie de tâches"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vuoi davvero eliminare questa categoria di funzione?"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Er du sikker på du vil slette denne oppgavekategorien?"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weet je zeker dat je deze taakcategorie wilt verwijderen?"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na pewno chcesz usunąć tę kategorię zadań?"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tem certeza de que deseja excluir esta categoria de tarefa?"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tem certeza de que deseja excluir esta categoria de tarefa?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是否确实要删除此任务类别？"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "確定要刪除此任務分類嗎？"
           }
         }
       }
@@ -46593,6 +46621,16 @@
         }
       }
     },
+    "No chores" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Hausarbeiten"
+          }
+        }
+      }
+    },
     "No connection to server." : {
       "localizations" : {
         "cs" : {
@@ -46925,6 +46963,16 @@
         }
       }
     },
+    "No product groups" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Produktgruppen"
+          }
+        }
+      }
+    },
     "No product picture" : {
       "localizations" : {
         "cs" : {
@@ -46989,6 +47037,16 @@
         }
       }
     },
+    "No products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Produkte"
+          }
+        }
+      }
+    },
     "No products found." : {
       "localizations" : {
         "cs" : {
@@ -47049,6 +47107,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "物品未找到"
+          }
+        }
+      }
+    },
+    "No quantity units" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Mengeneinheiten"
           }
         }
       }
@@ -47129,6 +47197,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun magasin n'a été défini. Veuillez en créer un."
+          }
+        }
+      }
+    },
+    "No stores" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Geschäfte"
+          }
+        }
+      }
+    },
+    "No task categories" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Aufgabenkategorien"
           }
         }
       }

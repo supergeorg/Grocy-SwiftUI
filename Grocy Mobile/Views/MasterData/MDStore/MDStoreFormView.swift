@@ -20,7 +20,7 @@ struct MDStoreFormView: View {
     @State private var errorMessage: String? = nil
 
     var existingStore: MDStore?
-    @State var store: MDStore
+    @State private var store: MDStore
 
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
@@ -133,8 +133,8 @@ struct MDStoreFormView: View {
                     },
                     label: {
                         if !isProcessing {
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                             Label("Save", systemImage: MySymbols.save)
-                                .labelStyle(.titleAndIcon)
                         } else {
                             ProgressView().progressViewStyle(.circular)
                         }

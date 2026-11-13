@@ -12,14 +12,22 @@ struct MDTaskCategoryRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(taskCategory.name)
-                .font(.title)
+                .font(.headline)
                 .foregroundStyle(taskCategory.active ? .primary : .secondary)
+            // Disabled is spelled out, not only shown by the dimmed color ("Disabled" matches the Grocy web app).
+            if !taskCategory.active {
+                Text("Disabled")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
             if !taskCategory.mdTaskCategoryDescription.isEmpty {
                 Text(taskCategory.mdTaskCategoryDescription)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
         .multilineTextAlignment(.leading)
+        .accessibilityElement(children: .combine)
     }
 }
 

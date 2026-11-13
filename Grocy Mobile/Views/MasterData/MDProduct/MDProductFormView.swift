@@ -44,7 +44,7 @@ struct MDProductFormView: View {
     var createBarcode: Bool
 
     var existingProduct: MDProduct?
-    @State var product: MDProduct
+    @State private var product: MDProduct
 
     @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
 
@@ -421,8 +421,8 @@ struct MDProductFormView: View {
                     },
                     label: {
                         if !isProcessing {
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                             Label("Save", systemImage: MySymbols.save)
-                                .labelStyle(.titleAndIcon)
                         } else {
                             ProgressView().progressViewStyle(.circular)
                         }

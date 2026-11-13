@@ -16,6 +16,7 @@ struct MDQuantityUnitsView: View {
     @State private var showAddQuantityUnit: Bool = false
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdQuantityUnits: MDQuantityUnits {
@@ -61,6 +62,11 @@ struct MDQuantityUnitsView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting quantity unit failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -69,7 +75,13 @@ struct MDQuantityUnitsView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdQuantityUnitsCount == 0 {
-                ContentUnavailableView("No quantity units found.", systemImage: MySymbols.quantityUnit)
+                ContentUnavailableView {
+                    Label("No quantity units", systemImage: MySymbols.quantityUnit)
+                } actions: {
+                    Button("Create quantity unit") {
+                        showAddQuantityUnit = true
+                    }
+                }
             } else if mdQuantityUnits.isEmpty {
                 ContentUnavailableView.search
             }
@@ -100,7 +112,7 @@ struct MDQuantityUnitsView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddQuantityUnit, destination: { NavigationStack { MDQuantityUnitFormView() } })
+            .navigationDestination(isPresented: $showAddQuantityUnit, destination: { MDQuantityUnitFormView() })
         #endif
         .navigationDestination(
             for: MDQuantityUnit.self,
@@ -140,13 +152,30 @@ struct MDQuantityUnitsView: View {
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = quantityUnitToDelete?.id {
                         Task {
                             await deleteQuantityUnit(toDelID: toDelID)
                         }
                     }
                 }
+            },
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(quantityUnitToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
             }
         )
     }

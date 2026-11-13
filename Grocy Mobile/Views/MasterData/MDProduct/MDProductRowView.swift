@@ -21,26 +21,36 @@ struct MDProductRowView: View {
                 PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
                     .clipShape(.rect(cornerRadius: 5.0))
                     .frame(maxWidth: 75.0, maxHeight: 75.0)
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading) {
-                HStack {
-                    Text(product.name)
-                        .font(.title)
-                        .foregroundStyle(product.active ? .primary : .secondary)
+                Text(product.name)
+                    .font(.headline)
+                    .foregroundStyle(product.active ? .primary : .secondary)
+                // Disabled is spelled out, not only shown by the dimmed color ("Disabled" matches the Grocy web app).
+                if !product.active {
+                    Text("Disabled")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                if let locationName = location?.name {
-                    Text("\(Text("Location")): \(Text(locationName).font(.caption))")
+                Group {
+                    if let locationName = location?.name {
+                        Text("\(Text("Location")): \(Text(locationName))")
+                    }
+                    if let productGroupName = productGroup?.name {
+                        Text("\(Text("Product group")): \(Text(productGroupName))")
+                    }
+                    if !product.mdProductDescription.isEmpty {
+                        Text(product.mdProductDescription)
+                            .italic()
+                    }
                 }
-                if let productGroupName = productGroup?.name {
-                    Text("\(Text("Product group")): \(Text(productGroupName).font(.caption))")
-                }
-                if !product.mdProductDescription.isEmpty {
-                    Text(product.mdProductDescription)
-                        .font(.caption)
-                        .italic()
-                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             }
         }
+        .multilineTextAlignment(.leading)
+        .accessibilityElement(children: .combine)
     }
 }
 

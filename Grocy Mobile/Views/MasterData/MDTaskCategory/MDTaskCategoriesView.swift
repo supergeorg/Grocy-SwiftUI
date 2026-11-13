@@ -17,6 +17,7 @@ struct MDTaskCategoriesView: View {
 
     @State private var taskCategoryToDelete: MDTaskCategory? = nil
     @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     private let dataToUpdate: [ObjectEntities] = [.task_categories]
 
@@ -63,6 +64,11 @@ struct MDTaskCategoriesView: View {
             await updateData()
         } catch {
             GrocyLogger.error("Deleting task category failed. \(error)")
+            if let apiError = error as? APIError {
+                deleteErrorMessage = apiError.displayMessage
+            } else {
+                deleteErrorMessage = error.localizedDescription
+            }
         }
     }
 
@@ -71,7 +77,15 @@ struct MDTaskCategoriesView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if mdTaskCategoriesCount == 0 {
-                ContentUnavailableView("No task category defined. Please create one.", systemImage: MySymbols.tasks)
+                ContentUnavailableView {
+                    Label("No task categories", systemImage: MySymbols.tasks)
+                } description: {
+                    Text("No task category defined. Please create one.")
+                } actions: {
+                    Button("Create task category") {
+                        showAddTaskCategory = true
+                    }
+                }
             } else if mdTaskCategories.isEmpty {
                 ContentUnavailableView.search
             }
@@ -102,7 +116,7 @@ struct MDTaskCategoriesView: View {
                 }
             )
         #else
-            .navigationDestination(isPresented: $showAddTaskCategory, destination: { NavigationStack { MDTaskCategoryFormView() } })
+            .navigationDestination(isPresented: $showAddTaskCategory, destination: { MDTaskCategoryFormView() })
         #endif
         .navigationTitle("Task categories")
         .navigationDestination(
@@ -134,11 +148,12 @@ struct MDTaskCategoriesView: View {
             )
         })
         .alert(
-            "Do you really want to delete this task category?",
+            "Are you sure you want to delete task category \"\(taskCategoryToDelete?.name ?? "")\"?",
             isPresented: $showDeleteConfirmation,
             actions: {
                 Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
                     if let toDelID = taskCategoryToDelete?.id {
                         Task {
                             await deleteTaskCategory(toDelID: toDelID)
@@ -146,7 +161,22 @@ struct MDTaskCategoriesView: View {
                     }
                 }
             },
-            message: { Text(taskCategoryToDelete?.name ?? "Name not found") }
+            message: {
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't delete \"\(taskCategoryToDelete?.name ?? "")\"",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
+            }
         )
     }
 }

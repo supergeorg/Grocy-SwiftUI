@@ -20,7 +20,7 @@ struct MDLocationFormView: View {
     @State private var errorMessage: String? = nil
 
     var existingLocation: MDLocation?
-    @State var location: MDLocation
+    @State private var location: MDLocation
 
     @State private var isNameCorrect: Bool = false
     private func checkNameCorrect() -> Bool {

@@ -159,7 +159,7 @@ struct MDLocationsView: View {
             }
         )
         .alert(
-            "Deleting location failed",
+            "Couldn't delete \"\(locationToDelete?.name ?? "")\"",
             isPresented: Binding(
                 get: { deleteErrorMessage != nil },
                 set: { if !$0 { deleteErrorMessage = nil } }
