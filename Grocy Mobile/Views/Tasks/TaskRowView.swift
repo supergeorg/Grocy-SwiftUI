@@ -17,12 +17,13 @@ struct TaskRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(grocyTask.name)
-                .font(.title)
+                .font(.headline)
                 .foregroundStyle(grocyTask.done ? .secondary : .primary)
                 .strikethrough(grocyTask.done, color: .secondary)
             if !grocyTask.taskDescription.isEmpty {
                 Text(grocyTask.taskDescription)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             if let dueDate = grocyTask.dueDate {
                 HStack {
@@ -52,6 +53,9 @@ struct TaskRowView: View {
             }
 
         }
+        // Done is announced, not only shown by the strikethrough and the dimmed color.
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(grocyTask.done ? Text("Done") : Text(""))
     }
 }
 

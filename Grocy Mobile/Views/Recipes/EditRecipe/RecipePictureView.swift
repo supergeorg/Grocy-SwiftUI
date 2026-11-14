@@ -108,7 +108,9 @@ struct RecipePictureView: View {
                             .font(.caption)
                     }
                     if let pictureFileNameData = pictureFileName.data(using: .utf8) {
+                        // The destructive role colors the button, instead of a hard-coded red label.
                         Button(
+                            role: .destructive,
                             action: {
                                 Task {
                                     await deletePicture(savedPictureFileNameData: pictureFileNameData)
@@ -116,7 +118,6 @@ struct RecipePictureView: View {
                             },
                             label: {
                                 Label("Delete", systemImage: MySymbols.delete)
-                                    .foregroundStyle(.red)
                             }
                         )
                         .disabled(isProcessing)

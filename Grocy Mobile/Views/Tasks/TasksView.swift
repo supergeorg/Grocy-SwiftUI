@@ -255,7 +255,15 @@ struct TasksView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if tasksCount == 0 {
-                ContentUnavailableView("No task defined. Please create one.", systemImage: MySymbols.tasks)
+                ContentUnavailableView {
+                    Label("No tasks", systemImage: MySymbols.tasks)
+                } description: {
+                    Text("No task defined. Please create one.")
+                } actions: {
+                    Button("Create task") {
+                        showCreateTask = true
+                    }
+                }
             } else if grocyTasks.isEmpty {
                 ContentUnavailableView.search
             }

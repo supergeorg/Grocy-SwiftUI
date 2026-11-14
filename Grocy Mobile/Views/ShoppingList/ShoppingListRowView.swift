@@ -42,7 +42,10 @@ struct ShoppingListRowView: View {
             Text("\(Text("Amount")): \(amountString)")
                 .strikethrough(shoppingListItem.done)
         }
-        .foregroundStyle(shoppingListItem.done ? Color.gray : Color.primary)
+        .foregroundStyle(shoppingListItem.done ? .secondary : .primary)
+        // Done is announced, not only shown by the strikethrough and the dimmed color.
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(shoppingListItem.done ? Text("Done") : Text(""))
         .contextMenu(menuItems: {
             Button(
                 action: {

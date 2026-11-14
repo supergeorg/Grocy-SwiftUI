@@ -20,7 +20,7 @@ struct StockJournalRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(product?.name ?? "Name Error")
-                .font(.title)
+                .font(.headline)
                 .strikethrough(journalEntry.undone, color: .primary)
             if journalEntry.undone {
                 if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
@@ -67,7 +67,7 @@ struct StockJournalRowView: View {
             }
             .font(.caption)
         }
-        .foregroundStyle(journalEntry.undone ? Color.gray : Color.primary)
+        .foregroundStyle(journalEntry.undone ? .secondary : .primary)
     }
 }
 

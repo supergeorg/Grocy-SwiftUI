@@ -161,7 +161,7 @@ struct InventoryProductView: View {
                         } else {
                             Text("The selected amount is equal to the stock amount.")
                                 .font(.caption)
-                                .foregroundStyle(.red)
+                                .foregroundStyle(Color(.GrocyColors.grocyRed))
                         }
                     }
                 }

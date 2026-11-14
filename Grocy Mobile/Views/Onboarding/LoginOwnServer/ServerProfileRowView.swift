@@ -24,7 +24,7 @@ struct ServerProfileRowView: View {
                         .font(profile.name.isEmpty ? .title2 : .largeTitle)
                     if profile.useHassIngress {
                         Image(systemName: "house")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(.tint)
                     }
                 }
                 if !profile.userName.isEmpty || !profile.displayName.isEmpty || profile.profilePicture != nil {

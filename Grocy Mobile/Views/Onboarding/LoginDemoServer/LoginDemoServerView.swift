@@ -37,12 +37,14 @@ struct LoginDemoServerView: View {
                         Label("Login", systemImage: MySymbols.login)
                             .font(.title2)
                             .frame(maxWidth: .infinity)
-                            .foregroundStyle(.white)
-                            .padding()
                     }
                 )
-                .glassEffect(.regular.tint(.green).interactive())
-                .contentShape(Capsule())
+                // System glass style: handles pressed and disabled states and keeps the label legible.
+                .buttonStyle(.glassProminent)
+                .tint(Color(.GrocyColors.grocyGreen))
+                .controlSize(.large)
+                // Keep the system side margin; the full-width label would otherwise touch the screen edges.
+                .padding(.horizontal)
             }
         )
     }

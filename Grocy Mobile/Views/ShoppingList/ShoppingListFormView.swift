@@ -123,8 +123,8 @@ struct ShoppingListFormView: View {
                         },
                         label: {
                             if !isProcessing {
+                                // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                                 Label("Save", systemImage: MySymbols.save)
-                                    .labelStyle(.titleAndIcon)
                             } else {
                                 ProgressView().progressViewStyle(.circular)
                             }

@@ -181,7 +181,7 @@ struct WYSIWYGEditorView: View {
                     )
                 } label: {
                     Image(systemName: MySymbols.dismissKeyboard)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.callout.weight(.semibold))
                 }
                 .tint(.secondary)
                 .buttonStyle(FormattingButtonStyleAdditional())
@@ -193,7 +193,7 @@ struct WYSIWYGEditorView: View {
             // Bold
             Button(action: { editorProxy?.bold() }) {
                 Image(systemName: "bold")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasBold))
@@ -201,7 +201,7 @@ struct WYSIWYGEditorView: View {
             // Italic
             Button(action: { editorProxy?.italic() }) {
                 Image(systemName: "italic")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasItalic))
@@ -209,7 +209,7 @@ struct WYSIWYGEditorView: View {
             // Underline
             Button(action: { editorProxy?.underline() }) {
                 Image(systemName: "underline")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnderline))
@@ -217,7 +217,7 @@ struct WYSIWYGEditorView: View {
             // Strikethrough
             Button(action: { editorProxy?.strikethrough() }) {
                 Image(systemName: "strikethrough")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasStrikethrough))
@@ -228,7 +228,7 @@ struct WYSIWYGEditorView: View {
             // Bullet List
             Button(action: { editorProxy?.unorderedList() }) {
                 Image(systemName: "list.bullet")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnorderedList))
@@ -236,7 +236,7 @@ struct WYSIWYGEditorView: View {
             // Numbered List
             Button(action: { editorProxy?.orderedList() }) {
                 Image(systemName: "list.number")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasOrderedList))
@@ -247,7 +247,7 @@ struct WYSIWYGEditorView: View {
             // Align Left
             Button(action: { editorProxy?.justify(.left) }) {
                 Image(systemName: "text.alignleft")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .left))
@@ -255,7 +255,7 @@ struct WYSIWYGEditorView: View {
             // Align Center
             Button(action: { editorProxy?.justify(.center) }) {
                 Image(systemName: "text.aligncenter")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .center))
@@ -263,7 +263,7 @@ struct WYSIWYGEditorView: View {
             // Align Right
             Button(action: { editorProxy?.justify(.right) }) {
                 Image(systemName: "text.alignright")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .right))
@@ -271,7 +271,7 @@ struct WYSIWYGEditorView: View {
             // Justify
             Button(action: { editorProxy?.justify(.full) }) {
                 Image(systemName: "text.justify")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .full))
@@ -282,7 +282,7 @@ struct WYSIWYGEditorView: View {
             // Indent
             Button(action: { editorProxy?.indent() }) {
                 Image(systemName: "increase.indent")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
@@ -290,7 +290,7 @@ struct WYSIWYGEditorView: View {
             // Outdent
             Button(action: { editorProxy?.outdent() }) {
                 Image(systemName: "decrease.indent")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
@@ -320,7 +320,7 @@ struct WYSIWYGEditorView: View {
             // Link
             Button(action: { showLinkDialog = true }) {
                 Image(systemName: "link")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasLink))
@@ -331,7 +331,7 @@ struct WYSIWYGEditorView: View {
             // Undo
             Button(action: { editorProxy?.undo() }) {
                 Image(systemName: "arrow.uturn.left")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
@@ -339,7 +339,7 @@ struct WYSIWYGEditorView: View {
             // Redo
             Button(action: { editorProxy?.redo() }) {
                 Image(systemName: "arrow.uturn.right")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
@@ -347,7 +347,7 @@ struct WYSIWYGEditorView: View {
             // Clear Format
             Button(action: { editorProxy?.removeFormat() }) {
                 Image(systemName: "text.badge.xmark")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())

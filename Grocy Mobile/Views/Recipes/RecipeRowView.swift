@@ -9,6 +9,8 @@ import SwiftUI
 
 struct RecipeRowView: View {
     var recipe: Recipe
+    /// Placeholder symbol size that still follows the text size (Dynamic Type).
+    @ScaledMetric(relativeTo: .title) private var placeholderSymbolSize: CGFloat = 36
     var fulfillment: RecipeFulfilment?
 
     var body: some View {
@@ -27,8 +29,8 @@ struct RecipeRowView: View {
                             RoundedRectangle(cornerRadius: 0)
                                 .fill(Color.gray.opacity(0.15))
                                 .overlay(
-                                    Image(systemName: "photo.on.rectangle")
-                                        .font(.system(size: 36))
+                                    Image(systemName: MySymbols.picturePlaceholder)
+                                        .font(.system(size: placeholderSymbolSize))
                                         .foregroundStyle(.gray.opacity(0.6))
                                 )
                         }
@@ -49,7 +51,7 @@ struct RecipeRowView: View {
                     Text(recipe.name)
                         .font(.title3)
                         .fontWeight(.semibold)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
                         .padding(.horizontal, 10)
@@ -74,7 +76,7 @@ struct RecipeRowView: View {
                     if fulfillment?.needFulfilled == true {
                         VStack(alignment: .trailing) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color(.GrocyColors.grocyGreen))
                                 .font(.title)
                             Text("Enough in stock")
                                 .font(.caption)
@@ -83,7 +85,7 @@ struct RecipeRowView: View {
                     } else if fulfillment?.needFulfilledWithShoppingList == true {
                         VStack(alignment: .trailing) {
                             Image(systemName: "exclamationmark.circle.fill")
-                                .foregroundStyle(.yellow)
+                                .foregroundStyle(Color(.GrocyColors.grocyYellow))
                                 .font(.title)
                             Text("Not enough in stock, \(fulfillment?.missingProductsCount ?? 0) ingredient missing but already on the shopping list")
                                 .font(.caption)
@@ -93,7 +95,7 @@ struct RecipeRowView: View {
                     } else {
                         VStack(alignment: .trailing) {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.red)
+                                .foregroundStyle(Color(.GrocyColors.grocyRed))
                                 .font(.title)
                             Text("Not enough in stock, \(fulfillment?.missingProductsCount ?? 0) ingredient missing")
                                 .font(.caption)

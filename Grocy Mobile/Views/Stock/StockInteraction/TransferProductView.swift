@@ -176,7 +176,7 @@ struct TransferProductView: View {
                     if locationIDFrom == nil {
                         Text("A location is required")
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color(.GrocyColors.grocyRed))
                     }
                 }
 
@@ -200,19 +200,19 @@ struct TransferProductView: View {
                     if locationIDTo == nil {
                         Text("A location is required")
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color(.GrocyColors.grocyRed))
                     }
                     if (locationIDFrom != nil) && (locationIDFrom == locationIDTo) {
                         Text("This cannot be the same as the \"From\" location")
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color(.GrocyColors.grocyRed))
                     }
                     if product?.shouldNotBeFrozen == true,
                         locationTo?.isFreezer == true
                     {
                         Text("This product shouldn't be frozen")
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color(.GrocyColors.grocyRed))
                     }
                 }
 

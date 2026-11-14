@@ -106,7 +106,7 @@ struct StockEntryFormView: View {
                         DueDateScanner(dueDate: $stockEntry.bestBeforeDate)
                     }
                     Text(getRelativeDateAsText(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                         .italic()
                 }
                 MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
@@ -163,8 +163,8 @@ struct StockEntryFormView: View {
                     Button(
                         action: { Task { await saveStockEntry() } },
                         label: {
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
                             Label("Save", systemImage: MySymbols.save)
-                                .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormValid || isProcessing)

@@ -41,7 +41,7 @@ struct LoginView: View {
 
             Text("Select a server type:")
                 .font(.title3)
-                .foregroundColor(.primary)
+                .foregroundStyle(.primary)
                 .padding(.top, 4)
 
             NavigationLink(
@@ -50,12 +50,14 @@ struct LoginView: View {
                     Label("Demo server", systemImage: "server.rack")
                         .font(.title2)
                         .frame(maxWidth: .infinity)
-                        .foregroundStyle(.white)
-                        .padding()
                 }
             )
-            .glassEffect(.regular.tint(.orange).interactive())
-            .contentShape(Capsule())
+            // System glass style: handles pressed and disabled states and keeps the label legible.
+            .buttonStyle(.glassProminent)
+            .tint(.orange)
+            .controlSize(.large)
+            // Keep the system side margin; the full-width label would otherwise touch the screen edges.
+            .padding(.horizontal)
             .accessibilityLabel("Use demo server")
 
             NavigationLink(
@@ -64,12 +66,14 @@ struct LoginView: View {
                     Label("Own server", systemImage: "house")
                         .font(.title2)
                         .frame(maxWidth: .infinity)
-                        .foregroundStyle(.white)
-                        .padding()
                 }
             )
-            .glassEffect(.regular.tint(.GrocyColors.grocyGreen).interactive())
-            .contentShape(Capsule())
+            // System glass style: handles pressed and disabled states and keeps the label legible.
+            .buttonStyle(.glassProminent)
+            .tint(Color(.GrocyColors.grocyGreen))
+            .controlSize(.large)
+            // Keep the system side margin; the full-width label would otherwise touch the screen edges.
+            .padding(.horizontal)
             .accessibilityLabel("Use your own server")
         }
         .background(Color(.GrocyColors.grocyBlueBackground))

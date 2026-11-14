@@ -22,18 +22,18 @@ struct MyLabelWithSubtitle: View {
                 if let systemImage = systemImage {
                     Label {
                         Text(title)
-                            .foregroundStyle(isProblem ? Color.red : Color.primary)
+                            .foregroundStyle(isProblem ? Color(.GrocyColors.grocyRed) : Color.primary)
                     } icon: {
                         Image(systemName: systemImage)
                             .foregroundStyle(.primary)
                     }
                 } else {
                     Text(title)
-                        .foregroundStyle(isProblem ? Color.red : Color.primary)
+                        .foregroundStyle(isProblem ? Color(.GrocyColors.grocyRed) : Color.primary)
                 }
                 if !hideSubtitle, let subTitle = subTitle {
                     Text(subTitle)
-                        .foregroundStyle(isSubtitleProblem ? Color.red : Color.secondary)
+                        .foregroundStyle(isSubtitleProblem ? Color(.GrocyColors.grocyRed) : Color.secondary)
                 }
             }
         )

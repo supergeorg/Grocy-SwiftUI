@@ -448,7 +448,13 @@ struct StockView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if (stock + missingStock).isEmpty {
-                ContentUnavailableView("Stock is empty.", systemImage: MySymbols.stockOverview)
+                ContentUnavailableView {
+                    Label("Stock is empty.", systemImage: MySymbols.stockOverview)
+                } actions: {
+                    Button("Purchase") {
+                        stockInteractionRouter.present(.purchaseProduct)
+                    }
+                }
             } else if filteredAndSearchedStock.isEmpty {
                 ContentUnavailableView.search
             }
