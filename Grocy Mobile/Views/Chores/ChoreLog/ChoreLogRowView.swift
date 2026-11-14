@@ -17,7 +17,7 @@ struct ChoreLogRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(chore?.choreName ?? "")
-                .font(.title)
+                .font(.headline)
                 .italic(choreLogEntry.skipped)
                 .foregroundStyle(!choreLogEntry.undone ? .primary : .secondary)
                 .strikethrough(choreLogEntry.undone, color: .secondary)

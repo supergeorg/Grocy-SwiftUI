@@ -50,13 +50,14 @@ struct SettingsView: View {
                                 .foregroundStyle(.primary)
                         }
                     )
+                    // The destructive role colors the button, instead of a hard-coded red label.
                     Button(
+                        role: .destructive,
                         action: {
                             grocyVM.logout()
                         },
                         label: {
                             Label("Logout", systemImage: MySymbols.logout)
-                                .foregroundStyle(.red)
                         }
                     )
                 }

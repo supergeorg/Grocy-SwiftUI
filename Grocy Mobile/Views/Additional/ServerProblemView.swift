@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ServerProblemView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    /// Large illustration symbol that still follows the text size (Dynamic Type).
+    @ScaledMetric(relativeTo: .largeTitle) private var symbolSize: CGFloat = 100
 
     @AppStorage("devMode") private var devMode: Bool = false
 
@@ -72,7 +74,8 @@ struct ServerProblemView: View {
     var normalView: some View {
         VStack(alignment: .center, spacing: 20) {
             Image(systemName: serverErrorInfo.0)
-                .font(.system(size: 100))
+                .font(.system(size: symbolSize))
+                .accessibilityHidden(true)
             if serverErrorState != .none {
                 VStack(alignment: .center) {
                     Text(serverErrorInfo.1)
@@ -128,8 +131,8 @@ struct ServerProblemView: View {
             .controlSize(.large)
         }
         .padding(.horizontal)
-        .background(Color.red)
-        .cornerRadius(5)
+        // Tinted background with primary text keeps the contrast above 4.5:1 in light and dark mode.
+        .background(Color(.GrocyColors.grocyRedBackground), in: .rect(cornerRadius: 5))
     }
 }
 

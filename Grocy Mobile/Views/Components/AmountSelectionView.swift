@@ -82,7 +82,7 @@ struct AmountSelectionView: View {
                     if quantityUnitID == nil {
                         Text("A quantity unit is required")
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color(.GrocyColors.grocyRed))
                     } else if quantityUnitID != stockQuantityUnit?.id {
                         Text("This equals \(factoredAmount.formatted(.number.precision(.fractionLength(0...8)))) \(factoredAmount == 1 ? stockQuantityUnit?.name ?? "?" : stockQuantityUnit?.namePlural ?? "?")")
                             .font(.caption)

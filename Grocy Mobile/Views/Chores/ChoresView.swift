@@ -216,7 +216,12 @@ struct ChoresView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if choresCount == 0 {
-                ContentUnavailableView("No chore defined. Please create one.", systemImage: MySymbols.chores)
+                // Chores are created in master data, so there's no create action here.
+                ContentUnavailableView {
+                    Label("No chores", systemImage: MySymbols.chores)
+                } description: {
+                    Text("No chore defined. Please create one.")
+                }
             } else if chores.isEmpty {
                 ContentUnavailableView.search
             }

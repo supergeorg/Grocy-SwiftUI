@@ -40,7 +40,7 @@ struct RecipeParserView: View {
 
             if let error = errorMessage {
                 Text(error)
-                    .foregroundColor(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .font(.caption)
             }
         }
@@ -125,7 +125,7 @@ struct RecipeDisplayView: View {
                     case .failure:
                         Image(systemName: MySymbols.picture)
                             .font(.largeTitle)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .frame(height: 200)
                     @unknown default:
                         EmptyView()
@@ -146,7 +146,7 @@ struct RecipeDisplayView: View {
 
                         if !ingredient.unit.isEmpty {
                             Text(ingredient.unit)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         }
                     }
 

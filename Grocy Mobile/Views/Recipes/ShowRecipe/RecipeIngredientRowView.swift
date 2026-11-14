@@ -26,7 +26,7 @@ struct RecipeIngredientRowView: View {
                 if recipePos.missingAmount == 0.0 {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color(.GrocyColors.grocyGreen))
                         Text("\(Text("Enough in stock")) (\(recipePos.stockAmount.formattedAmount) \(quantityUnit?.getName(amount: recipePos.stockAmount) ?? ""))")
                             .italic()
                             .font(.caption)
@@ -35,10 +35,10 @@ struct RecipeIngredientRowView: View {
                     HStack {
                         if recipePos.amountOnShoppingList > 0.0 {
                             Image(systemName: "exclamationmark.circle.fill")
-                                .foregroundStyle(.yellow)
+                                .foregroundStyle(Color(.GrocyColors.grocyYellow))
                         } else {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.red)
+                                .foregroundStyle(Color(.GrocyColors.grocyRed))
                         }
                         Text("Not enough in stock, \(recipePos.missingAmount.formattedAmount) missing, \(recipePos.amountOnShoppingList.formattedAmount) already on shopping list")
                             .italic()

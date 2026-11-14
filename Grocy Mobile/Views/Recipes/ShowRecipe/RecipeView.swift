@@ -35,7 +35,7 @@ private struct StatChip: View {
             if let warning {
                 Text(warning)
                     .font(.caption2)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

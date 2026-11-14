@@ -16,7 +16,7 @@ struct ChoreRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(chore.choreName)
-                .font(.title)
+                .font(.headline)
             if let nextEstimatedExecutionTime = chore.nextEstimatedExecutionTime {
                 HStack {
                     Text("\(Text("Next estimated tracking")):")

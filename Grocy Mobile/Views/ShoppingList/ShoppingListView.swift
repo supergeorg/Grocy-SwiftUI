@@ -374,7 +374,13 @@ struct ShoppingListView: View {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
             } else if filteredShoppingListItems.isEmpty {
-                ContentUnavailableView("Shopping list is empty.", systemImage: MySymbols.shoppingList)
+                ContentUnavailableView {
+                    Label("Shopping list is empty.", systemImage: MySymbols.shoppingList)
+                } actions: {
+                    Button("Add item") {
+                        shoppingListInteractionRouter.present(.newShoppingListEntry)
+                    }
+                }
             }
             #if os(iOS)
                 Section {

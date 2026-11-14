@@ -47251,6 +47251,16 @@
         }
       }
     },
+    "No tasks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Aufgaben"
+          }
+        }
+      }
+    },
     "No transactions found." : {
       "localizations" : {
         "cs" : {

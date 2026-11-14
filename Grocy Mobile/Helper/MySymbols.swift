@@ -29,6 +29,7 @@ nonisolated struct MySymbols {
     static let productGroup = "square.on.circle"
     static let recipe = "book"
     static let picture = "photo"
+    static let picturePlaceholder = "photo.on.rectangle"
     static let gallery = "photo.on.rectangle.angled"
     static let user = "person"
     static let parentProduct = "rectangle.stack"

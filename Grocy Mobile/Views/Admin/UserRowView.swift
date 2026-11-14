@@ -87,9 +87,10 @@ struct UserRowView: View {
             Divider()
             VStack(alignment: .leading){
                 Text(user.username)
-                    .font(.title)
+                    .font(.headline)
                 Text(user.displayName)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
     }

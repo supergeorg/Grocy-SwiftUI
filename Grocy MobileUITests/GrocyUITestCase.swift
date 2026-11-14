@@ -44,17 +44,19 @@ class GrocyUITestCase: XCTestCase {
     // MARK: - App
 
     @MainActor
-    func launchApp() -> XCUIApplication {
+    func launchApp(loggedIn: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
         // Launch arguments go to UserDefaults' argument domain, which isn't persisted.
         app.launchArguments += [
             "-onboardingNeeded", "NO",
-            "-isLoggedIn", "YES",
+            "-isLoggedIn", loggedIn ? "YES" : "NO",
             "-isDemoModus", "NO",
             "-localizationKey", "en",
             "-AppleLanguages", "(en)",
             // Pin the iPhone layout, whatever the simulator has stored.
             "-iPhoneTabNavigation", "YES",
+            // Don't restore saved window state: on macOS it can leave the app without any window.
+            "-ApplePersistenceIgnoreState", "YES",
         ]
         app.launchEnvironment["GROCY_UITEST_SERVER_URL"] = serverURL
         app.launchEnvironment["GROCY_UITEST_API_KEY"] = apiKey

@@ -111,12 +111,15 @@ struct OnboardingView: View {
                     Text("Let's get started!")
                         #if os(iOS)
                             .font(.title)
-                            .foregroundStyle(.white)
-                            .padding()
-                            .glassEffect(.regular.tint(.GrocyColors.grocyGreen).interactive())
                         #endif
                 }
             )
+            #if os(iOS)
+                // System glass style: handles pressed and disabled states and keeps the label legible.
+                .buttonStyle(.glassProminent)
+                .tint(Color(.GrocyColors.grocyGreen))
+                .controlSize(.large)
+            #endif
         }
         .background(Color(.GrocyColors.grocyBlueBackground))
     }
