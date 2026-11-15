@@ -42,8 +42,8 @@ struct MyLabelWithSubtitle: View {
 
 #Preview {
     Form {
-        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: "tag")
-        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: "tag", isProblem: true)
-        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: "tag", isSubtitleProblem: true)
+        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: MySymbols.name)
+        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: MySymbols.name, isProblem: true)
+        MyLabelWithSubtitle(title: "Title", subTitle: "subtitle", systemImage: MySymbols.name, isSubtitleProblem: true)
     }
 }

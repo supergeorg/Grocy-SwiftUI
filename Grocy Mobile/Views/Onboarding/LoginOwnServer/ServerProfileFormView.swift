@@ -145,7 +145,7 @@ struct ServerProfileFormView: View {
                     Link(
                         destination: manageKeysURL,
                         label: {
-                            Label("Create API key", systemImage: "key")
+                            Label("Create API key", systemImage: MySymbols.apiKey)
                         }
                     )
                 }
@@ -193,7 +193,7 @@ struct ServerProfileFormView: View {
                 #endif
             }
             Section("Home Assistant Ingress") {
-                MyToggle(isOn: $serverProfile.useHassIngress, description: "Use Home Assistant Ingress", icon: "house")
+                MyToggle(isOn: $serverProfile.useHassIngress, description: "Use Home Assistant Ingress", icon: MySymbols.homeAssistant)
                 if serverProfile.useHassIngress {
                     HStack {
                         MyTextField(
@@ -255,7 +255,7 @@ struct ServerProfileFormView: View {
                 Link(
                     destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md")!,
                     label: {
-                        Label("Guide (English)", systemImage: "questionmark.circle")
+                        Label("Guide (English)", systemImage: MySymbols.guide)
                     }
                 )
             }

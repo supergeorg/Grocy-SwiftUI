@@ -30,7 +30,7 @@ struct ChoresFilterCapsuleView: View {
                 }
             }
         }) {
-            HStack(spacing: 6) {
+            HStack(spacing: Spacing.xSmall) {
                 Image(systemName: ownFilteredStatus.icon)
                 if isSelected {
                     // Show full text

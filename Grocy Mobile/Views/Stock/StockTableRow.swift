@@ -133,12 +133,12 @@ struct StockTableRow: View {
     }
 
     var stockElementDetails: some View {
-        VStack(alignment: .leading, spacing: 5.0) {
+        VStack(alignment: .leading, spacing: Spacing.xxSmall) {
             // The status is also spelled out, not only shown by the row's background color (HIG),
             // with the same wording and symbols as the stock filter.
             if let productStatus {
                 // An HStack instead of a Label: in a list row, a Label's icon gets its own wide, tinted column.
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxSmall) {
                     Image(systemName: productStatus.getIconName())
                         .accessibilityHidden(true)
                     Text(productStatus.rawValue)

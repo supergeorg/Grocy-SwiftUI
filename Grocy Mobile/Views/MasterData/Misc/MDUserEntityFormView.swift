@@ -136,7 +136,7 @@ struct MDUserEntityFormView: View {
                 Text(isNewUserEntity ? "Create userentity" : "Edit userentity")
                     .font(.title)
                     .bold()
-                    .padding(.bottom, 20.0)
+                    .padding(.bottom, Spacing.xLarge)
             #endif
             Section(header: Text("Name of the userentity")) {
                 MyTextField(
@@ -158,7 +158,7 @@ struct MDUserEntityFormView: View {
 
             MyTextField(textToEdit: $mdUserEntityDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
 
-            MyToggle(isOn: $showInSidebarMenu, description: "Show in sidebar menu", icon: "tablecells")
+            MyToggle(isOn: $showInSidebarMenu, description: "Show in sidebar menu", icon: MySymbols.tableColumn)
         }
         .task {
             if firstAppear {

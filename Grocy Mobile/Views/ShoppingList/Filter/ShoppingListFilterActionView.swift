@@ -7,45 +7,6 @@
 
 import SwiftUI
 
-private struct ShoppingListFilterItemView: View {
-    @Binding var filteredStatus: ShoppingListStatus
-
-    var ownFilteredStatus: ShoppingListStatus
-    var num: Int
-    var color: Color
-    var backgroundColor: Color
-
-    var body: some View {
-        VStack(spacing: 0.0) {
-            Divider()
-                .hidden()
-                .frame(height: 10.0)
-                .background(color)
-            HStack {
-                if filteredStatus == ownFilteredStatus {
-                    Image(systemName: MySymbols.filter)
-                }
-                Text(ownFilteredStatus.getDescription(amount: num))
-                    .bold()
-                    .foregroundStyle(color)
-            }
-            .padding(.horizontal, 10.0)
-            .padding(.top, 10.0)
-            .padding(.bottom, 10.0)
-            .background(backgroundColor)
-        }
-        .fixedSize()
-        .cornerRadius(5.0)
-        .onTapGesture {
-            if filteredStatus != ownFilteredStatus {
-                filteredStatus = ownFilteredStatus
-            } else {
-                filteredStatus = ShoppingListStatus.all
-            }
-        }
-    }
-}
-
 struct ShoppingListFilterActionView: View {
     @Binding var filteredStatus: ShoppingListStatus
 

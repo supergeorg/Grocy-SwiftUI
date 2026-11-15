@@ -114,19 +114,19 @@ struct RecipeDisplayView: View {
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(height: 200)
+                            .frame(height: Sizes.parserTextHeight)
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(maxHeight: 300)
+                            .frame(maxHeight: Sizes.parserResultMaxHeight)
                             .clipped()
                             .cornerRadius(12)
                     case .failure:
                         Image(systemName: MySymbols.picture)
                             .font(.largeTitle)
                             .foregroundStyle(.secondary)
-                            .frame(height: 200)
+                            .frame(height: Sizes.parserTextHeight)
                     @unknown default:
                         EmptyView()
                     }
@@ -137,7 +137,7 @@ struct RecipeDisplayView: View {
         Section("Ingredients") {
             ForEach(recipe.ingredients.indices, id: \.self) { index in
                 let ingredient = recipe.ingredients[index]
-                HStack(alignment: .top, spacing: 8) {
+                HStack(alignment: .top, spacing: Spacing.small) {
                     Text("•")
 
                     if ingredient.amount > 0 {

@@ -138,4 +138,82 @@ nonisolated struct MySymbols {
     static let htmlCode = "chevron.left.slash.chevron.right"
     static let preview = "eye"
     static let forward = "arrow.forward"
+
+
+    // MARK: - Server & app info
+
+    static let developer = "person.circle"
+    static let serverURL = "safari"
+    static let phpVersion = "chevron.left.forwardslash.chevron.right"
+    static let database = "cylinder.split.1x2"
+    static let serverOS = "server.rack"
+    static let clientDevices = "ipad.and.iphone"
+    static let demoServer = "server.rack"
+    static let ownServer = "house"
+    static let homeAssistant = "house"
+    static let apiKey = "key"
+    static let guide = "questionmark.circle"
+
+    // MARK: - Settings
+
+    static let iPhoneTabNavigation = "platter.filled.bottom.iphone"
+    static let iPadTabNavigation = "sidebar.left"
+    static let appleIntelligence = "apple.intelligence"
+    static let tableColumn = "tablecells"
+    static let sortNumber = "list.number"
+
+    // MARK: - Recipes
+
+    static let fulfilled = "checkmark.circle.fill"
+    static let partiallyFulfilled = "exclamationmark.circle.fill"
+    static let notFulfilled = "xmark.circle.fill"
+    static let editPreparation = "pencil.and.scribble"
+    static let fontSizeDecrease = "textformat.size.smaller"
+    static let fontSizeIncrease = "textformat.size.larger"
+
+    // MARK: - Recipe preparation editor
+
+    static let formatBold = "bold"
+    static let formatItalic = "italic"
+    static let formatUnderline = "underline"
+    static let formatStrikethrough = "strikethrough"
+    static let formatBulletList = "list.bullet"
+    static let formatNumberedList = "list.number"
+    static let formatAlignLeft = "text.alignleft"
+    static let formatAlignCenter = "text.aligncenter"
+    static let formatAlignRight = "text.alignright"
+    static let formatJustify = "text.justify"
+    static let formatIndentIncrease = "increase.indent"
+    static let formatIndentDecrease = "decrease.indent"
+    static let formatTextColor = "paintbrush.pointed"
+    static let formatHighlightColor = "paint.bucket.classic"
+    static let editorUndo = "arrow.uturn.left"
+    static let editorRedo = "arrow.uturn.right"
+    static let formatClear = "text.badge.xmark"
+
+    // MARK: - Stock & shopping list
+
+    static let stockEntry = "tag"
+    static let transferFrom = "square.and.arrow.up"
+    static let transferTo = "square.and.arrow.down"
+    static let note = "square.and.pencil"
+    static let exportToReminders = "checklist"
+
+    // MARK: - Scanner
+
+    static let scannerViewFinder = "camera.viewfinder"
+    static let scannerCapture = "camera.circle"
+    static let scannerPhotoLibrary = "photo.on.rectangle"
+    static let scannerButtonBackground = "capsule.fill"
+    static let quickScanPause = "pause.rectangle"
+
+    // MARK: - Onboarding devices
+
+    static let deviceMacBook = "macbook"
+    static let deviceMacMini = "macmini"
+    static let deviceDesktop = "desktopcomputer"
+    static let deviceIPhone = "iphone"
+    static let deviceIPhoneHomeButton = "iphone.homebutton"
+    static let deviceIPad = "ipad"
+    static let deviceIPadHomeButton = "ipad.homebutton"
 }

@@ -49,11 +49,11 @@ struct AboutView: View {
                 Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
                     .lineLimit(.none)
                 AboutLineView(iconName: MySymbols.info, caption: "Version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
-                AboutLineView(iconName: "person.circle", caption: "Developer", content: "Georg Meißner")
+                AboutLineView(iconName: MySymbols.developer, caption: "Developer", content: "Georg Meißner")
                 Link(
                     destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
                     label: {
-                        AboutLineView(iconName: "chevron.left.forwardslash.chevron.right", caption: "Github", content: "supergeorg/Grocy-SwiftUI")
+                        AboutLineView(iconName: MySymbols.api, caption: "Github", content: "supergeorg/Grocy-SwiftUI")
                     }
                 )
                 Link(

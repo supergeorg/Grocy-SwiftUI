@@ -47,7 +47,7 @@ struct RecipePreparationEditorView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
-                .padding(.vertical, 8)
+                .padding(.vertical, Spacing.small)
 
                 Divider()
 
@@ -117,7 +117,7 @@ struct WYSIWYGEditorView: View {
                 .padding(.horizontal)
                 // Give the editor a tall minimum so it fills the visible area.
                 // The ScrollView will expand it further as content grows.
-                .frame(minHeight: 400)
+                .frame(minHeight: Sizes.preparationEditorMinHeight)
                 .frame(maxWidth: .infinity)
             #endif
         }
@@ -170,7 +170,7 @@ struct WYSIWYGEditorView: View {
     }
 
     var formattingBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Spacing.small) {
             #if os(iOS)
                 Button {
                     UIApplication.shared.sendAction(
@@ -188,11 +188,11 @@ struct WYSIWYGEditorView: View {
             #endif
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Bold
             Button(action: { editorProxy?.bold() }) {
-                Image(systemName: "bold")
+                Image(systemName: MySymbols.formatBold)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -200,7 +200,7 @@ struct WYSIWYGEditorView: View {
 
             // Italic
             Button(action: { editorProxy?.italic() }) {
-                Image(systemName: "italic")
+                Image(systemName: MySymbols.formatItalic)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -208,7 +208,7 @@ struct WYSIWYGEditorView: View {
 
             // Underline
             Button(action: { editorProxy?.underline() }) {
-                Image(systemName: "underline")
+                Image(systemName: MySymbols.formatUnderline)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -216,18 +216,18 @@ struct WYSIWYGEditorView: View {
 
             // Strikethrough
             Button(action: { editorProxy?.strikethrough() }) {
-                Image(systemName: "strikethrough")
+                Image(systemName: MySymbols.formatStrikethrough)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasStrikethrough))
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Bullet List
             Button(action: { editorProxy?.unorderedList() }) {
-                Image(systemName: "list.bullet")
+                Image(systemName: MySymbols.formatBulletList)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -235,18 +235,18 @@ struct WYSIWYGEditorView: View {
 
             // Numbered List
             Button(action: { editorProxy?.orderedList() }) {
-                Image(systemName: "list.number")
+                Image(systemName: MySymbols.formatNumberedList)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasOrderedList))
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Align Left
             Button(action: { editorProxy?.justify(.left) }) {
-                Image(systemName: "text.alignleft")
+                Image(systemName: MySymbols.formatAlignLeft)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -254,7 +254,7 @@ struct WYSIWYGEditorView: View {
 
             // Align Center
             Button(action: { editorProxy?.justify(.center) }) {
-                Image(systemName: "text.aligncenter")
+                Image(systemName: MySymbols.formatAlignCenter)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -262,7 +262,7 @@ struct WYSIWYGEditorView: View {
 
             // Align Right
             Button(action: { editorProxy?.justify(.right) }) {
-                Image(systemName: "text.alignright")
+                Image(systemName: MySymbols.formatAlignRight)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -270,18 +270,18 @@ struct WYSIWYGEditorView: View {
 
             // Justify
             Button(action: { editorProxy?.justify(.full) }) {
-                Image(systemName: "text.justify")
+                Image(systemName: MySymbols.formatJustify)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .full))
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Indent
             Button(action: { editorProxy?.indent() }) {
-                Image(systemName: "increase.indent")
+                Image(systemName: MySymbols.formatIndentIncrease)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -289,25 +289,25 @@ struct WYSIWYGEditorView: View {
 
             // Outdent
             Button(action: { editorProxy?.outdent() }) {
-                Image(systemName: "decrease.indent")
+                Image(systemName: MySymbols.formatIndentDecrease)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Foreground Color
             #if os(iOS)
-                FormattingColorPicker(selection: $selectedColor, iconName: "paintbrush.pointed")
+                FormattingColorPicker(selection: $selectedColor, iconName: MySymbols.formatTextColor)
                     .onChange(of: selectedColor) {
                         editorProxy?.setForegroundColor(UIColor(selectedColor))
                     }
                     .labelsHidden()
 
                 // Background Color
-                FormattingColorPicker(selection: $selectedBackgroundColor, iconName: "paint.bucket.classic")
+                FormattingColorPicker(selection: $selectedBackgroundColor, iconName: MySymbols.formatHighlightColor)
                     .onChange(of: selectedBackgroundColor) {
                         editorProxy?.setBackgroundColor(UIColor(selectedBackgroundColor))
                     }
@@ -315,22 +315,22 @@ struct WYSIWYGEditorView: View {
             #endif
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Link
             Button(action: { showLinkDialog = true }) {
-                Image(systemName: "link")
+                Image(systemName: MySymbols.link)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasLink))
 
             Divider()
-                .frame(height: 20)
+                .frame(height: Sizes.toolbarDividerHeight)
 
             // Undo
             Button(action: { editorProxy?.undo() }) {
-                Image(systemName: "arrow.uturn.left")
+                Image(systemName: MySymbols.editorUndo)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -338,7 +338,7 @@ struct WYSIWYGEditorView: View {
 
             // Redo
             Button(action: { editorProxy?.redo() }) {
-                Image(systemName: "arrow.uturn.right")
+                Image(systemName: MySymbols.editorRedo)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -346,7 +346,7 @@ struct WYSIWYGEditorView: View {
 
             // Clear Format
             Button(action: { editorProxy?.removeFormat() }) {
-                Image(systemName: "text.badge.xmark")
+                Image(systemName: MySymbols.formatClear)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
@@ -359,8 +359,8 @@ struct WYSIWYGEditorView: View {
 struct FormattingButtonStyleAdditional: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(height: 40)
-            .frame(minWidth: 40)
+            .frame(height: Sizes.minimumHitTarget)
+            .frame(minWidth: Sizes.minimumHitTarget)
             .glassEffect(.regular.interactive())
 
     }
@@ -371,8 +371,8 @@ struct FormattingButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(height: 40)
-            .frame(minWidth: 40)
+            .frame(height: Sizes.minimumHitTarget)
+            .frame(minWidth: Sizes.minimumHitTarget)
             .glassEffect(isSelected ? .regular.tint(.blue.opacity(0.2)).interactive() : .regular.interactive())
     }
 }
@@ -392,14 +392,14 @@ struct FormattingColorPicker: View {
                 .overlay(alignment: .bottom) {
                     RoundedRectangle(cornerRadius: 2)
                         .fill(selection)
-                        .frame(height: 4)
-                        .padding(.horizontal, 4)
+                        .frame(height: Sizes.colorIndicatorHeight)
+                        .padding(.horizontal, Spacing.xxSmall)
                         .offset(y: 6)
                 }
                 .allowsHitTesting(false)
         }
-        .frame(height: 40)
-        .frame(minWidth: 40)
+        .frame(height: Sizes.minimumHitTarget)
+        .frame(minWidth: Sizes.minimumHitTarget)
         .glassEffect(.regular.interactive())
     }
 }

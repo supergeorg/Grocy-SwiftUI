@@ -29,7 +29,7 @@ struct RecipeFilterCapsuleView: View {
                 }
             }
         }) {
-            HStack(spacing: 6) {
+            HStack(spacing: Spacing.xSmall) {
                 Image(systemName: ownFilteredStatus.getIconName())
                 Text(String(num ?? 0))
                     .bold()

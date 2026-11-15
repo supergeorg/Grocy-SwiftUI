@@ -116,9 +116,9 @@ struct SettingsAppView: View {
                 }
 
                 if horizontalSizeClass == .compact {
-                    MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: Tab navigation", icon: "platter.filled.bottom.iphone")
+                    MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: Tab navigation", icon: MySymbols.iPhoneTabNavigation)
                 } else {
-                    MyToggle(isOn: $iPadTabNavigation, description: "iPad: Tab navigation", icon: "sidebar.left")
+                    MyToggle(isOn: $iPadTabNavigation, description: "iPad: Tab navigation", icon: MySymbols.iPadTabNavigation)
                 }
             #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
@@ -169,7 +169,7 @@ struct SettingsAppView: View {
             #endif
             if AppleIntelligenceStatus.isAppleIntelligenceAvailable {
                 Section("Apple Intelligence") {
-                    MyToggle(isOn: $useAppleIntelligence, description: "Apple Intelligence", icon: "apple.intelligence")
+                    MyToggle(isOn: $useAppleIntelligence, description: "Apple Intelligence", icon: MySymbols.appleIntelligence)
                 }
             }
         }

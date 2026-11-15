@@ -253,7 +253,7 @@ import SwiftUI
                 let fallbackVideoCaptureDevice = AVCaptureDevice.default(for: .video)
 
                 private lazy var viewFinder: UIImageView? = {
-                    let image = UIImage(systemName: "camera.viewfinder")
+                    let image = UIImage(systemName: MySymbols.scannerViewFinder)
                     let imageView = UIImageView(image: image)
                     imageView.translatesAutoresizingMaskIntoConstraints = false
                     return imageView
@@ -261,7 +261,7 @@ import SwiftUI
 
                 private lazy var manualCaptureButton: UIButton = {
                     let button = UIButton(type: .system)
-                    let image = UIImage(systemName: "camera.circle")
+                    let image = UIImage(systemName: MySymbols.scannerCapture)
                     button.setBackgroundImage(image, for: .normal)
                     button.addTarget(self, action: #selector(manualCapturePressed), for: .touchUpInside)
                     button.translatesAutoresizingMaskIntoConstraints = false
@@ -270,8 +270,8 @@ import SwiftUI
 
                 private lazy var manualSelectButton: UIButton = {
                     let button = UIButton(type: .system)
-                    let image = UIImage(systemName: "photo.on.rectangle")
-                    let background = UIImage(systemName: "capsule.fill")?.withTintColor(.systemBackground, renderingMode: .alwaysOriginal)
+                    let image = UIImage(systemName: MySymbols.scannerPhotoLibrary)
+                    let background = UIImage(systemName: MySymbols.scannerButtonBackground)?.withTintColor(.systemBackground, renderingMode: .alwaysOriginal)
                     button.setImage(image, for: .normal)
                     button.setBackgroundImage(background, for: .normal)
                     button.addTarget(self, action: #selector(openGalleryFromButton), for: .touchUpInside)

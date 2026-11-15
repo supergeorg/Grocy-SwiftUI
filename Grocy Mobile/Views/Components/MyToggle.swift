@@ -47,8 +47,8 @@ struct MyToggle: View {
     @Previewable @State var isOn: Bool = true
 
     Form {
-        MyToggle(isOn: $isOn, description: "Description", descriptionInfo: "Descriptioninfo", icon: "tag")
-        MyToggle(isOn: $isOn, description: "Enable tare weight handling", descriptionInfo: "Descriptioninfo", icon: "tag")
+        MyToggle(isOn: $isOn, description: "Description", descriptionInfo: "Descriptioninfo", icon: MySymbols.name)
+        MyToggle(isOn: $isOn, description: "Enable tare weight handling", descriptionInfo: "Descriptioninfo", icon: MySymbols.name)
         MyToggle(isOn: $isOn, description: "Without icon")
     }
 }

@@ -161,7 +161,7 @@ struct TransferProductView: View {
                     Picker(
                         selection: $locationIDFrom,
                         label: HStack {
-                            Image(systemName: "square.and.arrow.up")
+                            Image(systemName: MySymbols.transferFrom)
                                 .foregroundStyle(.primary)
                             Text("From location")
                         },
@@ -186,7 +186,7 @@ struct TransferProductView: View {
                     Picker(
                         selection: $locationIDTo,
                         label: HStack {
-                            Image(systemName: "square.and.arrow.down")
+                            Image(systemName: MySymbols.transferTo)
                                 .foregroundStyle(.primary)
                             Text("To location")
                         },
@@ -221,14 +221,14 @@ struct TransferProductView: View {
                         isOn: $useSpecificStockEntry,
                         description: "Use a specific stock item",
                         descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
-                        icon: "tag"
+                        icon: MySymbols.stockEntry
                     )
 
                     if useSpecificStockEntry {
                         Picker(
                             selection: $stockEntryID,
                             label: HStack {
-                                Image(systemName: "tag")
+                                Image(systemName: MySymbols.stockEntry)
                                     .foregroundStyle(.primary)
                                 Text("Stock entry")
                             },

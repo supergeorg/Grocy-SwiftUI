@@ -449,7 +449,7 @@ struct ShoppingListView: View {
         #if os(macOS)
             .safeAreaBar(edge: .top) {
                 filterCapsules
-                    .padding(.vertical, 8)
+                    .padding(.vertical, Spacing.small)
             }
         #endif
         .navigationTitle(selectedShoppingList?.name ?? "Shopping list")
@@ -759,7 +759,7 @@ struct ShoppingListView: View {
                 }
             },
             label: {
-                Label("Export shopping list to Reminders", systemImage: "checklist")
+                Label("Export shopping list to Reminders", systemImage: MySymbols.exportToReminders)
             }
         )
     }

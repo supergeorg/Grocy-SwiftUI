@@ -16,8 +16,8 @@ struct FilterCapsuleBar<Content: View>: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            GlassEffectContainer(spacing: 4) {
-                HStack(spacing: 8) {
+            GlassEffectContainer(spacing: Spacing.xxSmall) {
+                HStack(spacing: Spacing.small) {
                     content
                 }
             }

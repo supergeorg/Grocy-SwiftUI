@@ -104,7 +104,7 @@ struct MDProductPictureFormView: View {
                 Section("Existing product picture") {
                     PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
                         .clipShape(.rect(cornerRadius: 5.0))
-                        .frame(maxWidth: 300.0, maxHeight: 300.0)
+                        .frame(maxWidth: Sizes.picturePreview, maxHeight: Sizes.picturePreview)
                     Text(pictureFileName)
                         .font(.caption)
                     if let pictureFileNameData = pictureFileName.data(using: .utf8) {
@@ -150,7 +150,7 @@ struct MDProductPictureFormView: View {
                     productImage
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 300.0, height: 300.0)
+                        .frame(width: Sizes.picturePreview, height: Sizes.picturePreview)
                     if let productImageFilename = productImageFilename {
                         Text(productImageFilename)
                             .font(.caption)

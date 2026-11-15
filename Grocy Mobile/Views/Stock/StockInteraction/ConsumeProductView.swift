@@ -359,7 +359,7 @@ struct ConsumeProductView: View {
                             isOn: $useSpecificStockEntry,
                             description: "Use a specific stock item",
                             descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
-                            icon: "tag"
+                            icon: MySymbols.stockEntry
                         )
                         .onChange(of: useSpecificStockEntry) {
                             // Clear stockEntryID when toggling off
@@ -378,7 +378,7 @@ struct ConsumeProductView: View {
                             content: {
                                 Text("").tag(nil as String?)
                                 ForEach(stockEntriesForLocation, id: \.stockID) { stockProduct in
-                                    VStack(alignment: .leading, spacing: 2) {
+                                    VStack(alignment: .leading, spacing: Spacing.hairline) {
                                         // Show product name if entry is from a child product
                                         if childProducts.contains(where: { $0.id == stockProduct.productID }) {
                                             if let childProductName = mdProducts.first(where: { $0.id == stockProduct.productID })?.name {

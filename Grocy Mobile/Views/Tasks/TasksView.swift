@@ -368,7 +368,7 @@ struct TasksView: View {
         #if os(macOS)
             .safeAreaBar(edge: .top) {
                 filterCapsules
-                    .padding(.vertical, 8)
+                    .padding(.vertical, Spacing.small)
             }
         #endif
         .navigationTitle("Tasks")

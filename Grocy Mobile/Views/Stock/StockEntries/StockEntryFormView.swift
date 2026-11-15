@@ -92,7 +92,7 @@ struct StockEntryFormView: View {
 
     var content: some View {
         Form {
-            VStack(alignment: .trailing, spacing: 5.0) {
+            VStack(alignment: .trailing, spacing: Spacing.xxSmall) {
                 if !productDoesntSpoil {
                     HStack {
                         DatePicker(

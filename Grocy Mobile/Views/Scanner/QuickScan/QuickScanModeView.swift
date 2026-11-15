@@ -292,7 +292,7 @@ struct QuickScanModeView: View {
                                     qsActiveSheet = nil
                                 },
                                 label: {
-                                    Image(systemName: "pause.rectangle")
+                                    Image(systemName: MySymbols.quickScanPause)
                                 }
                             )
                         }

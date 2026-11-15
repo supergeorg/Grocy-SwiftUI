@@ -75,7 +75,7 @@ struct UserFormView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Username").font(.title)) {
+            Section(header: Text("Username")) {
                 MyTextField(textToEdit: $username, description: "Username", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "A username is required", errorMessage: "Username already exists")
                     .onChange(of: username) {
                         isValidUsername = checkUsernameCorrect()
@@ -83,7 +83,7 @@ struct UserFormView: View {
                 MyTextField(textToEdit: $firstName, description: "First name", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
                 MyTextField(textToEdit: $lastName, description: "Last name", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
             }
-            Section(header: Text("Password").font(.title)) {
+            Section(header: Text("Password")) {
                 MyTextField(textToEdit: $password, description: "Password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
                 MyTextField(textToEdit: $passwordConfirm, description: "Confirm password", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "Passwords do not match")
             }

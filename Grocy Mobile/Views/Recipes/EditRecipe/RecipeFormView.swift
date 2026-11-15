@@ -316,7 +316,7 @@ struct RecipeFormView: View {
                             Button(action: {
                                 showPreparationEditor.toggle()
                             }) {
-                                Label("Edit", systemImage: "pencil.and.scribble")
+                                Label("Edit", systemImage: MySymbols.editPreparation)
                             }
                         }
                     },

@@ -24,7 +24,7 @@ struct ContentView: View {
             }
         #elseif os(macOS)
             AppSidebarNavigation()
-                .frame(minWidth: 500)
+                .frame(minWidth: Constants.macOSMinWindowWidth)
         #endif
     }
 }

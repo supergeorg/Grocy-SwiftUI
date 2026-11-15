@@ -44,7 +44,7 @@ struct GrocyInfoView: View {
                         )
                     },
                     label: {
-                        Label("Grocy Server Demo URL", systemImage: "safari")
+                        Label("Grocy Server Demo URL", systemImage: MySymbols.serverURL)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -59,7 +59,7 @@ struct GrocyInfoView: View {
                         )
                     },
                     label: {
-                        Label("Grocy Server URL", systemImage: "safari")
+                        Label("Grocy Server URL", systemImage: MySymbols.serverURL)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -88,7 +88,7 @@ struct GrocyInfoView: View {
                         Text(systemInfo.phpVersion)
                     },
                     label: {
-                        Label("PHP version", systemImage: "chevron.left.forwardslash.chevron.right")
+                        Label("PHP version", systemImage: MySymbols.phpVersion)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -97,7 +97,7 @@ struct GrocyInfoView: View {
                         Text(systemInfo.sqliteVersion)
                     },
                     label: {
-                        Label("SQLite version", systemImage: "cylinder.split.1x2")
+                        Label("SQLite version", systemImage: MySymbols.database)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -107,7 +107,7 @@ struct GrocyInfoView: View {
                             Text(os)
                         },
                         label: {
-                            Label("OS", systemImage: "server.rack")
+                            Label("OS", systemImage: MySymbols.serverOS)
                                 .foregroundStyle(.primary)
                         }
                     )
@@ -118,7 +118,7 @@ struct GrocyInfoView: View {
                             Text(client)
                         },
                         label: {
-                            Label("Client information", systemImage: "ipad.and.iphone")
+                            Label("Client information", systemImage: MySymbols.clientDevices)
                                 .foregroundStyle(.primary)
                         }
                     )

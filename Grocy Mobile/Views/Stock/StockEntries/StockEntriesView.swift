@@ -132,7 +132,7 @@ struct StockEntriesView: View {
             }
         }
         #if os(macOS)
-            .frame(minWidth: 350)
+            .frame(minWidth: Constants.macOSStockEntriesMinWidth)
         #endif
         .navigationTitle(stockElement.product?.name ?? "Product")
         .refreshable {
