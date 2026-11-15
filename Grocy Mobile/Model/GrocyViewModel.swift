@@ -353,6 +353,7 @@ class GrocyViewModel {
                             try swiftDataSync.syncPersistentCollection(self.mdProducts)
                             // Stock may have been synced before the products (for example on first launch), so link it now.
                             try swiftDataSync.linkStockElementsToProducts()
+                            self.updateWidgetShoppingList()
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdQuantityUnitConversions)
@@ -371,12 +372,15 @@ class GrocyViewModel {
                         case .quantity_units:
                             self.mdQuantityUnits = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdQuantityUnits)
+                            self.updateWidgetShoppingList()
                         case .shopping_list:
                             self.shoppingList = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingList)
+                            self.updateWidgetShoppingList()
                         case .shopping_lists:
                             self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingListDescriptions)
+                            self.updateWidgetShoppingList()
                         case .shopping_locations:
                             self.mdStores = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdStores)
@@ -392,6 +396,7 @@ class GrocyViewModel {
                         case .tasks:
                             self.grocyTasks = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.grocyTasks)
+                            self.updateWidgetTasks()
                         case .task_categories:
                             self.mdTaskCategories = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdTaskCategories)
@@ -440,10 +445,13 @@ class GrocyViewModel {
         switch additionalObject {
         case .current_user:
             self.currentUser = try await grocyApi.getUser().first
+            self.updateWidgetChores()
+            self.updateWidgetTasks()
 
         case .chores:
             self.chores = try await grocyApi.getChores()
             try swiftDataSync.syncPersistentCollection(self.chores)
+            self.updateWidgetChores()
 
         case .stock:
             self.stock = try await grocyApi.getStock()
@@ -462,6 +470,8 @@ class GrocyViewModel {
         case .user_settings:
             self.userSettings = try await grocyApi.getUserSettings()
             try swiftDataSync.syncSingletonModel(GrocyUserSettings.self, with: self.userSettings)
+            self.updateWidgetChores()
+            self.updateWidgetTasks()
 
         case .recipeFulfillments:
             self.recipeFulfillments = try await grocyApi.getRecipeFulfillments()
@@ -557,7 +567,10 @@ class GrocyViewModel {
         }
 
         WidgetStockSummary.clear()
-        WidgetCenter.shared.reloadTimelines(ofKind: WidgetStockSummary.widgetKind)
+        WidgetSharedStore.remove(forKey: WidgetSharedStore.shoppingListKey)
+        WidgetSharedStore.remove(forKey: WidgetSharedStore.choresKey)
+        WidgetSharedStore.remove(forKey: WidgetSharedStore.tasksKey)
+        WidgetCenter.shared.reloadAllTimelines()
 
         GrocyLogger.info("Deleted all cached data from the viewmodel.")
     }
@@ -576,7 +589,84 @@ class GrocyViewModel {
             belowMinStock: volatileStock.missingProducts.count,
             updated: Date()
         ).save()
+        WidgetSharedStore.saveLocalization(localizationKey)
         WidgetCenter.shared.reloadTimelines(ofKind: WidgetStockSummary.widgetKind)
+    }
+
+    /// Writes the undone shopping list items to the App Group and reloads the shopping list widget.
+    private func updateWidgetShoppingList() {
+        do {
+            let descriptions = try modelContext.fetch(FetchDescriptor<ShoppingListDescription>(sortBy: [SortDescriptor(\.id)]))
+            let items = try modelContext.fetch(FetchDescriptor<ShoppingListItem>(predicate: #Predicate { $0.done == false }))
+            let products = Dictionary(try modelContext.fetch(FetchDescriptor<MDProduct>()).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            let quantityUnits = Dictionary(try modelContext.fetch(FetchDescriptor<MDQuantityUnit>()).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+
+            let lists = descriptions.map { description in
+                let listItems = items
+                    .filter { $0.shoppingListID == description.id }
+                    .map { item in
+                        let product = item.productID.flatMap { products[$0] }
+                        let name = product?.name ?? item.note
+                        var amount = item.amount.formattedAmount
+                        if let quantityUnit = item.quID.flatMap({ quantityUnits[$0] }) {
+                            amount += " \(quantityUnit.getName(amount: item.amount))"
+                        }
+                        return WidgetShoppingListSummary.Item(id: item.id, name: name, amount: amount)
+                    }
+                    .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+                return WidgetShoppingListSummary.List(id: description.id, name: description.name, items: listItems)
+            }
+
+            WidgetSharedStore.save(WidgetShoppingListSummary(lists: lists, updated: Date()), forKey: WidgetSharedStore.shoppingListKey)
+            WidgetSharedStore.saveLocalization(localizationKey)
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.shoppingListKind)
+        } catch {
+            GrocyLogger.error("Updating the shopping list widget failed. \(error)")
+        }
+    }
+
+    /// Writes the chores with their next due date to the App Group and reloads the chores widget.
+    private func updateWidgetChores() {
+        do {
+            let chores = try modelContext.fetch(FetchDescriptor<Chore>())
+            let dueSoonDays = try modelContext.fetch(FetchDescriptor<GrocyUserSettings>()).first?.choresDueSoonDays ?? 5
+            let currentUserID = self.currentUser?.id
+            let items = chores.map { chore in
+                WidgetDueSummary.Item(
+                    id: chore.choreID,
+                    name: chore.choreName,
+                    dueDate: chore.nextEstimatedExecutionTime,
+                    assignedToMe: currentUserID != nil && chore.nextExecutionAssignedToUserID == currentUserID
+                )
+            }
+            WidgetSharedStore.save(WidgetDueSummary(items: items, dueSoonDays: dueSoonDays, updated: Date()), forKey: WidgetSharedStore.choresKey)
+            WidgetSharedStore.saveLocalization(localizationKey)
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.choresKind)
+        } catch {
+            GrocyLogger.error("Updating the chores widget failed. \(error)")
+        }
+    }
+
+    /// Writes the tasks that aren't done to the App Group and reloads the tasks widget.
+    private func updateWidgetTasks() {
+        do {
+            let tasks = try modelContext.fetch(FetchDescriptor<GrocyTask>(predicate: #Predicate { $0.done == false }))
+            let dueSoonDays = try modelContext.fetch(FetchDescriptor<GrocyUserSettings>()).first?.tasksDueSoonDays ?? 5
+            let currentUserID = self.currentUser?.id
+            let items = tasks.map { task in
+                WidgetDueSummary.Item(
+                    id: task.id,
+                    name: task.name,
+                    dueDate: task.dueDate,
+                    assignedToMe: currentUserID != nil && task.assignedToUserID == currentUserID
+                )
+            }
+            WidgetSharedStore.save(WidgetDueSummary(items: items, dueSoonDays: dueSoonDays, updated: Date()), forKey: WidgetSharedStore.tasksKey)
+            WidgetSharedStore.saveLocalization(localizationKey)
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.tasksKind)
+        } catch {
+            GrocyLogger.error("Updating the tasks widget failed. \(error)")
+        }
     }
 
     func getLogEntries() async {

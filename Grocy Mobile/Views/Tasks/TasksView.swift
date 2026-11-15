@@ -18,6 +18,7 @@ enum TasksSortOption: Hashable, Sendable {
 struct TasksView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
+    @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
 
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
@@ -73,6 +74,13 @@ struct TasksView: View {
 
     private let dataToUpdate: [ObjectEntities] = [.tasks, .task_categories]
     private let additionalDataToUpdate: [AdditionalEntities] = [.current_user, .users]
+    /// Applies the filter a widget link asked for.
+    private func applyPendingFilter() {
+        guard let deepLinkManager, let filter = deepLinkManager.pendingTaskFilter else { return }
+        filteredStatus = filter
+        deepLinkManager.pendingTaskFilter = nil
+    }
+
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
@@ -365,7 +373,11 @@ struct TasksView: View {
         #endif
         .navigationTitle("Tasks")
         .task {
+            applyPendingFilter()
             await updateData()
+        }
+        .onChange(of: deepLinkManager?.pendingTaskFilter) { _, _ in
+            applyPendingFilter()
         }
         .refreshable {
             await updateData()
@@ -546,6 +558,6 @@ struct TasksView: View {
 
 #Preview(traits: .previewData) {
     NavigationStack {
-        ChoresView()
+        TasksView()
     }
 }

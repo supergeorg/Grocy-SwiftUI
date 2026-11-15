@@ -82,6 +82,8 @@ enum TaskStatus: Identifiable, CaseIterable {
             return .dueToday
         case "dueSoon":
             return .dueSoon
+        case "assignedToMe":
+            return .assignedToMe
         default:
             return nil
         }
