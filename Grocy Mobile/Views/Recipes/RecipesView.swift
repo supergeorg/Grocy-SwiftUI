@@ -51,6 +51,7 @@ struct RecipesView: View {
     @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
+    @State private var showImportRecipe: Bool = false
     @State private var recipeToDelete: Recipe? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -260,6 +261,17 @@ struct RecipesView: View {
                 RecipeFormView()
             }
         }
+        #if os(iOS)
+            .sheet(isPresented: $showImportRecipe) {
+                NavigationStack {
+                    RecipeImportView()
+                }
+            }
+        #else
+            .navigationDestination(isPresented: $showImportRecipe) {
+                RecipeImportView()
+            }
+        #endif
         .refreshable(action: {
             await updateData()
         })
@@ -293,6 +305,19 @@ struct RecipesView: View {
                 )
             #endif
             ToolbarSpacer(.fixed)
+            ToolbarItem(
+                placement: .primaryAction,
+                content: {
+                    Button(
+                        action: {
+                            showImportRecipe = true
+                        },
+                        label: {
+                            Label("Import recipe from website", systemImage: MySymbols.importRecipe)
+                        }
+                    )
+                }
+            )
             ToolbarItem(
                 placement: .primaryAction,
                 content: {

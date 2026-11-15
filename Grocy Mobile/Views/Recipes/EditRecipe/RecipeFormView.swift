@@ -21,6 +21,7 @@ struct RecipeFormView: View {
 
     @Query var mdProducts: MDProducts
     @Query var mdQuantityUnits: MDQuantityUnits
+    @Query var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query var recipes: Recipes
 
     @Environment(\.dismiss) var dismiss
@@ -92,7 +93,7 @@ struct RecipeFormView: View {
         _recipe = State(initialValue: existingRecipe ?? Recipe())
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .recipes_nestings, .recipes_pos, .quantity_units]
+    private let dataToUpdate: [ObjectEntities] = [.products, .recipes_nestings, .recipes_pos, .quantity_units, .quantity_unit_conversions]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -199,7 +200,7 @@ struct RecipeFormView: View {
                                     NavigationLink(
                                         value: RecipeFormInteraction.editIngredient(ingredient: ingredient, recipe: recipe),
                                         label: {
-                                            RecipeFormIngredientRowView(recipePos: ingredient, product: mdProducts.first(where: { $0.id == ingredient.productID }), quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }))
+                                            RecipeFormIngredientRowView(recipePos: ingredient, product: mdProducts.first(where: { $0.id == ingredient.productID }), quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }), quantityUnitConversions: mdQuantityUnitConversions)
                                         }
                                     )
                                     .swipeActions(
