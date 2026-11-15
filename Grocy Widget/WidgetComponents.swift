@@ -11,10 +11,13 @@ import WidgetKit
 // MARK: - Header
 
 /// The title row at the top of a widget: symbol, title and an optional count.
+///
+/// VoiceOver reads the title, then `countDescription` (for example "4 overdue or due today"), because a bare number doesn't say what it counts.
 struct WidgetHeaderView: View {
     let title: Text
     let systemImage: String
     var count: Int? = nil
+    var countDescription: Text? = nil
     var tint: Color = .accentColor
 
     var body: some View {
@@ -22,7 +25,7 @@ struct WidgetHeaderView: View {
             Label {
                 title
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.7)
             } icon: {
                 Image(systemName: systemImage)
                     .foregroundStyle(tint)
@@ -37,8 +40,20 @@ struct WidgetHeaderView: View {
                     .contentTransition(.numericText())
             }
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue(accessibilityCount)
         .accessibilityAddTraits(.isHeader)
+    }
+
+    private var accessibilityCount: Text {
+        if let countDescription {
+            return countDescription
+        }
+        if let count {
+            return Text(count, format: .number)
+        }
+        return Text(verbatim: "")
     }
 }
 
