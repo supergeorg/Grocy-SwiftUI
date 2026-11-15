@@ -7,9 +7,6 @@
     ":" : {
       "shouldTranslate" : false
     },
-    "·" : {
-
-    },
     "(%@)" : {
       "localizations" : {
         "de" : {
@@ -20,9 +17,6 @@
         }
       },
       "shouldTranslate" : false
-    },
-    "/ %lld" : {
-
     },
     "%.1f" : {
 
@@ -2803,6 +2797,9 @@
         }
       }
     },
+    "%lld ingredients have no product and won't be imported. Select an ingredient to choose or create its product." : {
+
+    },
     "%lld items are done" : {
       "localizations" : {
         "de" : {
@@ -5096,9 +5093,6 @@
           }
         }
       }
-    },
-    "%lld ratings" : {
-
     },
     "%lld tasks are assigned to me" : {
       "localizations" : {
@@ -35688,6 +35682,9 @@
         }
       }
     },
+    "Enter a website address that starts with http:// or https://." : {
+
+    },
     "Entity" : {
       "localizations" : {
         "ca" : {
@@ -37953,6 +37950,9 @@
     "Grocy Mobile" : {
       "shouldTranslate" : false
     },
+    "Grocy needs a product for every ingredient. Ingredients without a product aren't imported." : {
+
+    },
     "Grocy Server Demo URL" : {
       "localizations" : {
         "de" : {
@@ -38586,9 +38586,6 @@
     "HTML" : {
       "shouldTranslate" : false
     },
-    "https://example.com/recipe" : {
-
-    },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
         "cs" : {
@@ -38733,6 +38730,12 @@
         }
       }
     },
+    "Import picture" : {
+
+    },
+    "Import recipe" : {
+
+    },
     "Import Recipe" : {
       "localizations" : {
         "de" : {
@@ -38742,6 +38745,12 @@
           }
         }
       }
+    },
+    "Import recipe from website" : {
+
+    },
+    "Import this ingredient" : {
+
     },
     "In alphabetical order" : {
       "localizations" : {
@@ -40489,9 +40498,6 @@
     "kcal" : {
       "shouldTranslate" : false
     },
-    "Keywords" : {
-
-    },
     "Last done by" : {
       "localizations" : {
         "ca" : {
@@ -41879,9 +41885,6 @@
       }
     },
     "Load recipe" : {
-
-    },
-    "Load Recipe" : {
 
     },
     "Loading recipe…" : {
@@ -46410,6 +46413,7 @@
       }
     },
     "No" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ca" : {
           "stringUnit" : {
@@ -47259,6 +47263,9 @@
         }
       }
     },
+    "No product selected" : {
+
+    },
     "No products" : {
       "localizations" : {
         "de" : {
@@ -47270,6 +47277,7 @@
       }
     },
     "No products found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -47344,6 +47352,7 @@
       }
     },
     "No quantity units found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -47406,6 +47415,9 @@
           }
         }
       }
+    },
+    "No recipe was found on this website. Only websites that provide schema.org recipe data are supported." : {
+
     },
     "No store defined. Please create one." : {
       "localizations" : {
@@ -49491,6 +49503,9 @@
         }
       }
     },
+    "Not imported" : {
+
+    },
     "Not opened" : {
       "localizations" : {
         "ca" : {
@@ -50436,6 +50451,9 @@
           }
         }
       }
+    },
+    "On the website" : {
+
     },
     "Only assigned to me" : {
       "localizations" : {
@@ -52003,9 +52021,6 @@
           }
         }
       }
-    },
-    "Paste a recipe URL above and tap load" : {
-
     },
     "Paste recipe URL" : {
       "localizations" : {
@@ -55442,9 +55457,6 @@
         }
       }
     },
-    "Published: %@" : {
-
-    },
     "Purchase" : {
       "localizations" : {
         "ca" : {
@@ -57893,9 +57905,6 @@
         }
       }
     },
-    "Recipe Import" : {
-
-    },
     "Recipe parsing" : {
       "localizations" : {
         "de" : {
@@ -57905,9 +57914,6 @@
           }
         }
       }
-    },
-    "Recipe URL" : {
-
     },
     "Recipes" : {
       "localizations" : {
@@ -65915,9 +65921,6 @@
         }
       }
     },
-    "Suitable for" : {
-
-    },
     "Sunday" : {
       "localizations" : {
         "ca" : {
@@ -67076,6 +67079,15 @@
         }
       }
     },
+    "The preparation is saved as numbered steps." : {
+
+    },
+    "The recipe is read from the website's schema.org data, which most recipe websites provide." : {
+
+    },
+    "The recipe was saved, but these ingredients couldn't be added: %@" : {
+
+    },
     "The resulting price of this ingredient will be multiplied by this factor" : {
       "localizations" : {
         "ca" : {
@@ -67593,6 +67605,9 @@
           }
         }
       }
+    },
+    "There's no unit conversion to the product's stock unit \"%@\". Only whether any amount is in stock can be checked." : {
+
     },
     "This amount is used for the \"quick consume button\" on the stock overview page (related to quantity unit stock)" : {
       "localizations" : {
@@ -80501,9 +80516,6 @@
     "Version" : {
       "shouldTranslate" : false
     },
-    "View original recipe" : {
-
-    },
     "Water the plants" : {
       "localizations" : {
         "de" : {
@@ -80513,6 +80525,9 @@
           }
         }
       }
+    },
+    "Website" : {
+
     },
     "Wednesday" : {
       "localizations" : {
@@ -83422,6 +83437,7 @@
       }
     },
     "Yes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ca" : {
           "stringUnit" : {
