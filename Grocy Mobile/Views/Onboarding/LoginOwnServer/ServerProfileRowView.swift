@@ -23,7 +23,7 @@ struct ServerProfileRowView: View {
                     Text(profile.name.isEmpty ? profile.grocyServerURL : profile.name)
                         .font(profile.name.isEmpty ? .title2 : .largeTitle)
                     if profile.useHassIngress {
-                        Image(systemName: "house")
+                        Image(systemName: MySymbols.homeAssistant)
                             .foregroundStyle(.tint)
                     }
                 }
@@ -35,7 +35,7 @@ struct ServerProfileRowView: View {
                                     Image(uiImage: image)
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 40, height: 40)
+                                        .frame(width: Sizes.avatar, height: Sizes.avatar)
                                         .clipShape(.circle)
                                 }
                             #elseif os(macOS)
@@ -43,7 +43,7 @@ struct ServerProfileRowView: View {
                                     Image(nsImage: image)
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 40, height: 40)
+                                        .frame(width: Sizes.avatar, height: Sizes.avatar)
                                         .clipShape(.circle)
                                 }
                             #endif

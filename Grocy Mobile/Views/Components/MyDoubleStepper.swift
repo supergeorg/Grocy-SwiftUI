@@ -60,7 +60,7 @@ struct MyDoubleStepper: View {
                         // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
                         .labelsHidden()
                         #if os(macOS)
-                            .frame(width: 90)
+                            .frame(width: Constants.macOSAmountFieldWidth)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
@@ -160,14 +160,14 @@ struct MyDoubleStepperOptional: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Spacing.xxSmall) {
             LabeledContent {
                 HStack {
                     TextField(description, value: $amount, formatter: formatter)
                         // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
                         .labelsHidden()
                         #if os(macOS)
-                            .frame(width: 90)
+                            .frame(width: Constants.macOSAmountFieldWidth)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
@@ -259,7 +259,7 @@ struct MyDoubleStepperOptional: View {
             minAmount: 1.0,
             amountStep: 0.1,
             amountName: "Quantityunit",
-            systemImage: "tag"
+            systemImage: MySymbols.name
         )
 
         MyDoubleStepperOptional(
@@ -275,7 +275,7 @@ struct MyDoubleStepperOptional: View {
             minAmount: 1.0,
             amountStep: 0.1,
             amountName: "Quantityunit",
-            systemImage: "tag"
+            systemImage: MySymbols.name
         )
     }
 }

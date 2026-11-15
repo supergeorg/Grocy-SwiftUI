@@ -75,7 +75,7 @@ struct Sidebar: View {
                     }
                     if !(systemConfig?.featureFlagEquipment == false) {
                         NavigationLink(value: NavigationItem.equipment) {
-                            Label("Equipment", systemImage: "questionmark")
+                            Label("Equipment", systemImage: MySymbols.unknown)
                         }
                     }
                 }
@@ -193,7 +193,7 @@ struct Sidebar: View {
                         Image("grocy-logo")
                             .resizable()
                             .scaledToFill()
-                            .frame(height: 28)
+                            .frame(height: Sizes.navigationLogoHeight)
                     }
                 )
             })

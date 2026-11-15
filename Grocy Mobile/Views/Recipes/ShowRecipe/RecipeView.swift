@@ -19,7 +19,7 @@ private struct StatChip: View {
     var info: LocalizedStringKey
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
 
             Label(title, systemImage: icon)
                 .font(.caption)
@@ -39,8 +39,8 @@ private struct StatChip: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
+        .padding(.horizontal, Spacing.medium)
+        .padding(.vertical, Spacing.medium)
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
@@ -57,7 +57,7 @@ private struct SettingsCard: View {
     let onServingsChange: () async -> Void
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.large) {
             MyDoubleStepper(
                 amount: $recipe.desiredServings,
                 description: "Desired servings",
@@ -73,7 +73,7 @@ private struct SettingsCard: View {
                     .frame(maxWidth: .infinity)
             }
 
-            HStack(spacing: 12) {
+            HStack(spacing: Spacing.medium) {
                 StatChip(
                     icon: MySymbols.energy,
                     title: "Energy",
@@ -91,7 +91,7 @@ private struct SettingsCard: View {
                 )
             }
         }
-        .padding(18)
+        .padding(Spacing.large)
         .glassEffect(in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 }

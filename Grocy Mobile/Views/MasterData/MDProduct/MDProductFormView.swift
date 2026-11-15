@@ -219,7 +219,7 @@ struct MDProductFormView: View {
                         Label {
                             Text("Apple Intelligence")
                         } icon: {
-                            Image(systemName: "apple.intelligence")
+                            Image(systemName: MySymbols.appleIntelligence)
                                 .symbolEffect(
                                     .variableColor.iterative.reversing,
                                     options: .speed(0.5),
@@ -466,7 +466,7 @@ struct MDProductFormView: View {
     var optionalPropertiesView: some View {
         Form {
             // Active
-            MyToggle(isOn: $product.active, description: "Active", descriptionInfo: nil, icon: "checkmark.circle")
+            MyToggle(isOn: $product.active, description: "Active", descriptionInfo: nil, icon: MySymbols.active)
 
             // Parent Product
             ProductField(productID: $product.parentProductID, description: "Parent product", icon: MySymbols.parentProduct)

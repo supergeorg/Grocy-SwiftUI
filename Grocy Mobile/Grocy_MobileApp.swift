@@ -163,9 +163,12 @@ struct Grocy_MobileApp: App {
                 let vm = GrocyViewModel(modelContext: mainContainer.mainContext, profileModelContext: profileModelContainer.mainContext)
                 _grocyVM = State(initialValue: vm)
                 if let serverURL = UITestConfiguration.serverURL {
+                    // Set the login data synchronously, so the first requests of the views are already authenticated.
+                    // (checkServer would replace the API client asynchronously, and requests started before that fail.)
+                    vm.grocyApi.setLoginData(baseURL: serverURL, apiKey: UITestConfiguration.apiKey, customHeaders: [:])
                     Task {
                         do {
-                            try await vm.checkServer(baseURL: serverURL, apiKey: UITestConfiguration.apiKey, isDemoMode: false)
+                            vm.systemInfo = try await vm.grocyApi.getSystemInfo()
                         } catch {
                             GrocyLogger.error("UI test login failed. \(error)")
                         }

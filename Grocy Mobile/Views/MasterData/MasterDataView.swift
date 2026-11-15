@@ -76,11 +76,11 @@ struct MasterDataView: View {
 
             if devMode {
                 NavigationLink(value: MasterDataItem.userFields) {
-                    Label("Userfields", systemImage: "questionmark")
+                    Label("Userfields", systemImage: MySymbols.unknown)
                 }
 
                 NavigationLink(value: MasterDataItem.userEntities) {
-                    Label("User entities", systemImage: "questionmark")
+                    Label("User entities", systemImage: MySymbols.unknown)
                 }
             }
         }

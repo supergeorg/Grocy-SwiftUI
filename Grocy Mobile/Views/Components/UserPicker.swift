@@ -34,7 +34,7 @@ struct UserPicker: View {
     }
 
     var body: some View {
-        FlowLayout(spacing: 8) {
+        FlowLayout(spacing: Spacing.small) {
             ForEach(users) { user in
                 UserSelectButton(
                     user: user,

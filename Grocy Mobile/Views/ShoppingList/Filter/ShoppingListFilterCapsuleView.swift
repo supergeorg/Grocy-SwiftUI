@@ -29,7 +29,7 @@ struct ShoppingListFilterCapsuleView: View {
                 }
             }
         }) {
-            HStack(spacing: 6) {
+            HStack(spacing: Spacing.xSmall) {
                 Image(systemName: ownFilteredStatus.getIcon())
                 if isSelected {
                     // Show full text

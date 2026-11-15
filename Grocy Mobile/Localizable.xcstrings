@@ -59081,8 +59081,15 @@
         }
       }
     },
-    "REMINDER SYNC" : {
-      "shouldTranslate" : false
+    "Reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen"
+          }
+        }
+      }
     },
     "Replay app onboarding" : {
       "localizations" : {
@@ -61720,9 +61727,6 @@
           }
         }
       }
-    },
-    "SHOPPING LIST" : {
-      "shouldTranslate" : false
     },
     "Shopping list is empty." : {
       "localizations" : {
@@ -67225,8 +67229,15 @@
         }
       }
     },
-    "SYNC SHOPPING LIST TO REMINDERS" : {
-      "shouldTranslate" : false
+    "Sync shopping list to Reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einkaufsliste mit Erinnerungen synchronisieren"
+          }
+        }
+      }
     },
     "Take out the trash" : {
       "localizations" : {

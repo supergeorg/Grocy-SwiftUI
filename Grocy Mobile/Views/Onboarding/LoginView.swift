@@ -19,7 +19,7 @@ struct LoginView: View {
     #endif
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: Spacing.xLarge) {
             Spacer()
             Image("grocy-logo")
                 .resizable()
@@ -42,12 +42,12 @@ struct LoginView: View {
             Text("Select a server type:")
                 .font(.title3)
                 .foregroundStyle(.primary)
-                .padding(.top, 4)
+                .padding(.top, Spacing.xxSmall)
 
             NavigationLink(
                 value: LoginDestinationType.demoServer,
                 label: {
-                    Label("Demo server", systemImage: "server.rack")
+                    Label("Demo server", systemImage: MySymbols.demoServer)
                         .font(.title2)
                         .frame(maxWidth: .infinity)
                 }
@@ -63,7 +63,7 @@ struct LoginView: View {
             NavigationLink(
                 value: LoginDestinationType.ownServer,
                 label: {
-                    Label("Own server", systemImage: "house")
+                    Label("Own server", systemImage: MySymbols.ownServer)
                         .font(.title2)
                         .frame(maxWidth: .infinity)
                 }

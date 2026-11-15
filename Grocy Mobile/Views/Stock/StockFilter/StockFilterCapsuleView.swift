@@ -35,7 +35,7 @@ struct StockFilterCapsuleView: View {
                 }
             }
         }) {
-            HStack(spacing: 6) {
+            HStack(spacing: Spacing.xSmall) {
                 Image(systemName: ownFilteredStatus.getIconName())
                 if isSelected {
                     // Show full text

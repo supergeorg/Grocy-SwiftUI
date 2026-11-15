@@ -139,7 +139,7 @@ struct MDUserFieldFormView: View {
             Text(isNewUserField ? "Create userfield" : "Edit userfield")
                 .font(.title)
                 .bold()
-                .padding(.bottom, 20.0)
+                .padding(.bottom, Spacing.xLarge)
 #endif
             VStack(alignment: .leading){
                 Picker(selection: $entity, label: Text("Entity"), content: {
@@ -164,7 +164,7 @@ struct MDUserFieldFormView: View {
                         isCaptionCorrect = checkCaptionCorrect()
                     }
             }
-            MyIntStepperOptional(amount: $sortNumber, description: "Sort number", helpText: "Multiple Userfields will be ordered by that number on the input form", minAmount: -1, errorMessage: "", systemImage: "list.number")
+            MyIntStepperOptional(amount: $sortNumber, description: "Sort number", helpText: "Multiple Userfields will be ordered by that number on the input form", minAmount: -1, errorMessage: "", systemImage: MySymbols.sortNumber)
             
             Picker(selection: $type, label: Text("Type"), content: {
                 ForEach(UserFieldType.allCases, id:\.self) { userFieldType in
@@ -172,7 +172,7 @@ struct MDUserFieldFormView: View {
                 }
             })
             
-            MyToggle(isOn: $showAsColumnInTables, description: "Show as column in tables", icon: "tablecells")
+            MyToggle(isOn: $showAsColumnInTables, description: "Show as column in tables", icon: MySymbols.tableColumn)
         }
         .task {
             if firstAppear {

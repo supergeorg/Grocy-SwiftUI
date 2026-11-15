@@ -24,7 +24,7 @@ struct StockJournalRowView: View {
                 .strikethrough(journalEntry.undone, color: .primary)
             if journalEntry.undone {
                 if let date = getDateFromTimestamp(journalEntry.undoneTimestamp ?? "") {
-                    HStack(spacing: 4) {
+                    HStack(spacing: Spacing.xxSmall) {
                         Text("\(Text("Undone on")):")
                         Text(formatDateAsString(date, showTime: true, localizationKey: localizationKey) ?? "")
                         Text(getRelativeDateAsText(date, localizationKey: localizationKey) ?? "")
@@ -34,32 +34,32 @@ struct StockJournalRowView: View {
                 }
             }
             Group {
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxSmall) {
                     Text("\(Text("Amount")):")
                     Text("\(journalEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: journalEntry.amount) ?? "")")
                 }
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxSmall) {
                     Text("\(Text("Transaction time")):")
                     Text(formatDateAsString(journalEntry.rowCreatedTimestamp, showTime: true, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(journalEntry.rowCreatedTimestamp, localizationKey: localizationKey) ?? "")
                         .italic()
                 }
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxSmall) {
                     Text("\(Text("Transaction type")):")
                     Text(journalEntry.transactionType.localizedName)
                 }
                 if let locationName = location?.name {
-                    HStack(spacing: 4) {
+                    HStack(spacing: Spacing.xxSmall) {
                         Text("\(Text("Location")):")
                         Text(locationName)
                     }
                 }
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxSmall) {
                     Text("\(Text("Done by")):")
                     Text(grocyUser?.displayName ?? "Username Error")
                 }
                 if let note = journalEntry.note {
-                    HStack(spacing: 4) {
+                    HStack(spacing: Spacing.xxSmall) {
                         Text("\(Text("Note")): ")
                         Text(note)
                     }

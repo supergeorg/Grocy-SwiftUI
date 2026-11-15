@@ -20,7 +20,7 @@ struct MDProductRowView: View {
             if let pictureFileName = product.pictureFileName {
                 PictureView(pictureFileName: pictureFileName, pictureType: .productPictures)
                     .clipShape(.rect(cornerRadius: 5.0))
-                    .frame(maxWidth: 75.0, maxHeight: 75.0)
+                    .frame(maxWidth: Sizes.productThumbnail, maxHeight: Sizes.productThumbnail)
                     .accessibilityHidden(true)
             }
             VStack(alignment: .leading) {

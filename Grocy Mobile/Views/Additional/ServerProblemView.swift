@@ -72,7 +72,7 @@ struct ServerProblemView: View {
     }
 
     var normalView: some View {
-        VStack(alignment: .center, spacing: 20) {
+        VStack(alignment: .center, spacing: Spacing.xLarge) {
             Image(systemName: serverErrorInfo.0)
                 .font(.system(size: symbolSize))
                 .accessibilityHidden(true)

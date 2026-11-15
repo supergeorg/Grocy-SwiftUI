@@ -57,11 +57,12 @@ struct SettingsShoppingListView: View {
                 )
             }
             if devMode {
-                Section(header: Text("REMINDER SYNC").font(.title)) {
-                    MyToggle(isOn: $syncShoppingListToReminders, description: "SYNC SHOPPING LIST TO REMINDERS")
+                // Default header style, like every other section.
+                Section(header: Text("Reminders")) {
+                    MyToggle(isOn: $syncShoppingListToReminders, description: "Sync shopping list to Reminders")
                     if syncShoppingListToReminders {
                         Picker(
-                            "SHOPPING LIST",
+                            "Shopping list",
                             selection: $shoppingListToSyncID,
                             content: {
                                 Text("").tag(0)

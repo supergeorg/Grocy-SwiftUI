@@ -62,7 +62,7 @@ struct WeekdayPicker: View {
     }
 
     var body: some View {
-        FlowLayout(spacing: 8) {
+        FlowLayout(spacing: Spacing.small) {
             ForEach(Weekday.allCases) { weekday in
                 WeekdaySelectButton(
                     weekday: weekday,

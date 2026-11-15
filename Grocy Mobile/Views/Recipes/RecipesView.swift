@@ -163,7 +163,7 @@ struct RecipesView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 8) {
+            VStack(spacing: Spacing.small) {
                 Section {
                     RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
                         .listRowInsets(EdgeInsets())
@@ -208,13 +208,13 @@ struct RecipesView: View {
                                 }
                             },
                             label: {
-                                Label("Copy recipe", systemImage: "document.on.document")
+                                Label("Copy recipe", systemImage: MySymbols.duplicate)
                             }
                         )
                     })
                 }
             }
-            .padding(8)
+            .padding(Spacing.small)
         }
         .navigationTitle("Recipes")
         .navigationDestination(for: RecipeInteraction.self) { interaction in

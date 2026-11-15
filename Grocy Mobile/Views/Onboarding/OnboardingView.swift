@@ -11,14 +11,14 @@ struct OnboardingDevicesView: View {
     var body: some View {
         HStack {
             #if os(macOS)
-                Image(systemName: "macbook")
-                Image(systemName: "macmini")
-                Image(systemName: "desktopcomputer")
+                Image(systemName: MySymbols.deviceMacBook)
+                Image(systemName: MySymbols.deviceMacMini)
+                Image(systemName: MySymbols.deviceDesktop)
             #elseif os(iOS)
-                Image(systemName: "iphone")
-                Image(systemName: "iphone.homebutton")
-                Image(systemName: "ipad")
-                Image(systemName: "ipad.homebutton")
+                Image(systemName: MySymbols.deviceIPhone)
+                Image(systemName: MySymbols.deviceIPhoneHomeButton)
+                Image(systemName: MySymbols.deviceIPad)
+                Image(systemName: MySymbols.deviceIPadHomeButton)
             #endif
         }
     }

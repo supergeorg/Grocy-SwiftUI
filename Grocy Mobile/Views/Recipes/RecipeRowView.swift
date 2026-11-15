@@ -44,7 +44,7 @@ struct RecipeRowView: View {
                         startPoint: .center,
                         endPoint: .bottom
                     )
-                    .frame(height: 110)
+                    .frame(height: Sizes.recipeTitleFadeHeight)
                     .clipped()
 
                     // Recipe name placed on the image
@@ -54,14 +54,14 @@ struct RecipeRowView: View {
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 12)
+                        .padding(.horizontal, Spacing.medium)
+                        .padding(.vertical, Spacing.medium)
                         .shadow(color: Color.black.opacity(0.6), radius: 6, x: 0, y: 2)
                 }
                 .clipped()
 
-                HStack(alignment: .center, spacing: 8) {
-                    VStack(alignment: .center, spacing: 6) {
+                HStack(alignment: .center, spacing: Spacing.small) {
+                    VStack(alignment: .center, spacing: Spacing.xSmall) {
                         Text("\(fulfillment?.dueScore ?? 0)")
                             .font(.title2)
                             .fontWeight(.semibold)
@@ -69,13 +69,13 @@ struct RecipeRowView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    .frame(minWidth: 60)
+                    .frame(minWidth: Sizes.recipeScoreMinWidth)
 
                     Spacer()
 
                     if fulfillment?.needFulfilled == true {
                         VStack(alignment: .trailing) {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image(systemName: MySymbols.fulfilled)
                                 .foregroundStyle(Color(.GrocyColors.grocyGreen))
                                 .font(.title)
                             Text("Enough in stock")
@@ -84,7 +84,7 @@ struct RecipeRowView: View {
                         }
                     } else if fulfillment?.needFulfilledWithShoppingList == true {
                         VStack(alignment: .trailing) {
-                            Image(systemName: "exclamationmark.circle.fill")
+                            Image(systemName: MySymbols.partiallyFulfilled)
                                 .foregroundStyle(Color(.GrocyColors.grocyYellow))
                                 .font(.title)
                             Text("Not enough in stock, \(fulfillment?.missingProductsCount ?? 0) ingredient missing but already on the shopping list")
@@ -94,7 +94,7 @@ struct RecipeRowView: View {
                         }
                     } else {
                         VStack(alignment: .trailing) {
-                            Image(systemName: "xmark.circle.fill")
+                            Image(systemName: MySymbols.notFulfilled)
                                 .foregroundStyle(Color(.GrocyColors.grocyRed))
                                 .font(.title)
                             Text("Not enough in stock, \(fulfillment?.missingProductsCount ?? 0) ingredient missing")

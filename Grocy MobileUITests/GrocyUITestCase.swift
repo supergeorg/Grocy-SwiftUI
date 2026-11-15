@@ -115,7 +115,8 @@ class GrocyUITestCase: XCTestCase {
         let field = app.searchFields.firstMatch
         #if os(iOS)
             // The search field sits in a drawer above the list until it's pulled down.
-            if !field.waitForExistence(timeout: 3) {
+            // The list may still be loading, so a single swipe doesn't always reveal it.
+            for _ in 0..<3 where !field.waitForExistence(timeout: 3) {
                 let list = app.collectionViews.firstMatch
                 if list.waitForExistence(timeout: 5) {
                     list.swipeDown()

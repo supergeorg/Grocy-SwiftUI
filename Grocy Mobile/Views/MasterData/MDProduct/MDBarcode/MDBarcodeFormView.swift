@@ -110,7 +110,7 @@ struct MDBarcodeFormView: View {
                 Picker(
                     selection: $barcode.quID,
                     label: HStack {
-                        Image(systemName: "scalemass")
+                        Image(systemName: MySymbols.quantityUnit)
                             .foregroundStyle(.primary)
                         Text("Quantity unit")
                     },

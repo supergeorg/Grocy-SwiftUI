@@ -103,7 +103,7 @@ struct RecipePictureView: View {
                     VStack(alignment: .leading) {
                         PictureView(pictureFileName: pictureFileName, pictureType: .recipePictures)
                             .clipShape(.rect(cornerRadius: 5.0))
-                            .frame(maxWidth: 300.0, maxHeight: 300.0)
+                            .frame(maxWidth: Sizes.picturePreview, maxHeight: Sizes.picturePreview)
                         Text(pictureFileName)
                             .font(.caption)
                     }
@@ -151,7 +151,7 @@ struct RecipePictureView: View {
                     recipeImage
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 300.0, height: 300.0)
+                        .frame(width: Sizes.picturePreview, height: Sizes.picturePreview)
                     if let recipeImageFilename {
                         Text(recipeImageFilename)
                             .font(.caption)

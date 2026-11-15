@@ -65,7 +65,7 @@ struct UserManagementView: View {
                                 content: {
                                     UserFormView(isNewUser: true)
                                         .padding()
-                                        .frame(width: 500, height: 500)
+                                        .frame(width: Sizes.popoverFormSize, height: Sizes.popoverFormSize)
                                 }
                             )
                         }

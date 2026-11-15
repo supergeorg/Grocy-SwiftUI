@@ -114,10 +114,10 @@ struct HTMLPreviewView: View {
     // MARK: - Control Bar
 
     private var controlBar: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Spacing.small) {
             // Line 1: Appearance picker + scale percentage
-            GlassEffectContainer(spacing: 10) {
-                HStack(spacing: 10) {
+            GlassEffectContainer(spacing: Spacing.medium) {
+                HStack(spacing: Spacing.medium) {
                     Picker("Appearance", selection: $webColorScheme) {
                         ForEach(WebColorScheme.allCases, id: \.self) { scheme in
                             Image(systemName: scheme.icon).tag(scheme)
@@ -136,17 +136,17 @@ struct HTMLPreviewView: View {
                             withAnimation(.smooth) { fontScale = 1.0 }
                         }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, Spacing.xxSmall)
             }
 
             // Line 2: Smaller → Slider → Larger
-            GlassEffectContainer(spacing: 10) {
-                HStack(spacing: 10) {
+            GlassEffectContainer(spacing: Spacing.medium) {
+                HStack(spacing: Spacing.medium) {
                     Button {
                         fontScale = max(minFontScale, (fontScale - 0.1).rounded(toPlaces: 1))
                     } label: {
-                        Image(systemName: "textformat.size.smaller")
-                            .frame(width: 36, height: 36)
+                        Image(systemName: MySymbols.fontSizeDecrease)
+                            .frame(width: Sizes.minimumHitTarget, height: Sizes.minimumHitTarget)
                     }
                     .glassEffect(.regular.interactive(), in: .circle)
                     .disabled(fontScale <= minFontScale)
@@ -156,17 +156,17 @@ struct HTMLPreviewView: View {
                     Button {
                         fontScale = min(maxFontScale, (fontScale + 0.1).rounded(toPlaces: 1))
                     } label: {
-                        Image(systemName: "textformat.size.larger")
-                            .frame(width: 36, height: 36)
+                        Image(systemName: MySymbols.fontSizeIncrease)
+                            .frame(width: Sizes.minimumHitTarget, height: Sizes.minimumHitTarget)
                     }
                     .glassEffect(.regular.interactive(), in: .circle)
                     .disabled(fontScale >= maxFontScale)
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, Spacing.xxSmall)
             }
         }
         .buttonStyle(.plain)
-        .padding(.bottom, 8)
+        .padding(.bottom, Spacing.small)
     }
 }
 

@@ -33,7 +33,7 @@ struct MyIntStepper: View {
                         // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
                         .labelsHidden()
                         #if os(macOS)
-                            .frame(width: 90)
+                            .frame(width: Constants.macOSAmountFieldWidth)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
@@ -107,7 +107,7 @@ struct MyIntStepperOptional: View {
                         // The description names the field (hidden here, the row shows it), so VoiceOver says which amount this is.
                         .labelsHidden()
                         #if os(macOS)
-                            .frame(width: 90)
+                            .frame(width: Constants.macOSAmountFieldWidth)
                         #elseif os(iOS)
                             .keyboardType(.numbersAndPunctuation)
                             .submitLabel(.done)
@@ -180,13 +180,13 @@ struct MyIntStepperOptional: View {
 
     Form {
         Section {
-            MyIntStepper(amount: $amount, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: "tag")
+            MyIntStepper(amount: $amount, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: MySymbols.name)
         }
         Section("Optional") {
-            MyIntStepperOptional(amount: $amountOptional, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: "tag")
+            MyIntStepperOptional(amount: $amountOptional, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: MySymbols.name)
         }
         Section("Error") {
-            MyIntStepper(amount: .constant(-1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", errorMessage: "Error Message", systemImage: "tag")
+            MyIntStepper(amount: .constant(-1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", errorMessage: "Error Message", systemImage: MySymbols.name)
         }
     }
 }

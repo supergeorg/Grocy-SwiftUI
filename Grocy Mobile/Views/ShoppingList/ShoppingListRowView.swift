@@ -119,7 +119,7 @@ struct ShoppingListRowView: View {
                             action: {
                                 shoppingListInteractionRouter.present(.purchase(item: shoppingListItem))
                             },
-                            label: { Label("Purchase", systemImage: "shippingbox") }
+                            label: { Label("Purchase", systemImage: MySymbols.purchase) }
                         )
                         .tint(.blue)
                     }
