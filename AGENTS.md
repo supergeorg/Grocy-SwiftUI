@@ -6,12 +6,12 @@ Guidance for AI coding agents working on **Grocy Mobile**. It covers the project
 
 Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-hosted app for managing groceries and the household. The app can't run without a server. It talks to a Grocy instance (version 4.4 to 4.7.1, see `GrocyAPP.supportedVersions`) over Grocy's REST API, or to one of the public demo servers. It can also reach Grocy through a Home Assistant Ingress.
 
-- **Platforms:** iOS / iPadOS 26+ and macOS 26+ (Tahoe), built from one multiplatform target. visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
+- **Platforms:** iOS / iPadOS 26.6+ and macOS 26.6+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.6`). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
 - **Design language:** Liquid Glass (`.glassEffect(...)`, system toolbars, `ContentUnavailableView`). There's no fallback for older OS versions, and none should be added.
 - **Language / toolchain:** Swift 6, latest Xcode. The app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, and `SWIFT_STRICT_MEMORY_SAFETY = YES`.
 - **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
 - **Version:** `MARKETING_VERSION` in the project (currently 3.4.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
-- **Dependencies (SPM):** `InfomaniakRichHTMLEditor` (`swift-rich-html-editor`), used for editing recipe preparation HTML. Prefer Apple frameworks over adding new packages.
+- **Dependencies (SPM):** `InfomaniakRichHTMLEditor` (`swift-rich-html-editor`, up to next major from 3.3.1), used for editing recipe preparation HTML. Prefer Apple frameworks over adding new packages.
 
 ## Repository Layout
 
@@ -32,13 +32,15 @@ Grocy Mobile/                 App target (file-system synchronized group, so new
     Components/               Reusable form controls (MyTextField, MyToggle, MyDoubleStepper, ProductField, ...)
     Additional/               ServerProblemView, FlowLayout, ...
   Helper/                     Logger, symbols, formatters, decoding helpers, deep links, AI matcher, reminders
-Grocy Widget/                 WidgetKit extension (reads the shared SwiftData store)
+Grocy Widget/                 WidgetKit extension: stock, shopping list, chores and tasks widgets
 Grocy MobileTests/            Unit tests (currently XCTest)
 Grocy MobileUITests/          UI tests (XCUIAutomation)
-Changelogs/ Guides/ Screenshots/ PrivacyPolicy/ Assets/   Non-code assets and docs
+Changelogs/                   Release notes per version (Changelog_<version>.md, English + German)
+Guides/<Topic>/               Feature and contributor guides (Home Assistant Ingress, Recipe Import, Translation)
+Screenshots/ PrivacyPolicy/ Assets/   Non-code assets
 ```
 
-The widget target compiles a few files from the app folder through membership exceptions: `DateFormatter.swift`, `Decoder.swift`, `MySymbols.swift`, `APIError.swift`, `SharedModel.swift`, `ProductStatus.swift`, `VolatileStockModel.swift`, and `Assets.xcassets`. Keep these files free of app-only dependencies such as `GrocyViewModel` or SwiftUI views from the app target. Don't break them, or the widget stops building.
+The widget target compiles a few files from the app folder through membership exceptions: `DateFormatter.swift`, `Decoder.swift`, `MySymbols.swift`, `APIError.swift`, `SharedModel.swift`, `ProductStatus.swift`, `VolatileStockModel.swift`, `Assets.xcassets`, and `Localizable.xcstrings`. Keep these files free of app-only dependencies such as `GrocyViewModel` or SwiftUI views from the app target. Don't break them, or the widget stops building.
 
 ## Architecture
 
@@ -51,7 +53,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
                GrocyViewModel (@MainActor @Observable)
                      │  SwiftDataSynchronizer.sync*()
                      ▼
-               SwiftData store (App Group container, shared with widget)
+               SwiftData store (App Group container)
                      │
                      ▼
                Views read via @Query / modelContext.fetch(FetchDescriptor)
@@ -74,7 +76,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 ### Persistence
 
 - There are two `ModelContainer`s.
-  - **Main store:** all Grocy data, stored at `sharedModelContainerURL()` in the App Group so the widget can read it. Not synced to iCloud.
+  - **Main store:** all Grocy data, stored at `sharedModelContainerURL()` in the App Group. Not synced to iCloud. The widgets don't open it (see Widgets below).
   - **Profile store:** `ServerProfile` and `LoginCustomHeader`, stored at `profiles.store` and synced with CloudKit (except on the simulator). It's exposed through custom environment keys `\.profileModelContext` and `\.profileModelContainer` (see `Helper/EnvironmentKeys.swift`).
 - If the main store fails to migrate, it's deleted and rebuilt, because it's only a cache. Adding a new `@Model` type means registering it in the **main schema** in `Grocy_MobileApp.init`. If previews or tests need it, also add it to `PreviewContainer.modelTypes`.
 - `GrocyViewModel` sets `modelContext.autosaveEnabled = false`. `SwiftDataSynchronizer` saves explicitly and rolls back on error.
@@ -85,7 +87,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - `ContentView` chooses between `AppTabNavigation` and `AppSidebarNavigation`, based on the size class and the `iPhoneTabNavigation` / `iPadTabNavigation` settings. macOS always uses the sidebar.
 - List → detail navigation uses `NavigationLink(value:)` plus `.navigationDestination(for:)`.
 - Creating an item uses a `.sheet` on iOS and `.navigationDestination(isPresented:)` on macOS, behind `#if os(iOS)`.
-- Deep links use the `grocy://stock/filter/<ProductStatus>` scheme. They're parsed by `GrocyDeepLink` and handed over through the `DeepLinkManager` environment object.
+- Deep links (opened by the widgets) are `grocy://stock/filter/<ProductStatus>`, `grocy://shoppinglist[/list/<id>]`, `grocy://chores/filter/<ChoreStatus>` and `grocy://tasks/filter/<TaskStatus>`. Widgets build them with `WidgetDeepLink` (`SharedModel.swift`); the app parses them with `GrocyDeepLink` (`Helper/DeepLinkHandler.swift`) and hands them over through the `DeepLinkManager` environment object.
 
 ### Other subsystems
 
@@ -93,8 +95,8 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - **Apple Intelligence:** `Helper/AICategoryMatcher.swift` is an `actor` built on `FoundationModels`. It matches free text such as product names to categories conforming to `Categorizable`. Gate it with `AppleIntelligenceStatus.isAppleIntelligenceAvailable` and the `useAppleIntelligence` setting.
 - **Scanning:** `Views/Scanner/` uses VisionKit and AVFoundation barcode scanning. The `*Legacy` variants are older implementations. Quick Scan mode works only on iOS. Barcode lookups can use `externalBarcodeLookup`.
 - **Reminders sync:** `Helper/ReminderStore.swift` uses EventKit to mirror a shopping list into Reminders.
-- **Recipe import (work in progress):** `Views/Recipes/Import/` parses schema.org/Recipe JSON-LD from web pages. See `RECIPE_IMPORT_GUIDE.md`.
-- **Widget:** `Grocy Widget/` is an `AppIntentTimelineProvider` that reads `VolatileStock` from the shared store and refreshes every 15 minutes.
+- **Recipe import (work in progress):** `Views/Recipes/Import/` (UI and the JSON-LD `RecipeParser`) and `Model/Recipes/Import/` (ingredient line parser, product/unit mapping, preparation HTML format) import schema.org/Recipe JSON-LD from websites as Grocy recipes. See `Guides/Recipe Import/RecipeImportGuide.md`, and update it when the import changes.
+- **Widgets:** `Grocy Widget/` bundles the stock, shopping list, chores and tasks widgets (`AppIntentTimelineProvider`s, also on the Lock Screen). They never open SwiftData. After each sync, `GrocyViewModel` writes small `Codable` summaries (`WidgetStockSummary`, `WidgetShoppingListSummary`, `WidgetDueSummary`) to the App Group's `UserDefaults` via `WidgetSharedStore` (`Model/SharedModel.swift`) and reloads the matching timeline. `deleteAllCachedData` clears them. The app's language override is shared too, so widgets use the same language.
 
 ## Coding Conventions
 
