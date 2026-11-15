@@ -17,7 +17,10 @@ struct ContentView: View {
 
     var body: some View {
         #if os(iOS)
-            if (horizontalSizeClass == .compact && iPhoneTabNavigation) || iPadTabNavigation {
+            if horizontalSizeClass == .compact && iPhoneTabNavigation {
+                // Prototype: at most five tabs, so iPhone never needs the system "More" list.
+                PhoneTabNavigation()
+            } else if iPadTabNavigation {
                 AppTabNavigation()
             } else {
                 AppSidebarNavigation()

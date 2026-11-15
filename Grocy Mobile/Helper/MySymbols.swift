@@ -193,6 +193,8 @@ nonisolated struct MySymbols {
 
     // MARK: - Stock & shopping list
 
+    static let household = "house"
+
     static let stockEntry = "tag"
     static let transferFrom = "square.and.arrow.up"
     static let transferTo = "square.and.arrow.down"
