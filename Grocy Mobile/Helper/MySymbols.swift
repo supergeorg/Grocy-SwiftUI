@@ -126,6 +126,10 @@ nonisolated struct MySymbols {
 
     static let task = "checkmark.circle"
     static let tasks = "checklist"
+
+    static let widgetNoData = "arrow.down.circle"
+    static let widgetAllDone = "checkmark.circle.fill"
+    static let widgetNoDueDate = "circle"
     
     static let darkMode = "moon.stars.fill"
     static let lightMode = "sun.horizon.fill"

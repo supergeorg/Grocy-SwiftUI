@@ -613,6 +613,38 @@
       },
       "shouldTranslate" : false
     },
+    "%@: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld"
+          }
+        }
+      }
+    },
+    "%@: %lld due" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld fällig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld due"
+          }
+        }
+      }
+    },
     "%@s" : {
       "shouldTranslate" : false
     },
@@ -2883,6 +2915,56 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld items to buy" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Eintrag zu kaufen"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Einträge zu kaufen"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld item to buy"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld items to buy"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld overdue or due today" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld überfällig oder heute fällig"
           }
         }
       }
@@ -6620,6 +6702,16 @@
     },
     "•" : {
       "shouldTranslate" : false
+    },
+    "+ %lld more" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ %lld weitere"
+          }
+        }
+      }
     },
     "🇧🇷 Português Brasileiro (Portuguese Brazil)" : {
       "localizations" : {
@@ -10691,6 +10783,16 @@
         }
       }
     },
+    "All done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles erledigt"
+          }
+        }
+      }
+    },
     "Amount" : {
       "localizations" : {
         "ca" : {
@@ -11408,6 +11510,16 @@
     },
     "Apple Intelligence" : {
       "shouldTranslate" : false
+    },
+    "Apples" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Äpfel"
+          }
+        }
+      }
     },
     "Apply" : {
       "localizations" : {
@@ -16466,6 +16578,16 @@
         }
       }
     },
+    "Bread" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brot"
+          }
+        }
+      }
+    },
     "By default the amount to be added to the shopping list is \"needed amount - stock amount - shopping list amount\" - when this is enabled, it is only checked against the stock amount, not against what is already on the shopping list" : {
       "localizations" : {
         "cs" : {
@@ -17564,6 +17686,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "分類"
+          }
+        }
+      }
+    },
+    "Change the bed sheets" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bettwäsche wechseln"
+          }
+        }
+      }
+    },
+    "Choose which entries the widget shows." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle, welche Einträge das Widget zeigt."
           }
         }
       }
@@ -19018,6 +19160,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "家務設定"
+          }
+        }
+      }
+    },
+    "Clean the kitchen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Küche putzen"
           }
         }
       }
@@ -31562,6 +31714,16 @@
         }
       }
     },
+    "Due, overdue or expired" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fällig, überfällig oder abgelaufen"
+          }
+        }
+      }
+    },
     "Edit" : {
       "localizations" : {
         "de" : {
@@ -41434,6 +41596,16 @@
         }
       }
     },
+    "Later" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später"
+          }
+        }
+      }
+    },
     "Legacy Barcode Scanner" : {
       "localizations" : {
         "de" : {
@@ -44049,6 +44221,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "代表每 %@ 包含 %@"
+          }
+        }
+      }
+    },
+    "Milk" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milch"
           }
         }
       }
@@ -46705,6 +46887,16 @@
         }
       }
     },
+    "No data yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Daten"
+          }
+        }
+      }
+    },
     "No description" : {
       "localizations" : {
         "de" : {
@@ -46717,6 +46909,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune description"
+          }
+        }
+      }
+    },
+    "No due date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Fälligkeitsdatum"
           }
         }
       }
@@ -46871,6 +47073,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未找到匹配的记录"
+          }
+        }
+      }
+    },
+    "No open tasks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine offenen Aufgaben"
           }
         }
       }
@@ -49647,6 +49859,16 @@
         }
       }
     },
+    "Nothing left to buy." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts mehr zu kaufen."
+          }
+        }
+      }
+    },
     "Nothing was found for the given barcode" : {
       "localizations" : {
         "cs" : {
@@ -50215,6 +50437,16 @@
         }
       }
     },
+    "Only assigned to me" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur mir zugewiesene"
+          }
+        }
+      }
+    },
     "Only check if any amount is in stock" : {
       "localizations" : {
         "ca" : {
@@ -50747,6 +50979,16 @@
         }
       }
     },
+    "Open Grocy Mobile to load your data." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne Grocy Mobile, um deine Daten zu laden."
+          }
+        }
+      }
+    },
     "Open Settings" : {
       "localizations" : {
         "de" : {
@@ -50847,6 +51089,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已开封"
+          }
+        }
+      }
+    },
+    "Opens filter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet Filter"
+          }
+        }
+      }
+    },
+    "Opens the list with this filter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet die Liste mit diesem Filter"
+          }
+        }
+      }
+    },
+    "Opens the stock overview with this filter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet die Bestandsübersicht mit diesem Filter"
           }
         }
       }
@@ -62006,6 +62278,46 @@
         }
       }
     },
+    "Shows how many products are due soon, overdue, expired or below their minimum stock amount." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt, wie viele Produkte bald fällig, überfällig, abgelaufen oder unter dem Mindestbestand sind."
+          }
+        }
+      }
+    },
+    "Shows the items still to buy on a shopping list." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt die Einträge eines Einkaufszettels, die noch gekauft werden müssen."
+          }
+        }
+      }
+    },
+    "Shows which chores are overdue, due today and due soon." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt, welche Hausarbeiten überfällig, heute fällig und bald fällig sind."
+          }
+        }
+      }
+    },
+    "Shows your open tasks and when they are due." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt deine offenen Aufgaben und wann sie fällig sind."
+          }
+        }
+      }
+    },
     "Skip" : {
       "localizations" : {
         "ca" : {
@@ -64389,6 +64701,16 @@
         }
       }
     },
+    "Stock filter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandsfilter"
+          }
+        }
+      }
+    },
     "Stock interaction" : {
       "localizations" : {
         "de" : {
@@ -65862,6 +66184,16 @@
     },
     "SYNC SHOPPING LIST TO REMINDERS" : {
       "shouldTranslate" : false
+    },
+    "Take out the trash" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müll rausbringen"
+          }
+        }
+      }
     },
     "Tare weight" : {
       "localizations" : {
@@ -74037,6 +74369,16 @@
         }
       }
     },
+    "Tomatoes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomaten"
+          }
+        }
+      }
+    },
     "Total price" : {
       "localizations" : {
         "ca" : {
@@ -80161,6 +80503,16 @@
     },
     "View original recipe" : {
 
+    },
+    "Water the plants" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pflanzen gießen"
+          }
+        }
+      }
     },
     "Wednesday" : {
       "localizations" : {

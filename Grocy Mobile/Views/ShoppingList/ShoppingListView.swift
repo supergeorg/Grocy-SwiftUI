@@ -83,6 +83,7 @@ class ShoppingListInteractionNavigationRouter {
 
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
 
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
@@ -144,6 +145,15 @@ struct ShoppingListView: View {
         .shopping_lists,
         .shopping_list,
     ]
+    /// Selects the shopping list a widget link asked for.
+    private func applyPendingShoppingList() {
+        guard let deepLinkManager, let listID = deepLinkManager.pendingShoppingListID else { return }
+        if shoppingListDescriptions.contains(where: { $0.id == listID }) {
+            selectedShoppingListID = listID
+        }
+        deepLinkManager.pendingShoppingListID = nil
+    }
+
     func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -498,6 +508,10 @@ struct ShoppingListView: View {
                 }
                 firstAppear = false
             }
+            applyPendingShoppingList()
+        }
+        .onChange(of: deepLinkManager?.pendingShoppingListID) { _, _ in
+            applyPendingShoppingList()
         }
         .searchable(
             text: $searchString,

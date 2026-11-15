@@ -39,6 +39,7 @@ class ChoreInteractionNavigationRouter {
 struct ChoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
+    @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
 
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
@@ -88,6 +89,13 @@ struct ChoresView: View {
 
     private let dataToUpdate: [ObjectEntities] = [.chores]
     private let additionalDataToUpdate: [AdditionalEntities] = [.chores, .current_user, .users]
+    /// Applies the filter a widget link asked for.
+    private func applyPendingFilter() {
+        guard let deepLinkManager, let filter = deepLinkManager.pendingChoreFilter else { return }
+        filteredStatus = filter
+        deepLinkManager.pendingChoreFilter = nil
+    }
+
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
@@ -318,7 +326,11 @@ struct ChoresView: View {
             }
         #endif
         .task {
+            applyPendingFilter()
             await updateData()
+        }
+        .onChange(of: deepLinkManager?.pendingChoreFilter) { _, _ in
+            applyPendingFilter()
         }
         .refreshable {
             await updateData()

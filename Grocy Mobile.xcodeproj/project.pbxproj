@@ -73,6 +73,7 @@
 				Helper/DateFormatter.swift,
 				Helper/Decoder.swift,
 				Helper/MySymbols.swift,
+				Localizable.xcstrings,
 				Model/APIError.swift,
 				Model/SharedModel.swift,
 				Model/Stock/ProductStatus.swift,

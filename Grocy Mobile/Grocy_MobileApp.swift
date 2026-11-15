@@ -10,13 +10,37 @@ import SwiftUI
 
 // MARK: - Deep Link State
 
+/// The screens a deep link can open.
+enum DeepLinkDestination: Equatable {
+    case stock
+    case shoppingList
+    case chores
+    case tasks
+}
+
 @Observable
 class DeepLinkManager {
+    /// The screen the navigation should show. The navigation clears it after selecting the screen.
+    var pendingDestination: DeepLinkDestination?
     var pendingStockFilter: ProductStatus?
+    var pendingShoppingListID: Int?
+    var pendingChoreFilter: ChoreStatus?
+    var pendingTaskFilter: TaskStatus?
 
     func apply(deepLink: GrocyDeepLink) {
-        if case .stock(let filter) = deepLink {
+        switch deepLink {
+        case .stock(let filter):
             pendingStockFilter = filter
+            pendingDestination = .stock
+        case .shoppingList(let id):
+            pendingShoppingListID = id
+            pendingDestination = .shoppingList
+        case .chores(let filter):
+            pendingChoreFilter = filter
+            pendingDestination = .chores
+        case .tasks(let filter):
+            pendingTaskFilter = filter
+            pendingDestination = .tasks
         }
     }
 

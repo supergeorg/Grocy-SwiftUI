@@ -242,15 +242,26 @@ struct AppTabNavigation: View {
             Task {
                 await grocyVM.requestData(additionalObjects: [.system_config])
             }
-            if deepLinkManager.pendingStockFilter != nil {
-                tabSelection = .stockOverview
-            }
+            openPendingDestination()
         }
-        .onChange(of: deepLinkManager.pendingStockFilter) { _, newValue in
-            if newValue != nil {
-                tabSelection = .stockOverview
-            }
+        .onChange(of: deepLinkManager.pendingDestination) { _, _ in
+            openPendingDestination()
         }
+    }
+
+    private func openPendingDestination() {
+        guard let destination = deepLinkManager.pendingDestination else { return }
+        switch destination {
+        case .stock:
+            tabSelection = .stockOverview
+        case .shoppingList:
+            tabSelection = .shoppingList
+        case .chores:
+            tabSelection = .chores
+        case .tasks:
+            tabSelection = .tasks
+        }
+        deepLinkManager.pendingDestination = nil
     }
 }
 

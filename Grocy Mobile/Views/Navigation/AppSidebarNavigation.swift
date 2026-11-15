@@ -24,15 +24,26 @@ struct AppSidebarNavigation: View {
             }
         )
         .onAppear {
-            if deepLinkManager.pendingStockFilter != nil {
-                selection = .stockOverview
-            }
+            openPendingDestination()
         }
-        .onChange(of: deepLinkManager.pendingStockFilter) { _, newValue in
-            if newValue != nil {
-                selection = .stockOverview
-            }
+        .onChange(of: deepLinkManager.pendingDestination) { _, _ in
+            openPendingDestination()
         }
+    }
+
+    private func openPendingDestination() {
+        guard let destination = deepLinkManager.pendingDestination else { return }
+        switch destination {
+        case .stock:
+            selection = .stockOverview
+        case .shoppingList:
+            selection = .shoppingList
+        case .chores:
+            selection = .choresOverview
+        case .tasks:
+            selection = .tasks
+        }
+        deepLinkManager.pendingDestination = nil
     }
 }
 
