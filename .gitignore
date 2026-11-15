@@ -1,2 +1,5 @@
 Assets-Source/*
 .DS_Store
+
+# Xcode per-user state
+xcuserdata/
