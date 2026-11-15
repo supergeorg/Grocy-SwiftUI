@@ -95,10 +95,10 @@ class GrocyUITestCase: XCTestCase {
             XCTAssertTrue(entry.waitForExistence(timeout: 5), "No \"\(title)\" entry in the sidebar.\n\(sidebar.debugDescription)")
             entry.click()
         #else
-            let more = app.tabBars.buttons["More"].firstMatch
-            XCTAssertTrue(more.waitForExistence(timeout: 10), "No \"More\" tab.")
-            more.tap()
-            // The rows of the "More" list are cells with static text, not buttons.
+            // On iPhone, master data opens from the profile button ("Settings") in the navigation bar.
+            let account = app.navigationBars.buttons["Settings"].firstMatch
+            XCTAssertTrue(account.waitForExistence(timeout: 10), "No profile button.")
+            account.tap()
             let masterData = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", "Master data")).firstMatch
             XCTAssertTrue(masterData.waitForExistence(timeout: 10), "No \"Master data\" entry.")
             masterData.tap()

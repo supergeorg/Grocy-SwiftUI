@@ -36859,6 +36859,16 @@
         }
       }
     },
+    "Find products, stock and recipes by name or barcode." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finde Produkte, Bestand und Rezepte nach Name oder Barcode."
+          }
+        }
+      }
+    },
     "First name" : {
       "localizations" : {
         "ca" : {
@@ -38579,6 +38589,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "每小時"
+          }
+        }
+      }
+    },
+    "Household" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haushalt"
           }
         }
       }
@@ -49506,6 +49526,16 @@
     "Not imported" : {
 
     },
+    "Not in stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht vorrätig"
+          }
+        }
+      }
+    },
     "Not opened" : {
       "localizations" : {
         "ca" : {
@@ -55453,6 +55483,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "物品"
+          }
+        }
+      }
+    },
+    "Products, stock and recipes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkte, Bestand und Rezepte"
           }
         }
       }
