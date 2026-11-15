@@ -65,7 +65,7 @@ struct MDProductFormView: View {
         return (queuedBarcode.isEmpty || (foundBarcode == nil))
     }
 
-    init(existingProduct: MDProduct? = nil, userSettings: GrocyUserSettings? = nil, queuedBarcode: String? = nil, createBarcode: Bool = false, createdProductID: Binding<Int?> = .constant(nil)) {
+    init(existingProduct: MDProduct? = nil, userSettings: GrocyUserSettings? = nil, productName: String? = nil, queuedBarcode: String? = nil, createBarcode: Bool = false, createdProductID: Binding<Int?> = .constant(nil)) {
         _createdProductID = createdProductID
         self.existingProduct = existingProduct
         self._queuedBarcode = State(initialValue: queuedBarcode ?? "")
@@ -73,6 +73,7 @@ struct MDProductFormView: View {
         self.product =
             existingProduct
             ?? MDProduct(
+                name: productName ?? "",
                 productGroupID: userSettings?.productPresetsProductGroupID != -1 ? userSettings?.productPresetsProductGroupID : nil,
                 locationID: userSettings?.productPresetsLocationID ?? -1,
                 quIDPurchase: userSettings?.productPresetsQuID ?? -1,

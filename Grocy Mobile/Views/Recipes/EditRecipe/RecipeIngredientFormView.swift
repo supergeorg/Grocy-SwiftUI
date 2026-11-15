@@ -12,6 +12,7 @@ struct RecipeIngredientFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @Query var mdProducts: MDProducts
+    @Query var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query var recipes: Recipes
 
     @Environment(\.dismiss) var dismiss
@@ -23,23 +24,46 @@ struct RecipeIngredientFormView: View {
     var existingIngredient: RecipePos?
     var recipe: Recipe
     @State var ingredient: RecipePos
+    /// The amount in the selected unit. Grocy stores `ingredient.amount` in the product's stock unit, so it's converted when saving.
+    @State private var amount: Double
+    @State private var didLoadAmount: Bool = false
 
     @State private var isFormCorrect: Bool = false
     private func checkFormCorrect() -> Bool {
         if ingredient.productID == nil { return false }
-        if ingredient.amount.isZero { return false }
+        if amount.isZero { return false }
         return true
+    }
+
+    private var product: MDProduct? {
+        mdProducts.first(where: { $0.id == ingredient.productID })
     }
 
     init(existingIngredient: RecipePos? = nil, recipe: Recipe) {
         self.existingIngredient = existingIngredient
         self.recipe = recipe
-        self.ingredient = existingIngredient ?? RecipePos(recipeID: recipe.id)
+        let ingredient = existingIngredient ?? RecipePos(recipeID: recipe.id)
+        self.ingredient = ingredient
+        self.amount = ingredient.amount
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products]
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
+    }
+
+    /// Shows a saved ingredient's amount in its unit instead of the stock unit.
+    private func loadAmount() {
+        guard !didLoadAmount else { return }
+        didLoadAmount = true
+        guard existingIngredient != nil else { return }
+        amount = RecipeAmountConversion.displayAmount(
+            forStored: ingredient.amount,
+            quID: ingredient.quID,
+            onlyCheckSingleUnitInStock: ingredient.onlyCheckSingleUnitInStock,
+            product: product,
+            conversions: mdQuantityUnitConversions
+        )
     }
 
     private func finishForm() {
@@ -57,6 +81,13 @@ struct RecipeIngredientFormView: View {
         }
         isProcessing = true
         isSuccessful = nil
+        ingredient.amount = RecipeAmountConversion.storedAmount(
+            for: amount,
+            quID: ingredient.quID,
+            onlyCheckSingleUnitInStock: ingredient.onlyCheckSingleUnitInStock,
+            product: product,
+            conversions: mdQuantityUnitConversions
+        )
         do {
             try ingredient.modelContext?.save()
             if existingIngredient == nil {
@@ -87,7 +118,8 @@ struct RecipeIngredientFormView: View {
 
             ProductField(productID: $ingredient.productID, description: "Product")
                 .onChange(of: ingredient.productID) {
-                    ingredient.quID = mdProducts.first(where: { $0.id == ingredient.productID })?.quIDConsume
+                    ingredient.quID = product?.quIDConsume
+                    isFormCorrect = checkFormCorrect()
                 }
 
             MyToggle(
@@ -97,7 +129,10 @@ struct RecipeIngredientFormView: View {
                 icon: MySymbols.stockOverview
             )
 
-            AmountSelectionView(productID: $ingredient.productID, amount: $ingredient.amount, quantityUnitID: $ingredient.quID)
+            AmountSelectionView(productID: $ingredient.productID, amount: $amount, quantityUnitID: $ingredient.quID)
+                .onChange(of: amount) {
+                    isFormCorrect = checkFormCorrect()
+                }
 
             MyTextField(
                 textToEdit: $ingredient.variableAmount,
@@ -133,6 +168,8 @@ struct RecipeIngredientFormView: View {
         }
         .formStyle(.grouped)
         .task {
+            // Convert with the cached data first, so the stock amount never shows up in the form
+            loadAmount()
             await updateData()
             self.isFormCorrect = checkFormCorrect()
         }

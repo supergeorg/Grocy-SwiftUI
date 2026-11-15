@@ -12,12 +12,24 @@ struct RecipeFormIngredientRowView: View {
 
     var product: MDProduct?
     var quantityUnit: MDQuantityUnit?
+    var quantityUnitConversions: MDQuantityUnitConversions = []
+
+    /// Grocy stores the amount in the product's stock unit, so it's converted to the ingredient's unit for showing it.
+    private var amount: Double {
+        RecipeAmountConversion.displayAmount(
+            forStored: recipePos.amount,
+            quID: recipePos.quID,
+            onlyCheckSingleUnitInStock: recipePos.onlyCheckSingleUnitInStock,
+            product: product,
+            conversions: quantityUnitConversions
+        )
+    }
 
     var body: some View {
         HStack {
             Text(product?.name ?? "")
             Spacer()
-            Text("\(recipePos.amount.formattedAmount) \(quantityUnit?.getName(amount: recipePos.amount) ?? "")")
+            Text("\(amount.formattedAmount) \(quantityUnit?.getName(amount: amount) ?? "")")
         }
     }
 }
