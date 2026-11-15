@@ -115,7 +115,7 @@ struct ShoppingListWidgetView: View {
         #endif
         default:
             VStack(alignment: .leading, spacing: 6) {
-                WidgetHeaderView(title: Text(verbatim: list.name), systemImage: MySymbols.shoppingList, count: list.items.count)
+                WidgetHeaderView(title: Text(verbatim: list.name), systemImage: MySymbols.shoppingList, count: widgetFamily == .systemSmall ? nil : list.items.count, countDescription: Text("\(list.items.count) items to buy"))
                 if list.items.isEmpty {
                     WidgetMessageView(systemImage: MySymbols.widgetAllDone, title: "All done", message: "Nothing left to buy.")
                 } else {

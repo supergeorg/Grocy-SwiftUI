@@ -248,7 +248,7 @@ struct DueItemsWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         case .systemMedium:
             VStack(alignment: .leading, spacing: 6) {
-                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount)
+                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount, countDescription: Text("\(entry.dueNowCount) overdue or due today"))
                 itemList(maxItems: 3)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -291,7 +291,7 @@ struct DueItemsWidgetView: View {
         #endif
         default:
             VStack(alignment: .leading, spacing: 8) {
-                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount)
+                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount, countDescription: Text("\(entry.dueNowCount) overdue or due today"))
                 HStack(spacing: 6) {
                     ForEach([DueState.overdue, .dueToday, .dueSoon], id: \.self) { state in
                         Link(destination: kind.url(filter: state)) {
