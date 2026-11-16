@@ -13,7 +13,7 @@ class MDBattery: Codable, Equatable, Identifiable {
     @Attribute(.unique) var id: Int
     var name: String
     var mdBatteryDescription: String
-    var usedIn: String?
+    var usedIn: String
     var chargeIntervalDays: Int
     var active: Bool
     var rowCreatedTimestamp: Date
@@ -34,10 +34,10 @@ class MDBattery: Codable, Equatable, Identifiable {
             self.id = try container.decodeFlexibleInt(forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
             self.mdBatteryDescription = try container.decodeIfPresent(String.self, forKey: .mdBatteryDescription) ?? ""
-            self.usedIn = try? container.decodeIfPresent(String.self, forKey: .usedIn) ?? nil
-            self.chargeIntervalDays = try container.decodeFlexibleInt(forKey: .chargeIntervalDays)
+            self.usedIn = try container.decodeIfPresent(String.self, forKey: .usedIn) ?? ""
+            self.chargeIntervalDays = try container.decodeFlexibleIntIfPresent(forKey: .chargeIntervalDays) ?? 0
             self.active = try container.decodeFlexibleBool(forKey: .active)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decodeIfPresent(String.self, forKey: .rowCreatedTimestamp)) ?? Date()
         } catch {
             throw APIError.decodingError(error: error)
         }
@@ -56,11 +56,11 @@ class MDBattery: Codable, Equatable, Identifiable {
 
     init(
         id: Int = -1,
-        name: String,
+        name: String = "",
         mdBatteryDescription: String = "",
-        usedIn: String? = nil,
-        chargeIntervalDays: Int,
-        active: Bool,
+        usedIn: String = "",
+        chargeIntervalDays: Int = 0,
+        active: Bool = true,
         rowCreatedTimestamp: Date = Date()
     ) {
         self.id = id
@@ -70,6 +70,11 @@ class MDBattery: Codable, Equatable, Identifiable {
         self.chargeIntervalDays = chargeIntervalDays
         self.active = active
         self.rowCreatedTimestamp = rowCreatedTimestamp
+    }
+
+    static func == (lhs: MDBattery, rhs: MDBattery) -> Bool {
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdBatteryDescription == rhs.mdBatteryDescription && lhs.usedIn == rhs.usedIn && lhs.chargeIntervalDays == rhs.chargeIntervalDays && lhs.active == rhs.active
+            && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

@@ -20,6 +20,8 @@ private enum TabNavigationItem: String, Codable {
     case recipes = "recipes"
     case chores = "chores"
     case tasks = "tasks"
+    case batteries = "batteries"
+    case equipment = "equipment"
     case stockInteraction = "stockInteraction"
     case purchaseProduct = "purchaseProduct"
     case consumeProduct = "consumeProduct"
@@ -32,6 +34,7 @@ private enum TabNavigationItem: String, Codable {
     case mdProductGroups = "mdProductGroups"
     case mdChores = "mdChores"
     case mdTaskCategories = "mdTaskCategories"
+    case mdBatteries = "mdBatteries"
 }
 
 struct AppTabNavigation: View {
@@ -91,21 +94,47 @@ struct AppTabNavigation: View {
             .customizationID("georgappdev.Grocy.recipes")
             .hidden(systemConfig?.featureFlagRecipes == false || !enableRecipes)
 
-            Tab("Chores overview", systemImage: MySymbols.chores, value: TabNavigationItem.chores) {
-                NavigationStack {
-                    ChoresView()
+            // Grouped, because a tab builder takes at most 10 items.
+            Group {
+                Tab("Chores overview", systemImage: MySymbols.chores, value: TabNavigationItem.chores) {
+                    NavigationStack {
+                        ChoresView()
+                    }
                 }
-            }
-            .customizationID("georgappdev.Grocy.chores")
-            .hidden(systemConfig?.featureFlagChores == false || !enableChores)
+                .customizationID("georgappdev.Grocy.chores")
+                .hidden(systemConfig?.featureFlagChores == false || !enableChores)
 
-            Tab("Tasks", systemImage: MySymbols.tasks, value: TabNavigationItem.tasks) {
-                NavigationStack {
-                    TasksView()
+                Tab("Tasks", systemImage: MySymbols.tasks, value: TabNavigationItem.tasks) {
+                    NavigationStack {
+                        TasksView()
+                    }
                 }
+                .customizationID("georgappdev.Grocy.tasks")
+                .hidden(systemConfig?.featureFlagTasks == false || !enableTasks)
+
+                Tab("Batteries overview", systemImage: MySymbols.batteries, value: TabNavigationItem.batteries) {
+                    NavigationStack {
+                        BatteriesView()
+                    }
+                }
+                .customizationID("georgappdev.Grocy.batteries")
+                .hidden(systemConfig?.featureFlagBatteries == false)
+                // New tabs start in the sidebar, so the tab bar of existing users doesn't change.
+                #if os(iOS)
+                    .defaultVisibility(.hidden, for: .tabBar)
+                #endif
+
+                Tab("Equipment", systemImage: MySymbols.equipment, value: TabNavigationItem.equipment) {
+                    NavigationStack {
+                        EquipmentView()
+                    }
+                }
+                .customizationID("georgappdev.Grocy.equipment")
+                .hidden(systemConfig?.featureFlagEquipment == false)
+                #if os(iOS)
+                    .defaultVisibility(.hidden, for: .tabBar)
+                #endif
             }
-            .customizationID("georgappdev.Grocy.tasks")
-            .hidden(systemConfig?.featureFlagTasks == false || !enableTasks)
 
             if horizontalSizeClass != .compact {
                 TabSection(
@@ -202,6 +231,14 @@ struct AppTabNavigation: View {
                         }
                         .customizationID("georgappdev.Grocy.mdTaskCategories")
                         .hidden(systemConfig?.featureFlagTasks == false)
+
+                        Tab("Batteries", systemImage: MySymbols.batteries, value: TabNavigationItem.mdBatteries) {
+                            NavigationStack {
+                                MDBatteriesView()
+                            }
+                        }
+                        .customizationID("georgappdev.Grocy.mdBatteries")
+                        .hidden(systemConfig?.featureFlagBatteries == false)
                     }
                 )
                 .tabPlacement(.sidebarOnly)

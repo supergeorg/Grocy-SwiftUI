@@ -13,6 +13,7 @@ public enum ObjectEntities: String, CaseIterable {
     case chores
     case chores_log
     case batteries
+    case battery_charge_cycles
     case locations
     case quantity_units
     case quantity_unit_conversions
@@ -37,7 +38,7 @@ public enum ObjectEntities: String, CaseIterable {
 }
 
 public enum AdditionalEntities: String, CaseIterable {
-    case system_info, system_db_changed_time, system_config, stock, volatileStock, users, current_user, user_settings, recipeFulfillments, chores
+    case system_info, system_db_changed_time, system_config, stock, volatileStock, users, current_user, user_settings, recipeFulfillments, chores, batteries
 }
 
 public enum StockProductPost: String {
@@ -90,6 +91,11 @@ protocol GrocyAPI {
     func getChoreDetails(id: Int) async throws -> ChoreDetails
     func choreExecute(id: Int, content: Data) async throws -> ChoreLogEntry
     func undoChoreWithID(id: Int) async throws
+    // MARK: - Batteries
+    func getBatteries() async throws -> Batteries
+    func getBatteryDetails(id: Int) async throws -> BatteryDetails
+    func batteryCharge(id: Int, content: Data) async throws
+    func undoBatteryChargeCycle(id: Int) async throws
     // MARK: - Current user
     func getUser() async throws -> GrocyUsers
     func getUserSettings() async throws -> GrocyUserSettings
@@ -117,6 +123,7 @@ protocol GrocyAPI {
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
     // MARK: - Files
     func getFile(fileName: String, groupName: String, bestFitHeight: Int?, bestFitWidth: Int?) async throws -> Data
+    func getFileUnmodified(fileName: String, groupName: String) async throws -> Data
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws
     func putFileData(fileData: Data, fileName: String, groupName: String) async throws
     func deleteFile(fileName: String, groupName: String) async throws
@@ -180,9 +187,11 @@ public class GrocyApi: GrocyAPI {
         groupName: String? = nil,
         bestFitHeight: Int? = nil,
         bestFitWidth: Int? = nil,
+        servedAsPicture: Bool = true,
         hassIngressToken: String? = nil
     ) async throws -> Data {
-        var queries = ["force_serve_as=picture"]
+        // Grocy only serves images with this; other files (e.g. PDF manuals) must be fetched without it.
+        var queries = servedAsPicture ? ["force_serve_as=picture"] : []
         if let bestFitHeight = bestFitHeight { queries.append("best_fit_height=\(bestFitHeight)") }
         if let bestFitWidth = bestFitWidth { queries.append("best_fit_width=\(bestFitWidth)") }
 
@@ -192,7 +201,7 @@ public class GrocyApi: GrocyAPI {
             fileName: fileName,
             groupName: groupName,
             isOctet: true,
-            queries: queries,
+            queries: queries.isEmpty ? nil : queries,
             hassIngressToken: hassIngressToken
         )
         let (resultData, resultCode) = try await URLSession.shared.data(for: urlRequest)
@@ -634,6 +643,23 @@ extension GrocyApi {
         return try await callEmptyResponse(.choreExecutionWithIDUndo, method: .POST, id: String(id))
     }
 
+    // MARK: - Batteries
+    func getBatteries() async throws -> Batteries {
+        return try await call(.batteries, method: .GET)
+    }
+
+    func getBatteryDetails(id: Int) async throws -> BatteryDetails {
+        return try await call(.batteryWithID, method: .GET, id: String(id))
+    }
+
+    func batteryCharge(id: Int, content: Data) async throws {
+        return try await callEmptyResponse(.batteryWithIDCharge, method: .POST, id: String(id), content: content)
+    }
+
+    func undoBatteryChargeCycle(id: Int) async throws {
+        return try await callEmptyResponse(.batteryChargeCycleUndo, method: .POST, id: String(id))
+    }
+
     // MARK: - Current user
     func getUser() async throws -> GrocyUsers {
         return try await call(.user, method: .GET)
@@ -752,6 +778,11 @@ extension GrocyApi {
     // MARK: - Files
     func getFile(fileName: String, groupName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data {
         return try await callGetFileData(.filesGroupFilename, fileName: fileName, groupName: groupName, bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+    }
+
+    /// Downloads a file as stored, e.g. a PDF, without converting it to a picture.
+    func getFileUnmodified(fileName: String, groupName: String) async throws -> Data {
+        return try await callGetFileData(.filesGroupFilename, fileName: fileName, groupName: groupName, servedAsPicture: false)
     }
 
     func putFile(fileURL: URL, fileName: String, groupName: String) async throws {

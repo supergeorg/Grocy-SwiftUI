@@ -12,7 +12,7 @@ import SwiftUI
     /// iPhone navigation prototype: at most five tabs, so the system "More" list (with its second
     /// navigation bar) is never needed.
     ///
-    /// - Places are tabs: Stock, Shopping list, Recipes, Household (chores and tasks) and a search tab.
+    /// - Places are tabs: Stock, Shopping list, Recipes, Household (chores, tasks, batteries, equipment) and a search tab.
     /// - Actions aren't: Quick Scan sits in the bottom accessory above the tab bar, while the search tab is selected
     ///   (scanning a barcode is a way of searching).
     /// - Setup isn't a tab either: Settings and master data open from the settings button, in its own toolbar group.
@@ -39,7 +39,10 @@ import SwiftUI
         private var showsStock: Bool { systemConfig?.featureFlagStock != false }
         private var showsShoppingList: Bool { systemConfig?.featureFlagShoppinglist != false }
         private var showsRecipes: Bool { systemConfig?.featureFlagRecipes != false }
-        private var showsHousehold: Bool { systemConfig?.featureFlagChores != false || systemConfig?.featureFlagTasks != false }
+        private var showsHousehold: Bool {
+            systemConfig?.featureFlagChores != false || systemConfig?.featureFlagTasks != false
+                || systemConfig?.featureFlagBatteries != false || systemConfig?.featureFlagEquipment != false
+        }
 
         var body: some View {
             TabView(selection: $selection) {

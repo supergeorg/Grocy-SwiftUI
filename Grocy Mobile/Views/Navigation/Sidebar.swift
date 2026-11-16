@@ -67,16 +67,14 @@ struct Sidebar: View {
                         Label("Tasks", systemImage: MySymbols.tasks)
                     }
                 }
-                if devMode {
-                    if !(systemConfig?.featureFlagBatteries == false) {
-                        NavigationLink(value: NavigationItem.batteriesOverview) {
-                            Label("Batteries overview", systemImage: MySymbols.batteries)
-                        }
+                if !(systemConfig?.featureFlagBatteries == false) {
+                    NavigationLink(value: NavigationItem.batteriesOverview) {
+                        Label("Batteries overview", systemImage: MySymbols.batteries)
                     }
-                    if !(systemConfig?.featureFlagEquipment == false) {
-                        NavigationLink(value: NavigationItem.equipment) {
-                            Label("Equipment", systemImage: MySymbols.unknown)
-                        }
+                }
+                if !(systemConfig?.featureFlagEquipment == false) {
+                    NavigationLink(value: NavigationItem.equipment) {
+                        Label("Equipment", systemImage: MySymbols.equipment)
                     }
                 }
             }
@@ -111,11 +109,9 @@ struct Sidebar: View {
                         Label("Chore tracking", systemImage: MySymbols.chores)
                     }
                 }
-                if devMode {
-                    if !(systemConfig?.featureFlagBatteries == false) {
-                        NavigationLink(value: NavigationItem.batteryTracking) {
-                            Label("Battery tracking", systemImage: MySymbols.batteries)
-                        }
+                if !(systemConfig?.featureFlagBatteries == false) {
+                    NavigationLink(value: NavigationItem.batteryTracking) {
+                        Label("Battery tracking", systemImage: MySymbols.batteryCharge)
                     }
                 }
             }
@@ -145,11 +141,9 @@ struct Sidebar: View {
                             MDCategoryRowView(categoryName: "Chores", iconName: MySymbols.chores, mdType: MDChore.self)
                         }
                     }
-                    if devMode {
-                        if !(systemConfig?.featureFlagBatteries == false) {
-                            NavigationLink(value: NavigationItem.mdBatteries) {
-                                MDCategoryRowView(categoryName: "Batteries", iconName: MySymbols.batteries, mdType: MDBattery.self)
-                            }
+                    if !(systemConfig?.featureFlagBatteries == false) {
+                        NavigationLink(value: NavigationItem.mdBatteries) {
+                            MDCategoryRowView(categoryName: "Batteries", iconName: MySymbols.batteries, mdType: MDBattery.self)
                         }
                     }
                     if !(systemConfig?.featureFlagTasks == false) {

@@ -23,6 +23,8 @@ struct GlobalSearchView: View {
     @Query(sort: \MDProductGroup.name) private var productGroups: MDProductGroups
     @Query(sort: \MDChore.name) private var chores: MDChores
     @Query(sort: \MDTaskCategory.name) private var taskCategories: MDTaskCategories
+    @Query(sort: \MDBattery.name) private var batteries: MDBatteries
+    @Query(sort: \MDEquipment.name) private var equipment: MDEquipments
 
     /// Owned by the search tab, which puts `.searchable` on its navigation stack (needed for the search tab's field).
     @Binding var searchText: String
@@ -30,6 +32,7 @@ struct GlobalSearchView: View {
     private let dataToUpdate: [ObjectEntities] = [
         .products, .product_barcodes, .recipes, .quantity_units,
         .locations, .shopping_locations, .product_groups, .chores, .task_categories,
+        .batteries, .equipment,
     ]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock]
 
@@ -64,14 +67,16 @@ struct GlobalSearchView: View {
     private var productGroupResults: MDProductGroups { productGroups.filter { matches($0.name) } }
     private var choreResults: MDChores { chores.filter { matches($0.name) } }
     private var taskCategoryResults: MDTaskCategories { taskCategories.filter { matches($0.name) } }
+    private var batteryResults: MDBatteries { batteries.filter { matches($0.name) || matches($0.usedIn) } }
+    private var equipmentResults: MDEquipments { equipment.filter { matches($0.name) } }
 
     private var hasMasterDataResults: Bool {
         !productResults.isEmpty || !locationResults.isEmpty || !storeResults.isEmpty || !quantityUnitResults.isEmpty
-            || !productGroupResults.isEmpty || !choreResults.isEmpty || !taskCategoryResults.isEmpty
+            || !productGroupResults.isEmpty || !choreResults.isEmpty || !taskCategoryResults.isEmpty || !batteryResults.isEmpty
     }
 
     private var hasResults: Bool {
-        !stockResults.isEmpty || !recipeResults.isEmpty || hasMasterDataResults
+        !stockResults.isEmpty || !recipeResults.isEmpty || !equipmentResults.isEmpty || hasMasterDataResults
     }
 
     var body: some View {
@@ -80,7 +85,7 @@ struct GlobalSearchView: View {
                 ContentUnavailableView(
                     "Search",
                     systemImage: MySymbols.search,
-                    description: Text("Find stock, products, recipes and master data by name or barcode.")
+                    description: Text("Find stock, products, recipes, equipment and master data by name or barcode.")
                 )
             } else if !hasResults {
                 ContentUnavailableView.search(text: query)
@@ -99,6 +104,15 @@ struct GlobalSearchView: View {
                         ForEach(recipeResults) { recipe in
                             NavigationLink(value: recipe) {
                                 Label(recipe.name, systemImage: MySymbols.recipe)
+                            }
+                        }
+                    }
+                }
+                if !equipmentResults.isEmpty {
+                    Section("Equipment") {
+                        ForEach(equipmentResults) { item in
+                            NavigationLink(value: item) {
+                                Label(item.name, systemImage: MySymbols.equipment)
                             }
                         }
                     }
@@ -141,6 +155,11 @@ struct GlobalSearchView: View {
                                 masterDataRow(taskCategory.name, kind: "Task category", systemImage: MySymbols.tasks)
                             }
                         }
+                        ForEach(batteryResults) { battery in
+                            NavigationLink(value: battery) {
+                                masterDataRow(battery.name, kind: "Battery", systemImage: MySymbols.batteries)
+                            }
+                        }
                     }
                 }
             }
@@ -161,6 +180,8 @@ struct GlobalSearchView: View {
         .navigationDestination(for: MDProductGroup.self) { MDProductGroupFormView(existingProductGroup: $0) }
         .navigationDestination(for: MDChore.self) { MDChoreFormView(existingChore: $0) }
         .navigationDestination(for: MDTaskCategory.self) { MDTaskCategoryFormView(existingTaskCategory: $0) }
+        .navigationDestination(for: MDBattery.self) { MDBatteryFormView(existingBattery: $0) }
+        .navigationDestination(for: MDEquipment.self) { EquipmentDetailsView(equipment: $0) }
         .task {
             await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
         }

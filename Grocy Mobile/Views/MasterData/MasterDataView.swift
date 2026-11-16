@@ -62,9 +62,9 @@ struct MasterDataView: View {
                 }
             }
 
-            if devMode && !(systemConfig?.featureFlagBatteries == false) {
+            if !(systemConfig?.featureFlagBatteries == false) {
                 NavigationLink(value: MasterDataItem.batteries) {
-                    Label("Batteries", systemImage: MySymbols.batteries)
+                    MDCategoryRowView(categoryName: "Batteries", iconName: MySymbols.batteries, mdType: MDBattery.self)
                 }
             }
 

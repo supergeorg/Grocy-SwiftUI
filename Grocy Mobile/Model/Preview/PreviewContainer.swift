@@ -49,6 +49,10 @@ struct PreviewContainer {
         RecipeFulfilment.self,
         Chore.self,
         ChoreLogEntry.self,
+        MDBattery.self,
+        Battery.self,
+        BatteryChargeCycle.self,
+        MDEquipment.self,
     ]
 
     static let shared: ModelContainer = {
@@ -92,6 +96,9 @@ struct PreviewContainer {
         loadAndInsert(modelType: MDChore.self, filename: "objects__chores.json", into: context)
         loadAndInsert(modelType: MDTaskCategory.self, filename: "objects__task_categories.json", into: context)
         loadAndInsert(modelType: ChoreLogEntry.self, filename: "objects__chores_log.json", into: context)
+        loadAndInsert(modelType: MDBattery.self, filename: "objects__batteries.json", into: context)
+        loadAndInsert(modelType: BatteryChargeCycle.self, filename: "objects__battery_charge_cycles.json", into: context)
+        loadAndInsert(modelType: MDEquipment.self, filename: "objects__equipment.json", into: context)
 
         // Other
         loadAndInsert(modelType: StockElement.self, filename: "stock.json", into: context)
@@ -99,6 +106,7 @@ struct PreviewContainer {
         loadAndInsert(modelType: GrocyUser.self, filename: "users.json", into: context)
         loadAndInsert(modelType: RecipeFulfilment.self, filename: "recipes__fulfillment.json", into: context)
         loadAndInsert(modelType: Chore.self, filename: "chores.json", into: context)
+        loadAndInsert(modelType: Battery.self, filename: "batteries.json", into: context)
 
         try? context.save()
     }

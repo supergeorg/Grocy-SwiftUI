@@ -20,6 +20,11 @@ nonisolated struct MySymbols {
     static let settings = "gear"
     static let chores = "list.bullet.clipboard"
     static let batteries = "battery.25percent"
+    static let equipment = "wrench.and.screwdriver"
+    static let batteryCharge = "battery.100percent.bolt"
+    static let batteryUsedIn = "powerplug"
+    static let batteryChargeInterval = "arrow.triangle.2.circlepath"
+    static let instructionManual = "book.pages"
 
     static let stockOverview = "archivebox"
     static let product = "shippingbox"
