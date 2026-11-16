@@ -55,6 +55,8 @@ class GrocyUITestCase: XCTestCase {
             "-AppleLanguages", "(en)",
             // Pin the iPhone layout, whatever the simulator has stored.
             "-iPhoneTabNavigation", "YES",
+            // Always start on the first tab, whatever an earlier run left selected.
+            "-phoneTabSelection", "stock",
             // Don't restore saved window state: on macOS it can leave the app without any window.
             "-ApplePersistenceIgnoreState", "YES",
         ]

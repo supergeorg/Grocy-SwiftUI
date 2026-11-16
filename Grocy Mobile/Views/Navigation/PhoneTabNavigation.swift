@@ -24,7 +24,10 @@ import SwiftUI
         @Environment(GrocyViewModel.self) private var grocyVM
         @Environment(DeepLinkManager.self) private var deepLinkManager
 
-        @AppStorage("phoneTabSelection") private var selection: Tab = .stock
+        /// The last tab is remembered, except search: selecting the search tab activates its field,
+        /// so restoring it would open the app in search mode, with the keyboard up and the tab bar collapsed.
+        @AppStorage("phoneTabSelection") private var storedSelection: Tab = .stock
+        @State private var selection: Tab = .stock
         @State private var householdSection: HouseholdView.Section = .chores
         @State private var showQuickScan: Bool = false
         @State private var searchText: String = ""
@@ -113,10 +116,16 @@ import SwiftUI
                 await grocyVM.requestData(additionalObjects: [.system_config])
             }
             .onAppear {
+                selection = storedSelection == .search ? .stock : storedSelection
                 openPendingDestination()
             }
             .onChange(of: deepLinkManager.pendingDestination) { _, _ in
                 openPendingDestination()
+            }
+            .onChange(of: selection) { _, newSelection in
+                if newSelection != .search {
+                    storedSelection = newSelection
+                }
             }
         }
 
