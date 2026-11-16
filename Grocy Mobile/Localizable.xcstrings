@@ -37351,12 +37351,12 @@
         }
       }
     },
-    "Find products, stock and recipes by name or barcode." : {
+    "Find stock, products, recipes and master data by name or barcode." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Finde Produkte, Bestand und Rezepte nach Name oder Barcode."
+            "value" : "Finde Bestand, Produkte, Rezepte und Stammdaten nach Name oder Barcode."
           }
         }
       }
@@ -56359,12 +56359,12 @@
         }
       }
     },
-    "Products, stock and recipes" : {
+    "Products, recipes and more" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Produkte, Bestand und Rezepte"
+            "value" : "Produkte, Rezepte und mehr"
           }
         }
       }
@@ -67653,6 +67653,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "任務分類"
+          }
+        }
+      }
+    },
+    "Task category" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufgabenkategorie"
           }
         }
       }

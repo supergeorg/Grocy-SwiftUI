@@ -34,7 +34,9 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             }
 
             tabBar.buttons["Stock overview"].tap()
-            XCTAssertTrue(app.buttons["Quick Scan"].waitForExistence(timeout: 5), "No Quick Scan button above the tab bar.")
+            XCTAssertTrue(app.navigationBars.buttons["Settings"].waitForExistence(timeout: 5), "No settings button.")
+            // Quick Scan belongs to the search tab only.
+            XCTAssertFalse(app.buttons["Quick Scan"].exists, "Quick Scan is shown outside the search tab.")
             attachScreenshot(of: app, named: "1 Stock")
 
             tabBar.buttons["Shopping list"].tap()
@@ -58,13 +60,16 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             let searchTab = tabBar.buttons["Search"].firstMatch
             XCTAssertTrue(searchTab.exists, "No search tab.")
             searchTab.tap()
+            XCTAssertTrue(app.buttons["Quick Scan"].waitForExistence(timeout: 5), "No Quick Scan button on the search tab.")
             attachScreenshot(of: app, named: "6 Search – empty")
             // Selecting the tab activates the field right away; it can take a moment to appear.
             let field = app.searchFields.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 10), "No search field in the search tab.")
             field.tap()
-            field.typeText("UITest milk")
+            // The run ID is part of this run's product, location and unit names, so it finds all three.
+            field.typeText(runID)
             XCTAssertTrue(element(in: app, labelContaining: productName).waitForExistence(timeout: 10), "The product isn't found.")
+            XCTAssertTrue(element(in: app, labelContaining: "UITest location \(runID)").exists, "The location (master data) isn't found.")
             attachScreenshot(of: app, named: "7 Search – results")
 
             // While searching, the tab bar shrinks to one button for the previous tab; it leads back out of search.
