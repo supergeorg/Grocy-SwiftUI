@@ -49526,16 +49526,6 @@
     "Not imported" : {
 
     },
-    "Not in stock" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht vorrätig"
-          }
-        }
-      }
-    },
     "Not opened" : {
       "localizations" : {
         "ca" : {

@@ -45,20 +45,18 @@ struct GlobalSearchView: View {
             .sorted { ($0.product?.name ?? "") < ($1.product?.name ?? "") }
     }
 
-    /// Products that aren't in stock (those are listed under stock already), by name or exact barcode.
-    private var productResults: [MDProduct] {
-        let inStock = Set(stock.map(\.productID))
-        let barcodeProductIDs = Set(barcodes.filter { $0.barcode == query }.map(\.productID))
-        return products.filter { product in
-            !inStock.contains(product.id) && (matches(product.name) || barcodeProductIDs.contains(product.id))
-        }
-    }
-
     private var recipeResults: [Recipe] {
         recipes.filter { $0.type == .normal && matches($0.name) }
     }
 
     // MARK: - Master data
+
+    /// All matching products, by name or exact barcode, also those in stock: the stock result opens the stock entries,
+    /// this one the product itself.
+    private var productResults: [MDProduct] {
+        let barcodeProductIDs = Set(barcodes.filter { $0.barcode == query }.map(\.productID))
+        return products.filter { matches($0.name) || barcodeProductIDs.contains($0.id) }
+    }
 
     private var locationResults: MDLocations { locations.filter { matches($0.name) } }
     private var storeResults: MDStores { stores.filter { matches($0.name) } }
@@ -68,12 +66,12 @@ struct GlobalSearchView: View {
     private var taskCategoryResults: MDTaskCategories { taskCategories.filter { matches($0.name) } }
 
     private var hasMasterDataResults: Bool {
-        !locationResults.isEmpty || !storeResults.isEmpty || !quantityUnitResults.isEmpty
+        !productResults.isEmpty || !locationResults.isEmpty || !storeResults.isEmpty || !quantityUnitResults.isEmpty
             || !productGroupResults.isEmpty || !choreResults.isEmpty || !taskCategoryResults.isEmpty
     }
 
     private var hasResults: Bool {
-        !stockResults.isEmpty || !productResults.isEmpty || !recipeResults.isEmpty || hasMasterDataResults
+        !stockResults.isEmpty || !recipeResults.isEmpty || hasMasterDataResults
     }
 
     var body: some View {
@@ -96,22 +94,6 @@ struct GlobalSearchView: View {
                         }
                     }
                 }
-                if !productResults.isEmpty {
-                    Section("Products") {
-                        ForEach(productResults) { product in
-                            NavigationLink(value: product) {
-                                VStack(alignment: .leading) {
-                                    Text(product.name)
-                                        .font(.headline)
-                                    Text("Not in stock")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .accessibilityElement(children: .combine)
-                            }
-                        }
-                    }
-                }
                 if !recipeResults.isEmpty {
                     Section("Recipes") {
                         ForEach(recipeResults) { recipe in
@@ -124,6 +106,11 @@ struct GlobalSearchView: View {
                 if hasMasterDataResults {
                     // Each entry says which kind of master data it is, since names can repeat across kinds.
                     Section("Master data") {
+                        ForEach(productResults) { product in
+                            NavigationLink(value: product) {
+                                masterDataRow(product.name, kind: "Product", systemImage: MySymbols.product)
+                            }
+                        }
                         ForEach(locationResults) { location in
                             NavigationLink(value: location) {
                                 masterDataRow(location.name, kind: "Location", systemImage: MySymbols.location)

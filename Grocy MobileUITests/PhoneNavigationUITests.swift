@@ -30,7 +30,7 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             // At most five tabs, so there's no "More" tab.
             XCTAssertFalse(tabBar.buttons["More"].exists, "The tab bar still has a \"More\" tab.")
             for tab in ["Stock overview", "Shopping list", "Recipes", "Household"] {
-                XCTAssertTrue(tabBar.buttons[tab].exists, "No \"\(tab)\" tab.")
+                XCTAssertTrue(tabBar.buttons[tab].waitForExistence(timeout: 5), "No \"\(tab)\" tab.\n\(tabBar.debugDescription)")
             }
 
             tabBar.buttons["Stock overview"].tap()
@@ -70,6 +70,10 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             field.typeText(runID)
             XCTAssertTrue(element(in: app, labelContaining: productName).waitForExistence(timeout: 10), "The product isn't found.")
             XCTAssertTrue(element(in: app, labelContaining: "UITest location \(runID)").exists, "The location (master data) isn't found.")
+            // A product in stock is found twice: its stock entry and the product itself (master data).
+            let productResults = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", productName))
+            XCTAssertEqual(productResults.count, 2, "The product isn't listed both in stock and in master data.\n\(app.debugDescription)")
+            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@", productName, "Product")).firstMatch.exists, "The product isn't listed as master data.")
             attachScreenshot(of: app, named: "7 Search – results")
 
             // While searching, the tab bar shrinks to one button for the previous tab; it leads back out of search.
