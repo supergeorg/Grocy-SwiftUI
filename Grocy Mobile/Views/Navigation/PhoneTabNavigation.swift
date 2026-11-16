@@ -13,8 +13,9 @@ import SwiftUI
     /// navigation bar) is never needed.
     ///
     /// - Places are tabs: Stock, Shopping list, Recipes, Household (chores and tasks) and a search tab.
-    /// - Actions aren't: Quick Scan sits in the bottom accessory above the tab bar, on every tab.
-    /// - Setup isn't a tab either: Settings and master data open from the profile button, on the current tab.
+    /// - Actions aren't: Quick Scan sits in the bottom accessory above the tab bar, while the search tab is selected
+    ///   (scanning a barcode is a way of searching).
+    /// - Setup isn't a tab either: Settings and master data open from the settings button, in its own toolbar group.
     struct PhoneTabNavigation: View {
         enum Tab: String {
             case stock, shoppingList, recipes, household, search
@@ -81,15 +82,15 @@ import SwiftUI
                         GlobalSearchView(searchText: $searchText)
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
-                    .searchable(text: $searchText, prompt: "Products, stock and recipes")
+                    .searchable(text: $searchText, prompt: "Products, recipes and more")
                 }
             }
             .tabBarMinimizeBehavior(.onScrollDown)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)
-            // Scanning is the most frequent action, so it stays one tap away on every tab
+            // Only on the search tab: scanning a barcode is another way of searching
             // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-            .tabViewBottomAccessory {
+            .tabViewBottomAccessory(isEnabled: selection == .search) {
                 Button {
                     showQuickScan = true
                 } label: {
@@ -121,12 +122,17 @@ import SwiftUI
 
         // MARK: - Toolbar actions
 
+        /// In its own glass group, separated from the screen's own buttons (filter, sort, …), so it reads as
+        /// app-wide setup rather than as an action of the current list.
+        /// Tab-level items come before the screen's own leading items, so the spacer goes after the button.
+        @ToolbarContentBuilder
         private var accountButton: some ToolbarContent {
             ToolbarItem(placement: .topBarLeading) {
                 NavigationLink(value: AccountView.Route.account) {
-                    Label("Settings", systemImage: MySymbols.user)
+                    Label("Settings", systemImage: MySymbols.settings)
                 }
             }
+            ToolbarSpacer(.fixed, placement: .topBarLeading)
         }
 
         // MARK: - Deep links
