@@ -61,6 +61,8 @@ class GrocyViewModel {
     var recipesPosResolved: [RecipePosResolvedElement] = []
     var chores: Chores = []
     var choreLog: ChoreLog = []
+    var batteries: Batteries = []
+    var batteryChargeCycles: BatteryChargeCycles = []
     var grocyTasks: GrocyTasks = []
 
     var mdProducts: MDProducts = []
@@ -71,6 +73,7 @@ class GrocyViewModel {
     var mdQuantityUnitConversions: MDQuantityUnitConversions = []
     var mdProductGroups: MDProductGroups = []
     var mdBatteries: MDBatteries = []
+    var mdEquipment: MDEquipments = []
     var mdTaskCategories: MDTaskCategories = []
     var mdUserFields: MDUserFields = []
     var mdUserEntities: MDUserEntities = []
@@ -267,6 +270,10 @@ class GrocyViewModel {
         switch object {
         case .chores:
             ints = self.mdChores.map { $0.id }
+        case .batteries:
+            ints = self.mdBatteries.map { $0.id }
+        case .equipment:
+            ints = self.mdEquipment.map { $0.id }
         case .products:
             ints = self.mdProducts.map { $0.id }
         case .locations:
@@ -333,6 +340,13 @@ class GrocyViewModel {
                         switch object {
                         case .batteries:
                             self.mdBatteries = try await grocyApi.getObject(object: object)
+                            try swiftDataSync.syncPersistentCollection(self.mdBatteries)
+                        case .battery_charge_cycles:
+                            self.batteryChargeCycles = try await grocyApi.getObject(object: object)
+                            try swiftDataSync.syncPersistentCollection(self.batteryChargeCycles)
+                        case .equipment:
+                            self.mdEquipment = try await grocyApi.getObject(object: object)
+                            try swiftDataSync.syncPersistentCollection(self.mdEquipment)
                         case .chores:
                             self.mdChores = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdChores)
@@ -448,6 +462,9 @@ class GrocyViewModel {
             self.updateWidgetChores()
             self.updateWidgetTasks()
 
+        case .batteries:
+            self.batteries = try await grocyApi.getBatteries()
+            try swiftDataSync.syncPersistentCollection(self.batteries)
         case .chores:
             self.chores = try await grocyApi.getChores()
             try swiftDataSync.syncPersistentCollection(self.chores)
@@ -522,6 +539,8 @@ class GrocyViewModel {
         self.mdChores = []
         self.chores = []
         self.choreLog = []
+        self.batteries = []
+        self.batteryChargeCycles = []
         self.grocyTasks = []
 
         self.mdProducts = []
@@ -532,6 +551,7 @@ class GrocyViewModel {
         self.mdQuantityUnitConversions = []
         self.mdProductGroups = []
         self.mdBatteries = []
+        self.mdEquipment = []
         self.mdTaskCategories = []
         self.mdUserFields = []
         self.mdUserEntities = []
@@ -913,6 +933,37 @@ class GrocyViewModel {
 
     func undoChoreWithID(id: Int) async throws {
         return try await grocyApi.undoChoreWithID(id: id)
+    }
+
+    // MARK: - Batteries
+    func getBatteryDetails(id: Int) async throws -> BatteryDetails {
+        return try await grocyApi.getBatteryDetails(id: id)
+    }
+
+    func chargeBattery(id: Int, content: BatteryChargeModel) async throws {
+        let jsonContent = try jsonEncoder.encode(content)
+        try await grocyApi.batteryCharge(id: id, content: jsonContent)
+    }
+
+    func undoBatteryChargeCycle(id: Int) async throws {
+        try await grocyApi.undoBatteryChargeCycle(id: id)
+    }
+
+    // MARK: - Equipment
+    /// Downloads an instruction manual. Grocy expects the file name Base64 encoded in the path.
+    func getInstructionManual(fileName: String) async throws -> Data {
+        let encodedFileName = Data(fileName.utf8).base64EncodedString()
+        return try await grocyApi.getFileUnmodified(fileName: encodedFileName, groupName: MDEquipment.instructionManualGroup)
+    }
+
+    func uploadInstructionManual(fileData: Data, fileName: String) async throws {
+        let encodedFileName = Data(fileName.utf8).base64EncodedString()
+        try await grocyApi.putFileData(fileData: fileData, fileName: encodedFileName, groupName: MDEquipment.instructionManualGroup)
+    }
+
+    func deleteInstructionManual(fileName: String) async throws {
+        let encodedFileName = Data(fileName.utf8).base64EncodedString()
+        try await grocyApi.deleteFile(fileName: encodedFileName, groupName: MDEquipment.instructionManualGroup)
     }
 
     // MARK: - Tasks

@@ -8,12 +8,12 @@
 import SwiftData
 import SwiftUI
 
-/// Chores and tasks in one tab (iPhone navigation prototype), switched with the navigation title menu
+/// Chores, tasks, batteries and equipment in one tab (iPhone navigation prototype), switched with the navigation title menu
 /// ("Chores overview ▾"). Each section is the existing screen, so filters, rows and forms stay the same.
 /// A segmented control in the navigation bar collided with the screens' own toolbar buttons.
 struct HouseholdView: View {
     enum Section: String, CaseIterable, Identifiable {
-        case chores, tasks
+        case chores, tasks, batteries, equipment
 
         var id: Self { self }
 
@@ -21,6 +21,8 @@ struct HouseholdView: View {
             switch self {
             case .chores: "Chores"
             case .tasks: "Tasks"
+            case .batteries: "Batteries"
+            case .equipment: "Equipment"
             }
         }
     }
@@ -36,6 +38,8 @@ struct HouseholdView: View {
             switch section {
             case .chores: systemConfig?.featureFlagChores != false
             case .tasks: systemConfig?.featureFlagTasks != false
+            case .batteries: systemConfig?.featureFlagBatteries != false
+            case .equipment: systemConfig?.featureFlagEquipment != false
             }
         }
     }
@@ -47,6 +51,10 @@ struct HouseholdView: View {
                 ChoresView()
             case .tasks:
                 TasksView()
+            case .batteries:
+                BatteriesView()
+            case .equipment:
+                EquipmentView()
             }
         }
         // The title menu needs the inline title.

@@ -21,6 +21,16 @@ extension Date {
         return formatter.string(from: self)
     }
 
+    /// Local date and time as Grocy's `IsIsoDateTime` expects it (`Y-m-d H:i:s`), e.g. for `tracked_time`.
+    /// Grocy ignores other formats and uses the current time instead.
+    nonisolated var grocyDateTimeString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+        return formatter.string(from: self)
+    }
+
     nonisolated var hasTimeComponent: Bool {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: self)

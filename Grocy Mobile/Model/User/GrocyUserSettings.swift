@@ -40,7 +40,7 @@ class GrocyUserSettings: Codable {
     //    var recipeIngredientsGroupByProductGroup: Bool
     var choresDueSoonDays: Int?
     var choresOverviewSwapTrackingButtons: Bool?
-    //    var batteriesDueSoonDays: Int
+    var batteriesDueSoonDays: Int?
     var tasksDueSoonDays: Int?
     //    var showClockInHeader: Bool
     //    var quagga2Numofworkers: Int
@@ -91,7 +91,7 @@ class GrocyUserSettings: Codable {
         //        case recipeIngredientsGroupByProductGroup = "recipe_ingredients_group_by_product_group"
         case choresDueSoonDays = "chores_due_soon_days"
         case choresOverviewSwapTrackingButtons = "chores_overview_swap_tracking_buttons"
-        //        case batteriesDueSoonDays = "batteries_due_soon_days"
+        case batteriesDueSoonDays = "batteries_due_soon_days"
         case tasksDueSoonDays = "tasks_due_soon_days"
         //        case showClockInHeader = "show_clock_in_header"
         //        case quagga2Numofworkers = "quagga2_numofworkers"
@@ -147,6 +147,7 @@ class GrocyUserSettings: Codable {
             self.shoppingListAutoAddBelowMinStockAmountListID = try container.decodeFlexibleIntIfPresent(forKey: .shoppingListAutoAddBelowMinStockAmountListID)
             self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
             self.choresDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .choresDueSoonDays)
+            self.batteriesDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .batteriesDueSoonDays)
             self.choresOverviewSwapTrackingButtons = try container.decodeFlexibleBoolIfPresent(forKey: .choresOverviewSwapTrackingButtons)
             self.tasksDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .tasksDueSoonDays)
             self.locale = try container.decodeIfPresent(String.self, forKey: .locale)
@@ -179,6 +180,7 @@ class GrocyUserSettings: Codable {
         try container.encode(shoppingListAutoAddBelowMinStockAmountListID, forKey: .shoppingListAutoAddBelowMinStockAmountListID)
         try container.encode(shoppingListToStockWorkflowAutoSubmitWhenPrefilled, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
         try container.encode(choresDueSoonDays, forKey: .choresDueSoonDays)
+        try container.encode(batteriesDueSoonDays, forKey: .batteriesDueSoonDays)
         try container.encode(choresOverviewSwapTrackingButtons, forKey: .choresOverviewSwapTrackingButtons)
         try container.encode(tasksDueSoonDays, forKey: .tasksDueSoonDays)
         try container.encode(locale, forKey: .locale)

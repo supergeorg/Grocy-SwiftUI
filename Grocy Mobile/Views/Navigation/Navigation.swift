@@ -61,9 +61,9 @@ struct Navigation: View {
         case .tasks:
             TasksView()
         case .batteriesOverview:
-            EmptyView()
+            BatteriesView()
         case .equipment:
-            EmptyView()
+            EquipmentView()
         case .calendar:
             EmptyView()
         case .purchase:
@@ -77,7 +77,7 @@ struct Navigation: View {
         case .choreTracking:
             ChoreTrackingView()
         case .batteryTracking:
-            EmptyView()
+            BatteryTrackingView()
         case .userEntity:
             EmptyView()
         case .masterData:

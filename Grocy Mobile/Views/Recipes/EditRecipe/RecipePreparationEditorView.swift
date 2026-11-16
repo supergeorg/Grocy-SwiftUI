@@ -15,6 +15,8 @@ import SwiftUI
 
 struct RecipePreparationEditorView: View {
     @Binding var htmlContent: String
+    /// The editor is shared by recipes ("Preparation") and equipment ("Notes").
+    var title: LocalizedStringKey = "Preparation"
     @State private var temporaryHTML: String = ""
     @State private var selectedTab: TabSelection = .wysiwygEditor
     @Environment(\.dismiss) var dismiss
@@ -25,8 +27,9 @@ struct RecipePreparationEditorView: View {
         case preview
     }
 
-    init(htmlContent: Binding<String>) {
+    init(htmlContent: Binding<String>, title: LocalizedStringKey = "Preparation") {
         self._htmlContent = htmlContent
+        self.title = title
         self._temporaryHTML = State(initialValue: htmlContent.wrappedValue)
     }
 
@@ -64,7 +67,7 @@ struct RecipePreparationEditorView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .navigationTitle("Preparation")
+            .navigationTitle(title)
             #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
             #endif
