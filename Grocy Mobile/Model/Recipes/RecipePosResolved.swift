@@ -83,7 +83,8 @@ final class RecipePosResolvedElement: Codable {
         costs = try container.decodeFlexibleDouble(forKey: .costs)
         isNestedRecipePos = try container.decodeFlexibleBool(forKey: .isNestedRecipePos)
         ingredientGroup = try container.decodeIfPresent(String.self, forKey: .ingredientGroup)
-        productGroup = try container.decode(String.self, forKey: .productGroup)
+        // Grocy joins the product group with a LEFT JOIN, so it is null for products without a group.
+        productGroup = try container.decodeIfPresent(String.self, forKey: .productGroup) ?? ""
         recipeType = try container.decode(RecipeType.self, forKey: .recipeType)
         childRecipeID = try container.decodeFlexibleInt(forKey: .childRecipeID)
         note = try container.decodeIfPresent(String.self, forKey: .note) ?? ""

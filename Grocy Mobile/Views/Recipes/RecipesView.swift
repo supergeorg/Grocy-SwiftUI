@@ -40,6 +40,23 @@ enum RecipeSortOption: Hashable, RawRepresentable {
     }
 }
 
+/// How the recipe overview shows the recipes.
+enum RecipesLayout: String {
+    /// Rows with a small picture.
+    case list
+    /// Cards with a large picture, in at least two columns.
+    case gallery
+
+    /// The list on iPhone, where the screen is narrow; the gallery on iPad and Mac, where there's room for pictures.
+    static var platformDefault: RecipesLayout {
+        #if os(iOS)
+            UIDevice.current.userInterfaceIdiom == .phone ? .list : .gallery
+        #else
+            .gallery
+        #endif
+    }
+}
+
 struct RecipesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
@@ -58,6 +75,9 @@ struct RecipesView: View {
     @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
     @AppStorage("RecipesView.sortOrder") private var sortOrderKey: String = "reverse"
     @State private var filteredStatus: RecipeStatus = .all
+    @AppStorage("RecipesView.layout") private var layout: RecipesLayout = .platformDefault
+    /// Width of the gallery, to fit as many columns as possible.
+    @State private var galleryWidth: CGFloat = 0
 
     private var sortOrder: SortOrder {
         sortOrderKey == "forward" ? .forward : .reverse
@@ -161,57 +181,111 @@ struct RecipesView: View {
         getRecipeCount(for: .notEnoughInStock)
     }
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: Spacing.small) {
+    private func fulfillment(for recipe: Recipe) -> RecipeFulfilment? {
+        recipeFulfilments.first(where: { $0.recipeID == recipe.id })
+    }
+
+    /// As many columns as fit, but at least two.
+    private var galleryColumns: [GridItem] {
+        let usableWidth = galleryWidth - 2 * Spacing.large + Spacing.medium
+        let count = max(2, Int(usableWidth / (Sizes.recipeCardMinWidth + Spacing.medium)))
+        return Array(repeating: GridItem(.flexible(), spacing: Spacing.medium, alignment: .top), count: count)
+    }
+
+    @ViewBuilder
+    private var recipesContent: some View {
+        switch layout {
+        case .list:
+            List {
                 ForEach(filteredRecipes, id: \.id) { recipe in
-                    NavigationLink(
-                        value: RecipeInteraction.showRecipe(recipe: recipe),
-                        label: {
-                            RecipeRowView(recipe: recipe, fulfillment: recipeFulfilments.first(where: { $0.recipeID == recipe.id }))
-                                .foregroundStyle(.foreground)
+                    NavigationLink(value: RecipeInteraction.showRecipe(recipe: recipe)) {
+                        RecipeRowView(recipe: recipe, fulfillment: fulfillment(for: recipe))
+                    }
+                    .contextMenu { recipeMenuItems(recipe: recipe) }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            deleteItem(itemToDelete: recipe)
+                        } label: {
+                            Label("Delete", systemImage: MySymbols.delete)
                         }
-                    )
-                    .contextMenu(menuItems: {
-                        NavigationLink(
-                            value: RecipeInteraction.editRecipe(recipe: recipe),
-                            label: {
-                                Label("Edit this item", systemImage: MySymbols.edit)
-                            }
-                        )
-                        if devMode {
-                            Button(
-                                action: {
-                                },
-                                label: {
-                                    Label("Add to meal plan", systemImage: MySymbols.new)
-                                }
-                            )
+                    }
+                    .swipeActions(edge: .leading) {
+                        NavigationLink(value: RecipeInteraction.editRecipe(recipe: recipe)) {
+                            Label("Edit", systemImage: MySymbols.edit)
                         }
-                        Button(
-                            role: .destructive,
-                            action: {
-                                deleteItem(itemToDelete: recipe)
-                            },
-                            label: {
-                                Label("Delete this item", systemImage: MySymbols.delete)
-                            }
-                        )
-                        Button(
-                            action: {
-                                Task {
-                                    await copyRecipe(recipeID: recipe.id)
-                                }
-                            },
-                            label: {
-                                Label("Copy recipe", systemImage: MySymbols.duplicate)
-                            }
-                        )
-                    })
+                        .tint(Color(.GrocyColors.grocyTurquoise))
+                    }
                 }
             }
-            .padding(Spacing.small)
+        case .gallery:
+            ScrollView {
+                LazyVGrid(columns: galleryColumns, spacing: Spacing.medium) {
+                    ForEach(filteredRecipes, id: \.id) { recipe in
+                        NavigationLink(value: RecipeInteraction.showRecipe(recipe: recipe)) {
+                            RecipeCardView(recipe: recipe, fulfillment: fulfillment(for: recipe))
+                        }
+                        .buttonStyle(.plain)
+                        .contextMenu { recipeMenuItems(recipe: recipe) }
+                    }
+                }
+                .padding(.horizontal, Spacing.large)
+                .padding(.vertical, Spacing.small)
+            }
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.size.width
+            } action: { width in
+                galleryWidth = width
+            }
         }
+    }
+
+    @ViewBuilder
+    private func recipeMenuItems(recipe: Recipe) -> some View {
+        NavigationLink(
+            value: RecipeInteraction.editRecipe(recipe: recipe),
+            label: {
+                Label("Edit this item", systemImage: MySymbols.edit)
+            }
+        )
+        if devMode {
+            Button(
+                action: {
+                },
+                label: {
+                    Label("Add to meal plan", systemImage: MySymbols.new)
+                }
+            )
+        }
+        Button(
+            action: {
+                Task {
+                    await copyRecipe(recipeID: recipe.id)
+                }
+            },
+            label: {
+                Label("Copy recipe", systemImage: MySymbols.duplicate)
+            }
+        )
+        Button(
+            role: .destructive,
+            action: {
+                deleteItem(itemToDelete: recipe)
+            },
+            label: {
+                Label("Delete this item", systemImage: MySymbols.delete)
+            }
+        )
+    }
+
+    var body: some View {
+        recipesContent
+            .overlay {
+                if recipes.filter({ $0.type == .normal }).isEmpty {
+                    ContentUnavailableView("No recipe defined. Please create one.", systemImage: MySymbols.recipe)
+                } else if filteredRecipes.isEmpty {
+                    ContentUnavailableView.search
+                }
+            }
         // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
         .safeAreaBar(edge: .top) {
             RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
@@ -291,19 +365,15 @@ struct RecipesView: View {
         .animation(.default, value: searchString)
         .toolbar {
             #if os(iOS)
-                ToolbarItem(
-                    placement: .topBarLeading,
-                    content: {
-                        sortMenu
-                    }
-                )
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    sortMenu
+                    layoutPicker
+                }
             #else
-                ToolbarItem(
-                    placement: .automatic,
-                    content: {
-                        sortMenu
-                    }
-                )
+                ToolbarItemGroup(placement: .automatic) {
+                    sortMenu
+                    layoutPicker
+                }
             #endif
             ToolbarSpacer(.fixed)
             ToolbarItem(
@@ -333,6 +403,24 @@ struct RecipesView: View {
                 }
             )
         }
+    }
+
+    /// Shows the current layout's symbol; choosing switches between the list and the gallery.
+    var layoutPicker: some View {
+        Picker("Layout", selection: $layout.animation()) {
+            Label("List", systemImage: MySymbols.layoutList)
+                .tag(RecipesLayout.list)
+            Label("Gallery", systemImage: MySymbols.layoutGallery)
+                .tag(RecipesLayout.gallery)
+        }
+        #if os(macOS)
+            // A menu picker in the macOS toolbar shows an empty title; a segmented control with symbols is the Mac's usual view switcher (like Finder).
+            .pickerStyle(.segmented)
+            .labelStyle(.iconOnly)
+            .help("Layout")
+        #else
+            .pickerStyle(.menu)
+        #endif
     }
 
     var sortMenu: some View {
