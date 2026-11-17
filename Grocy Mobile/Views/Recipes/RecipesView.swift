@@ -164,10 +164,6 @@ struct RecipesView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.small) {
-                Section {
-                    RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
-                        .listRowInsets(EdgeInsets())
-                }
                 ForEach(filteredRecipes, id: \.id) { recipe in
                     NavigationLink(
                         value: RecipeInteraction.showRecipe(recipe: recipe),
@@ -215,6 +211,11 @@ struct RecipesView: View {
                 }
             }
             .padding(Spacing.small)
+        }
+        // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
+        .safeAreaBar(edge: .top) {
+            RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
+                .padding(.vertical, Spacing.small)
         }
         .navigationTitle("Recipes")
         .navigationDestination(for: RecipeInteraction.self) { interaction in

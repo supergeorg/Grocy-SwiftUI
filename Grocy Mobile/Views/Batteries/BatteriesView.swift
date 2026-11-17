@@ -140,7 +140,7 @@ struct BatteriesView: View {
         }
     }
 
-    // On macOS the capsules are shown in a bar above the list, as in the chores overview.
+    // The capsules float in a bar above the list (the navigation layer), so their glass isn't drawn inside a list row
     private var filterCapsules: some View {
         BatteriesFilterActionsView(
             filteredStatus: $filteredStatus,
@@ -153,12 +153,6 @@ struct BatteriesView: View {
 
     var body: some View {
         List {
-            #if os(iOS)
-                Section {
-                    filterCapsules
-                        .listRowInsets(EdgeInsets())
-                }
-            #endif
 
             if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
@@ -230,12 +224,10 @@ struct BatteriesView: View {
                     }
             }
         }
-        #if os(macOS)
-            .safeAreaBar(edge: .top) {
-                filterCapsules
-                    .padding(.vertical, Spacing.small)
-            }
-        #endif
+        .safeAreaBar(edge: .top) {
+            filterCapsules
+                .padding(.vertical, Spacing.small)
+        }
         .task {
             await updateData()
         }

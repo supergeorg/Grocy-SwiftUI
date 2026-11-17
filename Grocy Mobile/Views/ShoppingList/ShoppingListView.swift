@@ -365,8 +365,7 @@ struct ShoppingListView: View {
         }
     }
 
-    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
-    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    // The capsules float in a bar above the list (the navigation layer), so their glass isn't drawn inside a list row
     @ViewBuilder
     private var filterCapsules: some View {
         if numBelowStock > 0 || numDone > 0 || numUndone > 0 {
@@ -392,12 +391,6 @@ struct ShoppingListView: View {
                     }
                 }
             }
-            #if os(iOS)
-                Section {
-                    filterCapsules
-                        .listRowInsets(EdgeInsets())
-                }
-            #endif
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 #if os(macOS)
                     DisclosureGroup(
@@ -446,12 +439,10 @@ struct ShoppingListView: View {
                 #endif
             }
         }
-        #if os(macOS)
-            .safeAreaBar(edge: .top) {
-                filterCapsules
-                    .padding(.vertical, Spacing.small)
-            }
-        #endif
+        .safeAreaBar(edge: .top) {
+            filterCapsules
+                .padding(.vertical, Spacing.small)
+        }
         .navigationTitle(selectedShoppingList?.name ?? "Shopping list")
         .toolbar {
             ToolbarItemGroup(
