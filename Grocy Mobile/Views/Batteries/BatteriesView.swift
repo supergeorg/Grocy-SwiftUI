@@ -224,14 +224,14 @@ struct BatteriesView: View {
                     }
             }
         }
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             filterCapsules
                 .padding(.vertical, Spacing.small)
         }
         .task {
-            await updateData()
-        }
-        .refreshable {
             await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")

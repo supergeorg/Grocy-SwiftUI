@@ -358,6 +358,9 @@ struct TasksView: View {
                 }
             }
         }
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             filterCapsules
                 .padding(.vertical, Spacing.small)
@@ -369,9 +372,6 @@ struct TasksView: View {
         }
         .onChange(of: deepLinkManager?.pendingTaskFilter) { _, _ in
             applyPendingFilter()
-        }
-        .refreshable {
-            await updateData()
         }
         .searchable(
             text: $searchString,

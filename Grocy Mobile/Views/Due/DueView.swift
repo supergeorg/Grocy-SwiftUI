@@ -121,6 +121,9 @@ struct DueView: View {
             }
         }
         .environment(stockInteractionRouter)
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             if kinds.count > 1 {
                 DueFilterActionsView(filteredKind: $filteredKind, kinds: kinds, counts: counts)
@@ -220,9 +223,6 @@ struct DueView: View {
         )
         .sensoryFeedback(.success, trigger: doneCount)
         .task {
-            await updateData()
-        }
-        .refreshable {
             await updateData()
         }
     }

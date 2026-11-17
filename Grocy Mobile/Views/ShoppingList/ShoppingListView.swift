@@ -439,6 +439,9 @@ struct ShoppingListView: View {
                 #endif
             }
         }
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             filterCapsules
                 .padding(.vertical, Spacing.small)
@@ -508,9 +511,6 @@ struct ShoppingListView: View {
             text: $searchString,
             prompt: "Search"
         )
-        .refreshable {
-            await updateData()
-        }
         .animation(.default, value: groupedShoppingList.count)
         .animation(.default, value: filteredStatus)
         .sheet(isPresented: $showFilterSheet) {
