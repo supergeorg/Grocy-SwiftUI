@@ -200,8 +200,7 @@ struct ChoresView: View {
         }
     }
 
-    // On macOS the capsules are shown in a bar above the list, because macOS lists don't animate
-    // changes inside their rows (so the capsules wouldn't expand smoothly)
+    // The capsules float in a bar above the list (the navigation layer), so their glass isn't drawn inside a list row
     private var filterCapsules: some View {
         ChoresFilterActionsView(
             filteredStatus: $filteredStatus,
@@ -214,12 +213,6 @@ struct ChoresView: View {
 
     var body: some View {
         List {
-            #if os(iOS)
-                Section {
-                    filterCapsules
-                        .listRowInsets(EdgeInsets())
-                }
-            #endif
 
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
@@ -319,12 +312,10 @@ struct ChoresView: View {
                 }
             }
         }
-        #if os(macOS)
-            .safeAreaBar(edge: .top) {
-                filterCapsules
-                    .padding(.vertical, Spacing.small)
-            }
-        #endif
+        .safeAreaBar(edge: .top) {
+            filterCapsules
+                .padding(.vertical, Spacing.small)
+        }
         .task {
             applyPendingFilter()
             await updateData()

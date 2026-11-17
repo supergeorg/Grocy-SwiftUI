@@ -24,12 +24,13 @@ Grocy Mobile/                 App target (file-system synchronized group, so new
     GrocyViewModel.swift      Central @Observable state & actions (injected via environment)
     SwiftDataSync.swift       `SwiftDataSynchronizer`: diff/upsert API results into SwiftData
     APIError.swift            Unified error enum
-    MasterData/ Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ User/ System/ HomeAssistant/
+    MasterData/ Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ Batteries/ Equipment/ User/ System/ HomeAssistant/
     Preview/                  PreviewContainer + TestData/*.json (fixtures named after API endpoints)
   Views/                      Grouped by feature
-    Navigation/               ContentView, AppTabNavigation, AppSidebarNavigation, Navigation (NavigationItem router)
-    Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ MasterData/MD*/ Settings/ Onboarding/ Admin/ Scanner/
-    Components/               Reusable form controls (MyTextField, MyToggle, MyDoubleStepper, ProductField, ...)
+    Navigation/               ContentView, PhoneTabNavigation, AppTabNavigation, AppSidebarNavigation, Navigation (NavigationItem router),
+                              HouseholdView, GlobalSearchView, AccountView
+    Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ Batteries/ Equipment/ MasterData/MD*/ Settings/ Onboarding/ Admin/ Scanner/
+    Components/               Reusable form controls (MyTextField, MyToggle, MyDoubleStepper, ProductField, ...) and FilterCapsuleBar
     Additional/               ServerProblemView, FlowLayout, ...
   Helper/                     Logger, symbols, formatters, decoding helpers, deep links, AI matcher, reminders
 Grocy Widget/                 WidgetKit extension: stock, shopping list, chores and tasks widgets
@@ -84,7 +85,12 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 ### Navigation
 
 - `NavigationItem` (in `Views/Navigation/Navigation.swift`) lists every top-level destination, and `Navigation` switches over it.
-- `ContentView` chooses between `AppTabNavigation` and `AppSidebarNavigation`, based on the size class and the `iPhoneTabNavigation` / `iPadTabNavigation` settings. macOS always uses the sidebar.
+- `ContentView` chooses the navigation from the size class and the `iPhoneTabNavigation` / `iPadTabNavigation` settings. macOS always uses the sidebar.
+  - **iPhone (compact, prototype):** `PhoneTabNavigation` has at most five tabs, so the system "More" list is never needed: Stock, Shopping list, Recipes, Household and a search tab (`Tab(role: .search)`). Server feature flags hide tabs.
+    - `HouseholdView` puts chores, tasks, batteries and equipment in one tab. The navigation title menu switches between them.
+    - `GlobalSearchView` searches stock, products, recipes and master data by name or exact barcode. Quick Scan sits in the tab view's bottom accessory, only while the search tab is selected. The app never restores the search tab at launch, because selecting it activates the search field.
+    - Settings and master data open from the settings button (its own toolbar group, `ToolbarSpacer`), through `AccountView` with value-based routes. A sheet conflicts with the lists' pull-down search field.
+  - **iPad / regular width:** `AppTabNavigation` or `AppSidebarNavigation`.
 - List → detail navigation uses `NavigationLink(value:)` plus `.navigationDestination(for:)`.
 - Creating an item uses a `.sheet` on iOS and `.navigationDestination(isPresented:)` on macOS, behind `#if os(iOS)`.
 - Deep links (opened by the widgets) are `grocy://stock/filter/<ProductStatus>`, `grocy://shoppinglist[/list/<id>]`, `grocy://chores/filter/<ChoreStatus>` and `grocy://tasks/filter/<TaskStatus>`. Widgets build them with `WidgetDeepLink` (`SharedModel.swift`); the app parses them with `GrocyDeepLink` (`Helper/DeepLinkHandler.swift`) and hands them over through the `DeepLinkManager` environment object.
@@ -96,6 +102,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - **Scanning:** `Views/Scanner/` uses VisionKit and AVFoundation barcode scanning. The `*Legacy` variants are older implementations. Quick Scan mode works only on iOS. Barcode lookups can use `externalBarcodeLookup`.
 - **Reminders sync:** `Helper/ReminderStore.swift` uses EventKit to mirror a shopping list into Reminders.
 - **Recipe import (work in progress):** `Views/Recipes/Import/` (UI and the JSON-LD `RecipeParser`) and `Model/Recipes/Import/` (ingredient line parser, product/unit mapping, preparation HTML format) import schema.org/Recipe JSON-LD from websites as Grocy recipes. See `Guides/Recipe Import/RecipeImportGuide.md`, and update it when the import changes.
+- **Batteries and equipment:** `Model/Batteries/` and `Model/Equipment/`, views in `Views/Batteries/` (overview with due filters, tracking, journal, battery details) and `Views/Equipment/` (list, details with the PDF manual via PDFKit, notes form). Battery due status is `BatteryStatus`. Non-picture files (PDF manuals) are fetched without `force_serve_as=picture`. Tracked times are sent as local `Y-m-d H:i:s`, the only format Grocy accepts.
 - **Widgets:** `Grocy Widget/` bundles the stock, shopping list, chores and tasks widgets (`AppIntentTimelineProvider`s, also on the Lock Screen). They never open SwiftData. After each sync, `GrocyViewModel` writes small `Codable` summaries (`WidgetStockSummary`, `WidgetShoppingListSummary`, `WidgetDueSummary`) to the App Group's `UserDefaults` via `WidgetSharedStore` (`Model/SharedModel.swift`) and reloads the matching timeline. `deleteAllCachedData` clears them. The app's language override is shared too, so widgets use the same language.
 
 ## Coding Conventions
@@ -134,9 +141,12 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
   - toolbar items with `.cancellationAction` / `.confirmationAction`, `Button(role: .cancel/.confirm)`, and `.keyboardShortcut`
   - dismissal on success, plus `.sensoryFeedback(.success/.error, …)`
 - Build forms from the shared components in `Views/Components/` (`MyTextField`, `MyTextEditor`, `MyToggle`, `MyDoubleStepper`, `MyIntStepper`, `ProductField`, `AmountSelectionView`, …) rather than raw controls, so styling and validation stay consistent.
-- **SF Symbols:** never hard-code symbol names in views. Use or add constants in `Helper/MySymbols.swift` (`MySymbols.delete`, `MySymbols.save`, …).
+- **SF Symbols:** never hard-code symbol names in views. Use or add constants in `Helper/MySymbols.swift` (`MySymbols.delete`, `MySymbols.save`, …), named after their meaning rather than the symbol (e.g. `ownServer` vs. `homeAssistant`).
 - **Colors:** use the asset catalog colors `Color(.GrocyColors.grocyRed)`, `grocyBlueBackground`, etc.
+- **Spacing and sizes:** no ad-hoc numbers. Use the `Spacing` scale (`hairline` … `xLarge`) and the named `Sizes` (`minimumHitTarget` = 44 pt, …) in `Helper/Constants.swift`. Tap targets are at least 44 pt.
 - **Platform differences:** use `#if os(iOS)` / `#if os(macOS)` inline. macOS-specific sizes live in `Helper/Constants.swift`.
+- **Liquid Glass:** glass belongs to the navigation layer (toolbars, tab bar, bars floating above content), never to the content layer (list rows, cards). Use the system styles (`.buttonStyle(.glass)` / `.glassProminent`) instead of hand-made glass, and don't nest glass effects.
+- **Quick filter capsules:** each overview's `…FilterActionsView` puts its `…FilterCapsuleView`s in a `FilterCapsuleBar` (horizontal scroll view with a `GlassEffectContainer`). Style capsules with `filterCapsuleStyle(tint:)`. Show the bar in `.safeAreaBar(edge: .top) { … .padding(.vertical, Spacing.small) }` on the list or scroll view, on all platforms. Don't put it in a `List` section: the row background draws a white box around the glass.
 - **Previews:** every view gets a `#Preview(traits: .previewData)`, usually wrapped in a `NavigationStack`. The `.previewData` trait injects an in-memory `PreviewContainer` (seeded from `Model/Preview/TestData/*.json`) and a `GrocyViewModel`. Forms provide separate "Create" and "Edit" previews.
 
 ### State & settings
@@ -191,7 +201,7 @@ Adding a suite for another entity (use `MDLocationIntegrationTests.swift` as the
 4. Make tests independent of each other and of the server's contents: use unique names (`UUID`), create your own fixtures, and delete them with the `withCleanup` pattern (it also runs when a test fails). Create the entities a test depends on (e.g. a location and quantity unit before a product) inside that test.
 5. Check the server's supported version still matches `GrocyAPP.supportedVersions` when updating the Grocy clone.
 
-UI tests against the same server live in `Grocy MobileUITests/` (XCTest + XCUIAutomation; see `TestServer/README.md`). Subclass `GrocyUITestCase`, which provides the server gate, `createObject` fixtures (deleted after each test), `launchApp()`, `openMasterData(_:in:)`, platform-aware element helpers and `attachScreenshot`. Examples: `MDLocationUITests.swift` (one screen in depth), `MDMasterDataUITests.swift` (the same check across all master data types).
+UI tests against the same server live in `Grocy MobileUITests/` (XCTest + XCUIAutomation; see `TestServer/README.md`). Subclass `GrocyUITestCase`, which provides the server gate, `createObject` fixtures (deleted after each test), `launchApp()`, `openMasterData(_:in:)`, platform-aware element helpers and `attachScreenshot`. Examples: `MDLocationUITests.swift` (one screen in depth), `MDMasterDataUITests.swift` (the same check across all master data types), `PhoneNavigationUITests.swift` (every place in the iPhone navigation). On iPhone, master data is reached through the settings button, not a tab.
 
 - The test passes `GROCY_UITEST_SERVER_URL` / `GROCY_UITEST_API_KEY` in the app's launch environment. That turns on `UITestConfiguration` (DEBUG only): in-memory stores and a direct login, so the installed app's data, login and iCloud profiles are never touched. Launch arguments like `-isLoggedIn YES -onboardingNeeded NO -localizationKey en` go to UserDefaults' argument domain and aren't persisted.
 - Run them on macOS **and** an iOS simulator. On macOS, use `click()` instead of `tap()` (taps don't trigger navigation there), and read static text from `value` (iOS uses `label`).
