@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-private enum MasterDataItem: Hashable {
+enum MasterDataItem: Hashable {
     case products
     case locations
     case stores
@@ -21,8 +21,9 @@ private enum MasterDataItem: Hashable {
     case userEntities
 }
 
-struct MasterDataView: View {
-    @Environment(GrocyViewModel.self) private var grocyVM
+/// The master data lists, as list rows. Used by `MasterDataView` and directly on the iPhone's `AccountView`
+/// (so master data is one tap away). Needs `masterDataDestinations()` on the navigation stack.
+struct MasterDataLinks: View {
     @AppStorage("devMode") private var devMode: Bool = false
 
     @Query var systemConfigList: [SystemConfig]
@@ -31,87 +32,99 @@ struct MasterDataView: View {
     }
 
     var body: some View {
-        List {
-            NavigationLink(value: MasterDataItem.products) {
-                MDCategoryRowView(categoryName: "Products", iconName: MySymbols.product, mdType: MDProduct.self)
-            }
+        NavigationLink(value: MasterDataItem.products) {
+            MDCategoryRowView(categoryName: "Products", iconName: MySymbols.product, mdType: MDProduct.self)
+        }
 
-            if !(systemConfig?.featureFlagStock == false) {
-                NavigationLink(value: MasterDataItem.locations) {
-                    MDCategoryRowView(categoryName: "Locations", iconName: MySymbols.location, mdType: MDLocation.self)
-                }
-            }
-
-            if !(systemConfig?.featureFlagStock == false) {
-                NavigationLink(value: MasterDataItem.stores) {
-                    MDCategoryRowView(categoryName: "Stores", iconName: MySymbols.store, mdType: MDStore.self)
-                }
-            }
-
-            NavigationLink(value: MasterDataItem.quantityUnits) {
-                MDCategoryRowView(categoryName: "Quantity units", iconName: MySymbols.quantityUnit, mdType: MDQuantityUnit.self)
-            }
-
-            NavigationLink(value: MasterDataItem.productGroups) {
-                MDCategoryRowView(categoryName: "Product groups", iconName: MySymbols.productGroup, mdType: MDProductGroup.self)
-            }
-
-            if !(systemConfig?.featureFlagChores == false) {
-                NavigationLink(value: MasterDataItem.chores) {
-                    MDCategoryRowView(categoryName: "Chores", iconName: MySymbols.chores, mdType: MDChore.self)
-                }
-            }
-
-            if !(systemConfig?.featureFlagBatteries == false) {
-                NavigationLink(value: MasterDataItem.batteries) {
-                    MDCategoryRowView(categoryName: "Batteries", iconName: MySymbols.batteries, mdType: MDBattery.self)
-                }
-            }
-
-            if !(systemConfig?.featureFlagTasks == false) {
-                NavigationLink(value: MasterDataItem.taskCategories) {
-                    MDCategoryRowView(categoryName: "Task categories", iconName: MySymbols.tasks, mdType: MDTaskCategory.self)
-                }
-            }
-
-            if devMode {
-                NavigationLink(value: MasterDataItem.userFields) {
-                    Label("Userfields", systemImage: MySymbols.unknown)
-                }
-
-                NavigationLink(value: MasterDataItem.userEntities) {
-                    Label("User entities", systemImage: MySymbols.unknown)
-                }
+        if !(systemConfig?.featureFlagStock == false) {
+            NavigationLink(value: MasterDataItem.locations) {
+                MDCategoryRowView(categoryName: "Locations", iconName: MySymbols.location, mdType: MDLocation.self)
             }
         }
-        .navigationTitle("Master data")
-        .navigationDestination(
-            for: MasterDataItem.self,
-            destination: { masterDataItem in
-                switch masterDataItem {
-                case .products:
-                    MDProductsView()
-                case .locations:
-                    MDLocationsView()
-                case .stores:
-                    MDStoresView()
-                case .quantityUnits:
-                    MDQuantityUnitsView()
-                case .productGroups:
-                    MDProductGroupsView()
-                case .chores:
-                    MDChoresView()
-                case .batteries:
-                    MDBatteriesView()
-                case .taskCategories:
-                    MDTaskCategoriesView()
-                case .userFields:
-                    MDUserFieldsView()
-                case .userEntities:
-                    MDUserEntitiesView()
-                }
+
+        if !(systemConfig?.featureFlagStock == false) {
+            NavigationLink(value: MasterDataItem.stores) {
+                MDCategoryRowView(categoryName: "Stores", iconName: MySymbols.store, mdType: MDStore.self)
             }
-        )
+        }
+
+        NavigationLink(value: MasterDataItem.quantityUnits) {
+            MDCategoryRowView(categoryName: "Quantity units", iconName: MySymbols.quantityUnit, mdType: MDQuantityUnit.self)
+        }
+
+        NavigationLink(value: MasterDataItem.productGroups) {
+            MDCategoryRowView(categoryName: "Product groups", iconName: MySymbols.productGroup, mdType: MDProductGroup.self)
+        }
+
+        if !(systemConfig?.featureFlagChores == false) {
+            NavigationLink(value: MasterDataItem.chores) {
+                MDCategoryRowView(categoryName: "Chores", iconName: MySymbols.chores, mdType: MDChore.self)
+            }
+        }
+
+        if !(systemConfig?.featureFlagBatteries == false) {
+            NavigationLink(value: MasterDataItem.batteries) {
+                MDCategoryRowView(categoryName: "Batteries", iconName: MySymbols.batteries, mdType: MDBattery.self)
+            }
+        }
+
+        if !(systemConfig?.featureFlagTasks == false) {
+            NavigationLink(value: MasterDataItem.taskCategories) {
+                MDCategoryRowView(categoryName: "Task categories", iconName: MySymbols.tasks, mdType: MDTaskCategory.self)
+            }
+        }
+
+        if devMode {
+            NavigationLink(value: MasterDataItem.userFields) {
+                Label("Userfields", systemImage: MySymbols.unknown)
+            }
+
+            NavigationLink(value: MasterDataItem.userEntities) {
+                Label("User entities", systemImage: MySymbols.unknown)
+            }
+        }
+    }
+}
+
+extension View {
+    /// Registers the master data lists (`MasterDataLinks`) on a navigation stack.
+    func masterDataDestinations() -> some View {
+        navigationDestination(for: MasterDataItem.self) { masterDataItem in
+            switch masterDataItem {
+            case .products:
+                MDProductsView()
+            case .locations:
+                MDLocationsView()
+            case .stores:
+                MDStoresView()
+            case .quantityUnits:
+                MDQuantityUnitsView()
+            case .productGroups:
+                MDProductGroupsView()
+            case .chores:
+                MDChoresView()
+            case .batteries:
+                MDBatteriesView()
+            case .taskCategories:
+                MDTaskCategoriesView()
+            case .userFields:
+                MDUserFieldsView()
+            case .userEntities:
+                MDUserEntitiesView()
+            }
+        }
+    }
+}
+
+struct MasterDataView: View {
+    @Environment(GrocyViewModel.self) private var grocyVM
+
+    var body: some View {
+        List {
+            MasterDataLinks()
+        }
+        .navigationTitle("Master data")
+        .masterDataDestinations()
         .task {
             await grocyVM.requestData(additionalObjects: [.system_config])
         }

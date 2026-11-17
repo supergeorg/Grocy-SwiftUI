@@ -176,6 +176,33 @@ struct StockView: View {
 
     @State private var stockInteractionRouter = StockInteractionNavigationRouter()
 
+    /// The fields of a stock entry that `StockElement.==` compares, as a value, so `onChange` can keep it safely.
+    private struct StockSnapshot: Equatable {
+        var id: PersistentIdentifier
+        var amount: Double
+        var amountAggregated: Double
+        var value: Double
+        var bestBeforeDate: Date?
+        var amountOpened: Double
+        var amountOpenedAggregated: Double
+        var isAggregatedAmount: Bool
+        var dueType: DueType
+        var productID: Int
+
+        init(_ element: StockElement) {
+            id = element.persistentModelID
+            amount = element.amount
+            amountAggregated = element.amountAggregated
+            value = element.value
+            bestBeforeDate = element.bestBeforeDate
+            amountOpened = element.amountOpened
+            amountOpenedAggregated = element.amountOpenedAggregated
+            isAggregatedAmount = element.isAggregatedAmount
+            dueType = element.dueType
+            productID = element.productID
+        }
+    }
+
     // Cached filtered/grouped results to prevent blocking during filter changes
     @State private var cachedFilteredStock: [StockElement] = []
     @State private var cachedGroupedStock: [AnyHashable: [StockElement]] = [:]
@@ -500,7 +527,9 @@ struct StockView: View {
         .onChange(of: storageSortOrder) { _, _ in
             computeFilteredAndGroupedStock()
         }
-        .onChange(of: stock) { _, _ in
+        // Observes a value snapshot, not the models: `onChange` keeps the previous value, and comparing models
+        // that a sync has deleted reads detached attributes, which crashes SwiftData.
+        .onChange(of: stock.map(StockSnapshot.init)) { _, _ in
             computeFilteredAndGroupedStock()
         }
         .onChange(of: volatileStock) { _, _ in

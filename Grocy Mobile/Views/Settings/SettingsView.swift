@@ -17,6 +17,8 @@ enum SettingsNavigationItem: Hashable {
     case batteriesSettings
     case appLog
     case aboutApp
+    /// The tab editor of the "own tabs" iPhone navigation, opened from the app settings.
+    case phoneTabs
 }
 
 struct SettingsView: View {
@@ -118,6 +120,8 @@ struct SettingsView: View {
                 LogView()
             case .aboutApp:
                 AboutView()
+            case .phoneTabs:
+                PhoneTabsSettingsView()
             }
         }
         .navigationTitle("Settings")
