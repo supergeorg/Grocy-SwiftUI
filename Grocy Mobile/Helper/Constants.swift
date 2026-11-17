@@ -46,8 +46,16 @@ enum Sizes {
     static let colorIndicatorHeight: CGFloat = 4
     static let preparationEditorMinHeight: CGFloat = 400
     static let noteEditorMinHeight: CGFloat = 50
-    static let recipeTitleFadeHeight: CGFloat = 110
-    static let recipeScoreMinWidth: CGFloat = 60
+    /// Picture in a recipe list row (scaled with Dynamic Type).
+    static let recipeThumbnail: CGFloat = 64
+    /// Narrowest card of the recipe gallery; the gallery shows as many columns as fit, but at least two.
+    static let recipeCardMinWidth: CGFloat = 160
+    /// Width-to-height ratio of a recipe picture in the gallery.
+    static let recipeCardPictureRatio: CGFloat = 4 / 3
+    static let recipeCardCornerRadius: CGFloat = 16
+    static let recipeThumbnailCornerRadius: CGFloat = 10
+    /// Height of the recipe picture above the details (iOS, scaled to the width on narrow screens).
+    static let recipeHeaderPictureMaxHeight: CGFloat = 320
     static let parserTextHeight: CGFloat = 200
     static let parserResultMaxHeight: CGFloat = 300
     static let popoverFormSize: CGFloat = 500

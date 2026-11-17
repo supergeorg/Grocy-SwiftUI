@@ -7,103 +7,19 @@
 
 import SwiftData
 import SwiftUI
-import WebKit
-
-// MARK: - Stat Chip
-
-private struct StatChip: View {
-    let icon: String
-    let title: LocalizedStringKey
-    let value: String
-    var warning: LocalizedStringKey? = nil
-    var info: LocalizedStringKey
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.xSmall) {
-
-            Label(title, systemImage: icon)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            HStack {
-                Text(value)
-                    .font(.headline.monospacedDigit())
-                    .foregroundStyle(.primary)
-                Spacer()
-                FieldDescription(description: info)
-            }
-            if let warning {
-                Text(warning)
-                    .font(.caption2)
-                    .foregroundStyle(Color(.GrocyColors.grocyRed))
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .padding(.horizontal, Spacing.medium)
-        .padding(.vertical, Spacing.medium)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-}
-
-// MARK: - Settings Card
-
-private struct SettingsCard: View {
-    @Binding var recipe: Recipe
-    let summedCalories: Double
-    let summedPrice: String
-    let noPriceForOne: Bool
-    let isProcessing: Bool
-    let onServingsChange: () async -> Void
-
-    var body: some View {
-        VStack(spacing: Spacing.large) {
-            MyDoubleStepper(
-                amount: $recipe.desiredServings,
-                description: "Desired servings",
-                systemImage: MySymbols.amount
-            )
-            .onChange(of: recipe.desiredServings) {
-                Task { await onServingsChange() }
-            }
-
-            if isProcessing {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity)
-            }
-
-            HStack(spacing: Spacing.medium) {
-                StatChip(
-                    icon: MySymbols.energy,
-                    title: "Energy",
-                    value: "\(summedCalories.formattedAmount) kcal",
-                    info: "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones"
-                )
-                StatChip(
-                    icon: MySymbols.price,
-                    title: "Costs",
-                    value: summedPrice,
-                    warning: noPriceForOne
-                        ? "No price information is available for at least one ingredient"
-                        : nil,
-                    info: "per serving"
-                )
-            }
-        }
-        .padding(Spacing.large)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-    }
-}
 
 // MARK: - Main View
 
 struct RecipeView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    @Environment(\.modelContext) private var modelContext
 
     @Query var mdQuantityUnits: MDQuantityUnits
+    @Query var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query var mdProducts: MDProducts
+    @Query var recipes: Recipes
+    @Query private var ingredientsAll: [RecipePosResolvedElement]
+    @Query private var fulfilments: RecipeFulfilments
+    @Query private var nestings: RecipesNesting
 
     var initialRecipe: Recipe
     @State private var recipe: Recipe
@@ -115,15 +31,20 @@ struct RecipeView: View {
 
     @State private var addToShLItems: [AddMissingToShLItem] = []
 
-    @State private var page = WebPage()
-    private let blank = URL(string: "about:blank")!
+    /// The icon column of `RowIconLabelStyle`, to start a note under a row's title.
+    @ScaledMetric(relativeTo: .body) private var rowIconWidth: CGFloat = Sizes.rowIconWidth
 
-    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .recipes_pos_resolved, .products]
-    private let additionalDataToUpdate: [AdditionalEntities] = []
+    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions, .recipes, .recipes_pos_resolved, .recipes_nestings, .products]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]
 
     init(initialRecipe: Recipe) {
         self.initialRecipe = initialRecipe
         self.recipe = initialRecipe
+        let recipeID = initialRecipe.id
+        // Queries instead of fetches in computed properties, so the ingredients appear as soon as the sync stored them.
+        _ingredientsAll = Query(filter: #Predicate<RecipePosResolvedElement> { $0.recipeID == recipeID }, sort: \.productName)
+        _fulfilments = Query(filter: #Predicate<RecipeFulfilment> { $0.recipeID == recipeID })
+        _nestings = Query(filter: #Predicate<RecipeNesting> { $0.recipeID == recipeID }, sort: \.id)
     }
 
     private func updateData() async {
@@ -132,22 +53,50 @@ struct RecipeView: View {
 
     // MARK: Computed
 
-    var ingredientsAll: [RecipePosResolvedElement] {
-        let descriptor = FetchDescriptor<RecipePosResolvedElement>(
-            predicate: #Predicate { $0.recipeID == recipe.id },
-            sortBy: [SortDescriptor(\.ingredientGroup)]
-        )
-        return (try? modelContext.fetch(descriptor)) ?? []
-    }
+    private var fulfilment: RecipeFulfilment? { fulfilments.first }
 
-    var groupedIngredients: [String: [RecipePosResolvedElement]] {
+    /// Ingredient groups in display order: ungrouped ingredients first, then the groups by name.
+    private var groupedIngredients: [(name: String, ingredients: [RecipePosResolvedElement])] {
         Dictionary(grouping: ingredientsAll) { $0.ingredientGroup ?? "" }
+            .map { (name: $0.key, ingredients: $0.value.sorted { $0.productName.localizedStandardCompare($1.productName) == .orderedAscending }) }
+            .sorted { lhs, rhs in
+                if lhs.name.isEmpty != rhs.name.isEmpty { return lhs.name.isEmpty }
+                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            }
     }
 
-    var summedCalories: Double { ingredientsAll.reduce(0) { $0 + $1.calories } }
-    var summedPrice: Double { ingredientsAll.reduce(0) { $0 + $1.costs } }
-    var noPriceForOne: Bool { ingredientsAll.contains { $0.costs.isZero } }
-    var enoughInStock: Bool { ingredientsAll.allSatisfy(\.needFulfilled) }
+    /// Calories of all ingredients; Grocy calculates them per serving.
+    private var summedCalories: Double { ingredientsAll.reduce(0) { $0 + $1.calories } }
+    /// Costs of all ingredients for the desired servings.
+    private var summedPrice: Double { ingredientsAll.reduce(0) { $0 + $1.costs } }
+    private var pricePerServing: Double? {
+        if let costsPerServing = fulfilment?.costsPerServing { return costsPerServing }
+        return recipe.desiredServings > 0 ? summedPrice / recipe.desiredServings : nil
+    }
+    private var noPriceForOne: Bool { ingredientsAll.contains { $0.costs.isZero } }
+    private var enoughInStock: Bool { ingredientsAll.allSatisfy(\.needFulfilled) }
+
+    private var producedProduct: MDProduct? {
+        guard let productID = recipe.productID else { return nil }
+        return mdProducts.first { $0.id == productID }
+    }
+
+    private func quantityUnit(_ id: Int?) -> MDQuantityUnit? {
+        guard let id else { return nil }
+        return mdQuantityUnits.first { $0.id == id }
+    }
+
+    /// Grocy returns the amount in the product's stock unit. Shows it in the ingredient's own unit when a conversion exists.
+    private func displayAmount(for ingredient: RecipePosResolvedElement) -> (amount: Double, unit: MDQuantityUnit?) {
+        let product = mdProducts.first { $0.id == ingredient.productID }
+        if ingredient.onlyCheckSingleUnitInStock {
+            return (ingredient.recipeAmount, quantityUnit(ingredient.quID))
+        }
+        if let product, let factor = RecipeAmountConversion.factorFromStockUnit(to: ingredient.quID, product: product, conversions: mdQuantityUnitConversions) {
+            return (ingredient.recipeAmount * factor, quantityUnit(ingredient.quID))
+        }
+        return (ingredient.recipeAmount, quantityUnit(product?.quIDStock ?? ingredient.quID))
+    }
 
     // MARK: Actions
 
@@ -197,68 +146,106 @@ struct RecipeView: View {
 
     // MARK: Body
 
-    var body: some View {
-        List {
-            if let pictureFileName = recipe.pictureFileName {
-                PictureView(pictureFileName: pictureFileName, pictureType: .recipePictures)
-                    .backgroundExtensionEffect()
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
+    /// A grouped Form on macOS (like the app's other detail and form screens there, with values in a trailing column);
+    /// an inset grouped List on iOS, where it supports pull to refresh.
+    @ViewBuilder
+    private var container: some View {
+        #if os(macOS)
+            Form {
+                listContent
             }
-
-            if let errorMessage {
-                ErrorMessageView(errorMessage: errorMessage)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
+            .formStyle(.grouped)
+        #else
+            List {
+                listContent
             }
+            .listStyle(.insetGrouped)
+        #endif
+    }
 
+    @ViewBuilder
+    private var listContent: some View {
+        if grocyVM.failedToLoadObjects.contains(where: { dataToUpdate.contains($0) }) {
+            ServerProblemView()
+                .listRowBackground(Color.clear)
+        }
+
+        if let pictureFileName = recipe.pictureFileName, !pictureFileName.isEmpty {
             Section {
-                SettingsCard(
-                    recipe: $recipe,
-                    summedCalories: summedCalories,
-                    summedPrice: grocyVM.getFormattedCurrency(amount: summedPrice),
-                    noPriceForOne: noPriceForOne,
-                    isProcessing: isProcessing,
-                    onServingsChange: updateRecipe
-                )
-                .listRowInsets(EdgeInsets())
+                Color.clear
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Sizes.recipeHeaderPictureMaxHeight)
+                    .overlay {
+                        PictureView(pictureFileName: pictureFileName, pictureType: .recipePictures)
+                            .scaledToFill()
+                    }
+                    #if os(macOS)
+                        // The grouped Form keeps the row insets on macOS, so round the picture like its group.
+                        .clipShape(RoundedRectangle(cornerRadius: Sizes.recipeThumbnailCornerRadius, style: .continuous))
+                    #else
+                        .clipped()
+                    #endif
+                    .listRowInsets(EdgeInsets())
+                    .accessibilityHidden(true)
+            }
+        }
+
+        if let errorMessage {
+            ErrorMessageView(errorMessage: errorMessage)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
-            }
+        }
 
-            ForEach(
-                groupedIngredients.sorted(by: { $0.key < $1.key }),
-                id: \.key
-            ) { groupName, ingredients in
-                Section {
-                    ForEach(
-                        ingredients.sorted(by: { $0.productName < $1.productName }),
-                        id: \.id
-                    ) { ingredient in
-                        RecipeIngredientRowView(
-                            recipePos: ingredient,
-                            quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == ingredient.productID })?.quIDStock })
-                        )
-                    }
-                } header: {
-                    if groupName.isEmpty {
-                        Text("Ingredients")
-                            .font(.title)
-                    } else {
-                        Text(groupName)
+        overviewSection
+
+        ForEach(groupedIngredients, id: \.name) { group in
+            Section {
+                ForEach(group.ingredients, id: \.id) { ingredient in
+                    let display = displayAmount(for: ingredient)
+                    RecipeIngredientRowView(
+                        recipePos: ingredient,
+                        amount: display.amount,
+                        quantityUnit: display.unit,
+                        stockQuantityUnit: quantityUnit(mdProducts.first { $0.id == ingredient.productID }?.quIDStock),
+                        nestedRecipeName: ingredient.isNestedRecipePos ? recipes.first { $0.id == ingredient.childRecipeID }?.name : nil
+                    )
+                }
+            } header: {
+                if group.name.isEmpty {
+                    Text("Ingredients")
+                } else {
+                    Text(group.name)
+                }
+            }
+        }
+
+        if !nestings.isEmpty {
+            Section("Included recipes") {
+                ForEach(nestings, id: \.id) { nesting in
+                    if let includedRecipe = recipes.first(where: { $0.id == nesting.includesRecipeID }) {
+                        NavigationLink {
+                            RecipeView(initialRecipe: includedRecipe)
+                        } label: {
+                            LabeledContent {
+                                Text(nesting.servings.formattedAmount)
+                            } label: {
+                                Label(includedRecipe.name, systemImage: MySymbols.recipe)
+                            }
+                        }
                     }
                 }
             }
-            Section {
+        }
+
+        if !recipe.recipeDescription.isEmpty {
+            Section("Preparation") {
                 HTMLPreviewView(htmlContent: $recipe.recipeDescription)
-            } header: {
-                Text("Preparation")
-                    .font(.title)
             }
         }
-        #if os(iOS)
-            .listStyle(.insetGrouped)
-        #endif
+    }
+
+    var body: some View {
+        container
         .navigationTitle(recipe.name)
         #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
@@ -365,10 +352,138 @@ struct RecipeView: View {
     }
 }
 
+// MARK: - Overview
+
+extension RecipeView {
+    @ViewBuilder
+    private var fulfilmentLabel: some View {
+        if enoughInStock {
+            Label {
+                Text("Enough in stock")
+            } icon: {
+                Image(systemName: MySymbols.fulfilled)
+                    .foregroundStyle(Color(.GrocyColors.grocyGreen))
+            }
+        } else if fulfilment?.needFulfilledWithShoppingList == true {
+            Label {
+                Text("Not enough in stock, \(fulfilment?.missingProductsCount ?? 0) ingredient missing but already on the shopping list")
+            } icon: {
+                Image(systemName: MySymbols.partiallyFulfilled)
+                    .foregroundStyle(Color(.GrocyColors.grocyYellow))
+            }
+        } else {
+            Label {
+                Text("Not enough in stock, \(fulfilment?.missingProductsCount ?? ingredientsAll.filter { !$0.needFulfilled }.count) ingredient missing")
+            } icon: {
+                Image(systemName: MySymbols.notFulfilled)
+                    .foregroundStyle(Color(.GrocyColors.grocyRed))
+            }
+        }
+    }
+
+    /// A row title with a help button behind the title.
+    private func labelWithHelp(_ title: LocalizedStringKey, systemImage: String, help: LocalizedStringKey) -> some View {
+        Label {
+            HStack {
+                Text(title)
+                FieldDescription(description: help)
+            }
+        } icon: {
+            Image(systemName: systemImage)
+        }
+    }
+
+    private var overviewSection: some View {
+        Section {
+            if !ingredientsAll.isEmpty {
+                fulfilmentLabel
+            }
+
+            MyDoubleStepper(
+                amount: $recipe.desiredServings,
+                description: "Desired servings",
+                systemImage: MySymbols.servings
+            )
+            .onChange(of: recipe.desiredServings) {
+                Task { await updateRecipe() }
+            }
+
+            LabeledContent {
+                Text(recipe.baseServings.formattedAmount)
+            } label: {
+                labelWithHelp("Servings", systemImage: MySymbols.servings, help: "The ingredients listed here result in this amount of servings")
+            }
+
+            LabeledContent {
+                Text("\(summedCalories.formattedAmount) kcal")
+                    .monospacedDigit()
+            } label: {
+                labelWithHelp("Energy", systemImage: MySymbols.energy, help: "per serving")
+            }
+
+            if let dueScore = fulfilment?.dueScore {
+                LabeledContent {
+                    Text("\(dueScore)")
+                        .monospacedDigit()
+                } label: {
+                    Label("Due score", systemImage: MySymbols.due)
+                }
+            }
+
+            if let producedProduct {
+                LabeledContent {
+                    Text(producedProduct.name)
+                } label: {
+                    Label("Produces product", systemImage: MySymbols.selfProduction)
+                }
+            }
+
+            // The note about missing prices belongs to the costs, so it's in the same row, below the label and the price.
+            // Not in the LabeledContent's label: a long label pushes the price out of the trailing column.
+            VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                LabeledContent {
+                    VStack(alignment: .trailing, spacing: Spacing.xxSmall) {
+                        Text(grocyVM.getFormattedCurrency(amount: summedPrice))
+                            .monospacedDigit()
+                        if let pricePerServing {
+                            Text("\(grocyVM.getFormattedCurrency(amount: pricePerServing)) \(Text("per serving"))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+                } label: {
+                    labelWithHelp("Costs", systemImage: MySymbols.price, help: "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones")
+                }
+                if noPriceForOne {
+                    Text("No price information is available for at least one ingredient")
+                        .font(.caption)
+                        .foregroundStyle(Color(.GrocyColors.grocyRed))
+                        .padding(.leading, rowIconWidth + Spacing.medium)
+                }
+            }
+        }
+        // One icon column for all rows, also for the Labels inside the stepper and the costs row.
+        .labelStyle(.rowIcon)
+        // The List tints the icons of some rows with the accent color; keep all row icons in the text color, in one color each.
+        .listItemTint(Color.primary)
+        .symbolRenderingMode(.monochrome)
+    }
+}
+
 // MARK: - Preview
 
 #Preview(traits: .previewData) {
     NavigationStack {
         RecipeView(initialRecipe: Recipe(name: "Recipe 1", recipeDescription: "<h1>Hello</h1>"))
+    }
+}
+
+#Preview("Recipe with ingredients", traits: .previewData) {
+    @Previewable @Query(filter: #Predicate<Recipe> { $0.id == 1 }) var recipes: Recipes
+    NavigationStack {
+        if let recipe = recipes.first {
+            RecipeView(initialRecipe: recipe)
+        }
     }
 }

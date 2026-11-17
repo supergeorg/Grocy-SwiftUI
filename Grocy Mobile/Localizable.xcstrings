@@ -103,17 +103,6 @@
       },
       "shouldTranslate" : false
     },
-    "%@ %@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@ %3$@"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
     "%@ %%" : {
       "shouldTranslate" : false
     },
@@ -658,17 +647,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$lf %2$@"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
-    "%lf %@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lf %2$@ %3$@"
           }
         }
       },
@@ -10815,9 +10793,6 @@
         }
       }
     },
-    "All entries" : {
-
-    },
     "All places in one list, as in the iPad sidebar." : {
 
     },
@@ -15404,6 +15379,7 @@
       }
     },
     "Barcode settings (legacy)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16259,6 +16235,9 @@
           }
         }
       }
+    },
+    "Below min. stock" : {
+
     },
     "Below min. stock amount" : {
       "localizations" : {
@@ -19229,9 +19208,6 @@
         }
       }
     },
-    "Chores, tasks and batteries that are overdue or due soon show up here." : {
-
-    },
     "Clean the kitchen" : {
       "localizations" : {
         "de" : {
@@ -19740,6 +19716,12 @@
     },
     "CodeScanner" : {
       "shouldTranslate" : false
+    },
+    "Collapsed" : {
+
+    },
+    "Collapses the section" : {
+
     },
     "Common" : {
       "localizations" : {
@@ -36274,6 +36256,12 @@
         }
       }
     },
+    "Expanded" : {
+
+    },
+    "Expands the section" : {
+
+    },
     "Expiration date" : {
       "localizations" : {
         "ca" : {
@@ -37856,6 +37844,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "從"
+          }
+        }
+      }
+    },
+    "Gallery" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galerie"
           }
         }
       }
@@ -41752,7 +41750,18 @@
         }
       }
     },
+    "Layout" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darstellung"
+          }
+        }
+      }
+    },
     "Legacy Barcode Scanner" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -42020,6 +42029,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Link-Text"
+          }
+        }
+      }
+    },
+    "List" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
           }
         }
       }
@@ -44745,6 +44764,9 @@
           }
         }
       }
+    },
+    "Missing: %@" : {
+
     },
     "Monday" : {
       "localizations" : {
@@ -47591,6 +47613,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "数量单位未找到"
+          }
+        }
+      }
+    },
+    "No recipe defined. Please create one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Rezept definiert. Bitte erstelle eines."
           }
         }
       }
@@ -55645,6 +55677,9 @@
         }
       }
     },
+    "Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here." : {
+
+    },
     "Products, recipes and more" : {
       "localizations" : {
         "de" : {
@@ -59491,6 +59526,9 @@
         }
       }
     },
+    "Scan barcode" : {
+
+    },
     "Scheduled tracking time" : {
       "localizations" : {
         "cs" : {
@@ -61504,6 +61542,9 @@
           }
         }
       }
+    },
+    "Show" : {
+
     },
     "Show a warning when the due date of the purchased product is earlier than the next due date in stock" : {
       "localizations" : {
@@ -65705,7 +65746,7 @@
         }
       }
     },
-    "Stock, shopping list, recipes and everything that is due: chores, tasks and batteries. The complete lists are linked in the due tab." : {
+    "Stock, shopping list, recipes and everything that is due: products, chores, tasks and batteries. The complete lists are linked in the due tab." : {
 
     },
     "Store" : {
@@ -74661,6 +74702,9 @@
         }
       }
     },
+    "Torch" : {
+
+    },
     "Total price" : {
       "localizations" : {
         "ca" : {
@@ -81215,6 +81259,9 @@
           }
         }
       }
+    },
+    "What the due tab shows." : {
+
     },
     "When a product is selected, one unit (per serving in stock quantity unit) will be added to stock on consuming this recipe" : {
       "localizations" : {
