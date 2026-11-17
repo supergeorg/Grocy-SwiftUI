@@ -288,6 +288,9 @@ struct RecipesView: View {
                     ContentUnavailableView.search
                 }
             }
+        .refreshable(action: {
+            await updateData()
+        })
         // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
         .safeAreaBar(edge: .top) {
             RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
@@ -349,9 +352,6 @@ struct RecipesView: View {
                 RecipeImportView()
             }
         #endif
-        .refreshable(action: {
-            await updateData()
-        })
         .task {
             await updateData()
             initialLoadDone = true

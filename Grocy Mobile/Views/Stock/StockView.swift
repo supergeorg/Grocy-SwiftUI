@@ -480,15 +480,15 @@ struct StockView: View {
             }
             stockListContent
         }
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             filterCapsules
                 .padding(.vertical, Spacing.small)
         }
         .navigationTitle("Stock overview")
         .searchable(text: $searchString, prompt: "Search")
-        .refreshable {
-            await updateData()
-        }
         .animation(.default, value: filteredStatus)
         .task {
             await updateData()

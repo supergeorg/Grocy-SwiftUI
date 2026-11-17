@@ -11,6 +11,9 @@ import SwiftUI
 ///
 /// Uses a `GlassEffectContainer` so the capsules render as one consistent glass group on all platforms.
 /// Style the capsules themselves with `filterCapsuleStyle(tint:)`.
+///
+/// Apply the overview's `.refreshable` before the `.safeAreaBar` holding this bar. Applied after it, the refresh
+/// action reaches this scroll view through the environment as well, and the capsules get pull-to-refresh.
 struct FilterCapsuleBar<Content: View>: View {
     @ViewBuilder var content: Content
 

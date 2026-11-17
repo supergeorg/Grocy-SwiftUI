@@ -312,6 +312,9 @@ struct ChoresView: View {
                 }
             }
         }
+        .refreshable {
+            await updateData()
+        }
         .safeAreaBar(edge: .top) {
             filterCapsules
                 .padding(.vertical, Spacing.small)
@@ -322,9 +325,6 @@ struct ChoresView: View {
         }
         .onChange(of: deepLinkManager?.pendingChoreFilter) { _, _ in
             applyPendingFilter()
-        }
-        .refreshable {
-            await updateData()
         }
         .searchable(
             text: $searchString,
