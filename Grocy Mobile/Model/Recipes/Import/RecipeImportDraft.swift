@@ -30,6 +30,11 @@ struct RecipeImportDraft {
     var ingredientsWithoutProduct: [ImportedIngredient] {
         ingredients.filter { $0.isIncluded && $0.productID == nil }
     }
+
+    /// Included ingredients whose product or unit was only suggested, so the person should check them.
+    var ingredientsToCheck: [ImportedIngredient] {
+        ingredients.filter { $0.isIncluded && !$0.isSaved && $0.productID != nil && ($0.productMatch == .suggested || $0.unitMatch == .suggested || $0.hasUnmatchedUnit) }
+    }
 }
 
 /// One ingredient of an imported recipe, with the amount in the unit the website uses.
@@ -48,12 +53,25 @@ struct ImportedIngredient: Identifiable, Hashable {
     var onlyCheckSingleUnitInStock: Bool
     /// `true` once the ingredient was saved to the server.
     var isSaved: Bool = false
+    /// How the product was found.
+    var productMatch: IngredientMatchQuality = .none
+    /// How the unit was found. `.none` when the line has a unit that no Grocy quantity unit matches.
+    var unitMatch: IngredientMatchQuality = .none
+    /// The name and plural name to suggest when the person creates a quantity unit for the line's unit.
+    var newUnitName: String = ""
+    var newUnitNamePlural: String = ""
+
+    /// `true` when the website names a unit ("1 Bund") that no Grocy quantity unit matches.
+    var hasUnmatchedUnit: Bool {
+        line.unit != nil && unitMatch == .none
+    }
 
     static func == (lhs: ImportedIngredient, rhs: ImportedIngredient) -> Bool {
         lhs.id == rhs.id && lhs.isIncluded == rhs.isIncluded && lhs.productID == rhs.productID && lhs.amount == rhs.amount
             && lhs.quID == rhs.quID && lhs.note == rhs.note && lhs.ingredientGroup == rhs.ingredientGroup
             && lhs.variableAmount == rhs.variableAmount && lhs.onlyCheckSingleUnitInStock == rhs.onlyCheckSingleUnitInStock
-            && lhs.isSaved == rhs.isSaved
+            && lhs.isSaved == rhs.isSaved && lhs.productMatch == rhs.productMatch && lhs.unitMatch == rhs.unitMatch
+            && lhs.newUnitName == rhs.newUnitName && lhs.newUnitNamePlural == rhs.newUnitNamePlural
     }
 
     func hash(into hasher: inout Hasher) {
@@ -71,6 +89,8 @@ struct RecipeImportMapper {
 
     /// Creates a draft from a parsed website recipe, with products and units matched as well as possible.
     func draft(from recipe: JSONParsedRecipe) -> RecipeImportDraft {
+        let lines = recipe.recipeIngredient.map { IngredientLineParser.parse($0) }
+        let unitLanguage = IngredientUnitLanguage.detect(in: lines) ?? .appLanguage
         let steps = RecipePreparationFormat.steps(from: recipe.recipeInstructions)
         let html = RecipePreparationFormat.html(introduction: recipe.schemaDescription, steps: steps, sourceURL: recipe.url)
 
@@ -82,21 +102,26 @@ struct RecipeImportMapper {
             imageURL: recipe.image,
             importPicture: recipe.image != nil,
             sourceURL: recipe.url,
-            ingredients: recipe.recipeIngredient.map { ingredient(from: IngredientLineParser.parse($0)) }
+            ingredients: lines.map { ingredient(from: $0, unitLanguage: unitLanguage) }
         )
     }
 
     /// Creates an ingredient from a parsed line, with the matching product and quantity unit.
-    func ingredient(from line: ParsedIngredientLine) -> ImportedIngredient {
+    func ingredient(from line: ParsedIngredientLine, unitLanguage: IngredientUnitLanguage = .appLanguage) -> ImportedIngredient {
+        let productMatch = productCandidates(for: line.name, note: line.note).first
+        let newUnitNames = line.newQuantityUnitNames(language: unitLanguage)
         var ingredient = ImportedIngredient(
             line: line,
-            productID: matchProduct(for: line.name)?.id,
+            productID: productMatch?.product.id,
             amount: line.amount ?? 1.0,
             quID: nil,
             note: line.note,
             ingredientGroup: "",
             variableAmount: "",
-            onlyCheckSingleUnitInStock: false
+            onlyCheckSingleUnitInStock: false,
+            productMatch: productMatch?.quality ?? .none,
+            newUnitName: newUnitNames?.singular ?? "",
+            newUnitNamePlural: newUnitNames?.plural ?? ""
         )
         resetUnit(of: &ingredient)
         return ingredient
@@ -107,14 +132,47 @@ struct RecipeImportMapper {
         resetUnit(of: &ingredient)
     }
 
+    /// Applies Grocy's unit rules again after the person chose another unit.
+    func unitChanged(_ ingredient: inout ImportedIngredient) {
+        ingredient.onlyCheckSingleUnitInStock = false
+        ingredient.variableAmount = rangeText(of: ingredient.line)
+        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: nil)
+    }
+
+    /// Fills in products and units that were missing, e.g. after the person created a product or quantity unit.
+    /// Choices of the person and existing matches stay as they are.
+    func fillMissingMatches(in draft: inout RecipeImportDraft) {
+        for index in draft.ingredients.indices where !draft.ingredients[index].isSaved {
+            var ingredient = draft.ingredients[index]
+            var changed = false
+            if ingredient.productID == nil, ingredient.productMatch == .none, let match = productCandidates(for: ingredient.line.name, note: ingredient.line.note).first {
+                ingredient.productID = match.product.id
+                ingredient.productMatch = match.quality
+                changed = true
+            }
+            if ingredient.hasUnmatchedUnit, let unit = ingredient.line.unit, quantityUnitMatch(for: unit, knownUnit: ingredient.line.knownUnit) != nil {
+                changed = true
+            }
+            if changed {
+                resetUnit(of: &ingredient)
+                draft.ingredients[index] = ingredient
+            }
+        }
+    }
+
     private func resetUnit(of ingredient: inout ImportedIngredient) {
         let line = ingredient.line
-        let unit = line.unit.flatMap { matchQuantityUnit(for: $0, knownUnit: line.knownUnit) }
-        ingredient.quID = unit?.id
+        let match = line.unit.flatMap { quantityUnitMatch(for: $0, knownUnit: line.knownUnit) }
+        ingredient.quID = match?.unit.id
+        ingredient.unitMatch = match?.quality ?? .none
         ingredient.onlyCheckSingleUnitInStock = false
-        // A range like "2-3" can't be stored as an amount, so it's shown as written
-        ingredient.variableAmount = line.amountText.map { [$0, line.unit].compactMap { $0 }.joined(separator: " ") } ?? ""
-        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: unit == nil ? line.unit : nil)
+        ingredient.variableAmount = rangeText(of: line)
+        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: match == nil ? line.unit : nil)
+    }
+
+    /// A range like "2-3" can't be stored as an amount, so it's shown as written.
+    private func rangeText(of line: ParsedIngredientLine) -> String {
+        line.amountText.map { [$0, line.unit].compactMap { $0 }.joined(separator: " ") } ?? ""
     }
 
     /// Makes the unit valid for Grocy:
@@ -142,33 +200,7 @@ struct RecipeImportMapper {
         }
     }
 
-    // MARK: Products
-
-    /// Finds the product for an ingredient name: an exact name match first,
-    /// then the longest product name that appears as a whole word in the ingredient ("Butter" in "kalte Butter").
-    func matchProduct(for ingredientName: String) -> MDProduct? {
-        let name = Self.normalizedName(ingredientName)
-        guard !name.isEmpty else { return nil }
-        let activeProducts = products.filter(\.active)
-        let normalizedProducts = activeProducts.map { (product: $0, name: Self.normalizedName($0.name)) }.filter { !$0.name.isEmpty }
-
-        if let exact = normalizedProducts.first(where: { $0.name == name || Self.singular($0.name) == Self.singular(name) }) {
-            return exact.product
-        }
-
-        let ingredientWords = Set(name.split(separator: " ").map { Self.singular(String($0)) })
-        let containedProducts = normalizedProducts.filter { candidate in
-            let productWords = candidate.name.split(separator: " ").map { Self.singular(String($0)) }
-            return !productWords.isEmpty && productWords.allSatisfy { ingredientWords.contains($0) }
-        }
-        if let best = containedProducts.max(by: { $0.name.count < $1.name.count }) {
-            return best.product
-        }
-
-        // Compound words ("Schlagsahne" contains "Sahne"), only for product names that aren't too short
-        let compounds = normalizedProducts.filter { $0.name.count >= 4 && !$0.name.contains(" ") && name.replacingOccurrences(of: " ", with: "").hasSuffix($0.name) }
-        return compounds.max(by: { $0.name.count < $1.name.count })?.product
-    }
+    // MARK: Names
 
     /// Lowercased, without diacritics, plural markers and punctuation, for comparing names.
     static func normalizedName(_ name: String) -> String {
@@ -181,36 +213,14 @@ struct RecipeImportMapper {
             .joined(separator: " ")
     }
 
-    /// A simple singular form for English and German words ("tomatoes" → "tomato", "Zwiebeln" → "zwiebel").
-    static func singular(_ word: String) -> String {
-        let irregular = ["eier": "ei", "leaves": "leaf", "knives": "knife", "loaves": "loaf"]
-        if let singular = irregular[word] { return singular }
-        guard word.count > 3 else { return word }
-        for suffix in ["oes", "ies", "es", "en", "n", "s", "e"] where word.hasSuffix(suffix) {
-            let stem = String(word.dropLast(suffix.count))
-            if stem.count >= 3 { return suffix == "ies" ? stem + "y" : stem }
-        }
-        return word
-    }
-
-    // MARK: Quantity units
-
-    /// Finds the Grocy quantity unit for a unit from a website, by its name or plural name,
-    /// or by any spelling of the same known unit (so "EL" finds a unit named "Esslöffel" or "Tablespoon").
-    func matchQuantityUnit(for unit: String, knownUnit: KnownIngredientUnit?) -> MDQuantityUnit? {
-        let token = unit.normalizedUnitToken
-        let activeUnits = quantityUnits.filter(\.active)
-        let spellings = Set([token] + (knownUnit?.aliases ?? []))
-
-        if let direct = activeUnits.first(where: { $0.name.normalizedUnitToken == token || $0.namePlural.normalizedUnitToken == token }) {
-            return direct
-        }
-        return activeUnits.first { quantityUnit in
-            spellings.contains(quantityUnit.name.normalizedUnitToken) || spellings.contains(quantityUnit.namePlural.normalizedUnitToken)
-        }
-    }
-
     // MARK: Conversion
+
+    /// Whether the ingredient's unit can't be converted to the product's stock unit yet,
+    /// so a product-specific conversion would let Grocy check the amount in stock.
+    func needsUnitConnection(_ ingredient: ImportedIngredient, product: MDProduct) -> Bool {
+        guard let quID = ingredient.quID, quID != product.quIDStock, !ingredient.hasUnmatchedUnit else { return false }
+        return stockAmount(for: 1, quID: quID, product: product) == nil
+    }
 
     /// Converts an amount in the unit `quID` to the product's stock unit, the way Grocy stores ingredient amounts.
     /// Returns `nil` when there's no conversion between the two units.

@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 /// Edits how an ingredient from a website is saved: its product, amount and unit.
+/// Suggests products with a similar name, and creates a missing product or quantity unit.
 struct RecipeImportIngredientFormView: View {
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.name, order: .forward) var mdQuantityUnits: MDQuantityUnits
@@ -19,6 +20,10 @@ struct RecipeImportIngredientFormView: View {
 
     @State private var showCreateProduct: Bool = false
     @State private var createdProductID: Int? = nil
+    @State private var showCreateQuantityUnit: Bool = false
+    @State private var createdQuantityUnitID: Int? = nil
+    @State private var showConnectUnit: Bool = false
+    @State private var didConnectUnit: Bool = false
 
     private var mapper: RecipeImportMapper {
         RecipeImportMapper(products: mdProducts, quantityUnits: mdQuantityUnits, conversions: mdQuantityUnitConversions)
@@ -36,10 +41,59 @@ struct RecipeImportIngredientFormView: View {
         mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
     }
 
+    /// Products with a similar name, best first.
+    private var productCandidates: [ProductMatchCandidate] {
+        mapper.productCandidates(for: ingredient.line.name, note: ingredient.line.note)
+    }
+
+    /// Similar products are only worth showing when there's something to choose or to confirm.
+    private var showsSuggestions: Bool {
+        let otherCandidates = productCandidates.contains { $0.product.id != ingredient.productID }
+        return otherCandidates || ingredient.productMatch == .suggested || showsCreateProduct
+    }
+
+    /// Creating a product is offered unless one with the ingredient's name exists.
+    private var showsCreateProduct: Bool {
+        !productCandidates.contains { $0.quality == .exact }
+    }
+
+    /// Choosing a product or unit by hand marks it as the person's choice, so it isn't shown as a suggestion anymore.
+    private var productSelection: Binding<Int?> {
+        Binding(
+            get: { ingredient.productID },
+            set: { newValue in
+                ingredient.productID = newValue
+                ingredient.productMatch = .manual
+            }
+        )
+    }
+
+    private var unitSelection: Binding<Int?> {
+        Binding(
+            get: { ingredient.quID },
+            set: { newValue in
+                ingredient.quID = newValue
+                ingredient.unitMatch = .manual
+                mapper.unitChanged(&ingredient)
+            }
+        )
+    }
+
+    /// The unit as written on the website, e.g. "Bund".
+    private var websiteUnit: String? {
+        ingredient.line.unit
+    }
+
     /// The amount in the product's stock unit, or `nil` when the units can't be converted.
     private var stockAmount: Double? {
         guard let product, let quID = ingredient.quID else { return nil }
         return mapper.stockAmount(for: ingredient.amount, quID: quID, product: product)
+    }
+
+    /// The selected unit exists, but there's no conversion to the product's stock unit, so it can be connected to the product.
+    private var unitToConnect: MDQuantityUnit? {
+        guard let product, let quantityUnit, !ingredient.hasUnmatchedUnit, stockAmount == nil else { return nil }
+        return mapper.needsUnitConnection(ingredient, product: product) ? quantityUnit : nil
     }
 
     var body: some View {
@@ -59,25 +113,24 @@ struct RecipeImportIngredientFormView: View {
 
             if ingredient.isIncluded {
                 Section {
-                    ProductField(productID: $ingredient.productID, description: "Product")
+                    ProductField(productID: productSelection, description: "Product")
                         .onChange(of: ingredient.productID) {
                             mapper.productChanged(&ingredient)
                         }
-
-                    if ingredient.productID == nil {
-                        Button(
-                            action: {
-                                showCreateProduct = true
-                            },
-                            label: {
-                                Label("Create product", systemImage: MySymbols.new)
-                            }
-                        )
-                    }
                 } footer: {
                     if ingredient.productID == nil {
                         Text("Grocy needs a product for every ingredient. Ingredients without a product aren't imported.")
+                    } else if ingredient.productMatch == .suggested {
+                        Label {
+                            Text("Suggested because the names are similar. Check that it's the right product.")
+                        } icon: {
+                            Image(systemName: MySymbols.suggestedMatch)
+                        }
                     }
+                }
+
+                if showsSuggestions {
+                    suggestionsSection
                 }
 
                 if product != nil {
@@ -117,9 +170,91 @@ struct RecipeImportIngredientFormView: View {
                 MDProductFormView(userSettings: userSettingsList.first, productName: ingredient.line.name, createdProductID: $createdProductID)
             }
         }
+        .sheet(
+            isPresented: $showCreateQuantityUnit,
+            onDismiss: {
+                // A new unit has no conversions yet, so connecting it to the product is the next step.
+                if createdQuantityUnitID != nil, unitToConnect != nil {
+                    showConnectUnit = true
+                }
+            },
+            content: {
+                NavigationStack {
+                    MDQuantityUnitFormView(name: ingredient.newUnitName, namePlural: ingredient.newUnitNamePlural, createdQuantityUnitID: $createdQuantityUnitID)
+                }
+            }
+        )
+        .sheet(isPresented: $showConnectUnit) {
+            if let product, let quantityUnit {
+                NavigationStack {
+                    RecipeImportUnitConversionFormView(product: product, quantityUnit: quantityUnit, didSave: $didConnectUnit)
+                }
+            }
+        }
         .onChange(of: createdProductID) {
             if let createdProductID {
                 ingredient.productID = createdProductID
+                ingredient.productMatch = .manual
+            }
+        }
+        .onChange(of: createdQuantityUnitID) {
+            if let createdQuantityUnitID {
+                ingredient.quID = createdQuantityUnitID
+                ingredient.unitMatch = .exact
+                mapper.unitChanged(&ingredient)
+            }
+        }
+        .onChange(of: didConnectUnit) {
+            if didConnectUnit {
+                mapper.unitChanged(&ingredient)
+                didConnectUnit = false
+            }
+        }
+    }
+
+    /// Products with a similar name to pick with one tap, and creating a new product.
+    private var suggestionsSection: some View {
+        Section {
+            ForEach(productCandidates, id: \.product.id) { candidate in
+                Button(
+                    action: {
+                        productSelection.wrappedValue = candidate.product.id
+                    },
+                    label: {
+                        HStack {
+                            Label(candidate.product.name, systemImage: MySymbols.product)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            if candidate.product.id == ingredient.productID {
+                                Image(systemName: MySymbols.success)
+                                    .foregroundStyle(.tint)
+                                    .accessibilityLabel("Selected")
+                            }
+                        }
+                        .contentShape(.rect)
+                    }
+                )
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(candidate.product.id == ingredient.productID ? .isSelected : [])
+            }
+
+            if showsCreateProduct {
+                Button(
+                    action: {
+                        showCreateProduct = true
+                    },
+                    label: {
+                        Label("Create product “\(ingredient.line.name)”", systemImage: MySymbols.new)
+                    }
+                )
+            }
+        } header: {
+            if !productCandidates.isEmpty {
+                Text("Similar products")
+            }
+        } footer: {
+            if ingredient.productMatch == .suggested, productCandidates.contains(where: { $0.product.id == ingredient.productID }) {
+                Text("Select the product to confirm it.")
             }
         }
     }
@@ -136,7 +271,7 @@ struct RecipeImportIngredientFormView: View {
             )
 
             Picker(
-                selection: $ingredient.quID,
+                selection: unitSelection,
                 content: {
                     Text("")
                         .tag(Int?.none)
@@ -150,10 +285,44 @@ struct RecipeImportIngredientFormView: View {
                         .foregroundStyle(.primary)
                 }
             )
+
+            if let websiteUnit, ingredient.hasUnmatchedUnit {
+                Button(
+                    action: {
+                        createdQuantityUnitID = nil
+                        showCreateQuantityUnit = true
+                    },
+                    label: {
+                        Label("Create quantity unit “\(ingredient.newUnitName.isEmpty ? websiteUnit : ingredient.newUnitName)”", systemImage: MySymbols.new)
+                    }
+                )
+            } else if let unitToConnect, let product {
+                Button(
+                    action: {
+                        showConnectUnit = true
+                    },
+                    label: {
+                        Label("Connect “\(unitToConnect.name)” to “\(product.name)”", systemImage: MySymbols.connectUnit)
+                    }
+                )
+            }
         } header: {
             Text("Amount")
         } footer: {
-            if ingredient.quID == nil {
+            if let websiteUnit, ingredient.hasUnmatchedUnit {
+                Label {
+                    Text("No quantity unit matches “\(websiteUnit)” from the website. Create it, or choose another unit.")
+                } icon: {
+                    Image(systemName: MySymbols.warning)
+                        .foregroundStyle(Color(.GrocyColors.grocyYellow))
+                }
+            } else if let websiteUnit, ingredient.unitMatch == .suggested, let quantityUnit {
+                Label {
+                    Text("“\(websiteUnit)” from the website was matched to the similar unit “\(quantityUnit.name)”.")
+                } icon: {
+                    Image(systemName: MySymbols.suggestedMatch)
+                }
+            } else if ingredient.quID == nil {
                 Text("A quantity unit is required")
                     .foregroundStyle(Color(.GrocyColors.grocyRed))
             } else if let stockAmount {
@@ -162,12 +331,15 @@ struct RecipeImportIngredientFormView: View {
                 }
             } else {
                 Text("There's no unit conversion to the product's stock unit \"\(stockQuantityUnit?.name ?? "?")\". Only whether any amount is in stock can be checked.")
+                if unitToConnect != nil {
+                    Text("Connect the unit to the product to check the amount in stock.")
+                }
             }
         }
     }
 }
 
-#Preview(traits: .previewData) {
+#Preview("Matched", traits: .previewData) {
     @Previewable @State var ingredient = ImportedIngredient(
         line: IngredientLineParser.parse("200 g Butter, weich"),
         productID: 1,
@@ -176,7 +348,29 @@ struct RecipeImportIngredientFormView: View {
         note: "weich",
         ingredientGroup: "",
         variableAmount: "",
-        onlyCheckSingleUnitInStock: false
+        onlyCheckSingleUnitInStock: false,
+        productMatch: .exact,
+        unitMatch: .exact
+    )
+    NavigationStack {
+        RecipeImportIngredientFormView(ingredient: $ingredient)
+    }
+}
+
+#Preview("Unknown unit", traits: .previewData) {
+    @Previewable @State var ingredient = ImportedIngredient(
+        line: IngredientLineParser.parse("1 Bund Petersilie"),
+        productID: 1,
+        amount: 1,
+        quID: 1,
+        note: "",
+        ingredientGroup: "",
+        variableAmount: "1 Bund",
+        onlyCheckSingleUnitInStock: true,
+        productMatch: .suggested,
+        unitMatch: .none,
+        newUnitName: "Bund",
+        newUnitNamePlural: "Bund"
     )
     NavigationStack {
         RecipeImportIngredientFormView(ingredient: $ingredient)

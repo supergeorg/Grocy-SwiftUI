@@ -22,6 +22,8 @@ struct MDQuantityUnitFormView: View {
 
     var existingQuantityUnit: MDQuantityUnit?
     @State private var quantityUnit: MDQuantityUnit
+    /// Set to the new unit's ID after it was created, e.g. to select it in the form that opened this one.
+    @Binding var createdQuantityUnitID: Int?
 
     @State private var showAddQuantityUnitConversion: Bool = false
 
@@ -34,9 +36,10 @@ struct MDQuantityUnitFormView: View {
         return !(quantityUnit.name.isEmpty || (foundQuantityUnit != nil && foundQuantityUnit!.id != quantityUnit.id))
     }
 
-    init(existingQuantityUnit: MDQuantityUnit? = nil) {
+    init(existingQuantityUnit: MDQuantityUnit? = nil, name: String = "", namePlural: String = "", createdQuantityUnitID: Binding<Int?> = .constant(nil)) {
         self.existingQuantityUnit = existingQuantityUnit
-        self.quantityUnit = existingQuantityUnit ?? MDQuantityUnit()
+        self.quantityUnit = existingQuantityUnit ?? MDQuantityUnit(name: name, namePlural: namePlural)
+        _createdQuantityUnitID = createdQuantityUnitID
     }
 
     private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions]
@@ -84,7 +87,9 @@ struct MDQuantityUnitFormView: View {
         do {
             try quantityUnit.modelContext?.save()
             if existingQuantityUnit == nil {
-                _ = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnit)
+                let creation = try await grocyVM.postMDObject(object: .quantity_units, content: quantityUnit)
+                await updateData()
+                createdQuantityUnitID = creation.createdObjectID
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_units, id: quantityUnit.id, content: quantityUnit)
             }

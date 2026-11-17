@@ -4,6 +4,26 @@
     "" : {
       "shouldTranslate" : false
     },
+    "%lld ingredients have a suggested product or unit. Check them before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei %lld Zutaten wurde ein Produkt oder eine Einheit vorgeschlagen. Prüfe sie vor dem Speichern."
+          }
+        }
+      }
+    },
+    "1 %@ %@ is the same as" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 %1$@ %2$@ entspricht"
+          }
+        }
+      }
+    },
     ":" : {
       "shouldTranslate" : false
     },
@@ -6690,6 +6710,210 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Connect the unit to the product to check the amount in stock." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde die Einheit mit dem Produkt, um die Menge im Bestand zu prüfen."
+          }
+        }
+      }
+    },
+    "Connect unit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit verbinden"
+          }
+        }
+      }
+    },
+    "Connect “%@” to “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%1$@“ mit „%2$@“ verbinden"
+          }
+        }
+      }
+    },
+    "Create product “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt „%@“ erstellen"
+          }
+        }
+      }
+    },
+    "Create quantity unit “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengeneinheit „%@“ erstellen"
+          }
+        }
+      }
+    },
+    "Don't import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht importieren"
+          }
+        }
+      }
+    },
+    "Import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren"
+          }
+        }
+      }
+    },
+    "No quantity unit matches “%@” from the website. Create it, or choose another unit." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Mengeneinheit passt zu „%@“ von der Website. Erstelle sie oder wähle eine andere Einheit."
+          }
+        }
+      }
+    },
+    "Quick Scan mode" : {
+
+    },
+    "Resume" : {
+
+    },
+    "Saved" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespeichert"
+          }
+        }
+      }
+    },
+    "Select the product to confirm it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle das Produkt aus, um es zu bestätigen."
+          }
+        }
+      }
+    },
+    "Selected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählt"
+          }
+        }
+      }
+    },
+    "Similar products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ähnliche Produkte"
+          }
+        }
+      }
+    },
+    "Suggested because the names are similar. Check that it's the right product." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorgeschlagen, weil die Namen ähnlich sind. Prüfe, ob es das richtige Produkt ist."
+          }
+        }
+      }
+    },
+    "Suggested: %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschlag: %1$@ %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Suggested: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "This conversion only applies to the product \"%@\". Then the amount of the ingredient can be checked against the stock." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Umrechnung gilt nur für das Produkt „%@“. Dann kann die Menge der Zutat mit dem Bestand abgeglichen werden."
+          }
+        }
+      }
+    },
+    "Unit “%@” not found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit „%@“ nicht gefunden"
+          }
+        }
+      }
+    },
+    "Unit “%@” suggested as “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit „%1$@“ als „%2$@“ vorgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unit “%1$@” suggested as “%2$@”"
+          }
+        }
+      }
+    },
+    "“%@” from the website was matched to the similar unit “%@”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%1$@“ von der Website wurde der ähnlichen Einheit „%2$@“ zugeordnet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "“%1$@” from the website was matched to the similar unit “%2$@”."
           }
         }
       }
@@ -49715,7 +49939,14 @@
       }
     },
     "Not imported" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht importiert"
+          }
+        }
+      }
     },
     "Not opened" : {
       "localizations" : {

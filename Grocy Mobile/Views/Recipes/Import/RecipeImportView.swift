@@ -267,6 +267,13 @@ struct RecipeImportView: View {
         .task {
             await updateData()
         }
+        // A product or unit created for one ingredient may fit others too ("Bund" for parsley and chives)
+        .onChange(of: mdProducts.map(\.id)) {
+            fillMissingMatches()
+        }
+        .onChange(of: mdQuantityUnits.map(\.id)) {
+            fillMissingMatches()
+        }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button(role: .cancel, action: finishForm)
@@ -298,6 +305,12 @@ struct RecipeImportView: View {
         }
         .sensoryFeedback(.success, trigger: isSuccessful == true)
         .sensoryFeedback(.error, trigger: isSuccessful == false)
+    }
+
+    private func fillMissingMatches() {
+        guard var updatedDraft = draft else { return }
+        mapper.fillMissingMatches(in: &updatedDraft)
+        draft = updatedDraft
     }
 
     // MARK: - Sections
@@ -381,7 +394,7 @@ struct RecipeImportView: View {
                         image
                             .resizable()
                             .scaledToFit()
-                            .clipShape(.rect(cornerRadius: 8.0))
+                            .clipShape(.rect(cornerRadius: Sizes.recipeThumbnailCornerRadius))
                     case .failure:
                         Image(systemName: MySymbols.picturePlaceholder)
                             .font(.largeTitle)
@@ -390,7 +403,7 @@ struct RecipeImportView: View {
                         ProgressView()
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: 240.0)
+                .frame(maxWidth: .infinity, maxHeight: Sizes.recipeHeaderPictureMaxHeight)
                 .accessibilityHidden(true)
 
                 MyToggle(isOn: draft.importPicture, description: "Import picture", icon: MySymbols.picture)
@@ -407,14 +420,30 @@ struct RecipeImportView: View {
                         quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID })
                     )
                 }
-                .disabled(draft.wrappedValue.savedIngredientIDs.contains(ingredient.id))
+                .disabled(ingredient.isSaved)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    if !ingredient.isSaved {
+                        includeButton(for: ingredient, in: draft)
+                    }
+                }
+                .contextMenu {
+                    if !ingredient.isSaved {
+                        includeButton(for: ingredient, in: draft)
+                    }
+                }
             }
         } header: {
             Text("Ingredients list")
         } footer: {
             let missingCount = draft.wrappedValue.ingredientsWithoutProduct.count
-            if missingCount > 0 {
-                Text("\(missingCount) ingredients have no product and won't be imported. Select an ingredient to choose or create its product.")
+            let checkCount = draft.wrappedValue.ingredientsToCheck.count
+            VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                if missingCount > 0 {
+                    Text("\(missingCount) ingredients have no product and won't be imported. Select an ingredient to choose or create its product.")
+                }
+                if checkCount > 0 {
+                    Text("\(checkCount) ingredients have a suggested product or unit. Check them before saving.")
+                }
             }
         }
 
@@ -432,6 +461,27 @@ struct RecipeImportView: View {
     }
 }
 
+extension RecipeImportView {
+    /// Swipe and context menu action that includes or excludes an ingredient.
+    fileprivate func includeButton(for ingredient: ImportedIngredient, in draft: Binding<RecipeImportDraft>) -> some View {
+        Button(
+            action: {
+                if let index = draft.wrappedValue.ingredients.firstIndex(where: { $0.id == ingredient.id }) {
+                    draft.wrappedValue.ingredients[index].isIncluded.toggle()
+                }
+            },
+            label: {
+                if ingredient.isIncluded {
+                    Label("Don't import", systemImage: MySymbols.notImported)
+                } else {
+                    Label("Import", systemImage: MySymbols.importRecipe)
+                }
+            }
+        )
+        .tint(ingredient.isIncluded ? .gray : Color(.GrocyColors.grocyGreen))
+    }
+}
+
 // MARK: - Step row
 
 private struct RecipeImportStepRowView: View {
@@ -440,16 +490,16 @@ private struct RecipeImportStepRowView: View {
     var showsSection: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4.0) {
+        VStack(alignment: .leading, spacing: Spacing.xxSmall) {
             if showsSection, let section = step.section {
                 Text(section)
                     .font(.headline)
             }
-            HStack(alignment: .firstTextBaseline, spacing: 8.0) {
+            HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
                 Text(number, format: .number)
                     .font(.body.monospacedDigit().bold())
                     .foregroundStyle(.secondary)
-                VStack(alignment: .leading, spacing: 2.0) {
+                VStack(alignment: .leading, spacing: Spacing.hairline) {
                     if let title = step.title {
                         Text(title)
                             .font(.subheadline.bold())

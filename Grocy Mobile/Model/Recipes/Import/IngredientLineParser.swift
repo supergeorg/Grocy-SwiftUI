@@ -170,7 +170,7 @@ nonisolated enum IngredientLineParser {
 
         // Name and note: "Zwiebel(n), fein gewürfelt (ca. 100 g)"
         var name = String(rest)
-        if let commaIndex = name.firstIndex(of: ",") {
+        if let commaIndex = firstIndexOutsideParentheses(of: ",", in: name) {
             notes.append(String(name[name.index(after: commaIndex)...]))
             name = String(name[..<commaIndex])
         }
@@ -183,6 +183,20 @@ nonisolated enum IngredientLineParser {
             line.name = line.unit ?? text
         }
         return line
+    }
+
+    /// The first `character` that isn't inside parentheses, so "Speck (durchwachsener, klein geschnittener)" keeps its note together.
+    private static func firstIndexOutsideParentheses(of character: Character, in text: String) -> String.Index? {
+        var depth = 0
+        for index in text.indices {
+            switch text[index] {
+            case "(": depth += 1
+            case ")": depth = max(0, depth - 1)
+            case character where depth == 0: return index
+            default: break
+            }
+        }
+        return nil
     }
 
     /// Words that stand for an amount without a number, longest first.
