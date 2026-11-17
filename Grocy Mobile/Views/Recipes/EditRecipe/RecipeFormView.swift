@@ -390,12 +390,11 @@ struct RecipeFormView: View {
                             }
                         },
                         label: {
-                            if !isProcessing {
-                                Label("Save & return to recipes", systemImage: MySymbols.save)
-                                    .labelStyle(.titleAndIcon)
-                            } else {
-                                ProgressView().progressViewStyle(.circular)
-                            }
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Save & return to recipes", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessing)
+                            .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormCorrect || isProcessing)
@@ -411,12 +410,11 @@ struct RecipeFormView: View {
                                 }
                             },
                             label: {
-                                if !isProcessing {
-                                    Label("Save & continue", systemImage: MySymbols.forward)
-                                        .labelStyle(.titleAndIcon)
-                                } else {
-                                    ProgressView().progressViewStyle(.circular)
-                                }
+                                // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                                // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                                Label("Save & continue", systemImage: isProcessing ? MySymbols.progress : MySymbols.forward)
+                                    .symbolEffect(.variableColor.iterative, isActive: isProcessing)
+                                .labelStyle(.titleAndIcon)
                             }
                         )
                         .disabled(!isFormCorrect || isProcessing)

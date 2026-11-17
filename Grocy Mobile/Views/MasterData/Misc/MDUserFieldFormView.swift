@@ -124,7 +124,7 @@ struct MDUserFieldFormView: View {
 #if os(iOS)
                 ToolbarItem(placement: .cancellationAction) {
                     if isNewUserField {
-                        Button("Cancel") {
+                        Button(role: .cancel) {
                             finishForm()
                         }
                     }

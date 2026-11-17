@@ -169,11 +169,10 @@ struct ChoreTrackingView: View {
                         }
                     },
                     label: {
-                        if !isProcessingAction {
-                            Label("Track next chore schedule", systemImage: MySymbols.choreTrackNext)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Track next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreTrackNext)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)
@@ -187,11 +186,10 @@ struct ChoreTrackingView: View {
                         }
                     },
                     label: {
-                        if !isProcessingAction {
-                            Label("Skip next chore schedule", systemImage: MySymbols.choreSkipNext)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Skip next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreSkipNext)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                     }
                 )
                 .accentColor(.gray)

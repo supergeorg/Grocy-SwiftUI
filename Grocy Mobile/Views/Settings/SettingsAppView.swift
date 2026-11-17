@@ -96,7 +96,7 @@ struct SettingsAppView: View {
                     }
                 )
 
-                if horizontalSizeClass == .compact {
+                if PhoneNavigationStyle.applies(in: horizontalSizeClass) {
                     Picker(selection: $phoneNavigationStyle) {
                         ForEach(PhoneNavigationStyle.allCases) { style in
                             Label(style.title, systemImage: style.icon)
@@ -119,7 +119,7 @@ struct SettingsAppView: View {
             #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
             #if os(iOS)
-                if horizontalSizeClass == .compact {
+                if PhoneNavigationStyle.applies(in: horizontalSizeClass) {
                     Section {
                         DueKindToggles()
                     } header: {

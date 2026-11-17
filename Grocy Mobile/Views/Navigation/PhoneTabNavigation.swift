@@ -92,6 +92,9 @@ import SwiftUI
             // Rebuilt when the chosen tabs change: otherwise the tab bar keeps an item's old symbol by position
             // (e.g. the Chores tab showed the Tasks symbol). Selection and paths are kept outside the TabView.
             .id(PhonePlace.encode(places))
+            // A tab bar in compact width; in regular width (the inner display of iPhone Duo) it can also
+            // become a sidebar, with the same places, so the hierarchy doesn't change when the device opens.
+            .tabViewStyle(.sidebarAdaptable)
             .tabBarMinimizeBehavior(.onScrollDown)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)

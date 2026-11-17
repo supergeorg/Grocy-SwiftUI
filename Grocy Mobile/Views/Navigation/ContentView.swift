@@ -18,10 +18,12 @@ struct ContentView: View {
 
     var body: some View {
         #if os(iOS)
-            if horizontalSizeClass == .compact && phoneNavigationStyle != .sidebar {
+            // One branch per navigation, so a size class change that keeps the navigation
+            // (opening or closing iPhone Duo, resizing on iPad) keeps its state too.
+            if PhoneNavigationStyle.applies(in: horizontalSizeClass) && phoneNavigationStyle != .sidebar {
                 // At most five tabs, so iPhone never needs the system "More" list.
                 PhoneTabNavigation(places: phoneNavigationStyle == .smart ? PhonePlace.smartTabs : PhonePlace.decode(phoneTabs))
-            } else if horizontalSizeClass != .compact && iPadTabNavigation {
+            } else if !PhoneNavigationStyle.applies(in: horizontalSizeClass) && iPadTabNavigation {
                 AppTabNavigation()
             } else {
                 AppSidebarNavigation()

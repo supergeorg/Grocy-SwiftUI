@@ -281,11 +281,10 @@ struct RecipeImportView: View {
                         }
                     },
                     label: {
-                        if !isProcessing {
-                            Label("Save", systemImage: MySymbols.save)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Save", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessing)
                     }
                 )
                 .disabled(draft == nil || !(isNameCorrect || createdRecipeID != nil) || (draft?.baseServings ?? 0) <= 0 || isProcessing || isLoading)
