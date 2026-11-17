@@ -104,18 +104,7 @@ import SwiftUI
                     Label("Quick Scan", systemImage: MySymbols.barcodeScan)
                 }
             }
-            .fullScreenCover(isPresented: $showQuickScan) {
-                NavigationStack {
-                    QuickScanModeView()
-                        .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button(role: .close) {
-                                    showQuickScan = false
-                                }
-                            }
-                        }
-                }
-            }
+            .quickScanSheet(isPresented: $showQuickScan)
             .task {
                 await grocyVM.requestData(additionalObjects: [.system_config])
             }

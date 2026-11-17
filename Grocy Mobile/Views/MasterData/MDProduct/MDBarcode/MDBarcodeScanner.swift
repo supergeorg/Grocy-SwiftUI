@@ -12,23 +12,8 @@ struct MDBarcodeScanner: View {
     
     @Binding var barcode: String
     
-    @State private var isTorchOn = false
-    @State private var isFrontCamera = false
     @State private var isShowingScanner = false
-    
-#if os(iOS)
-    func handleScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
-        self.isShowingScanner = false
-        switch result {
-        case .success(let code):
-            barcode = code.string
-        case .failure(let error):
-            //            GrocyLogger.error("Scanning barcode failed. \(error)")
-            print("Scanning barcode failed. \(error)")
-        }
-    }
-#endif
-    
+
     var body: some View {
 #if os(iOS)
         Button(action: {
@@ -37,35 +22,9 @@ struct MDBarcodeScanner: View {
             Image(systemName: MySymbols.barcodeScan)
         })
         .sheet(isPresented: $isShowingScanner) {
-            CodeScannerViewLegacy(
-                codeTypes: getSavedCodeTypesLegacy().map{$0.type},
-                scanMode: .once,
-                simulatedData: "5901234123457",
-                isTorchOn: $isTorchOn,
-                isFrontCamera: $isFrontCamera,
-                completion: self.handleScan
-            )
-            .overlay(
-                HStack{
-                    Button(action: {
-                        isTorchOn.toggle()
-                    }, label: {
-                        Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
-                            .font(.title)
-                    })
-                    .disabled(!checkForTorch() || isFrontCamera)
-                    .padding()
-                    if getFrontCameraAvailable() {
-                        Button(action: {
-                            isFrontCamera.toggle()
-                        }, label: {
-                            Image(systemName: MySymbols.changeCamera)
-                                .font(.title)
-                        })
-                        .disabled(isTorchOn)
-                        .padding()
-                    }
-                }, alignment: .topTrailing)
+            CodeScannerSheetView { result in
+                barcode = result.value
+            }
         }
 #else
         Text("Not available on this platform.")

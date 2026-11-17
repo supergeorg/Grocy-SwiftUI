@@ -31,12 +31,8 @@ struct QuickScanModeView: View {
     @Query var mdChores: MDChores
 
     @AppStorage("quickScanActionAfterAdd") private var quickScanActionAfterAdd: Bool = false
-    #if os(iOS)
-        @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
-    #endif
 
     @State private var isTorchOn: Bool = false
-    @AppStorage("isFrontCamera") private var isFrontCamera: Bool = false
     @State private var quickScanMode: QuickScanMode = .consume
 
     @State private var qsActiveSheet: QSActiveSheet?
@@ -99,38 +95,6 @@ struct QuickScanModeView: View {
         }
     }
     #if os(iOS)
-        func searchForBarcodeLegacy(barcode: CodeScannerViewLegacy.ScanResult) -> MDProductBarcode? {
-            if barcode.type == .ean13 {
-                return mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.string) })
-            } else {
-                return mdProductBarcodes.first(where: { $0.barcode == barcode.string })
-            }
-        }
-
-        func handleScanLegacy(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
-            switch result {
-            case .success(let barcode):
-                if let grocyCode = searchForGrocyCode(barcodeString: barcode.string) {
-                    recognizedBarcode = nil
-                    recognizedGrocyCode = grocyCode
-                    notRecognizedBarcode = nil
-                    qsActiveSheet = .grocyCode
-                } else if let foundBarcode = searchForBarcodeLegacy(barcode: barcode) {
-                    recognizedBarcode = foundBarcode
-                    recognizedGrocyCode = nil
-                    notRecognizedBarcode = nil
-                    qsActiveSheet = .barcode
-                } else {
-                    recognizedBarcode = nil
-                    recognizedGrocyCode = nil
-                    notRecognizedBarcode = barcode.string
-                    qsActiveSheet = .selectProduct
-                }
-            case .failure(let error):
-                GrocyLogger.error("Barcode scan failed. \(error)")
-            }
-        }
-
         func searchForBarcode(barcode: CodeResult) -> MDProductBarcode? {
             if barcode.type == .ean13 {
                 return mdProductBarcodes.first(where: { $0.barcode.hasSuffix(barcode.value) })
@@ -192,16 +156,7 @@ struct QuickScanModeView: View {
     #if os(iOS)
         @ViewBuilder
         private func barcodeScanner() -> some View {
-            if useLegacyScanner {
-                CodeScannerViewLegacy(
-                    codeTypes: getSavedCodeTypesLegacy().map { $0.type },
-                    scanMode: .continuous,
-                    simulatedData: showDemoGrocyCode ? "grcy:p:1:62596f7263051" : "5901234123457",
-                    isTorchOn: $isTorchOn,
-                    isPaused: $isScanPaused,
-                    isFrontCamera: $isFrontCamera,
-                    completion: self.handleScanLegacy
-                )
+            CodeScannerView(isPaused: $isScanPaused, onCodeFound: handleScan, onAuthorizationFailed: { cameraUnauthorized = true })
                 .onAppear { isScanPaused = false }
                 .onDisappear { isScanPaused = true }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
@@ -210,17 +165,6 @@ struct QuickScanModeView: View {
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     isScanPaused = false
                 }
-            } else {
-                CodeScannerView(isPaused: $isScanPaused, onCodeFound: handleScan, onAuthorizationFailed: { cameraUnauthorized = true })
-                    .onAppear { isScanPaused = false }
-                    .onDisappear { isScanPaused = true }
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                        isScanPaused = true
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                        isScanPaused = false
-                    }
-            }
         }
     #endif
 
@@ -239,7 +183,9 @@ struct QuickScanModeView: View {
                 }
                 .alert("Camera Access Required", isPresented: $cameraUnauthorized) {
                     Button("Open Settings") {
-                        openURL(URL(string: UIApplication.openSettingsURLString)!)
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            openURL(url)
+                        }
                     }
                     Button("Cancel", role: .cancel) {}
                 } message: {
@@ -266,26 +212,7 @@ struct QuickScanModeView: View {
                     }
 
                     ToolbarItemGroup(placement: .topBarTrailing) {
-                        Button(
-                            action: {
-                                isTorchOn.toggle()
-                            },
-                            label: {
-                                Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
-                            }
-                        )
-                        .disabled(!checkForTorch() || isFrontCamera)
-                        if getFrontCameraAvailable() && useLegacyScanner {
-                            Button(
-                                action: {
-                                    isFrontCamera.toggle()
-                                },
-                                label: {
-                                    Image(systemName: MySymbols.changeCamera)
-                                }
-                            )
-                            .disabled(isTorchOn)
-                        }
+                        TorchButton(isTorchOn: $isTorchOn)
                         if isScanPaused {
                             Button(
                                 action: {
@@ -313,14 +240,6 @@ struct QuickScanModeView: View {
                         checkScanPause()
                     }
                 }
-                .onChange(
-                    of: isTorchOn,
-                    {
-                        if !useLegacyScanner {
-                            toggleTorch(state: isTorchOn)
-                        }
-                    }
-                )
                 .focusable()
                 .focused($isFocused)
                 .onKeyPress { press in
@@ -332,6 +251,10 @@ struct QuickScanModeView: View {
                 }
                 .onDisappear {
                     isFocused = false
+                    if isTorchOn {
+                        isTorchOn = false
+                        toggleTorch(state: false)
+                    }
                 }
         #else
             Text("Not available on this platform.")
@@ -385,6 +308,26 @@ struct QuickScanModeView: View {
         }
     }
 }
+
+#if os(iOS)
+    extension View {
+        /// Presents Quick Scan in a sheet: it's an action, not a place. Closed with the close button or by swiping down.
+        func quickScanSheet(isPresented: Binding<Bool>) -> some View {
+            sheet(isPresented: isPresented) {
+                NavigationStack {
+                    QuickScanModeView()
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button(role: .close) {
+                                    isPresented.wrappedValue = false
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    }
+#endif
 
 #Preview(traits: .previewData) {
     NavigationStack {
