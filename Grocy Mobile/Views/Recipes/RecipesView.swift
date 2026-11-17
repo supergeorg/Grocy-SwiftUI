@@ -233,6 +233,10 @@ struct RecipesView: View {
                 .padding(.horizontal, Spacing.large)
                 .padding(.vertical, Spacing.small)
             }
+            #if os(iOS)
+                // A scroll view has the plain background; the lists of the other overviews have the grouped one, so the gallery uses the same system color
+                .background(Color(.systemGroupedBackground))
+            #endif
             .onGeometryChange(for: CGFloat.self) { proxy in
                 proxy.size.width
             } action: { width in
