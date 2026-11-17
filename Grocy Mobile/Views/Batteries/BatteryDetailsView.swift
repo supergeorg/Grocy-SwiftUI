@@ -51,9 +51,10 @@ struct BatteryDetailsView: View {
     }
 
     private func dateContent(_ date: Date?) -> some View {
-        HStack {
+        VStack(alignment: .trailing) {
             if let date {
-                Text(formatDateAsString(date, showTime: false, localizationKey: localizationKey) ?? "")
+                // Date and time here; the overview rows only show the date.
+                Text(formatDateAsString(date, showTime: true, localizationKey: localizationKey) ?? "")
                 Text(getRelativeDateAsText(date, localizationKey: localizationKey) ?? "")
                     .font(.caption)
                     .italic()

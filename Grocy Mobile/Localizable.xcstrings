@@ -681,6 +681,15 @@
       },
       "shouldTranslate" : false
     },
+    "%lld batteries are due to be charged" : {
+
+    },
+    "%lld batteries are due to be charged today" : {
+
+    },
+    "%lld batteries are overdue to be charged" : {
+
+    },
     "%lld chores are assigned to me" : {
       "localizations" : {
         "ca" : {
@@ -2802,6 +2811,9 @@
           }
         }
       }
+    },
+    "%lld days" : {
+
     },
     "%lld ingredients have no product and won't be imported. Select an ingredient to choose or create its product." : {
 
@@ -6917,6 +6929,9 @@
     },
     "🏴󠁥󠁳󠁣󠁴󠁿 Català (Catalan)" : {
       "shouldTranslate" : false
+    },
+    "0 means suggestions for the next charge cycle are disabled" : {
+
     },
     "1 %@ is the same as..." : {
       "localizations" : {
@@ -11913,6 +11928,9 @@
         }
       }
     },
+    "Are you sure you want to delete battery \"%@\"?" : {
+
+    },
     "Are you sure you want to delete chore \"%@\"?" : {
       "localizations" : {
         "cs" : {
@@ -12012,6 +12030,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete equipment \"%@\"?" : {
+
     },
     "Are you sure you want to delete location \"%@\"?" : {
       "localizations" : {
@@ -16096,7 +16117,11 @@
         }
       }
     },
+    "Batteries journal" : {
+
+    },
     "Batteries not implemented" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16301,6 +16326,18 @@
           }
         }
       }
+    },
+    "Batteries settings" : {
+
+    },
+    "Battery" : {
+
+    },
+    "Battery journal" : {
+
+    },
+    "Battery overview" : {
+
     },
     "Battery tracking" : {
       "localizations" : {
@@ -17420,6 +17457,9 @@
         }
       }
     },
+    "Can't show this file" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "ca" : {
@@ -17981,6 +18021,15 @@
           }
         }
       }
+    },
+    "Charge" : {
+
+    },
+    "Charge cycle interval" : {
+
+    },
+    "Charge cycles count" : {
+
     },
     "Choose which entries the widget shows." : {
       "localizations" : {
@@ -19745,6 +19794,9 @@
           }
         }
       }
+    },
+    "Clear filter" : {
+
     },
     "Clear list" : {
       "localizations" : {
@@ -22358,6 +22410,15 @@
         }
       }
     },
+    "Couldn't load the instruction manual" : {
+
+    },
+    "Couldn't track the charge cycle" : {
+
+    },
+    "Couldn't undo the charge cycle" : {
+
+    },
     "Couldn't update shopping list \"%@\"" : {
       "localizations" : {
         "de" : {
@@ -22443,6 +22504,9 @@
           }
         }
       }
+    },
+    "Create battery" : {
+
     },
     "Create chore" : {
       "localizations" : {
@@ -22627,6 +22691,9 @@
           }
         }
       }
+    },
+    "Create equipment" : {
+
     },
     "Create inverse QU conversion" : {
       "localizations" : {
@@ -25993,6 +26060,9 @@
           }
         }
       }
+    },
+    "days" : {
+
     },
     "Days" : {
       "localizations" : {
@@ -32236,6 +32306,9 @@
         }
       }
     },
+    "Edit battery" : {
+
+    },
     "Edit chore" : {
       "localizations" : {
         "ca" : {
@@ -32495,6 +32568,9 @@
           }
         }
       }
+    },
+    "Edit equipment" : {
+
     },
     "Edit included recipe" : {
       "localizations" : {
@@ -37352,6 +37428,7 @@
       }
     },
     "Find stock, products, recipes and master data by name or barcode." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -37360,6 +37437,9 @@
           }
         }
       }
+    },
+    "Find stock, products, recipes, equipment and master data by name or barcode." : {
+
     },
     "First name" : {
       "localizations" : {
@@ -40519,6 +40599,9 @@
         }
       }
     },
+    "Instruction manual" : {
+
+    },
     "Inventory" : {
       "localizations" : {
         "ca" : {
@@ -41111,6 +41194,9 @@
     },
     "kcal" : {
       "shouldTranslate" : false
+    },
+    "Last charged" : {
+
     },
     "Last done by" : {
       "localizations" : {
@@ -46258,6 +46344,9 @@
         }
       }
     },
+    "Never" : {
+
+    },
     "Never overdue" : {
       "localizations" : {
         "ca" : {
@@ -47100,6 +47189,9 @@
         }
       }
     },
+    "Next planned charge cycle" : {
+
+    },
     "No" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -47491,6 +47583,21 @@
         }
       }
     },
+    "No batteries" : {
+
+    },
+    "No battery defined. Create one in master data." : {
+
+    },
+    "No battery defined. Please create one." : {
+
+    },
+    "No battery matches this filter." : {
+
+    },
+    "No charge cycles" : {
+
+    },
     "No chore defined. Please create one." : {
       "localizations" : {
         "de" : {
@@ -47644,6 +47751,18 @@
           }
         }
       }
+    },
+    "No equipment" : {
+
+    },
+    "No equipment defined. Please create one." : {
+
+    },
+    "No file selected" : {
+
+    },
+    "No instruction manual" : {
+
     },
     "No location defined. Please create one." : {
       "localizations" : {
@@ -47816,6 +47935,9 @@
           }
         }
       }
+    },
+    "No notes" : {
+
     },
     "No open tasks" : {
       "localizations" : {
@@ -50687,6 +50809,9 @@
           }
         }
       }
+    },
+    "Notes" : {
+
     },
     "Nothing left to buy." : {
       "localizations" : {
@@ -59121,6 +59246,12 @@
         }
       }
     },
+    "Remove file" : {
+
+    },
+    "Replace file" : {
+
+    },
     "Replay app onboarding" : {
       "localizations" : {
         "cs" : {
@@ -60509,6 +60640,9 @@
         }
       }
     },
+    "Section" : {
+
+    },
     "Select a server type:" : {
       "localizations" : {
         "cs" : {
@@ -60578,6 +60712,9 @@
           }
         }
       }
+    },
+    "Select file" : {
+
     },
     "Select picture from gallery" : {
       "localizations" : {
@@ -61573,6 +61710,9 @@
           }
         }
       }
+    },
+    "Share" : {
+
     },
     "Shopping list" : {
       "localizations" : {
@@ -63307,6 +63447,9 @@
           }
         }
       }
+    },
+    "Shows the battery overview" : {
+
     },
     "Shows the items still to buy on a shopping list." : {
       "localizations" : {
@@ -67934,6 +68077,15 @@
         }
       }
     },
+    "The current file will be deleted on save" : {
+
+    },
+    "The current file will be replaced on save" : {
+
+    },
+    "The file isn't a PDF document." : {
+
+    },
     "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"" : {
       "localizations" : {
         "cs" : {
@@ -68432,6 +68584,9 @@
           }
         }
       }
+    },
+    "The selected equipment has no instruction manual." : {
+
     },
     "The server version %@ is currently unsupported by the app. You can use it anyways, but there can be problems." : {
       "localizations" : {
@@ -69928,6 +70083,9 @@
           }
         }
       }
+    },
+    "This equipment has no notes." : {
+
     },
     "This is a companion app and requires access to a running Grocy instance (for example on your server). If you just want to try the app, use one of the demo servers provided by the Grocy developer. Do not use demo servers for your personal data — they are not persistent." : {
       "localizations" : {
@@ -75729,6 +75887,12 @@
         }
       }
     },
+    "Track charge cycle" : {
+
+    },
+    "Track charge cycle at…" : {
+
+    },
     "Track chore execution now" : {
       "localizations" : {
         "cs" : {
@@ -76148,6 +76312,9 @@
           }
         }
       }
+    },
+    "Tracked charge cycles are listed here." : {
+
     },
     "Tracked count" : {
       "localizations" : {
@@ -78627,6 +78794,9 @@
         }
       }
     },
+    "Undo charge cycle" : {
+
+    },
     "Undo chore execution" : {
       "localizations" : {
         "ca" : {
@@ -80405,6 +80575,9 @@
           }
         }
       }
+    },
+    "Used in" : {
+
     },
     "User" : {
       "localizations" : {
