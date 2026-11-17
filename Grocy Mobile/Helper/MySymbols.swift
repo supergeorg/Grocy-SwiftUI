@@ -163,6 +163,10 @@ nonisolated struct MySymbols {
 
     static let iPhoneTabNavigation = "platter.filled.bottom.iphone"
     static let iPadTabNavigation = "sidebar.left"
+    /// iPhone navigation styles: smart (agenda tab), own tabs, sidebar.
+    static let smartNavigation = "sparkles.rectangle.stack"
+    static let sidebarNavigation = "sidebar.left"
+    static let chooseTabs = "rectangle.3.group"
     static let appleIntelligence = "apple.intelligence"
     static let tableColumn = "tablecells"
     static let sortNumber = "list.number"
@@ -199,6 +203,12 @@ nonisolated struct MySymbols {
     // MARK: - Stock & shopping list
 
     static let household = "house"
+    /// The agenda of everything due (chores, tasks, batteries).
+    static let due = "calendar.badge.clock"
+    /// Links from the agenda to the complete lists.
+    static let allEntries = "square.grid.2x2"
+    /// Collapsible section headers (rotated when expanded).
+    static let disclosure = "chevron.right"
 
     static let stockEntry = "tag"
     static let transferFrom = "square.and.arrow.up"

@@ -7,7 +7,7 @@
 
 import XCTest
 
-/// Walks through the iPhone navigation prototype (`PhoneTabNavigation`) and attaches a screenshot of each place,
+/// Walks through the iPhone navigation styles (smart, own tabs, sidebar) and attaches a screenshot of each place,
 /// against a local Grocy test server (see `GrocyUITestCase`).
 final class PhoneNavigationUITests: GrocyUITestCase {
     private var productName: String { "UITest milk \(runID)" }
@@ -29,7 +29,7 @@ final class PhoneNavigationUITests: GrocyUITestCase {
 
             // At most five tabs, so there's no "More" tab.
             XCTAssertFalse(tabBar.buttons["More"].exists, "The tab bar still has a \"More\" tab.")
-            for tab in ["Stock overview", "Shopping list", "Recipes", "Household"] {
+            for tab in ["Stock overview", "Shopping list", "Recipes", "Due"] {
                 XCTAssertTrue(tabBar.buttons[tab].waitForExistence(timeout: 5), "No \"\(tab)\" tab.\n\(tabBar.debugDescription)")
             }
 
@@ -45,16 +45,16 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             tabBar.buttons["Recipes"].tap()
             attachScreenshot(of: app, named: "3 Recipes")
 
-            // Chores and tasks are switched with the navigation title menu.
-            tabBar.buttons["Household"].tap()
-            let titleMenu = app.navigationBars.buttons["Chores overview"].firstMatch
-            XCTAssertTrue(titleMenu.waitForExistence(timeout: 5), "No title menu in the household tab.\n\(app.navigationBars.firstMatch.debugDescription)")
-            attachScreenshot(of: app, named: "4 Household – chores")
-            titleMenu.tap()
-            attachScreenshot(of: app, named: "4b Household – title menu")
+            // Products, chores, tasks and batteries that are due are in one agenda; the complete lists open from the settings button.
+            tabBar.buttons["Due"].tap()
+            XCTAssertTrue(app.navigationBars["Due"].waitForExistence(timeout: 5), "No due agenda.\n\(app.navigationBars.firstMatch.debugDescription)")
+            attachScreenshot(of: app, named: "4 Due")
+            app.navigationBars.buttons["Settings"].firstMatch.tap()
             app.buttons["Tasks"].firstMatch.tap()
-            XCTAssertTrue(app.navigationBars.buttons["Tasks"].waitForExistence(timeout: 5), "Switching to tasks didn't work.")
-            attachScreenshot(of: app, named: "5 Household – tasks")
+            XCTAssertTrue(app.navigationBars["Tasks"].waitForExistence(timeout: 5), "The complete task list didn't open.")
+            attachScreenshot(of: app, named: "5 Due – all tasks")
+            app.navigationBars.buttons.element(boundBy: 0).tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
 
             // The search tab turns into a search field; results come from stock, products and recipes.
             let searchTab = tabBar.buttons["Search"].firstMatch
@@ -84,9 +84,54 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             tabBar.buttons["Stock overview"].tap()
             app.navigationBars.buttons["Settings"].firstMatch.tap()
             XCTAssertTrue(element(in: app, labelContaining: "Master data").waitForExistence(timeout: 5), "No master data on the profile page.")
+            // Places without a tab are listed there, too.
+            XCTAssertTrue(element(in: app, labelContaining: "Equipment").exists, "Equipment isn't reachable from the profile page.")
             attachScreenshot(of: app, named: "8 Profile page")
         #else
-            throw XCTSkip("The tab navigation prototype is iPhone only.")
+            throw XCTSkip("The tab navigation is iPhone only.")
+        #endif
+    }
+
+    /// Own tabs: the chosen places are tabs, the others open from the settings button.
+    @MainActor
+    func testOwnTabs() throws {
+        #if os(iOS)
+            let app = launchApp(phoneNavigationStyle: "tabs", phoneTabs: "stock,chores,tasks")
+            let tabBar = app.tabBars.firstMatch
+            XCTAssertTrue(tabBar.waitForExistence(timeout: 10), "No tab bar.")
+            for tab in ["Stock overview", "Chores", "Tasks"] {
+                XCTAssertTrue(tabBar.buttons[tab].waitForExistence(timeout: 5), "No \"\(tab)\" tab.\n\(tabBar.debugDescription)")
+            }
+            XCTAssertFalse(tabBar.buttons["Shopping list"].exists, "A tab that wasn't chosen is shown.")
+            tabBar.buttons["Chores"].tap()
+            attachScreenshot(of: app, named: "Own tabs – chores")
+
+            tabBar.buttons["Stock overview"].tap()
+            app.navigationBars.buttons["Settings"].firstMatch.tap()
+            let shoppingList = element(in: app, labelContaining: "Shopping list")
+            XCTAssertTrue(shoppingList.waitForExistence(timeout: 5), "The shopping list isn't reachable from the profile page.")
+            attachScreenshot(of: app, named: "Own tabs – profile page")
+            shoppingList.tap()
+            XCTAssertTrue(app.navigationBars["Shopping list"].waitForExistence(timeout: 5), "The shopping list didn't open.")
+        #else
+            throw XCTSkip("The tab navigation is iPhone only.")
+        #endif
+    }
+
+    /// Sidebar: the iPad sidebar as a list that pushes the screens, without a tab bar.
+    @MainActor
+    func testSidebar() throws {
+        #if os(iOS)
+            let app = launchApp(phoneNavigationStyle: "sidebar")
+            let chores = element(in: app, labelContaining: "Chores overview")
+            XCTAssertTrue(chores.waitForExistence(timeout: 10), "No sidebar list.\n\(app.debugDescription)")
+            XCTAssertFalse(app.tabBars.firstMatch.exists, "The sidebar style shows a tab bar.")
+            attachScreenshot(of: app, named: "Sidebar")
+            chores.tap()
+            XCTAssertTrue(app.navigationBars["Chores overview"].waitForExistence(timeout: 5), "Chores didn't open from the sidebar.")
+            attachScreenshot(of: app, named: "Sidebar – chores")
+        #else
+            throw XCTSkip("The iPhone navigation styles are iPhone only.")
         #endif
     }
 }

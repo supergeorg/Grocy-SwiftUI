@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = true
+    @AppStorage(PhoneNavigationStyle.storageKey) var phoneNavigationStyle: PhoneNavigationStyle = .smart
+    @AppStorage(PhonePlace.tabsStorageKey) var phoneTabs: String = PhonePlace.defaultOwnTabsValue
     @AppStorage("iPadTabNavigation") var iPadTabNavigation: Bool = false
 
     #if os(iOS)
@@ -17,10 +18,10 @@ struct ContentView: View {
 
     var body: some View {
         #if os(iOS)
-            if horizontalSizeClass == .compact && iPhoneTabNavigation {
-                // Prototype: at most five tabs, so iPhone never needs the system "More" list.
-                PhoneTabNavigation()
-            } else if iPadTabNavigation {
+            if horizontalSizeClass == .compact && phoneNavigationStyle != .sidebar {
+                // At most five tabs, so iPhone never needs the system "More" list.
+                PhoneTabNavigation(places: phoneNavigationStyle == .smart ? PhonePlace.smartTabs : PhonePlace.decode(phoneTabs))
+            } else if horizontalSizeClass != .compact && iPadTabNavigation {
                 AppTabNavigation()
             } else {
                 AppSidebarNavigation()

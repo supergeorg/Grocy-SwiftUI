@@ -44,7 +44,7 @@ class GrocyUITestCase: XCTestCase {
     // MARK: - App
 
     @MainActor
-    func launchApp(loggedIn: Bool = true) -> XCUIApplication {
+    func launchApp(loggedIn: Bool = true, phoneNavigationStyle: String = "smart", phoneTabs: String? = nil) -> XCUIApplication {
         let app = XCUIApplication()
         // Launch arguments go to UserDefaults' argument domain, which isn't persisted.
         app.launchArguments += [
@@ -54,12 +54,15 @@ class GrocyUITestCase: XCTestCase {
             "-localizationKey", "en",
             "-AppleLanguages", "(en)",
             // Pin the iPhone layout, whatever the simulator has stored.
-            "-iPhoneTabNavigation", "YES",
+            "-phoneNavigationStyle", phoneNavigationStyle,
             // Always start on the first tab, whatever an earlier run left selected.
             "-phoneTabSelection", "stock",
             // Don't restore saved window state: on macOS it can leave the app without any window.
             "-ApplePersistenceIgnoreState", "YES",
         ]
+        if let phoneTabs {
+            app.launchArguments += ["-phoneTabs", phoneTabs]
+        }
         app.launchEnvironment["GROCY_UITEST_SERVER_URL"] = serverURL
         app.launchEnvironment["GROCY_UITEST_API_KEY"] = apiKey
         app.launch()
@@ -97,14 +100,15 @@ class GrocyUITestCase: XCTestCase {
             XCTAssertTrue(entry.waitForExistence(timeout: 5), "No \"\(title)\" entry in the sidebar.\n\(sidebar.debugDescription)")
             entry.click()
         #else
-            // On iPhone, master data opens from the profile button ("Settings") in the navigation bar.
+            // On iPhone, the master data lists are on the page behind the settings button in the navigation bar.
             let account = app.navigationBars.buttons["Settings"].firstMatch
-            XCTAssertTrue(account.waitForExistence(timeout: 10), "No profile button.")
+            XCTAssertTrue(account.waitForExistence(timeout: 10), "No settings button.")
             account.tap()
-            let masterData = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", "Master data")).firstMatch
-            XCTAssertTrue(masterData.waitForExistence(timeout: 10), "No \"Master data\" entry.")
-            masterData.tap()
             let entry = app.buttons.matching(entryPredicate).firstMatch
+            // The last entries can be below the visible part of the page.
+            for _ in 0..<3 where !(entry.waitForExistence(timeout: 3) && entry.isHittable) {
+                app.collectionViews.firstMatch.swipeUp()
+            }
             XCTAssertTrue(entry.waitForExistence(timeout: 10), "No \"\(title)\" entry.")
             entry.tap()
         #endif

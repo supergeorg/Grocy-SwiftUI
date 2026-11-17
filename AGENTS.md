@@ -27,8 +27,9 @@ Grocy Mobile/                 App target (file-system synchronized group, so new
     MasterData/ Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ Batteries/ Equipment/ User/ System/ HomeAssistant/
     Preview/                  PreviewContainer + TestData/*.json (fixtures named after API endpoints)
   Views/                      Grouped by feature
-    Navigation/               ContentView, PhoneTabNavigation, AppTabNavigation, AppSidebarNavigation, Navigation (NavigationItem router),
-                              HouseholdView, GlobalSearchView, AccountView
+    Navigation/               ContentView, PhoneTabNavigation, PhoneNavigationStyle (PhonePlace), AppTabNavigation, AppSidebarNavigation,
+                              Navigation (NavigationItem router), GlobalSearchView, AccountView
+    Due/                      The due agenda of the smart iPhone navigation (DueView, DueItemRowView)
     Stock/ ShoppingList/ Recipes/ Chores/ Tasks/ Batteries/ Equipment/ MasterData/MD*/ Settings/ Onboarding/ Admin/ Scanner/
     Components/               Reusable form controls (MyTextField, MyToggle, MyDoubleStepper, ProductField, ...) and FilterCapsuleBar
     Additional/               ServerProblemView, FlowLayout, ...
@@ -85,11 +86,15 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 ### Navigation
 
 - `NavigationItem` (in `Views/Navigation/Navigation.swift`) lists every top-level destination, and `Navigation` switches over it.
-- `ContentView` chooses the navigation from the size class and the `iPhoneTabNavigation` / `iPadTabNavigation` settings. macOS always uses the sidebar.
-  - **iPhone (compact, prototype):** `PhoneTabNavigation` has at most five tabs, so the system "More" list is never needed: Stock, Shopping list, Recipes, Household and a search tab (`Tab(role: .search)`). Server feature flags hide tabs.
-    - `HouseholdView` puts chores, tasks, batteries and equipment in one tab. The navigation title menu switches between them.
+- `ContentView` chooses the navigation from the size class, the `phoneNavigationStyle` setting (`PhoneNavigationStyle`: `smart`, `tabs`, `sidebar`; iPhone) and `iPadTabNavigation` (iPad). macOS always uses the sidebar.
+  - **iPhone (compact):** the user picks the style in the app settings.
+    - `smart` (default): `PhoneTabNavigation` with Stock, Shopping list, Recipes, Due and a search tab (`Tab(role: .search)`). `DueView` is one agenda (`DueItem`) with swipe actions: products that are expired, overdue, due today or due soon, or below their minimum stock amount (from the volatile stock, like the stock overview's filters), and chores, tasks and batteries that are overdue, due today or due soon. Each kind can be hidden (`DueKindToggles`, stored in `dueHiddenKinds`; all shown by default), in the due tab's menu and the app settings. Each section can be collapsed (`dueCollapsedSections`). Its badge counts expired, overdue and due today. The complete lists (chores, tasks, batteries, equipment) open from the settings button. Product rows are keyed by the stock element's ID, which changes with every stock sync; keying them by product makes SwiftUI compare a deleted element and crash.
+    - `tabs`: `PhoneTabNavigation` with up to four places the user chooses in `PhoneTabsSettingsView` (stored in `phoneTabs`), plus search.
+    - `sidebar`: `AppSidebarNavigation`, which collapses to the sidebar list.
+    - At most five tabs, so the system "More" list is never needed. `PhonePlace` lists every place that can be a tab; places that aren't tabs are pushed (`phonePlaceDestinations()`) and listed on `AccountView`. Server feature flags hide places.
     - `GlobalSearchView` searches stock, products, recipes and master data by name or exact barcode. Quick Scan sits in the tab view's bottom accessory, only while the search tab is selected. The app never restores the search tab at launch, because selecting it activates the search field.
-    - Settings and master data open from the settings button (its own toolbar group, `ToolbarSpacer`), through `AccountView` with value-based routes. A sheet conflicts with the lists' pull-down search field.
+    - Settings and master data open from the settings button (its own toolbar group, `ToolbarSpacer`), through `AccountView`: Settings first (visible without scrolling), the places that aren't tabs, then the master data lists directly (`MasterDataLinks`, shared with `MasterDataView`; their destinations are registered at the tab's stack root by `accountNavigationDestinations()`, because registered on the pushed page they aren't found). Value-based routes; a sheet conflicts with the lists' pull-down search field.
+    - Deep links select a tab, or push the place onto the due tab (chores, tasks) or the first tab when it isn't a tab.
   - **iPad / regular width:** `AppTabNavigation` or `AppSidebarNavigation`.
 - List → detail navigation uses `NavigationLink(value:)` plus `.navigationDestination(for:)`.
 - Creating an item uses a `.sheet` on iOS and `.navigationDestination(isPresented:)` on macOS, behind `#if os(iOS)`.
@@ -201,7 +206,7 @@ Adding a suite for another entity (use `MDLocationIntegrationTests.swift` as the
 4. Make tests independent of each other and of the server's contents: use unique names (`UUID`), create your own fixtures, and delete them with the `withCleanup` pattern (it also runs when a test fails). Create the entities a test depends on (e.g. a location and quantity unit before a product) inside that test.
 5. Check the server's supported version still matches `GrocyAPP.supportedVersions` when updating the Grocy clone.
 
-UI tests against the same server live in `Grocy MobileUITests/` (XCTest + XCUIAutomation; see `TestServer/README.md`). Subclass `GrocyUITestCase`, which provides the server gate, `createObject` fixtures (deleted after each test), `launchApp()`, `openMasterData(_:in:)`, platform-aware element helpers and `attachScreenshot`. Examples: `MDLocationUITests.swift` (one screen in depth), `MDMasterDataUITests.swift` (the same check across all master data types), `PhoneNavigationUITests.swift` (every place in the iPhone navigation). On iPhone, master data is reached through the settings button, not a tab.
+UI tests against the same server live in `Grocy MobileUITests/` (XCTest + XCUIAutomation; see `TestServer/README.md`). Subclass `GrocyUITestCase`, which provides the server gate, `createObject` fixtures (deleted after each test), `launchApp()`, `openMasterData(_:in:)`, platform-aware element helpers and `attachScreenshot`. Examples: `MDLocationUITests.swift` (one screen in depth), `MDMasterDataUITests.swift` (the same check across all master data types), `PhoneNavigationUITests.swift` (every place in the three iPhone navigation styles; `launchApp(phoneNavigationStyle:phoneTabs:)` pins the style). On iPhone, master data is reached through the settings button, not a tab.
 
 - The test passes `GROCY_UITEST_SERVER_URL` / `GROCY_UITEST_API_KEY` in the app's launch environment. That turns on `UITestConfiguration` (DEBUG only): in-memory stores and a direct login, so the installed app's data, login and iCloud profiles are never touched. Launch arguments like `-isLoggedIn YES -onboardingNeeded NO -localizationKey en` go to UserDefaults' argument domain and aren't persisted.
 - Run them on macOS **and** an iOS simulator. On macOS, use `click()` instead of `tap()` (taps don't trigger navigation there), and read static text from `value` (iOS uses `label`).

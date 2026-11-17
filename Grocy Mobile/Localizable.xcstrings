@@ -35,6 +35,16 @@
       },
       "shouldTranslate" : false
     },
+    "%@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
     "%@ (%@ %@)" : {
       "localizations" : {
         "en" : {
@@ -10704,6 +10714,9 @@
         }
       }
     },
+    "Adds this place as a tab" : {
+
+    },
     "All" : {
       "localizations" : {
         "ca" : {
@@ -10897,6 +10910,12 @@
           }
         }
       }
+    },
+    "All entries" : {
+
+    },
+    "All places in one list, as in the iPad sidebar." : {
+
     },
     "Amount" : {
       "localizations" : {
@@ -18031,6 +18050,9 @@
     "Charge cycles count" : {
 
     },
+    "Choose up to four tabs. Everything else opens from the settings button." : {
+
+    },
     "Choose which entries the widget shows." : {
       "localizations" : {
         "de" : {
@@ -19494,6 +19516,9 @@
           }
         }
       }
+    },
+    "Chores, tasks and batteries that are overdue or due soon show up here." : {
+
     },
     "Clean the kitchen" : {
       "localizations" : {
@@ -22411,6 +22436,9 @@
       }
     },
     "Couldn't load the instruction manual" : {
+
+    },
+    "Couldn't save the change" : {
 
     },
     "Couldn't track the charge cycle" : {
@@ -35855,6 +35883,7 @@
       }
     },
     "Enabled Tabs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -39208,6 +39237,7 @@
       }
     },
     "Household" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -40992,7 +41022,11 @@
         }
       }
     },
+    "iPhone navigation" : {
+
+    },
     "iPhone: Tab navigation" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -45735,6 +45769,9 @@
           }
         }
       }
+    },
+    "More" : {
+
     },
     "Move on open" : {
       "localizations" : {
@@ -50813,6 +50850,9 @@
     "Notes" : {
 
     },
+    "Nothing due" : {
+
+    },
     "Nothing left to buy." : {
       "localizations" : {
         "de" : {
@@ -52438,6 +52478,9 @@
           }
         }
       }
+    },
+    "Own tabs" : {
+
     },
     "Parent product" : {
       "localizations" : {
@@ -63481,6 +63524,9 @@
         }
       }
     },
+    "Sidebar" : {
+
+    },
     "Skip" : {
       "localizations" : {
         "ca" : {
@@ -63954,6 +64000,9 @@
           }
         }
       }
+    },
+    "Smart" : {
+
     },
     "Sort" : {
       "localizations" : {
@@ -66672,6 +66721,9 @@
         }
       }
     },
+    "Stock, shopping list, recipes and everything that is due: chores, tasks and batteries. The complete lists are linked in the due tab." : {
+
+    },
     "Store" : {
       "localizations" : {
         "ca" : {
@@ -67412,6 +67464,9 @@
         }
       }
     },
+    "Tabs" : {
+
+    },
     "Take out the trash" : {
       "localizations" : {
         "de" : {
@@ -67605,6 +67660,9 @@
           }
         }
       }
+    },
+    "Task" : {
+
     },
     "Task categories" : {
       "localizations" : {
@@ -79974,6 +80032,9 @@
           }
         }
       }
+    },
+    "Up to %lld tabs, plus search. Everything else opens from the settings button." : {
+
     },
     "Upload picture" : {
       "localizations" : {

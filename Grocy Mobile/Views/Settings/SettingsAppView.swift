@@ -21,18 +21,10 @@ struct SettingsAppView: View {
     @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
 
     #if os(iOS)
-        @AppStorage("iPhoneTabNavigation") var iPhoneTabNavigation: Bool = true
+        @AppStorage(PhoneNavigationStyle.storageKey) var phoneNavigationStyle: PhoneNavigationStyle = .smart
         @AppStorage("iPadTabNavigation") var iPadTabNavigation: Bool = false
         @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
-        @AppStorage("enableQuickScan") var enableQuickScan: Bool = true
-        @AppStorage("enableStockOverview") var enableStockOverview: Bool = true
-        @AppStorage("enableShoppingList") var enableShoppingList: Bool = true
-        @AppStorage("enableRecipes") var enableRecipes: Bool = true
-        @AppStorage("enableChores") var enableChores: Bool = true
-        @AppStorage("enableTasks") var enableTasks: Bool = true
-        @AppStorage("enableMasterData") var enableMasterData: Bool = true
     #endif
 
     let refreshIntervals: [Int] = [3, 5, 10, 30, 60, 300]
@@ -116,13 +108,37 @@ struct SettingsAppView: View {
                 }
 
                 if horizontalSizeClass == .compact {
-                    MyToggle(isOn: $iPhoneTabNavigation, description: "iPhone: Tab navigation", icon: MySymbols.iPhoneTabNavigation)
+                    Picker(selection: $phoneNavigationStyle) {
+                        ForEach(PhoneNavigationStyle.allCases) { style in
+                            Label(style.title, systemImage: style.icon)
+                                .tag(style)
+                        }
+                    } label: {
+                        Label("iPhone navigation", systemImage: MySymbols.iPhoneTabNavigation)
+                            .foregroundStyle(.primary)
+                    }
+                    if phoneNavigationStyle == .tabs {
+                        // Value-based, so the editor stays open when the tab bar is rebuilt after a change.
+                        NavigationLink(value: SettingsNavigationItem.phoneTabs) {
+                            Label("Tabs", systemImage: MySymbols.chooseTabs)
+                                .foregroundStyle(.primary)
+                        }
+                    }
                 } else {
                     MyToggle(isOn: $iPadTabNavigation, description: "iPad: Tab navigation", icon: MySymbols.iPadTabNavigation)
                 }
             #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
             #if os(iOS)
+                if horizontalSizeClass == .compact {
+                    Section {
+                        DueKindToggles()
+                    } header: {
+                        Text("Due")
+                    } footer: {
+                        Text("What the due tab shows.")
+                    }
+                }
                 Section("\(Text("Quick Scan")) \(Text("Settings"))") {
                     MyToggle(isOn: $quickScanActionAfterAdd, description: "Do selected action after assigning a barcode", icon: MySymbols.barcodeScan)
                 }
@@ -154,19 +170,6 @@ struct SettingsAppView: View {
                     )
                 }
             }
-            #if os(iOS)
-                if horizontalSizeClass == .compact {
-                    Section("Enabled Tabs") {
-                        MyToggle(isOn: $enableQuickScan, description: "Quick Scan", icon: MySymbols.barcodeScan)
-                        MyToggle(isOn: $enableStockOverview, description: "Stock overview", icon: MySymbols.stockOverview)
-                        MyToggle(isOn: $enableShoppingList, description: "Shopping list", icon: MySymbols.shoppingList)
-                        MyToggle(isOn: $enableRecipes, description: "Recipes", icon: MySymbols.recipe)
-                        MyToggle(isOn: $enableChores, description: "Chores overview", icon: MySymbols.chores)
-                        MyToggle(isOn: $enableTasks, description: "Tasks", icon: MySymbols.tasks)
-                        MyToggle(isOn: $enableMasterData, description: "Master data", icon: MySymbols.masterData)
-                    }
-                }
-            #endif
             if AppleIntelligenceStatus.isAppleIntelligenceAvailable {
                 Section("Apple Intelligence") {
                     MyToggle(isOn: $useAppleIntelligence, description: "Apple Intelligence", icon: MySymbols.appleIntelligence)
