@@ -44,6 +44,7 @@ struct BatteriesView: View {
 
     @State private var searchString: String = ""
     @State private var filteredStatus: BatteryStatus = .all
+    @State private var showingFilterSheet = false
     @State private var sortOption: BatteriesSortOption = .byName
     @State private var sortOrder: SortOrder = .forward
     @State private var trackedCount: Int = 0
@@ -80,6 +81,10 @@ struct BatteriesView: View {
 
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
+    }
+
+    private var numFilters: Int {
+        filteredStatus != .all ? 1 : 0
     }
 
     var filteredBatteries: Batteries {
@@ -270,6 +275,12 @@ struct BatteriesView: View {
         .sensoryFeedback(.success, trigger: trackedCount)
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
+                Button {
+                    showingFilterSheet = true
+                } label: {
+                    Label("Filter", systemImage: MySymbols.filter)
+                }
+                .badge(numFilters)
                 sortGroupMenu
             }
             ToolbarItem(placement: .primaryAction) {
@@ -279,6 +290,29 @@ struct BatteriesView: View {
                     Label("Batteries journal", systemImage: MySymbols.stockJournal)
                 }
             }
+        }
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                BatteriesFilterView(filteredStatus: $filteredStatus, dueSoonDays: dueSoonDays)
+                    .navigationTitle("Filter")
+                    #if os(iOS)
+                        .navigationBarTitleDisplayMode(.inline)
+                    #endif
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button(role: .confirm) {
+                                showingFilterSheet = false
+                            }
+                        }
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button(role: .destructive) {
+                                filteredStatus = .all
+                                showingFilterSheet = false
+                            }
+                        }
+                    }
+            }
+            .presentationDetents([.medium])
         }
         .environment(batteryInteractionRouter)
     }
