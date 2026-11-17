@@ -39,6 +39,11 @@ nonisolated struct MySymbols {
     static let importRecipe = "square.and.arrow.down"
     static let link = "link"
     static let steps = "list.number"
+    /// A product or unit the recipe import found by a similar name, which the person should check.
+    static let suggestedMatch = "sparkles"
+    /// An imported ingredient the person excluded.
+    static let notImported = "minus.circle"
+    static let connectUnit = "arrow.left.arrow.right"
     static let user = "person"
     static let parentProduct = "rectangle.stack"
 

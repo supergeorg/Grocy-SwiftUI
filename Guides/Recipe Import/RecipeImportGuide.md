@@ -27,23 +27,34 @@ There's no HTML scraping and no third-party parser. Only websites that embed **s
 |------|------|
 | `Views/Recipes/Import/RecipeParse.swift` | `RecipeParser`: extracts the JSON-LD blocks, finds `Recipe` nodes (also inside `@graph`), and builds `JSONParsedRecipe` with its supporting types (`Ingredient`, `InstructionStep`, `IsoDuration`, `NutritionInfo`, `DietType`, …). Malformed fields are skipped with a warning instead of failing. `diagnose(html:)` explains why a page yields no recipe. |
 | `Model/Recipes/Import/IngredientLineParser.swift` | Splits a line like `"2-3 EL Olivenöl, kaltgepresst"` into amount, amount text (for ranges), unit, name and note (`ParsedIngredientLine`). `KnownIngredientUnit` lists common units with their English and German spellings and UN/CEFACT codes. |
-| `Model/Recipes/Import/RecipeImportDraft.swift` | `RecipeImportDraft` and `ImportedIngredient` (the editable state), plus `RecipeImportMapper`, which matches products and quantity units and applies Grocy's unit rules. |
+| `Model/Recipes/Import/RecipeImportDraft.swift` | `RecipeImportDraft` and `ImportedIngredient` (the editable state), plus `RecipeImportMapper`, which builds the draft and applies Grocy's unit rules. |
+| `Model/Recipes/Import/IngredientMatcher.swift` | The matching of products (`productCandidates(for:note:)`, scored) and quantity units (`quantityUnitMatch(for:knownUnit:)`), the match quality (`IngredientMatchQuality`), and the names suggested for new quantity units. |
 | `Model/Recipes/Import/RecipePreparationFormat.swift` | The HTML format for the recipe's preparation (see below), in both directions: steps → HTML and HTML → steps. |
 | `Model/Recipes/RecipeAmountConversion.swift` | Converts between an ingredient's display unit and the product's stock unit. The recipe ingredient form uses it too. |
 | `Views/Recipes/Import/RecipeImportView.swift` | URL field, loading, review form, and saving. |
-| `Views/Recipes/Import/RecipeImportIngredientFormView.swift` / `…RowView.swift` | Editing one imported ingredient: include it or not, product (or create one with `MDProductFormView`), amount, unit, note, group, variable amount. |
+| `Views/Recipes/Import/RecipeImportIngredientFormView.swift` / `…RowView.swift` / `RecipeImportUnitConversionFormView.swift` | Editing one imported ingredient: include it or not, product (pick one of the similar products, or create one with `MDProductFormView`), amount, unit (create one with `MDQuantityUnitFormView`, or connect it to the product with `RecipeImportUnitConversionFormView`), note, group, variable amount. The row names suggested matches and missing units in text. |
 | `Grocy MobileTests/Model/RecipeImportTests.swift` | Swift Testing suites for the line parser, the preparation format, the mapping and the amount conversion. |
 
 ## Mapping to Grocy
 
-**Products.** `matchProduct(for:)` only considers active products. It tries, in order:
-1. an exact match of the normalized name, ignoring case, diacritics, `ß`/`ss` and a simple English/German singular form;
-2. the longest product whose words all appear in the ingredient ("Butter" in "kalte Butter");
-3. a compound-word suffix of at least 4 characters ("Sahne" in "Schlagsahne").
+**Products.** `productCandidates(for:note:)` scores every active product against the ingredient's name and note. Words are compared normalized (case, diacritics, `ß`/`ss`) and stemmed (`stem(_:)` removes English and German plural and adjective endings, so "getrockneter" and "getrocknet" are the same).
 
-Grocy requires a product for every ingredient. Ingredients without one are shown, but not saved, and the form footer counts them.
+| Score | Rule | Example |
+|-------|------|---------|
+| 110+ | The name, made more specific by words of the note | "Thymian (getrockneter)" → "Thymian, getrocknet" |
+| 100 | The same name | "Champignons" → "Champignon", "Eier" → "Ei" |
+| 70–90 | All words of the product appear in the ingredient | "süße Sahne" → "Sahne" |
+| 55 | The product is the end of a compound word | "Schweineschnitzel" → "Schnitzel" |
+| 40–55 | The product is more specific than the ingredient | "Thymian" → "Thymian frisch", "Mehl" → "Weizenmehl" |
+| 40 | A typo (1 letter from 5 letters on, 2 from 8 on) | "Jogurt" → "Joghurt" |
 
-**Quantity units.** `matchQuantityUnit(for:knownUnit:)` matches a unit's name or plural name directly. Failing that, it matches any spelling of the same `KnownIngredientUnit`, so "EL" finds "Esslöffel" or "Tablespoon".
+The best candidate is selected. From 100 on it's an exact match; below, it's *suggested*: the row says "Suggested", and the form shows the reason and the other candidates (*Similar products*). Selecting a product, also the suggested one, makes it the person's choice. Grocy requires a product for every ingredient. Ingredients without one are shown, but not saved, and the form footer counts them.
+
+**Quantity units.** `quantityUnitMatch(for:knownUnit:)` matches, as exact: a unit's name or plural name; any spelling of the same `KnownIngredientUnit` ("g" finds "Gramm" or "Grams", "EL" finds "Esslöffel" or "Tablespoon"); a word of the unit's name ("g" finds "Gramm (g)"). As suggested: the same stem ("Dosen" finds "Dose") or, for unknown units, an abbreviation of the name.
+
+When no unit matches (`hasUnmatchedUnit`), the row says so and the form offers *Create quantity unit*. Its name is the full name of a known unit in the recipe's language (`IngredientUnitLanguage.detect(in:)`, from units like "EL" or "tbsp"; the app language for "g" or "ml"), e.g. "TL" → "Teelöffel", or the unit as written. After a product or unit was created, `fillMissingMatches(in:)` fills in the other ingredients that were missing it, so one new "Bund" serves parsley and chives. Choices of the person stay as they are.
+
+When the unit exists but can't be converted to the product's stock unit (`needsUnitConnection(_:product:)`, e.g. "Bund" for parsley stocked in pieces), only "any amount in stock" can be checked. The form then offers *Connect “Bund” to “Petersilie”*, which adds a product-specific conversion (`productID` set, from the unit to the stock unit) and applies the unit rules again (`unitChanged`), so the amount is checked against the stock. Creating a unit leads straight to this step, as a new unit has no conversions yet.
 
 **Amounts.** Grocy stores an ingredient's amount in the product's *stock* unit. `qu_id` is only the unit the amount is shown in. So:
 - Without a unit ("3 eggs"), the product's consume unit is used.

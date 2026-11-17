@@ -34,6 +34,13 @@ struct IngredientLineParserTests {
         #expect(line.knownUnit != nil)
     }
 
+    @Test("Commas inside parentheses belong to the note")
+    func commaInParentheses() {
+        let line = IngredientLineParser.parse("30 g Speck (durchwachsener, klein geschnittener)")
+        #expect(line.name == "Speck")
+        #expect(line.note == "durchwachsener, klein geschnittener")
+    }
+
     @Test("Lines without a unit")
     func noUnit() {
         let line = IngredientLineParser.parse("3 Eier")
@@ -201,6 +208,142 @@ struct RecipeImportMapperTests {
     @Test("Servings are read from the yield", arguments: [("4 Portionen", 4.0), ("Serves 2-3", 2.0), ("12", 12.0)])
     func servings(yield: String, servings: Double) {
         #expect(RecipeImportMapper.servings(from: yield) == servings)
+    }
+}
+
+@MainActor
+@Suite("Recipe import suggestions")
+struct RecipeImportSuggestionTests {
+    private let gram = MDQuantityUnit(id: 1, name: "Gram", namePlural: "Grams")
+    private let milliliter = MDQuantityUnit(id: 2, name: "ml (Milliliter)")
+    private let teaspoon = MDQuantityUnit(id: 3, name: "Teelöffel", namePlural: "Teelöffel")
+    private let piece = MDQuantityUnit(id: 4, name: "Stück", namePlural: "Stück")
+    private let can = MDQuantityUnit(id: 5, name: "Dose")
+
+    private func mapper(products: [String]) -> RecipeImportMapper {
+        RecipeImportMapper(
+            products: products.enumerated().map { MDProduct(id: $0.offset + 1, name: $0.element, quIDPurchase: 4, quIDStock: 4, quIDConsume: 4) },
+            quantityUnits: [gram, milliliter, teaspoon, piece, can],
+            conversions: []
+        )
+    }
+
+    private func matchedName(_ line: String, products: [String]) -> String? {
+        let mapper = mapper(products: products)
+        let ingredient = mapper.ingredient(from: IngredientLineParser.parse(line))
+        return mapper.products.first(where: { $0.id == ingredient.productID })?.name
+    }
+
+    @Test("A more specific product described by the note is preferred")
+    func noteMakesItSpecific() {
+        #expect(matchedName("0.5 TL Thymian (getrockneter)", products: ["Thymian", "Thymian, getrocknet"]) == "Thymian, getrocknet")
+        #expect(matchedName("0.5 TL Thymian (getrockneter)", products: ["Thymian frisch", "Thymian"]) == "Thymian")
+    }
+
+    @Test("Without the exact product, a similar one is suggested")
+    func plainProductIsSuggested() {
+        let mapper = mapper(products: ["Thymian frisch"])
+        let ingredient = mapper.ingredient(from: IngredientLineParser.parse("0.5 TL Thymian (getrockneter)"))
+        #expect(ingredient.productID == 1)
+        #expect(ingredient.productMatch == .suggested)
+    }
+
+    @Test("Exact names are exact matches")
+    func exactMatch() {
+        let mapper = mapper(products: ["Champignon", "Zwiebel"])
+        #expect(mapper.ingredient(from: IngredientLineParser.parse("500 g Champignons (frische)")).productMatch == .exact)
+        #expect(mapper.ingredient(from: IngredientLineParser.parse("1 Zwiebel(n) (klein gehackte)")).productMatch == .exact)
+    }
+
+    @Test("Products are suggested for adjectives, compounds and typos", arguments: [
+        ("125 ml süße Sahne", "Sahne"),
+        ("4 Schweineschnitzel", "Schnitzel"),
+        ("Mehl", "Weizenmehl"),
+        ("200 g Jogurt", "Joghurt"),
+    ])
+    func suggestions(line: String, product: String) {
+        let mapper = mapper(products: [product, "Zucker"])
+        let ingredient = mapper.ingredient(from: IngredientLineParser.parse(line))
+        #expect(ingredient.productID == 1)
+        #expect(ingredient.productMatch == .suggested)
+    }
+
+    @Test("Unrelated products aren't suggested")
+    func noFalseSuggestions() {
+        #expect(matchedName("Butterschmalz", products: ["Butter", "Salz"]) == nil)
+        #expect(matchedName("Zucker", products: ["Butter"]) == nil)
+    }
+
+    @Test("Units are matched by spelling, name words and stems")
+    func unitMatching() {
+        let mapper = mapper(products: [])
+        #expect(mapper.quantityUnitMatch(for: "g", knownUnit: .gram)?.unit.id == gram.id)
+        #expect(mapper.quantityUnitMatch(for: "g", knownUnit: .gram)?.quality == .exact)
+        #expect(mapper.quantityUnitMatch(for: "ml", knownUnit: .milliliter)?.unit.id == milliliter.id)
+        #expect(mapper.quantityUnitMatch(for: "TL", knownUnit: .teaspoon)?.unit.id == teaspoon.id)
+        #expect(mapper.quantityUnitMatch(for: "Dosen", knownUnit: nil)?.unit.id == can.id)
+        #expect(mapper.quantityUnitMatch(for: "Bund", knownUnit: .bunch) == nil)
+    }
+
+    @Test("Missing units can be created with their full name")
+    func newUnitNames() {
+        let teaspoon = IngredientLineParser.parse("0.5 TL Salz")
+        #expect(teaspoon.newQuantityUnitNames(language: .english)?.singular == "Teelöffel")
+        let bunch = IngredientLineParser.parse("1 Bund Petersilie")
+        #expect(bunch.newQuantityUnitNames(language: .english)?.singular == "Bund")
+        let gram = IngredientLineParser.parse("100g flour")
+        #expect(gram.newQuantityUnitNames(language: .english)?.plural == "Grams")
+        #expect(gram.newQuantityUnitNames(language: .german)?.singular == "Gramm")
+        #expect(IngredientUnitLanguage.detect(in: [teaspoon, bunch, gram]) == .german)
+    }
+
+    @Test("A created unit is used for all ingredients with that unit")
+    func fillsMissingUnits() {
+        let lines = ["1 Bund Petersilie", "1 Bund Schnittlauch"].map { IngredientLineParser.parse($0) }
+        let before = mapper(products: ["Petersilie", "Schnittlauch"])
+        var draft = RecipeImportDraft(
+            name: "Test", baseServings: 1, preparationHTML: "", steps: [], imageURL: nil, importPicture: false, sourceURL: nil,
+            ingredients: lines.map { before.ingredient(from: $0) }
+        )
+        let allUnmatched = draft.ingredients.allSatisfy { $0.hasUnmatchedUnit }
+        #expect(allUnmatched)
+
+        let bunch = MDQuantityUnit(id: 6, name: "Bund", namePlural: "Bund")
+        let after = RecipeImportMapper(products: before.products, quantityUnits: before.quantityUnits + [bunch], conversions: [])
+        after.fillMissingMatches(in: &draft)
+        let allMatched = draft.ingredients.allSatisfy { $0.quID == bunch.id && !$0.hasUnmatchedUnit }
+        #expect(allMatched)
+    }
+
+    @Test("A unit without a conversion can be connected to the product")
+    func connectsUnitToProduct() {
+        let bunch = MDQuantityUnit(id: 6, name: "Bund", namePlural: "Bund")
+        let products = [MDProduct(id: 1, name: "Petersilie", quIDPurchase: 4, quIDStock: 4, quIDConsume: 4)]
+        let before = RecipeImportMapper(products: products, quantityUnits: [piece, bunch], conversions: [])
+        var ingredient = before.ingredient(from: IngredientLineParser.parse("2 Bund Petersilie"))
+        let product = products[0]
+        #expect(ingredient.quID == bunch.id)
+        #expect(ingredient.onlyCheckSingleUnitInStock)
+        #expect(before.needsUnitConnection(ingredient, product: product))
+
+        // 1 Bund Petersilie = 3 Stück, only for this product
+        let conversion = MDQuantityUnitConversion(id: 1, fromQuID: bunch.id, toQuID: piece.id, factor: 3, productID: product.id)
+        let after = RecipeImportMapper(products: products, quantityUnits: [piece, bunch], conversions: [conversion])
+        after.unitChanged(&ingredient)
+        #expect(!after.needsUnitConnection(ingredient, product: product))
+        #expect(!ingredient.onlyCheckSingleUnitInStock)
+        #expect(ingredient.variableAmount.isEmpty)
+        #expect(after.stockAmount(for: ingredient.amount, quID: bunch.id, product: product) == 6)
+    }
+
+    @Test("Units that are already convertible don't need a connection")
+    func noConnectionNeeded() {
+        let products = [MDProduct(id: 1, name: "Mehl", quIDPurchase: 4, quIDStock: 4, quIDConsume: 4)]
+        let mapper = RecipeImportMapper(products: products, quantityUnits: [piece, gram], conversions: [MDQuantityUnitConversion(id: 1, fromQuID: piece.id, toQuID: gram.id, factor: 1000)])
+        let inGrams = mapper.ingredient(from: IngredientLineParser.parse("500 g Mehl"))
+        let inStockUnit = mapper.ingredient(from: IngredientLineParser.parse("2 Stück Mehl"))
+        #expect(!mapper.needsUnitConnection(inGrams, product: products[0]))
+        #expect(!mapper.needsUnitConnection(inStockUnit, product: products[0]))
     }
 }
 
