@@ -60,32 +60,15 @@ struct AppTabNavigation: View {
         systemConfigList.first
     }
 
-    @State private var showQuickScan: Bool = false
-
-    /// Quick Scan is an action, not a place: selecting its tab opens it in a sheet and keeps the current tab.
-    private var selection: Binding<TabNavigationItem> {
-        Binding(
-            get: { tabSelection == .quickScanMode ? .stockOverview : tabSelection },
-            set: { newSelection in
-                if newSelection == .quickScanMode {
-                    showQuickScan = true
-                } else {
-                    tabSelection = newSelection
+    var body: some View {
+        TabView(selection: $tabSelection) {
+            Tab("Quick Scan", systemImage: MySymbols.barcodeScan, value: TabNavigationItem.quickScanMode) {
+                NavigationStack {
+                    QuickScanModeView()
                 }
             }
-        )
-    }
-
-    var body: some View {
-        TabView(selection: selection) {
-            #if os(iOS)
-                Tab("Quick Scan", systemImage: MySymbols.barcodeScan, value: TabNavigationItem.quickScanMode) {
-                    // Never shown: selecting the tab opens the Quick Scan sheet.
-                    Color.clear
-                }
-                .customizationID("georgappdev.Grocy.quickScanMode")
-                .hidden(!enableQuickScan)
-            #endif
+            .customizationID("georgappdev.Grocy.quickScanMode")
+            .hidden(!enableQuickScan)
 
             Tab("Stock overview", systemImage: MySymbols.stockOverview, value: TabNavigationItem.stockOverview) {
                 NavigationStack {
@@ -291,7 +274,6 @@ struct AppTabNavigation: View {
         })
         #if os(iOS)
             .tabBarMinimizeBehavior(.onScrollDown)
-            .quickScanSheet(isPresented: $showQuickScan)
         #endif
         .onAppear {
             Task {

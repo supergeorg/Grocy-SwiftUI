@@ -16,7 +16,6 @@ struct Sidebar: View {
     @AppStorage("devMode") private var devMode: Bool = false
 
     @State private var isMasterDataSectionExpanded: Bool = false
-    @State private var showQuickScan: Bool = false
 
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
@@ -27,10 +26,7 @@ struct Sidebar: View {
         List(selection: $selection) {
             Section {
                 #if os(iOS)
-                    // An action, not a place: opens in a sheet.
-                    Button {
-                        showQuickScan = true
-                    } label: {
+                    NavigationLink(value: NavigationItem.quickScan) {
                         Label("Quick Scan", systemImage: MySymbols.barcodeScan)
                     }
                 #endif
@@ -195,7 +191,6 @@ struct Sidebar: View {
                     }
                 )
             })
-            .quickScanSheet(isPresented: $showQuickScan)
         #endif
         #if os(macOS)
             .navigationSplitViewColumnWidth(min: 200, ideal: 200)

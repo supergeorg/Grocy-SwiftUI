@@ -88,6 +88,7 @@ nonisolated struct MySymbols {
     static let reload = "arrow.triangle.2.circlepath"
     static let search = "magnifyingglass"
     static let menuPick = "chevron.down.circle"
+    static let dropdown = "chevron.down"
     static let done = "checkmark.circle"
     static let undone = "circle"
     static let clear = "clear"
