@@ -31,12 +31,8 @@ struct ServerProfileFormView: View {
     @Environment(\.profileModelContext) private var profileModelContext
     @Environment(\.dismiss) private var dismiss
 
-    @State private var isScanPaused: Bool = true
     @State private var serverProfile: ServerProfile
     @AppStorage("selectedServerProfileID") private var selectedServerProfileID: UUID?
-    #if os(iOS)
-        @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
-    #endif
     var isEditing: Bool = false
 
     init(serverProfile: ServerProfile? = nil) {
@@ -70,40 +66,10 @@ struct ServerProfileFormView: View {
                 serverProfile.grocyAPIKey = apiKey
             }
         }
-        func handleGrocyScanLegacy(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
-            self.isShowingGrocyScanner = false
-            switch result {
-            case .success(let code):
-                let grocyServerData = code.string.components(separatedBy: "|")
-                guard grocyServerData.count == 2 else { return }
-
-                let serverURL = grocyServerData[0]
-                let apiKey = grocyServerData[1]
-
-                if apiKey.count == 50 {
-                    serverProfile.grocyServerURL = serverURL
-                    serverProfile.grocyAPIKey = apiKey
-                }
-            case .failure(let error):
-                print("Scanning failed")
-                print(error)
-            }
-        }
-
         @State private var isShowingTokenScanner: Bool = false
         func handleHassTokenScan(result: CodeResult) {
             self.isShowingTokenScanner = false
             serverProfile.hassToken = result.value
-        }
-        func handleTokenScanLegacy(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
-            self.isShowingTokenScanner = false
-            switch result {
-            case .success(let scannedHassToken):
-                serverProfile.hassToken = scannedHassToken.string
-            case .failure(let error):
-                print("Scanning failed")
-                print(error)
-            }
         }
     #endif
 
@@ -161,33 +127,7 @@ struct ServerProfileFormView: View {
                     .sheet(
                         isPresented: $isShowingGrocyScanner,
                         content: {
-                            if !useLegacyScanner {
-                                CodeScannerView(isPaused: $isScanPaused, onCodeFound: self.handleGrocyScan, symbologies: [.qr])
-                                    .onAppear { isScanPaused = false }
-                                    .onDisappear { isScanPaused = true }
-                                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                                        isScanPaused = true
-                                    }
-                                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                                        isScanPaused = false
-                                    }
-                            } else {
-                                CodeScannerViewLegacy(
-                                    codeTypes: [.qr],
-                                    scanMode: .once,
-                                    simulatedData: "http://192.168.178.40:8123/api/hassio_ingress/ckgy-GNrulcboPPwZyCnOn181YpRqOr6vIC8G2lijqU/api|tkYf677yotIwTibP0ko1lZxn8tj4cgoecWBMropiNc1MCjup8p",
-                                    isPaused: $isScanPaused,
-                                    completion: self.handleGrocyScanLegacy
-                                )
-                                .onAppear { isScanPaused = false }
-                                .onDisappear { isScanPaused = true }
-                                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                                    isScanPaused = true
-                                }
-                                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                                    isScanPaused = false
-                                }
-                            }
+                            CodeScannerSheetView(title: "QR-Scan", symbologies: [.qr], onCodeFound: self.handleGrocyScan)
                         }
                     )
                 #endif
@@ -220,33 +160,7 @@ struct ServerProfileFormView: View {
                             .sheet(
                                 isPresented: $isShowingTokenScanner,
                                 content: {
-                                    if !useLegacyScanner {
-                                        CodeScannerView(isPaused: $isScanPaused, onCodeFound: self.handleHassTokenScan, symbologies: [.qr])
-                                            .onAppear { isScanPaused = false }
-                                            .onDisappear { isScanPaused = true }
-                                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                                                isScanPaused = true
-                                            }
-                                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                                                isScanPaused = false
-                                            }
-                                    } else {
-                                        CodeScannerViewLegacy(
-                                            codeTypes: [.qr],
-                                            scanMode: .once,
-                                            simulatedData: "670f7d46391db7b42d382ebc9ea667f3aac94eb90219b9e32c7cd71cd37d13833109113270b327fac08d77d9b038a9cb3ab6cfd8dc8d0e3890d16e6434d10b3d",
-                                            isPaused: $isScanPaused,
-                                            completion: self.handleTokenScanLegacy
-                                        )
-                                        .onAppear { isScanPaused = false }
-                                        .onDisappear { isScanPaused = true }
-                                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                                            isScanPaused = true
-                                        }
-                                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                                            isScanPaused = false
-                                        }
-                                    }
+                                    CodeScannerSheetView(title: "QR-Scan", symbologies: [.qr], onCodeFound: self.handleHassTokenScan)
                                 }
                             )
                         #endif

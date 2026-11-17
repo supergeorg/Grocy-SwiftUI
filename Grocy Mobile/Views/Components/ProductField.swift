@@ -60,18 +60,7 @@ struct ProductField: View {
 
     @State private var searchTerm: String = ""
     #if os(iOS)
-        @State private var isTorchOn = false
-        @State private var isFrontCamera = false
         @State private var isShowingScanner: Bool = false
-        func handleScan(result: Result<CodeScannerViewLegacy.ScanResult, CodeScannerViewLegacy.ScanError>) {
-            self.isShowingScanner = false
-            switch result {
-            case .success(let code):
-                searchTerm = code.string
-            case .failure(let error):
-                GrocyLogger.error("Scanning for product failed. \(error)")
-            }
-        }
     #endif
 
     private func getBarcodes(pID: Int) -> [String] {
@@ -119,42 +108,9 @@ struct ProductField: View {
                             }
                         )
                         .sheet(isPresented: $isShowingScanner) {
-                            CodeScannerViewLegacy(
-                                codeTypes: getSavedCodeTypesLegacy().map { $0.type },
-                                scanMode: .once,
-                                simulatedData: "5901234123457",
-                                isFrontCamera: $isFrontCamera,
-                                completion: self.handleScan
-                            )
-                            .overlay(
-                                HStack {
-                                    Button(
-                                        action: {
-                                            isTorchOn.toggle()
-                                        },
-                                        label: {
-                                            Image(systemName: isTorchOn ? "bolt.circle" : "bolt.slash.circle")
-                                                .font(.title)
-                                        }
-                                    )
-                                    .disabled(!checkForTorch() || isFrontCamera)
-                                    .padding()
-                                    if getFrontCameraAvailable() {
-                                        Button(
-                                            action: {
-                                                isFrontCamera.toggle()
-                                            },
-                                            label: {
-                                                Image(systemName: MySymbols.changeCamera)
-                                                    .font(.title)
-                                            }
-                                        )
-                                        .disabled(isTorchOn)
-                                        .padding()
-                                    }
-                                },
-                                alignment: .topTrailing
-                            )
+                            CodeScannerSheetView { result in
+                                searchTerm = result.value
+                            }
                         }
                     }
                     Text("").tag(nil as Int?)

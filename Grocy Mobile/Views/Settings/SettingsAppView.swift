@@ -23,7 +23,6 @@ struct SettingsAppView: View {
     #if os(iOS)
         @AppStorage(PhoneNavigationStyle.storageKey) var phoneNavigationStyle: PhoneNavigationStyle = .smart
         @AppStorage("iPadTabNavigation") var iPadTabNavigation: Bool = false
-        @AppStorage("useLegacyScanner") private var useLegacyScanner: Bool = false
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
@@ -96,16 +95,6 @@ struct SettingsAppView: View {
                             .foregroundStyle(.primary)
                     }
                 )
-                MyToggle(isOn: $useLegacyScanner, description: "Legacy Barcode Scanner", icon: MySymbols.barcode)
-                if useLegacyScanner {
-                    NavigationLink(
-                        destination: CodeTypeSelectionViewLegacy(),
-                        label: {
-                            Label("Barcode settings (legacy)", systemImage: MySymbols.barcodeScan)
-                                .foregroundStyle(.primary)
-                        }
-                    )
-                }
 
                 if horizontalSizeClass == .compact {
                     Picker(selection: $phoneNavigationStyle) {
