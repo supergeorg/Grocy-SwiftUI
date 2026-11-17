@@ -623,13 +623,15 @@ struct LinkDialog: View {
             #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(role: .cancel) {
                         isPresented = false
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Insert") {
+                    Button(role: .confirm) {
                         onInsert()
+                    } label: {
+                        Label("Insert", systemImage: MySymbols.link)
                     }
                     .disabled(linkURL.isEmpty || linkText.isEmpty)
                 }

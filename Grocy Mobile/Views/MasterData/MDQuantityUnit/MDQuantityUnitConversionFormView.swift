@@ -226,12 +226,11 @@ struct MDQuantityUnitConversionFormView: View {
                         }
                     },
                     label: {
-                        if !isProcessing {
-                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
-                            Label("Save", systemImage: MySymbols.save)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Save", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessing)
                     }
                 )
                 .disabled(!conversionCorrect || isProcessing)

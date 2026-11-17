@@ -159,11 +159,10 @@ struct BatteryTrackingView: View {
                         await trackChargeCycle()
                     }
                 } label: {
-                    if !isProcessingAction {
-                        Label("Track charge cycle", systemImage: MySymbols.batteryCharge)
-                    } else {
-                        ProgressView().progressViewStyle(.circular)
-                    }
+                    // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                    // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                    Label("Track charge cycle", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.batteryCharge)
+                        .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                 }
                 .disabled(!isFormValid || isProcessingAction)
                 .keyboardShortcut(.defaultAction)

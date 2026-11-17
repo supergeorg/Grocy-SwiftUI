@@ -47,13 +47,10 @@ enum RecipesLayout: String {
     /// Cards with a large picture, in at least two columns.
     case gallery
 
-    /// The list on iPhone, where the screen is narrow; the gallery on iPad and Mac, where there's room for pictures.
-    static var platformDefault: RecipesLayout {
-        #if os(iOS)
-            UIDevice.current.userInterfaceIdiom == .phone ? .list : .gallery
-        #else
-            .gallery
-        #endif
+    /// The list in compact width, where the screen is narrow; the gallery in regular width and on Mac, where there's room for pictures.
+    /// From the size class rather than the device, so the inner display of iPhone Duo gets the gallery.
+    static func defaultLayout(for horizontalSizeClass: UserInterfaceSizeClass?) -> RecipesLayout {
+        horizontalSizeClass == .compact ? .list : .gallery
     }
 }
 
@@ -75,7 +72,12 @@ struct RecipesView: View {
     @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
     @AppStorage("RecipesView.sortOrder") private var sortOrderKey: String = "reverse"
     @State private var filteredStatus: RecipeStatus = .all
-    @AppStorage("RecipesView.layout") private var layout: RecipesLayout = .platformDefault
+    /// Only set once the user picks a layout; until then it follows the width (`RecipesLayout.defaultLayout(for:)`).
+    @AppStorage("RecipesView.layout") private var storedLayout: RecipesLayout?
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    private var layout: RecipesLayout {
+        storedLayout ?? RecipesLayout.defaultLayout(for: horizontalSizeClass)
+    }
     /// Width of the gallery, to fit as many columns as possible.
     @State private var galleryWidth: CGFloat = 0
 
@@ -407,7 +409,7 @@ struct RecipesView: View {
 
     /// Shows the current layout's symbol; choosing switches between the list and the gallery.
     var layoutPicker: some View {
-        Picker("Layout", selection: $layout.animation()) {
+        Picker("Layout", selection: Binding(get: { layout }, set: { storedLayout = $0 }).animation()) {
             Label("List", systemImage: MySymbols.layoutList)
                 .tag(RecipesLayout.list)
             Label("Gallery", systemImage: MySymbols.layoutGallery)

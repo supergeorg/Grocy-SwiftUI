@@ -314,22 +314,19 @@ struct PurchaseProductView: View {
             if productToPurchaseID == nil {
                 ToolbarItem(id: "clear", placement: .cancellationAction) {
                     if !quickScan {
-                        if isProcessingAction {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                        } else {
-                            Button(
-                                action: {
-                                    actionPending = false
-                                    resetForm()
-                                },
-                                label: {
-                                    Label("Clear", systemImage: MySymbols.cancel)
-                                        .help("Clear")
-                                }
-                            )
-                            .keyboardShortcut("r", modifiers: [.command])
-                        }
+                        Button(
+                            action: {
+                                actionPending = false
+                                resetForm()
+                            },
+                            label: {
+                                Label("Clear", systemImage: MySymbols.cancel)
+                                    .help("Clear")
+                            }
+                        )
+                        .keyboardShortcut("r", modifiers: [.command])
+                        // Stays in place while the action runs (the confirm button shows the progress), so the bar doesn't change.
+                        .disabled(isProcessingAction)
                     }
                 }
             }
@@ -342,12 +339,11 @@ struct PurchaseProductView: View {
                         }
                     },
                     label: {
-                        if !isProcessingAction {
-                            Label("Purchase product", systemImage: MySymbols.purchase)
-                                .labelStyle(.titleAndIcon)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Purchase product", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.purchase)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
+                        .labelStyle(.titleAndIcon)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)

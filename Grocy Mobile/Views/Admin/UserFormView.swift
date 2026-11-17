@@ -91,12 +91,11 @@ struct UserFormView: View {
         .navigationTitle(isNewUser ? "Create user" : "Edit user")
         .toolbar(content: {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button(role: .cancel) {
                     finishForm()
                 }
             }
-            ToolbarItemGroup(placement: .automatic) {
-                Spacer()
+            ToolbarItem(placement: .confirmationAction) {
                 Button(
                     role: .confirm,
                     action: {

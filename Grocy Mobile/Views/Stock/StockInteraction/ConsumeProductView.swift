@@ -434,21 +434,19 @@ struct ConsumeProductView: View {
             if productToConsumeID == nil {
                 ToolbarItem(id: "clear", placement: .cancellationAction) {
                     if !quickScan {
-                        if isProcessingAction {
-                            ProgressView().progressViewStyle(.circular)
-                        } else {
-                            Button(
-                                action: {
-                                    actionPending = false
-                                    resetForm()
-                                },
-                                label: {
-                                    Label("Clear", systemImage: MySymbols.cancel)
-                                        .help("Clear")
-                                }
-                            )
-                            .keyboardShortcut("r", modifiers: [.command])
-                        }
+                        Button(
+                            action: {
+                                actionPending = false
+                                resetForm()
+                            },
+                            label: {
+                                Label("Clear", systemImage: MySymbols.cancel)
+                                    .help("Clear")
+                            }
+                        )
+                        .keyboardShortcut("r", modifiers: [.command])
+                        // Stays in place while the action runs (the confirm button shows the progress), so the bar doesn't change.
+                        .disabled(isProcessingAction)
                     }
                 }
             }
@@ -462,12 +460,11 @@ struct ConsumeProductView: View {
                             }
                         },
                         label: {
-                            if !isProcessingAction {
-                                Label("Mark as opened", systemImage: MySymbols.open)
-                                    .labelStyle(.titleAndIcon)
-                            } else {
-                                ProgressView().progressViewStyle(.circular)
-                            }
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Mark as opened", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.open)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
+                            .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormValid || isProcessingAction)
@@ -484,12 +481,11 @@ struct ConsumeProductView: View {
                             }
                         },
                         label: {
-                            if !isProcessingAction {
-                                Label("Consume product", systemImage: MySymbols.consume)
-                                    .labelStyle(.titleAndIcon)
-                            } else {
-                                ProgressView().progressViewStyle(.circular)
-                            }
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Consume product", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.consume)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
+                            .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormValid || isProcessingAction)

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// How the app is navigated on iPhone (compact width), chosen in the app settings.
+/// How the app is navigated on iPhone (in every width, see `applies(in:)`) and in compact width on iPad, chosen in the app settings.
 enum PhoneNavigationStyle: String, CaseIterable, Identifiable {
     /// Stock, shopping list, recipes and an agenda of everything due (chores, tasks, batteries).
     case smart
@@ -43,6 +43,19 @@ enum PhoneNavigationStyle: String, CaseIterable, Identifiable {
         case .sidebar: MySymbols.sidebarNavigation
         }
     }
+
+    #if os(iOS)
+        /// Whether this setting decides the navigation, rather than the iPad one (`iPadTabNavigation`).
+        ///
+        /// On iPhone always, in every width: the inner display of iPhone Duo is regular width, its outer display
+        /// and each half of Split View are compact. Switching to the iPad navigation there would replace the whole
+        /// hierarchy, losing the selected place and the pushed screens, each time the device opens or closes.
+        /// The device only picks which setting applies; the size class still decides the layout within it.
+        /// On iPad, in compact width (Split View, Slide Over).
+        static func applies(in horizontalSizeClass: UserInterfaceSizeClass?) -> Bool {
+            UIDevice.current.userInterfaceIdiom == .phone || horizontalSizeClass == .compact
+        }
+    #endif
 }
 
 /// A place of the iPhone tab navigation: a tab, or a page pushed onto a tab (from the settings button

@@ -78,6 +78,8 @@ nonisolated struct MySymbols {
     static let cancel = "xmark.circle.fill"
     static let upload = "square.and.arrow.up.fill"
     static let save = "checkmark"
+    /// Shown, animated, in place of an action's symbol while it runs (a toolbar item keeps an image, so it stays in iPhone Duo's vertical bar).
+    static let progress = "progress.indicator"
     static let login = "key.fill"
     static let logout = "rectangle.portrait.and.arrow.right"
     static let reset = "arrow.counterclockwise"

@@ -167,7 +167,9 @@ struct StockTableRow: View {
                 .foregroundStyle(.primary)
             }
 
-            HStack {
+            // A flow layout, not an HStack: in a narrow row (the outer display of iPhone Duo, beside its vertical bar)
+            // an HStack squeezes the texts until words break ("Pack / s"); this moves whole items to the next line.
+            FlowLayout(spacing: Spacing.small) {
                 Text("\(stockElement.amount.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amount) ?? "")")
                 if stockElement.amountOpened > 0 {
                     Text("\(stockElement.amountOpened.formattedAmount) opened")

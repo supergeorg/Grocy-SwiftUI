@@ -271,21 +271,19 @@ struct TransferProductView: View {
             }
             if productToTransferID == nil {
                 ToolbarItem(id: "reset", placement: .cancellationAction) {
-                    if isProcessingAction {
-                        ProgressView().progressViewStyle(.circular)
-                    } else {
-                        Button(
-                            action: {
-                                actionPending = false
-                                resetForm()
-                            },
-                            label: {
-                                Label("Clear", systemImage: MySymbols.cancel)
-                                    .help("Clear")
-                            }
-                        )
-                        .keyboardShortcut("r", modifiers: [.command])
-                    }
+                    Button(
+                        action: {
+                            actionPending = false
+                            resetForm()
+                        },
+                        label: {
+                            Label("Clear", systemImage: MySymbols.cancel)
+                                .help("Clear")
+                        }
+                    )
+                    .keyboardShortcut("r", modifiers: [.command])
+                    // Stays in place while the action runs (the confirm button shows the progress), so the bar doesn't change.
+                    .disabled(isProcessingAction)
                 }
             }
             ToolbarItem(id: "transfer", placement: .primaryAction) {
@@ -297,12 +295,11 @@ struct TransferProductView: View {
                         }
                     },
                     label: {
-                        if !isProcessingAction {
-                            Label("Transfer", systemImage: MySymbols.transfer)
-                                .labelStyle(.titleAndIcon)
-                        } else {
-                            ProgressView().progressViewStyle(.circular)
-                        }
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Transfer", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.transfer)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
+                        .labelStyle(.titleAndIcon)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)
