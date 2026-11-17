@@ -25,7 +25,7 @@ struct TaskFormView: View {
     var existingTask: GrocyTask? = nil
     var isPopup: Bool
 
-    @State var grocyTask: GrocyTask
+    @State private var grocyTask: GrocyTask
 
     init(existingTask: GrocyTask? = nil, isPopup: Bool = false) {
         self.existingTask = existingTask
@@ -111,45 +111,38 @@ struct TaskFormView: View {
                 leadingIcon: MySymbols.description
             )
 
-            LabeledContent(
-                content: {
-                    VStack {
-                        Toggle(
-                            "",
-                            isOn: Binding(
-                                get: { grocyTask.dueDate != nil },
-                                set: { isOn in
-                                    if isOn {
-                                        grocyTask.dueDate = Date()
-                                    } else {
-                                        grocyTask.dueDate = nil
-                                    }
-                                }
-                            )
-                        )
-                        Spacer()
-                        if grocyTask.dueDate != nil {
-                            DatePicker(
-                                "",
-                                selection: Binding(
-                                    get: { grocyTask.dueDate ?? Date() },
-                                    set: { grocyTask.dueDate = $0 }
-                                ),
-                                displayedComponents: [.date, .hourAndMinute]
-                            )
-                        }
+            // The switch and the date picker each get their own row, so neither is squeezed into the label's row.
+            Toggle(
+                isOn: Binding(
+                    get: { grocyTask.dueDate != nil },
+                    set: { isOn in
+                        grocyTask.dueDate = isOn ? Date() : nil
                     }
-                },
-                label: {
-                    Label("Due", systemImage: MySymbols.date)
+                )
+            ) {
+                Label {
+                    Text("Due")
                     if grocyTask.dueDate != nil {
                         Text(getRelativeDateAsText(grocyTask.dueDate, localizationKey: localizationKey) ?? "")
                             .foregroundStyle(.secondary)
                             .italic()
                     }
+                } icon: {
+                    Image(systemName: MySymbols.date)
+                        .foregroundStyle(.primary)
                 }
-            )
-            .foregroundStyle(.primary)
+            }
+
+            if let dueDate = grocyTask.dueDate {
+                DatePicker(
+                    "Due date",
+                    selection: Binding(
+                        get: { dueDate },
+                        set: { grocyTask.dueDate = $0 }
+                    ),
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+            }
 
             Picker(
                 selection: $grocyTask.categoryID,
