@@ -10,8 +10,24 @@ import SwiftData
 import SwiftUI
 import Vision
 
-enum QuickScanMode {
+enum QuickScanMode: CaseIterable {
     case consume, markAsOpened, purchase
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .consume: "Consume"
+        case .markAsOpened: "Open"
+        case .purchase: "Purchase"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .consume: MySymbols.consume
+        case .markAsOpened: MySymbols.open
+        case .purchase: MySymbols.purchase
+        }
+    }
 }
 
 enum QSActiveSheet: Identifiable {
@@ -23,6 +39,9 @@ enum QSActiveSheet: Identifiable {
 }
 
 struct QuickScanModeView: View {
+    /// Set when Quick Scan is presented in a sheet: shows the close button.
+    var onClose: (() -> Void)? = nil
+
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.openURL) private var openURL
 
@@ -192,37 +211,48 @@ struct QuickScanModeView: View {
                     Text("Please enable camera access in Settings to scan barcodes.")
                 }
                 .toolbar {
+                    // Leading: close (in a sheet) and the torch, the controls of the camera.
+                    if let onClose {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(role: .close, action: onClose)
+                        }
+                    }
                     ToolbarItem(placement: .topBarLeading) {
-                        Picker(
-                            selection: $quickScanMode,
-                            label: Label("Quick Scan", systemImage: MySymbols.menuPick),
-                            content: {
-                                Label("Consume", systemImage: MySymbols.consume)
-                                    .labelStyle(.titleAndIcon)
-                                    .tag(QuickScanMode.consume)
-                                Label("Open", systemImage: MySymbols.open)
-                                    .labelStyle(.titleAndIcon)
-                                    .tag(QuickScanMode.markAsOpened)
-                                Label("Purchase", systemImage: MySymbols.purchase)
-                                    .labelStyle(.titleAndIcon)
-                                    .tag(QuickScanMode.purchase)
-                            }
-                        )
-                        .pickerStyle(.menu)
+                        TorchButton(isTorchOn: $isTorchOn)
                     }
 
-                    ToolbarItemGroup(placement: .topBarTrailing) {
-                        TorchButton(isTorchOn: $isTorchOn)
-                        if isScanPaused {
-                            Button(
-                                action: {
-                                    qsActiveSheet = nil
-                                },
-                                label: {
-                                    Image(systemName: MySymbols.quickScanPause)
-                                }
-                            )
+                    // Trailing: what a scan does. Labeled with the current mode and a chevron, so it reads as a choice.
+                    if isScanPaused {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                qsActiveSheet = nil
+                            } label: {
+                                Label("Resume", systemImage: MySymbols.quickScanPause)
+                            }
                         }
+                        ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Picker("Quick Scan mode", selection: $quickScanMode) {
+                                ForEach(QuickScanMode.allCases, id: \.self) { mode in
+                                    Label(mode.title, systemImage: mode.icon)
+                                        .tag(mode)
+                                }
+                            }
+                        } label: {
+                            // Not a Label: the toolbar would reduce it to its icon.
+                            HStack(spacing: Spacing.xSmall) {
+                                Image(systemName: quickScanMode.icon)
+                                Text(quickScanMode.title)
+                                Image(systemName: MySymbols.dropdown)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+                            }
+                            .fixedSize()
+                        }
+                        .accessibilityLabel("Quick Scan mode")
+                        .accessibilityValue(Text(quickScanMode.title))
                     }
                 }
                 .onChange(of: newRecognizedBarcode?.id) {
@@ -311,18 +341,12 @@ struct QuickScanModeView: View {
 
 #if os(iOS)
     extension View {
-        /// Presents Quick Scan in a sheet: it's an action, not a place. Closed with the close button or by swiping down.
+        /// Presents Quick Scan in a sheet, for when a button opens it (the iPhone search tab's bottom accessory).
+        /// Closed with the close button or by swiping down. Opened from a tab or the sidebar, it's shown in place instead.
         func quickScanSheet(isPresented: Binding<Bool>) -> some View {
             sheet(isPresented: isPresented) {
                 NavigationStack {
-                    QuickScanModeView()
-                        .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button(role: .close) {
-                                    isPresented.wrappedValue = false
-                                }
-                            }
-                        }
+                    QuickScanModeView(onClose: { isPresented.wrappedValue = false })
                 }
             }
         }

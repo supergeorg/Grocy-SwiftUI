@@ -36,12 +36,13 @@ import Vision
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
+                    // Close first, the torch next to it.
+                    ToolbarItem(placement: .topBarLeading) {
                         Button(role: .close) {
                             dismiss()
                         }
                     }
-                    ToolbarItem(placement: .primaryAction) {
+                    ToolbarItem(placement: .topBarLeading) {
                         TorchButton(isTorchOn: $isTorchOn)
                     }
                 }
