@@ -56,15 +56,6 @@ struct AboutView: View {
                         AboutLineView(iconName: MySymbols.api, caption: "Github", content: "supergeorg/Grocy-SwiftUI")
                     }
                 }
-            }
-            .foregroundStyle(.primary)
-
-            Section {
-                if let grocyURL = URL(string: "https://github.com/grocy/grocy") {
-                    Link(destination: grocyURL) {
-                        AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
-                    }
-                }
                 #if os(iOS)
                     NavigationLink {
                         TranslatorsView()
@@ -83,8 +74,29 @@ struct AboutView: View {
                         AboutLineView(iconName: MySymbols.richText, caption: "Infomaniak Rich HTML Editor", content: "Copyright (Apache 2.0 License) Infomaniak")
                     }
                 }
-            } footer: {
-                Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
+            } header: {
+                Text("Grocy Mobile")
+            }
+            .foregroundStyle(.primary)
+
+            Section {
+                Label {
+                    Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
+                        .font(.headline)
+                        .fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: MySymbols.thanks)
+                        .foregroundStyle(Color(.GrocyColors.grocyRed))
+                        .accessibilityHidden(true)
+                }
+                .padding(.vertical, Spacing.xxSmall)
+                if let grocyURL = URL(string: "https://github.com/grocy/grocy") {
+                    Link(destination: grocyURL) {
+                        AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
+                    }
+                }
+            } header: {
+                Text("Grocy")
             }
             .foregroundStyle(.primary)
 

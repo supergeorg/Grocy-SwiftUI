@@ -256,5 +256,6 @@ nonisolated struct MySymbols {
     static let serverProfiles = "icloud"
     static let householdManagement = "house.and.flag"
     static let whatsNew = "sparkles"
+    static let thanks = "heart.fill"
     static let widgets = "widget.small"
 }
