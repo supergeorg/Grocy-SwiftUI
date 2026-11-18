@@ -4,38 +4,24 @@
     "" : {
       "shouldTranslate" : false
     },
-    "%lld ingredients have a suggested product or unit. Check them before saving." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bei %lld Zutaten wurde ein Produkt oder eine Einheit vorgeschlagen. Prüfe sie vor dem Speichern."
-          }
-        }
-      }
-    },
-    "%lld of %lld ingredients" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld von %2$lld Zutaten"
-          }
-        }
-      }
-    },
-    "1 %@ %@ is the same as" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1 %1$@ %2$@ entspricht"
-          }
-        }
-      }
-    },
     ":" : {
       "shouldTranslate" : false
+    },
+    "“%@” from the website was matched to the similar unit “%@”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%1$@“ von der Website wurde der ähnlichen Einheit „%2$@“ zugeordnet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "“%1$@” from the website was matched to the similar unit “%2$@”."
+          }
+        }
+      }
     },
     "(%@)" : {
       "localizations" : {
@@ -2833,6 +2819,16 @@
     "%lld days" : {
 
     },
+    "%lld ingredients have a suggested product or unit. Check them before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei %lld Zutaten wurde ein Produkt oder eine Einheit vorgeschlagen. Prüfe sie vor dem Speichern."
+          }
+        }
+      }
+    },
     "%lld ingredients have no product and won't be imported. Select an ingredient to choose or create its product." : {
 
     },
@@ -3024,6 +3020,26 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld of %lld ingredients" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld von %2$lld Zutaten"
+          }
+        }
+      }
+    },
+    "%lld of %lld ready" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld ready"
           }
         }
       }
@@ -6784,410 +6800,6 @@
         }
       }
     },
-    "A new navigation on iPhone" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eine neue Navigation auf dem iPhone"
-          }
-        }
-      }
-    },
-    "All ingredients with their stock status, a list or gallery layout, and import from websites." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Zutaten mit ihrem Bestandsstatus, eine Listen- oder Galerieansicht und Import von Webseiten."
-          }
-        }
-      }
-    },
-    "Apple Intelligence: %@ %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence: %1$@ %2$@"
-          }
-        }
-      }
-    },
-    "Check off the ingredients, follow one step per page, and consume everything when you're done." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hake die Zutaten ab, folge einem Schritt pro Seite und verbrauche am Ende alles."
-          }
-        }
-      }
-    },
-    "Choose the smart navigation, your own tabs or the sidebar. Search finds stock, products, recipes and master data." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle die smarte Navigation, eigene Tabs oder die Seitenleiste. Die Suche findet Bestand, Produkte, Rezepte und Stammdaten."
-          }
-        }
-      }
-    },
-    "Connect the unit to the product to check the amount in stock." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbinde die Einheit mit dem Produkt, um die Menge im Bestand zu prüfen."
-          }
-        }
-      }
-    },
-    "Connect unit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einheit verbinden"
-          }
-        }
-      }
-    },
-    "Connect “%@” to “%@”" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„%1$@“ mit „%2$@“ verbinden"
-          }
-        }
-      }
-    },
-    "Cooking mode" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kochmodus"
-          }
-        }
-      }
-    },
-    "Create product “%@”" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produkt „%@“ erstellen"
-          }
-        }
-      }
-    },
-    "Create quantity unit “%@”" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mengeneinheit „%@“ erstellen"
-          }
-        }
-      }
-    },
-    "Don't import" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht importieren"
-          }
-        }
-      }
-    },
-    "Everything that's due" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alles, was fällig ist"
-          }
-        }
-      }
-    },
-    "Fill in with Apple Intelligence" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Apple Intelligence ausfüllen"
-          }
-        }
-      }
-    },
-    "Filling in with Apple Intelligence" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird mit Apple Intelligence ausgefüllt"
-          }
-        }
-      }
-    },
-    "Finding products with Apple Intelligence" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produkte mit Apple Intelligence finden"
-          }
-        }
-      }
-    },
-    "Import" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importieren"
-          }
-        }
-      }
-    },
-    "Ingredients whose names match no product get a suggestion. You can change it before saving." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zutaten, deren Name zu keinem Produkt passt, bekommen einen Vorschlag. Du kannst ihn vor dem Speichern ändern."
-          }
-        }
-      }
-    },
-    "Looking for a product…" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produkt wird gesucht …"
-          }
-        }
-      }
-    },
-    "No quantity unit matches “%@” from the website. Create it, or choose another unit." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Mengeneinheit passt zu „%@“ von der Website. Erstelle sie oder wähle eine andere Einheit."
-          }
-        }
-      }
-    },
-    "Products that are expired, due soon or running low, and due chores, tasks and batteries in one list, with swipe actions." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abgelaufene, bald fällige und knappe Produkte sowie fällige Hausarbeiten, Aufgaben und Batterien in einer Liste, mit Wischaktionen."
-          }
-        }
-      }
-    },
-    "Quick Scan mode" : {
-
-    },
-    "Resume" : {
-
-    },
-    "Saved" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gespeichert"
-          }
-        }
-      }
-    },
-    "Select the product to confirm it." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle das Produkt aus, um es zu bestätigen."
-          }
-        }
-      }
-    },
-    "Selected" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgewählt"
-          }
-        }
-      }
-    },
-    "Similar products" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ähnliche Produkte"
-          }
-        }
-      }
-    },
-    "Split" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufteilen"
-          }
-        }
-      }
-    },
-    "Stop" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stoppen"
-          }
-        }
-      }
-    },
-    "Suggested because the names are similar. Check that it's the right product." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorgeschlagen, weil die Namen ähnlich sind. Prüfe, ob es das richtige Produkt ist."
-          }
-        }
-      }
-    },
-    "Suggested by Apple Intelligence. Check that it's the right product." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Von Apple Intelligence vorgeschlagen. Prüfe, ob es das richtige Produkt ist."
-          }
-        }
-      }
-    },
-    "Suggested by Apple Intelligence: %@. Check them before saving." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Von Apple Intelligence vorgeschlagen: %@. Prüfe die Angaben vor dem Speichern."
-          }
-        }
-      }
-    },
-    "Suggested: %@ %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorschlag: %1$@ %2$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Suggested: %1$@ %2$@"
-          }
-        }
-      }
-    },
-    "Suggestions for the location, product group and unit of new products, and for the products of imported ingredients." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorschläge für Standort, Produktgruppe und Einheit neuer Produkte und für die Produkte importierter Zutaten."
-          }
-        }
-      }
-    },
-    "Suggests the location, product group and quantity unit from the name and your other products." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schlägt Standort, Produktgruppe und Mengeneinheit anhand des Namens und deiner anderen Produkte vor."
-          }
-        }
-      }
-    },
-    "This conversion only applies to the product \"%@\". Then the amount of the ingredient can be checked against the stock." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Umrechnung gilt nur für das Produkt „%@“. Dann kann die Menge der Zutat mit dem Bestand abgeglichen werden."
-          }
-        }
-      }
-    },
-    "Unit “%@” not found" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einheit „%@“ nicht gefunden"
-          }
-        }
-      }
-    },
-    "Unit “%@” suggested as “%@”" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einheit „%1$@“ als „%2$@“ vorgeschlagen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Unit “%1$@” suggested as “%2$@”"
-          }
-        }
-      }
-    },
-    "With suggestions from Apple Intelligence" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Vorschlägen von Apple Intelligence"
-          }
-        }
-      }
-    },
-    "“%@” from the website was matched to the similar unit “%@”." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„%1$@“ von der Website wurde der ähnlichen Einheit „%2$@“ zugeordnet."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "“%1$@” from the website was matched to the similar unit “%2$@”."
-          }
-        }
-      }
-    },
     "•" : {
       "shouldTranslate" : false
     },
@@ -7354,6 +6966,16 @@
     },
     "0 means suggestions for the next charge cycle are disabled" : {
 
+    },
+    "1 %@ %@ is the same as" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 %1$@ %2$@ entspricht"
+          }
+        }
+      }
     },
     "1 %@ is the same as..." : {
       "localizations" : {
@@ -7541,6 +7163,9 @@
     },
     "2D Matrix codes" : {
       "shouldTranslate" : false
+    },
+    "A badge shows how many filters are applied." : {
+
     },
     "A barcode is required" : {
       "localizations" : {
@@ -8284,6 +7909,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名稱為必填項目"
+          }
+        }
+      }
+    },
+    "A new navigation on iPhone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine neue Navigation auf dem iPhone"
           }
         }
       }
@@ -10649,6 +10284,9 @@
         }
       }
     },
+    "Add server" : {
+
+    },
     "Add this item to stock" : {
       "localizations" : {
         "ca" : {
@@ -11323,6 +10961,16 @@
         }
       }
     },
+    "All ingredients with their stock status, a list or gallery layout, and import from websites." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Zutaten mit ihrem Bestandsstatus, eine Listen- oder Galerieansicht und Import von Webseiten."
+          }
+        }
+      }
+    },
     "All places in one list, as in the iPad sidebar." : {
 
     },
@@ -11587,6 +11235,7 @@
       }
     },
     "An app in native design, allowing a comfortable use of Grocy at home and on the go." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -11731,6 +11380,9 @@
           }
         }
       }
+    },
+    "An overview with due filters, charge cycle tracking and a journal with undo." : {
+
     },
     "An unknown error occurred." : {
       "comment" : "unknown error description",
@@ -12109,6 +11761,16 @@
     },
     "Apple Intelligence" : {
       "shouldTranslate" : false
+    },
+    "Apple Intelligence: %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence: %1$@ %2$@"
+          }
+        }
+      }
     },
     "Apples" : {
       "localizations" : {
@@ -15864,6 +15526,9 @@
         }
       }
     },
+    "Back" : {
+
+    },
     "Barcode" : {
       "localizations" : {
         "ca" : {
@@ -18463,6 +18128,29 @@
     "Charge cycles count" : {
 
     },
+    "Check off the ingredients, follow one step per page, and consume everything when you're done." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hake die Zutaten ab, folge einem Schritt pro Seite und verbrauche am Ende alles."
+          }
+        }
+      }
+    },
+    "Check what you can cook with your stock, and import recipes from websites." : {
+
+    },
+    "Choose the smart navigation, your own tabs or the sidebar. Search finds stock, products, recipes and master data." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle die smarte Navigation, eigene Tabs oder die Seitenleiste. Die Suche findet Bestand, Produkte, Rezepte und Stammdaten."
+          }
+        }
+      }
+    },
     "Choose up to four tabs. Everything else opens from the settings button." : {
 
     },
@@ -19930,6 +19618,9 @@
         }
       }
     },
+    "Chores, tasks, batteries and equipment in one place, with widgets for your Home Screen." : {
+
+    },
     "Clean the kitchen" : {
       "localizations" : {
         "de" : {
@@ -21028,6 +20719,42 @@
         }
       }
     },
+    "Connect “%@” to “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%1$@“ mit „%2$@“ verbinden"
+          }
+        }
+      }
+    },
+    "Connect the unit to the product to check the amount in stock." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde die Einheit mit dem Produkt, um die Menge im Bestand zu prüfen."
+          }
+        }
+      }
+    },
+    "Connect to Grocy" : {
+
+    },
+    "Connect to your Grocy server with its address and an API key, also through Home Assistant." : {
+
+    },
+    "Connect unit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit verbinden"
+          }
+        }
+      }
+    },
     "Connection to server failed." : {
       "localizations" : {
         "cs" : {
@@ -21932,6 +21659,9 @@
         }
       }
     },
+    "Consume the ingredients to take them out of your stock." : {
+
+    },
     "Consume this stock entry" : {
       "localizations" : {
         "ca" : {
@@ -22104,6 +21834,9 @@
         }
       }
     },
+    "Continue" : {
+
+    },
     "Continue anyway" : {
       "localizations" : {
         "cs" : {
@@ -22170,6 +21903,19 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "仍然继续"
+          }
+        }
+      }
+    },
+    "Cook from your recipes" : {
+
+    },
+    "Cooking mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochmodus"
           }
         }
       }
@@ -23568,6 +23314,16 @@
         }
       }
     },
+    "Create product “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt „%@“ erstellen"
+          }
+        }
+      }
+    },
     "Create product group" : {
       "localizations" : {
         "ca" : {
@@ -24110,6 +23866,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增數量單位"
+          }
+        }
+      }
+    },
+    "Create quantity unit “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengeneinheit „%@“ erstellen"
           }
         }
       }
@@ -31131,6 +30897,16 @@
         }
       }
     },
+    "Don't import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht importieren"
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "de" : {
@@ -36460,6 +36236,9 @@
         }
       }
     },
+    "Enjoy your meal!" : {
+
+    },
     "Enough in stock" : {
       "localizations" : {
         "ca" : {
@@ -37111,6 +36890,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "运行条码查询插件时出错"
+          }
+        }
+      }
+    },
+    "Everything that's due" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles, was fällig ist"
           }
         }
       }
@@ -37847,6 +37636,26 @@
         }
       }
     },
+    "Fill in with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Apple Intelligence ausfüllen"
+          }
+        }
+      }
+    },
+    "Filling in with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird mit Apple Intelligence ausgefüllt"
+          }
+        }
+      }
+    },
     "Filter" : {
       "localizations" : {
         "de" : {
@@ -37875,6 +37684,9 @@
         }
       }
     },
+    "Filters at a glance" : {
+
+    },
     "Find stock, products, recipes and master data by name or barcode." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -37887,6 +37699,22 @@
       }
     },
     "Find stock, products, recipes, equipment and master data by name or barcode." : {
+
+    },
+    "Finding products with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkte mit Apple Intelligence finden"
+          }
+        }
+      }
+    },
+    "Finish" : {
+
+    },
+    "Finished" : {
 
     },
     "First name" : {
@@ -38793,6 +38621,12 @@
         }
       }
     },
+    "Georg Meißner" : {
+
+    },
+    "Get all ingredients ready before you start cooking." : {
+
+    },
     "Github" : {
       "shouldTranslate" : false
     },
@@ -38808,6 +38642,7 @@
       "shouldTranslate" : false
     },
     "grocy - ERP beyond your fridge" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -38877,7 +38712,11 @@
         }
       }
     },
+    "Grocy 4.7.1 and iOS 27" : {
+
+    },
     "Grocy for iOS/macOS" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -38948,6 +38787,7 @@
       }
     },
     "grocy is a web-based self-hosted groceries & household management solution for your home." : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -39019,6 +38859,12 @@
     },
     "Grocy Mobile" : {
       "shouldTranslate" : false
+    },
+    "Grocy Mobile connects to your self-hosted Grocy server. You can try a demo server first." : {
+
+    },
+    "Grocy Mobile is a companion app and needs a running Grocy server." : {
+
     },
     "Grocy needs a product for every ingredient. Ingredients without a product aren't imported." : {
 
@@ -39837,6 +39683,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Imagen"
+          }
+        }
+      }
+    },
+    "Import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren"
           }
         }
       }
@@ -41023,6 +40879,16 @@
         }
       }
     },
+    "Ingredients whose names match no product get a suggestion. You can change it before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zutaten, deren Name zu keinem Produkt passt, bekommen einen Vorschlag. Du kannst ihn vor dem Speichern ändern."
+          }
+        }
+      }
+    },
     "INIT CALENDAR" : {
       "shouldTranslate" : false
     },
@@ -41657,6 +41523,9 @@
     },
     "kcal" : {
       "shouldTranslate" : false
+    },
+    "Know what's at home" : {
+
     },
     "Last charged" : {
 
@@ -42809,6 +42678,7 @@
       }
     },
     "Let's get started!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -43918,7 +43788,11 @@
         }
       }
     },
+    "Long-lived access token" : {
+
+    },
     "Long-Term-Token for Home Assistant" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -43990,6 +43864,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home Assistant 的永久有效存取權杖"
+          }
+        }
+      }
+    },
+    "Looking for a product…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt wird gesucht …"
           }
         }
       }
@@ -45852,6 +45736,9 @@
         }
       }
     },
+    "Mise en place" : {
+
+    },
     "Missing: %@" : {
 
     },
@@ -47329,6 +47216,12 @@
         }
       }
     },
+    "New widgets" : {
+
+    },
+    "Next" : {
+
+    },
     "Next due date" : {
       "localizations" : {
         "ca" : {
@@ -48251,6 +48144,9 @@
     "No file selected" : {
 
     },
+    "No ingredients" : {
+
+    },
     "No instruction manual" : {
 
     },
@@ -48713,6 +48609,16 @@
         }
       }
     },
+    "No quantity unit matches “%@” from the website. Create it, or choose another unit." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Mengeneinheit passt zu „%@“ von der Website. Erstelle sie oder wähle eine andere Einheit."
+          }
+        }
+      }
+    },
     "No quantity units" : {
       "localizations" : {
         "de" : {
@@ -48805,6 +48711,12 @@
       }
     },
     "No recipe was found on this website. Only websites that provide schema.org recipe data are supported." : {
+
+    },
+    "No server added yet. Please add one." : {
+
+    },
+    "No servers" : {
 
     },
     "No store defined. Please create one." : {
@@ -56987,6 +56899,16 @@
         }
       }
     },
+    "Products that are expired, due soon or running low, and due chores, tasks and batteries in one list, with swipe actions." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgelaufene, bald fällige und knappe Produkte sowie fällige Hausarbeiten, Aufgaben und Batterien in einer Liste, mit Wischaktionen."
+          }
+        }
+      }
+    },
     "Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here." : {
 
     },
@@ -59095,6 +59017,9 @@
       },
       "shouldTranslate" : false
     },
+    "Quick Scan mode" : {
+
+    },
     "Random" : {
       "localizations" : {
         "ca" : {
@@ -59281,6 +59206,9 @@
     },
     "READ ALL" : {
       "shouldTranslate" : false
+    },
+    "Read instruction manuals (PDF) and keep notes for your equipment." : {
+
     },
     "Recipe" : {
       "localizations" : {
@@ -60050,6 +59978,9 @@
         }
       }
     },
+    "Resume" : {
+
+    },
     "Retrieving Details failed." : {
       "localizations" : {
         "de" : {
@@ -60159,6 +60090,9 @@
           }
         }
       }
+    },
+    "Run the household" : {
+
     },
     "Saturday" : {
       "localizations" : {
@@ -60896,7 +60830,23 @@
         }
       }
     },
+    "Saved" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespeichert"
+          }
+        }
+      }
+    },
+    "Saved in iCloud" : {
+
+    },
     "Scan barcode" : {
+
+    },
+    "Scan token QR code" : {
 
     },
     "Scheduled tracking time" : {
@@ -61162,7 +61112,11 @@
     "Section" : {
 
     },
+    "See your stock, what's due soon and what's running low, and scan barcodes to purchase or consume." : {
+
+    },
     "Select a server type:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -61317,6 +61271,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "从gallery中选择物品图片"
+          }
+        }
+      }
+    },
+    "Select the product to confirm it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle das Produkt aus, um es zu bestätigen."
+          }
+        }
+      }
+    },
+    "Selected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählt"
           }
         }
       }
@@ -61916,6 +61890,9 @@
         }
       }
     },
+    "Servings: %@" : {
+
+    },
     "Set to 0 to hide due soon filters/highlighting" : {
       "localizations" : {
         "cs" : {
@@ -62231,6 +62208,9 @@
       }
     },
     "Share" : {
+
+    },
+    "Shop with your lists" : {
 
     },
     "Shopping list" : {
@@ -62800,6 +62780,9 @@
           }
         }
       }
+    },
+    "Shopping lists stay in sync with your household, and can be mirrored to Reminders." : {
+
     },
     "Should not be frozen" : {
       "localizations" : {
@@ -64006,6 +63989,16 @@
     "Sidebar" : {
 
     },
+    "Similar products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ähnliche Produkte"
+          }
+        }
+      }
+    },
     "Skip" : {
       "localizations" : {
         "ca" : {
@@ -64829,6 +64822,16 @@
         }
       }
     },
+    "Split" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufteilen"
+          }
+        }
+      }
+    },
     "Spoil rate" : {
       "localizations" : {
         "ca" : {
@@ -65208,6 +65211,9 @@
       },
       "shouldTranslate" : false
     },
+    "Start cooking" : {
+
+    },
     "Start date" : {
       "localizations" : {
         "ca" : {
@@ -65542,6 +65548,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "狀態"
+          }
+        }
+      }
+    },
+    "Step %lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Step %1$lld of %2$lld"
           }
         }
       }
@@ -67203,6 +67219,16 @@
     "Stock, shopping list, recipes and everything that is due: products, chores, tasks and batteries. The complete lists are linked in the due tab." : {
 
     },
+    "Stop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoppen"
+          }
+        }
+      }
+    },
     "Store" : {
       "localizations" : {
         "ca" : {
@@ -67657,6 +67683,72 @@
         }
       }
     },
+    "Suggested because the names are similar. Check that it's the right product." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorgeschlagen, weil die Namen ähnlich sind. Prüfe, ob es das richtige Produkt ist."
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence: %@. Check them before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von Apple Intelligence vorgeschlagen: %@. Prüfe die Angaben vor dem Speichern."
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence. Check that it's the right product." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von Apple Intelligence vorgeschlagen. Prüfe, ob es das richtige Produkt ist."
+          }
+        }
+      }
+    },
+    "Suggested: %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschlag: %1$@ %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Suggested: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Suggestions for the location, product group and unit of new products, and for the products of imported ingredients." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschläge für Standort, Produktgruppe und Einheit neuer Produkte und für die Produkte importierter Zutaten."
+          }
+        }
+      }
+    },
+    "Suggests the location, product group and quantity unit from the name and your other products." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlägt Standort, Produktgruppe und Mengeneinheit anhand des Namens und deiner anderen Produkte vor."
+          }
+        }
+      }
+    },
     "Sunday" : {
       "localizations" : {
         "ca" : {
@@ -67840,6 +67932,9 @@
           }
         }
       }
+    },
+    "Support for the newest Grocy versions, built for iOS 27, and fixes for data parsing problems." : {
+
     },
     "Supported server version" : {
       "localizations" : {
@@ -68876,6 +68971,12 @@
           }
         }
       }
+    },
+    "The ingredients were consumed from your stock." : {
+
+    },
+    "The native app for Grocy, the self-hosted groceries and household management solution." : {
+
     },
     "The preparation is saved as numbered steps." : {
 
@@ -70266,6 +70367,16 @@
         }
       }
     },
+    "This conversion only applies to the product \"%@\". Then the amount of the ingredient can be checked against the stock." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Umrechnung gilt nur für das Produkt „%@“. Dann kann die Menge der Zutat mit dem Bestand abgeglichen werden."
+          }
+        }
+      }
+    },
     "This device doesn't allow access to reminders." : {
       "comment" : "access restricted error description",
       "localizations" : {
@@ -70625,6 +70736,7 @@
 
     },
     "This is a companion app and requires access to a running Grocy instance (for example on your server). If you just want to try the app, use one of the demo servers provided by the Grocy developer. Do not use demo servers for your personal data — they are not persistent." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -78420,6 +78532,9 @@
         }
       }
     },
+    "Try the app with sample data. Demo servers are reset regularly, so don't use them for your personal data." : {
+
+    },
     "Tuesday" : {
       "localizations" : {
         "ca" : {
@@ -80235,6 +80350,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未分類"
+          }
+        }
+      }
+    },
+    "Unit “%@” not found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit „%@“ nicht gefunden"
+          }
+        }
+      }
+    },
+    "Unit “%@” suggested as “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit „%1$@“ als „%2$@“ vorgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unit “%1$@” suggested as “%2$@”"
           }
         }
       }
@@ -82461,6 +82602,9 @@
     "Version" : {
       "shouldTranslate" : false
     },
+    "Version %@" : {
+
+    },
     "Water the plants" : {
       "localizations" : {
         "de" : {
@@ -82883,6 +83027,9 @@
       }
     },
     "What the due tab shows." : {
+
+    },
+    "What's New in Grocy Mobile" : {
 
     },
     "When a product is selected, one unit (per serving in stock quantity unit) will be added to stock on consuming this recipe" : {
@@ -84653,6 +84800,19 @@
         }
       }
     },
+    "Widgets for the shopping list, chores and tasks, also on the Lock Screen. The stock widget works better with VoiceOver and larger text." : {
+
+    },
+    "With suggestions from Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Vorschlägen von Apple Intelligence"
+          }
+        }
+      }
+    },
     "within the next %lld days" : {
       "localizations" : {
         "ca" : {
@@ -85586,6 +85746,15 @@
           }
         }
       }
+    },
+    "Your data on your server" : {
+
+    },
+    "Your own server" : {
+
+    },
+    "Your servers are saved as profiles and synced to your other devices." : {
+
     },
     "Σ %@ %@" : {
       "localizations" : {
