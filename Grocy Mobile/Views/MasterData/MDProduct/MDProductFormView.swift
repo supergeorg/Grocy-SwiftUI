@@ -38,7 +38,11 @@ struct MDProductFormView: View {
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
 
-    @State private var processingAppleIntelligence: Bool = false
+    /// Suggestions that started before the form opened, e.g. in the recipe import.
+    private var suggester: ProductPropertySuggester?
+    @State private var ownSuggester = ProductPropertySuggester()
+    /// The values Apple Intelligence filled in, to disclose them while they're unchanged.
+    @State private var appliedSuggestions: [ProductPropertySuggester.Step: Int] = [:]
 
     @Binding var createdProductID: Int?
     var createBarcode: Bool
@@ -65,8 +69,17 @@ struct MDProductFormView: View {
         return (queuedBarcode.isEmpty || (foundBarcode == nil))
     }
 
-    init(existingProduct: MDProduct? = nil, userSettings: GrocyUserSettings? = nil, productName: String? = nil, queuedBarcode: String? = nil, createBarcode: Bool = false, createdProductID: Binding<Int?> = .constant(nil)) {
+    init(
+        existingProduct: MDProduct? = nil,
+        userSettings: GrocyUserSettings? = nil,
+        productName: String? = nil,
+        queuedBarcode: String? = nil,
+        createBarcode: Bool = false,
+        createdProductID: Binding<Int?> = .constant(nil),
+        suggester: ProductPropertySuggester? = nil
+    ) {
         _createdProductID = createdProductID
+        self.suggester = suggester
         self.existingProduct = existingProduct
         self._queuedBarcode = State(initialValue: queuedBarcode ?? "")
         self.createBarcode = createBarcode
@@ -92,13 +105,15 @@ struct MDProductFormView: View {
         return mdQuantityUnits.first(where: { $0.id == product.quIDStock })
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes]
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes, .product_groups]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_info]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
 
     private func finishForm() {
+        // Not on disappear: that also happens when a part of the form is pushed
+        ownSuggester.stop()
         self.dismiss()
     }
 
@@ -157,48 +172,113 @@ struct MDProductFormView: View {
         isProcessing = false
     }
 
-    private func matchUsingAppleIntelligence() async {
-        processingAppleIntelligence = true
-        do {
-            // Match default location
-            if product.locationID == -1 {
-                let categoryNames = mdLocations.map { $0.name }
-                if let matchResult = try await grocyVM.aiCategoryMatcher?.matchByNames(word: product.name, categoryNames: categoryNames), matchResult.confidence > 0.5 {
-                    // Find the product group by matching the category name
-                    if let foundLocation = mdLocations.first(where: { $0.name.lowercased() == matchResult.categoryName.lowercased() }) {
-                        product.locationID = foundLocation.id
-                    }
-                }
-            }
+    // MARK: - Apple Intelligence
 
-            // Match product group
-            if product.productGroupID == nil {
-                let categoryNames = mdProductGroups.map { $0.name }
-                if let matchResult = try await grocyVM.aiCategoryMatcher?.matchByNames(word: product.name, categoryNames: categoryNames), matchResult.confidence > 0.5 {
-                    // Find the product group by matching the category name
-                    if let foundProductGroup = mdProductGroups.first(where: { $0.name.lowercased() == matchResult.categoryName.lowercased() }) {
-                        product.productGroupID = foundProductGroup.id
-                    }
-                }
-            }
+    private var activeSuggester: ProductPropertySuggester {
+        suggester ?? ownSuggester
+    }
 
-            // Match quantityUnitStock
-            if product.quIDStock == -1 {
-                let categoryNames = mdQuantityUnits.map { $0.name }
-                if let matchResult = try await grocyVM.aiCategoryMatcher?.matchByNames(word: product.name, categoryNames: categoryNames), matchResult.confidence > 0.5 {
-                    // Find the product group by matching the category name
-                    if let foundQuantityUnit = mdQuantityUnits.first(where: { $0.name.lowercased() == matchResult.categoryName.lowercased() }) {
-                        product.quIDStock = foundQuantityUnit.id
-                        product.quIDPurchase = foundQuantityUnit.id
-                        product.quIDConsume = foundQuantityUnit.id
-                        product.quIDPrice = foundQuantityUnit.id
-                    }
-                }
-            }
-        } catch {
-            GrocyLogger.error("AI does AI things. \(error)")
+    /// The properties that are still empty, which Apple Intelligence can fill in.
+    private var stepsToSuggest: Set<ProductPropertySuggester.Step> {
+        var steps: Set<ProductPropertySuggester.Step> = []
+        if product.locationID == -1 { steps.insert(.location) }
+        if product.productGroupID == nil { steps.insert(.productGroup) }
+        if product.quIDStock == -1 { steps.insert(.quantityUnit) }
+        return steps
+    }
+
+    private func suggestWithAppleIntelligence() {
+        activeSuggester.start(
+            productName: product.name,
+            locations: mdLocations,
+            productGroups: mdProductGroups,
+            quantityUnits: mdQuantityUnits,
+            products: mdProducts,
+            skipping: Set<ProductPropertySuggester.Step>([.location, .productGroup, .quantityUnit]).subtracting(stepsToSuggest)
+        )
+    }
+
+    /// Fills in the suggestions that arrived, for properties that are still empty. Choices of the person stay as they are.
+    private func applySuggestions() {
+        let suggester = activeSuggester
+        guard suggester.productName == product.name.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
+        let suggestions = suggester.suggestions
+        if product.locationID == -1, let locationID = suggestions.locationID {
+            product.locationID = locationID
+            appliedSuggestions[.location] = locationID
         }
-        processingAppleIntelligence = false
+        if product.productGroupID == nil, let productGroupID = suggestions.productGroupID {
+            product.productGroupID = productGroupID
+            appliedSuggestions[.productGroup] = productGroupID
+        }
+        if product.quIDStock == -1, let quantityUnitID = suggestions.quantityUnitID {
+            product.quIDStock = quantityUnitID
+            if product.quIDPurchase == -1 { product.quIDPurchase = quantityUnitID }
+            if product.quIDConsume == -1 { product.quIDConsume = quantityUnitID }
+            if product.quIDPrice == -1 { product.quIDPrice = quantityUnitID }
+            appliedSuggestions[.quantityUnit] = quantityUnitID
+        }
+    }
+
+    /// The names of the filled in properties, e.g. "Kühlschrank, Gemüse and Piece".
+    private var appliedSuggestionNames: String {
+        var names: [String] = []
+        if appliedSuggestions[.location] == product.locationID, let location = mdLocations.first(where: { $0.id == product.locationID }) {
+            names.append(location.name)
+        }
+        if let productGroupID = product.productGroupID, appliedSuggestions[.productGroup] == productGroupID,
+            let productGroup = mdProductGroups.first(where: { $0.id == productGroupID })
+        {
+            names.append(productGroup.name)
+        }
+        if appliedSuggestions[.quantityUnit] == product.quIDStock, let quantityUnit = mdQuantityUnits.first(where: { $0.id == product.quIDStock }) {
+            names.append(quantityUnit.name)
+        }
+        return names.formatted(.list(type: .and))
+    }
+
+    private func stepName(_ step: ProductPropertySuggester.Step?) -> Text {
+        switch step {
+        case .location: Text("Default location")
+        case .productGroup: Text("Product group")
+        case .quantityUnit: Text("Quantity unit stock")
+        case nil: Text(verbatim: "")
+        }
+    }
+
+    @ViewBuilder
+    private var appleIntelligenceSection: some View {
+        let suggester = activeSuggester
+        Section {
+            if suggester.isRunning {
+                AppleIntelligenceProgressRow(
+                    title: "Filling in with Apple Intelligence",
+                    detail: stepName(suggester.currentStep),
+                    completed: suggester.completedSteps,
+                    total: suggester.steps.count,
+                    onStop: { suggester.stop() }
+                )
+            } else {
+                Button(
+                    action: suggestWithAppleIntelligence,
+                    label: {
+                        Label {
+                            Text("Fill in with Apple Intelligence")
+                        } icon: {
+                            AppleIntelligenceSymbol()
+                        }
+                    }
+                )
+                .foregroundStyle(.primary)
+                .disabled(product.name.isEmpty || stepsToSuggest.isEmpty)
+            }
+        } footer: {
+            if !appliedSuggestionNames.isEmpty {
+                Text("Suggested by Apple Intelligence: \(appliedSuggestionNames). Check them before saving.")
+            } else if !suggester.isRunning, existingProduct == nil {
+                Text("Suggests the location, product group and quantity unit from the name and your other products.")
+            }
+        }
     }
 
     var body: some View {
@@ -209,28 +289,7 @@ struct MDProductFormView: View {
                 }
 
             if useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
-                Button(
-                    action: {
-                        Task {
-                            await matchUsingAppleIntelligence()
-                        }
-                    },
-                    label: {
-                        Label {
-                            Text("Apple Intelligence")
-                        } icon: {
-                            Image(systemName: MySymbols.appleIntelligence)
-                                .symbolEffect(
-                                    .variableColor.iterative.reversing,
-                                    options: .speed(0.5),
-                                    isActive: processingAppleIntelligence
-                                )
-                                .foregroundStyle(.linearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
-                        }
-                    }
-                )
-                .foregroundStyle(.primary)
-                .disabled(processingAppleIntelligence)
+                appleIntelligenceSection
             }
 
             if !queuedBarcode.isEmpty && existingProduct == nil {
@@ -395,7 +454,13 @@ struct MDProductFormView: View {
         .task {
             await updateData()
             self.isNameCorrect = checkNameCorrect()
+            // Suggestions that were ready before the form opened
+            applySuggestions()
         }
+        .onChange(of: activeSuggester.suggestions) {
+            applySuggestions()
+        }
+
         .navigationTitle(existingProduct == nil ? "Create product" : "Edit product")
         .toolbar(content: {
             if existingProduct == nil {

@@ -85,14 +85,16 @@ struct MyDoubleStepper: View {
                         HStack {
                             Text(description)
                                 .fixedSize(horizontal: false, vertical: true)
+                                // Only the text and icon: the help button keeps its tint.
+                                .foregroundStyle(.primary)
                             if let descriptionInfo {
                                 FieldDescription(description: descriptionInfo)
                             }
                         }
                     } icon: {
                         Image(systemName: systemImage)
+                            .foregroundStyle(.primary)
                     }
-                    .foregroundStyle(.primary)
                 } else {
                     Text(description)
                 }
@@ -217,14 +219,16 @@ struct MyDoubleStepperOptional: View {
                         HStack {
                             Text(description)
                                 .fixedSize(horizontal: false, vertical: true)
+                                // Only the text and icon: the help button keeps its tint.
+                                .foregroundStyle(.primary)
                             if let descriptionInfo {
                                 FieldDescription(description: descriptionInfo)
                             }
                         }
                     } icon: {
                         Image(systemName: systemImage)
+                            .foregroundStyle(.primary)
                     }
-                    .foregroundStyle(.primary)
                 } else {
                     Text(description)
                 }

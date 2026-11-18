@@ -13,6 +13,8 @@ struct RecipeImportIngredientRowView: View {
     var ingredient: ImportedIngredient
     var product: MDProduct?
     var quantityUnit: MDQuantityUnit?
+    /// `true` while Apple Intelligence looks for this ingredient's product.
+    var isMatching: Bool = false
 
     private var amountText: String {
         if !ingredient.variableAmount.isEmpty {
@@ -27,13 +29,29 @@ struct RecipeImportIngredientRowView: View {
                 .strikethrough(!ingredient.isIncluded)
                 .foregroundStyle(ingredient.isIncluded ? .primary : .secondary)
 
-            Group {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
                 if ingredient.isSaved {
                     Label("Saved", systemImage: MySymbols.success)
+                        .foregroundStyle(.secondary)
                 } else if !ingredient.isIncluded {
                     Label("Not imported", systemImage: MySymbols.notImported)
+                        .foregroundStyle(.secondary)
+                } else if isMatching {
+                    Label {
+                        Text("Looking for a product…")
+                            .foregroundStyle(.secondary)
+                    } icon: {
+                        AppleIntelligenceSymbol(isActive: true)
+                    }
                 } else if let product {
-                    if ingredient.productMatch == .suggested {
+                    // The product is what gets saved, so it's as readable as the line; the symbol tells how sure the match is.
+                    if ingredient.productMatch == .intelligence {
+                        Label {
+                            Text("Apple Intelligence: \(amountText) \(product.name)")
+                        } icon: {
+                            AppleIntelligenceSymbol()
+                        }
+                    } else if ingredient.productMatch == .suggested {
                         Label {
                             Text("Suggested: \(amountText) \(product.name)")
                         } icon: {
@@ -41,34 +59,39 @@ struct RecipeImportIngredientRowView: View {
                                 .foregroundStyle(.tint)
                         }
                     } else {
-                        Label("\(amountText) \(product.name)", systemImage: MySymbols.product)
+                        Label {
+                            Text("\(amountText) \(product.name)")
+                        } icon: {
+                            Image(systemName: MySymbols.confirmedMatch)
+                                .foregroundStyle(Color(.GrocyColors.grocyGreen))
+                        }
                     }
                     if ingredient.hasUnmatchedUnit, let unit = ingredient.line.unit {
                         Label {
                             Text("Unit “\(unit)” not found")
+                                .foregroundStyle(.secondary)
                         } icon: {
                             Image(systemName: MySymbols.warning)
                                 .foregroundStyle(Color(.GrocyColors.grocyYellow))
                         }
+                        .font(.caption)
                     } else if ingredient.unitMatch == .suggested, let unit = ingredient.line.unit, let quantityUnit {
                         Label {
                             Text("Unit “\(unit)” suggested as “\(quantityUnit.name)”")
+                                .foregroundStyle(.secondary)
                         } icon: {
                             Image(systemName: MySymbols.suggestedMatch)
                                 .foregroundStyle(.tint)
                         }
+                        .font(.caption)
                     }
                 } else {
-                    Label {
-                        Text("No product selected")
-                    } icon: {
-                        Image(systemName: MySymbols.warning)
-                            .foregroundStyle(Color(.GrocyColors.grocyYellow))
-                    }
+                    // Without a product, the ingredient isn't imported.
+                    Label("No product selected", systemImage: MySymbols.missingProduct)
+                        .foregroundStyle(Color(.GrocyColors.grocyRed))
                 }
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .font(.subheadline)
         }
         .accessibilityElement(children: .combine)
     }

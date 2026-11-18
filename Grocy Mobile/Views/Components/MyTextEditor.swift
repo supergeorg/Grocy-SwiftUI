@@ -12,11 +12,9 @@ struct MyTextEditor: View {
     var description: LocalizedStringKey
     var leadingIcon: String?
 
-    #if os(macOS)
-        // In a macOS Form, an empty TextEditor collapses to a sliver of a line. Keep room for about three lines,
-        // scaled with the text size.
-        @ScaledMetric(relativeTo: .body) private var minEditorHeight: CGFloat = 54
-    #endif
+    // In a Form, the TextEditor only gets the label's height: on macOS an empty one collapses to a sliver of a line,
+    // and on iOS its text sits below the inset and gets clipped. Keep room for a few lines, scaled with the text size.
+    @ScaledMetric(relativeTo: .body) private var minEditorHeight: CGFloat = 54
 
     var body: some View {
         LabeledContent(
@@ -25,9 +23,7 @@ struct MyTextEditor: View {
                     // In a Form row, the content column is trailing-aligned on macOS; text reads from the leading edge.
                     .multilineTextAlignment(.leading)
                     .accessibilityLabel(Text(description))
-                    #if os(macOS)
-                        .frame(minHeight: minEditorHeight)
-                    #endif
+                    .frame(minHeight: minEditorHeight)
             },
             label: {
                 if let leadingIcon = leadingIcon {

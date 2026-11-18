@@ -29,6 +29,12 @@ struct RecipeImportView: View {
     @State private var isLoading: Bool = false
     @State private var loadErrorMessage: String? = nil
     @State private var draft: RecipeImportDraft? = nil
+    /// The running load. A new load cancels it, so two loads never fill the draft at the same time.
+    @State private var loadTask: Task<Void, Never>? = nil
+    /// Apple Intelligence looking for products of ingredients that matched none by name.
+    @State private var intelligenceTask: Task<Void, Never>? = nil
+    @State private var intelligenceProgress: RecipeImportIntelligenceProgress? = nil
+    @AppStorage("useAppleIntelligence") private var useAppleIntelligence: Bool = true
 
     @State private var isNameCorrect: Bool = false
     @State private var isProcessing: Bool = false
@@ -43,7 +49,8 @@ struct RecipeImportView: View {
         _urlText = State(initialValue: url)
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .recipes, .recipes_pos]
+    // Locations and product groups are suggested for products created from an ingredient
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .quantity_unit_conversions, .recipes, .recipes_pos, .locations, .product_groups]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -58,6 +65,8 @@ struct RecipeImportView: View {
     }
 
     private func finishForm() {
+        loadTask?.cancel()
+        stopIntelligenceMatching()
         dismiss()
     }
 
@@ -72,11 +81,21 @@ struct RecipeImportView: View {
         return url
     }
 
-    private func loadRecipe() async {
+    /// Starts loading the recipe, unless a load is already running (e.g. "Load recipe" pressed twice).
+    private func startLoading() {
+        guard !isLoading, !isProcessing else { return }
         guard let url = websiteURL else {
             loadErrorMessage = String(localized: "Enter a website address that starts with http:// or https://.")
             return
         }
+        // Set before the task starts: taps arriving before it runs then find a load in progress
+        isLoading = true
+        stopIntelligenceMatching()
+        loadTask?.cancel()
+        loadTask = Task { await loadRecipe(from: url) }
+    }
+
+    private func loadRecipe(from url: URL) async {
         isURLFieldFocused = false
         isLoading = true
         loadErrorMessage = nil
@@ -87,6 +106,7 @@ struct RecipeImportView: View {
             // Products and units are needed to map the ingredients
             await updateData()
             let parsedRecipes = try await RecipeParser.fetch(from: url)
+            try Task.checkCancellation()
             guard let parsedRecipe = parsedRecipes.first else { throw RecipeParserError.noRecipeFound }
             var newDraft = mapper.draft(from: parsedRecipe)
             if newDraft.sourceURL == nil {
@@ -96,6 +116,9 @@ struct RecipeImportView: View {
             draft = newDraft
             isNameCorrect = checkNameCorrect()
             GrocyLogger.info("Loading recipe from \(url.host() ?? "website") was successful.")
+            startIntelligenceMatching()
+        } catch is CancellationError {
+            GrocyLogger.info("Loading recipe from \(url.host() ?? "website") was cancelled.")
         } catch RecipeParserError.noRecipeFound {
             GrocyLogger.warning("No recipe found on \(url.absoluteString).")
             loadErrorMessage = String(localized: "No recipe was found on this website. Only websites that provide schema.org recipe data are supported.")
@@ -106,9 +129,82 @@ struct RecipeImportView: View {
         isLoading = false
     }
 
+    // MARK: - Apple Intelligence
+
+    private func startIntelligenceMatching() {
+        intelligenceTask?.cancel()
+        guard useAppleIntelligence, AppleIntelligenceStatus.isAppleIntelligenceAvailable else { return }
+        intelligenceTask = Task { await matchWithAppleIntelligence() }
+    }
+
+    private func stopIntelligenceMatching() {
+        intelligenceTask?.cancel()
+        intelligenceTask = nil
+        intelligenceProgress = nil
+    }
+
+    /// Asks Apple Intelligence for the products of ingredients whose names match none, e.g. "Pflanzenöl" → "Rapsöl".
+    /// One ingredient at a time, as the model answers one request at a time. Results are suggestions the person checks.
+    private func matchWithAppleIntelligence() async {
+        guard let ingredientIDs = draft?.ingredients.filter(RecipeImportMapper.needsIntelligenceMatch).map(\.id), !ingredientIDs.isEmpty else { return }
+        let matcher = AICategoryMatcher()
+        intelligenceProgress = RecipeImportIntelligenceProgress(total: ingredientIDs.count)
+        var suggestedCount = 0
+
+        for id in ingredientIDs {
+            guard !Task.isCancelled else { break }
+            // The person may have chosen a product in the meantime
+            if let ingredient = draft?.ingredients.first(where: { $0.id == id }), RecipeImportMapper.needsIntelligenceMatch(ingredient) {
+                intelligenceProgress?.currentIngredientID = id
+                let candidates = mapper.intelligenceCandidates(for: ingredient.line.name)
+                do {
+                    // Offering "none" lets the model decline, instead of picking the closest product when none fits
+                    let result = try await matcher.matchByNames(word: ingredient.line.name, categoryNames: candidates.map(\.name) + [Self.noMatchingProduct])
+                    try Task.checkCancellation()
+                    GrocyLogger.info("Apple Intelligence matched \(ingredient.line.name) to \(result.categoryName) with confidence \(result.confidence).")
+                    if result.confidence >= Self.minimumIntelligenceConfidence,
+                        let product = candidates.first(where: { $0.name.localizedCaseInsensitiveCompare(result.categoryName) == .orderedSame })
+                    {
+                        // Only very confident matches are used: the model is asked again whether the product really is the ingredient
+                        let isConfirmed = try await matcher.confirmMatch(word: ingredient.line.name, categoryName: product.name)
+                        try Task.checkCancellation()
+                        GrocyLogger.info("Apple Intelligence \(isConfirmed ? "confirmed" : "rejected") \(product.name) for \(ingredient.line.name).")
+                        if isConfirmed,
+                            let index = draft?.ingredients.firstIndex(where: { $0.id == id }),
+                            var current = draft?.ingredients[index],
+                            RecipeImportMapper.needsIntelligenceMatch(current)
+                        {
+                            mapper.intelligenceSuggested(product, for: &current)
+                            draft?.ingredients[index] = current
+                            suggestedCount += 1
+                        }
+                    }
+                } catch is CancellationError {
+                    break
+                } catch {
+                    GrocyLogger.warning("Matching \(ingredient.line.name) with Apple Intelligence failed. \(error)")
+                }
+            }
+            intelligenceProgress?.completed += 1
+        }
+
+        if !Task.isCancelled {
+            GrocyLogger.info("Apple Intelligence suggested products for \(suggestedCount) of \(ingredientIDs.count) ingredients.")
+            intelligenceProgress = nil
+            intelligenceTask = nil
+        }
+    }
+
+    /// Answers of the model below this confidence are left out, so the person chooses the product.
+    private static let minimumIntelligenceConfidence = 0.9
+    /// The answer for "no product fits". It's in English like the model's instructions; it's never shown.
+    private static let noMatchingProduct = "None of these products"
+
     // MARK: - Saving
 
     private func saveRecipe() async {
+        // Suggestions arriving while saving would change ingredients that are being saved
+        stopIntelligenceMatching()
         guard let draft else { return }
         isProcessing = true
         isSuccessful = nil
@@ -250,8 +346,11 @@ struct RecipeImportView: View {
                     ProgressView("Loading recipe…")
                         .frame(maxWidth: .infinity)
                 }
-            } else if let draftBinding = Binding($draft) {
-                recipeSections(draft: draftBinding)
+            } else if let draft {
+                if let intelligenceProgress {
+                    RecipeImportIntelligenceProgressView(progress: intelligenceProgress, onStop: stopIntelligenceMatching)
+                }
+                recipeSections(draft: draftBinding(fallback: draft))
             }
         }
         .formStyle(.grouped)
@@ -259,8 +358,8 @@ struct RecipeImportView: View {
         .navigationDestination(for: RecipeImportInteraction.self) { interaction in
             switch interaction {
             case .editIngredient(let id):
-                if let draftBinding = Binding($draft), let index = draftBinding.wrappedValue.ingredients.firstIndex(where: { $0.id == id }) {
-                    RecipeImportIngredientFormView(ingredient: draftBinding.ingredients[index])
+                if let ingredient = draft?.ingredients.first(where: { $0.id == id }) {
+                    RecipeImportIngredientFormView(ingredient: ingredientBinding(id: id, fallback: ingredient))
                 }
             }
         }
@@ -307,6 +406,31 @@ struct RecipeImportView: View {
         .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 
+    /// A binding to the draft that never force-unwraps it. While a new recipe loads, the draft is `nil`,
+    /// but the views of the old one may still read it once while they go away; they get the old draft then.
+    private func draftBinding(fallback: RecipeImportDraft) -> Binding<RecipeImportDraft> {
+        Binding(
+            get: { draft ?? fallback },
+            set: { newValue in
+                if draft != nil {
+                    draft = newValue
+                }
+            }
+        )
+    }
+
+    /// A binding to one ingredient, found by its ID rather than its index, which changes when another recipe is loaded.
+    private func ingredientBinding(id: UUID, fallback: ImportedIngredient) -> Binding<ImportedIngredient> {
+        Binding(
+            get: { draft?.ingredients.first(where: { $0.id == id }) ?? fallback },
+            set: { newValue in
+                if let index = draft?.ingredients.firstIndex(where: { $0.id == id }) {
+                    draft?.ingredients[index] = newValue
+                }
+            }
+        )
+    }
+
     private func fillMissingMatches() {
         guard var updatedDraft = draft else { return }
         mapper.fillMissingMatches(in: &updatedDraft)
@@ -333,13 +457,11 @@ struct RecipeImportView: View {
             #endif
             .submitLabel(.go)
             .onSubmit {
-                Task { await loadRecipe() }
+                startLoading()
             }
 
             Button(
-                action: {
-                    Task { await loadRecipe() }
-                },
+                action: startLoading,
                 label: {
                     Label("Load recipe", systemImage: MySymbols.importRecipe)
                 }
@@ -417,7 +539,8 @@ struct RecipeImportView: View {
                     RecipeImportIngredientRowView(
                         ingredient: ingredient,
                         product: mdProducts.first(where: { $0.id == ingredient.productID }),
-                        quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID })
+                        quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }),
+                        isMatching: intelligenceProgress?.currentIngredientID == ingredient.id
                     )
                 }
                 .disabled(ingredient.isSaved)
@@ -426,9 +549,17 @@ struct RecipeImportView: View {
                         includeButton(for: ingredient, in: draft)
                     }
                 }
+                .swipeActions(edge: .leading) {
+                    if mapper.canSplit(ingredient, language: draft.wrappedValue.language) {
+                        splitButton(for: ingredient, in: draft)
+                    }
+                }
                 .contextMenu {
                     if !ingredient.isSaved {
                         includeButton(for: ingredient, in: draft)
+                    }
+                    if mapper.canSplit(ingredient, language: draft.wrappedValue.language) {
+                        splitButton(for: ingredient, in: draft)
                     }
                 }
             }
@@ -479,6 +610,22 @@ extension RecipeImportView {
             }
         )
         .tint(ingredient.isIncluded ? .gray : Color(.GrocyColors.grocyGreen))
+    }
+
+    /// Swipe and context menu action that splits an ingredient like "Salz und Pfeffer" into one ingredient each,
+    /// when it was kept together because a product has the whole name.
+    fileprivate func splitButton(for ingredient: ImportedIngredient, in draft: Binding<RecipeImportDraft>) -> some View {
+        Button(
+            action: {
+                withAnimation {
+                    mapper.split(ingredientID: ingredient.id, in: &draft.wrappedValue)
+                }
+            },
+            label: {
+                Label("Split", systemImage: MySymbols.splitIngredient)
+            }
+        )
+        .tint(Color(.GrocyColors.grocyBlue))
     }
 }
 

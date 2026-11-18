@@ -43,6 +43,11 @@ nonisolated struct MySymbols {
     static let suggestedMatch = "sparkles"
     /// An imported ingredient the person excluded.
     static let notImported = "minus.circle"
+    /// An ingredient whose product was found for sure.
+    static let confirmedMatch = "checkmark.circle.fill"
+    /// An ingredient that has no product yet.
+    static let missingProduct = "exclamationmark.circle.fill"
+    static let splitIngredient = "scissors"
     static let connectUnit = "arrow.left.arrow.right"
     static let user = "person"
     static let parentProduct = "rectangle.stack"

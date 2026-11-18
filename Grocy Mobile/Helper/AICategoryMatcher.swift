@@ -67,7 +67,7 @@ public actor AICategoryMatcher {
     // MARK: - Properties
 
     private let configuration: Configuration
-    private let session: LanguageModelSession
+    private let instructions: String
 
     // MARK: - Initialization
 
@@ -92,7 +92,7 @@ public actor AICategoryMatcher {
             7. Return BOTH category name AND confidence score
             """
 
-        self.session = LanguageModelSession { instructions }
+        self.instructions = instructions
     }
 
     // MARK: - Public Methods
@@ -208,11 +208,19 @@ public actor AICategoryMatcher {
 
     private func performMatch(
         word: String,
-        categoryNames: [String]
+        categoryNames: [String],
+        context: String? = nil
     ) async throws -> MatchResult {
-        let schema = try buildSchema()
-        let prompt = buildPrompt(word: word, categoryNames: categoryNames)
+        // Without duplicates or empty names, which a guided choice doesn't allow
+        var seen = Set<String>()
+        let categoryNames = categoryNames.filter { !$0.isEmpty && seen.insert($0).inserted }
+        guard !categoryNames.isEmpty else { throw MatchError.noCategories }
+        let schema = try buildSchema(categoryNames: categoryNames)
+        let prompt = buildPrompt(word: word, categoryNames: categoryNames, context: context)
         let options = GenerationOptions(temperature: configuration.temperature)
+        // A new session for every match: each one is independent, and a shared session's transcript would grow
+        // with every prompt until it exceeds the model's context
+        let session = LanguageModelSession(instructions: instructions)
 
         let response = try await session.respond(
             to: prompt,
@@ -237,7 +245,7 @@ public actor AICategoryMatcher {
         )
     }
 
-    private func buildSchema() throws -> GenerationSchema {
+    private func buildSchema(categoryNames: [String]) throws -> GenerationSchema {
         let categorySchema = DynamicGenerationSchema(
             name: "CategoryResult",
             description: "The matched category result with confidence score",
@@ -245,7 +253,8 @@ public actor AICategoryMatcher {
                 DynamicGenerationSchema.Property(
                     name: "category",
                     description: "The exact category string from the provided list",
-                    schema: DynamicGenerationSchema(type: String.self)
+                    // Guided generation: the model can only answer with one of the names, never a paraphrase
+                    schema: DynamicGenerationSchema(name: "CategoryName", anyOf: categoryNames)
                 ),
                 DynamicGenerationSchema.Property(
                     name: "confidence",
@@ -262,7 +271,7 @@ public actor AICategoryMatcher {
         }
     }
 
-    private func buildPrompt(word: String, categoryNames: [String]) -> String {
+    private func buildPrompt(word: String, categoryNames: [String], context: String?) -> String {
         var prompt = """
             Word to classify: "\(word)"
 
@@ -281,7 +290,9 @@ public actor AICategoryMatcher {
             Return the exact category name including all prefixes, numbers, and special characters.
             """
 
-        if configuration.includeExamples && categoryNames.count >= 3 {
+        if let context, !context.isEmpty {
+            prompt += "\n\nContext:\n\(context)"
+        } else if configuration.includeExamples && categoryNames.count >= 3 {
             let examples = categoryNames.prefix(3)
             prompt += """
 
@@ -336,16 +347,77 @@ public actor AICategoryMatcher {
     }
 }
 
+// MARK: - Confirming matches
+extension AICategoryMatcher {
+    private static let confirmationInstructions = """
+        You check whether a match between a word and a category is correct. Be strict.
+        Answer true only if the word names the same thing as the category: the same item, a singular or plural,
+        a synonym, a translation, or a more specific kind or a part of it.
+        Answer false if they are different things, even when they are related, belong to the same group or are used together.
+        Examples:
+        - "Eigelb" and "Ei": true
+        - "Cherry tomatoes" and "Tomato": true
+        - "Paprikaschote" and "Butterschmalz": false
+        - "Semmelbrösel" and "Weizenmehl": false
+        - "Olive oil" and "Butter": false
+        """
+
+    /// Asks the model a second time, in a fresh session, whether `word` really is `categoryName`.
+    /// A match chooses the best of the given categories, even when none fits; this question has no list to choose from.
+    public func confirmMatch(word: String, categoryName: String) async throws -> Bool {
+        guard SystemLanguageModel.default.isAvailable else {
+            throw MatchError.modelUnavailable
+        }
+        let session = LanguageModelSession(instructions: Self.confirmationInstructions)
+        let response = try await session.respond(
+            to: "Word: \"\(word)\"\nCategory: \"\(categoryName)\"\nDoes the word name the same thing as the category?",
+            generating: Bool.self,
+            options: GenerationOptions(temperature: 0.0)
+        )
+        return response.content
+    }
+}
+
+// MARK: - Confirming categories
+extension AICategoryMatcher {
+    private static let membershipInstructions = """
+        You check whether an item belongs in a category. Be strict.
+        Answer true only if the item is a kind of what the category names.
+        Answer false if the item is only related to the category, used together with it, or a different kind of thing.
+        Examples:
+        - "Chicken breast" in "Meat": true
+        - "Yogurt" in "Dairy": true
+        - "Olive oil" in "Vegetables": false
+        - "Flour" in "Spices": false
+        """
+
+    /// Asks the model, in a fresh session, whether `word` belongs in the category `categoryName`, e.g. a product in a product group.
+    public func confirmMembership(word: String, categoryName: String) async throws -> Bool {
+        guard SystemLanguageModel.default.isAvailable else {
+            throw MatchError.modelUnavailable
+        }
+        let session = LanguageModelSession(instructions: Self.membershipInstructions)
+        let response = try await session.respond(
+            to: "Item: \"\(word)\"\nCategory: \"\(categoryName)\"\nDoes the item belong in the category?",
+            generating: Bool.self,
+            options: GenerationOptions(temperature: 0.0)
+        )
+        return response.content
+    }
+}
+
 // MARK: - Convenience Extensions
 extension AICategoryMatcher {
     /// Match using category names only - safe for passing across actor boundaries
     /// Extract category names before calling this method to avoid Sendable issues
+    /// - Parameter context: Additional information for the model, e.g. how similar items were classified.
     public func matchByNames(
         word: String,
-        categoryNames: [String]
+        categoryNames: [String],
+        context: String? = nil
     ) async throws -> MatchResultInfo {
         let start = Date()
-        let result = try await performMatch(word: word, categoryNames: categoryNames)
+        let result = try await performMatch(word: word, categoryNames: categoryNames, context: context)
         let duration = Date().timeIntervalSince(start)
 
         print(unsafe "✅ Matched '\(word)' → '\(result.category)' in \(String(format: "%.2f", duration))s")

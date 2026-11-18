@@ -58,14 +58,16 @@ struct MyIntStepper: View {
                         HStack {
                             Text(description)
                                 .fixedSize(horizontal: false, vertical: true)
+                                // Only the text and icon: the help button keeps its tint.
+                                .foregroundStyle(.primary)
                             if let helpText {
                                 FieldDescription(description: helpText)
                             }
                         }
                     } icon: {
                         Image(systemName: systemImage)
+                            .foregroundStyle(.primary)
                     }
-                    .foregroundStyle(.primary)
                 } else {
                     Text(description)
                 }
@@ -152,14 +154,16 @@ struct MyIntStepperOptional: View {
                         HStack {
                             Text(description)
                                 .fixedSize(horizontal: false, vertical: true)
+                                // Only the text and icon: the help button keeps its tint.
+                                .foregroundStyle(.primary)
                             if let helpText {
                                 FieldDescription(description: helpText)
                             }
                         }
                     } icon: {
                         Image(systemName: systemImage)
+                            .foregroundStyle(.primary)
                     }
-                    .foregroundStyle(.primary)
                 } else {
                     Text(description)
                 }

@@ -20,6 +20,8 @@ struct RecipeImportDraft {
     var importPicture: Bool
     var sourceURL: URL?
     var ingredients: [ImportedIngredient]
+    /// The language of the ingredient lines (ISO 639-1), used to split lines like "Salz und Pfeffer".
+    var language: String? = nil
 
     /// Ingredients that will be saved: included, linked to a product and not saved yet.
     var ingredientsToSave: [ImportedIngredient] {
@@ -33,7 +35,7 @@ struct RecipeImportDraft {
 
     /// Included ingredients whose product or unit was only suggested, so the person should check them.
     var ingredientsToCheck: [ImportedIngredient] {
-        ingredients.filter { $0.isIncluded && !$0.isSaved && $0.productID != nil && ($0.productMatch == .suggested || $0.unitMatch == .suggested || $0.hasUnmatchedUnit) }
+        ingredients.filter { $0.isIncluded && !$0.isSaved && $0.productID != nil && ($0.productMatch.needsCheck || $0.unitMatch == .suggested || $0.hasUnmatchedUnit) }
     }
 }
 
@@ -89,7 +91,9 @@ struct RecipeImportMapper {
 
     /// Creates a draft from a parsed website recipe, with products and units matched as well as possible.
     func draft(from recipe: JSONParsedRecipe) -> RecipeImportDraft {
-        let lines = recipe.recipeIngredient.map { IngredientLineParser.parse($0) }
+        let parsedLines = recipe.recipeIngredient.map { IngredientLineParser.parse($0) }
+        let language = IngredientLineParser.language(of: parsedLines)
+        let lines = parsedLines.flatMap { splitAutomatically($0, language: language) }
         let unitLanguage = IngredientUnitLanguage.detect(in: lines) ?? .appLanguage
         let steps = RecipePreparationFormat.steps(from: recipe.recipeInstructions)
         let html = RecipePreparationFormat.html(introduction: recipe.schemaDescription, steps: steps, sourceURL: recipe.url)
@@ -102,7 +106,8 @@ struct RecipeImportMapper {
             imageURL: recipe.image,
             importPicture: recipe.image != nil,
             sourceURL: recipe.url,
-            ingredients: lines.map { ingredient(from: $0, unitLanguage: unitLanguage) }
+            ingredients: lines.map { ingredient(from: $0, unitLanguage: unitLanguage) },
+            language: language
         )
     }
 
@@ -127,6 +132,40 @@ struct RecipeImportMapper {
         return ingredient
     }
 
+    // MARK: Splitting
+
+    /// Lines like "n. B. Salz und Pfeffer" or "2 EL Öl und Essig" name several ingredients. They are split into one ingredient each,
+    /// unless a product has the whole name ("Salz und Pfeffer" as one spice mix).
+    func splitAutomatically(_ line: ParsedIngredientLine, language: String?) -> [ParsedIngredientLine] {
+        guard let parts = IngredientLineParser.split(line, language: language),
+            productCandidates(for: line.name, note: line.note).first?.quality != .exact
+        else { return [line] }
+        return parts
+    }
+
+    /// `true` when the ingredient names several ingredients and can be split.
+    func canSplit(_ ingredient: ImportedIngredient, language: String?) -> Bool {
+        !ingredient.isSaved && IngredientLineParser.split(ingredient.line, language: language) != nil
+    }
+
+    /// Replaces an ingredient that names several ingredients by one ingredient each.
+    /// Lines are split when loading; this is for lines kept together because a product has the whole name.
+    func split(ingredientID: UUID, in draft: inout RecipeImportDraft) {
+        guard let index = draft.ingredients.firstIndex(where: { $0.id == ingredientID }),
+            !draft.ingredients[index].isSaved,
+            let parts = IngredientLineParser.split(draft.ingredients[index].line, language: draft.language)
+        else { return }
+        let original = draft.ingredients[index]
+        let unitLanguage = IngredientUnitLanguage.detect(in: draft.ingredients.map(\.line)) ?? .appLanguage
+        let ingredients = parts.map { part in
+            var ingredient = ingredient(from: part, unitLanguage: unitLanguage)
+            ingredient.isIncluded = original.isIncluded
+            ingredient.ingredientGroup = original.ingredientGroup
+            return ingredient
+        }
+        draft.ingredients.replaceSubrange(index...index, with: ingredients)
+    }
+
     /// Sets the unit again after the product of an ingredient changed, as units depend on the product's conversions.
     func productChanged(_ ingredient: inout ImportedIngredient) {
         resetUnit(of: &ingredient)
@@ -136,7 +175,7 @@ struct RecipeImportMapper {
     func unitChanged(_ ingredient: inout ImportedIngredient) {
         ingredient.onlyCheckSingleUnitInStock = false
         ingredient.variableAmount = rangeText(of: ingredient.line)
-        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: nil)
+        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: nil, isUnitClear: true)
     }
 
     /// Fills in products and units that were missing, e.g. after the person created a product or quantity unit.
@@ -167,7 +206,36 @@ struct RecipeImportMapper {
         ingredient.unitMatch = match?.quality ?? .none
         ingredient.onlyCheckSingleUnitInStock = false
         ingredient.variableAmount = rangeText(of: line)
-        applyUnitRules(to: &ingredient, product: products.first(where: { $0.id == ingredient.productID }), unmatchedUnit: match == nil ? line.unit : nil)
+        let product = products.first(where: { $0.id == ingredient.productID })
+        let isUnitClear: Bool
+        if line.unit != nil {
+            isUnitClear = match?.quality == .exact
+        } else if let product, line.amount != nil, isMeasure(quantityUnitID: product.quIDConsume) {
+            // "1 Zwiebel" counts pieces, which the product's consume unit (e.g. grams) can't hold
+            if let pieceUnit {
+                ingredient.quID = pieceUnit.id
+                isUnitClear = true
+            } else {
+                isUnitClear = false
+            }
+        } else {
+            isUnitClear = true
+        }
+        applyUnitRules(to: &ingredient, product: product, unmatchedUnit: match == nil ? line.unit : nil, isUnitClear: isUnitClear)
+    }
+
+    /// The quantity unit for pieces, e.g. "Stück" or "Piece".
+    private var pieceUnit: MDQuantityUnit? {
+        quantityUnits.first { quantityUnit in
+            [quantityUnit.name, quantityUnit.namePlural].contains { KnownIngredientUnit.matching($0) == .piece }
+        }
+    }
+
+    /// `true` when the quantity unit measures an amount, like grams or milliliters.
+    private func isMeasure(quantityUnitID: Int) -> Bool {
+        guard let quantityUnit = quantityUnits.first(where: { $0.id == quantityUnitID }) else { return false }
+        let knownUnit = KnownIngredientUnit.matching(quantityUnit.name) ?? KnownIngredientUnit.matching(quantityUnit.namePlural)
+        return knownUnit?.isMeasure ?? false
     }
 
     /// A range like "2-3" can't be stored as an amount, so it's shown as written.
@@ -179,8 +247,12 @@ struct RecipeImportMapper {
     /// - Without a unit (e.g. "3 eggs"), the product's consume unit is used.
     /// - When the unit can't be converted to the product's stock unit (e.g. "1 pinch of salt"),
     ///   only "any amount in stock" can be checked, and the amount is shown as written on the website.
-    private func applyUnitRules(to ingredient: inout ImportedIngredient, product: MDProduct?, unmatchedUnit: String?) {
+    /// - When the unit isn't clear (only suggested, or "1 Paprikaschote" for a product measured in grams),
+    ///   the amount is also shown as written on the website, so the recipe doesn't say "1 Gram".
+    /// - Without an amount ("n. B. Salz"), the vague quantity is shown.
+    private func applyUnitRules(to ingredient: inout ImportedIngredient, product: MDProduct?, unmatchedUnit: String?, isUnitClear: Bool) {
         guard let product else { return }
+        let line = ingredient.line
 
         if ingredient.quID == nil, unmatchedUnit == nil {
             ingredient.quID = product.quIDConsume
@@ -196,6 +268,21 @@ struct RecipeImportMapper {
             if ingredient.variableAmount.isEmpty, let unmatchedUnit {
                 let amountText = ingredient.line.amountText ?? ingredient.line.amount?.formattedAmount
                 ingredient.variableAmount = [amountText, unmatchedUnit].compactMap { $0 }.joined(separator: " ")
+            }
+        }
+
+        if hasNoAmount {
+            if ingredient.variableAmount.isEmpty, let vagueAmount = line.vagueAmount {
+                ingredient.variableAmount = vagueAmount
+            }
+        } else if !isUnitClear {
+            if line.unit == nil {
+                // The amount counts pieces, which the product's measuring unit can't check
+                ingredient.onlyCheckSingleUnitInStock = true
+            }
+            if ingredient.variableAmount.isEmpty {
+                let amountText = line.amountText ?? line.amount?.formattedAmount
+                ingredient.variableAmount = [amountText, line.unit].compactMap { $0 }.joined(separator: " ")
             }
         }
     }

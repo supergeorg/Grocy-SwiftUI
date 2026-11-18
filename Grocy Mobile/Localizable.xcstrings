@@ -14,6 +14,16 @@
         }
       }
     },
+    "%lld of %lld ingredients" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld von %2$lld Zutaten"
+          }
+        }
+      }
+    },
     "1 %@ %@ is the same as" : {
       "localizations" : {
         "de" : {
@@ -6774,6 +6784,16 @@
         }
       }
     },
+    "Apple Intelligence: %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence: %1$@ %2$@"
+          }
+        }
+      }
+    },
     "Connect the unit to the product to check the amount in stock." : {
       "localizations" : {
         "de" : {
@@ -6834,12 +6854,62 @@
         }
       }
     },
+    "Fill in with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Apple Intelligence ausfüllen"
+          }
+        }
+      }
+    },
+    "Filling in with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird mit Apple Intelligence ausgefüllt"
+          }
+        }
+      }
+    },
+    "Finding products with Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkte mit Apple Intelligence finden"
+          }
+        }
+      }
+    },
     "Import" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importieren"
+          }
+        }
+      }
+    },
+    "Ingredients whose names match no product get a suggestion. You can change it before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zutaten, deren Name zu keinem Produkt passt, bekommen einen Vorschlag. Du kannst ihn vor dem Speichern ändern."
+          }
+        }
+      }
+    },
+    "Looking for a product…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt wird gesucht …"
           }
         }
       }
@@ -6900,12 +6970,52 @@
         }
       }
     },
+    "Split" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufteilen"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoppen"
+          }
+        }
+      }
+    },
     "Suggested because the names are similar. Check that it's the right product." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vorgeschlagen, weil die Namen ähnlich sind. Prüfe, ob es das richtige Produkt ist."
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence. Check that it's the right product." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von Apple Intelligence vorgeschlagen. Prüfe, ob es das richtige Produkt ist."
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence: %@. Check them before saving." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von Apple Intelligence vorgeschlagen: %@. Prüfe die Angaben vor dem Speichern."
           }
         }
       }
@@ -6922,6 +7032,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Suggested: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Suggests the location, product group and quantity unit from the name and your other products." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlägt Standort, Produktgruppe und Mengeneinheit anhand des Namens und deiner anderen Produkte vor."
           }
         }
       }
@@ -6958,6 +7078,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Unit “%1$@” suggested as “%2$@”"
+          }
+        }
+      }
+    },
+    "With suggestions from Apple Intelligence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Vorschlägen von Apple Intelligence"
           }
         }
       }

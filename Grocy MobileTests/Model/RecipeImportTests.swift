@@ -73,6 +73,65 @@ struct IngredientLineParserTests {
         #expect(some.note == "etwas, frisch gemahlen")
     }
 
+    @Test("Lines with several ingredients are split")
+    func split() throws {
+        let vague = try #require(IngredientLineParser.split(IngredientLineParser.parse("n. B. Salz und Pfeffer, frisch gemahlen"), language: "de"))
+        #expect(vague.map(\.name) == ["Salz", "Pfeffer"])
+        #expect(vague.map(\.originalText) == ["n. B. Salz", "n. B. Pfeffer"])
+        #expect(vague.allSatisfy { $0.amount == nil && $0.vagueAmount == "n. B." && $0.note == "n. B., frisch gemahlen" })
+
+        let shared = try #require(IngredientLineParser.split(IngredientLineParser.parse("2 EL Öl und Essig"), language: "de"))
+        #expect(shared.map(\.name) == ["Öl", "Essig"])
+        #expect(shared.map(\.originalText) == ["2 EL Öl", "2 EL Essig"])
+        #expect(shared.allSatisfy { $0.amount == 2 && $0.unit == "EL" })
+
+        let own = try #require(IngredientLineParser.split(IngredientLineParser.parse("1 Zwiebel & 2 Knoblauchzehen"), language: "de"))
+        #expect(own.map(\.name) == ["Zwiebel", "Knoblauch"])
+        #expect(own.map(\.amount) == [1, 2])
+
+        #expect(IngredientLineParser.split(IngredientLineParser.parse("200 g Butter"), language: "de") == nil)
+        #expect(IngredientLineParser.split(IngredientLineParser.parse("Butter oder Margarine"), language: "de") == nil)
+    }
+
+    @Test("Lines are split with the word for \"and\" of the recipe's language", arguments: [
+        ("Salt and pepper", "en"), ("Sel et poivre", "fr"), ("Sal y pimienta", "es"), ("Sale e pepe", "it"),
+        ("Zout en peper", "nl"), ("Salt och peppar", "sv"), ("Tuz ve biber", "tr"), ("Sól i pieprz", "pl"),
+    ])
+    func splitInLanguage(text: String, language: String) throws {
+        let parts = try #require(IngredientLineParser.split(IngredientLineParser.parse(text), language: language))
+        #expect(parts.count == 2)
+    }
+
+    @Test("Without a known language, only unambiguous words split")
+    func splitWithoutLanguage() {
+        #expect(IngredientLineParser.split(IngredientLineParser.parse("Salz und Pfeffer"), language: nil)?.count == 2)
+        #expect(IngredientLineParser.split(IngredientLineParser.parse("Salz & Pfeffer"), language: nil)?.count == 2)
+        // "e" is "and" in Italian, but a letter elsewhere
+        #expect(IngredientLineParser.split(IngredientLineParser.parse("Vitamin e Tabletten"), language: nil) == nil)
+    }
+
+    @Test("The language of the ingredients is recognized")
+    func language() {
+        let lines = ["300 g Hähnchenbrustfilet", "1 EL Pflanzenöl", "1 Paprikaschote, rote", "n. B. Salz und Pfeffer"].map { IngredientLineParser.parse($0) }
+        #expect(IngredientLineParser.language(of: lines) == "de")
+    }
+
+    @Test("Unit words in compound words become the unit")
+    func compoundUnit() {
+        let paprika = IngredientLineParser.parse("1 Paprikaschote(n), rote")
+        #expect(paprika.name == "Paprika")
+        #expect(paprika.knownUnit == .piece)
+        #expect(paprika.note == "rote")
+
+        let garlic = IngredientLineParser.parse("2 Knoblauchzehen")
+        #expect(garlic.name == "Knoblauch")
+        #expect(garlic.knownUnit == .clove)
+
+        // A unit given before the name stays, and short stems aren't split off
+        #expect(IngredientLineParser.parse("1 Stück Vanilleschote").name == "Vanilleschote")
+        #expect(IngredientLineParser.parse("2 Zehen").knownUnit == .clove)
+    }
+
     @Test("Ranges keep their text")
     func range() {
         let line = IngredientLineParser.parse("2-3 EL Zucker")
@@ -101,6 +160,42 @@ struct IngredientLineParserTests {
     func entities() {
         let line = IngredientLineParser.parse("100 g Cr&egrave;me fra&icirc;che &amp; Sahne")
         #expect(line.name.contains("& Sahne"))
+    }
+}
+
+@Suite("Recipe picture")
+@MainActor
+struct RecipePictureParsingTests {
+    private func page(jsonLD: String, head: String = "") -> String {
+        "<html><head>\(head)<script type=\"application/ld+json\">\(jsonLD)</script></head><body></body></html>"
+    }
+
+    @Test("A picture referenced by @id in the @graph is resolved")
+    func imageReference() throws {
+        let json = """
+            {"@context": "https://schema.org", "@graph": [
+              {"@type": "Recipe", "name": "Nudeln", "image": {"@id": "https://example.com/r#primaryimage"}},
+              {"@type": "ImageObject", "@id": "https://example.com/r#primaryimage", "url": "https://example.com/nudeln.jpg"}
+            ]}
+            """
+        let recipe = try #require(try RecipeParser.parse(html: page(jsonLD: json)).first)
+        #expect(recipe.image == URL(string: "https://example.com/nudeln.jpg"))
+    }
+
+    @Test("The page's og:image is used when the recipe has no picture")
+    func openGraphFallback() throws {
+        let json = #"{"@type": "Recipe", "name": "Nudeln"}"#
+        let head = #"<meta content="https://example.com/og.jpg?a=1&amp;b=2" property="og:image">"#
+        let recipe = try #require(try RecipeParser.parse(html: page(jsonLD: json, head: head)).first)
+        #expect(recipe.image == URL(string: "https://example.com/og.jpg?a=1&b=2"))
+    }
+
+    @Test("The recipe's own picture wins over og:image")
+    func ownPictureFirst() throws {
+        let json = #"{"@type": "Recipe", "name": "Nudeln", "image": ["https://example.com/own.jpg"]}"#
+        let head = #"<meta property="og:image" content="https://example.com/og.jpg">"#
+        let recipe = try #require(try RecipeParser.parse(html: page(jsonLD: json, head: head)).first)
+        #expect(recipe.image == URL(string: "https://example.com/own.jpg"))
     }
 }
 
@@ -139,6 +234,47 @@ struct RecipePreparationFormatTests {
         let instruction = InstructionStep(position: 1, sectionName: nil, name: nil, text: "Erst das.\n\nDann das.", imageURL: nil, url: nil)
         let steps = RecipePreparationFormat.steps(from: [instruction])
         #expect(steps.map(\.text) == ["Erst das.", "Dann das."])
+    }
+}
+
+@Suite("Recipe description")
+@MainActor
+struct RecipeDescriptionTests {
+    private func page(description: String, body: String) -> String {
+        let jsonLD = #"{"@context":"https://schema.org","@type":"Recipe","name":"Gebratene Nudeln","description":"\#(description)","recipeIngredient":["200 g Nudeln"]}"#
+        return """
+            <html><head><meta name="description" content="\(description)"><script type="application/ld+json">\(jsonLD)</script></head>
+            <body><h1>Gebratene Nudeln</h1>\(body)<script>var text = "\(description)";</script></body></html>
+            """
+    }
+
+    @Test("Text only meant for search engines is left out")
+    func searchEngineTextIsRemoved() throws {
+        let html = page(
+            description: "Gebratene Nudeln - schnell und einfach. Über 26 Bewertungen und für beliebt befunden. Mit ► Portionsrechner ► Kochbuch!",
+            body: "<p>Schnell und einfach</p><ul><li>200 g Nudeln</li></ul>"
+        )
+        #expect(try RecipeParser.parse(html: html).first?.schemaDescription == nil)
+    }
+
+    @Test("Sentences the page shows are kept")
+    func shownSentencesAreKept() throws {
+        let html = page(
+            description: "A great dish for busy days. Rated 4.8 by 120 cooks!",
+            body: "<p>A great   dish for <em>busy</em> days.</p><p>Bake 1.5 hours.</p>"
+        )
+        #expect(try RecipeParser.parse(html: html).first?.schemaDescription == "A great dish for busy days.")
+    }
+
+    @Test("Pages without rendered text keep the description")
+    func javaScriptPagesKeepTheDescription() {
+        let pageText = RecipeParser.visibleText(in: "<html><body><div id=\"app\"></div></body></html>")
+        #expect(RecipeParser.shownDescription("Only in metadata.", recipeName: "Gebratene Nudeln", pageText: pageText) == "Only in metadata.")
+    }
+
+    @Test("Decimals don't split sentences")
+    func sentences() {
+        #expect(RecipeParser.sentences(in: "Bake 1.5 hours. Done! Really?") == ["Bake 1.5 hours.", "Done!", "Really?"])
     }
 }
 
@@ -203,6 +339,74 @@ struct RecipeImportMapperTests {
         #expect(ingredient.quID == 1)
         #expect(ingredient.onlyCheckSingleUnitInStock)
         #expect(ingredient.variableAmount == "1 Prise")
+    }
+
+    @Test("Counted amounts use the piece unit")
+    func countedAmountForMeasuredProduct() {
+        // Butter is used in grams, so "1 Butter" is one piece and not "1 Gramm"
+        let ingredient = mapper.ingredient(from: IngredientLineParser.parse("1 Butter"))
+        #expect(ingredient.productID == 2)
+        #expect(ingredient.quID == piece.id)
+        #expect(ingredient.variableAmount.isEmpty)
+        #expect(ingredient.onlyCheckSingleUnitInStock)
+
+        // Eggs are counted in pieces
+        let eggs = mapper.ingredient(from: IngredientLineParser.parse("3 Eier"))
+        #expect(eggs.quID == piece.id)
+        #expect(eggs.variableAmount.isEmpty)
+        #expect(eggs.onlyCheckSingleUnitInStock == false)
+
+        // Without a piece unit, the amount is shown as written
+        let withoutPiece = RecipeImportMapper(products: mapper.products, quantityUnits: [gram, kilogram], conversions: mapper.conversions)
+        let butter = withoutPiece.ingredient(from: IngredientLineParser.parse("1 Butter"))
+        #expect(butter.quID == gram.id)
+        #expect(butter.variableAmount == "1")
+        #expect(butter.onlyCheckSingleUnitInStock)
+    }
+
+    @Test("A compound with a unit word is counted in that unit")
+    func compoundUnitIngredient() {
+        let paprika = RecipeImportMapper(
+            products: [MDProduct(id: 5, name: "Paprika", quIDPurchase: 1, quIDStock: 1, quIDConsume: 1)],
+            quantityUnits: [gram, piece],
+            conversions: []
+        )
+        let ingredient = paprika.ingredient(from: IngredientLineParser.parse("1 Paprikaschote(n), rote"))
+        #expect(ingredient.productID == 5)
+        #expect(ingredient.amount == 1)
+        #expect(ingredient.quID == piece.id)
+        #expect(ingredient.unitMatch == .exact)
+    }
+
+    @Test("Vague quantities are kept as variable amount")
+    func vagueAmount() {
+        let ingredient = mapper.ingredient(from: IngredientLineParser.parse("n. B. Salz"))
+        #expect(ingredient.productID == 4)
+        #expect(ingredient.variableAmount == "n. B.")
+        #expect(ingredient.onlyCheckSingleUnitInStock)
+    }
+
+    @Test("Lines are split, unless a product has the whole name")
+    func automaticSplit() {
+        #expect(mapper.splitAutomatically(IngredientLineParser.parse("n. B. Salz und Pfeffer"), language: "de").map(\.name) == ["Salz", "Pfeffer"])
+        #expect(mapper.splitAutomatically(IngredientLineParser.parse("2 EL Öl und Essig"), language: "de").map(\.originalText) == ["2 EL Öl", "2 EL Essig"])
+
+        let combined = RecipeImportMapper(
+            products: [MDProduct(id: 1, name: "Salz und Pfeffer", quIDPurchase: 1, quIDStock: 1, quIDConsume: 1)],
+            quantityUnits: [gram],
+            conversions: []
+        )
+        #expect(combined.splitAutomatically(IngredientLineParser.parse("Salz und Pfeffer"), language: "de").count == 1)
+    }
+
+    @Test("An ingredient can be split by the person")
+    func manualSplit() {
+        let original = mapper.ingredient(from: IngredientLineParser.parse("2 EL Butter und Mehl"))
+        var draft = RecipeImportDraft(name: "Test", baseServings: 1, preparationHTML: "", steps: [], importPicture: false, ingredients: [original], language: "de")
+        #expect(mapper.canSplit(original, language: "de"))
+        mapper.split(ingredientID: original.id, in: &draft)
+        #expect(draft.ingredients.map(\.productID) == [2, 1])
+        #expect(draft.ingredients.allSatisfy { $0.amount == 2 && $0.quID == tablespoon.id })
     }
 
     @Test("Servings are read from the yield", arguments: [("4 Portionen", 4.0), ("Serves 2-3", 2.0), ("12", 12.0)])
@@ -334,6 +538,33 @@ struct RecipeImportSuggestionTests {
         #expect(!ingredient.onlyCheckSingleUnitInStock)
         #expect(ingredient.variableAmount.isEmpty)
         #expect(after.stockAmount(for: ingredient.amount, quID: bunch.id, product: product) == 6)
+    }
+
+    @Test("Apple Intelligence only looks at ingredients without a product, and its suggestions need a check")
+    func intelligenceSuggestion() {
+        let mapper = mapper(products: ["Rapsöl", "Butter"])
+        var oil = mapper.ingredient(from: IngredientLineParser.parse("1 EL Pflanzenöl"))
+        let butter = mapper.ingredient(from: IngredientLineParser.parse("20 g Butter"))
+        #expect(RecipeImportMapper.needsIntelligenceMatch(oil))
+        #expect(!RecipeImportMapper.needsIntelligenceMatch(butter))
+
+        let rapeseedOil = mapper.products[0]
+        mapper.intelligenceSuggested(rapeseedOil, for: &oil)
+        #expect(oil.productID == rapeseedOil.id)
+        #expect(oil.productMatch == .intelligence)
+        #expect(oil.productMatch.needsCheck)
+        #expect(!RecipeImportMapper.needsIntelligenceMatch(oil))
+        #expect(oil.quID != nil)
+    }
+
+    @Test("With many products, the ones with similar letters are offered to Apple Intelligence")
+    func intelligenceCandidates() {
+        let names = (1...200).map { "Produkt \($0)" } + ["Pflanzenfett", "Rapsöl"]
+        let mapper = mapper(products: names)
+        let candidates = mapper.intelligenceCandidates(for: "Pflanzenöl", limit: 10).map(\.name)
+        #expect(candidates.count == 10)
+        #expect(candidates.contains("Pflanzenfett"))
+        #expect(mapper.intelligenceCandidates(for: "Pflanzenöl", limit: 500).count == names.count)
     }
 
     @Test("Units that are already convertible don't need a connection")
