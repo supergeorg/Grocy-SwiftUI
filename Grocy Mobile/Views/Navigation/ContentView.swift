@@ -17,6 +17,12 @@ struct ContentView: View {
     #endif
 
     var body: some View {
+        navigation
+            .whatsNewSheet()
+    }
+
+    @ViewBuilder
+    private var navigation: some View {
         #if os(iOS)
             // One branch per navigation, so a size class change that keeps the navigation
             // (opening or closing iPhone Duo, resizing on iPad) keeps its state too.
@@ -35,6 +41,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .previewData) {
     ContentView()
 }

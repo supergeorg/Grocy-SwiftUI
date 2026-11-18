@@ -7,124 +7,74 @@
 
 import SwiftUI
 
-struct OnboardingDevicesView: View {
-    var body: some View {
-        HStack {
-            #if os(macOS)
-                Image(systemName: MySymbols.deviceMacBook)
-                Image(systemName: MySymbols.deviceMacMini)
-                Image(systemName: MySymbols.deviceDesktop)
-            #elseif os(iOS)
-                Image(systemName: MySymbols.deviceIPhone)
-                Image(systemName: MySymbols.deviceIPhoneHomeButton)
-                Image(systemName: MySymbols.deviceIPad)
-                Image(systemName: MySymbols.deviceIPadHomeButton)
-            #endif
-        }
-    }
-}
-
-public enum OnboardingCards: CaseIterable {
-    case GROCY
-    case ERP_BEYOND
-    case IOS_MACOS
-
-    public var title: LocalizedStringKey {
-        switch self {
-        case .GROCY:
-            return "Grocy"
-        case .ERP_BEYOND:
-            return "grocy - ERP beyond your fridge"
-        case .IOS_MACOS:
-            return "Grocy for iOS/macOS"
-        }
-    }
-
-    public var subtitle: LocalizedStringKey {
-        switch self {
-        case .GROCY:
-            return ""
-        case .ERP_BEYOND:
-            return "grocy is a web-based self-hosted groceries & household management solution for your home."
-        case .IOS_MACOS:
-            return "An app in native design, allowing a comfortable use of Grocy at home and on the go."
-        }
-    }
-
-    public var imageName: String {
-        switch self {
-        case .GROCY:
-            return "grocy-logo"
-        case .ERP_BEYOND:
-            return "web-stock"
-        case .IOS_MACOS:
-            return "stock-screenshot"
-        }
-    }
-}
-
-struct OnboardingCardView: View {
-    var card: OnboardingCards
-    var body: some View {
-        VStack {
-            Image(card.imageName)
-                .resizable()
-                .scaledToFit()
-            Spacer()
-            Text(card.title).font(.largeTitle)
-            if card.subtitle == "" {
-                OnboardingDevicesView()
-                    .font(.largeTitle)
-            } else {
-                Text(card.subtitle)
-            }
-            Spacer()
-        }
-        .padding()
-    }
-}
-
+/// The first screen after installing: what Grocy and the app do, before choosing a server.
 struct OnboardingView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
+    @AppStorage(WhatsNew.storageKey) private var whatsNewLastVersion: String = ""
+
+    @ScaledMetric(relativeTo: .largeTitle) private var logoHeight: CGFloat = Sizes.introductionLogoHeight
+
+    static let features: [IntroductionFeature] = [
+        IntroductionFeature(
+            symbol: MySymbols.stockOverview,
+            tint: Color(.GrocyColors.grocyGreen),
+            title: "Know what's at home",
+            text: "See your stock, what's due soon and what's running low, and scan barcodes to purchase or consume."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.shoppingList,
+            tint: Color(.GrocyColors.grocyBlue),
+            title: "Shop with your lists",
+            text: "Shopping lists stay in sync with your household, and can be mirrored to Reminders."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.recipe,
+            tint: .orange,
+            title: "Cook from your recipes",
+            text: "Check what you can cook with your stock, and import recipes from websites."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.householdManagement,
+            tint: Color(.GrocyColors.grocyTurquoise),
+            title: "Run the household",
+            text: "Chores, tasks, batteries and equipment in one place, with widgets for your Home Screen."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.serverConnection,
+            tint: Color(.GrocyColors.grocyGray),
+            title: "Your data on your server",
+            text: "Grocy Mobile connects to your self-hosted Grocy server. You can try a demo server first."
+        ),
+    ]
 
     var body: some View {
-        VStack {
-            #if os(iOS)
-                TabView {
-                    ForEach(OnboardingCards.allCases, id: \.self) { card in
-                        OnboardingCardView(card: card)
-                    }
-                }
-                .tabViewStyle(PageTabViewStyle())
-            #else
-                HStack {
-                    ForEach(OnboardingCards.allCases, id: \.self) { card in
-                        OnboardingCardView(card: card)
-                    }
-                }
-            #endif
-            Button(
-                action: {
+        IntroductionLayout(
+            title: "Welcome to Grocy Mobile",
+            subtitle: "The native app for Grocy, the self-hosted groceries and household management solution.",
+            features: Self.features
+        ) {
+            Image("grocy-logo")
+                .resizable()
+                .scaledToFit()
+                .frame(height: logoHeight)
+                .accessibilityLabel("Grocy")
+        } actions: {
+            Button {
+                // A new user has nothing to compare with, so What's New only appears after the next update.
+                whatsNewLastVersion = WhatsNew.appVersion
+                withAnimation {
                     onboardingNeeded = false
-                },
-                label: {
-                    Text("Let's get started!")
-                        #if os(iOS)
-                            .font(.title)
-                        #endif
                 }
-            )
-            #if os(iOS)
-                // System glass style: handles pressed and disabled states and keeps the label legible.
-                .buttonStyle(.glassProminent)
-                .tint(Color(.GrocyColors.grocyGreen))
-                .controlSize(.large)
-            #endif
+            } label: {
+                Text("Continue")
+                    .frame(maxWidth: .infinity)
+            }
+            .introductionButton(tint: Color(.GrocyColors.grocyGreen))
+            .keyboardShortcut(.defaultAction)
         }
-        .background(Color(.GrocyColors.grocyBlueBackground))
     }
 }
 
-#Preview {
+#Preview(traits: .previewData) {
     OnboardingView()
 }

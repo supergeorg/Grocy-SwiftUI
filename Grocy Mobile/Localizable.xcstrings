@@ -6784,12 +6784,52 @@
         }
       }
     },
+    "A new navigation on iPhone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine neue Navigation auf dem iPhone"
+          }
+        }
+      }
+    },
+    "All ingredients with their stock status, a list or gallery layout, and import from websites." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Zutaten mit ihrem Bestandsstatus, eine Listen- oder Galerieansicht und Import von Webseiten."
+          }
+        }
+      }
+    },
     "Apple Intelligence: %@ %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Intelligence: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Check off the ingredients, follow one step per page, and consume everything when you're done." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hake die Zutaten ab, folge einem Schritt pro Seite und verbrauche am Ende alles."
+          }
+        }
+      }
+    },
+    "Choose the smart navigation, your own tabs or the sidebar. Search finds stock, products, recipes and master data." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle die smarte Navigation, eigene Tabs oder die Seitenleiste. Die Suche findet Bestand, Produkte, Rezepte und Stammdaten."
           }
         }
       }
@@ -6824,6 +6864,16 @@
         }
       }
     },
+    "Cooking mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochmodus"
+          }
+        }
+      }
+    },
     "Create product “%@”" : {
       "localizations" : {
         "de" : {
@@ -6850,6 +6900,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nicht importieren"
+          }
+        }
+      }
+    },
+    "Everything that's due" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles, was fällig ist"
           }
         }
       }
@@ -6920,6 +6980,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Mengeneinheit passt zu „%@“ von der Website. Erstelle sie oder wähle eine andere Einheit."
+          }
+        }
+      }
+    },
+    "Products that are expired, due soon or running low, and due chores, tasks and batteries in one list, with swipe actions." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgelaufene, bald fällige und knappe Produkte sowie fällige Hausarbeiten, Aufgaben und Batterien in einer Liste, mit Wischaktionen."
           }
         }
       }
@@ -7032,6 +7102,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Suggested: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Suggestions for the location, product group and unit of new products, and for the products of imported ingredients." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschläge für Standort, Produktgruppe und Einheit neuer Produkte und für die Produkte importierter Zutaten."
           }
         }
       }
@@ -20360,9 +20440,6 @@
       }
     },
     "Code 39 / Code 93 / Codabar family" : {
-      "shouldTranslate" : false
-    },
-    "CodeScanner" : {
       "shouldTranslate" : false
     },
     "Collapsed" : {

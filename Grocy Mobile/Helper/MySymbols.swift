@@ -250,13 +250,11 @@ nonisolated struct MySymbols {
     static let scannerButtonBackground = "capsule.fill"
     static let quickScanPause = "pause.rectangle"
 
-    // MARK: - Onboarding devices
+    // MARK: - Introduction
 
-    static let deviceMacBook = "macbook"
-    static let deviceMacMini = "macmini"
-    static let deviceDesktop = "desktopcomputer"
-    static let deviceIPhone = "iphone"
-    static let deviceIPhoneHomeButton = "iphone.homebutton"
-    static let deviceIPad = "ipad"
-    static let deviceIPadHomeButton = "ipad.homebutton"
+    static let serverConnection = "externaldrive.connected.to.line.below"
+    static let serverProfiles = "icloud"
+    static let householdManagement = "house.and.flag"
+    static let whatsNew = "sparkles"
+    static let widgets = "widget.small"
 }

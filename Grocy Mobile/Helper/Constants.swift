@@ -19,6 +19,8 @@ struct Constants {
     /// The cooking mode's sheet, large enough to read a step from a distance.
     static let macOSCookingMinWidth: CGFloat = 640.0
     static let macOSCookingMinHeight: CGFloat = 560.0
+    /// Onboarding, login start and What's New, so the feature list and its buttons fit without scrolling.
+    static let macOSIntroductionMinHeight: CGFloat = 620.0
 #endif
 }
 
@@ -64,4 +66,10 @@ enum Sizes {
     static let popoverFormSize: CGFloat = 500
     /// Widest line length of the cooking mode's pages, so long steps stay readable on iPad and Mac.
     static let cookingReadableWidth: CGFloat = 720
+    /// Widest line length of the onboarding, login start and What's New screens, so the feature list stays compact on iPad and Mac.
+    static let introductionReadableWidth: CGFloat = 520
+    /// Width of the symbol column in an introduction feature row (scaled with Dynamic Type).
+    static let introductionIconWidth: CGFloat = 44
+    /// Height of the Grocy logo above the welcome title (scaled with Dynamic Type).
+    static let introductionLogoHeight: CGFloat = 48
 }

@@ -13,70 +13,55 @@ struct LoginView: View {
     @State private var showAbout: Bool = false
     @State private var showSettings: Bool = false
 
-    #if os(iOS)
-        @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-        @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    #endif
+    @ScaledMetric(relativeTo: .largeTitle) private var logoHeight: CGFloat = Sizes.introductionLogoHeight
+
+    static let features: [IntroductionFeature] = [
+        IntroductionFeature(
+            symbol: MySymbols.ownServer,
+            tint: Color(.GrocyColors.grocyGreen),
+            title: "Your own server",
+            text: "Connect to your Grocy server with its address and an API key, also through Home Assistant."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.serverProfiles,
+            tint: Color(.GrocyColors.grocyBlue),
+            title: "Saved in iCloud",
+            text: "Your servers are saved as profiles and synced to your other devices."
+        ),
+        IntroductionFeature(
+            symbol: MySymbols.demoServer,
+            tint: .orange,
+            title: "Demo server",
+            text: "Try the app with sample data. Demo servers are reset regularly, so don't use them for your personal data."
+        ),
+    ]
 
     var body: some View {
-        VStack(spacing: Spacing.xLarge) {
-            Spacer()
+        IntroductionLayout(
+            title: "Connect to Grocy",
+            subtitle: "Grocy Mobile is a companion app and needs a running Grocy server.",
+            features: Self.features
+        ) {
             Image("grocy-logo")
                 .resizable()
                 .scaledToFit()
-                .padding()
-            ScrollView {
-                Text("Welcome to Grocy Mobile")
-                    .font(.largeTitle).bold()
-                    .multilineTextAlignment(.center)
-                Text(
-                    "This is a companion app and requires access to a running Grocy instance (for example on your server). If you just want to try the app, use one of the demo servers provided by the Grocy developer. Do not use demo servers for your personal data — they are not persistent."
-                )
-                .font(.body)
-                .multilineTextAlignment(.leading)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding()
+                .frame(height: logoHeight)
+                .accessibilityLabel("Grocy")
+        } actions: {
+            NavigationLink(value: LoginDestinationType.ownServer) {
+                Label("Own server", systemImage: MySymbols.ownServer)
+                    .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal)
-
-            Text("Select a server type:")
-                .font(.title3)
-                .foregroundStyle(.primary)
-                .padding(.top, Spacing.xxSmall)
-
-            NavigationLink(
-                value: LoginDestinationType.demoServer,
-                label: {
-                    Label("Demo server", systemImage: MySymbols.demoServer)
-                        .font(.title2)
-                        .frame(maxWidth: .infinity)
-                }
-            )
-            // System glass style: handles pressed and disabled states and keeps the label legible.
-            .buttonStyle(.glassProminent)
-            .tint(.orange)
-            .controlSize(.large)
-            // Keep the system side margin; the full-width label would otherwise touch the screen edges.
-            .padding(.horizontal)
-            .accessibilityLabel("Use demo server")
-
-            NavigationLink(
-                value: LoginDestinationType.ownServer,
-                label: {
-                    Label("Own server", systemImage: MySymbols.ownServer)
-                        .font(.title2)
-                        .frame(maxWidth: .infinity)
-                }
-            )
-            // System glass style: handles pressed and disabled states and keeps the label legible.
-            .buttonStyle(.glassProminent)
-            .tint(Color(.GrocyColors.grocyGreen))
-            .controlSize(.large)
-            // Keep the system side margin; the full-width label would otherwise touch the screen edges.
-            .padding(.horizontal)
+            .introductionButton(tint: Color(.GrocyColors.grocyGreen))
             .accessibilityLabel("Use your own server")
+
+            NavigationLink(value: LoginDestinationType.demoServer) {
+                Label("Demo server", systemImage: MySymbols.demoServer)
+                    .frame(maxWidth: .infinity)
+            }
+            .introductionButton(tint: .orange, isProminent: false)
+            .accessibilityLabel("Use demo server")
         }
-        .background(Color(.GrocyColors.grocyBlueBackground))
         .navigationDestination(
             for: LoginDestinationType.self,
             destination: { destination in
@@ -216,7 +201,7 @@ struct LoginDestination: Hashable {
     }
 }
 
-#Preview {
+#Preview(traits: .previewData) {
     NavigationStack {
         LoginView()
     }
