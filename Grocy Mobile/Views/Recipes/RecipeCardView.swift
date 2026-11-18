@@ -50,8 +50,14 @@ struct RecipeCardView: View {
 #Preview(traits: .previewData) {
     ScrollView {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-            RecipeCardView(recipe: Recipe(id: 1, name: "Pasta Carbonara"), fulfillment: RecipeFulfilment(recipeID: 1, needFulfilled: true, calories: 640, dueScore: 10))
-            RecipeCardView(recipe: Recipe(id: 2, name: "Vegetable Stir Fry with a long name"), fulfillment: RecipeFulfilment(recipeID: 2, needFulfilledWithShoppingList: true, missingProductsCount: 5))
+            RecipeCardView(
+                recipe: Recipe(id: 1, name: "Pasta Carbonara"),
+                fulfillment: RecipeFulfilment(recipeID: 1, needFulfilled: true, calories: 640, dueScore: 10)
+            )
+            RecipeCardView(
+                recipe: Recipe(id: 2, name: "Vegetable Stir Fry with a long name"),
+                fulfillment: RecipeFulfilment(recipeID: 2, needFulfilledWithShoppingList: true, missingProductsCount: 5)
+            )
             RecipeCardView(recipe: Recipe(id: 3, name: "Chocolate Cake"), fulfillment: RecipeFulfilment(recipeID: 3, missingProductsCount: 3))
         }
         .padding()

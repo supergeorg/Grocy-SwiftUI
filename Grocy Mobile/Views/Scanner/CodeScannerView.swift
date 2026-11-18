@@ -24,7 +24,13 @@ struct CodeResult: Hashable {
         var symbologies: [VNBarcodeSymbology]
         var recognizeDates: Bool = false
 
-        init(isPaused: Binding<Bool> = .constant(false), onCodeFound: ((CodeResult) -> Void)? = nil, onAuthorizationFailed: (() -> Void)? = nil, symbologies: [VNBarcodeSymbology]? = nil, recognizeDates: Bool = false) {
+        init(
+            isPaused: Binding<Bool> = .constant(false),
+            onCodeFound: ((CodeResult) -> Void)? = nil,
+            onAuthorizationFailed: (() -> Void)? = nil,
+            symbologies: [VNBarcodeSymbology]? = nil,
+            recognizeDates: Bool = false
+        ) {
             self._isPaused = isPaused
             self.onCodeFound = onCodeFound
             self.onAuthorizationFailed = onAuthorizationFailed

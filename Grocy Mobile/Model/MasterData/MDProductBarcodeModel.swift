@@ -99,7 +99,8 @@ class MDProductBarcode: Codable, Equatable, Identifiable, CustomStringConvertibl
     }
 
     static func == (lhs: MDProductBarcode, rhs: MDProductBarcode) -> Bool {
-        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.barcode == rhs.barcode && lhs.quID == rhs.quID && lhs.amount == rhs.amount && lhs.storeID == rhs.storeID && lhs.lastPrice == rhs.lastPrice && lhs.note == rhs.note
+        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.barcode == rhs.barcode && lhs.quID == rhs.quID && lhs.amount == rhs.amount
+            && lhs.storeID == rhs.storeID && lhs.lastPrice == rhs.lastPrice && lhs.note == rhs.note
             && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

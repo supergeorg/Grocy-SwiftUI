@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChoreLogFilterView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @AppStorage("localizationKey") var localizationKey: String = "en"
 
     @Query(sort: \Chore.choreName, order: .forward) var chores: Chores

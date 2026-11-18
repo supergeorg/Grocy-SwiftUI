@@ -119,9 +119,12 @@ class StockJournalEntry: Codable, Equatable {
     }
 
     static func == (lhs: StockJournalEntry, rhs: StockJournalEntry) -> Bool {
-        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.amount == rhs.amount && lhs.bestBeforeDate == rhs.bestBeforeDate && lhs.purchasedDate == rhs.purchasedDate && lhs.usedDate == rhs.usedDate && lhs.spoiled == rhs.spoiled
-            && lhs.stockID == rhs.stockID && lhs.transactionTypeRaw == rhs.transactionTypeRaw && lhs.price == rhs.price && lhs.undone == rhs.undone && lhs.undoneTimestamp == rhs.undoneTimestamp && lhs.openedDate == rhs.openedDate
-            && lhs.locationID == rhs.locationID && lhs.recipeID == rhs.recipeID && lhs.correlationID == rhs.correlationID && lhs.transactionID == rhs.transactionID && lhs.stockRowID == rhs.stockRowID && lhs.storeID == rhs.storeID
+        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.amount == rhs.amount && lhs.bestBeforeDate == rhs.bestBeforeDate
+            && lhs.purchasedDate == rhs.purchasedDate && lhs.usedDate == rhs.usedDate && lhs.spoiled == rhs.spoiled
+            && lhs.stockID == rhs.stockID && lhs.transactionTypeRaw == rhs.transactionTypeRaw && lhs.price == rhs.price && lhs.undone == rhs.undone
+            && lhs.undoneTimestamp == rhs.undoneTimestamp && lhs.openedDate == rhs.openedDate
+            && lhs.locationID == rhs.locationID && lhs.recipeID == rhs.recipeID && lhs.correlationID == rhs.correlationID
+            && lhs.transactionID == rhs.transactionID && lhs.stockRowID == rhs.stockRowID && lhs.storeID == rhs.storeID
             && lhs.userID == rhs.userID && lhs.note == rhs.note && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

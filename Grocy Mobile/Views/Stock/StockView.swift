@@ -208,7 +208,9 @@ struct StockView: View {
     @State private var cachedGroupedStock: [AnyHashable: [StockElement]] = [:]
     @State private var filterComputationTask: Task<Void, Never>?
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list, .stock, .stock_current_locations]
+    private let dataToUpdate: [ObjectEntities] = [
+        .products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list, .stock, .stock_current_locations,
+    ]
     private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .system_config, .user_settings]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -247,7 +249,8 @@ struct StockView: View {
 
         missingStockUpdateTask = Task {
             if !Task.isCancelled {
-                self.cachedMissingStock = missingProducts.filter { !$0.isPartlyInStock && !stockProductIDs.contains($0.productID) }.compactMap { missingProduct in
+                self.cachedMissingStock = missingProducts.filter { !$0.isPartlyInStock && !stockProductIDs.contains($0.productID) }.compactMap {
+                    missingProduct in
                     guard let product = productsByID[missingProduct.productID] else { return nil }
                     return StockElement(
                         amount: 0,
@@ -302,7 +305,8 @@ struct StockView: View {
                 // Search filter
                 if !searchString.isEmpty {
                     let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
-                    let parentProductNameMatches = element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
+                    let parentProductNameMatches =
+                        element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
 
                     if !productNameMatches && !parentProductNameMatches {
                         continue
@@ -459,7 +463,13 @@ struct StockView: View {
 
     // The capsules float in a bar above the list (the navigation layer), so their glass isn't drawn inside a list row
     private var filterCapsules: some View {
-        StockFilterActionsView(filteredStatus: filteredStatusBinding, numExpiringSoon: numExpiringSoon, numOverdue: numOverdue, numExpired: numExpired, numBelowStock: numBelowStock)
+        StockFilterActionsView(
+            filteredStatus: filteredStatusBinding,
+            numExpiringSoon: numExpiringSoon,
+            numOverdue: numOverdue,
+            numExpired: numExpired,
+            numBelowStock: numBelowStock
+        )
     }
 
     var body: some View {
@@ -631,7 +641,11 @@ struct StockView: View {
         #if os(iOS)
             .sheet(isPresented: $showingFilterSheet) {
                 NavigationStack {
-                    StockFilterView(filteredLocationID: $filteredLocationID, filteredProductGroupID: $filteredProductGroupID, filteredStatus: filteredStatusBinding)
+                    StockFilterView(
+                        filteredLocationID: $filteredLocationID,
+                        filteredProductGroupID: $filteredProductGroupID,
+                        filteredStatus: filteredStatusBinding
+                    )
                     .navigationTitle("Filter")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {

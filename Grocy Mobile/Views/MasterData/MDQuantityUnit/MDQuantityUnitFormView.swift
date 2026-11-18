@@ -145,7 +145,9 @@ struct MDQuantityUnitFormView: View {
                     content: {
                         ForEach(quConversions, id: \.id) { quConversion in
                             NavigationLink(value: quConversion) {
-                                Text("\(quConversion.factor.formattedAmount) \(mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")")
+                                Text(
+                                    "\(quConversion.factor.formattedAmount) \(mdQuantityUnits.first(where: { $0.id == quConversion.toQuID })?.name ?? "\(quConversion.id)")"
+                                )
                             }
                             .swipeActions(
                                 edge: .trailing,
@@ -251,7 +253,9 @@ struct MDQuantityUnitFormView: View {
             },
             message: {
                 if let conversionToDelete = conversionToDelete {
-                    Text("\(conversionToDelete.factor.formattedAmount) \(mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")")
+                    Text(
+                        "\(conversionToDelete.factor.formattedAmount) \(mdQuantityUnits.first(where: { $0.id == conversionToDelete.toQuID })?.name ?? "\(conversionToDelete.id)")"
+                    )
                 } else {
                     Text("Unknown error occured.")
                 }

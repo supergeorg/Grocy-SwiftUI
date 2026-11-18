@@ -86,7 +86,13 @@ class GrocyUITestCase: XCTestCase {
                 XCTAssertTrue(masterData.waitForExistence(timeout: 10), "No \"Master data\" section in the sidebar.\n\(sidebar.debugDescription)")
                 masterData.hover()
                 let headerRow = sidebar.outlineRows.containing(NSPredicate(format: "label == %@", "Master data")).firstMatch
-                let chevron = headerRow.descendants(matching: .any).matching(NSPredicate(format: "elementType == %d OR elementType == %d", XCUIElement.ElementType.disclosureTriangle.rawValue, XCUIElement.ElementType.button.rawValue)).firstMatch
+                let chevron = headerRow.descendants(matching: .any).matching(
+                    NSPredicate(
+                        format: "elementType == %d OR elementType == %d",
+                        XCUIElement.ElementType.disclosureTriangle.rawValue,
+                        XCUIElement.ElementType.button.rawValue
+                    )
+                ).firstMatch
                 if chevron.waitForExistence(timeout: 3) {
                     chevron.click()
                 } else {
@@ -147,16 +153,26 @@ class GrocyUITestCase: XCTestCase {
     func element(in app: XCUIApplication, labelContaining text: String) -> XCUIElement {
         // macOS exposes static text as the value, iOS as the label.
         // Input fields are skipped: after a search, the search field's value contains the text, too.
-        app.descendants(matching: .any).matching(NSPredicate(
-            format: "(label CONTAINS %@ OR value CONTAINS %@) AND elementType != %d AND elementType != %d",
-            text, text, XCUIElement.ElementType.searchField.rawValue, XCUIElement.ElementType.textField.rawValue
-        )).firstMatch
+        app.descendants(matching: .any).matching(
+            NSPredicate(
+                format: "(label CONTAINS %@ OR value CONTAINS %@) AND elementType != %d AND elementType != %d",
+                text,
+                text,
+                XCUIElement.ElementType.searchField.rawValue,
+                XCUIElement.ElementType.textField.rawValue
+            )
+        ).firstMatch
     }
 
     func toggle(in app: XCUIApplication, labeled title: String) -> XCUIElement {
         #if os(macOS)
             // Depending on the style, SwiftUI toggles are switches or checkboxes on macOS.
-            let predicate = NSPredicate(format: "label == %@ AND (elementType == %d OR elementType == %d)", title, XCUIElement.ElementType.switch.rawValue, XCUIElement.ElementType.checkBox.rawValue)
+            let predicate = NSPredicate(
+                format: "label == %@ AND (elementType == %d OR elementType == %d)",
+                title,
+                XCUIElement.ElementType.switch.rawValue,
+                XCUIElement.ElementType.checkBox.rawValue
+            )
             return app.descendants(matching: .any).matching(predicate).firstMatch
         #else
             return app.switches[title].firstMatch

@@ -35,7 +35,17 @@ final class ServerProfile {
     var displayName: String = ""
     @Attribute(.externalStorage) var profilePicture: Data?
 
-    init(name: String = "", grocyServerURL: String = "", grocyAPIKey: String = "", useHassIngress: Bool = false, hassToken: String = "", customHeaders: [LoginCustomHeader] = [], userName: String = "", displayName: String = "", profilePicture: Data? = nil) {
+    init(
+        name: String = "",
+        grocyServerURL: String = "",
+        grocyAPIKey: String = "",
+        useHassIngress: Bool = false,
+        hassToken: String = "",
+        customHeaders: [LoginCustomHeader] = [],
+        userName: String = "",
+        displayName: String = "",
+        profilePicture: Data? = nil
+    ) {
         self.id = UUID()
         self.name = name
         self.grocyServerURL = grocyServerURL

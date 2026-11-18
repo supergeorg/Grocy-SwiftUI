@@ -31,7 +31,9 @@ struct StockProductInfoView: View {
             if let productDetails = productDetails {
                 LabeledContent(
                     content: {
-                        Text("\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock?.getName(amount: productDetails.stockAmount) ?? "")")
+                        Text(
+                            "\(productDetails.stockAmount.formattedAmount) \(productDetails.quantityUnitStock?.getName(amount: productDetails.stockAmount) ?? "")"
+                        )
                     },
                     label: {
                         Label("Stock amount", systemImage: MySymbols.amount)
@@ -86,7 +88,11 @@ struct StockProductInfoView: View {
                 )
                 LabeledContent(
                     content: {
-                        Text(productDetails.lastPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
+                        Text(
+                            productDetails.lastPrice != nil
+                                ? "\(grocyVM.getFormattedCurrency(amount: productDetails.lastPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")"
+                                : "Unknown"
+                        )
                     },
                     label: {
                         Label("Last price", systemImage: MySymbols.price)
@@ -95,7 +101,11 @@ struct StockProductInfoView: View {
                 )
                 LabeledContent(
                     content: {
-                        Text(productDetails.avgPrice != nil ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")" : "Unknown")
+                        Text(
+                            productDetails.avgPrice != nil
+                                ? "\(grocyVM.getFormattedCurrency(amount: productDetails.avgPrice ?? 0.0)) per \(productDetails.quantityUnitStock?.name ?? "")"
+                                : "Unknown"
+                        )
                     },
                     label: {
                         Label("Average price", systemImage: MySymbols.price)
@@ -104,7 +114,10 @@ struct StockProductInfoView: View {
                 )
                 LabeledContent(
                     content: {
-                        Text(productDetails.averageShelfLifeDays ?? 0 > 0 ? formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown" : "Unknown")
+                        Text(
+                            productDetails.averageShelfLifeDays ?? 0 > 0
+                                ? formatDays(daysToFormat: productDetails.averageShelfLifeDays) ?? "Unknown" : "Unknown"
+                        )
                     },
                     label: {
                         Label("Average shelf life", systemImage: MySymbols.date)

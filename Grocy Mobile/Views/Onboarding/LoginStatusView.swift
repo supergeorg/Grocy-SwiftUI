@@ -51,7 +51,8 @@ struct LoginStatusView: View {
             await grocyVM.requestData(additionalObjects: [.current_user])
             grocyVM.selectedServerProfile?.userName = grocyVM.currentUser?.username ?? ""
             grocyVM.selectedServerProfile?.displayName = grocyVM.currentUser?.displayName ?? ""
-            if let pictureFileName = grocyVM.currentUser?.pictureFileName, let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
+            if let pictureFileName = grocyVM.currentUser?.pictureFileName,
+                let base64Encoded = pictureFileName.data(using: .utf8)?.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)),
                 let pictureData = try await grocyVM.getUserPicture(fileName: base64Encoded)
             {
                 grocyVM.selectedServerProfile?.profilePicture = pictureData
@@ -141,7 +142,9 @@ struct LoginStatusView: View {
                     Label("Incompatible server", systemImage: MySymbols.warning)
                 },
                 description: {
-                    Text("The server version \(grocyVM.systemInfo?.grocyVersion.version ?? "?") is currently unsupported by the app. You can use it anyways, but there can be problems.")
+                    Text(
+                        "The server version \(grocyVM.systemInfo?.grocyVersion.version ?? "?") is currently unsupported by the app. You can use it anyways, but there can be problems."
+                    )
                 },
                 actions: {
                     Button(

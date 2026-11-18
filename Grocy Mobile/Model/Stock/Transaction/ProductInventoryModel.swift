@@ -16,7 +16,7 @@ struct ProductInventory: Codable {
     var locationID: Int?
     var price: Double?
     var note: String
-    
+
     enum CodingKeys: String, CodingKey {
         case newAmount = "new_amount"
         case bestBeforeDate = "best_before_date"
@@ -25,7 +25,7 @@ struct ProductInventory: Codable {
         case price
         case note
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(newAmount, forKey: .newAmount)
@@ -35,7 +35,7 @@ struct ProductInventory: Codable {
         try container.encode(price, forKey: .price)
         try container.encode(note.isEmpty ? nil : note, forKey: .note)
     }
-    
+
     init(
         newAmount: Double = 1.0,
         bestBeforeDate: Date = Date(),

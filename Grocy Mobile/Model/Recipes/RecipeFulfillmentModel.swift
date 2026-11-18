@@ -38,7 +38,7 @@ class RecipeFulfilment: Codable, Identifiable {
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            
+
             self.id = UUID()
             self.equalID = try container.decodeFlexibleInt(forKey: .equalID)
             self.recipeID = try container.decodeFlexibleInt(forKey: .recipeID)

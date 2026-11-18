@@ -91,7 +91,8 @@ nonisolated enum RecipePreparationFormat {
         instructions.flatMap { instruction -> [RecipePreparationStep] in
             let text = instruction.text.strippingHTML
             let title = instruction.name?.strippingHTML.collapsingWhitespace
-            let paragraphs = text
+            let paragraphs =
+                text
                 .components(separatedBy: .newlines)
                 .map(\.collapsingWhitespace)
                 .filter { !$0.isEmpty }

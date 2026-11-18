@@ -139,7 +139,7 @@ struct ProductField: View {
 
 #Preview(traits: .previewData) {
     @Previewable @State var productID: Int? = -1
-    
+
     NavigationStack {
         Form {
             ProductField(productID: $productID, description: "Product")

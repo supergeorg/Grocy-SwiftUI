@@ -51,7 +51,7 @@ public actor AICategoryMatcher {
             self.temperature = temperature
             self.includeExamples = includeExamples
             self.fallbackToFuzzyMatch = fallbackToFuzzyMatch
-            self.minimumConfidence = min(max(minimumConfidence, 0.0), 1.0) // Clamp between 0-1
+            self.minimumConfidence = min(max(minimumConfidence, 0.0), 1.0)  // Clamp between 0-1
         }
 
         public static var `default`: Configuration {
@@ -164,30 +164,30 @@ public actor AICategoryMatcher {
         return results
     }
 
-//    /// Match multiple words concurrently (faster but uses more resources)
-//    /// - Parameters:
-//    ///   - words: Array of words to categorize
-//    ///   - categories: Array of categorizable objects to match against
-//    /// - Returns: Dictionary mapping words to their matched categories
-//    public func matchConcurrently<T: Categorizable>(
-//        words: [String],
-//        in categories: [T]
-//    ) async throws -> [String: T] {
-//        try await withThrowingTaskGroup(of: (String, T).self) { group in
-//            for word in words {
-//                group.addTask {
-//                    let category = try await self.match(word: word, in: categories)
-//                    return (word, category)
-//                }
-//            }
-//
-//            var results: [String: T] = [:]
-//            for try await (word, category) in group {
-//                results[word] = category
-//            }
-//            return results
-//        }
-//    }
+    //    /// Match multiple words concurrently (faster but uses more resources)
+    //    /// - Parameters:
+    //    ///   - words: Array of words to categorize
+    //    ///   - categories: Array of categorizable objects to match against
+    //    /// - Returns: Dictionary mapping words to their matched categories
+    //    public func matchConcurrently<T: Categorizable>(
+    //        words: [String],
+    //        in categories: [T]
+    //    ) async throws -> [String: T] {
+    //        try await withThrowingTaskGroup(of: (String, T).self) { group in
+    //            for word in words {
+    //                group.addTask {
+    //                    let category = try await self.match(word: word, in: categories)
+    //                    return (word, category)
+    //                }
+    //            }
+    //
+    //            var results: [String: T] = [:]
+    //            for try await (word, category) in group {
+    //                results[word] = category
+    //            }
+    //            return results
+    //        }
+    //    }
 
     // MARK: - Public Types
 
@@ -234,9 +234,9 @@ public actor AICategoryMatcher {
 
         let confidence: Double
         if let rawConfidence = try? response.content.value(Double.self, forProperty: "confidence") {
-            confidence = min(max(rawConfidence, 0.0), 1.0) // Clamp between 0-1
+            confidence = min(max(rawConfidence, 0.0), 1.0)  // Clamp between 0-1
         } else {
-            confidence = 0.5 // Default confidence if not provided
+            confidence = 0.5  // Default confidence if not provided
         }
 
         return MatchResult(
@@ -260,7 +260,7 @@ public actor AICategoryMatcher {
                     name: "confidence",
                     description: "Confidence score for the match (0.0 to 1.0, where 1.0 is highest confidence)",
                     schema: DynamicGenerationSchema(type: Double.self)
-                )
+                ),
             ]
         )
 
@@ -296,12 +296,12 @@ public actor AICategoryMatcher {
             let examples = categoryNames.prefix(3)
             prompt += """
 
-            Examples of confident matches:
-            \(examples.map { "- \"\($0.lowercased())\" → \($0) (confidence: 0.95)" }.joined(separator: "\n"))
+                Examples of confident matches:
+                \(examples.map { "- \"\($0.lowercased())\" → \($0) (confidence: 0.95)" }.joined(separator: "\n"))
 
-            Examples of weak matches:
-            - \"random-text\" → (no good match, confidence would be < 0.3)
-            """
+                Examples of weak matches:
+                - \"random-text\" → (no good match, confidence would be < 0.3)
+                """
         }
 
         return prompt

@@ -42,7 +42,8 @@ struct MDUserEntitiesView: View {
     private var filteredUserEntities: MDUserEntities {
         grocyVM.mdUserEntities
             .filter {
-                searchString.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchString) || $0.caption.localizedCaseInsensitiveContains(searchString))
+                searchString.isEmpty
+                    ? true : ($0.name.localizedCaseInsensitiveContains(searchString) || $0.caption.localizedCaseInsensitiveContains(searchString))
             }
     }
 

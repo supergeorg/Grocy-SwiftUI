@@ -29,7 +29,8 @@ struct UserManagementView: View {
     var filteredUsers: GrocyUsers {
         users
             .filter {
-                !searchString.isEmpty ? ($0.username.localizedCaseInsensitiveContains(searchString) && $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
+                !searchString.isEmpty
+                    ? ($0.username.localizedCaseInsensitiveContains(searchString) && $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
             }
     }
 

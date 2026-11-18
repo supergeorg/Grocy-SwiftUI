@@ -12,7 +12,7 @@ public enum APIError: Error, Equatable {
         return String(describing: self).components(separatedBy: "(").first
     }
     var displayMessage: String {
-        if case let .errorString(description) = self {
+        if case .errorString(let description) = self {
             return description
         }
         return self.localizedDescription

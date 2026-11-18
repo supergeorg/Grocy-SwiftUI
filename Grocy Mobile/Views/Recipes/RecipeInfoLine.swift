@@ -46,5 +46,8 @@ struct RecipeInfoLine: View {
 }
 
 #Preview(traits: .previewData) {
-    RecipeInfoLine(recipe: Recipe(name: "Pasta", desiredServings: 2), fulfillment: RecipeFulfilment(recipeID: 1, costsPerServing: 2.5, calories: 650, dueScore: 12))
+    RecipeInfoLine(
+        recipe: Recipe(name: "Pasta", desiredServings: 2),
+        fulfillment: RecipeFulfilment(recipeID: 1, costsPerServing: 2.5, calories: 650, dueScore: 12)
+    )
 }

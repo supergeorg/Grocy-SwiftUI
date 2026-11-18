@@ -59,10 +59,17 @@ import SwiftUI
         private var urgentDueCount: Int {
             guard places.contains(.due) else { return 0 }
             return DueItem.items(
-                stock: stock, volatileStock: volatileStockList.first, mdProducts: mdProducts, chores: chores, tasks: openTasks, batteries: batteries,
-                userSettings: userSettingsList.first, systemConfig: systemConfig, hiddenKinds: DueKind.hiddenKinds(from: hiddenDueKinds)
+                stock: stock,
+                volatileStock: volatileStockList.first,
+                mdProducts: mdProducts,
+                chores: chores,
+                tasks: openTasks,
+                batteries: batteries,
+                userSettings: userSettingsList.first,
+                systemConfig: systemConfig,
+                hiddenKinds: DueKind.hiddenKinds(from: hiddenDueKinds)
             )
-                .count(where: { $0.urgency.needsAttention })
+            .count(where: { $0.urgency.needsAttention })
         }
 
         var body: some View {

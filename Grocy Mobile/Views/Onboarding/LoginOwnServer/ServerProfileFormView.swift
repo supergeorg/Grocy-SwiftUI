@@ -87,7 +87,8 @@ struct ServerProfileFormView: View {
                     description: "Server URL",
                     isCorrect: Binding.constant(true),
                     leadingIcon: "network",
-                    helpText: "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)"
+                    helpText:
+                        "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)"
                 )
                 .textContentType(.URL)
                 #if os(iOS)
@@ -167,7 +168,9 @@ struct ServerProfileFormView: View {
                     #endif
                 }
                 Link(
-                    destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md")!,
+                    destination: URL(
+                        string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md"
+                    )!,
                     label: {
                         Label("Guide (English)", systemImage: MySymbols.guide)
                     }

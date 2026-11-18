@@ -13,12 +13,12 @@
 //        case shoppingList = 1
 //        case fulfilled = 2
 //    }
-//    
+//
 //    var fulfillment: RecipeFulfilment? {
 //        nil
 ////        GrocyViewModel.shared.recipeFulfillments.first(where: { $0.recipeID == self.id })
 //    }
-//    
+//
 //    var dueScore: Int {
 //        fulfillment?.dueScore ?? 0
 //    }

@@ -177,7 +177,8 @@ struct RecipeImportIngredientFormView: View {
                     MyToggle(
                         isOn: $ingredient.onlyCheckSingleUnitInStock,
                         description: "Only check if any amount is in stock",
-                        descriptionInfo: "A different amount/unit can then be used below while for stock fulfillment checking it is sufficient when any amount of the product in stock",
+                        descriptionInfo:
+                            "A different amount/unit can then be used below while for stock fulfillment checking it is sufficient when any amount of the product in stock",
                         icon: MySymbols.stockOverview
                     )
 
@@ -186,7 +187,8 @@ struct RecipeImportIngredientFormView: View {
                         description: "Variable amount",
                         isCorrect: .constant(true),
                         leadingIcon: MySymbols.amount,
-                        helpText: "When this is not empty, it will be shown instead of the amount entered above while the amount there will still be used for stock fulfillment checking"
+                        helpText:
+                            "When this is not empty, it will be shown instead of the amount entered above while the amount there will still be used for stock fulfillment checking"
                     )
 
                     MyTextField(
@@ -212,7 +214,12 @@ struct RecipeImportIngredientFormView: View {
         }
         .sheet(isPresented: $showCreateProduct) {
             NavigationStack {
-                MDProductFormView(userSettings: userSettingsList.first, productName: ingredient.line.name, createdProductID: $createdProductID, suggester: productSuggester)
+                MDProductFormView(
+                    userSettings: userSettingsList.first,
+                    productName: ingredient.line.name,
+                    createdProductID: $createdProductID,
+                    suggester: productSuggester
+                )
             }
         }
         .sheet(
@@ -225,7 +232,11 @@ struct RecipeImportIngredientFormView: View {
             },
             content: {
                 NavigationStack {
-                    MDQuantityUnitFormView(name: ingredient.newUnitName, namePlural: ingredient.newUnitNamePlural, createdQuantityUnitID: $createdQuantityUnitID)
+                    MDQuantityUnitFormView(
+                        name: ingredient.newUnitName,
+                        namePlural: ingredient.newUnitNamePlural,
+                        createdQuantityUnitID: $createdQuantityUnitID
+                    )
                 }
             }
         )
@@ -386,10 +397,14 @@ struct RecipeImportIngredientFormView: View {
                     .foregroundStyle(Color(.GrocyColors.grocyRed))
             } else if let stockAmount {
                 if ingredient.quID != product?.quIDStock {
-                    Text("This equals \(stockAmount.formatted(.number.precision(.fractionLength(0...8)))) \(stockQuantityUnit?.getName(amount: stockAmount) ?? "?")")
+                    Text(
+                        "This equals \(stockAmount.formatted(.number.precision(.fractionLength(0...8)))) \(stockQuantityUnit?.getName(amount: stockAmount) ?? "?")"
+                    )
                 }
             } else {
-                Text("There's no unit conversion to the product's stock unit \"\(stockQuantityUnit?.name ?? "?")\". Only whether any amount is in stock can be checked.")
+                Text(
+                    "There's no unit conversion to the product's stock unit \"\(stockQuantityUnit?.name ?? "?")\". Only whether any amount is in stock can be checked."
+                )
                 if unitToConnect != nil {
                     Text("Connect the unit to the product to check the amount in stock.")
                 }

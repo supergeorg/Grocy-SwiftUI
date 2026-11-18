@@ -79,7 +79,7 @@ struct ChoresView: View {
 
         return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
-    
+
     private var numFilters: Int {
         var filterCount = 0
         if filteredStatus != .all { filterCount += 1 }

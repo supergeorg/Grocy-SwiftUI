@@ -60,7 +60,8 @@ struct MDProductFormView: View {
     @State private var isNameCorrect: Bool = true
     private func checkNameCorrect() -> Bool {
         let foundProduct = mdProducts.first(where: { $0.name == product.name })
-        return existingProduct == nil ? !(product.name.isEmpty || foundProduct != nil) : !(product.name.isEmpty || (foundProduct != nil && foundProduct!.id != product.id))
+        return existingProduct == nil
+            ? !(product.name.isEmpty || foundProduct != nil) : !(product.name.isEmpty || (foundProduct != nil && foundProduct!.id != product.id))
     }
 
     @State private var isBarcodeCorrect: Bool = true
@@ -118,7 +119,8 @@ struct MDProductFormView: View {
     }
 
     private var isFormValid: Bool {
-        !(product.name.isEmpty) && isNameCorrect && (product.locationID != -1) && (product.quIDStock != -1) && (product.quIDPurchase != -1) && (product.quIDConsume != -1) && (product.quIDPrice != -1) && isBarcodeCorrect
+        !(product.name.isEmpty) && isNameCorrect && (product.locationID != -1) && (product.quIDStock != -1) && (product.quIDPurchase != -1)
+            && (product.quIDConsume != -1) && (product.quIDPrice != -1) && isBarcodeCorrect
     }
 
     private func saveProduct() async {
@@ -283,10 +285,17 @@ struct MDProductFormView: View {
 
     var body: some View {
         List {
-            MyTextField(textToEdit: $product.name, description: "Name", isCorrect: $isNameCorrect, leadingIcon: "tag", emptyMessage: "A name is required", errorMessage: "Name already exists")
-                .onChange(of: product.name) {
-                    isNameCorrect = checkNameCorrect()
-                }
+            MyTextField(
+                textToEdit: $product.name,
+                description: "Name",
+                isCorrect: $isNameCorrect,
+                leadingIcon: "tag",
+                emptyMessage: "A name is required",
+                errorMessage: "Name already exists"
+            )
+            .onChange(of: product.name) {
+                isNameCorrect = checkNameCorrect()
+            }
 
             if useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
                 appleIntelligenceSection
@@ -294,11 +303,17 @@ struct MDProductFormView: View {
 
             if !queuedBarcode.isEmpty && existingProduct == nil {
                 Section("Barcode") {
-                    MyTextField(textToEdit: $queuedBarcode, description: "Barcode", isCorrect: $isBarcodeCorrect, leadingIcon: MySymbols.barcode, errorMessage: "The barcode is invalid or already in use.")
-                        .onChange(of: queuedBarcode) {
-                            isBarcodeCorrect = checkBarcodeCorrect()
-                        }
-                        .disabled(true)
+                    MyTextField(
+                        textToEdit: $queuedBarcode,
+                        description: "Barcode",
+                        isCorrect: $isBarcodeCorrect,
+                        leadingIcon: MySymbols.barcode,
+                        errorMessage: "The barcode is invalid or already in use."
+                    )
+                    .onChange(of: queuedBarcode) {
+                        isBarcodeCorrect = checkBarcodeCorrect()
+                    }
+                    .disabled(true)
                     if foundExternalBarcode == nil && (externalBarcodeState == nil || externalBarcodeState == .error) {
                         Button(
                             action: {
@@ -404,7 +419,8 @@ struct MDProductFormView: View {
                     label: {
                         MyLabelWithSubtitle(
                             title: "Optional properties",
-                            subTitle: "\(Text("Status")), \(Text("Parent product")), \(Text("Description")), \(Text("Product group")), \(Text("Energy")), \(Text("Picture"))",
+                            subTitle:
+                                "\(Text("Status")), \(Text("Parent product")), \(Text("Description")), \(Text("Product group")), \(Text("Energy")), \(Text("Picture"))",
                             systemImage: MySymbols.description
                         )
                     }
@@ -412,7 +428,12 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.location,
                     label: {
-                        MyLabelWithSubtitle(title: "Default location", subTitle: "\(Text("Location")), \(Text("Store"))", systemImage: MySymbols.location, isProblem: product.locationID == -1)
+                        MyLabelWithSubtitle(
+                            title: "Default location",
+                            subTitle: "\(Text("Location")), \(Text("Store"))",
+                            systemImage: MySymbols.location,
+                            isProblem: product.locationID == -1
+                        )
                     }
                 )
                 NavigationLink(
@@ -435,14 +456,23 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.amount,
                     label: {
-                        MyLabelWithSubtitle(title: "Amount", subTitle: "\(Text("Min. stock amount")), \(Text("Quick consume amount")), \(Text("Factor")), \(Text("Tare weight"))", systemImage: MySymbols.amount)
+                        MyLabelWithSubtitle(
+                            title: "Amount",
+                            subTitle: "\(Text("Min. stock amount")), \(Text("Quick consume amount")), \(Text("Factor")), \(Text("Tare weight"))",
+                            systemImage: MySymbols.amount
+                        )
                     }
                 )
                 if queuedBarcode.isEmpty || createBarcode == false {
                     NavigationLink(
                         value: MDProductFormPart.barcode,
                         label: {
-                            MyLabelWithSubtitle(title: "Barcodes", subTitle: existingProduct == nil ? "Product is not on server" : "", systemImage: MySymbols.barcode, hideSubtitle: existingProduct != nil)
+                            MyLabelWithSubtitle(
+                                title: "Barcodes",
+                                subTitle: existingProduct == nil ? "Product is not on server" : "",
+                                systemImage: MySymbols.barcode,
+                                hideSubtitle: existingProduct != nil
+                            )
                         }
                     )
                     .disabled(existingProduct == nil)
@@ -536,7 +566,12 @@ struct MDProductFormView: View {
             ProductField(productID: $product.parentProductID, description: "Parent product", icon: MySymbols.parentProduct)
 
             // Product Description
-            MyTextField(textToEdit: $product.mdProductDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
+            MyTextField(
+                textToEdit: $product.mdProductDescription,
+                description: "Description",
+                isCorrect: Binding.constant(true),
+                leadingIcon: MySymbols.description
+            )
 
             // Product group
             Picker(
@@ -555,13 +590,22 @@ struct MDProductFormView: View {
             )
 
             // Energy
-            MyDoubleStepperOptional(amount: $product.calories, description: "\(Text("Energy")) (kcal)", descriptionInfo: "Per stock quantity unit", minAmount: 0, amountStep: 1, amountName: "kcal", systemImage: MySymbols.energy)
+            MyDoubleStepperOptional(
+                amount: $product.calories,
+                description: "\(Text("Energy")) (kcal)",
+                descriptionInfo: "Per stock quantity unit",
+                minAmount: 0,
+                amountStep: 1,
+                amountName: "kcal",
+                systemImage: MySymbols.energy
+            )
 
             // Don't show on stock overview
             MyToggle(
                 isOn: $product.hideOnStockOverview,
                 description: "Never show on stock overview",
-                descriptionInfo: "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always",
+                descriptionInfo:
+                    "The stock overview page lists all products which are currently in-stock or below their min. stock amount - enable this to hide this product there always",
                 icon: MySymbols.stockOverview
             )
 
@@ -569,7 +613,8 @@ struct MDProductFormView: View {
             MyToggle(
                 isOn: $product.noOwnStock,
                 description: "Disable own stock",
-                descriptionInfo: "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)",
+                descriptionInfo:
+                    "When enabled, this product can't have own stock, means it will not be selectable on purchase (useful for parent products which are just used as a summary/total view of the child products)",
                 icon: MySymbols.stockOverview
             )
 
@@ -585,7 +630,11 @@ struct MDProductFormView: View {
             NavigationLink(
                 value: MDProductFormPart.productPicture,
                 label: {
-                    MyLabelWithSubtitle(title: "Product picture", subTitle: (product.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found", systemImage: MySymbols.picture)
+                    MyLabelWithSubtitle(
+                        title: "Product picture",
+                        subTitle: (product.pictureFileName ?? "").isEmpty ? "No product picture" : "Product picture found",
+                        systemImage: MySymbols.picture
+                    )
                 }
             )
             .disabled(existingProduct == nil)
@@ -686,7 +735,8 @@ struct MDProductFormView: View {
             MyIntStepper(
                 amount: $product.defaultDueDays,
                 description: "Default due days",
-                helpText: "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)",
+                helpText:
+                    "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)",
                 minAmount: -1,
                 amountName: product.defaultDueDays == 1 ? "Day" : "Days",
                 systemImage: MySymbols.date
@@ -709,7 +759,8 @@ struct MDProductFormView: View {
                 helpText: "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days",
                 minAmount: -1,
                 amountName: product.defaultDueDaysAfterFreezing == 1 ? "Day" : "Days",
-                errorMessage: "This cannot be lower than \(Double(-1.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
+                errorMessage:
+                    "This cannot be lower than \(Double(-1.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
                 systemImage: MySymbols.freezing
             )
 
@@ -720,7 +771,8 @@ struct MDProductFormView: View {
                 helpText: "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days",
                 minAmount: 0,
                 amountName: product.defaultDueDaysAfterThawing == 1 ? "Day" : "Days",
-                errorMessage: "This cannot be lower than \(Double(0.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
+                errorMessage:
+                    "This cannot be lower than \(Double(0.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
                 systemImage: MySymbols.thawing
             )
         }
@@ -855,13 +907,21 @@ struct MDProductFormView: View {
     var amountPropertiesView: some View {
         Form {
             // Min Stock amount
-            MyDoubleStepper(amount: $product.minStockAmount, description: "Minimum stock amount", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.amount)
+            MyDoubleStepper(
+                amount: $product.minStockAmount,
+                description: "Minimum stock amount",
+                minAmount: 0,
+                amountStep: 1,
+                amountName: currentQUStock?.name ?? "QU",
+                systemImage: MySymbols.amount
+            )
 
             // Accumulate sub products min stock amount
             MyToggle(
                 isOn: $product.cumulateMinStockAmountOfSubProducts,
                 description: "Accumulate sub products min. stock amount",
-                descriptionInfo: "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product",
+                descriptionInfo:
+                    "If enabled, the min. stock amount of sub products will be accumulated into this product, means the sub product will never be \"missing\", only this product",
                 icon: MySymbols.accumulate
             )
 
@@ -906,7 +966,14 @@ struct MDProductFormView: View {
                 )
 
                 if product.enableTareWeightHandling {
-                    MyDoubleStepperOptional(amount: $product.tareWeight, description: "Tare weight", minAmount: 0, amountStep: 1, amountName: currentQUStock?.name ?? "QU", systemImage: MySymbols.tareWeight)
+                    MyDoubleStepperOptional(
+                        amount: $product.tareWeight,
+                        description: "Tare weight",
+                        minAmount: 0,
+                        amountStep: 1,
+                        amountName: currentQUStock?.name ?? "QU",
+                        systemImage: MySymbols.tareWeight
+                    )
                 }
             }
 

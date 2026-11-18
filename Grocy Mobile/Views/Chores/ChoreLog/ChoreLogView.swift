@@ -199,25 +199,29 @@ struct ChoreLogView: View {
                 ContentUnavailableView.search
             }
             ForEach(choreLog, id: \.id) { (choreLogEntry: ChoreLogEntry) in
-                ChoreLogRowView(choreLogEntry: choreLogEntry, chore: chores.first(where: { $0.id == choreLogEntry.choreID }), user: users.first(where: { $0.id == choreLogEntry.doneByUserID }))
-                    .swipeActions(
-                        edge: .leading,
-                        allowsFullSwipe: true,
-                        content: {
-                            if !choreLogEntry.undone {
-                                Button(
-                                    action: {
-                                        Task {
-                                            await undoExecution(choreLogEntry: choreLogEntry)
-                                        }
-                                    },
-                                    label: {
-                                        Label("Undo chore execution", systemImage: MySymbols.undo)
+                ChoreLogRowView(
+                    choreLogEntry: choreLogEntry,
+                    chore: chores.first(where: { $0.id == choreLogEntry.choreID }),
+                    user: users.first(where: { $0.id == choreLogEntry.doneByUserID })
+                )
+                .swipeActions(
+                    edge: .leading,
+                    allowsFullSwipe: true,
+                    content: {
+                        if !choreLogEntry.undone {
+                            Button(
+                                action: {
+                                    Task {
+                                        await undoExecution(choreLogEntry: choreLogEntry)
                                     }
-                                )
-                            }
+                                },
+                                label: {
+                                    Label("Undo chore execution", systemImage: MySymbols.undo)
+                                }
+                            )
                         }
-                    )
+                    }
+                )
             }
         }
         .navigationTitle("Chores journal")

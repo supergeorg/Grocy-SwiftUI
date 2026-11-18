@@ -68,7 +68,8 @@ class MDEquipment: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDEquipment, rhs: MDEquipment) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdEquipmentDescription == rhs.mdEquipmentDescription && lhs.instructionManualFileName == rhs.instructionManualFileName
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdEquipmentDescription == rhs.mdEquipmentDescription
+            && lhs.instructionManualFileName == rhs.instructionManualFileName
             && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

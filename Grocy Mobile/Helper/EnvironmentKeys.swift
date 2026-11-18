@@ -21,7 +21,7 @@ extension EnvironmentValues {
         get { self[ProfileModelContextKey.self] }
         set { self[ProfileModelContextKey.self] = newValue }
     }
-    
+
     var profileModelContainer: ModelContainer? {
         get { self[ProfileModelContainerKey.self] }
         set { self[ProfileModelContainerKey.self] = newValue }

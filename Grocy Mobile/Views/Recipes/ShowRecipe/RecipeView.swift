@@ -235,126 +235,126 @@ struct RecipeView: View {
 
     var body: some View {
         container
-        .navigationTitle(recipe.name)
-        #if os(iOS)
-            .navigationBarTitleDisplayMode(.large)
-        #endif
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showCooking = true
-                } label: {
-                    Label("Start cooking", systemImage: MySymbols.cooking)
-                }
-                .buttonStyle(.glassProminent)
-            }
-            ToolbarItemGroup(placement: .automatic) {
-                Button {
-                    showConsumeAllNeeded.toggle()
-                } label: {
-                    Label("Consume all ingredients needed by this recipe", systemImage: MySymbols.consume)
-                }
-                Button {
-                    showAddToShLSelection.toggle()
-                } label: {
-                    Label("Put missing products on shopping list", systemImage: MySymbols.addToShoppingList)
-                }
-                .disabled(enoughInStock)
-            }
-        }
-        // Short title, details in the message, buttons named after the result instead of "Yes"/"No" (HIG).
-        .alert(
-            "Consume all ingredients needed by this recipe",
-            isPresented: $showConsumeAllNeeded,
-            actions: {
-                Button("Cancel", role: .cancel) {}
-                // No destructive role: the person chose to consume, this button carries out their intent.
-                Button("Consume") {
-                    Task {
-                        await consumeAllIngredientsNeeded()
+            .navigationTitle(recipe.name)
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.large)
+            #endif
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showCooking = true
+                    } label: {
+                        Label("Start cooking", systemImage: MySymbols.cooking)
                     }
+                    .buttonStyle(.glassProminent)
                 }
-            },
-            message: {
-                Text(
-                    "\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"
-                )
+                ToolbarItemGroup(placement: .automatic) {
+                    Button {
+                        showConsumeAllNeeded.toggle()
+                    } label: {
+                        Label("Consume all ingredients needed by this recipe", systemImage: MySymbols.consume)
+                    }
+                    Button {
+                        showAddToShLSelection.toggle()
+                    } label: {
+                        Label("Put missing products on shopping list", systemImage: MySymbols.addToShoppingList)
+                    }
+                    .disabled(enoughInStock)
+                }
             }
-        )
-        #if os(iOS)
-            .fullScreenCover(isPresented: $showCooking) {
-                RecipeCookingView(recipe: recipe)
-            }
-        #else
-            .sheet(isPresented: $showCooking) {
-                RecipeCookingView(recipe: recipe)
-            }
-        #endif
-        .sheet(isPresented: $showAddToShLSelection) {
-            NavigationStack {
-                List {
-                    Text("Are you sure you want to put all missing ingredients for recipe \"\(recipe.name)\" on the shopping list?")
-                        .font(.headline)
-
-                    Text("Uncheck ingredients to not put them on the shopping list")
-                        .font(.subheadline)
-
-                    Section {
-                        ForEach($addToShLItems) { $item in
-                            Toggle(item.label, isOn: $item.isChecked)
+            // Short title, details in the message, buttons named after the result instead of "Yes"/"No" (HIG).
+            .alert(
+                "Consume all ingredients needed by this recipe",
+                isPresented: $showConsumeAllNeeded,
+                actions: {
+                    Button("Cancel", role: .cancel) {}
+                    // No destructive role: the person chose to consume, this button carries out their intent.
+                    Button("Consume") {
+                        Task {
+                            await consumeAllIngredientsNeeded()
                         }
                     }
+                },
+                message: {
+                    Text(
+                        "\(Text("Are you sure you want to consume all ingredients needed by recipe \"\(recipe.name)\" (ingredients marked with \"only check if any amount is in stock\" will be ignored)?"))\n\n\(Text("For ingredients that are only partially in stock, the in stock amount will be consumed."))"
+                    )
                 }
-                .onAppear {
-                    addToShLItems = []
-                    let missingIngredients = ingredientsAll.filter({
-                        !$0.needFulfilled && !$0.needFulfilledWithShoppingList
-                    })
-                    for ingredient in missingIngredients {
-                        addToShLItems.append(
-                            AddMissingToShLItem(
-                                id: ingredient.productID,
-                                label: ingredient.productName
+            )
+            #if os(iOS)
+                .fullScreenCover(isPresented: $showCooking) {
+                    RecipeCookingView(recipe: recipe)
+                }
+            #else
+                .sheet(isPresented: $showCooking) {
+                    RecipeCookingView(recipe: recipe)
+                }
+            #endif
+            .sheet(isPresented: $showAddToShLSelection) {
+                NavigationStack {
+                    List {
+                        Text("Are you sure you want to put all missing ingredients for recipe \"\(recipe.name)\" on the shopping list?")
+                            .font(.headline)
+
+                        Text("Uncheck ingredients to not put them on the shopping list")
+                            .font(.subheadline)
+
+                        Section {
+                            ForEach($addToShLItems) { $item in
+                                Toggle(item.label, isOn: $item.isChecked)
+                            }
+                        }
+                    }
+                    .onAppear {
+                        addToShLItems = []
+                        let missingIngredients = ingredientsAll.filter({
+                            !$0.needFulfilled && !$0.needFulfilledWithShoppingList
+                        })
+                        for ingredient in missingIngredients {
+                            addToShLItems.append(
+                                AddMissingToShLItem(
+                                    id: ingredient.productID,
+                                    label: ingredient.productName
+                                )
                             )
+                        }
+                    }
+                    .toolbar {
+                        ToolbarItem(
+                            placement: .cancellationAction,
+                            content: {
+                                Button(role: .cancel, action: { showAddToShLSelection = false })
+                            }
+                        )
+                        ToolbarItem(
+                            placement: .confirmationAction,
+                            content: {
+                                Button(
+                                    role: .confirm,
+                                    action: {
+                                        var excludedProductIds: [Int] = []
+                                        for item in addToShLItems {
+                                            if !item.isChecked {
+                                                excludedProductIds.append(item.id)
+                                            }
+                                        }
+                                        Task {
+                                            await addMissingToShoppingList(excludedProductIds: excludedProductIds)
+                                        }
+                                        showAddToShLSelection = false
+                                    }
+                                )
+                            }
                         )
                     }
                 }
-                .toolbar {
-                    ToolbarItem(
-                        placement: .cancellationAction,
-                        content: {
-                            Button(role: .cancel, action: { showAddToShLSelection = false })
-                        }
-                    )
-                    ToolbarItem(
-                        placement: .confirmationAction,
-                        content: {
-                            Button(
-                                role: .confirm,
-                                action: {
-                                    var excludedProductIds: [Int] = []
-                                    for item in addToShLItems {
-                                        if !item.isChecked {
-                                            excludedProductIds.append(item.id)
-                                        }
-                                    }
-                                    Task {
-                                        await addMissingToShoppingList(excludedProductIds: excludedProductIds)
-                                    }
-                                    showAddToShLSelection = false
-                                }
-                            )
-                        }
-                    )
-                }
             }
-        }
-        .task {
-            await updateData()
-        }
-        .refreshable {
-            await updateData()
-        }
+            .task {
+                await updateData()
+            }
+            .refreshable {
+                await updateData()
+            }
     }
 }
 
@@ -459,7 +459,12 @@ extension RecipeView {
                         }
                     }
                 } label: {
-                    labelWithHelp("Costs", systemImage: MySymbols.price, help: "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones")
+                    labelWithHelp(
+                        "Costs",
+                        systemImage: MySymbols.price,
+                        help:
+                            "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones"
+                    )
                 }
                 if noPriceForOne {
                     Text("No price information is available for at least one ingredient")

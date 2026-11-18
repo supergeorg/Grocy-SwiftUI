@@ -24,7 +24,10 @@ final class LoginUITests: GrocyUITestCase {
                 XCTAssertTrue(app.buttons[label].firstMatch.exists, "No toolbar button labeled \"\(label)\".")
             }
             for label in ["Github", "Grocy"] {
-                XCTAssertTrue(app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label)).firstMatch.exists, "No toolbar link labeled \"\(label)\".")
+                XCTAssertTrue(
+                    app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label)).firstMatch.exists,
+                    "No toolbar link labeled \"\(label)\"."
+                )
             }
         #endif
         attachScreenshot(of: app, named: "Login")

@@ -191,7 +191,11 @@ class GrocyViewModel {
         grocyApi.setLoginData(
             baseURL: selectedServerProfile.grocyServerURL,
             apiKey: selectedServerProfile.grocyAPIKey,
-            customHeaders: Dictionary(uniqueKeysWithValues: (selectedServerProfile.customHeaders ?? []).map { (header: LoginCustomHeader) in ((header.headerName) as String, (header.headerValue) as String) })
+            customHeaders: Dictionary(
+                uniqueKeysWithValues: (selectedServerProfile.customHeaders ?? []).map { (header: LoginCustomHeader) in
+                    ((header.headerName) as String, (header.headerValue) as String)
+                }
+            )
         )
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isDemoModus = false
@@ -239,13 +243,24 @@ class GrocyViewModel {
         }
     }
 
-    func checkServer(baseURL: String, apiKey: String?, useHassIngress: Bool = false, hassToken: String = "", isDemoMode: Bool, customHeaders: [LoginCustomHeader] = []) async throws {
+    func checkServer(
+        baseURL: String,
+        apiKey: String?,
+        useHassIngress: Bool = false,
+        hassToken: String = "",
+        isDemoMode: Bool,
+        customHeaders: [LoginCustomHeader] = []
+    ) async throws {
         // Configure the new API completely before swapping it in, so no request runs against a half-configured instance.
         let api = GrocyApi()
         if useHassIngress && !isDemoMode, let hassAPIPath = getHomeAssistantPathFromIngress(ingressPath: baseURL) {
             api.setHassData(hassURL: hassAPIPath, hassToken: hassToken)
         }
-        api.setLoginData(baseURL: baseURL, apiKey: apiKey ?? "", customHeaders: Dictionary(uniqueKeysWithValues: customHeaders.map({ ($0.headerName, $0.headerValue) })))
+        api.setLoginData(
+            baseURL: baseURL,
+            apiKey: apiKey ?? "",
+            customHeaders: Dictionary(uniqueKeysWithValues: customHeaders.map({ ($0.headerName, $0.headerValue) }))
+        )
         api.setTimeoutInterval(timeoutInterval: timeoutInterval)
         self.grocyApi = api
         // The server may have changed, so reload everything and forget errors from the previous server.
@@ -256,7 +271,9 @@ class GrocyViewModel {
         self.failedToLoadErrors.removeAll()
         let systemInfo = try await api.getSystemInfo()
         if !systemInfo.grocyVersion.version.isEmpty {
-            GrocyLogger.info("Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?").")
+            GrocyLogger.info(
+                "Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")."
+            )
             self.systemInfo = systemInfo
             return
         } else {
@@ -619,10 +636,14 @@ class GrocyViewModel {
             let descriptions = try modelContext.fetch(FetchDescriptor<ShoppingListDescription>(sortBy: [SortDescriptor(\.id)]))
             let items = try modelContext.fetch(FetchDescriptor<ShoppingListItem>(predicate: #Predicate { $0.done == false }))
             let products = Dictionary(try modelContext.fetch(FetchDescriptor<MDProduct>()).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-            let quantityUnits = Dictionary(try modelContext.fetch(FetchDescriptor<MDQuantityUnit>()).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            let quantityUnits = Dictionary(
+                try modelContext.fetch(FetchDescriptor<MDQuantityUnit>()).map { ($0.id, $0) },
+                uniquingKeysWith: { first, _ in first }
+            )
 
             let lists = descriptions.map { description in
-                let listItems = items
+                let listItems =
+                    items
                     .filter { $0.shoppingListID == description.id }
                     .map { item in
                         let product = item.productID.flatMap { products[$0] }
@@ -845,7 +866,12 @@ class GrocyViewModel {
         if self.productPictures.keys.contains(fileName) {
             return self.productPictures[fileName]
         }
-        let productPictureData = try await grocyApi.getFile(fileName: fileName, groupName: "productpictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        let productPictureData = try await grocyApi.getFile(
+            fileName: fileName,
+            groupName: "productpictures",
+            bestFitHeight: bestFitHeight,
+            bestFitWidth: bestFitWidth
+        )
         self.productPictures[fileName] = productPictureData
         return productPictureData
     }
@@ -854,7 +880,12 @@ class GrocyViewModel {
         if self.productPictures.keys.contains(fileName) {
             return self.productPictures[fileName]
         }
-        let userPictureData = try await grocyApi.getFile(fileName: fileName, groupName: "userpictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        let userPictureData = try await grocyApi.getFile(
+            fileName: fileName,
+            groupName: "userpictures",
+            bestFitHeight: bestFitHeight,
+            bestFitWidth: bestFitWidth
+        )
         self.userPictures[fileName] = userPictureData
         return userPictureData
     }
@@ -863,7 +894,12 @@ class GrocyViewModel {
         if self.recipePictures.keys.contains(fileName) {
             return self.recipePictures[fileName]
         }
-        let recipePictureData = try await grocyApi.getFile(fileName: fileName, groupName: "recipepictures", bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        let recipePictureData = try await grocyApi.getFile(
+            fileName: fileName,
+            groupName: "recipepictures",
+            bestFitHeight: bestFitHeight,
+            bestFitWidth: bestFitWidth
+        )
         self.recipePictures[fileName] = recipePictureData
         return recipePictureData
     }

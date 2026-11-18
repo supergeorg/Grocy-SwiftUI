@@ -32,17 +32,18 @@ struct MDBatteryFormView: View {
         self.existingBattery = existingBattery
         self.isPopup = isPopup
         // Edited on a copy, so cancelling doesn't change the cached battery.
-        self.battery = existingBattery.map {
-            MDBattery(
-                id: $0.id,
-                name: $0.name,
-                mdBatteryDescription: $0.mdBatteryDescription,
-                usedIn: $0.usedIn,
-                chargeIntervalDays: $0.chargeIntervalDays,
-                active: $0.active,
-                rowCreatedTimestamp: $0.rowCreatedTimestamp
-            )
-        } ?? MDBattery()
+        self.battery =
+            existingBattery.map {
+                MDBattery(
+                    id: $0.id,
+                    name: $0.name,
+                    mdBatteryDescription: $0.mdBatteryDescription,
+                    usedIn: $0.usedIn,
+                    chargeIntervalDays: $0.chargeIntervalDays,
+                    active: $0.active,
+                    rowCreatedTimestamp: $0.rowCreatedTimestamp
+                )
+            } ?? MDBattery()
     }
 
     private let dataToUpdate: [ObjectEntities] = [.batteries]

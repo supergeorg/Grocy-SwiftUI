@@ -326,7 +326,7 @@ struct QuickScanModeView: View {
                 }
             } else if let grocyCode = recognizedGrocyCode, grocyCode.entityType == .chore {
                 ChoreTrackingView(mdChoreID: grocyCode.entityID)
-            }  else {
+            } else {
                 EmptyView()
             }
         case .selectProduct:

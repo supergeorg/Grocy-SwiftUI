@@ -88,7 +88,8 @@ extension RecipeImportMapper {
         let activeProducts = products.filter(\.active)
         guard activeProducts.count > limit else { return activeProducts }
         let ingredientTrigrams = Self.trigrams(of: ingredientName)
-        return activeProducts
+        return
+            activeProducts
             .map { (product: $0, shared: Self.trigrams(of: $0.name).intersection(ingredientTrigrams).count) }
             .sorted { $0.shared > $1.shared }
             .prefix(limit)
@@ -265,7 +266,9 @@ extension RecipeImportMapper {
         if let stemmed = activeUnits.first(where: { names(of: $0).contains { Self.stem(Self.normalizedName($0)) == tokenStem } }) {
             return (stemmed, .suggested)
         }
-        if knownUnit == nil, token.count >= 3, let abbreviated = activeUnits.first(where: { names(of: $0).contains { $0.count > token.count && $0.hasPrefix(token) } }) {
+        if knownUnit == nil, token.count >= 3,
+            let abbreviated = activeUnits.first(where: { names(of: $0).contains { $0.count > token.count && $0.hasPrefix(token) } })
+        {
             return (abbreviated, .suggested)
         }
         return nil

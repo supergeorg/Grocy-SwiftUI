@@ -65,9 +65,13 @@ struct RecipeIngredientRowView: View {
                 Group {
                     switch status {
                     case .fulfilled:
-                        Text("\(Text("Enough in stock")) (\(recipePos.stockAmount.formattedAmount) \(stockQuantityUnit?.getName(amount: recipePos.stockAmount) ?? ""))")
+                        Text(
+                            "\(Text("Enough in stock")) (\(recipePos.stockAmount.formattedAmount) \(stockQuantityUnit?.getName(amount: recipePos.stockAmount) ?? ""))"
+                        )
                     case .onShoppingList, .missing:
-                        Text("Not enough in stock, \(recipePos.missingAmount.formattedAmount) missing, \(recipePos.amountOnShoppingList.formattedAmount) already on shopping list")
+                        Text(
+                            "Not enough in stock, \(recipePos.missingAmount.formattedAmount) missing, \(recipePos.amountOnShoppingList.formattedAmount) already on shopping list"
+                        )
                     }
                 }
                 .font(.caption)
@@ -89,7 +93,7 @@ struct RecipeIngredientRowView: View {
                         Text(nestedRecipeName)
                     }
                     .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .foregroundStyle(.secondary)
                 }
             }
 
@@ -112,8 +116,27 @@ struct RecipeIngredientRowView: View {
 
 #Preview(traits: .previewData) {
     List {
-        RecipeIngredientRowView(recipePos: RecipePosResolvedElement(quID: 1, calories: 120, productName: "Product name"), amount: 1, quantityUnit: MDQuantityUnit(name: "QU"))
-        RecipeIngredientRowView(recipePos: RecipePosResolvedElement(missingAmount: 1.0, quID: 2, note: "Finely chopped", productName: "Product name missing"), amount: 2, quantityUnit: MDQuantityUnit(name: "QU"), nestedRecipeName: "Pizza dough")
-        RecipeIngredientRowView(recipePos: RecipePosResolvedElement(missingAmount: 1.0, amountOnShoppingList: 1.0, quID: 2, recipeVariableAmount: "A pinch", productName: "Product name shopping list"), amount: 1, quantityUnit: MDQuantityUnit(name: "QU"))
+        RecipeIngredientRowView(
+            recipePos: RecipePosResolvedElement(quID: 1, calories: 120, productName: "Product name"),
+            amount: 1,
+            quantityUnit: MDQuantityUnit(name: "QU")
+        )
+        RecipeIngredientRowView(
+            recipePos: RecipePosResolvedElement(missingAmount: 1.0, quID: 2, note: "Finely chopped", productName: "Product name missing"),
+            amount: 2,
+            quantityUnit: MDQuantityUnit(name: "QU"),
+            nestedRecipeName: "Pizza dough"
+        )
+        RecipeIngredientRowView(
+            recipePos: RecipePosResolvedElement(
+                missingAmount: 1.0,
+                amountOnShoppingList: 1.0,
+                quID: 2,
+                recipeVariableAmount: "A pinch",
+                productName: "Product name shopping list"
+            ),
+            amount: 1,
+            quantityUnit: MDQuantityUnit(name: "QU")
+        )
     }
 }

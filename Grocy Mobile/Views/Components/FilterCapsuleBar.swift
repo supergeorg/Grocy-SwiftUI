@@ -48,8 +48,20 @@ extension View {
     List {
         Section {
             FilterCapsuleBar {
-                StockFilterCapsuleView(num: 1, filteredStatus: $filteredStatus, ownFilteredStatus: .expiringSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
-                StockFilterCapsuleView(num: 2, filteredStatus: $filteredStatus, ownFilteredStatus: .expired, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
+                StockFilterCapsuleView(
+                    num: 1,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: .expiringSoon,
+                    color: Color(.GrocyColors.grocyYellow),
+                    backgroundColor: Color(.GrocyColors.grocyYellowBackground)
+                )
+                StockFilterCapsuleView(
+                    num: 2,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: .expired,
+                    color: Color(.GrocyColors.grocyRed),
+                    backgroundColor: Color(.GrocyColors.grocyRedBackground)
+                )
             }
             .listRowInsets(EdgeInsets())
         }

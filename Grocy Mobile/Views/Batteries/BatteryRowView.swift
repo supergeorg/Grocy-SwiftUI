@@ -65,12 +65,23 @@ struct BatteryRowView: View {
     List {
         BatteryRowView(battery: Battery(batteryName: "Never charged", usedIn: "Remote control", chargeIntervalDays: 0))
         BatteryRowView(
-            battery: Battery(batteryName: "Overdue", usedIn: "Alarm clock", chargeIntervalDays: 30, lastTrackedTime: Calendar.current.date(byAdding: .day, value: -40, to: Date()), nextEstimatedChargeTime: Calendar.current.date(byAdding: .day, value: -10, to: Date())),
+            battery: Battery(
+                batteryName: "Overdue",
+                usedIn: "Alarm clock",
+                chargeIntervalDays: 30,
+                lastTrackedTime: Calendar.current.date(byAdding: .day, value: -40, to: Date()),
+                nextEstimatedChargeTime: Calendar.current.date(byAdding: .day, value: -10, to: Date())
+            ),
             status: .overdue
         )
         .listRowBackground(BatteryStatus.overdue.backgroundColor)
         BatteryRowView(
-            battery: Battery(batteryName: "Due soon", chargeIntervalDays: 30, lastTrackedTime: Calendar.current.date(byAdding: .day, value: -27, to: Date()), nextEstimatedChargeTime: Calendar.current.date(byAdding: .day, value: 3, to: Date())),
+            battery: Battery(
+                batteryName: "Due soon",
+                chargeIntervalDays: 30,
+                lastTrackedTime: Calendar.current.date(byAdding: .day, value: -27, to: Date()),
+                nextEstimatedChargeTime: Calendar.current.date(byAdding: .day, value: 3, to: Date())
+            ),
             status: .dueSoon
         )
         .listRowBackground(BatteryStatus.dueSoon.backgroundColor)

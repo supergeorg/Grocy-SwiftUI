@@ -125,7 +125,8 @@ struct RecipeIngredientFormView: View {
             MyToggle(
                 isOn: $ingredient.onlyCheckSingleUnitInStock,
                 description: "Only check if any amount is in stock",
-                descriptionInfo: "A different amount/unit can then be used below while for stock fulfillment checking it is sufficient when any amount of the product in stock",
+                descriptionInfo:
+                    "A different amount/unit can then be used below while for stock fulfillment checking it is sufficient when any amount of the product in stock",
                 icon: MySymbols.stockOverview
             )
 
@@ -139,7 +140,8 @@ struct RecipeIngredientFormView: View {
                 description: "Variable amount",
                 isCorrect: .constant(true),
                 leadingIcon: MySymbols.amount,
-                helpText: "When this is not empty, it will be shown instead of the amount entered above while the amount there will still be used for stock fulfillment checking"
+                helpText:
+                    "When this is not empty, it will be shown instead of the amount entered above while the amount there will still be used for stock fulfillment checking"
             )
 
             MyToggle(
@@ -164,7 +166,12 @@ struct RecipeIngredientFormView: View {
 
             MyTextEditor(textToEdit: $ingredient.note, description: "Note", leadingIcon: MySymbols.description)
 
-            MyDoubleStepper(amount: $ingredient.priceFactor, description: "Price factor", descriptionInfo: "The resulting price of this ingredient will be multiplied by this factor", systemImage: MySymbols.price)
+            MyDoubleStepper(
+                amount: $ingredient.priceFactor,
+                description: "Price factor",
+                descriptionInfo: "The resulting price of this ingredient will be multiplied by this factor",
+                systemImage: MySymbols.price
+            )
         }
         .formStyle(.grouped)
         .task {

@@ -77,7 +77,11 @@ struct DueItemRowView: View {
 #Preview(traits: .previewData) {
     List {
         DueItemRowView(
-            item: DueItem(source: .task(GrocyTask(name: "Take out the trash", dueDate: Calendar.current.date(byAdding: .day, value: -1, to: Date())!)), date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, urgency: .overdue),
+            item: DueItem(
+                source: .task(GrocyTask(name: "Take out the trash", dueDate: Calendar.current.date(byAdding: .day, value: -1, to: Date())!)),
+                date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+                urgency: .overdue
+            ),
             user: GrocyUser(id: 1, displayName: "Test User")
         )
         .listRowBackground(DueUrgency.overdue.backgroundColor)

@@ -179,6 +179,23 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - Keep the standard Xcode file header (`//  File.swift`, `//  Grocy Mobile`, `//  Created by … on dd.MM.yy.`).
 - Use 4-space indentation, `// MARK: -` sections in larger files, PascalCase types, and camelCase members. Avoid force-unwraps in new code.
 
+### Formatting (swift-format)
+
+The whole codebase is formatted with Apple's `swift-format` (ships with Xcode, `xcrun swift-format`). The configuration is `.swift-format` in the repository root (4 spaces, 160 columns, one argument per line once a call wraps). Don't change it without being asked.
+
+**After every change, format the Swift files you touched, then lint them:**
+
+```bash
+xcrun swift-format format -i -p <changed .swift files>
+xcrun swift-format lint -p <changed .swift files>
+```
+
+To format all changed files at once: `git diff --name-only --diff-filter=d HEAD -- '*.swift' | tr '\n' '\0' | xargs -0 xcrun swift-format format -i -p`. For the whole codebase: `xcrun swift-format format -i -r -p "Grocy Mobile" "Grocy Widget" "Grocy MobileTests" "Grocy MobileUITests"`.
+
+- Format before building, and build afterwards: some rules rewrite code (`FileScopedDeclarationPrivacy`, `NoAccessLevelOnExtensionDeclaration`, `OrderedImports`, `UseShorthandTypeNames`, …).
+- Fix new lint warnings in code you wrote. The remaining warnings in existing code (`AlwaysUseLowerCamelCase` on names like `chinese_simplified` or snake_case API types, a few `ReplaceForEachWithForLoop`) can't be fixed automatically and are left alone; don't rename them as a side effect.
+- Don't hand-format against the tool or add `// swift-format-ignore` without a reason in the comment.
+
 ## Building & Testing
 
 - Build and run through Xcode, using the `BuildProject` / `RunProject` tools when available. The scheme is `Grocy Mobile`. For local testing without your own server, use **Demo mode**, which connects to `https://demo.grocy.info`.
@@ -224,5 +241,6 @@ UI tests against the same server live in `Grocy MobileUITests/` (XCTest + XCUIAu
 ## Agent Ground Rules
 
 - Keep changes scoped to the request. Don't reformat unrelated code or edit the `.xcuserstate` / `project.pbxproj` files unless that's needed.
+- Run `swift-format` on every Swift file you changed before you finish (see Formatting above), so the formatting stays consistent.
 - Look up new or unfamiliar Apple APIs (Liquid Glass, FoundationModels, iOS 27 SwiftUI changes) in the documentation instead of guessing.
 - Check both platforms: code that compiles on iOS can fail on macOS (and the reverse) because of `UIKit`/`AppKit` APIs and `#if os(...)` branches.

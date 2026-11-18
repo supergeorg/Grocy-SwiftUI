@@ -107,7 +107,10 @@ struct PurchaseProductView: View {
 
     private func resetForm() {
         self.productID = actionPending ? productToPurchaseID : nil
-        self.amount = actionPending ? (productToPurchaseAmount ?? barcode?.amount ?? userSettings?.stockDefaultPurchaseAmount ?? 1.0) : (userSettings?.stockDefaultPurchaseAmount ?? 1.0)
+        self.amount =
+            actionPending
+            ? (productToPurchaseAmount ?? barcode?.amount ?? userSettings?.stockDefaultPurchaseAmount ?? 1.0)
+            : (userSettings?.stockDefaultPurchaseAmount ?? 1.0)
         self.quantityUnitID = barcode?.quID ?? (actionPending ? product?.quIDPurchase : nil)
         if product?.defaultDueDays ?? 0 == -1 {
             self.productDoesntSpoil = true
@@ -115,7 +118,8 @@ struct PurchaseProductView: View {
         } else {
             self.productDoesntSpoil = false
             let dateComponents = DateComponents(day: product?.defaultDueDays ?? 0)
-            self.dueDate = Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
+            self.dueDate =
+                Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
         }
         self.price = actionPending ? barcode?.lastPrice ?? productDetails?.lastPrice : nil
         self.isTotalPrice = false
@@ -137,7 +141,15 @@ struct PurchaseProductView: View {
         let noteText = note.isEmpty ? nil : note
         let purchasePrice = selfProduction ? nil : unitPrice
         let purchaseStoreID = selfProduction ? nil : storeID
-        let purchaseInfo = ProductBuy(amount: factoredAmount, bestBeforeDate: strDueDate, transactionType: selfProduction ? .selfProduction : .purchase, price: purchasePrice, locationID: locationID, storeID: purchaseStoreID, note: noteText)
+        let purchaseInfo = ProductBuy(
+            amount: factoredAmount,
+            bestBeforeDate: strDueDate,
+            transactionType: selfProduction ? .selfProduction : .purchase,
+            price: purchasePrice,
+            locationID: locationID,
+            storeID: purchaseStoreID,
+            note: noteText
+        )
         if let productID = productID {
             isProcessingAction = true
             isSuccessful = nil
@@ -170,7 +182,9 @@ struct PurchaseProductView: View {
                 ErrorMessageView(errorMessage: errorMessage)
             }
 
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 || grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0 {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0
+                || grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0
+            {
                 Section {
                     ServerProblemView(isCompact: true)
                 }
@@ -188,7 +202,9 @@ struct PurchaseProductView: View {
                             dueDate = Calendar.current.startOfDay(for: Date())
                         } else {
                             productDoesntSpoil = false
-                            dueDate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date())
+                            dueDate = Calendar.current.startOfDay(
+                                for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date()
+                            )
                         }
                     }
                 }
@@ -225,7 +241,15 @@ struct PurchaseProductView: View {
                 if !selfProduction {
                     Section("Price") {
                         VStack(alignment: .leading) {
-                            MyDoubleStepperOptional(amount: $price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+                            MyDoubleStepperOptional(
+                                amount: $price,
+                                description: "Price",
+                                minAmount: 0,
+                                amountStep: 1.0,
+                                amountName: "",
+                                systemImage: MySymbols.price,
+                                currencySymbol: grocyVM.getCurrencySymbol()
+                            )
 
                             if isTotalPrice && productID != nil {
                                 Text("means \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) per \(stockQuantityUnit?.name ?? "")")
@@ -343,7 +367,7 @@ struct PurchaseProductView: View {
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Purchase product", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.purchase)
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                        .labelStyle(.titleAndIcon)
+                            .labelStyle(.titleAndIcon)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)

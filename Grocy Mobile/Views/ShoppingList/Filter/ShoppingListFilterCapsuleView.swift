@@ -49,5 +49,10 @@ struct ShoppingListFilterCapsuleView: View {
 }
 
 #Preview {
-    ShoppingListFilterCapsuleView(filteredStatus: .init(projectedValue: .constant(.all)), ownFilteredStatus: .all, color: .white, backgroundColor: Color(.GrocyColors.grocyBlue))
+    ShoppingListFilterCapsuleView(
+        filteredStatus: .init(projectedValue: .constant(.all)),
+        ownFilteredStatus: .all,
+        color: .white,
+        backgroundColor: Color(.GrocyColors.grocyBlue)
+    )
 }

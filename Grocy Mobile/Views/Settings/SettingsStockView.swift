@@ -115,7 +115,8 @@ struct SettingsStockView: View {
                     ServerSettingsToggle(
                         settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue,
                         description: "Add decimal separator automatically for price inputs",
-                        descriptionInfo: "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places",
+                        descriptionInfo:
+                            "When enabled, you always have to enter the value including decimal places, the decimal separator will be automatically added based on the amount of allowed decimal places",
                         icon: MySymbols.price
                     )
                 }

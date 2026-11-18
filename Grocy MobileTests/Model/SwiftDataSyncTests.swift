@@ -83,7 +83,10 @@ struct SwiftDataSyncTests {
     @Test("Resetting the cache removes the data from the store")
     func deleteAllCachedDataIsPersisted() throws {
         let profileSchema = Schema([ServerProfile.self, LoginCustomHeader.self])
-        let profileContainer = try ModelContainer(for: profileSchema, configurations: ModelConfiguration(schema: profileSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        let profileContainer = try ModelContainer(
+            for: profileSchema,
+            configurations: ModelConfiguration(schema: profileSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        )
         let grocyVM = GrocyViewModel(modelContext: context, profileModelContext: profileContainer.mainContext)
 
         try sync.syncPersistentCollection([MDLocation(id: 1, name: "Fridge")])

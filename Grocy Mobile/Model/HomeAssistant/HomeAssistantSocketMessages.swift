@@ -11,7 +11,7 @@ import Foundation
 struct HomeAssistantSocketAuthState: Codable {
     let type: String
     let haVersion: String
-    
+
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case haVersion = "ha_version"
@@ -22,12 +22,12 @@ struct HomeAssistantSocketAuthState: Codable {
 struct HomeAssistantSocketAuthRequest: Codable {
     let type: String
     let accessToken: String
-    
+
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case accessToken = "access_token"
     }
-    
+
     init(type: String, accessToken: String) {
         self.type = type
         self.accessToken = accessToken
@@ -38,7 +38,7 @@ struct HomeAssistantSocketAuthRequest: Codable {
 struct HomeAssistantSocketAuthReturn: Codable {
     let type: String
     let message: String
-    
+
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case message = "message"
@@ -49,7 +49,7 @@ struct HomeAssistantSocketAuthReturn: Codable {
 struct HomeAssistantSocketTokenRequest: Codable {
     let id: Int
     let type, endpoint, method: String
-    
+
     init(
         id: Int,
         type: String,

@@ -80,7 +80,8 @@ struct InventoryProductView: View {
     private let priceFormatter = NumberFormatter()
 
     private var isFormValid: Bool {
-        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (productInventory.locationID != nil) && factoredAmount != selectedProductStock?.amount
+        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (productInventory.locationID != nil)
+            && factoredAmount != selectedProductStock?.amount
     }
 
     private var selectedProductStock: StockElement? {
@@ -138,7 +139,9 @@ struct InventoryProductView: View {
                 ErrorMessageView(errorMessage: errorMessage)
             }
 
-            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 || grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0 {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0
+                || grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0
+            {
                 Section {
                     ServerProblemView(isCompact: true)
                 }
@@ -171,7 +174,7 @@ struct InventoryProductView: View {
                         DatePicker("Due date", selection: $productInventory.bestBeforeDate, displayedComponents: .date)
                         DueDateScanner(dueDate: $productInventory.bestBeforeDate)
                     }
-                        .disabled(productNeverOverdue)
+                    .disabled(productNeverOverdue)
 
                     MyToggle(isOn: $productNeverOverdue, description: "Never overdue", icon: MySymbols.doesntSpoil)
                 }
@@ -286,7 +289,7 @@ struct InventoryProductView: View {
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Perform inventory", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.inventory)
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                        .labelStyle(.titleAndIcon)
+                            .labelStyle(.titleAndIcon)
                     }
                 )
                 .labelStyle(.titleAndIcon)

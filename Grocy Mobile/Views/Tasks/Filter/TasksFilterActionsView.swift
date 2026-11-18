@@ -23,10 +23,38 @@ struct TasksFilterActionsView: View {
 
     var body: some View {
         FilterCapsuleBar {
-            TasksFilterCapsuleView(num: numOverdue, filteredStatus: $filteredStatus, ownFilteredStatus: TaskStatus.overdue, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground), dueSoonDays: userSettings?.tasksDueSoonDays)
-            TasksFilterCapsuleView(num: numDueToday, filteredStatus: $filteredStatus, ownFilteredStatus: TaskStatus.dueToday, color: Color(.GrocyColors.grocyBlue), backgroundColor: Color(.GrocyColors.grocyBlueBackground), dueSoonDays: userSettings?.tasksDueSoonDays)
-            TasksFilterCapsuleView(num: numDueSoon, filteredStatus: $filteredStatus, ownFilteredStatus: TaskStatus.dueSoon, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground), dueSoonDays: userSettings?.tasksDueSoonDays)
-            TasksFilterCapsuleView(num: numAssignedToMe, filteredStatus: $filteredStatus, ownFilteredStatus: TaskStatus.assignedToMe, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground), dueSoonDays: userSettings?.tasksDueSoonDays)
+            TasksFilterCapsuleView(
+                num: numOverdue,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: TaskStatus.overdue,
+                color: Color(.GrocyColors.grocyRed),
+                backgroundColor: Color(.GrocyColors.grocyRedBackground),
+                dueSoonDays: userSettings?.tasksDueSoonDays
+            )
+            TasksFilterCapsuleView(
+                num: numDueToday,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: TaskStatus.dueToday,
+                color: Color(.GrocyColors.grocyBlue),
+                backgroundColor: Color(.GrocyColors.grocyBlueBackground),
+                dueSoonDays: userSettings?.tasksDueSoonDays
+            )
+            TasksFilterCapsuleView(
+                num: numDueSoon,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: TaskStatus.dueSoon,
+                color: Color(.GrocyColors.grocyYellow),
+                backgroundColor: Color(.GrocyColors.grocyYellowBackground),
+                dueSoonDays: userSettings?.tasksDueSoonDays
+            )
+            TasksFilterCapsuleView(
+                num: numAssignedToMe,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: TaskStatus.assignedToMe,
+                color: Color(.GrocyColors.grocyGray),
+                backgroundColor: Color(.GrocyColors.grocyGrayBackground),
+                dueSoonDays: userSettings?.tasksDueSoonDays
+            )
         }
     }
 }

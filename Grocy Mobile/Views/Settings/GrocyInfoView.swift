@@ -25,7 +25,10 @@ struct GrocyInfoView: View {
     }
     var releaseDate: String {
         if let systemInfo {
-            return formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? formatTimestampOutput(systemInfo.grocyVersion.releaseDate, localizationKey: localizationKey) ?? ""
+            return formatDateOutput(systemInfo.grocyVersion.releaseDate) ?? formatTimestampOutput(
+                systemInfo.grocyVersion.releaseDate,
+                localizationKey: localizationKey
+            ) ?? ""
         } else {
             return ""
         }
@@ -70,7 +73,10 @@ struct GrocyInfoView: View {
                         Text(systemInfo.grocyVersion.version)
                     },
                     label: {
-                        Label(isSupportedServer ? "Supported server version" : "Unsupported server version", systemImage: isSupportedServer ? MySymbols.success : MySymbols.failure)
+                        Label(
+                            isSupportedServer ? "Supported server version" : "Unsupported server version",
+                            systemImage: isSupportedServer ? MySymbols.success : MySymbols.failure
+                        )
                     }
                 )
                 .foregroundStyle(isSupportedServer ? .green : .red)
@@ -131,5 +137,13 @@ struct GrocyInfoView: View {
 }
 
 #Preview(traits: .previewData) {
-    GrocyInfoView(systemInfo: SystemInfo(grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"), phpVersion: "php", sqliteVersion: "sqlite", os: "iOS", client: "Grocy Mobile"))
+    GrocyInfoView(
+        systemInfo: SystemInfo(
+            grocyVersion: SystemInfo.GrocyVersion(version: "version", releaseDate: "date"),
+            phpVersion: "php",
+            sqliteVersion: "sqlite",
+            os: "iOS",
+            client: "Grocy Mobile"
+        )
+    )
 }

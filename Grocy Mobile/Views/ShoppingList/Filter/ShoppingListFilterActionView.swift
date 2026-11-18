@@ -18,13 +18,25 @@ struct ShoppingListFilterActionView: View {
         FilterCapsuleBar {
             if numUndone > 0 {
                 // Undone items
-                ShoppingListFilterCapsuleView(num: numUndone, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.undone, color: Color(.GrocyColors.grocyGray), backgroundColor: Color(.GrocyColors.grocyGrayBackground))
-                    .animation(.default, value: numUndone)
+                ShoppingListFilterCapsuleView(
+                    num: numUndone,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ShoppingListStatus.undone,
+                    color: Color(.GrocyColors.grocyGray),
+                    backgroundColor: Color(.GrocyColors.grocyGrayBackground)
+                )
+                .animation(.default, value: numUndone)
             }
             if numDone > 0 {
                 // Done items
-                ShoppingListFilterCapsuleView(num: numDone, filteredStatus: $filteredStatus, ownFilteredStatus: ShoppingListStatus.done, color: .white, backgroundColor: Color(.GrocyColors.grocyGreen))
-                    .animation(.default, value: numDone)
+                ShoppingListFilterCapsuleView(
+                    num: numDone,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ShoppingListStatus.done,
+                    color: .white,
+                    backgroundColor: Color(.GrocyColors.grocyGreen)
+                )
+                .animation(.default, value: numDone)
             }
             if numBelowStock > 0 {
                 // Below stock

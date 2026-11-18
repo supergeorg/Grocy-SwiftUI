@@ -49,7 +49,14 @@ struct UserFormView: View {
 
     private func saveUser() async {
         if isNewUser {
-            let userPost = GrocyUserPOST(id: grocyVM.getNewUserID(), username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: Date())
+            let userPost = GrocyUserPOST(
+                id: grocyVM.getNewUserID(),
+                username: username,
+                firstName: firstName,
+                lastName: lastName,
+                password: password,
+                rowCreatedTimestamp: Date()
+            )
             do {
                 try await grocyVM.postUser(user: userPost)
                 GrocyLogger.info("Successfully saved user.")
@@ -60,7 +67,14 @@ struct UserFormView: View {
             }
         } else {
             if let intID = user?.id {
-                let userPost = GrocyUserPOST(id: intID, username: username, firstName: firstName, lastName: lastName, password: password, rowCreatedTimestamp: user!.rowCreatedTimestamp)
+                let userPost = GrocyUserPOST(
+                    id: intID,
+                    username: username,
+                    firstName: firstName,
+                    lastName: lastName,
+                    password: password,
+                    rowCreatedTimestamp: user!.rowCreatedTimestamp
+                )
                 do {
                     try await grocyVM.putUser(id: user!.id, user: userPost)
                     GrocyLogger.info("Successfully edited user.")
@@ -76,16 +90,29 @@ struct UserFormView: View {
     var body: some View {
         Form {
             Section(header: Text("Username")) {
-                MyTextField(textToEdit: $username, description: "Username", isCorrect: $isValidUsername, leadingIcon: "rectangle.and.pencil.and.ellipsis", emptyMessage: "A username is required", errorMessage: "Username already exists")
-                    .onChange(of: username) {
-                        isValidUsername = checkUsernameCorrect()
-                    }
+                MyTextField(
+                    textToEdit: $username,
+                    description: "Username",
+                    isCorrect: $isValidUsername,
+                    leadingIcon: "rectangle.and.pencil.and.ellipsis",
+                    emptyMessage: "A username is required",
+                    errorMessage: "Username already exists"
+                )
+                .onChange(of: username) {
+                    isValidUsername = checkUsernameCorrect()
+                }
                 MyTextField(textToEdit: $firstName, description: "First name", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
                 MyTextField(textToEdit: $lastName, description: "Last name", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
             }
             Section(header: Text("Password")) {
                 MyTextField(textToEdit: $password, description: "Password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
-                MyTextField(textToEdit: $passwordConfirm, description: "Confirm password", isCorrect: $isMatchingPassword, leadingIcon: "key", errorMessage: "Passwords do not match")
+                MyTextField(
+                    textToEdit: $passwordConfirm,
+                    description: "Confirm password",
+                    isCorrect: $isMatchingPassword,
+                    leadingIcon: "key",
+                    errorMessage: "Passwords do not match"
+                )
             }
         }
         .navigationTitle(isNewUser ? "Create user" : "Edit user")

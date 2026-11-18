@@ -63,7 +63,12 @@ enum DueItemsKind: String {
             .init(id: 1, name: String(localized: "Water the plants"), dueDate: Calendar.current.date(byAdding: .day, value: -1, to: .now), assignedToMe: true),
             .init(id: 2, name: String(localized: "Take out the trash"), dueDate: .now, assignedToMe: false),
             .init(id: 3, name: String(localized: "Clean the kitchen"), dueDate: Calendar.current.date(byAdding: .day, value: 2, to: .now), assignedToMe: true),
-            .init(id: 4, name: String(localized: "Change the bed sheets"), dueDate: Calendar.current.date(byAdding: .day, value: 9, to: .now), assignedToMe: false),
+            .init(
+                id: 4,
+                name: String(localized: "Change the bed sheets"),
+                dueDate: Calendar.current.date(byAdding: .day, value: 9, to: .now),
+                assignedToMe: false
+            ),
         ],
         dueSoonDays: 5,
         updated: .now
@@ -152,7 +157,7 @@ struct DueItemsEntry: TimelineEntry {
             .filter { !onlyAssignedToMe || $0.assignedToMe }
             .sorted { lhs, rhs in
                 switch (lhs.dueDate, rhs.dueDate) {
-                case let (lhsDate?, rhsDate?):
+                case (let lhsDate?, let rhsDate?):
                     return lhsDate == rhsDate ? lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending : lhsDate < rhsDate
                 case (nil, _?):
                     return false
@@ -248,7 +253,12 @@ struct DueItemsWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         case .systemMedium:
             VStack(alignment: .leading, spacing: 6) {
-                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount, countDescription: Text("\(entry.dueNowCount) overdue or due today"))
+                WidgetHeaderView(
+                    title: Text(kind.title),
+                    systemImage: kind.systemImage,
+                    count: entry.dueNowCount,
+                    countDescription: Text("\(entry.dueNowCount) overdue or due today")
+                )
                 itemList(maxItems: 3)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -291,7 +301,12 @@ struct DueItemsWidgetView: View {
         #endif
         default:
             VStack(alignment: .leading, spacing: 8) {
-                WidgetHeaderView(title: Text(kind.title), systemImage: kind.systemImage, count: entry.dueNowCount, countDescription: Text("\(entry.dueNowCount) overdue or due today"))
+                WidgetHeaderView(
+                    title: Text(kind.title),
+                    systemImage: kind.systemImage,
+                    count: entry.dueNowCount,
+                    countDescription: Text("\(entry.dueNowCount) overdue or due today")
+                )
                 HStack(spacing: 6) {
                     ForEach([DueState.overdue, .dueToday, .dueSoon], id: \.self) { state in
                         Link(destination: kind.url(filter: state)) {
@@ -463,7 +478,8 @@ private var dueItemsFamilies: [WidgetFamily] {
 
 struct ChoresWidget: Widget {
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: DueItemsKind.chores.widgetKind, intent: DueWidgetConfigurationIntent.self, provider: DueItemsProvider(kind: .chores)) { entry in
+        AppIntentConfiguration(kind: DueItemsKind.chores.widgetKind, intent: DueWidgetConfigurationIntent.self, provider: DueItemsProvider(kind: .chores)) {
+            entry in
             DueItemsWidgetView(kind: .chores, entry: entry)
                 .grocyWidgetBackground()
         }
@@ -475,7 +491,8 @@ struct ChoresWidget: Widget {
 
 struct TasksWidget: Widget {
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: DueItemsKind.tasks.widgetKind, intent: DueWidgetConfigurationIntent.self, provider: DueItemsProvider(kind: .tasks)) { entry in
+        AppIntentConfiguration(kind: DueItemsKind.tasks.widgetKind, intent: DueWidgetConfigurationIntent.self, provider: DueItemsProvider(kind: .tasks)) {
+            entry in
             DueItemsWidgetView(kind: .tasks, entry: entry)
                 .grocyWidgetBackground()
         }

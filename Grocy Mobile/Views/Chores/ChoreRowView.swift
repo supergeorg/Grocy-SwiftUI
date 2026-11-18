@@ -49,7 +49,7 @@ struct ChoreRowView: View {
             }
 
         }
-//        .listRowBackground(backgroundColor)
+        //        .listRowBackground(backgroundColor)
     }
 }
 
@@ -57,8 +57,22 @@ struct ChoreRowView: View {
     List {
         ChoreRowView(chore: Chore(choreName: "Chore Past", nextEstimatedExecutionTime: Calendar.current.date(byAdding: .day, value: -1, to: Date())!))
         ChoreRowView(chore: Chore(choreName: "Chore Today", lastTrackedTime: Date(), nextEstimatedExecutionTime: Date(), isRescheduled: true))
-        ChoreRowView(chore: Chore(choreName: "Chore in 3 days", lastTrackedTime: Date(), nextEstimatedExecutionTime: Calendar.current.date(byAdding: .day, value: 3, to: Date())!, isRescheduled: true))
-        ChoreRowView(chore: Chore(choreName: "Chore in 10 days", lastTrackedTime: Date(), nextEstimatedExecutionTime: Calendar.current.date(byAdding: .day, value: 10, to: Date())!, isRescheduled: true))
+        ChoreRowView(
+            chore: Chore(
+                choreName: "Chore in 3 days",
+                lastTrackedTime: Date(),
+                nextEstimatedExecutionTime: Calendar.current.date(byAdding: .day, value: 3, to: Date())!,
+                isRescheduled: true
+            )
+        )
+        ChoreRowView(
+            chore: Chore(
+                choreName: "Chore in 10 days",
+                lastTrackedTime: Date(),
+                nextEstimatedExecutionTime: Calendar.current.date(byAdding: .day, value: 10, to: Date())!,
+                isRescheduled: true
+            )
+        )
         ChoreRowView(chore: Chore(choreName: "Chore for Me", nextExecutionAssignedToUserID: 1), user: GrocyUser(id: 1, displayName: "Test User"))
     }
 }

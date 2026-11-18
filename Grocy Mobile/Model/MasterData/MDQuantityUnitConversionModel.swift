@@ -67,7 +67,8 @@ class MDQuantityUnitConversion: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDQuantityUnitConversion, rhs: MDQuantityUnitConversion) -> Bool {
-        lhs.id == rhs.id && lhs.fromQuID == rhs.fromQuID && lhs.toQuID == rhs.toQuID && lhs.factor == rhs.factor && lhs.productID == rhs.productID && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.fromQuID == rhs.fromQuID && lhs.toQuID == rhs.toQuID && lhs.factor == rhs.factor && lhs.productID == rhs.productID
+            && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

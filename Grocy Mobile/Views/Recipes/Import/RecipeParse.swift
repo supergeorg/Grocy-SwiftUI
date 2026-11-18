@@ -329,7 +329,13 @@ public enum RecipeParser {
             }
 
             let nodes: [JSON]
-            if let dict = raw as? JSON { nodes = collectNodes(dict) } else if let arr = raw as? [JSON] { nodes = arr.flatMap { collectNodes($0) } } else { nodes = [] }
+            if let dict = raw as? JSON {
+                nodes = collectNodes(dict)
+            } else if let arr = raw as? [JSON] {
+                nodes = arr.flatMap { collectNodes($0) }
+            } else {
+                nodes = []
+            }
 
             if nodes.isEmpty {
                 if let dict = raw as? JSON {
@@ -350,7 +356,9 @@ public enum RecipeParser {
         if blocks.isEmpty {
             out.append("\nHint: no <script type=\"application/ld+json\"> tags matched.")
             let present = html.contains("application/ld+json")
-            out.append("Raw search for 'application/ld+json': \(present ? "found — possible regex mismatch" : "not found — JSON-LD may be injected by JavaScript")")
+            out.append(
+                "Raw search for 'application/ld+json': \(present ? "found — possible regex mismatch" : "not found — JSON-LD may be injected by JavaScript")"
+            )
         }
 
         out.append("\n=== end ===")
@@ -456,7 +464,13 @@ public enum RecipeParser {
         do { raw = try JSONSerialization.jsonObject(with: data) } catch { throw RecipeParserError.invalidJSON(error) }
 
         let nodes: [JSON]
-        if let dict = raw as? JSON { nodes = collectNodes(dict) } else if let arr = raw as? [JSON] { nodes = arr.flatMap { collectNodes($0) } } else { nodes = [] }
+        if let dict = raw as? JSON {
+            nodes = collectNodes(dict)
+        } else if let arr = raw as? [JSON] {
+            nodes = arr.flatMap { collectNodes($0) }
+        } else {
+            nodes = []
+        }
 
         guard !nodes.isEmpty else { throw RecipeParserError.noRecipeFound }
         let index = nodesByID(raw)
@@ -819,7 +833,15 @@ public enum RecipeParser {
 
     private static func dietList(_ v: Any?) -> [DietType] {
         let raw: [String]
-        if let s = v as? String { raw = [s] } else if let a = v as? [String] { raw = a } else if let a = v as? [Any] { raw = a.compactMap { $0 as? String } } else { return [] }
+        if let s = v as? String {
+            raw = [s]
+        } else if let a = v as? [String] {
+            raw = a
+        } else if let a = v as? [Any] {
+            raw = a.compactMap { $0 as? String }
+        } else {
+            return []
+        }
         return raw.compactMap { string($0) }.map { s -> DietType in
             let diet = DietType(rawOrURI: s)
             if case .unknown(let val) = diet {

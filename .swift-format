@@ -2,6 +2,7 @@
     "fileScopedDeclarationPrivacy": {
         "accessLevel": "private"
     },
+    "indentBlankLines": false,
     "indentConditionalCompilationBlocks": true,
     "indentSwitchCaseLabels": false,
     "indentation": {
@@ -12,18 +13,21 @@
     "lineBreakBeforeEachArgument": true,
     "lineBreakBeforeEachGenericRequirement": false,
     "lineBreakBetweenDeclarationAttributes": false,
-    "lineLength": 240,
+    "lineLength": 160,
     "maximumBlankLines": 1,
     "multiElementCollectionTrailingCommas": true,
+    "multilineTrailingCommaBehavior": "keptAsWritten",
     "noAssignmentInExpressions": {
         "allowedFunctions": [
             "XCTAssertNoThrow"
         ]
     },
-    "prioritizeKeepingFunctionOutputTogether": false,
-    "reflowMultilineStringLiterals": {
-        "never": {}
+    "orderedImports": {
+        "includeConditionalImports": false,
+        "shouldGroupImports": true
     },
+    "prioritizeKeepingFunctionOutputTogether": false,
+    "reflowMultilineStringLiterals": "never",
     "respectsExistingLineBreaks": true,
     "rules": {
         "AllPublicDeclarationsHaveDocumentation": false,

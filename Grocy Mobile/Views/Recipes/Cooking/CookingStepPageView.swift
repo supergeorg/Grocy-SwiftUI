@@ -73,7 +73,11 @@ struct CookingStepPageView: View {
 
 #Preview {
     CookingStepPageView(
-        step: RecipePreparationStep(section: "Sauce", title: "Onions", text: "Finely chop the onions and fry them in a little oil until golden.\nThen add the garlic."),
+        step: RecipePreparationStep(
+            section: "Sauce",
+            title: "Onions",
+            text: "Finely chop the onions and fry them in a little oil until golden.\nThen add the garlic."
+        ),
         number: 1,
         count: 3,
         ingredients: [CookingIngredient(id: "1", name: "Onions", amountText: "2 pieces", note: "")]

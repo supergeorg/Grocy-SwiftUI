@@ -112,7 +112,7 @@ struct ShoppingListView: View {
         if filteredStatus != .all { filterCount += 1 }
         return filterCount
     }
-    
+
     private var sortOrder: SortOrder {
         storageSortOrder.sortOrder
     }
@@ -357,7 +357,8 @@ struct ShoppingListView: View {
             }
             let filteredItems = shoppingList.filter { $0.shoppingListID == alertSHL.id }
             for shoppingListItem in filteredItems {
-                let title = "\(shoppingListItem.amount.formattedAmount)x \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
+                let title =
+                    "\(shoppingListItem.amount.formattedAmount)x \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
                 try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done))
             }
         } catch {

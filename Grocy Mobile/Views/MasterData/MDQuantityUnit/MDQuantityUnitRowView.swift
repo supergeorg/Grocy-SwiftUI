@@ -41,6 +41,8 @@ struct MDQuantityUnitRowView: View {
 
 #Preview {
     List {
-        MDQuantityUnitRowView(quantityUnit: MDQuantityUnit(id: 1, name: "Quantity unit", namePlural: "Quantity units", mdQuantityUnitDescription: "Description"))
+        MDQuantityUnitRowView(
+            quantityUnit: MDQuantityUnit(id: 1, name: "Quantity unit", namePlural: "Quantity units", mdQuantityUnitDescription: "Description")
+        )
     }
 }

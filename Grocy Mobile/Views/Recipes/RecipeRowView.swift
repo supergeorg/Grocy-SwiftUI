@@ -36,8 +36,14 @@ struct RecipeRowView: View {
 
 #Preview(traits: .previewData) {
     List {
-        RecipeRowView(recipe: Recipe(id: 1, name: "Pasta Carbonara"), fulfillment: RecipeFulfilment(recipeID: 1, needFulfilled: true, calories: 640, dueScore: 10))
-        RecipeRowView(recipe: Recipe(id: 2, name: "Vegetable Stir Fry"), fulfillment: RecipeFulfilment(recipeID: 2, needFulfilledWithShoppingList: true, missingProductsCount: 5))
+        RecipeRowView(
+            recipe: Recipe(id: 1, name: "Pasta Carbonara"),
+            fulfillment: RecipeFulfilment(recipeID: 1, needFulfilled: true, calories: 640, dueScore: 10)
+        )
+        RecipeRowView(
+            recipe: Recipe(id: 2, name: "Vegetable Stir Fry"),
+            fulfillment: RecipeFulfilment(recipeID: 2, needFulfilledWithShoppingList: true, missingProductsCount: 5)
+        )
         RecipeRowView(recipe: Recipe(id: 3, name: "Chocolate Cake"), fulfillment: RecipeFulfilment(recipeID: 3, missingProductsCount: 3))
     }
 }

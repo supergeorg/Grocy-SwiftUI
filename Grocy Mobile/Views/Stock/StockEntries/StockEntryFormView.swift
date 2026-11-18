@@ -43,7 +43,7 @@ struct StockEntryFormView: View {
         _stockEntry = State(initialValue: existingStockEntry)
         self.existingStockEntry = existingStockEntry
         self.productDoesntSpoil = existingStockEntry.bestBeforeDate == Date.neverOverdue
-        
+
     }
 
     private func updateData() async {
@@ -122,9 +122,24 @@ struct StockEntryFormView: View {
                     )
             }
 
-            MyDoubleStepper(amount: $stockEntry.amount, description: "Amount", minAmount: 0.0001, amountStep: 1.0, amountName: quantityUnit?.getName(amount: stockEntry.amount), systemImage: MySymbols.amount)
+            MyDoubleStepper(
+                amount: $stockEntry.amount,
+                description: "Amount",
+                minAmount: 0.0001,
+                amountStep: 1.0,
+                amountName: quantityUnit?.getName(amount: stockEntry.amount),
+                systemImage: MySymbols.amount
+            )
 
-            MyDoubleStepperOptional(amount: $stockEntry.price, description: "Price", minAmount: 0, amountStep: 1.0, amountName: "", systemImage: MySymbols.price, currencySymbol: grocyVM.getCurrencySymbol())
+            MyDoubleStepperOptional(
+                amount: $stockEntry.price,
+                description: "Price",
+                minAmount: 0,
+                amountStep: 1.0,
+                amountName: "",
+                systemImage: MySymbols.price,
+                currencySymbol: grocyVM.getCurrencySymbol()
+            )
 
             Picker(
                 selection: $stockEntry.storeID,

@@ -73,7 +73,8 @@ class MDBattery: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDBattery, rhs: MDBattery) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdBatteryDescription == rhs.mdBatteryDescription && lhs.usedIn == rhs.usedIn && lhs.chargeIntervalDays == rhs.chargeIntervalDays && lhs.active == rhs.active
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdBatteryDescription == rhs.mdBatteryDescription && lhs.usedIn == rhs.usedIn
+            && lhs.chargeIntervalDays == rhs.chargeIntervalDays && lhs.active == rhs.active
             && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

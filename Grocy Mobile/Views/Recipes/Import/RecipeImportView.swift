@@ -581,7 +581,11 @@ struct RecipeImportView: View {
         if !draft.wrappedValue.steps.isEmpty {
             Section {
                 ForEach(Array(draft.wrappedValue.steps.enumerated()), id: \.offset) { index, step in
-                    RecipeImportStepRowView(number: index + 1, step: step, showsSection: index == 0 || draft.wrappedValue.steps[index - 1].section != step.section)
+                    RecipeImportStepRowView(
+                        number: index + 1,
+                        step: step,
+                        showsSection: index == 0 || draft.wrappedValue.steps[index - 1].section != step.section
+                    )
                 }
             } header: {
                 Label("Preparation", systemImage: MySymbols.steps)

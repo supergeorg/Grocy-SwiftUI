@@ -29,7 +29,10 @@ struct RecipePictureView: View {
     private func deletePicture(savedPictureFileNameData: Data) async {
         isProcessing = true
         do {
-            try await grocyVM.deleteFile(groupName: PictureType.recipePictures.rawValue, fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0)))
+            try await grocyVM.deleteFile(
+                groupName: PictureType.recipePictures.rawValue,
+                fileName: savedPictureFileNameData.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+            )
             GrocyLogger.info("Picture successfully deleted.")
             await changePicture(newPictureFileName: nil)
         } catch {

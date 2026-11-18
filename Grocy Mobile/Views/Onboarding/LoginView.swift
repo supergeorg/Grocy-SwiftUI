@@ -124,27 +124,27 @@ struct LoginView: View {
                         } label: {
                             Label("About this app", systemImage: MySymbols.info)
                         }
-                            .sheet(
-                                isPresented: $showAbout,
-                                content: {
-                                    NavigationStack {
-                                        AboutView()
-                                            .toolbar(content: {
-                                                ToolbarItem(
-                                                    placement: .cancellationAction,
-                                                    content: {
-                                                        Button(
-                                                            role: .cancel,
-                                                            action: {
-                                                                showAbout = false
-                                                            }
-                                                        )
-                                                    }
-                                                )
-                                            })
-                                    }
+                        .sheet(
+                            isPresented: $showAbout,
+                            content: {
+                                NavigationStack {
+                                    AboutView()
+                                        .toolbar(content: {
+                                            ToolbarItem(
+                                                placement: .cancellationAction,
+                                                content: {
+                                                    Button(
+                                                        role: .cancel,
+                                                        action: {
+                                                            showAbout = false
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        })
                                 }
-                            )
+                            }
+                        )
                     }
                 )
                 ToolbarItem(
@@ -155,27 +155,27 @@ struct LoginView: View {
                         } label: {
                             Label("Settings", systemImage: MySymbols.settings)
                         }
-                            .sheet(
-                                isPresented: $showSettings,
-                                content: {
-                                    NavigationStack {
-                                        SettingsView()
-                                            .toolbar(content: {
-                                                ToolbarItem(
-                                                    placement: .cancellationAction,
-                                                    content: {
-                                                        Button(
-                                                            role: .cancel,
-                                                            action: {
-                                                                showSettings = false
-                                                            }
-                                                        )
-                                                    }
-                                                )
-                                            })
-                                    }
+                        .sheet(
+                            isPresented: $showSettings,
+                            content: {
+                                NavigationStack {
+                                    SettingsView()
+                                        .toolbar(content: {
+                                            ToolbarItem(
+                                                placement: .cancellationAction,
+                                                content: {
+                                                    Button(
+                                                        role: .cancel,
+                                                        action: {
+                                                            showSettings = false
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        })
                                 }
-                            )
+                            }
+                        )
                     }
                 )
             #endif

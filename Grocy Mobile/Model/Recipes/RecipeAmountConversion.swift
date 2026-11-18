@@ -38,13 +38,21 @@ enum RecipeAmountConversion {
     }
 
     /// The amount to save for an ingredient entered as `amount` in the unit `quID`.
-    static func storedAmount(for amount: Double, quID: Int?, onlyCheckSingleUnitInStock: Bool, product: MDProduct?, conversions: MDQuantityUnitConversions) -> Double {
+    static func storedAmount(for amount: Double, quID: Int?, onlyCheckSingleUnitInStock: Bool, product: MDProduct?, conversions: MDQuantityUnitConversions)
+        -> Double
+    {
         guard !onlyCheckSingleUnitInStock, let quID, let product else { return amount }
         return stockAmount(for: amount, quID: quID, product: product, conversions: conversions) ?? amount
     }
 
     /// The amount to show for a saved ingredient, in its unit `quID`.
-    static func displayAmount(forStored amount: Double, quID: Int?, onlyCheckSingleUnitInStock: Bool, product: MDProduct?, conversions: MDQuantityUnitConversions) -> Double {
+    static func displayAmount(
+        forStored amount: Double,
+        quID: Int?,
+        onlyCheckSingleUnitInStock: Bool,
+        product: MDProduct?,
+        conversions: MDQuantityUnitConversions
+    ) -> Double {
         guard !onlyCheckSingleUnitInStock, let quID, let product,
             let factor = factorFromStockUnit(to: quID, product: product, conversions: conversions)
         else { return amount }
