@@ -207,7 +207,7 @@ struct EquipmentFormView: View {
 
             Section("Notes") {
                 if !equipment.mdEquipmentDescription.isEmpty {
-                    HTMLPreviewView(htmlContent: $equipment.mdEquipmentDescription, minHeight: 150, idealHeight: 250, showControlBar: false)
+                    HTMLPreviewView(htmlContent: $equipment.mdEquipmentDescription, minHeight: 150, showControlBar: false)
                 }
                 Button {
                     showNotesEditor = true

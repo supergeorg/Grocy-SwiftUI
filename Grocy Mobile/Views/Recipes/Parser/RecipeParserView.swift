@@ -102,6 +102,8 @@ struct RecipeParserView: View {
 
 struct RecipeDisplayView: View {
     let recipe: ParsedRecipe
+    /// Converted once and off the body: the synchronous HTML import blocks the main thread on every redraw.
+    @State private var preparation: AttributedString?
 
     var body: some View {
         Section {
@@ -158,8 +160,15 @@ struct RecipeDisplayView: View {
         }
 
         Section("Preparation") {
-            Text(recipe.descriptionHTML.htmlToAttributedString())
-                .font(.body)
+            if let preparation {
+                Text(preparation)
+                    .font(.body)
+            } else {
+                ProgressView()
+            }
+        }
+        .task(id: recipe.descriptionHTML) {
+            preparation = await recipe.descriptionHTML.htmlToAttributedStringAsync()
         }
     }
 }

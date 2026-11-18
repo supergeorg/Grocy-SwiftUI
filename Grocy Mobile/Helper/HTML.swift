@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import WebKit
 
 extension String {
     func stripHTML() -> String {
@@ -38,6 +39,14 @@ extension String {
             return AttributedString(self)
         }
 
+        return AttributedString(nsAttributedString)
+    }
+
+    /// Like `htmlToAttributedString()`, without blocking the main thread.
+    func htmlToAttributedStringAsync() async -> AttributedString {
+        guard let (nsAttributedString, _) = try? await NSAttributedString.fromHTML(self) else {
+            return AttributedString(self)
+        }
         return AttributedString(nsAttributedString)
     }
 

@@ -92,84 +92,87 @@ struct RecipePreparationEditorView: View {
 
 struct WYSIWYGEditorView: View {
     @Binding var htmlContent: String
-    @State private var editorProxy: RichHTMLEditorProxy?
-    @StateObject private var proxyObserver = RichHTMLEditorProxy(editor: RichHTMLEditorView())
+    @State private var bridge = RichHTMLEditorBridge()
     @State private var showLinkDialog = false
     @State private var selectedColor: Color = .black
     @State private var selectedBackgroundColor: Color = .white
     @State private var linkURL: String = ""
     @State private var linkText: String = ""
-    /// True while the keyboard is visible. Drives toolbar visibility.
-    @State private var keyboardVisible: Bool = false
-
-    private let formattingBarHeight: CGFloat = 50
-    private let formattingButtonSize: CGFloat = 40.0
+    #if os(iOS)
+        /// True while the keyboard is visible. Drives toolbar visibility.
+        @State private var keyboardVisible: Bool = false
+    #else
+        /// macOS has no on-screen keyboard, the formatting bar is always shown.
+        private let keyboardVisible: Bool = true
+    #endif
 
     var body: some View {
-        // Wrapping the WKWebView-backed editor in a native SwiftUI ScrollView is
-        // the key insight: SwiftUI's scroll view handles keyboard avoidance itself
-        // (shrinking its frame, not the window), so the tab bar above is unaffected.
-        // safeAreaInset pins the formatting bar just above the keyboard automatically.
-        ScrollView(.vertical) {
+        editor
+            // The formatting bar attaches to the bottom safe area inset. On iOS,
+            // SwiftUI lifts this inset when the keyboard appears, so the bar travels with the keyboard.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if keyboardVisible {
+                    GlassEffectContainer {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            formattingBar
+                        }
+                    }
+                    .padding()
+                    .background(.bar)
+                    .overlay(alignment: .top) { Divider() }
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
             #if os(iOS)
-                RichHTMLEditorViewRepresentable(
-                    html: $htmlContent,
-                    proxy: $editorProxy,
-                    proxyObserver: proxyObserver
-                )
-                .padding(.horizontal)
-                // Give the editor a tall minimum so it fills the visible area.
-                // The ScrollView will expand it further as content grows.
-                .frame(minHeight: Sizes.preparationEditorMinHeight)
-                .frame(maxWidth: .infinity)
+                .onReceive(
+                    NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+                ) { _ in
+                    withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
+                }
+                .onReceive(
+                    NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+                ) { _ in
+                    withAnimation(.easeIn(duration: 0.2)) { keyboardVisible = false }
+                }
             #endif
-        }
-        // The formatting bar attaches to the bottom safe area inset of the
-        // ScrollView. SwiftUI automatically lifts this inset when the keyboard
-        // appears, so the bar travels with the keyboard for free.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if keyboardVisible {
-                GlassEffectContainer {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        formattingBar
+            .sheet(isPresented: $showLinkDialog) {
+                LinkDialog(
+                    linkURL: $linkURL,
+                    linkText: $linkText,
+                    isPresented: $showLinkDialog,
+                    onInsert: {
+                        if !linkURL.isEmpty {
+                            bridge.addLink(
+                                url: URL(string: linkURL) ?? URL(fileURLWithPath: ""),
+                                text: linkText.isEmpty ? nil : linkText
+                            )
+                            linkURL = ""
+                            linkText = ""
+                            showLinkDialog = false
+                        }
                     }
-                }
-                .padding()
-                .background(.bar)
-                .overlay(alignment: .top) { Divider() }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                )
             }
-        }
+    }
+
+    @ViewBuilder
+    private var editor: some View {
         #if os(iOS)
-            .onReceive(
-                NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
-            ) { _ in
-                withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
+            // The editor grows with its content and the native ScrollView scrolls it. SwiftUI's
+            // scroll view handles keyboard avoidance itself (shrinking its frame, not the window),
+            // so the tab bar above is unaffected, and the editor scrolls the caret into view.
+            ScrollView(.vertical) {
+                RichHTMLEditorRepresentable(html: $htmlContent, bridge: bridge)
+                    .padding(.horizontal)
+                    .frame(minHeight: Sizes.preparationEditorMinHeight)
+                    .frame(maxWidth: .infinity)
             }
-            .onReceive(
-                NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
-            ) { _ in
-                withAnimation(.easeIn(duration: 0.2)) { keyboardVisible = false }
-            }
+        #else
+            // The web view scrolls its content itself on macOS.
+            RichHTMLEditorRepresentable(html: $htmlContent, bridge: bridge)
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         #endif
-        .sheet(isPresented: $showLinkDialog) {
-            LinkDialog(
-                linkURL: $linkURL,
-                linkText: $linkText,
-                isPresented: $showLinkDialog,
-                onInsert: {
-                    if !linkURL.isEmpty {
-                        editorProxy?.addLink(
-                            url: URL(string: linkURL) ?? URL(fileURLWithPath: ""),
-                            text: linkText.isEmpty ? nil : linkText
-                        )
-                        linkURL = ""
-                        linkText = ""
-                        showLinkDialog = false
-                    }
-                }
-            )
-        }
     }
 
     var formattingBar: some View {
@@ -194,96 +197,96 @@ struct WYSIWYGEditorView: View {
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Bold
-            Button(action: { editorProxy?.bold() }) {
+            Button(action: { bridge.bold() }) {
                 Image(systemName: MySymbols.formatBold)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasBold))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasBold))
 
             // Italic
-            Button(action: { editorProxy?.italic() }) {
+            Button(action: { bridge.italic() }) {
                 Image(systemName: MySymbols.formatItalic)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasItalic))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasItalic))
 
             // Underline
-            Button(action: { editorProxy?.underline() }) {
+            Button(action: { bridge.underline() }) {
                 Image(systemName: MySymbols.formatUnderline)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnderline))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasUnderline))
 
             // Strikethrough
-            Button(action: { editorProxy?.strikethrough() }) {
+            Button(action: { bridge.strikethrough() }) {
                 Image(systemName: MySymbols.formatStrikethrough)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasStrikethrough))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasStrikethrough))
 
             Divider()
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Bullet List
-            Button(action: { editorProxy?.unorderedList() }) {
+            Button(action: { bridge.unorderedList() }) {
                 Image(systemName: MySymbols.formatBulletList)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasUnorderedList))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasUnorderedList))
 
             // Numbered List
-            Button(action: { editorProxy?.orderedList() }) {
+            Button(action: { bridge.orderedList() }) {
                 Image(systemName: MySymbols.formatNumberedList)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasOrderedList))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasOrderedList))
 
             Divider()
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Align Left
-            Button(action: { editorProxy?.justify(.left) }) {
+            Button(action: { bridge.justify(.left) }) {
                 Image(systemName: MySymbols.formatAlignLeft)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .left))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .left))
 
             // Align Center
-            Button(action: { editorProxy?.justify(.center) }) {
+            Button(action: { bridge.justify(.center) }) {
                 Image(systemName: MySymbols.formatAlignCenter)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .center))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .center))
 
             // Align Right
-            Button(action: { editorProxy?.justify(.right) }) {
+            Button(action: { bridge.justify(.right) }) {
                 Image(systemName: MySymbols.formatAlignRight)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .right))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .right))
 
             // Justify
-            Button(action: { editorProxy?.justify(.full) }) {
+            Button(action: { bridge.justify(.full) }) {
                 Image(systemName: MySymbols.formatJustify)
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.currentJustification == .full))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .full))
 
             Divider()
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Indent
-            Button(action: { editorProxy?.indent() }) {
+            Button(action: { bridge.indent() }) {
                 Image(systemName: MySymbols.formatIndentIncrease)
                     .font(.callout.weight(.semibold))
             }
@@ -291,7 +294,7 @@ struct WYSIWYGEditorView: View {
             .buttonStyle(FormattingButtonStyleAdditional())
 
             // Outdent
-            Button(action: { editorProxy?.outdent() }) {
+            Button(action: { bridge.outdent() }) {
                 Image(systemName: MySymbols.formatIndentDecrease)
                     .font(.callout.weight(.semibold))
             }
@@ -302,20 +305,18 @@ struct WYSIWYGEditorView: View {
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Foreground Color
-            #if os(iOS)
-                FormattingColorPicker(selection: $selectedColor, iconName: MySymbols.formatTextColor)
-                    .onChange(of: selectedColor) {
-                        editorProxy?.setForegroundColor(UIColor(selectedColor))
-                    }
-                    .labelsHidden()
+            FormattingColorPicker(selection: $selectedColor, iconName: MySymbols.formatTextColor)
+                .onChange(of: selectedColor) {
+                    bridge.setForegroundColor(PlatformColor(selectedColor))
+                }
+                .labelsHidden()
 
-                // Background Color
-                FormattingColorPicker(selection: $selectedBackgroundColor, iconName: MySymbols.formatHighlightColor)
-                    .onChange(of: selectedBackgroundColor) {
-                        editorProxy?.setBackgroundColor(UIColor(selectedBackgroundColor))
-                    }
-                    .labelsHidden()
-            #endif
+            // Background Color
+            FormattingColorPicker(selection: $selectedBackgroundColor, iconName: MySymbols.formatHighlightColor)
+                .onChange(of: selectedBackgroundColor) {
+                    bridge.setBackgroundColor(PlatformColor(selectedBackgroundColor))
+                }
+                .labelsHidden()
 
             Divider()
                 .frame(height: Sizes.toolbarDividerHeight)
@@ -326,13 +327,13 @@ struct WYSIWYGEditorView: View {
                     .font(.callout.weight(.semibold))
             }
             .tint(.primary)
-            .buttonStyle(FormattingButtonStyle(isSelected: proxyObserver.hasLink))
+            .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasLink))
 
             Divider()
                 .frame(height: Sizes.toolbarDividerHeight)
 
             // Undo
-            Button(action: { editorProxy?.undo() }) {
+            Button(action: { bridge.undo() }) {
                 Image(systemName: MySymbols.editorUndo)
                     .font(.callout.weight(.semibold))
             }
@@ -340,7 +341,7 @@ struct WYSIWYGEditorView: View {
             .buttonStyle(FormattingButtonStyleAdditional())
 
             // Redo
-            Button(action: { editorProxy?.redo() }) {
+            Button(action: { bridge.redo() }) {
                 Image(systemName: MySymbols.editorRedo)
                     .font(.callout.weight(.semibold))
             }
@@ -348,7 +349,7 @@ struct WYSIWYGEditorView: View {
             .buttonStyle(FormattingButtonStyleAdditional())
 
             // Clear Format
-            Button(action: { editorProxy?.removeFormat() }) {
+            Button(action: { bridge.removeFormat() }) {
                 Image(systemName: MySymbols.formatClear)
                     .font(.callout.weight(.semibold))
             }
@@ -407,168 +408,153 @@ struct FormattingColorPicker: View {
     }
 }
 
-// MARK: - RichHTMLEditor UIViewRepresentable
+// MARK: - RichHTMLEditor Representable
+
+/// Hosts the `RichHTMLEditorView` (a `UIView` on iOS, an `NSView` on macOS).
+struct RichHTMLEditorRepresentable {
+    @Binding var html: String
+    let bridge: RichHTMLEditorBridge
+
+    private func makeEditor() -> RichHTMLEditorView {
+        bridge.onHTMLChange = { newHTML in html = newHTML }
+        return bridge.makeEditor(html: html)
+    }
+
+    private func updateEditor() {
+        bridge.onHTMLChange = { newHTML in html = newHTML }
+        bridge.update(html: html)
+    }
+}
+
 #if os(iOS)
-    struct RichHTMLEditorViewRepresentable: UIViewRepresentable {
-        @Binding var html: String
-        @Binding var proxy: RichHTMLEditorProxy?
-        var proxyObserver: RichHTMLEditorProxy
+    extension RichHTMLEditorRepresentable: UIViewRepresentable {
+        func makeUIView(context: Context) -> RichHTMLEditorView { makeEditor() }
 
-        class Coordinator: NSObject {
-            var parent: RichHTMLEditorViewRepresentable
-            init(_ parent: RichHTMLEditorViewRepresentable) {
-                self.parent = parent
-            }
+        func updateUIView(_ uiView: RichHTMLEditorView, context: Context) { updateEditor() }
+
+        /// As tall as its content, so the surrounding scroll view scrolls it.
+        func sizeThatFits(_ proposal: ProposedViewSize, uiView: RichHTMLEditorView, context: Context) -> CGSize? {
+            proposal.replacingUnspecifiedDimensions(by: uiView.intrinsicContentSize)
         }
+    }
+#else
+    extension RichHTMLEditorRepresentable: NSViewRepresentable {
+        func makeNSView(context: Context) -> RichHTMLEditorView { makeEditor() }
 
-        func makeCoordinator() -> Coordinator { Coordinator(self) }
+        func updateNSView(_ nsView: RichHTMLEditorView, context: Context) { updateEditor() }
 
-        func makeUIView(context: Context) -> RichHTMLEditorView {
-            let editor = proxyObserver.editor
-            editor.html = html
-            proxyObserver.htmlBinding = $html
-
-            DispatchQueue.main.async {
-                self.proxy = proxyObserver
-            }
-
-            return editor
-        }
-
-        func updateUIView(_ uiView: RichHTMLEditorView, context: Context) {
-            // Only push down if the change originated externally (e.g. undo, toolbar action)
-            if uiView.html != html, !uiView.isFirstResponder {
-                uiView.html = html
-            }
+        /// Fills the offered space, the web view scrolls its content.
+        func sizeThatFits(_ proposal: ProposedViewSize, nsView: RichHTMLEditorView, context: Context) -> CGSize? {
+            proposal.replacingUnspecifiedDimensions(
+                by: CGSize(width: Sizes.preparationEditorMinHeight, height: Sizes.preparationEditorMinHeight)
+            )
         }
     }
 #endif
 
-// MARK: - RichHTMLEditor Proxy
-class RichHTMLEditorProxy: NSObject, ObservableObject, RichHTMLEditorViewDelegate {
-    let editor: RichHTMLEditorView
-    var htmlBinding: Binding<String>?
-    @Published var hasBold = false
-    @Published var hasItalic = false
-    @Published var hasUnderline = false
-    @Published var hasStrikethrough = false
-    @Published var hasOrderedList = false
-    @Published var hasUnorderedList = false
-    @Published var hasLink = false
-    @Published var currentJustification: TextJustification? = nil
+// MARK: - RichHTMLEditor Bridge
 
-    init(editor: RichHTMLEditorView) {
+/// The formatting of the selected text, as shown by the formatting bar.
+struct EditorFormatting: Equatable {
+    var hasBold = false
+    var hasItalic = false
+    var hasUnderline = false
+    var hasStrikethrough = false
+    var hasOrderedList = false
+    var hasUnorderedList = false
+    var hasLink = false
+    var textJustification: TextJustification?
+
+    init() {}
+
+    init(_ attributes: UITextAttributes) {
+        hasBold = attributes.hasBold
+        hasItalic = attributes.hasItalic
+        hasUnderline = attributes.hasUnderline
+        hasStrikethrough = attributes.hasStrikeThrough
+        hasOrderedList = attributes.hasOrderedList
+        hasUnorderedList = attributes.hasUnorderedList
+        hasLink = attributes.hasLink
+        textJustification = attributes.textJustification
+    }
+}
+
+/// Owns the editor, syncs its HTML with SwiftUI and runs the formatting commands.
+@Observable
+final class RichHTMLEditorBridge: RichHTMLEditorViewDelegate {
+    /// Only replaced when the formatting changed, so moving the caret doesn't redraw the formatting bar.
+    private(set) var formatting = EditorFormatting()
+
+    @ObservationIgnored private(set) var editor: RichHTMLEditorView?
+    @ObservationIgnored var onHTMLChange: ((String) -> Void)?
+    /// The HTML the editor has, as far as SwiftUI knows: what it was given or last reported.
+    /// The editor's own `html` only changes once its web view reported back, so it can't be used to detect outside changes.
+    @ObservationIgnored private var knownHTML: String?
+
+    /// Makes the empty space below the text editable too.
+    private static let editorCSS = """
+        #swift-rich-html-editor { min-height: 100vh; box-sizing: border-box; }
+        """
+
+    func makeEditor(html: String) -> RichHTMLEditorView {
+        let editor = RichHTMLEditorView()
+        editor.delegate = self
+        editor.injectAdditionalCSS(Self.editorCSS)
+        editor.html = html
+        knownHTML = html
         self.editor = editor
-        super.init()
-        self.editor.delegate = self
-        updateTextAttributes()
+        return editor
+    }
+
+    /// Passes changes made outside the editor (e.g. in the HTML tab) to it. Changes it reported itself aren't sent back,
+    /// that would reset the caret while typing.
+    func update(html: String) {
+        guard html != knownHTML else { return }
+        knownHTML = html
+        editor?.html = html
     }
 
     // MARK: - RichHTMLEditorViewDelegate
+
     func richHTMLEditorViewDidLoad(_ richHTMLEditorView: RichHTMLEditorView) {
+        #if os(macOS)
+            richHTMLEditorView.window?.makeFirstResponder(richHTMLEditorView.webView)
+        #endif
         _ = richHTMLEditorView.becomeFirstResponder()
     }
 
-    func richHTMLEditorView(_ richHTMLEditorView: RichHTMLEditorView, selectedTextAttributesDidChange textAttributes: UITextAttributes) {
-        updateTextAttributes(with: textAttributes)
-    }
-
-    // Detect content changes and sync to binding
     func richHTMLEditorViewDidChange(_ richHTMLEditorView: RichHTMLEditorView) {
-        if htmlBinding?.wrappedValue != richHTMLEditorView.html {
-            htmlBinding?.wrappedValue = richHTMLEditorView.html
+        let newHTML = richHTMLEditorView.html
+        guard newHTML != knownHTML else { return }
+        knownHTML = newHTML
+        onHTMLChange?(newHTML)
+    }
+
+    func richHTMLEditorView(_ richHTMLEditorView: RichHTMLEditorView, selectedTextAttributesDidChange textAttributes: UITextAttributes) {
+        let newFormatting = EditorFormatting(textAttributes)
+        if newFormatting != formatting {
+            formatting = newFormatting
         }
     }
 
-    func bold() {
-        editor.bold()
-        updateTextAttributes()
-    }
-    func italic() {
-        editor.italic()
-        updateTextAttributes()
-    }
-    func underline() {
-        editor.underline()
-        updateTextAttributes()
-    }
-    func strikethrough() {
-        editor.strikethrough()
-        updateTextAttributes()
-    }
-    func orderedList() {
-        editor.orderedList()
-        updateTextAttributes()
-    }
-    func unorderedList() {
-        editor.unorderedList()
-        updateTextAttributes()
-    }
-    func indent() {
-        editor.indent()
-        updateTextAttributes()
-    }
-    func outdent() {
-        editor.outdent()
-        updateTextAttributes()
-    }
-    func undo() {
-        editor.undo()
-        updateTextAttributes()
-    }
-    func redo() {
-        editor.redo()
-        updateTextAttributes()
-    }
-    func removeFormat() {
-        editor.removeFormat()
-        updateTextAttributes()
-    }
-    func toggleSubscript() {
-        editor.toggleSubscript()
-        updateTextAttributes()
-    }
-    func toggleSuperscript() {
-        editor.toggleSuperscript()
-        updateTextAttributes()
-    }
+    // MARK: - Commands
+    // The editor reports the new formatting after each command.
 
-    func justify(_ alignment: TextJustification) {
-        editor.justify(alignment)
-        updateTextAttributes()
-    }
-
-    #if os(iOS)
-        func setForegroundColor(_ color: UIColor) {
-            editor.setForegroundColor(color)
-            updateTextAttributes()
-        }
-
-        func setBackgroundColor(_ color: UIColor) {
-            editor.setBackgroundColor(color)
-            updateTextAttributes()
-        }
-    #endif
-
-    func addLink(url: URL, text: String?) {
-        editor.addLink(url: url, text: text)
-        updateTextAttributes()
-    }
-
-    // MARK: - Update Text Attributes
-    private func updateTextAttributes(with textAttributes: UITextAttributes? = nil) {
-        DispatchQueue.main.async {
-            let attributes = textAttributes ?? self.editor.selectedTextAttributes
-            self.hasBold = attributes.hasBold
-            self.hasItalic = attributes.hasItalic
-            self.hasUnderline = attributes.hasUnderline
-            self.hasStrikethrough = attributes.hasStrikeThrough
-            self.hasOrderedList = attributes.hasOrderedList
-            self.hasUnorderedList = attributes.hasUnorderedList
-            self.hasLink = attributes.hasLink
-            self.currentJustification = attributes.textJustification
-        }
-    }
+    func bold() { editor?.bold() }
+    func italic() { editor?.italic() }
+    func underline() { editor?.underline() }
+    func strikethrough() { editor?.strikethrough() }
+    func orderedList() { editor?.orderedList() }
+    func unorderedList() { editor?.unorderedList() }
+    func indent() { editor?.indent() }
+    func outdent() { editor?.outdent() }
+    func undo() { editor?.undo() }
+    func redo() { editor?.redo() }
+    func removeFormat() { editor?.removeFormat() }
+    func justify(_ alignment: TextJustification) { editor?.justify(alignment) }
+    func setForegroundColor(_ color: PlatformColor) { editor?.setForegroundColor(color) }
+    func setBackgroundColor(_ color: PlatformColor) { editor?.setBackgroundColor(color) }
+    func addLink(url: URL, text: String?) { editor?.addLink(url: url, text: text) }
 }
 
 // MARK: - Raw Editor View with Formatting Toolbar
@@ -645,8 +631,11 @@ struct PreviewTabView: View {
     @Binding var html: String
 
     var body: some View {
-        HTMLPreviewView(htmlContent: $html)
-            .padding(.horizontal)
+        // The preview is as tall as its content.
+        ScrollView {
+            HTMLPreviewView(htmlContent: $html)
+                .padding(.horizontal)
+        }
     }
 }
 
