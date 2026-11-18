@@ -15,6 +15,8 @@ struct RecipeImportIngredientFormView: View {
     @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.name, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query var userSettingsList: GrocyUserSettingsList
+    @Query(filter: #Predicate<MDLocation> { $0.active }, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
+    @Query(filter: #Predicate<MDProductGroup> { $0.active }, sort: \MDProductGroup.name, order: .forward) var mdProductGroups: MDProductGroups
 
     @Binding var ingredient: ImportedIngredient
 
@@ -24,6 +26,9 @@ struct RecipeImportIngredientFormView: View {
     @State private var createdQuantityUnitID: Int? = nil
     @State private var showConnectUnit: Bool = false
     @State private var didConnectUnit: Bool = false
+    /// Prepares the location, product group and unit of a new product while the person looks at the ingredient,
+    /// so they are ready when the product form opens.
+    @State private var productSuggester = ProductPropertySuggester()
 
     private var mapper: RecipeImportMapper {
         RecipeImportMapper(products: mdProducts, quantityUnits: mdQuantityUnits, conversions: mdQuantityUnitConversions)
@@ -43,18 +48,45 @@ struct RecipeImportIngredientFormView: View {
 
     /// Products with a similar name, best first.
     private var productCandidates: [ProductMatchCandidate] {
-        mapper.productCandidates(for: ingredient.line.name, note: ingredient.line.note)
+        let candidates = mapper.productCandidates(for: ingredient.line.name, note: ingredient.line.note)
+        // A product from Apple Intelligence has a different name, so it's listed first to confirm it with one tap
+        if ingredient.productMatch == .intelligence, let product, !candidates.contains(where: { $0.product.id == product.id }) {
+            return [ProductMatchCandidate(product: product, score: 0)] + candidates
+        }
+        return candidates
     }
 
     /// Similar products are only worth showing when there's something to choose or to confirm.
     private var showsSuggestions: Bool {
         let otherCandidates = productCandidates.contains { $0.product.id != ingredient.productID }
-        return otherCandidates || ingredient.productMatch == .suggested || showsCreateProduct
+        return otherCandidates || ingredient.productMatch.needsCheck || showsCreateProduct
     }
 
     /// Creating a product is offered unless one with the ingredient's name exists.
     private var showsCreateProduct: Bool {
         !productCandidates.contains { $0.quality == .exact }
+    }
+
+    /// Starts Apple Intelligence on the properties of the product to create, unless they're ready or being prepared.
+    private func prepareProductSuggestions() {
+        guard ProductPropertySuggester.isEnabled, showsCreateProduct, ingredient.productID == nil || ingredient.productMatch.needsCheck,
+            !productSuggester.isRunning, !productSuggester.isFinished(for: ingredient.line.name)
+        else { return }
+        // Presets of the user settings are already filled in by the product form
+        let userSettings = userSettingsList.first
+        var skipping: Set<ProductPropertySuggester.Step> = []
+        if let locationID = userSettings?.productPresetsLocationID, locationID != -1 { skipping.insert(.location) }
+        if let productGroupID = userSettings?.productPresetsProductGroupID, productGroupID != -1 { skipping.insert(.productGroup) }
+        if let quantityUnitID = userSettings?.productPresetsQuID, quantityUnitID != -1 { skipping.insert(.quantityUnit) }
+        productSuggester.start(
+            productName: ingredient.line.name,
+            locations: mdLocations,
+            productGroups: mdProductGroups,
+            quantityUnits: mdQuantityUnits,
+            products: mdProducts,
+            usage: ingredient.line.originalText,
+            skipping: skipping
+        )
     }
 
     /// Choosing a product or unit by hand marks it as the person's choice, so it isn't shown as a suggestion anymore.
@@ -120,6 +152,12 @@ struct RecipeImportIngredientFormView: View {
                 } footer: {
                     if ingredient.productID == nil {
                         Text("Grocy needs a product for every ingredient. Ingredients without a product aren't imported.")
+                    } else if ingredient.productMatch == .intelligence {
+                        Label {
+                            Text("Suggested by Apple Intelligence. Check that it's the right product.")
+                        } icon: {
+                            Image(systemName: MySymbols.appleIntelligence)
+                        }
                     } else if ingredient.productMatch == .suggested {
                         Label {
                             Text("Suggested because the names are similar. Check that it's the right product.")
@@ -165,9 +203,16 @@ struct RecipeImportIngredientFormView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("Edit recipe ingredient")
+        .task {
+            prepareProductSuggestions()
+        }
+        .onDisappear {
+            // Also when a product is picked from the list; the task starts it again on return
+            productSuggester.stop()
+        }
         .sheet(isPresented: $showCreateProduct) {
             NavigationStack {
-                MDProductFormView(userSettings: userSettingsList.first, productName: ingredient.line.name, createdProductID: $createdProductID)
+                MDProductFormView(userSettings: userSettingsList.first, productName: ingredient.line.name, createdProductID: $createdProductID, suggester: productSuggester)
             }
         }
         .sheet(
@@ -244,7 +289,21 @@ struct RecipeImportIngredientFormView: View {
                         showCreateProduct = true
                     },
                     label: {
-                        Label("Create product “\(ingredient.line.name)”", systemImage: MySymbols.new)
+                        // Apple Intelligence prepares the product's properties quietly in the background;
+                        // the product form shows its progress and what it filled in.
+                        Label {
+                            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                                Text("Create product “\(ingredient.line.name)”")
+                                if productSuggester.isFinished(for: ingredient.line.name), productSuggester.suggestions != ProductPropertySuggestions() {
+                                    Text("With suggestions from Apple Intelligence")
+                                        .font(.caption)
+                                        // Gray: the button's own secondary style would tint it.
+                                        .foregroundStyle(Color.secondary)
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: MySymbols.new)
+                        }
                     }
                 )
             }
@@ -253,7 +312,7 @@ struct RecipeImportIngredientFormView: View {
                 Text("Similar products")
             }
         } footer: {
-            if ingredient.productMatch == .suggested, productCandidates.contains(where: { $0.product.id == ingredient.productID }) {
+            if ingredient.productMatch.needsCheck, productCandidates.contains(where: { $0.product.id == ingredient.productID }) {
                 Text("Select the product to confirm it.")
             }
         }

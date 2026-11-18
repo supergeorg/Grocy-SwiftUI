@@ -19,6 +19,8 @@ struct MyTextField: View {
     var errorMessage: LocalizedStringKey?
     var helpText: LocalizedStringKey?
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     /// Becomes true on the first edit, so a new, still empty form doesn't greet people with an error.
     @State private var hasEdited: Bool = false
 
@@ -51,32 +53,41 @@ struct MyTextField: View {
         } label: {
             if let leadingIcon = leadingIcon {
                 Label {
-                    HStack {
-                        Text(description)
-                            .lineLimit(nil)
-                        if let helpText = helpText {
-                            FieldDescription(description: helpText)
-                        }
-                    }
+                    labelText
                 } icon: {
                     Image(systemName: leadingIcon)
-                }
-                .foregroundStyle(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-            } else {
-                HStack {
-                    Text(description)
                         .foregroundStyle(.primary)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if let helpText = helpText {
-                        FieldDescription(description: helpText)
-                    }
                 }
+            } else {
+                labelText
             }
             if let subtitle = subtitle {
                 Text(subtitle)
                     .lineLimit(nil)
+            }
+        }
+    }
+
+    /// The description with its help button. Only the text is styled as primary, so the help button keeps
+    /// the tint like in `MyToggle`.
+    private var labelText: some View {
+        HStack {
+            if dynamicTypeSize.isAccessibilitySize {
+                // The row places the label above the field, so it has the whole width and may wrap.
+                Text(description)
+                    .foregroundStyle(.primary)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else {
+                // Keeps its whole width: the form row then places the label above the field when both don't fit
+                // next to each other, instead of squeezing the label into a column where it wraps and gets clipped.
+                Text(description)
+                    .foregroundStyle(.primary)
+                    .fixedSize()
+            }
+            if let helpText = helpText {
+                FieldDescription(description: helpText)
+                    .fixedSize()
             }
         }
     }

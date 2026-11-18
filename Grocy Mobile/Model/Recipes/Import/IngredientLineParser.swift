@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NaturalLanguage
 
 // MARK: - Parsed ingredient line
 
@@ -28,6 +29,8 @@ nonisolated struct ParsedIngredientLine: Equatable, Sendable {
     var name: String
     /// Additional information, from text after a comma or in parentheses.
     var note: String
+    /// A quantity without a number, like "n. B." or "etwas". It's also part of the note.
+    var vagueAmount: String? = nil
 }
 
 // MARK: - Known units
@@ -42,6 +45,18 @@ nonisolated enum KnownIngredientUnit: String, CaseIterable, Sendable {
     case pinch, dash, handful
     case piece, clove, bunch, sprig, slice, leaf, stalk
     case can, jar, package, bag, cube, tub
+
+    /// `true` for units that measure an amount (weight, volume, spoons, a pinch), `false` for units that count things (pieces, cans, bunches).
+    /// "1 Paprikaschote" means one piece, so it can't be stored in a product's measuring unit like grams.
+    var isMeasure: Bool {
+        switch self {
+        case .milligram, .gram, .kilogram, .milliliter, .centiliter, .deciliter, .liter, .teaspoon, .tablespoon, .cup,
+            .ounce, .pound, .fluidOunce, .pinch, .dash, .handful:
+            true
+        case .piece, .clove, .bunch, .sprig, .slice, .leaf, .stalk, .can, .jar, .package, .bag, .cube, .tub:
+            false
+        }
+    }
 
     /// Lowercased spellings, without a trailing period.
     var aliases: [String] {
@@ -62,7 +77,7 @@ nonisolated enum KnownIngredientUnit: String, CaseIterable, Sendable {
         case .pinch: ["prise", "prisen", "pinch", "pinches", "msp", "messerspitze", "messerspitzen"]
         case .dash: ["schuss", "spritzer", "dash", "dashes", "splash"]
         case .handful: ["handvoll", "hand voll", "handful", "handfuls"]
-        case .piece: ["stück", "stk", "st", "piece", "pieces", "pc", "pcs"]
+        case .piece: ["stück", "stk", "st", "piece", "pieces", "pc", "pcs", "schote", "schoten"]
         case .clove: ["zehe", "zehen", "clove", "cloves"]
         case .bunch: ["bund", "bunch", "bunches", "bd"]
         case .sprig: ["zweig", "zweige", "zweiglein", "sprig", "sprigs", "stiel", "stiele"]
@@ -77,6 +92,13 @@ nonisolated enum KnownIngredientUnit: String, CaseIterable, Sendable {
         case .tub: ["becher", "tub", "tubs"]
         }
     }
+
+    /// Unit words at the end of compound words, like "Paprikaschote" (a piece of paprika) or "Knoblauchzehe" (a clove of garlic).
+    /// Longest first, so the plural is found before the singular.
+    static let compoundSuffixes: [(suffix: String, unit: KnownIngredientUnit)] = [
+        ("schoten", .piece), ("schote", .piece), ("zehen", .clove), ("zehe", .clove), ("stangen", .stalk), ("stange", .stalk),
+        ("zweige", .sprig), ("zweig", .sprig), ("blätter", .leaf), ("blatt", .leaf), ("scheiben", .slice), ("scheibe", .slice),
+    ]
 
     /// The UN/CEFACT common codes some websites use in structured ingredients (`unitCode`).
     var unitCodes: [String] {
@@ -144,7 +166,9 @@ nonisolated enum IngredientLineParser {
         // Vague quantities like "n. B. Butter" or "etwas Salz" have no amount; they are kept as note
         for word in vagueQuantities {
             if rest.lowercased().hasPrefix(word + " ") {
-                notes.append(String(rest.prefix(word.count)))
+                let vagueAmount = String(rest.prefix(word.count))
+                notes.append(vagueAmount)
+                line.vagueAmount = vagueAmount
                 rest = rest.dropFirst(word.count).drop(while: { $0.isWhitespace })
                 break
             }
@@ -177,12 +201,100 @@ nonisolated enum IngredientLineParser {
         name = extractParentheses(from: name, into: &notes)
 
         line.name = name.collapsingWhitespace
+        if line.unit == nil {
+            separateCompoundUnit(of: &line)
+        }
         line.note = notes.map(\.collapsingWhitespace).filter { !$0.isEmpty }.joined(separator: ", ")
         if line.name.isEmpty {
             // Lines like "1 Prise" without a name
             line.name = line.unit ?? text
         }
         return line
+    }
+
+    /// "1 Paprikaschote" is one piece of paprika: the unit word at the end of the name becomes the unit.
+    private static func separateCompoundUnit(of line: inout ParsedIngredientLine) {
+        var words = line.name.components(separatedBy: " ")
+        guard let lastWord = words.last else { return }
+        let lowercased = lastWord.lowercased()
+        for (suffix, unit) in KnownIngredientUnit.compoundSuffixes where lowercased.hasSuffix(suffix) {
+            let stem = String(lastWord.dropLast(suffix.count)).trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+            // "Zehe" alone is the unit; "Ei-Scheibe" has a too short stem to be sure
+            guard stem.count >= 3 else { return }
+            words[words.count - 1] = stem
+            line.name = words.joined(separator: " ")
+            line.unit = String(lastWord.suffix(suffix.count)).capitalized
+            line.knownUnit = unit
+            return
+        }
+    }
+
+    // MARK: Splitting
+
+    /// The words for "and" that join several ingredients in one line, per language (ISO 639-1 code).
+    /// Languages that write "and" attached to the next word (Hebrew, Korean) or without spaces (Chinese, Japanese) aren't split.
+    private static let conjunctions: [String: [String]] = [
+        "ca": ["i"], "cs": ["a"], "da": ["og"], "de": ["und", "sowie"], "el": ["και"], "en": ["and"], "es": ["y", "e"],
+        "et": ["ja"], "fi": ["ja"], "fr": ["et"], "hu": ["és"], "it": ["e", "ed"], "lt": ["ir"], "nb": ["og"], "nl": ["en"],
+        "no": ["og"], "pl": ["i", "oraz"], "pt": ["e"], "ro": ["și", "şi"], "ru": ["и"], "sk": ["a"], "sl": ["in"], "sv": ["och"],
+        "ta": ["மற்றும்"], "tr": ["ve"], "uk": ["і", "й", "та"],
+    ]
+    /// Symbols that mean "and" in every language.
+    private static let conjunctionSymbols = ["&", "+"]
+
+    /// The words that join ingredients in `language`. For an unknown language, the unambiguous words of all languages
+    /// (short ones like "e" or "en" also mean other things).
+    static func conjunctions(for language: String?) -> Set<String> {
+        let words = language.flatMap { conjunctions[$0] } ?? conjunctions.values.flatMap { $0 }.filter { $0.count >= 3 }
+        return Set(words + conjunctionSymbols)
+    }
+
+    /// The language of a recipe's ingredient lines as an ISO 639-1 code, e.g. "de", or `nil` when it can't be recognized.
+    static func language(of lines: [ParsedIngredientLine]) -> String? {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(lines.map(\.originalText).joined(separator: "\n"))
+        guard let language = recognizer.dominantLanguage, language != .undetermined else { return nil }
+        return String(language.rawValue.prefix(while: { $0 != "-" }))
+    }
+
+    /// Splits a line that names several ingredients, like "n. B. Salz und Pfeffer", into one line per ingredient.
+    /// A part without its own amount gets the amount and unit of the line, so "2 EL Öl und Essig" becomes "2 EL Öl" and "2 EL Essig".
+    /// The note applies to every part. Returns `nil` when the line names only one ingredient.
+    static func split(_ line: ParsedIngredientLine, language: String?) -> [ParsedIngredientLine]? {
+        let conjunctions = conjunctions(for: language)
+        var parts: [String] = [""]
+        for word in line.name.components(separatedBy: " ") where !word.isEmpty {
+            if conjunctions.contains(word.lowercased()) {
+                parts.append("")
+            } else {
+                parts[parts.count - 1] += parts[parts.count - 1].isEmpty ? word : " " + word
+            }
+        }
+        // "Salz und" or "und Pfeffer" aren't two ingredients
+        guard parts.count > 1, parts.allSatisfy({ !$0.isEmpty }) else { return nil }
+
+        // The amount and unit as written, e.g. "n. B. " of "n. B. Salz und Pfeffer"
+        let quantityText = line.originalText.range(of: line.name).map { String(line.originalText[..<$0.lowerBound]) } ?? ""
+
+        return parts.map { text in
+            var part = parse(text)
+            if part.amount == nil, part.unit == nil, part.vagueAmount == nil {
+                part.originalText = quantityText + text
+                part.amount = line.amount
+                part.amountText = line.amountText
+                part.unit = line.unit
+                part.knownUnit = line.knownUnit
+                part.vagueAmount = line.vagueAmount
+            } else if part.amount == nil, part.vagueAmount == nil, line.unit == nil {
+                // "1 Paprikaschote und Zwiebel": the part's unit comes from its name, the amount from the line
+                part.originalText = quantityText + text
+                part.amount = line.amount
+                part.amountText = line.amountText
+                part.vagueAmount = line.vagueAmount
+            }
+            part.note = [line.note, part.note].filter { !$0.isEmpty }.joined(separator: ", ")
+            return part
+        }
     }
 
     /// The first `character` that isn't inside parentheses, so "Speck (durchwachsener, klein geschnittener)" keeps its note together.

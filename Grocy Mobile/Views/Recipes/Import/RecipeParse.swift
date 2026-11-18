@@ -16,9 +16,11 @@ public struct JSONParsedRecipe: Sendable {
 
     // MARK: Thing properties
     public let name: String
-    public let schemaDescription: String?
+    /// The recipe's description, without sentences the page doesn't show (see `RecipeParser.shownDescription`).
+    public var schemaDescription: String?
     public let url: URL?
-    public let image: URL?
+    /// From the recipe's `image`, or the page's `og:image` when the recipe has none.
+    public var image: URL?
 
     // MARK: CreativeWork properties
     public let author: String?
@@ -279,8 +281,20 @@ public enum RecipeParser {
     /// only throws if *no* recipe is found across all blocks.
     public static func parse(html: String) throws -> [JSONParsedRecipe] {
         let blocks = jsonLDBlocks(in: html)
-        let recipes = blocks.flatMap { (try? parseJSONString($0)) ?? [] }
+        var recipes = blocks.flatMap { (try? parseJSONString($0)) ?? [] }
         guard !recipes.isEmpty else { throw RecipeParserError.noRecipeFound }
+        // Many pages show the recipe's picture as the page's preview picture, even when the JSON-LD has none
+        if let pageImage = openGraphImageURL(in: html) {
+            for index in recipes.indices where recipes[index].image == nil {
+                recipes[index].image = pageImage
+            }
+        }
+        // Many sites fill the description with text for search engines ("Über 26 Bewertungen und für beliebt befunden. Mit ► Portionsrechner"),
+        // which the page itself never shows. Only the sentences a reader sees on the page are kept.
+        let pageText = visibleText(in: html)
+        for index in recipes.indices {
+            recipes[index].schemaDescription = shownDescription(recipes[index].schemaDescription, recipeName: recipes[index].name, pageText: pageText)
+        }
         return recipes
     }
 
@@ -361,6 +375,79 @@ public enum RecipeParser {
             }
     }
 
+    /// The page's preview picture (`<meta property="og:image" content="…">`, in either attribute order).
+    static func openGraphImageURL(in html: String) -> URL? {
+        let patterns = [
+            #"<meta[^>]+property=["']og:image(?::url)?["'][^>]*content=["']([^"']+)["']"#,
+            #"<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:image(?::url)?["']"#,
+        ]
+        let ns = html as NSString
+        for pattern in patterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+                let match = regex.firstMatch(in: html, range: NSRange(location: 0, length: ns.length)),
+                match.range(at: 1).location != NSNotFound
+            else { continue }
+            let content = ns.substring(with: match.range(at: 1))
+                .replacingOccurrences(of: "&amp;", with: "&")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if let url = URL(string: content), url.scheme?.hasPrefix("http") == true {
+                return url
+            }
+        }
+        return nil
+    }
+
+    // MARK: Description
+
+    /// The text a reader sees on the page: without the `<head>`, scripts, styles and tags, lowercased, for comparing with `comparable(_:)`.
+    static func visibleText(in html: String) -> String {
+        var text = html.replacingOccurrences(of: #"(?is)<head\b.*?</head>"#, with: " ", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"(?is)<(script|style|noscript|template|svg)\b[^>]*>.*?</\1>"#, with: " ", options: .regularExpression)
+        text = text.replacingOccurrences(of: "<[^>]+>", with: " ", options: .regularExpression)
+        return comparable(text)
+    }
+
+    /// The sentences of `description` that the page shows, or `nil` when it shows none of them.
+    ///
+    /// A description that's only meant for search engines appears in the page's metadata (JSON-LD, `<meta name="description">`)
+    /// but not in its text, so this works for any website without knowing its wording.
+    /// When the page doesn't even show the recipe's name, its text is probably rendered with JavaScript,
+    /// so there's nothing to compare with and the description is kept.
+    static func shownDescription(_ description: String?, recipeName: String, pageText: String) -> String? {
+        guard let description = description?.strippingHTML.collapsingWhitespace, !description.isEmpty else { return nil }
+        let name = comparable(recipeName)
+        guard !name.isEmpty, pageText.contains(name) else { return description }
+        let shown = sentences(in: description).filter { sentence in
+            let text = comparable(sentence)
+            return !text.isEmpty && pageText.contains(text)
+        }
+        return shown.isEmpty ? nil : shown.joined(separator: " ")
+    }
+
+    /// Splits text into sentences at `.`, `!` or `?` followed by a space, so decimals like "1.5" stay together.
+    static func sentences(in text: String) -> [String] {
+        var sentences: [String] = []
+        var current = ""
+        var previous: Character?
+        for character in text {
+            if character.isWhitespace, let previous, ".!?".contains(previous) {
+                sentences.append(current)
+                current = ""
+                continue
+            }
+            current.append(character)
+            previous = character
+        }
+        sentences.append(current)
+        return sentences.map(\.collapsingWhitespace).filter { !$0.isEmpty }
+    }
+
+    /// Text without tags and entities, with single spaces, lowercased and without punctuation at the ends,
+    /// so a sentence matches the page however its HTML is laid out.
+    private static func comparable(_ text: String) -> String {
+        text.strippingHTML.collapsingWhitespace.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: ".!?…:;, "))
+    }
+
     // MARK: JSON Parsing
 
     private static func parseJSONString(_ string: String) throws -> [JSONParsedRecipe] {
@@ -372,8 +459,45 @@ public enum RecipeParser {
         if let dict = raw as? JSON { nodes = collectNodes(dict) } else if let arr = raw as? [JSON] { nodes = arr.flatMap { collectNodes($0) } } else { nodes = [] }
 
         guard !nodes.isEmpty else { throw RecipeParserError.noRecipeFound }
+        let index = nodesByID(raw)
         // Build each recipe independently; a failure in one doesn't abort the others
-        return nodes.compactMap { try? buildRecipe($0) }
+        return nodes.compactMap { try? buildRecipe(resolvingImageReferences(in: $0, index: index)) }
+    }
+
+    /// Every node with an `@id` in the document, e.g. the ImageObjects of a `@graph`.
+    private static func nodesByID(_ raw: Any) -> [String: JSON] {
+        var index: [String: JSON] = [:]
+        func walk(_ value: Any) {
+            if let dict = value as? JSON {
+                // A node with more than its `@id` is the definition; `{"@id": …}` alone only refers to it
+                if let id = dict["@id"] as? String, dict.count > 1, index[id] == nil {
+                    index[id] = dict
+                }
+                dict.values.forEach(walk)
+            } else if let array = value as? [Any] {
+                array.forEach(walk)
+            }
+        }
+        walk(raw)
+        return index
+    }
+
+    /// Replaces references like `"image": {"@id": "…#primaryimage"}` with the node they point to.
+    private static func resolvingImageReferences(in recipe: JSON, index: [String: JSON]) -> JSON {
+        func resolve(_ value: Any) -> Any {
+            if let dict = value as? JSON, dict["url"] == nil, dict["contentUrl"] == nil, let id = dict["@id"] as? String {
+                return index[id] ?? dict
+            }
+            return value
+        }
+        guard let image = recipe["image"] else { return recipe }
+        var resolved = recipe
+        if let array = image as? [Any] {
+            resolved["image"] = array.map(resolve)
+        } else {
+            resolved["image"] = resolve(image)
+        }
+        return resolved
     }
 
     /// Recursively finds @type == "Recipe" nodes, including inside @graph arrays.

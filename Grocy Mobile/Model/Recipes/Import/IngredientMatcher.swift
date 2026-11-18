@@ -15,10 +15,17 @@ nonisolated enum IngredientMatchQuality: Hashable, Sendable {
     case exact
     /// A likely match the person should check, e.g. "Sahne" for "süße Sahne".
     case suggested
+    /// Suggested by Apple Intelligence, for an ingredient whose name matches no product, e.g. "Pflanzenöl" → "Rapsöl".
+    case intelligence
     /// Chosen by the person.
     case manual
     /// Nothing was found.
     case none
+
+    /// Suggestions, from the names or from Apple Intelligence, that the person should check.
+    var needsCheck: Bool {
+        self == .suggested || self == .intelligence
+    }
 }
 
 /// A product that may fit an ingredient, with a score: 100 and more is an exact match, lower ones are suggestions.
@@ -75,6 +82,38 @@ extension RecipeImportMapper {
     }
 
     /// Words that don't tell products apart.
+    /// Products to offer Apple Intelligence for an ingredient that matched none by name.
+    /// The model's context is small, so with many products only those sharing the most letter triples with the ingredient are offered.
+    func intelligenceCandidates(for ingredientName: String, limit: Int = 120) -> [MDProduct] {
+        let activeProducts = products.filter(\.active)
+        guard activeProducts.count > limit else { return activeProducts }
+        let ingredientTrigrams = Self.trigrams(of: ingredientName)
+        return activeProducts
+            .map { (product: $0, shared: Self.trigrams(of: $0.name).intersection(ingredientTrigrams).count) }
+            .sorted { $0.shared > $1.shared }
+            .prefix(limit)
+            .map(\.product)
+    }
+
+    /// Sets the product Apple Intelligence suggested, then the unit again, as units depend on the product's conversions.
+    func intelligenceSuggested(_ product: MDProduct, for ingredient: inout ImportedIngredient) {
+        ingredient.productID = product.id
+        ingredient.productMatch = .intelligence
+        productChanged(&ingredient)
+    }
+
+    /// Whether Apple Intelligence should look for a product: nothing matched by name, and the person hasn't chosen one.
+    static func needsIntelligenceMatch(_ ingredient: ImportedIngredient) -> Bool {
+        ingredient.isIncluded && !ingredient.isSaved && ingredient.productID == nil && ingredient.productMatch == .none
+    }
+
+    /// The letter triples of a name, for finding names that share parts (e.g. "Kirschtomate" and "Tomate").
+    static func trigrams(of name: String) -> Set<String> {
+        let letters = Array(normalizedName(name).replacingOccurrences(of: " ", with: ""))
+        guard letters.count >= 3 else { return [String(letters)] }
+        return Set((0...(letters.count - 3)).map { String(letters[$0..<($0 + 3)]) })
+    }
+
     private static let fillerWords: Set<String> = ["und", "oder", "mit", "and", "or", "with", "of", "the", "a"]
 
     /// Normalized words of a name, also stemmed and joined, so they're computed once per name.
