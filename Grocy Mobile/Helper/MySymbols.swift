@@ -198,6 +198,13 @@ nonisolated struct MySymbols {
     static let editPreparation = "pencil.and.scribble"
     static let fontSizeDecrease = "textformat.size.smaller"
     static let fontSizeIncrease = "textformat.size.larger"
+    static let cooking = "frying.pan"
+    static let miseEnPlace = "checklist"
+    static let ingredientReady = "checkmark.circle.fill"
+    static let ingredientNotReady = "circle"
+    static let previousStep = "chevron.backward"
+    static let nextStep = "chevron.forward"
+    static let cookingFinished = "fork.knife.circle"
 
     // MARK: - Recipe preparation editor
 

@@ -16,6 +16,9 @@ struct Constants {
     static let macOSStockEntriesMinWidth: CGFloat = 350.0
     /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.
     static let macOSAmountFieldWidth: CGFloat = 90.0
+    /// The cooking mode's sheet, large enough to read a step from a distance.
+    static let macOSCookingMinWidth: CGFloat = 640.0
+    static let macOSCookingMinHeight: CGFloat = 560.0
 #endif
 }
 
@@ -59,4 +62,6 @@ enum Sizes {
     static let parserTextHeight: CGFloat = 200
     static let parserResultMaxHeight: CGFloat = 300
     static let popoverFormSize: CGFloat = 500
+    /// Widest line length of the cooking mode's pages, so long steps stay readable on iPad and Mac.
+    static let cookingReadableWidth: CGFloat = 720
 }
