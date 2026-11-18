@@ -308,16 +308,13 @@ struct RecipeFormView: View {
                 DisclosureGroup(
                     isExpanded: $isPreparationExpanded,
                     content: {
-                        List {
-                            ScrollView(.vertical) {
-                                HTMLPreviewView(htmlContent: $recipe.recipeDescription)
-                            }
+                        // The preview is as tall as its content and scrolls with the form.
+                        HTMLPreviewView(htmlContent: $recipe.recipeDescription)
 
-                            Button(action: {
-                                showPreparationEditor.toggle()
-                            }) {
-                                Label("Edit", systemImage: MySymbols.editPreparation)
-                            }
+                        Button(action: {
+                            showPreparationEditor.toggle()
+                        }) {
+                            Label("Edit", systemImage: MySymbols.editPreparation)
                         }
                     },
                     label: {

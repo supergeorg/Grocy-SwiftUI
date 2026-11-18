@@ -22,39 +22,122 @@ enum WebColorScheme: String, CaseIterable {
     }
 }
 
+/// Renders HTML (recipe preparation, equipment notes) in a web view that is as tall as its content,
+/// so it scrolls with the surrounding list instead of inside a box of its own.
 struct HTMLPreviewView: View {
     @Binding var htmlContent: String
     @Environment(\.colorScheme) private var systemColorScheme
+    @Environment(\.openURL) private var openURL
 
+    /// The height until the content has been measured.
     var minHeight: CGFloat = 300
-    var idealHeight: CGFloat = 500
     var showControlBar: Bool = true
     var minFontScale: Double = 0.5
     var maxFontScale: Double = 2.0
 
-    @State private var page = WebPage()
+    /// Created once, on appear. A `WebPage()` as the initial value of `@State` would be built
+    /// (and thrown away) every time the parent view re-evaluates its body.
+    @State private var page: WebPage?
+    @State private var contentHeight: CGFloat?
+    @State private var viewWidth: CGFloat = 0
     @State private var fontScale: Double = 1.0
     @State private var webColorScheme: WebColorScheme = .system
 
-    private let blank = URL(string: "about:blank")!
+    private static let blank = URL(string: "about:blank")
 
-    private var activeIsDark: Bool { isDark(for: webColorScheme) }
+    /// The height of the document's content. `scrollHeight` never gets smaller than the view, so it can't be used to shrink it.
+    private static let measureScript = "return Math.ceil(document.documentElement.getBoundingClientRect().height);"
 
-    private func isDark(for scheme: WebColorScheme) -> Bool {
-        switch scheme {
+    private var activeIsDark: Bool {
+        switch webColorScheme {
         case .light: return false
         case .dark: return true
         case .system: return systemColorScheme == .dark
         }
     }
 
+    /// Changes that need the content to be measured again, after the web view laid it out.
+    private struct LayoutKey: Equatable {
+        var width: CGFloat
+        var fontScale: Double
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            if showControlBar {
+                controlBar
+            }
+
+            webView
+                .frame(height: contentHeight ?? minHeight)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        }
+        .onAppear {
+            createPageIfNeeded()
+        }
+        .onChange(of: htmlContent) {
+            loadContent()
+        }
+        // Switching the appearance only changes the color scheme of the loaded document instead of loading it again.
+        .onChange(of: activeIsDark) {
+            applyColorScheme()
+        }
+        // Live updates while the slider is dragged.
+        .onChange(of: fontScale) {
+            applyFontScale()
+        }
+        .onChange(of: page?.isLoading) { _, isLoading in
+            guard isLoading == false else { return }
+            Task { await measureContentHeight() }
+        }
+        // Debounced: a window resize or a slider drag measures once, after it settled.
+        .task(id: LayoutKey(width: viewWidth, fontScale: fontScale)) {
+            guard contentHeight != nil, (try? await Task.sleep(for: .milliseconds(150))) != nil else { return }
+            await measureContentHeight()
+        }
+    }
+
+    @ViewBuilder
+    private var webView: some View {
+        if let page {
+            WebView(page)
+                .webViewBackForwardNavigationGestures(.disabled)
+                .webViewMagnificationGestures(.disabled)
+                .scrollBounceBehavior(.basedOnSize)
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    proxy.size.width
+                } action: { newWidth in
+                    viewWidth = newWidth
+                }
+        } else {
+            Color.clear
+        }
+    }
+
+    // MARK: - Web page
+
+    private func createPageIfNeeded() {
+        guard page == nil else { return }
+        var configuration = WebPage.Configuration()
+        // The content is only displayed. Scripts in it don't run; the app's own calls still work.
+        configuration.defaultNavigationPreferences.allowsContentJavaScript = false
+        page = WebPage(configuration: configuration, navigationDecider: ExternalLinkNavigationDecider(openURL: openURL))
+        loadContent()
+    }
+
+    private func loadContent() {
+        guard let page, let blank = Self.blank else { return }
+        page.load(html: preparedHTML(htmlContent), baseURL: blank)
+    }
+
+    /// Adds the color scheme, the font scale and responsive styles, so the first layout is already the right one.
     private func preparedHTML(_ raw: String) -> String {
         let scheme = activeIsDark ? "dark" : "light"
         let injection = """
             <meta name="color-scheme" content="\(scheme)">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-                html { font-size: 100%; }
+                html { font-size: \(Int(fontScale * 100))%; color-scheme: \(scheme); }
                 body { overflow-x: hidden !important; word-wrap: break-word; }
                 img, video, pre, table { max-width: 100%; }
             </style>
@@ -67,47 +150,33 @@ struct HTMLPreviewView: View {
         return injection + raw
     }
 
-    private func applyFontScale(_ scale: Double) {
-        let js = "document.documentElement.style.fontSize = '\(Int(scale * 100))%';"
-        Task { _ = try? await page.callJavaScript(js) }
+    private func applyColorScheme() {
+        let scheme = activeIsDark ? "dark" : "light"
+        let script = """
+            document.documentElement.style.colorScheme = '\(scheme)';
+            document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', '\(scheme)');
+            """
+        run(script)
     }
 
-    var body: some View {
-        VStack(spacing: 0) {
-            if showControlBar {
-                controlBar
-            }
+    private func applyFontScale() {
+        run("document.documentElement.style.fontSize = '\(Int(fontScale * 100))%';")
+    }
 
-            WebView(page)
-                .frame(minHeight: minHeight, idealHeight: idealHeight)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        }
-        .onAppear {
-            page.load(html: preparedHTML(htmlContent), baseURL: blank)
-        }
-        .onChange(of: htmlContent) { _, newValue in
-            page.load(html: preparedHTML(newValue), baseURL: blank)
-        }
-        .onChange(of: webColorScheme) { oldScheme, newScheme in
-            if isDark(for: oldScheme) != isDark(for: newScheme) {
-                page.load(html: preparedHTML(htmlContent), baseURL: blank)
-            }
-        }
-        .onChange(of: systemColorScheme) { _, _ in
-            guard webColorScheme == .system else { return }
-            page.load(html: preparedHTML(htmlContent), baseURL: blank)
-        }
-        // Re-apply font scale once the page finishes loading.
-        // This covers reloads triggered by color scheme changes,
-        // content changes, and initial appearance.
-        .onChange(of: page.isLoading) { _, isLoading in
-            guard !isLoading else { return }
-            applyFontScale(fontScale)
-        }
-        // Live updates while the page is already loaded (slider drag etc.)
-        .onChange(of: fontScale) { _, newScale in
-            guard !page.isLoading else { return }
-            applyFontScale(newScale)
+    /// Runs a script on the loaded document. While the page loads, it already uses the current settings (see `preparedHTML`).
+    private func run(_ script: String) {
+        guard let page, !page.isLoading else { return }
+        Task { _ = try? await page.callJavaScript(script) }
+    }
+
+    private func measureContentHeight() async {
+        guard let page, !page.isLoading,
+            let result = try? await page.callJavaScript(Self.measureScript),
+            let height = (result as? NSNumber)?.doubleValue, height > 0
+        else { return }
+        let newHeight = CGFloat(height)
+        if contentHeight != newHeight {
+            contentHeight = newHeight
         }
     }
 
@@ -170,6 +239,21 @@ struct HTMLPreviewView: View {
     }
 }
 
+// MARK: - Navigation
+
+/// Opens tapped links in the browser instead of replacing the displayed content.
+private struct ExternalLinkNavigationDecider: WebPage.NavigationDeciding {
+    let openURL: OpenURLAction
+
+    func decidePolicy(for action: WebPage.NavigationAction, preferences: inout WebPage.NavigationPreferences) async -> WKNavigationActionPolicy {
+        guard action.navigationType == .linkActivated, let url = action.request.url else {
+            return .allow
+        }
+        openURL(url)
+        return .cancel
+    }
+}
+
 // MARK: - Extensions
 
 extension Double {
@@ -185,5 +269,8 @@ extension Double {
     @Previewable @State var htmlContent: String =
         "<h1>Lorem ipsum</h1><p>Lorem ipsum <b>dolor sit</b> amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur <span style=\"background-color:rgb(255,255,0);\">sadipscing elitr</span>, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><ul><li>At vero eos et accusam et justo duo dolores et ea rebum.</li><li>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li></ul><h1>Lorem ipsum</h1><p>Lorem ipsum <b>dolor sit</b> amet, consetetur \nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et \ndolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et\n justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea \ntakimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit \namet, consetetur <span style=\"background-color:rgb(255,255,0);\">sadipscing elitr</span>,\n sed diam nonumy eirmod tempor invidunt ut labore et dolore magna \naliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo \ndolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus \nest Lorem ipsum dolor sit amet.</p>"
 
-    HTMLPreviewView(htmlContent: $htmlContent)
+    ScrollView {
+        HTMLPreviewView(htmlContent: $htmlContent)
+            .padding(.horizontal)
+    }
 }
