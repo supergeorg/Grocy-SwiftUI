@@ -50,4 +50,27 @@ enum RecipeAmountConversion {
         else { return amount }
         return amount * factor
     }
+
+    /// The amount of a resolved ingredient to show, and its unit.
+    ///
+    /// Grocy returns the amount in the product's stock unit. Shows it in the ingredient's own unit when a conversion exists.
+    static func displayAmount(
+        for ingredient: RecipePosResolvedElement,
+        products: MDProducts,
+        quantityUnits: MDQuantityUnits,
+        conversions: MDQuantityUnitConversions
+    ) -> (amount: Double, unit: MDQuantityUnit?) {
+        func quantityUnit(_ id: Int?) -> MDQuantityUnit? {
+            guard let id else { return nil }
+            return quantityUnits.first { $0.id == id }
+        }
+        let product = products.first { $0.id == ingredient.productID }
+        if ingredient.onlyCheckSingleUnitInStock {
+            return (ingredient.recipeAmount, quantityUnit(ingredient.quID))
+        }
+        if let product, let factor = factorFromStockUnit(to: ingredient.quID, product: product, conversions: conversions) {
+            return (ingredient.recipeAmount * factor, quantityUnit(ingredient.quID))
+        }
+        return (ingredient.recipeAmount, quantityUnit(product?.quIDStock ?? ingredient.quID))
+    }
 }

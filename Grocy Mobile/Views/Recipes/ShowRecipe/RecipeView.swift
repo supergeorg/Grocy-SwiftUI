@@ -28,6 +28,7 @@ struct RecipeView: View {
     @State private var isProcessing: Bool = false
     @State private var showConsumeAllNeeded: Bool = false
     @State private var showAddToShLSelection: Bool = false
+    @State private var showCooking: Bool = false
 
     @State private var addToShLItems: [AddMissingToShLItem] = []
 
@@ -57,12 +58,7 @@ struct RecipeView: View {
 
     /// Ingredient groups in display order: ungrouped ingredients first, then the groups by name.
     private var groupedIngredients: [(name: String, ingredients: [RecipePosResolvedElement])] {
-        Dictionary(grouping: ingredientsAll) { $0.ingredientGroup ?? "" }
-            .map { (name: $0.key, ingredients: $0.value.sorted { $0.productName.localizedStandardCompare($1.productName) == .orderedAscending }) }
-            .sorted { lhs, rhs in
-                if lhs.name.isEmpty != rhs.name.isEmpty { return lhs.name.isEmpty }
-                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
-            }
+        ingredientsAll.groupedForDisplay
     }
 
     /// Calories of all ingredients; Grocy calculates them per serving.
@@ -88,14 +84,7 @@ struct RecipeView: View {
 
     /// Grocy returns the amount in the product's stock unit. Shows it in the ingredient's own unit when a conversion exists.
     private func displayAmount(for ingredient: RecipePosResolvedElement) -> (amount: Double, unit: MDQuantityUnit?) {
-        let product = mdProducts.first { $0.id == ingredient.productID }
-        if ingredient.onlyCheckSingleUnitInStock {
-            return (ingredient.recipeAmount, quantityUnit(ingredient.quID))
-        }
-        if let product, let factor = RecipeAmountConversion.factorFromStockUnit(to: ingredient.quID, product: product, conversions: mdQuantityUnitConversions) {
-            return (ingredient.recipeAmount * factor, quantityUnit(ingredient.quID))
-        }
-        return (ingredient.recipeAmount, quantityUnit(product?.quIDStock ?? ingredient.quID))
+        RecipeAmountConversion.displayAmount(for: ingredient, products: mdProducts, quantityUnits: mdQuantityUnits, conversions: mdQuantityUnitConversions)
     }
 
     // MARK: Actions
@@ -251,6 +240,14 @@ struct RecipeView: View {
             .navigationBarTitleDisplayMode(.large)
         #endif
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showCooking = true
+                } label: {
+                    Label("Start cooking", systemImage: MySymbols.cooking)
+                }
+                .buttonStyle(.glassProminent)
+            }
             ToolbarItemGroup(placement: .automatic) {
                 Button {
                     showConsumeAllNeeded.toggle()
@@ -284,6 +281,15 @@ struct RecipeView: View {
                 )
             }
         )
+        #if os(iOS)
+            .fullScreenCover(isPresented: $showCooking) {
+                RecipeCookingView(recipe: recipe)
+            }
+        #else
+            .sheet(isPresented: $showCooking) {
+                RecipeCookingView(recipe: recipe)
+            }
+        #endif
         .sheet(isPresented: $showAddToShLSelection) {
             NavigationStack {
                 List {

@@ -183,3 +183,15 @@ final class RecipePosResolvedElement: Codable {
 }
 
 typealias RecipePosResolved = [RecipePosResolvedElement]
+
+extension [RecipePosResolvedElement] {
+    /// The ingredient groups in display order: ungrouped ingredients first, then the groups by name, each sorted by product name.
+    var groupedForDisplay: [(name: String, ingredients: [RecipePosResolvedElement])] {
+        Dictionary(grouping: self) { $0.ingredientGroup ?? "" }
+            .map { (name: $0.key, ingredients: $0.value.sorted { $0.productName.localizedStandardCompare($1.productName) == .orderedAscending }) }
+            .sorted { lhs, rhs in
+                if lhs.name.isEmpty != rhs.name.isEmpty { return lhs.name.isEmpty }
+                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            }
+    }
+}
