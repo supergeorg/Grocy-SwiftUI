@@ -54,7 +54,16 @@ struct StockTableRowActionsView: View {
             try await grocyVM.postStockObject(
                 id: stockElement.productID,
                 stockModePost: .consume,
-                content: ProductConsume(amount: stockElement.amount, transactionType: .consume, spoiled: false, stockEntryID: nil, recipeID: nil, locationID: nil, exactAmount: nil, allowSubproductSubstitution: nil)
+                content: ProductConsume(
+                    amount: stockElement.amount,
+                    transactionType: .consume,
+                    spoiled: false,
+                    stockEntryID: nil,
+                    recipeID: nil,
+                    locationID: nil,
+                    exactAmount: nil,
+                    allowSubproductSubstitution: nil
+                )
             )
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
@@ -93,7 +102,9 @@ struct StockTableRowActionsView: View {
                 }
             )
             .tint(Color(.GrocyColors.grocyGreen))
-            .help("Consume \(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1") \(quantityUnit?.getName(amount: stockElement.product?.quickConsumeAmount ?? 1.0) ?? "") \(stockElement.product?.name ?? "?")")
+            .help(
+                "Consume \(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1") \(quantityUnit?.getName(amount: stockElement.product?.quickConsumeAmount ?? 1.0) ?? "") \(stockElement.product?.name ?? "?")"
+            )
         }
         if shownActions.contains(.consumeAll) {
             Button(
@@ -113,7 +124,9 @@ struct StockTableRowActionsView: View {
                 }
             )
             .tint(Color(.GrocyColors.grocyBlue))
-            .help("Mark \(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1") \(quantityUnit?.getName(amount: stockElement.product?.quickConsumeAmount ?? 1.0) ?? "") \(stockElement.product?.name ?? "?") as open")
+            .help(
+                "Mark \(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1") \(quantityUnit?.getName(amount: stockElement.product?.quickConsumeAmount ?? 1.0) ?? "") \(stockElement.product?.name ?? "?") as open"
+            )
         }
     }
 }

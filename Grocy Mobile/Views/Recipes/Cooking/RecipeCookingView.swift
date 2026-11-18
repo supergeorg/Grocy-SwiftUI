@@ -121,45 +121,45 @@ struct RecipeCookingView: View {
     var body: some View {
         NavigationStack {
             pager
-            .navigationTitle(recipe.name)
-            #if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .close) {
-                        dismiss()
-                    }
-                    .keyboardShortcut(.cancelAction)
-                }
+                .navigationTitle(recipe.name)
                 #if os(iOS)
-                    ToolbarItem(placement: .bottomBar) {
-                        previousButton
+                    .navigationBarTitleDisplayMode(.inline)
+                #endif
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(role: .close) {
+                            dismiss()
+                        }
+                        .keyboardShortcut(.cancelAction)
                     }
-                    ToolbarSpacer(.flexible, placement: .bottomBar)
-                    ToolbarItem(placement: .bottomBar) {
-                        pageIndicator
-                    }
-                    // Plain text, not a control, so no glass behind it.
-                    .sharedBackgroundVisibility(.hidden)
-                    ToolbarSpacer(.flexible, placement: .bottomBar)
-                    ToolbarItem(placement: .bottomBar) {
-                        nextButton
+                    #if os(iOS)
+                        ToolbarItem(placement: .bottomBar) {
+                            previousButton
+                        }
+                        ToolbarSpacer(.flexible, placement: .bottomBar)
+                        ToolbarItem(placement: .bottomBar) {
+                            pageIndicator
+                        }
+                        // Plain text, not a control, so no glass behind it.
+                        .sharedBackgroundVisibility(.hidden)
+                        ToolbarSpacer(.flexible, placement: .bottomBar)
+                        ToolbarItem(placement: .bottomBar) {
+                            nextButton
+                        }
+                    #endif
+                }
+                #if os(macOS)
+                    .safeAreaBar(edge: .bottom) {
+                        HStack {
+                            previousButton
+                            Spacer()
+                            pageIndicator
+                            Spacer()
+                            nextButton
+                        }
+                        .padding()
                     }
                 #endif
-            }
-            #if os(macOS)
-                .safeAreaBar(edge: .bottom) {
-                    HStack {
-                        previousButton
-                        Spacer()
-                        pageIndicator
-                        Spacer()
-                        nextButton
-                    }
-                    .padding()
-                }
-            #endif
         }
         #if os(macOS)
             .frame(minWidth: Constants.macOSCookingMinWidth, minHeight: Constants.macOSCookingMinHeight)
@@ -212,7 +212,13 @@ struct RecipeCookingView: View {
                 .scrollTargetLayout()
             }
             .scrollTargetBehavior(.paging)
-            .scrollPosition(id: Binding { Optional(currentPage) } set: { if let newPage = $0 { currentPage = newPage } })
+            .scrollPosition(
+                id: Binding {
+                    Optional(currentPage)
+                } set: {
+                    if let newPage = $0 { currentPage = newPage }
+                }
+            )
             .scrollIndicators(.hidden)
         #endif
     }
@@ -370,7 +376,8 @@ extension RecipeCookingView {
     /// The ingredients a step mentions by name, matched at the start of a word (so "egg" also finds "eggs", but "Ei" not "weiter").
     private func ingredientsMentioned(in step: RecipePreparationStep) -> [CookingIngredient] {
         let text = [step.title, step.text].compactMap(\.self).joined(separator: " ")
-        return ingredientGroups
+        return
+            ingredientGroups
             .flatMap(\.ingredients)
             .filter { ingredient in
                 let name = ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -500,8 +507,16 @@ private struct MiseEnPlaceIngredientLabel: View {
                     introduction: "A quick weeknight dinner.",
                     steps: [
                         RecipePreparationStep(section: "Sauce", title: "Onions", text: "Finely chop the onions and fry them in a little oil until golden."),
-                        RecipePreparationStep(section: "Sauce", title: nil, text: "Add the tomatoes, season with salt and pepper and let it simmer for 15 minutes."),
-                        RecipePreparationStep(section: "Pasta", title: "Cook the pasta", text: "Cook the pasta in plenty of salted water until al dente.\nDrain and mix it with the sauce."),
+                        RecipePreparationStep(
+                            section: "Sauce",
+                            title: nil,
+                            text: "Add the tomatoes, season with salt and pepper and let it simmer for 15 minutes."
+                        ),
+                        RecipePreparationStep(
+                            section: "Pasta",
+                            title: "Cook the pasta",
+                            text: "Cook the pasta in plenty of salted water until al dente.\nDrain and mix it with the sauce."
+                        ),
                     ]
                 )
             }

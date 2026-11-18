@@ -257,7 +257,9 @@ struct DueItem: Identifiable {
             let dueSoonDays = userSettings?.batteriesDueSoonDays ?? 5
             for battery in batteries {
                 // Batteries follow Grocy's own rules (time-based overdue), as in the batteries overview.
-                guard let date = battery.nextEstimatedChargeTime, let status = BatteryStatus.status(of: battery, dueSoonDays: dueSoonDays, now: now) else { continue }
+                guard let date = battery.nextEstimatedChargeTime, let status = BatteryStatus.status(of: battery, dueSoonDays: dueSoonDays, now: now) else {
+                    continue
+                }
                 let urgency: DueUrgency
                 switch status {
                 case .overdue: urgency = .overdue

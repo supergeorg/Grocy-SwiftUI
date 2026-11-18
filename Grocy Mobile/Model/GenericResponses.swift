@@ -60,7 +60,7 @@ struct DeleteMessage: Codable {
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            
+
             self.deletedObjectID = try container.decodeFlexibleInt(forKey: .deletedObjectID)
         } catch {
             throw APIError.decodingError(error: error)

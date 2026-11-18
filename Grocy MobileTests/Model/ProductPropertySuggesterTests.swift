@@ -29,7 +29,12 @@ struct ProductPropertySuggesterTests {
 
     @Test("The context has the task, examples and the recipe line")
     func context() {
-        let context = ProductPropertySuggester.context(task: "Choose the unit.", examplesTitle: "Examples", examples: ["Tomate: Piece"], usage: "1 Paprikaschote")
+        let context = ProductPropertySuggester.context(
+            task: "Choose the unit.",
+            examplesTitle: "Examples",
+            examples: ["Tomate: Piece"],
+            usage: "1 Paprikaschote"
+        )
         #expect(context.contains("Choose the unit."))
         #expect(context.contains("- Tomate: Piece"))
         #expect(context.contains("1 Paprikaschote"))

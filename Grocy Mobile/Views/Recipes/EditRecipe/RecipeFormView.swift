@@ -173,7 +173,13 @@ struct RecipeFormView: View {
             .onChange(of: recipe.name) {
                 isFormCorrect = checkFormCorrect()
             }
-            MyDoubleStepper(amount: $recipe.baseServings, description: "Servings", descriptionInfo: "The ingredients listed here result in this amount of servings", minAmount: 0.0000001, systemImage: MySymbols.amount)
+            MyDoubleStepper(
+                amount: $recipe.baseServings,
+                description: "Servings",
+                descriptionInfo: "The ingredients listed here result in this amount of servings",
+                minAmount: 0.0000001,
+                systemImage: MySymbols.amount
+            )
 
             MyToggle(
                 isOn: $recipe.notCheckShoppinglist,
@@ -183,7 +189,11 @@ struct RecipeFormView: View {
                 icon: MySymbols.shoppingList,
             )
 
-            ProductField(productID: $recipe.productID, description: "Produces product", descriptionInfo: "When a product is selected, one unit (per serving in stock quantity unit) will be added to stock on consuming this recipe")
+            ProductField(
+                productID: $recipe.productID,
+                description: "Produces product",
+                descriptionInfo: "When a product is selected, one unit (per serving in stock quantity unit) will be added to stock on consuming this recipe"
+            )
 
             if existingRecipe != nil {
                 if devMode && useAppleIntelligence && AppleIntelligenceStatus.isAppleIntelligenceAvailable {
@@ -200,7 +210,12 @@ struct RecipeFormView: View {
                                     NavigationLink(
                                         value: RecipeFormInteraction.editIngredient(ingredient: ingredient, recipe: recipe),
                                         label: {
-                                            RecipeFormIngredientRowView(recipePos: ingredient, product: mdProducts.first(where: { $0.id == ingredient.productID }), quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }), quantityUnitConversions: mdQuantityUnitConversions)
+                                            RecipeFormIngredientRowView(
+                                                recipePos: ingredient,
+                                                product: mdProducts.first(where: { $0.id == ingredient.productID }),
+                                                quantityUnit: mdQuantityUnits.first(where: { $0.id == ingredient.quID }),
+                                                quantityUnitConversions: mdQuantityUnitConversions
+                                            )
                                         }
                                     )
                                     .swipeActions(
@@ -391,7 +406,7 @@ struct RecipeFormView: View {
                             // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                             Label("Save & return to recipes", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
                                 .symbolEffect(.variableColor.iterative, isActive: isProcessing)
-                            .labelStyle(.titleAndIcon)
+                                .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormCorrect || isProcessing)
@@ -411,7 +426,7 @@ struct RecipeFormView: View {
                                 // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                                 Label("Save & continue", systemImage: isProcessing ? MySymbols.progress : MySymbols.forward)
                                     .symbolEffect(.variableColor.iterative, isActive: isProcessing)
-                                .labelStyle(.titleAndIcon)
+                                    .labelStyle(.titleAndIcon)
                             }
                         )
                         .disabled(!isFormCorrect || isProcessing)

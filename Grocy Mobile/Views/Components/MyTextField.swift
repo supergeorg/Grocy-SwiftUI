@@ -40,8 +40,8 @@ struct MyTextField: View {
                     .accessibilityLabel(Text(description))
                 #endif
                 .onChange(of: textToEdit) {
-                        hasEdited = true
-                    }
+                    hasEdited = true
+                }
 
                 if !isCorrect && !textToEdit.isEmpty, let errorMessage = errorMessage {
                     validationMessage(errorMessage)

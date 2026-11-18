@@ -31,7 +31,7 @@ struct Translators {
             "Luca RHK <luca@rhk-in.de>, 2020",
             "Tobias Wolter <mumpfpuffel@gmail.com>, 2020",
             "@RubenKelevra <ruben@freifunk-nrw.de>, 2021",
-            "Bernd Bestel <bernd@berrnd.de>, 2021"
+            "Bernd Bestel <bernd@berrnd.de>, 2021",
         ]
     )
     static let polish = Language(
@@ -296,220 +296,324 @@ struct Translators {
             "Kristian Daae-Johansen, 2024",
         ]
     )
-    static let finnish = Language(name: "Finnish", flag: "🇫🇮", maintainers: "", contributors: [
-        "Niko Granö <niko9911@ironlions.fi>, 2019",
-        "oskari uusitalo <osku78@gmail.com>, 2019",
-        "Bernd Bestel <bernd@berrnd.de>, 2020",
-        "James Jesse <jt.inkinen@gmail.com>, 2020",
-        "jarkko hämäläinen <zeik@iki.fi>, 2020",
-        "Jukka-Pekka Kokkonen <jukkapekka.kokkonen@gmail.com>, 2020",
-        "Kalle Laakso <rogueshadow@keemail.me>, 2020",
-        "Matias Käkelä <matias.kakela@gmail.com>, 2020",
-        "Tuomas Yrjölä <yrski@pm.me>, 2020",
-        "Lauri Niskanen <ape3000@gmail.com>, 2021",
-        "Matti Koskimies <matti@apulanta.fi>, 2021",
-        "'t <trajahan@gmail.com>, 2022",
-        "Markus Laaksonen, 2022",
-        "Sami Kiviniemi, 2024",
-        "Tomi H, 2025",
-    ])
-    static let japanese = Language(name: "Japanese", flag: "🇯🇵", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2020",
-        "Cisco Benjamin <metallica@vivaldi.net>, 2020",
-        "EbXpJ6bp <ebxpj6bp@outlook.jp>, 2020",
-        "KATSUHIKO SHIGEYAMA <kshigeyama@gmail.com>, 2020",
-        "Tatsuya Ueda <ml@tatsuya.info>, 2020",
-        "鳥山 陽平 <kagemomiji@gmail.com>, 2022",
-        "Takuya Mizuguchi, 2024",
-        "pigmentblue15, 2025",
-        "Taiki Matsumura, 2025",
-    ])
-    static let ukrainian = Language(name: "Ukrainian", flag: "🇺🇦", maintainers: "", contributors: [
-        "Ivan Gavryliuk <igavryliuk@solusvm.com>, 2020",
-        "Oleksii Filonenko <brightone@protonmail.com>, 2020",
-        "NazimUa <nazim-ua@ukr.net>, 2021",
-        "Aleksey Zaremskiy, 2022",
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-    ])
-    static let catalan = Language(name: "Catalan", flag: "🏴󠁥󠁳󠁣󠁴󠁿", maintainers: "", contributors: [
-        "Joan Rodas <joanrc93@gmail.com>, 2020",
-        "Carles Riera <blauigris@gmail.com>, 2021",
-        "gimy16 <gimy16@hotmail.com>, 2021",
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-        "jorclaret, 2022",
-        "Martí Gombau, 2023",
-        "Auri, 2024",
-        "Pau Nofuentes Sendra, 2024",
-        "Roger Solé Vilajuliu, 2024",
-    ])
-    static let greek = Language(name: "Greek", flag: "🇬🇷", maintainers: "", contributors: [
-        "datablitz7 <plant7@gmail.com>, 2019",
-        "ByteGet, 2020",
-        "Dionysios Gkotsis <bloodsak4@yahoo.gr>, 2020",
-        "Stathis Stamoulis <sstamoulis2010@gmail.com>, 2020",
-        "Thodoris Kalatzis <teo.kal@hotmail.com>, 2021",
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-        "Dimitris, 2022",
-        "emmker kats, 2022",
-        "Lefteris Garyfalakis, 2022",
-        "Vasilis Mourtzis, 2023",
-    ])
-    static let britishEnglish = Language(name: "English (United Kingdom)", flag: "🇬🇧", maintainers: "", contributors: [
-        "Ben Fayers <ben.fayers@gmail.com>, 2020",
-        "duck. <me@duck.me.uk>, 2020",
-        "John Coles <john@johncoles.com>, 2020",
-        "Jonathan Adams <jonathan@connockadams.uk>, 2020",
-        "Chris H <cjh861@outlook.com>, 2021",
-        "David Knapman <dai.knapz@gmail.com>, 2021",
-        "w ralb <g.frcy.trnsfx@barlowhome.org>, 2021",
-        "Johnnie Blows, 2022",
-        "George Aston, 2024",
-        "Andi Chandler <andi@gowling.com>, 2025",
-    ])
-    static let estonian = Language(name: "Estonian", flag: "🇪🇪", maintainers: "", contributors: [
-        "Mario Loik <mariomobla@gmail.com>, 2020",
-        "aylamz, 2023",
-        "Bernd Bestel <bernd@berrnd.de>, 2023",
-        "Lauri Lepik, 2023",
-    ])
-    static let hebrew = Language(name: "Hebrew", flag: "🇮🇱", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2019",
-        "Adi Zarko <kapkapon@gmail.com>, 2020",
-        "Netanel Lazarovich <natylaza89@gmail.com>, 2020",
-        "רון יצחקי <ronveofir@gmail.com>, 2020",
-        "Yaron Shahrabani <sh.yaron@gmail.com>, 2025",
-    ])
-    static let korean = Language(name: "Korean", flag: "🇰🇷", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2020",
-        "신강수 <idaksha@outlook.com>, 2020",
-        "CW kim <cw2002.kim@gmail.com>, 2021",
-        "Junsu Jeong, 2023",
-        "YS Lee, 2024",
-    ])
-    static let romanian = Language(name: "Romanian", flag: "🇷🇴", maintainers: "", contributors: [
-        "Stefan Petrea <stefan@garage-coding.com>, 2020",
-        "Pwnisher <ciprian420@gmail.com>, 2021",
-        "Adi B, 2022",
-        "Gabriel Andreescu <gabone01@gmail.com>, 2022",
-        "Marian-Bogdan Muntean, 2022",
-        "Mădălin Pătrăşcanu <mada.patrascanu@gmail.com>, 2022",
-        "rathantara Tase, 2022",
-        "Bernd Bestel <bernd@berrnd.de>, 2023",
-        "Dorin JOREA <dorin.jorea@gmail.com>, 2023",
-    ])
-    static let slovak = Language(name: "Slovak", flag: "🇸🇰", maintainers: "", contributors: [
-        "Marko Zbirka <illethrias@gmail.com>, 2019",
-        "Juraj Smieško <juraj.smiesko@gmail.com>, 2020",
-        "peter cerny <posli.to.semka@gmail.com>, 2020",
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-        "Miroslav Ďurian, 2022",
-        "Jose Riha <jose1711@gmail.com>, 2023",
-    ])
-    static let slovenian = Language(name: "Slovenian", flag: "🇸🇮", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-        "bostjo g, 2022",
-        "Anže Pintar <anze.pintar2@gmail.com>, 2023",
-        "David Koprivec, 2024",
-        "Žiga Bobnar, 2025",
-    ])
-    static let turkish = Language(name: "Turkish", flag: "🇹🇷", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2019",
-        "Tuğberk Kaan Duman <kaan@dumanmail.com>, 2019",
-        "Yigit Sever <yigit@ceng.metu.edu.tr>, 2021",
-        "Sedat Mehmed, 2022",
-        "Burak ER, 2023",
-        "Bora Atıcı, 2025",
-    ])
-    static let lithuanian = Language(name: "Lithuanian", flag: "🇱🇹", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-        "Vytautas Barkauskas, 2023",
-    ])
-    static let tamil = Language(name: "Tamil", flag: "🇮🇳", maintainers: "", contributors: [
-        "Sathish K <sathishkk@sathishkumark.com>, 2019",
-        "Aswin Kumar, 2022",
-        "Bernd Bestel <bernd@berrnd.de>, 2022",
-    ])
-    static let spanish = Language(name: "Spanish", flag: "🇪🇸", maintainers: "", contributors: [
-        "Ankue <ankue.spam@gmail.com>, 2019",
-        "Bernd Bestel <bernd@berrnd.de>, 2019",
-        "Fernando Sánchez <fernando.l.sanchez@gmail.com>, 2019",
-        "Alan Pucheta <apucheta@protonmail.com>, 2020",
-        "Christian Cotillas <marril01@gmail.com>, 2020",
-        "Enrique Lapenta <enriquelap20@gmail.com>, 2020",
-        "Igor Perez <igordiablo@hotmail.com>, 2020",
-        "José Rugel <joserugel@gmail.com>, 2020",
-        "Adrián R.G. <adrirgrillo@gmail.com>, 2021",
-        "Alberto Martin <ami232@gmail.com>, 2021",
-        "Juan José González-Abril, 2021",
-        "victormce <victormce@gmail.com>, 2021",
-        "GRBaset, 2022",
-        "Matt Sawyers, 2022",
-        "Jose Manuel Ruiz, 2023",
-        "Ricardo Verduguez, 2023",
-        "Pier Jose Gotta Perez <piegope@protonmail.com>, 2024",
-    ])
-    static let danish = Language(name: "Danish", flag: "🇩🇰", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2019",
-        "Brian Moos Lindberg <brian@blueeel.dk>, 2019",
-        "dark159123 <r.j.hansen@protonmail.com>, 2019",
-        "Rasmus Bojsen <rasmus@bojsen.cn>, 2019",
-        "Troels Siggaard <troels@siggaard.com>, 2019",
-        "Mihai Marinescu <mihai@marinescu.dk>, 2020",
-        "Jesper Donnis, 2021",
-        "Kim Bardrum <kim.bardrum@gmail.com>, 2021",
-        "klavslund <klavslund@gmail.com>, 2021",
-        "Michael Winkel <mbw@mbw.dk>, 2021",
-        "hskdk <henrik@skjaerbaek.net>, 2023",
-        "Tobias Østergaard-Jørgensen, 2023",
-        "G Momsen, 2024",
-        "eurosite, 2025",
-    ])
-    static let hungarian = Language(name: "Hungarian", flag: "🇭🇺", maintainers: "", contributors: [
-        "Márk Kökény <oregapamgroup@gmail.com>, 2019",
-        "Richard Szolár <szolar.richard@gmail.com>, 2019",
-        "Ádám Kovács <kovacsadam07@outlook.hu>, 2019",
-        "Bernd Bestel <bernd@berrnd.de>, 2020",
-        "bolash <balazs.izso@gesundheitscloud.de>, 2020",
-        "Gabor Pilsits <gabor.pilsits@gmail.com>, 2020",
-        "Gábor Szellő <gabor.szello@gmail.com>, 2020",
-        "lakosd <login@lakosd.net>, 2020",
-        "Peter Gyetvai <gyetpet@mailbox.org>, 2021",
-        "Tallyrald, 2021",
-        "Vad Laszlo, 2021",
-        "Andras B, 2022",
-        "rozgonik <rozgonik1@gmail.com>, 2023",
-        "Tamas Voros <voros.e.tamas@gmail.com>, 2023",
-        "Gergő Mihály, 2025",
-        "Gábor Buslig, 2025",
-    ])
-    static let swedish = Language(name: "Swedish", flag: "🇸🇪", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2019",
-        "Fredrik Hendeberg <fredrik@hendeberg.com>, 2019",
-        "Jesper Sandström <jesper@languageconsulting.se>, 2019",
-        "Jimmy Hawkin <jimmyhawkin@gmail.com>, 2019",
-        "Mathias Fröjd <info@mcfrojd.com>, 2019",
-        "Peter Wickenberg <peter@wickenberg.nu>, 2019",
-        "A A <transifex@stardestroyer.se>, 2020",
-        "Andreas Olsson <basen82@protonmail.com>, 2020",
-        "namob <boman.d@gmail.com>, 2020",
-        "Per Bäckman <fotodille@gmail.com>, 2020",
-        "Sebastian Backman <valtkor@hotmail.com>, 2020",
-        "Eduard Kapoun, 2022",
-        "Matt Sawyers, 2022",
-        "Robert Johansson, 2022",
-        "Eric Andersson, 2023",
-        "riiga <riiga_92@hotmail.com>, 2024",
-        "Jesper, 2025",
-        "Johan Helin, 2025",
-    ])
-    static let chinese_traditional = Language(name: "Chinese (Traditional)", flag: "🇹🇼", maintainers: "", contributors: [
-        "Bernd Bestel <bernd@berrnd.de>, 2020",
-        "jd615645 <jd615645@gmail.com>, 2020",
-        "ppatrickxctw <ppatrickxctw@gmail.com>, 2020",
-        "richegg Tsai <zxp86021@gmail.com>, 2020",
-        "鍾佑豪 <zobuwei@gmail.com>, 2020",
-        "alexli1205, 2022",
-        "NelsonSu, 2026",
-    ])
-    static let languages: Set<Language> = [english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal, finnish, japanese, ukrainian, catalan, greek, britishEnglish, estonian, hebrew, korean, romanian, slovak, slovenian, turkish, lithuanian, tamil, spanish, danish, hungarian, swedish, chinese_traditional]
+    static let finnish = Language(
+        name: "Finnish",
+        flag: "🇫🇮",
+        maintainers: "",
+        contributors: [
+            "Niko Granö <niko9911@ironlions.fi>, 2019",
+            "oskari uusitalo <osku78@gmail.com>, 2019",
+            "Bernd Bestel <bernd@berrnd.de>, 2020",
+            "James Jesse <jt.inkinen@gmail.com>, 2020",
+            "jarkko hämäläinen <zeik@iki.fi>, 2020",
+            "Jukka-Pekka Kokkonen <jukkapekka.kokkonen@gmail.com>, 2020",
+            "Kalle Laakso <rogueshadow@keemail.me>, 2020",
+            "Matias Käkelä <matias.kakela@gmail.com>, 2020",
+            "Tuomas Yrjölä <yrski@pm.me>, 2020",
+            "Lauri Niskanen <ape3000@gmail.com>, 2021",
+            "Matti Koskimies <matti@apulanta.fi>, 2021",
+            "'t <trajahan@gmail.com>, 2022",
+            "Markus Laaksonen, 2022",
+            "Sami Kiviniemi, 2024",
+            "Tomi H, 2025",
+        ]
+    )
+    static let japanese = Language(
+        name: "Japanese",
+        flag: "🇯🇵",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2020",
+            "Cisco Benjamin <metallica@vivaldi.net>, 2020",
+            "EbXpJ6bp <ebxpj6bp@outlook.jp>, 2020",
+            "KATSUHIKO SHIGEYAMA <kshigeyama@gmail.com>, 2020",
+            "Tatsuya Ueda <ml@tatsuya.info>, 2020",
+            "鳥山 陽平 <kagemomiji@gmail.com>, 2022",
+            "Takuya Mizuguchi, 2024",
+            "pigmentblue15, 2025",
+            "Taiki Matsumura, 2025",
+        ]
+    )
+    static let ukrainian = Language(
+        name: "Ukrainian",
+        flag: "🇺🇦",
+        maintainers: "",
+        contributors: [
+            "Ivan Gavryliuk <igavryliuk@solusvm.com>, 2020",
+            "Oleksii Filonenko <brightone@protonmail.com>, 2020",
+            "NazimUa <nazim-ua@ukr.net>, 2021",
+            "Aleksey Zaremskiy, 2022",
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+        ]
+    )
+    static let catalan = Language(
+        name: "Catalan",
+        flag: "🏴󠁥󠁳󠁣󠁴󠁿",
+        maintainers: "",
+        contributors: [
+            "Joan Rodas <joanrc93@gmail.com>, 2020",
+            "Carles Riera <blauigris@gmail.com>, 2021",
+            "gimy16 <gimy16@hotmail.com>, 2021",
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+            "jorclaret, 2022",
+            "Martí Gombau, 2023",
+            "Auri, 2024",
+            "Pau Nofuentes Sendra, 2024",
+            "Roger Solé Vilajuliu, 2024",
+        ]
+    )
+    static let greek = Language(
+        name: "Greek",
+        flag: "🇬🇷",
+        maintainers: "",
+        contributors: [
+            "datablitz7 <plant7@gmail.com>, 2019",
+            "ByteGet, 2020",
+            "Dionysios Gkotsis <bloodsak4@yahoo.gr>, 2020",
+            "Stathis Stamoulis <sstamoulis2010@gmail.com>, 2020",
+            "Thodoris Kalatzis <teo.kal@hotmail.com>, 2021",
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+            "Dimitris, 2022",
+            "emmker kats, 2022",
+            "Lefteris Garyfalakis, 2022",
+            "Vasilis Mourtzis, 2023",
+        ]
+    )
+    static let britishEnglish = Language(
+        name: "English (United Kingdom)",
+        flag: "🇬🇧",
+        maintainers: "",
+        contributors: [
+            "Ben Fayers <ben.fayers@gmail.com>, 2020",
+            "duck. <me@duck.me.uk>, 2020",
+            "John Coles <john@johncoles.com>, 2020",
+            "Jonathan Adams <jonathan@connockadams.uk>, 2020",
+            "Chris H <cjh861@outlook.com>, 2021",
+            "David Knapman <dai.knapz@gmail.com>, 2021",
+            "w ralb <g.frcy.trnsfx@barlowhome.org>, 2021",
+            "Johnnie Blows, 2022",
+            "George Aston, 2024",
+            "Andi Chandler <andi@gowling.com>, 2025",
+        ]
+    )
+    static let estonian = Language(
+        name: "Estonian",
+        flag: "🇪🇪",
+        maintainers: "",
+        contributors: [
+            "Mario Loik <mariomobla@gmail.com>, 2020",
+            "aylamz, 2023",
+            "Bernd Bestel <bernd@berrnd.de>, 2023",
+            "Lauri Lepik, 2023",
+        ]
+    )
+    static let hebrew = Language(
+        name: "Hebrew",
+        flag: "🇮🇱",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2019",
+            "Adi Zarko <kapkapon@gmail.com>, 2020",
+            "Netanel Lazarovich <natylaza89@gmail.com>, 2020",
+            "רון יצחקי <ronveofir@gmail.com>, 2020",
+            "Yaron Shahrabani <sh.yaron@gmail.com>, 2025",
+        ]
+    )
+    static let korean = Language(
+        name: "Korean",
+        flag: "🇰🇷",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2020",
+            "신강수 <idaksha@outlook.com>, 2020",
+            "CW kim <cw2002.kim@gmail.com>, 2021",
+            "Junsu Jeong, 2023",
+            "YS Lee, 2024",
+        ]
+    )
+    static let romanian = Language(
+        name: "Romanian",
+        flag: "🇷🇴",
+        maintainers: "",
+        contributors: [
+            "Stefan Petrea <stefan@garage-coding.com>, 2020",
+            "Pwnisher <ciprian420@gmail.com>, 2021",
+            "Adi B, 2022",
+            "Gabriel Andreescu <gabone01@gmail.com>, 2022",
+            "Marian-Bogdan Muntean, 2022",
+            "Mădălin Pătrăşcanu <mada.patrascanu@gmail.com>, 2022",
+            "rathantara Tase, 2022",
+            "Bernd Bestel <bernd@berrnd.de>, 2023",
+            "Dorin JOREA <dorin.jorea@gmail.com>, 2023",
+        ]
+    )
+    static let slovak = Language(
+        name: "Slovak",
+        flag: "🇸🇰",
+        maintainers: "",
+        contributors: [
+            "Marko Zbirka <illethrias@gmail.com>, 2019",
+            "Juraj Smieško <juraj.smiesko@gmail.com>, 2020",
+            "peter cerny <posli.to.semka@gmail.com>, 2020",
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+            "Miroslav Ďurian, 2022",
+            "Jose Riha <jose1711@gmail.com>, 2023",
+        ]
+    )
+    static let slovenian = Language(
+        name: "Slovenian",
+        flag: "🇸🇮",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+            "bostjo g, 2022",
+            "Anže Pintar <anze.pintar2@gmail.com>, 2023",
+            "David Koprivec, 2024",
+            "Žiga Bobnar, 2025",
+        ]
+    )
+    static let turkish = Language(
+        name: "Turkish",
+        flag: "🇹🇷",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2019",
+            "Tuğberk Kaan Duman <kaan@dumanmail.com>, 2019",
+            "Yigit Sever <yigit@ceng.metu.edu.tr>, 2021",
+            "Sedat Mehmed, 2022",
+            "Burak ER, 2023",
+            "Bora Atıcı, 2025",
+        ]
+    )
+    static let lithuanian = Language(
+        name: "Lithuanian",
+        flag: "🇱🇹",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+            "Vytautas Barkauskas, 2023",
+        ]
+    )
+    static let tamil = Language(
+        name: "Tamil",
+        flag: "🇮🇳",
+        maintainers: "",
+        contributors: [
+            "Sathish K <sathishkk@sathishkumark.com>, 2019",
+            "Aswin Kumar, 2022",
+            "Bernd Bestel <bernd@berrnd.de>, 2022",
+        ]
+    )
+    static let spanish = Language(
+        name: "Spanish",
+        flag: "🇪🇸",
+        maintainers: "",
+        contributors: [
+            "Ankue <ankue.spam@gmail.com>, 2019",
+            "Bernd Bestel <bernd@berrnd.de>, 2019",
+            "Fernando Sánchez <fernando.l.sanchez@gmail.com>, 2019",
+            "Alan Pucheta <apucheta@protonmail.com>, 2020",
+            "Christian Cotillas <marril01@gmail.com>, 2020",
+            "Enrique Lapenta <enriquelap20@gmail.com>, 2020",
+            "Igor Perez <igordiablo@hotmail.com>, 2020",
+            "José Rugel <joserugel@gmail.com>, 2020",
+            "Adrián R.G. <adrirgrillo@gmail.com>, 2021",
+            "Alberto Martin <ami232@gmail.com>, 2021",
+            "Juan José González-Abril, 2021",
+            "victormce <victormce@gmail.com>, 2021",
+            "GRBaset, 2022",
+            "Matt Sawyers, 2022",
+            "Jose Manuel Ruiz, 2023",
+            "Ricardo Verduguez, 2023",
+            "Pier Jose Gotta Perez <piegope@protonmail.com>, 2024",
+        ]
+    )
+    static let danish = Language(
+        name: "Danish",
+        flag: "🇩🇰",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2019",
+            "Brian Moos Lindberg <brian@blueeel.dk>, 2019",
+            "dark159123 <r.j.hansen@protonmail.com>, 2019",
+            "Rasmus Bojsen <rasmus@bojsen.cn>, 2019",
+            "Troels Siggaard <troels@siggaard.com>, 2019",
+            "Mihai Marinescu <mihai@marinescu.dk>, 2020",
+            "Jesper Donnis, 2021",
+            "Kim Bardrum <kim.bardrum@gmail.com>, 2021",
+            "klavslund <klavslund@gmail.com>, 2021",
+            "Michael Winkel <mbw@mbw.dk>, 2021",
+            "hskdk <henrik@skjaerbaek.net>, 2023",
+            "Tobias Østergaard-Jørgensen, 2023",
+            "G Momsen, 2024",
+            "eurosite, 2025",
+        ]
+    )
+    static let hungarian = Language(
+        name: "Hungarian",
+        flag: "🇭🇺",
+        maintainers: "",
+        contributors: [
+            "Márk Kökény <oregapamgroup@gmail.com>, 2019",
+            "Richard Szolár <szolar.richard@gmail.com>, 2019",
+            "Ádám Kovács <kovacsadam07@outlook.hu>, 2019",
+            "Bernd Bestel <bernd@berrnd.de>, 2020",
+            "bolash <balazs.izso@gesundheitscloud.de>, 2020",
+            "Gabor Pilsits <gabor.pilsits@gmail.com>, 2020",
+            "Gábor Szellő <gabor.szello@gmail.com>, 2020",
+            "lakosd <login@lakosd.net>, 2020",
+            "Peter Gyetvai <gyetpet@mailbox.org>, 2021",
+            "Tallyrald, 2021",
+            "Vad Laszlo, 2021",
+            "Andras B, 2022",
+            "rozgonik <rozgonik1@gmail.com>, 2023",
+            "Tamas Voros <voros.e.tamas@gmail.com>, 2023",
+            "Gergő Mihály, 2025",
+            "Gábor Buslig, 2025",
+        ]
+    )
+    static let swedish = Language(
+        name: "Swedish",
+        flag: "🇸🇪",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2019",
+            "Fredrik Hendeberg <fredrik@hendeberg.com>, 2019",
+            "Jesper Sandström <jesper@languageconsulting.se>, 2019",
+            "Jimmy Hawkin <jimmyhawkin@gmail.com>, 2019",
+            "Mathias Fröjd <info@mcfrojd.com>, 2019",
+            "Peter Wickenberg <peter@wickenberg.nu>, 2019",
+            "A A <transifex@stardestroyer.se>, 2020",
+            "Andreas Olsson <basen82@protonmail.com>, 2020",
+            "namob <boman.d@gmail.com>, 2020",
+            "Per Bäckman <fotodille@gmail.com>, 2020",
+            "Sebastian Backman <valtkor@hotmail.com>, 2020",
+            "Eduard Kapoun, 2022",
+            "Matt Sawyers, 2022",
+            "Robert Johansson, 2022",
+            "Eric Andersson, 2023",
+            "riiga <riiga_92@hotmail.com>, 2024",
+            "Jesper, 2025",
+            "Johan Helin, 2025",
+        ]
+    )
+    static let chinese_traditional = Language(
+        name: "Chinese (Traditional)",
+        flag: "🇹🇼",
+        maintainers: "",
+        contributors: [
+            "Bernd Bestel <bernd@berrnd.de>, 2020",
+            "jd615645 <jd615645@gmail.com>, 2020",
+            "ppatrickxctw <ppatrickxctw@gmail.com>, 2020",
+            "richegg Tsai <zxp86021@gmail.com>, 2020",
+            "鍾佑豪 <zobuwei@gmail.com>, 2020",
+            "alexli1205, 2022",
+            "NelsonSu, 2026",
+        ]
+    )
+    static let languages: Set<Language> = [
+        english, german, french, polish, dutch, czech, italian, chinese_simplified, portuguese_PT, portuguese_BR, norwegian_bokmal, finnish, japanese,
+        ukrainian, catalan, greek, britishEnglish, estonian, hebrew, korean, romanian, slovak, slovenian, turkish, lithuanian, tamil, spanish, danish,
+        hungarian, swedish, chinese_traditional,
+    ]
 }

@@ -18,11 +18,19 @@ struct RecipeFulfilmentLabel: View {
             if fulfillment.needFulfilled {
                 label("Enough in stock", symbol: MySymbols.fulfilled, color: Color(.GrocyColors.grocyGreen))
             } else if compact {
-                label("Not enough in stock", symbol: fulfillment.needFulfilledWithShoppingList ? MySymbols.partiallyFulfilled : MySymbols.notFulfilled, color: Color(fulfillment.needFulfilledWithShoppingList ? .GrocyColors.grocyYellow : .GrocyColors.grocyRed))
+                label(
+                    "Not enough in stock",
+                    symbol: fulfillment.needFulfilledWithShoppingList ? MySymbols.partiallyFulfilled : MySymbols.notFulfilled,
+                    color: Color(fulfillment.needFulfilledWithShoppingList ? .GrocyColors.grocyYellow : .GrocyColors.grocyRed)
+                )
             } else if fulfillment.needFulfilledWithShoppingList {
                 label("Not enough in stock, but already on the shopping list", symbol: MySymbols.partiallyFulfilled, color: Color(.GrocyColors.grocyYellow))
             } else {
-                label("Not enough in stock, \(fulfillment.missingProductsCount ?? 0) ingredient missing", symbol: MySymbols.notFulfilled, color: Color(.GrocyColors.grocyRed))
+                label(
+                    "Not enough in stock, \(fulfillment.missingProductsCount ?? 0) ingredient missing",
+                    symbol: MySymbols.notFulfilled,
+                    color: Color(.GrocyColors.grocyRed)
+                )
             }
         }
     }

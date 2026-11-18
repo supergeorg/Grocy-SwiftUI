@@ -17,7 +17,7 @@ struct SystemInfo: Codable {
             case releaseDate = "ReleaseDate"
         }
     }
-    
+
     let grocyVersion: GrocyVersion
     let phpVersion, sqliteVersion: String
     let os: String?

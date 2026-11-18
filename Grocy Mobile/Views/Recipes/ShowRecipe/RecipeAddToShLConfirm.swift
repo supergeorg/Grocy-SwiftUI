@@ -40,12 +40,18 @@ struct AddMissingToShLView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .cancellationAction, content: {
-                Button(role: .cancel, action: { onCancel() })
-            })
-            ToolbarItem(placement: .confirmationAction, content: {
-                Button(role: .confirm, action: { onConfirm() })
-            })
+            ToolbarItem(
+                placement: .cancellationAction,
+                content: {
+                    Button(role: .cancel, action: { onCancel() })
+                }
+            )
+            ToolbarItem(
+                placement: .confirmationAction,
+                content: {
+                    Button(role: .confirm, action: { onConfirm() })
+                }
+            )
         }
     }
 }

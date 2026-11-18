@@ -292,123 +292,128 @@ struct RecipesView: View {
                     ContentUnavailableView.search
                 }
             }
-        .refreshable(action: {
-            await updateData()
-        })
-        // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
-        .safeAreaBar(edge: .top) {
-            RecipeFilterActionsView(filteredStatus: $filteredStatus, enoughInStockCount: enoughInStockCount, alreadyOnShoppingListCount: alreadyOnShoppingListCount, notEnoughInStockCount: notEnoughInStockCount)
+            .refreshable(action: {
+                await updateData()
+            })
+            // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
+            .safeAreaBar(edge: .top) {
+                RecipeFilterActionsView(
+                    filteredStatus: $filteredStatus,
+                    enoughInStockCount: enoughInStockCount,
+                    alreadyOnShoppingListCount: alreadyOnShoppingListCount,
+                    notEnoughInStockCount: notEnoughInStockCount
+                )
                 .padding(.vertical, Spacing.small)
-        }
-        .navigationTitle("Recipes")
-        .navigationDestination(for: RecipeInteraction.self) { interaction in
-            switch interaction {
-            case .showRecipe(let recipe):
-                RecipeView(initialRecipe: recipe)
-            case .editRecipe(let recipe):
-                RecipeFormView(existingRecipe: recipe)
             }
-        }
-        .alert(
-            "Are you sure you want to delete recipe \"\(recipeToDelete?.name ?? "")\"?",
-            isPresented: $showDeleteConfirmation,
-            actions: {
-                Button("Cancel", role: .cancel) {}
-                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
-                Button("Delete") {
-                    if let toDelID = recipeToDelete?.id {
-                        Task {
-                            await deleteRecipe(toDelID: toDelID)
+            .navigationTitle("Recipes")
+            .navigationDestination(for: RecipeInteraction.self) { interaction in
+                switch interaction {
+                case .showRecipe(let recipe):
+                    RecipeView(initialRecipe: recipe)
+                case .editRecipe(let recipe):
+                    RecipeFormView(existingRecipe: recipe)
+                }
+            }
+            .alert(
+                "Are you sure you want to delete recipe \"\(recipeToDelete?.name ?? "")\"?",
+                isPresented: $showDeleteConfirmation,
+                actions: {
+                    Button("Cancel", role: .cancel) {}
+                    // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                    Button("Delete") {
+                        if let toDelID = recipeToDelete?.id {
+                            Task {
+                                await deleteRecipe(toDelID: toDelID)
+                            }
                         }
                     }
+                },
+                message: {
+                    Text("This can't be undone.")
                 }
-            },
-            message: {
-                Text("This can't be undone.")
-            }
-        )
-        .alert(
-            "Couldn't delete \"\(recipeToDelete?.name ?? "")\"",
-            isPresented: Binding(
-                get: { deleteErrorMessage != nil },
-                set: { if !$0 { deleteErrorMessage = nil } }
-            ),
-            actions: {
-                Button("OK", role: .cancel) {}
-            },
-            message: {
-                Text(deleteErrorMessage ?? "")
-            }
-        )
-        .sheet(isPresented: $showAddRecipe) {
-            NavigationStack {
-                RecipeFormView()
-            }
-        }
-        #if os(iOS)
-            .sheet(isPresented: $showImportRecipe) {
+            )
+            .alert(
+                "Couldn't delete \"\(recipeToDelete?.name ?? "")\"",
+                isPresented: Binding(
+                    get: { deleteErrorMessage != nil },
+                    set: { if !$0 { deleteErrorMessage = nil } }
+                ),
+                actions: {
+                    Button("OK", role: .cancel) {}
+                },
+                message: {
+                    Text(deleteErrorMessage ?? "")
+                }
+            )
+            .sheet(isPresented: $showAddRecipe) {
                 NavigationStack {
-                    RecipeImportView()
+                    RecipeFormView()
                 }
             }
-        #else
-            .navigationDestination(isPresented: $showImportRecipe) {
-                RecipeImportView()
-            }
-        #endif
-        .task {
-            await updateData()
-            initialLoadDone = true
-        }
-        .onAppear {
-            guard !initialLoadDone else { return }
-            Task { await updateData() }
-        }
-        .searchable(text: $searchString, prompt: "Search")
-        .animation(.default, value: filteredStatus)
-        .animation(.default, value: sortOption)
-        .animation(.default, value: sortOrderKey)
-        .animation(.default, value: searchString)
-        .toolbar {
             #if os(iOS)
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    sortMenu
-                    layoutPicker
+                .sheet(isPresented: $showImportRecipe) {
+                    NavigationStack {
+                        RecipeImportView()
+                    }
                 }
             #else
-                ToolbarItemGroup(placement: .automatic) {
-                    sortMenu
-                    layoutPicker
+                .navigationDestination(isPresented: $showImportRecipe) {
+                    RecipeImportView()
                 }
             #endif
-            ToolbarSpacer(.fixed)
-            ToolbarItem(
-                placement: .primaryAction,
-                content: {
-                    Button(
-                        action: {
-                            showImportRecipe = true
-                        },
-                        label: {
-                            Label("Import recipe from website", systemImage: MySymbols.importRecipe)
-                        }
-                    )
-                }
-            )
-            ToolbarItem(
-                placement: .primaryAction,
-                content: {
-                    Button(
-                        action: {
-                            showAddRecipe = true
-                        },
-                        label: {
-                            Label("Create recipe", systemImage: MySymbols.new)
-                        }
-                    )
-                }
-            )
-        }
+            .task {
+                await updateData()
+                initialLoadDone = true
+            }
+            .onAppear {
+                guard !initialLoadDone else { return }
+                Task { await updateData() }
+            }
+            .searchable(text: $searchString, prompt: "Search")
+            .animation(.default, value: filteredStatus)
+            .animation(.default, value: sortOption)
+            .animation(.default, value: sortOrderKey)
+            .animation(.default, value: searchString)
+            .toolbar {
+                #if os(iOS)
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        sortMenu
+                        layoutPicker
+                    }
+                #else
+                    ToolbarItemGroup(placement: .automatic) {
+                        sortMenu
+                        layoutPicker
+                    }
+                #endif
+                ToolbarSpacer(.fixed)
+                ToolbarItem(
+                    placement: .primaryAction,
+                    content: {
+                        Button(
+                            action: {
+                                showImportRecipe = true
+                            },
+                            label: {
+                                Label("Import recipe from website", systemImage: MySymbols.importRecipe)
+                            }
+                        )
+                    }
+                )
+                ToolbarItem(
+                    placement: .primaryAction,
+                    content: {
+                        Button(
+                            action: {
+                                showAddRecipe = true
+                            },
+                            label: {
+                                Label("Create recipe", systemImage: MySymbols.new)
+                            }
+                        )
+                    }
+                )
+            }
     }
 
     /// Shows the current layout's symbol; choosing switches between the list and the gallery.

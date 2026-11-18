@@ -184,13 +184,35 @@ struct MyIntStepperOptional: View {
 
     Form {
         Section {
-            MyIntStepper(amount: $amount, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: MySymbols.name)
+            MyIntStepper(
+                amount: $amount,
+                description: "Description",
+                helpText: "Help Text",
+                minAmount: 1,
+                amountName: "QuantityUnit",
+                systemImage: MySymbols.name
+            )
         }
         Section("Optional") {
-            MyIntStepperOptional(amount: $amountOptional, description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", systemImage: MySymbols.name)
+            MyIntStepperOptional(
+                amount: $amountOptional,
+                description: "Description",
+                helpText: "Help Text",
+                minAmount: 1,
+                amountName: "QuantityUnit",
+                systemImage: MySymbols.name
+            )
         }
         Section("Error") {
-            MyIntStepper(amount: .constant(-1), description: "Description", helpText: "Help Text", minAmount: 1, amountName: "QuantityUnit", errorMessage: "Error Message", systemImage: MySymbols.name)
+            MyIntStepper(
+                amount: .constant(-1),
+                description: "Description",
+                helpText: "Help Text",
+                minAmount: 1,
+                amountName: "QuantityUnit",
+                errorMessage: "Error Message",
+                systemImage: MySymbols.name
+            )
         }
     }
 }

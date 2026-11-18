@@ -5,23 +5,23 @@
 //  Created by Georg Meissner on 29.04.22.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ServerSettingsToggle: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @State private var isOn: Bool = false
-    
+
     @State private var isFirstShown: Bool = true
-    
+
     let settingKey: String
     let description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
-    
+
     var toggleFeedback: Binding<Bool>? = nil
-    
+
     func getSetting() async {
         do {
             let userSettingsResult: GrocyUserSettingsBool = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
@@ -32,7 +32,7 @@ struct ServerSettingsToggle: View {
         }
         self.isFirstShown = false
     }
-    
+
     func putSetting() async {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsBool(value: isOn))
@@ -41,7 +41,7 @@ struct ServerSettingsToggle: View {
             GrocyLogger.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
-    
+
     var body: some View {
         MyToggle(isOn: $isOn, description: description, descriptionInfo: descriptionInfo, icon: icon)
             .task {
@@ -62,16 +62,16 @@ struct ServerSettingsToggle: View {
 
 struct ServerSettingsIntStepper: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @State private var value: Int = 0
-    
+
     @State private var isFirstShown: Bool = true
-    
+
     let settingKey: String
     let description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
-    
+
     func getSetting() async {
         do {
             let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
@@ -81,7 +81,7 @@ struct ServerSettingsIntStepper: View {
         }
         self.isFirstShown = false
     }
-    
+
     func putSetting() async {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: value))
@@ -89,7 +89,7 @@ struct ServerSettingsIntStepper: View {
             GrocyLogger.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
-    
+
     var body: some View {
         MyIntStepper(amount: $value, description: description, helpText: descriptionInfo, systemImage: icon)
             .task {
@@ -110,16 +110,16 @@ struct ServerSettingsIntStepper: View {
 
 struct ServerSettingsDoubleStepper: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @State private var value: Double = 0
-    
+
     @State private var isFirstShown: Bool = true
-    
+
     let settingKey: String
     let description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey? = nil
     var icon: String? = nil
-    
+
     func getSetting() async {
         do {
             let userSettingsResult: GrocyUserSettingsDouble = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
@@ -129,7 +129,7 @@ struct ServerSettingsDoubleStepper: View {
         }
         self.isFirstShown = false
     }
-    
+
     func putSetting() async {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsDouble(value: value))
@@ -137,7 +137,7 @@ struct ServerSettingsDoubleStepper: View {
             GrocyLogger.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
-    
+
     var body: some View {
         MyDoubleStepper(amount: $value, description: description, descriptionInfo: descriptionInfo, systemImage: icon)
             .task {
@@ -158,24 +158,24 @@ struct ServerSettingsDoubleStepper: View {
 
 struct ServerSettingsObjectPicker: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     @Query(sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
-    
+
     @State private var objectID: Int? = -1
     @State private var isFirstShown: Bool = true
-    
+
     enum Objects {
         case location, productGroup, quantityUnit, shoppingLists
     }
-    
+
     let settingKey: String
     let description: LocalizedStringKey
     var icon: String? = nil
     let objects: Objects
-    
+
     func getSetting() async {
         do {
             let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
@@ -189,7 +189,7 @@ struct ServerSettingsObjectPicker: View {
         }
         self.isFirstShown = false
     }
-    
+
     func putSetting() async {
         do {
             try await grocyVM.putUserSettingsEntry(settingKey: settingKey, content: GrocyUserSettingsInt(value: objectID))
@@ -197,38 +197,42 @@ struct ServerSettingsObjectPicker: View {
             GrocyLogger.error("Failed to put setting key \(settingKey). Message: \("\(error)")")
         }
     }
-    
+
     var body: some View {
-        Picker(selection: $objectID, content: {
-            Text("").tag(-1 as Int?)
-            Group {
-                switch objects {
-                case .location:
-                    ForEach(mdLocations.filter({ $0.active }), id: \.id) { location in
-                        Text(location.name).tag(location.id as Int?)
-                    }
-                case .productGroup:
-                    ForEach(mdProductGroups.filter({ $0.active }), id: \.id) { productGroup in
-                        Text(productGroup.name).tag(productGroup.id as Int?)
-                    }
-                case .quantityUnit:
-                    ForEach(mdQuantityUnits.filter({ $0.active }), id: \.id) { quantityUnit in
-                        Text(quantityUnit.name).tag(quantityUnit.id as Int?)
-                    }
-                case .shoppingLists:
-                    ForEach(shoppingListDescriptions, id: \.id) { shoppingList in
-                        Text(shoppingList.name).tag(shoppingList.id as Int?)
+        Picker(
+            selection: $objectID,
+            content: {
+                Text("").tag(-1 as Int?)
+                Group {
+                    switch objects {
+                    case .location:
+                        ForEach(mdLocations.filter({ $0.active }), id: \.id) { location in
+                            Text(location.name).tag(location.id as Int?)
+                        }
+                    case .productGroup:
+                        ForEach(mdProductGroups.filter({ $0.active }), id: \.id) { productGroup in
+                            Text(productGroup.name).tag(productGroup.id as Int?)
+                        }
+                    case .quantityUnit:
+                        ForEach(mdQuantityUnits.filter({ $0.active }), id: \.id) { quantityUnit in
+                            Text(quantityUnit.name).tag(quantityUnit.id as Int?)
+                        }
+                    case .shoppingLists:
+                        ForEach(shoppingListDescriptions, id: \.id) { shoppingList in
+                            Text(shoppingList.name).tag(shoppingList.id as Int?)
+                        }
                     }
                 }
+            },
+            label: {
+                if let icon = icon {
+                    Label(description, systemImage: icon)
+                        .foregroundStyle(.primary)
+                } else {
+                    Text(description)
+                }
             }
-        }, label: {
-            if let icon = icon {
-                Label(description, systemImage: icon)
-                    .foregroundStyle(.primary)
-            } else {
-                Text(description)
-            }
-        })
+        )
         .task {
             if isFirstShown {
                 await getSetting()

@@ -35,7 +35,9 @@ struct RecipeImportDraft {
 
     /// Included ingredients whose product or unit was only suggested, so the person should check them.
     var ingredientsToCheck: [ImportedIngredient] {
-        ingredients.filter { $0.isIncluded && !$0.isSaved && $0.productID != nil && ($0.productMatch.needsCheck || $0.unitMatch == .suggested || $0.hasUnmatchedUnit) }
+        ingredients.filter {
+            $0.isIncluded && !$0.isSaved && $0.productID != nil && ($0.productMatch.needsCheck || $0.unitMatch == .suggested || $0.hasUnmatchedUnit)
+        }
     }
 }
 
@@ -184,7 +186,9 @@ struct RecipeImportMapper {
         for index in draft.ingredients.indices where !draft.ingredients[index].isSaved {
             var ingredient = draft.ingredients[index]
             var changed = false
-            if ingredient.productID == nil, ingredient.productMatch == .none, let match = productCandidates(for: ingredient.line.name, note: ingredient.line.note).first {
+            if ingredient.productID == nil, ingredient.productMatch == .none,
+                let match = productCandidates(for: ingredient.line.name, note: ingredient.line.note).first
+            {
                 ingredient.productID = match.product.id
                 ingredient.productMatch = match.quality
                 changed = true

@@ -17,10 +17,13 @@ final class PhoneNavigationUITests: GrocyUITestCase {
         #if os(iOS)
             let locationID = try await createObject("locations", ["name": "UITest location \(runID)", "active": 1])
             let unitID = try await createObject("quantity_units", ["name": "UITest unit \(runID)", "active": 1])
-            let productID = try await createObject("products", [
-                "name": productName, "active": 1, "location_id": locationID,
-                "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
-            ])
+            let productID = try await createObject(
+                "products",
+                [
+                    "name": productName, "active": 1, "location_id": locationID,
+                    "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
+                ]
+            )
             try await callAPI("stock/products/\(productID)/add", ["amount": 2])
 
             let app = launchApp()
@@ -73,7 +76,10 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             // A product in stock is found twice: its stock entry and the product itself (master data).
             let productResults = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", productName))
             XCTAssertEqual(productResults.count, 2, "The product isn't listed both in stock and in master data.\n\(app.debugDescription)")
-            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@", productName, "Product")).firstMatch.exists, "The product isn't listed as master data.")
+            XCTAssertTrue(
+                app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@", productName, "Product")).firstMatch.exists,
+                "The product isn't listed as master data."
+            )
             attachScreenshot(of: app, named: "7 Search – results")
 
             // While searching, the tab bar shrinks to one button for the previous tab; it leads back out of search.

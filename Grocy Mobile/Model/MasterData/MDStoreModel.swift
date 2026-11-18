@@ -60,7 +60,8 @@ class MDStore: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDStore, rhs: MDStore) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdStoreDescription == rhs.mdStoreDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdStoreDescription == rhs.mdStoreDescription
+            && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

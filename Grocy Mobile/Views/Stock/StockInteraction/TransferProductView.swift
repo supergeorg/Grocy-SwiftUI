@@ -87,7 +87,8 @@ struct TransferProductView: View {
     private let priceFormatter = NumberFormatter()
 
     var isFormValid: Bool {
-        (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationIDFrom != nil) && (locationIDTo != nil) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0)
+        (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationIDFrom != nil) && (locationIDTo != nil)
+            && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0)
             && !(locationIDFrom == locationIDTo)
     }
 
@@ -220,7 +221,8 @@ struct TransferProductView: View {
                     MyToggle(
                         isOn: $useSpecificStockEntry,
                         description: "Use a specific stock item",
-                        descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
+                        descriptionInfo:
+                            "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
                         icon: MySymbols.stockEntry
                     )
 
@@ -299,7 +301,7 @@ struct TransferProductView: View {
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Transfer", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.transfer)
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                        .labelStyle(.titleAndIcon)
+                            .labelStyle(.titleAndIcon)
                     }
                 )
                 .disabled(!isFormValid || isProcessingAction)

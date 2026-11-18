@@ -16,9 +16,27 @@ struct RecipeFilterActionsView: View {
 
     var body: some View {
         FilterCapsuleBar {
-            RecipeFilterCapsuleView(num: enoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .enoughInStock, color: Color(.GrocyColors.grocyGreen), backgroundColor: Color(.GrocyColors.grocyGreenBackground))
-            RecipeFilterCapsuleView(num: alreadyOnShoppingListCount, filteredStatus: $filteredStatus, ownFilteredStatus: .alreadyOnShoppingList, color: Color(.GrocyColors.grocyYellow), backgroundColor: Color(.GrocyColors.grocyYellowBackground))
-            RecipeFilterCapsuleView(num: notEnoughInStockCount, filteredStatus: $filteredStatus, ownFilteredStatus: .notEnoughInStock, color: Color(.GrocyColors.grocyRed), backgroundColor: Color(.GrocyColors.grocyRedBackground))
+            RecipeFilterCapsuleView(
+                num: enoughInStockCount,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: .enoughInStock,
+                color: Color(.GrocyColors.grocyGreen),
+                backgroundColor: Color(.GrocyColors.grocyGreenBackground)
+            )
+            RecipeFilterCapsuleView(
+                num: alreadyOnShoppingListCount,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: .alreadyOnShoppingList,
+                color: Color(.GrocyColors.grocyYellow),
+                backgroundColor: Color(.GrocyColors.grocyYellowBackground)
+            )
+            RecipeFilterCapsuleView(
+                num: notEnoughInStockCount,
+                filteredStatus: $filteredStatus,
+                ownFilteredStatus: .notEnoughInStock,
+                color: Color(.GrocyColors.grocyRed),
+                backgroundColor: Color(.GrocyColors.grocyRedBackground)
+            )
         }
     }
 }

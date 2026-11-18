@@ -63,12 +63,18 @@ struct ChoreLogRowView: View {
                 }
             }
         }
-        .listRowBackground((choreLogEntry.trackedTime ?? Date() > choreLogEntry.scheduledExecutionTime ?? Date()) ? Color(.GrocyColors.grocyRedBackground) : nil)
+        .listRowBackground(
+            (choreLogEntry.trackedTime ?? Date() > choreLogEntry.scheduledExecutionTime ?? Date()) ? Color(.GrocyColors.grocyRedBackground) : nil
+        )
     }
 }
 
 #Preview {
     List {
-        ChoreLogRowView(choreLogEntry: ChoreLogEntry(trackedTime: Date(), scheduledExecutionTime: Date()), chore: Chore(choreName: "Chore"), user: GrocyUser(displayName: "User"))
+        ChoreLogRowView(
+            choreLogEntry: ChoreLogEntry(trackedTime: Date(), scheduledExecutionTime: Date()),
+            chore: Chore(choreName: "Chore"),
+            user: GrocyUser(displayName: "User")
+        )
     }
 }

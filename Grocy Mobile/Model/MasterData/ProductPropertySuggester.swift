@@ -105,7 +105,8 @@ final class ProductPropertySuggester {
                 usage: nil
             ),
             .quantityUnit: Self.context(
-                task: "Choose the quantity unit this product is usually counted or measured in at home. Count things that are used whole (an onion, an egg) in pieces.",
+                task:
+                    "Choose the quantity unit this product is usually counted or measured in at home. Count things that are used whole (an onion, an egg) in pieces.",
                 examplesTitle: "Products of this household and their unit",
                 examples: examples.compactMap { product in unitOptions.first { $0.id == product.quIDStock }.map { "\(product.name): \($0.name)" } },
                 usage: usage
@@ -143,7 +144,9 @@ final class ProductPropertySuggester {
             }
             currentStep = nil
             isRunning = false
-            GrocyLogger.info("Apple Intelligence suggested for \(name): location \(String(describing: suggestions.locationID)), product group \(String(describing: suggestions.productGroupID)), quantity unit \(String(describing: suggestions.quantityUnitID)).")
+            GrocyLogger.info(
+                "Apple Intelligence suggested for \(name): location \(String(describing: suggestions.locationID)), product group \(String(describing: suggestions.productGroupID)), quantity unit \(String(describing: suggestions.quantityUnitID))."
+            )
         }
     }
 

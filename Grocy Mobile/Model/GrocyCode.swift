@@ -11,7 +11,7 @@ struct GrocyCode {
     let entityType: GCEntityType
     let entityID: Int
     let stockID: String?
-    
+
     enum GCEntityType {
         case product, battery, chore
     }

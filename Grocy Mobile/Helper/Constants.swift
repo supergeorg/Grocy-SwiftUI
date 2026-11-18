@@ -8,20 +8,20 @@
 import Foundation
 
 struct Constants {
-#if os(macOS)
-    static let macOSNavWidth: CGFloat = 300.0
-    static let macOSSettingsWidth: CGFloat = 500.0
-    static let macOSSettingsHeight: CGFloat = 400.0
-    static let macOSMinWindowWidth: CGFloat = 500.0
-    static let macOSStockEntriesMinWidth: CGFloat = 350.0
-    /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.
-    static let macOSAmountFieldWidth: CGFloat = 90.0
-    /// The cooking mode's sheet, large enough to read a step from a distance.
-    static let macOSCookingMinWidth: CGFloat = 640.0
-    static let macOSCookingMinHeight: CGFloat = 560.0
-    /// Onboarding, login start and What's New, so the feature list and its buttons fit without scrolling.
-    static let macOSIntroductionMinHeight: CGFloat = 620.0
-#endif
+    #if os(macOS)
+        static let macOSNavWidth: CGFloat = 300.0
+        static let macOSSettingsWidth: CGFloat = 500.0
+        static let macOSSettingsHeight: CGFloat = 400.0
+        static let macOSMinWindowWidth: CGFloat = 500.0
+        static let macOSStockEntriesMinWidth: CGFloat = 350.0
+        /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.
+        static let macOSAmountFieldWidth: CGFloat = 90.0
+        /// The cooking mode's sheet, large enough to read a step from a distance.
+        static let macOSCookingMinWidth: CGFloat = 640.0
+        static let macOSCookingMinHeight: CGFloat = 560.0
+        /// Onboarding, login start and What's New, so the feature list and its buttons fit without scrolling.
+        static let macOSIntroductionMinHeight: CGFloat = 620.0
+    #endif
 }
 
 /// The app's spacing scale, for the few places the system doesn't provide one

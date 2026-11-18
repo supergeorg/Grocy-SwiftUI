@@ -18,10 +18,13 @@ final class StockUITests: GrocyUITestCase {
     private func createProduct() async throws -> Int {
         let locationID = try await createObject("locations", ["name": "UITest location \(runID)", "active": 1])
         let unitID = try await createObject("quantity_units", ["name": "UITest unit \(runID)", "active": 1])
-        return try await createObject("products", [
-            "name": productName, "active": 1, "location_id": locationID,
-            "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
-        ])
+        return try await createObject(
+            "products",
+            [
+                "name": productName, "active": 1, "location_id": locationID,
+                "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
+            ]
+        )
     }
 
     @MainActor
@@ -58,7 +61,9 @@ final class StockUITests: GrocyUITestCase {
 
         let title = "Minimum stock amount"
         XCTAssertTrue(app.textFields[title].firstMatch.waitForExistence(timeout: 10), "The amount field isn't labeled \"\(title)\".")
-        let stepper = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@ AND elementType == %d", title, XCUIElement.ElementType.stepper.rawValue)).firstMatch
+        let stepper = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label == %@ AND elementType == %d", title, XCUIElement.ElementType.stepper.rawValue)
+        ).firstMatch
         XCTAssertTrue(stepper.exists, "The stepper isn't labeled \"\(title)\".\n\(app.debugDescription)")
         attachScreenshot(of: app, named: "Product form – amounts")
     }

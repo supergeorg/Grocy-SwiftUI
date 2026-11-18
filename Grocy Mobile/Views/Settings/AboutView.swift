@@ -71,7 +71,11 @@ struct AboutView: View {
                 #endif
                 if let editorURL = URL(string: "https://github.com/Infomaniak/swift-rich-html-editor") {
                     Link(destination: editorURL) {
-                        AboutLineView(iconName: MySymbols.richText, caption: "Infomaniak Rich HTML Editor", content: "Copyright (Apache 2.0 License) Infomaniak")
+                        AboutLineView(
+                            iconName: MySymbols.richText,
+                            caption: "Infomaniak Rich HTML Editor",
+                            content: "Copyright (Apache 2.0 License) Infomaniak"
+                        )
                     }
                 }
             } header: {

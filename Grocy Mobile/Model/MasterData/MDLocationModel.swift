@@ -77,7 +77,8 @@ class MDLocation: Codable, Equatable, Identifiable, CustomStringConvertible {
     }
 
     static func == (lhs: MDLocation, rhs: MDLocation) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdLocationDescription == rhs.mdLocationDescription && lhs.isFreezer == rhs.isFreezer && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdLocationDescription == rhs.mdLocationDescription
+            && lhs.isFreezer == rhs.isFreezer && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

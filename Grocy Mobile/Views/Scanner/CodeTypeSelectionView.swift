@@ -81,8 +81,10 @@ struct CodeTypeSelectionView: View {
                         role: .close,
                         action: {
                             self.dismiss()
-                        })
-                })
+                        }
+                    )
+                }
+            )
         }
     }
 }

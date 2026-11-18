@@ -233,7 +233,15 @@ public class GrocyApi: GrocyAPI {
         groupName: String? = nil,
         hassIngressToken: String? = nil
     ) async throws {
-        let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
+        let urlRequest = request(
+            for: endPoint,
+            method: .PUT,
+            id: id,
+            fileName: fileName,
+            groupName: groupName,
+            isOctet: true,
+            hassIngressToken: hassIngressToken
+        )
         let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
         if let httpResponse = resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
@@ -257,7 +265,15 @@ public class GrocyApi: GrocyAPI {
         groupName: String? = nil,
         hassIngressToken: String? = nil
     ) async throws {
-        let urlRequest = request(for: endPoint, method: .PUT, id: id, fileName: fileName, groupName: groupName, isOctet: true, hassIngressToken: hassIngressToken)
+        let urlRequest = request(
+            for: endPoint,
+            method: .PUT,
+            id: id,
+            fileName: fileName,
+            groupName: groupName,
+            isOctet: true,
+            hassIngressToken: hassIngressToken
+        )
         let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
         if let httpResponse = resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
@@ -720,7 +736,8 @@ extension GrocyApi {
     }
 
     func getPictureURL(groupName: String, fileName: String) -> String? {
-        let filepath = request(for: .filesGroupFilename, method: .GET, fileName: fileName, groupName: groupName, queries: ["force_serve_as=picture"]).url?.absoluteString
+        let filepath = request(for: .filesGroupFilename, method: .GET, fileName: fileName, groupName: groupName, queries: ["force_serve_as=picture"]).url?
+            .absoluteString
         if groupName == "userfiles" || groupName == "userpictures" {
             return filepath?.replacingOccurrences(of: "/api", with: "")
         } else {
@@ -777,7 +794,13 @@ extension GrocyApi {
 
     // MARK: - Files
     func getFile(fileName: String, groupName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data {
-        return try await callGetFileData(.filesGroupFilename, fileName: fileName, groupName: groupName, bestFitHeight: bestFitHeight, bestFitWidth: bestFitWidth)
+        return try await callGetFileData(
+            .filesGroupFilename,
+            fileName: fileName,
+            groupName: groupName,
+            bestFitHeight: bestFitHeight,
+            bestFitWidth: bestFitWidth
+        )
     }
 
     /// Downloads a file as stored, e.g. a PDF, without converting it to a picture.

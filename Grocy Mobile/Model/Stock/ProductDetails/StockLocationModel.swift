@@ -73,7 +73,8 @@ class StockLocation: Codable, Equatable {
     }
 
     static func == (lhs: StockLocation, rhs: StockLocation) -> Bool {
-        lhs.equalID == rhs.equalID && lhs.productID == rhs.productID && lhs.amount == rhs.amount && lhs.locationID == rhs.locationID && lhs.locationName == rhs.locationName && lhs.locationIsFreezer == rhs.locationIsFreezer
+        lhs.equalID == rhs.equalID && lhs.productID == rhs.productID && lhs.amount == rhs.amount && lhs.locationID == rhs.locationID
+            && lhs.locationName == rhs.locationName && lhs.locationIsFreezer == rhs.locationIsFreezer
     }
 }
 

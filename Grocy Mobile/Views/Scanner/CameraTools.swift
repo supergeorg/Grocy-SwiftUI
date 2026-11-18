@@ -19,7 +19,11 @@ func checkForTorch() -> Bool {
 
 func getFrontCameraAvailable() -> Bool {
     #if os(iOS)
-        let devices = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .front).devices
+        let devices = AVCaptureDevice.DiscoverySession.init(
+            deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera],
+            mediaType: AVMediaType.video,
+            position: .front
+        ).devices
         return devices.count > 0
     #else
         return false

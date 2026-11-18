@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShoppingListReminderReadView: View {
     var reminders: [Reminder]
-    
+
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @Query var mdProducts: MDProducts

@@ -30,7 +30,8 @@ enum PhoneNavigationStyle: String, CaseIterable, Identifiable {
 
     var footer: LocalizedStringKey {
         switch self {
-        case .smart: "Stock, shopping list, recipes and everything that is due: products, chores, tasks and batteries. The complete lists are linked in the due tab."
+        case .smart:
+            "Stock, shopping list, recipes and everything that is due: products, chores, tasks and batteries. The complete lists are linked in the due tab."
         case .tabs: "Choose up to four tabs. Everything else opens from the settings button."
         case .sidebar: "All places in one list, as in the iPad sidebar."
         }

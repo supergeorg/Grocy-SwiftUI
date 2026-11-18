@@ -136,8 +136,10 @@ class VolatileStockElement: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: VolatileStockElement, rhs: VolatileStockElement) -> Bool {
-        lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate && lhs.amountOpened == rhs.amountOpened
-            && lhs.amountOpenedAggregated == rhs.amountOpenedAggregated && lhs.isAggregatedAmount == rhs.isAggregatedAmount && lhs.dueType == rhs.dueType && lhs.productID == rhs.productID
+        lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
+            && lhs.amountOpened == rhs.amountOpened
+            && lhs.amountOpenedAggregated == rhs.amountOpenedAggregated && lhs.isAggregatedAmount == rhs.isAggregatedAmount && lhs.dueType == rhs.dueType
+            && lhs.productID == rhs.productID
     }
 
     func hash(into hasher: inout Hasher) {

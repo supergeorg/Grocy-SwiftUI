@@ -149,7 +149,7 @@ nonisolated struct MySymbols {
     static let widgetNoData = "arrow.down.circle"
     static let widgetAllDone = "checkmark.circle.fill"
     static let widgetNoDueDate = "circle"
-    
+
     static let darkMode = "moon.stars.fill"
     static let lightMode = "sun.horizon.fill"
     static let systemDarkMode = "circle.lefthalf.filled.inverse"
@@ -157,7 +157,6 @@ nonisolated struct MySymbols {
     static let htmlCode = "chevron.left.slash.chevron.right"
     static let preview = "eye"
     static let forward = "arrow.forward"
-
 
     // MARK: - Server & app info
 

@@ -74,7 +74,15 @@ struct MDUserEntityFormView: View {
             id = userEntity!.id
         }
         let timeStamp = isNewUserEntity ? Date() : userEntity!.rowCreatedTimestamp
-        let userEntityPOST = MDUserEntity(id: id, name: name, caption: caption, mdUserEntityDescription: mdUserEntityDescription, showInSidebarMenu: showInSidebarMenu ? 1 : 0, iconCSSClass: nil, rowCreatedTimestamp: timeStamp)
+        let userEntityPOST = MDUserEntity(
+            id: id,
+            name: name,
+            caption: caption,
+            mdUserEntityDescription: mdUserEntityDescription,
+            showInSidebarMenu: showInSidebarMenu ? 1 : 0,
+            iconCSSClass: nil,
+            rowCreatedTimestamp: timeStamp
+        )
         isProcessing = true
         if isNewUserEntity {
             do {
@@ -150,10 +158,16 @@ struct MDUserEntityFormView: View {
                 .onChange(of: name) {
                     isNameCorrect = checkNameCorrect()
                 }
-                MyTextField(textToEdit: $caption, description: "Caption", isCorrect: $isCaptionCorrect, leadingIcon: "tag", emptyMessage: "A caption is required")
-                    .onChange(of: caption) {
-                        isCaptionCorrect = checkCaptionCorrect()
-                    }
+                MyTextField(
+                    textToEdit: $caption,
+                    description: "Caption",
+                    isCorrect: $isCaptionCorrect,
+                    leadingIcon: "tag",
+                    emptyMessage: "A caption is required"
+                )
+                .onChange(of: caption) {
+                    isCaptionCorrect = checkCaptionCorrect()
+                }
             }
 
             MyTextField(textToEdit: $mdUserEntityDescription, description: "Description", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)

@@ -29,10 +29,25 @@ struct StockWidgetView: View {
 
     private var items: [StockStatusItem] {
         [
-            StockStatusItem(status: .expiringSoon, count: summary.dueSoon, color: Color(.GrocyColors.grocyYellow), background: Color(.GrocyColors.grocyYellowBackground)),
-            StockStatusItem(status: .overdue, count: summary.overdue, color: Color(.GrocyColors.grocyGray), background: Color(.GrocyColors.grocyGrayBackground)),
+            StockStatusItem(
+                status: .expiringSoon,
+                count: summary.dueSoon,
+                color: Color(.GrocyColors.grocyYellow),
+                background: Color(.GrocyColors.grocyYellowBackground)
+            ),
+            StockStatusItem(
+                status: .overdue,
+                count: summary.overdue,
+                color: Color(.GrocyColors.grocyGray),
+                background: Color(.GrocyColors.grocyGrayBackground)
+            ),
             StockStatusItem(status: .expired, count: summary.expired, color: Color(.GrocyColors.grocyRed), background: Color(.GrocyColors.grocyRedBackground)),
-            StockStatusItem(status: .belowMinStock, count: summary.belowMinStock, color: Color(.GrocyColors.grocyBlue), background: Color(.GrocyColors.grocyBlueBackground)),
+            StockStatusItem(
+                status: .belowMinStock,
+                count: summary.belowMinStock,
+                color: Color(.GrocyColors.grocyBlue),
+                background: Color(.GrocyColors.grocyBlueBackground)
+            ),
         ]
     }
 

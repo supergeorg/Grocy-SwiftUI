@@ -52,7 +52,8 @@ struct SettingsShoppingListView: View {
             Section("Shopping list to stock workflow") {
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.shoppingListToStockWorkflowAutoSubmitWhenPrefilled.rawValue,
-                    description: "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set",
+                    description:
+                        "Automatically do the booking using the last price and the amount of the shopping list item, if the product has \"Default due days\" set",
                     icon: MySymbols.stockOverview
                 )
             }
@@ -90,7 +91,8 @@ struct SettingsShoppingListView: View {
                             action: {
                                 do {
                                     for shoppingListItem in selectedShoppingListItems {
-                                        let title = "\(shoppingListItem.amount.formattedAmount) \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
+                                        let title =
+                                            "\(shoppingListItem.amount.formattedAmount) \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
                                         try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done))
                                     }
                                 } catch {
@@ -136,11 +138,14 @@ struct SettingsShoppingListView: View {
                 await grocyVM.requestData(additionalObjects: [.user_settings])
             }
         })
-        .sheet(isPresented: $showFoundReminders, content: {
-            NavigationStack{
-                ShoppingListReminderReadView(reminders: foundReminders)
+        .sheet(
+            isPresented: $showFoundReminders,
+            content: {
+                NavigationStack {
+                    ShoppingListReminderReadView(reminders: foundReminders)
+                }
             }
-        })
+        )
     }
 }
 

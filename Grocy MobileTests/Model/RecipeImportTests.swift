@@ -12,19 +12,22 @@ import Testing
 
 @Suite("Ingredient line parser")
 struct IngredientLineParserTests {
-    @Test("Amount, unit, name and note", arguments: [
-        ("200 g Butter, weich", 200.0, "g", "Butter", "weich"),
-        ("200g Mehl", 200.0, "g", "Mehl", ""),
-        ("1,5 kg Kartoffeln (festkochend)", 1.5, "kg", "Kartoffeln", "festkochend"),
-        ("2 EL Olivenöl", 2.0, "EL", "Olivenöl", ""),
-        ("1 Pck. Vanillezucker", 1.0, "Pck", "Vanillezucker", ""),
-        ("1 Zehe/n Knoblauch", 1.0, "Zehe/n", "Knoblauch", ""),
-        ("1/2 tsp salt", 0.5, "tsp", "salt", ""),
-        ("1 1/2 cups flour", 1.5, "cups", "flour", ""),
-        ("½ Bund Petersilie", 0.5, "Bund", "Petersilie", ""),
-        ("1½ l Milch", 1.5, "l", "Milch", ""),
-        ("1 fl oz cream", 1.0, "fl oz", "cream", ""),
-    ])
+    @Test(
+        "Amount, unit, name and note",
+        arguments: [
+            ("200 g Butter, weich", 200.0, "g", "Butter", "weich"),
+            ("200g Mehl", 200.0, "g", "Mehl", ""),
+            ("1,5 kg Kartoffeln (festkochend)", 1.5, "kg", "Kartoffeln", "festkochend"),
+            ("2 EL Olivenöl", 2.0, "EL", "Olivenöl", ""),
+            ("1 Pck. Vanillezucker", 1.0, "Pck", "Vanillezucker", ""),
+            ("1 Zehe/n Knoblauch", 1.0, "Zehe/n", "Knoblauch", ""),
+            ("1/2 tsp salt", 0.5, "tsp", "salt", ""),
+            ("1 1/2 cups flour", 1.5, "cups", "flour", ""),
+            ("½ Bund Petersilie", 0.5, "Bund", "Petersilie", ""),
+            ("1½ l Milch", 1.5, "l", "Milch", ""),
+            ("1 fl oz cream", 1.0, "fl oz", "cream", ""),
+        ]
+    )
     func parsesLine(text: String, amount: Double, unit: String, name: String, note: String) {
         let line = IngredientLineParser.parse(text)
         #expect(line.amount == amount)
@@ -93,10 +96,13 @@ struct IngredientLineParserTests {
         #expect(IngredientLineParser.split(IngredientLineParser.parse("Butter oder Margarine"), language: "de") == nil)
     }
 
-    @Test("Lines are split with the word for \"and\" of the recipe's language", arguments: [
-        ("Salt and pepper", "en"), ("Sel et poivre", "fr"), ("Sal y pimienta", "es"), ("Sale e pepe", "it"),
-        ("Zout en peper", "nl"), ("Salt och peppar", "sv"), ("Tuz ve biber", "tr"), ("Sól i pieprz", "pl"),
-    ])
+    @Test(
+        "Lines are split with the word for \"and\" of the recipe's language",
+        arguments: [
+            ("Salt and pepper", "en"), ("Sel et poivre", "fr"), ("Sal y pimienta", "es"), ("Sale e pepe", "it"),
+            ("Zout en peper", "nl"), ("Salt och peppar", "sv"), ("Tuz ve biber", "tr"), ("Sól i pieprz", "pl"),
+        ]
+    )
     func splitInLanguage(text: String, language: String) throws {
         let parts = try #require(IngredientLineParser.split(IngredientLineParser.parse(text), language: language))
         #expect(parts.count == 2)
@@ -217,7 +223,11 @@ struct RecipePreparationFormatTests {
 
     @Test("Introduction and source are no steps")
     func introductionIsNoStep() {
-        let html = RecipePreparationFormat.html(introduction: "Intro", steps: [RecipePreparationStep(section: nil, title: nil, text: "Only step")], sourceURL: URL(string: "https://example.com"))
+        let html = RecipePreparationFormat.html(
+            introduction: "Intro",
+            steps: [RecipePreparationStep(section: nil, title: nil, text: "Only step")],
+            sourceURL: URL(string: "https://example.com")
+        )
         let parsed = RecipePreparationFormat.steps(fromHTML: html)
         #expect(parsed.count == 1)
         #expect(parsed.first?.text == "Only step")
@@ -241,7 +251,8 @@ struct RecipePreparationFormatTests {
 @MainActor
 struct RecipeDescriptionTests {
     private func page(description: String, body: String) -> String {
-        let jsonLD = #"{"@context":"https://schema.org","@type":"Recipe","name":"Gebratene Nudeln","description":"\#(description)","recipeIngredient":["200 g Nudeln"]}"#
+        let jsonLD =
+            #"{"@context":"https://schema.org","@type":"Recipe","name":"Gebratene Nudeln","description":"\#(description)","recipeIngredient":["200 g Nudeln"]}"#
         return """
             <html><head><meta name="description" content="\(description)"><script type="application/ld+json">\(jsonLD)</script></head>
             <body><h1>Gebratene Nudeln</h1>\(body)<script>var text = "\(description)";</script></body></html>
@@ -402,7 +413,15 @@ struct RecipeImportMapperTests {
     @Test("An ingredient can be split by the person")
     func manualSplit() {
         let original = mapper.ingredient(from: IngredientLineParser.parse("2 EL Butter und Mehl"))
-        var draft = RecipeImportDraft(name: "Test", baseServings: 1, preparationHTML: "", steps: [], importPicture: false, ingredients: [original], language: "de")
+        var draft = RecipeImportDraft(
+            name: "Test",
+            baseServings: 1,
+            preparationHTML: "",
+            steps: [],
+            importPicture: false,
+            ingredients: [original],
+            language: "de"
+        )
         #expect(mapper.canSplit(original, language: "de"))
         mapper.split(ingredientID: original.id, in: &draft)
         #expect(draft.ingredients.map(\.productID) == [2, 1])
@@ -459,12 +478,15 @@ struct RecipeImportSuggestionTests {
         #expect(mapper.ingredient(from: IngredientLineParser.parse("1 Zwiebel(n) (klein gehackte)")).productMatch == .exact)
     }
 
-    @Test("Products are suggested for adjectives, compounds and typos", arguments: [
-        ("125 ml süße Sahne", "Sahne"),
-        ("4 Schweineschnitzel", "Schnitzel"),
-        ("Mehl", "Weizenmehl"),
-        ("200 g Jogurt", "Joghurt"),
-    ])
+    @Test(
+        "Products are suggested for adjectives, compounds and typos",
+        arguments: [
+            ("125 ml süße Sahne", "Sahne"),
+            ("4 Schweineschnitzel", "Schnitzel"),
+            ("Mehl", "Weizenmehl"),
+            ("200 g Jogurt", "Joghurt"),
+        ]
+    )
     func suggestions(line: String, product: String) {
         let mapper = mapper(products: [product, "Zucker"])
         let ingredient = mapper.ingredient(from: IngredientLineParser.parse(line))
@@ -506,7 +528,13 @@ struct RecipeImportSuggestionTests {
         let lines = ["1 Bund Petersilie", "1 Bund Schnittlauch"].map { IngredientLineParser.parse($0) }
         let before = mapper(products: ["Petersilie", "Schnittlauch"])
         var draft = RecipeImportDraft(
-            name: "Test", baseServings: 1, preparationHTML: "", steps: [], imageURL: nil, importPicture: false, sourceURL: nil,
+            name: "Test",
+            baseServings: 1,
+            preparationHTML: "",
+            steps: [],
+            imageURL: nil,
+            importPicture: false,
+            sourceURL: nil,
             ingredients: lines.map { before.ingredient(from: $0) }
         )
         let allUnmatched = draft.ingredients.allSatisfy { $0.hasUnmatchedUnit }
@@ -570,7 +598,11 @@ struct RecipeImportSuggestionTests {
     @Test("Units that are already convertible don't need a connection")
     func noConnectionNeeded() {
         let products = [MDProduct(id: 1, name: "Mehl", quIDPurchase: 4, quIDStock: 4, quIDConsume: 4)]
-        let mapper = RecipeImportMapper(products: products, quantityUnits: [piece, gram], conversions: [MDQuantityUnitConversion(id: 1, fromQuID: piece.id, toQuID: gram.id, factor: 1000)])
+        let mapper = RecipeImportMapper(
+            products: products,
+            quantityUnits: [piece, gram],
+            conversions: [MDQuantityUnitConversion(id: 1, fromQuID: piece.id, toQuID: gram.id, factor: 1000)]
+        )
         let inGrams = mapper.ingredient(from: IngredientLineParser.parse("500 g Mehl"))
         let inStockUnit = mapper.ingredient(from: IngredientLineParser.parse("2 Stück Mehl"))
         #expect(!mapper.needsUnitConnection(inGrams, product: products[0]))
@@ -593,13 +625,17 @@ struct RecipeAmountConversionTests {
 
     @Test("Saved amounts are shown in the ingredient's unit")
     func displayed() {
-        #expect(RecipeAmountConversion.displayAmount(forStored: 0.5, quID: 1, onlyCheckSingleUnitInStock: false, product: flour, conversions: conversions) == 500)
+        #expect(
+            RecipeAmountConversion.displayAmount(forStored: 0.5, quID: 1, onlyCheckSingleUnitInStock: false, product: flour, conversions: conversions) == 500
+        )
     }
 
     @Test("Only checking stock keeps the amount as entered")
     func onlyCheck() {
         #expect(RecipeAmountConversion.storedAmount(for: 500, quID: 1, onlyCheckSingleUnitInStock: true, product: flour, conversions: conversions) == 500)
-        #expect(RecipeAmountConversion.displayAmount(forStored: 500, quID: 1, onlyCheckSingleUnitInStock: true, product: flour, conversions: conversions) == 500)
+        #expect(
+            RecipeAmountConversion.displayAmount(forStored: 500, quID: 1, onlyCheckSingleUnitInStock: true, product: flour, conversions: conversions) == 500
+        )
     }
 
     @Test("Units without a conversion keep the amount")

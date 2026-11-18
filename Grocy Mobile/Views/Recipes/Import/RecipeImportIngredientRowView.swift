@@ -101,22 +101,61 @@ struct RecipeImportIngredientRowView: View {
     let line = IngredientLineParser.parse("200 g Butter, weich")
     List {
         RecipeImportIngredientRowView(
-            ingredient: ImportedIngredient(line: line, productID: 1, amount: 200, quID: 1, note: line.note, ingredientGroup: "", variableAmount: "", onlyCheckSingleUnitInStock: false, productMatch: .exact, unitMatch: .exact),
+            ingredient: ImportedIngredient(
+                line: line,
+                productID: 1,
+                amount: 200,
+                quID: 1,
+                note: line.note,
+                ingredientGroup: "",
+                variableAmount: "",
+                onlyCheckSingleUnitInStock: false,
+                productMatch: .exact,
+                unitMatch: .exact
+            ),
             product: MDProduct(name: "Butter"),
             quantityUnit: MDQuantityUnit(name: "g")
         )
         RecipeImportIngredientRowView(
-            ingredient: ImportedIngredient(line: IngredientLineParser.parse("125 ml süße Sahne"), productID: 2, amount: 125, quID: 2, note: "", ingredientGroup: "", variableAmount: "", onlyCheckSingleUnitInStock: false, productMatch: .suggested, unitMatch: .exact),
+            ingredient: ImportedIngredient(
+                line: IngredientLineParser.parse("125 ml süße Sahne"),
+                productID: 2,
+                amount: 125,
+                quID: 2,
+                note: "",
+                ingredientGroup: "",
+                variableAmount: "",
+                onlyCheckSingleUnitInStock: false,
+                productMatch: .suggested,
+                unitMatch: .exact
+            ),
             product: MDProduct(name: "Sahne"),
             quantityUnit: MDQuantityUnit(name: "Milliliter")
         )
         RecipeImportIngredientRowView(
-            ingredient: ImportedIngredient(line: IngredientLineParser.parse("1 Bund Petersilie"), productID: 3, amount: 1, quID: 3, note: "", ingredientGroup: "", variableAmount: "1 Bund", onlyCheckSingleUnitInStock: true, productMatch: .exact),
+            ingredient: ImportedIngredient(
+                line: IngredientLineParser.parse("1 Bund Petersilie"),
+                productID: 3,
+                amount: 1,
+                quID: 3,
+                note: "",
+                ingredientGroup: "",
+                variableAmount: "1 Bund",
+                onlyCheckSingleUnitInStock: true,
+                productMatch: .exact
+            ),
             product: MDProduct(name: "Petersilie"),
             quantityUnit: MDQuantityUnit(name: "Stück")
         )
         RecipeImportIngredientRowView(
-            ingredient: ImportedIngredient(line: IngredientLineParser.parse("1 Prise Muskat"), amount: 1, note: "", ingredientGroup: "", variableAmount: "", onlyCheckSingleUnitInStock: false)
+            ingredient: ImportedIngredient(
+                line: IngredientLineParser.parse("1 Prise Muskat"),
+                amount: 1,
+                note: "",
+                ingredientGroup: "",
+                variableAmount: "",
+                onlyCheckSingleUnitInStock: false
+            )
         )
     }
 }

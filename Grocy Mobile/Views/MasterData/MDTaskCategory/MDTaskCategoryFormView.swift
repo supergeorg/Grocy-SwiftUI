@@ -8,9 +8,6 @@
 import SwiftData
 import SwiftUI
 
-import SwiftData
-import SwiftUI
-
 struct MDTaskCategoryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 

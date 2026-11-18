@@ -167,11 +167,20 @@ struct MDQuantityUnitConversionFormView: View {
                         .font(.caption)
                         .foregroundStyle(Color.red)
                 }
-                Text("This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: quantityUnitConversion.factor, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID })))")
-                    .font(.caption)
+                Text(
+                    "This means \(getQUString(amount: 1, qu: quantityUnit)) is the same as \(getQUString(amount: quantityUnitConversion.factor, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID })))"
+                )
+                .font(.caption)
             }
 
-            MyDoubleStepper(amount: $quantityUnitConversion.factor, description: "Factor", minAmount: 0.0001, amountStep: 1.0, amountName: "", systemImage: MySymbols.amount)
+            MyDoubleStepper(
+                amount: $quantityUnitConversion.factor,
+                description: "Factor",
+                minAmount: 0.0001,
+                amountStep: 1.0,
+                amountName: "",
+                systemImage: MySymbols.amount
+            )
 
             if existingQuantityUnitConversion == nil {
                 VStack(alignment: .leading) {
@@ -182,8 +191,10 @@ struct MDQuantityUnitConversionFormView: View {
                             .font(.caption)
                             .foregroundStyle(Color.red)
                     }
-                    Text("This means \(getQUString(amount: 1, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID }))) is the same as \(getQUString(amount: (1 / quantityUnitConversion.factor), qu: quantityUnit))")
-                        .font(.caption)
+                    Text(
+                        "This means \(getQUString(amount: 1, qu: mdQuantityUnits.first(where: { $0.id == quantityUnitConversion.toQuID }))) is the same as \(getQUString(amount: (1 / quantityUnitConversion.factor), qu: quantityUnit))"
+                    )
+                    .font(.caption)
                 }
             }
         }
@@ -255,6 +266,9 @@ struct MDQuantityUnitConversionFormView: View {
 
 #Preview("Edit", traits: .previewData) {
     NavigationStack {
-        MDQuantityUnitConversionFormView(quantityUnit: MDQuantityUnit(name: "Piece"), existingQuantityUnitConversion: MDQuantityUnitConversion(fromQuID: 2, toQuID: 3))
+        MDQuantityUnitConversionFormView(
+            quantityUnit: MDQuantityUnit(name: "Piece"),
+            existingQuantityUnitConversion: MDQuantityUnitConversion(fromQuID: 2, toQuID: 3)
+        )
     }
 }

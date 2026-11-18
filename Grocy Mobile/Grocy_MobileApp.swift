@@ -158,8 +158,14 @@ struct Grocy_MobileApp: App {
                 // UI tests run on in-memory stores, so the user's cache, login and iCloud profiles stay untouched.
                 let mainContainer: ModelContainer
                 do {
-                    mainContainer = try ModelContainer(for: mainSchema, configurations: ModelConfiguration(schema: mainSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
-                    profileModelContainer = try ModelContainer(for: profileSchema, configurations: ModelConfiguration(schema: profileSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                    mainContainer = try ModelContainer(
+                        for: mainSchema,
+                        configurations: ModelConfiguration(schema: mainSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+                    )
+                    profileModelContainer = try ModelContainer(
+                        for: profileSchema,
+                        configurations: ModelConfiguration(schema: profileSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+                    )
                 } catch {
                     fatalError("Failed to create in-memory ModelContainers for UI tests: \(error)")
                 }
@@ -231,7 +237,9 @@ struct Grocy_MobileApp: App {
             let isMigrationError = nsError.code == 134140 && nsError.domain == NSCocoaErrorDomain
 
             if isMigrationError {
-                GrocyLogger.error("Data model migration error detected. The data model has changed and the store is incompatible. Deleting store at \(storeURL.path)")
+                GrocyLogger.error(
+                    "Data model migration error detected. The data model has changed and the store is incompatible. Deleting store at \(storeURL.path)"
+                )
             } else {
                 GrocyLogger.error("Failed to create main ModelContainer: \(error). Attempting to delete store at \(storeURL.path)")
             }
@@ -271,7 +279,13 @@ struct Grocy_MobileApp: App {
 
         let numProfiles: Int = (try? profileModelContext.fetchCount(descriptor)) ?? 0
         if isLoggedIn && !isDemoModus && numProfiles == 0 && !grocyServerURL.isEmpty && !grocyAPIKey.isEmpty {
-            let profile = ServerProfile(name: "", grocyServerURL: grocyServerURL, grocyAPIKey: grocyAPIKey, useHassIngress: useHassIngress, hassToken: hassToken)
+            let profile = ServerProfile(
+                name: "",
+                grocyServerURL: grocyServerURL,
+                grocyAPIKey: grocyAPIKey,
+                useHassIngress: useHassIngress,
+                hassToken: hassToken
+            )
             selectedServerProfileID = profile.id
             profileModelContext.insert(profile)
             do {
@@ -351,14 +365,15 @@ extension ModelContainer {
 func sharedModelContainerURL() -> URL {
     let appGroupID = "group.georgappdev.Grocy"
     guard let sharedContainerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
-        let errorMsg = "Could not access shared app group container. App Groups entitlement might not be configured correctly. Expected identifier: \(appGroupID)"
+        let errorMsg =
+            "Could not access shared app group container. App Groups entitlement might not be configured correctly. Expected identifier: \(appGroupID)"
         GrocyLogger.error(errorMsg)
         fatalError(errorMsg)
     }
-    
+
     let appSupportDir = sharedContainerURL.appending(component: "Library/Application Support")
     let fileManager = FileManager.default
-    
+
     // Ensure Application Support directory exists
     if !fileManager.fileExists(atPath: appSupportDir.path) {
         do {
@@ -368,6 +383,6 @@ func sharedModelContainerURL() -> URL {
             GrocyLogger.error("Failed to create Application Support directory: \(error)")
         }
     }
-    
+
     return appSupportDir.appending(component: "default.store")
 }

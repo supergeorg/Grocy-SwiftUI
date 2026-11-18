@@ -189,7 +189,9 @@ struct MDChoreFormView: View {
                     WeekdayPicker(selection: $chore.periodConfig)
                 }
 
-                if [ChorePeriodType.hourly, ChorePeriodType.daily, ChorePeriodType.weekly, ChorePeriodType.monthly, ChorePeriodType.yearly].contains(chore.periodType) {
+                if [ChorePeriodType.hourly, ChorePeriodType.daily, ChorePeriodType.weekly, ChorePeriodType.monthly, ChorePeriodType.yearly].contains(
+                    chore.periodType
+                ) {
                     VStack(alignment: .leading) {
                         MyIntStepper(
                             amount: $chore.periodInterval,
@@ -255,9 +257,19 @@ struct MDChoreFormView: View {
             }
 
             Section {
-                MyToggle(isOn: $chore.trackDateOnly, description: "Track date only", descriptionInfo: "When enabled only the day of an execution is tracked, not the time", icon: MySymbols.date)
+                MyToggle(
+                    isOn: $chore.trackDateOnly,
+                    description: "Track date only",
+                    descriptionInfo: "When enabled only the day of an execution is tracked, not the time",
+                    icon: MySymbols.date
+                )
 
-                MyToggle(isOn: $chore.rollover, description: "Due date rollover", descriptionInfo: "When enabled the chore can never be overdue, the due date will shift forward each day when due", icon: MySymbols.choreRollover)
+                MyToggle(
+                    isOn: $chore.rollover,
+                    description: "Due date rollover",
+                    descriptionInfo: "When enabled the chore can never be overdue, the due date will shift forward each day when due",
+                    icon: MySymbols.choreRollover
+                )
             }
 
             Section {

@@ -67,7 +67,8 @@ class MDQuantityUnit: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDQuantityUnit, rhs: MDQuantityUnit) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.namePlural == rhs.namePlural && lhs.active == rhs.active && lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.namePlural == rhs.namePlural && lhs.active == rhs.active
+            && lhs.mdQuantityUnitDescription == rhs.mdQuantityUnitDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 
     func getName(amount: Double) -> String {

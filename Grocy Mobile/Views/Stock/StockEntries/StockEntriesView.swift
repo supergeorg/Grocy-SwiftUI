@@ -32,7 +32,10 @@ struct StockEntriesView: View {
         let predicate = #Predicate<StockEntry> { item in
             item.productID == stockElement.productID
         }
-        _stockEntries = Query(filter: predicate, sort: [SortDescriptor(\StockEntry.bestBeforeDate, order: .forward), SortDescriptor(\StockEntry.purchasedDate, order: .forward)])
+        _stockEntries = Query(
+            filter: predicate,
+            sort: [SortDescriptor(\StockEntry.bestBeforeDate, order: .forward), SortDescriptor(\StockEntry.purchasedDate, order: .forward)]
+        )
     }
 
     private let dataToUpdate: [ObjectEntities] = [.stock]

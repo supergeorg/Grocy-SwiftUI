@@ -41,7 +41,7 @@ struct StockJournalView: View {
 
     var stockElement: StockElement? = nil
     var isPopup: Bool = false
-    
+
     private var numFilters: Int {
         var filterCount = 0
         if filteredProductID != nil { filterCount += 1 }
@@ -125,7 +125,8 @@ struct StockJournalView: View {
         }
 
         // Combine predicates
-        let finalPredicate = predicates.reduce(nil as Predicate<StockJournalEntry>?) { (result: Predicate<StockJournalEntry>?, predicate: Predicate<StockJournalEntry>) in
+        let finalPredicate = predicates.reduce(nil as Predicate<StockJournalEntry>?) {
+            (result: Predicate<StockJournalEntry>?, predicate: Predicate<StockJournalEntry>) in
             if let existing = result {
                 return #Predicate<StockJournalEntry> {
                     existing.evaluate($0) && predicate.evaluate($0)

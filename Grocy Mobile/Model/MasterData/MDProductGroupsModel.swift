@@ -60,7 +60,8 @@ class MDProductGroup: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: MDProductGroup, rhs: MDProductGroup) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdProductGroupDescription == rhs.mdProductGroupDescription && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.active == rhs.active && lhs.mdProductGroupDescription == rhs.mdProductGroupDescription
+            && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 

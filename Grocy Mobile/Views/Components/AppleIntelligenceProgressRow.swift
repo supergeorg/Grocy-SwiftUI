@@ -61,6 +61,12 @@ struct AppleIntelligenceProgressRow: View {
 
 #Preview {
     Form {
-        AppleIntelligenceProgressRow(title: "Finding products with Apple Intelligence", detail: Text("\(3) of \(8) ingredients"), completed: 3, total: 8, onStop: {})
+        AppleIntelligenceProgressRow(
+            title: "Finding products with Apple Intelligence",
+            detail: Text("\(3) of \(8) ingredients"),
+            completed: 3,
+            total: 8,
+            onStop: {}
+        )
     }
 }

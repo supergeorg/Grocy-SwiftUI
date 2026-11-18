@@ -97,7 +97,8 @@ struct MDLocationFormView: View {
             MyToggle(
                 isOn: $location.isFreezer,
                 description: "Is freezer",
-                descriptionInfo: "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
+                descriptionInfo:
+                    "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
                 icon: MySymbols.freezing
             )
         }

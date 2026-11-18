@@ -40,15 +40,16 @@ struct EquipmentFormView: View {
         self.existingEquipment = existingEquipment
         self.isPopup = isPopup
         // Edited on a copy, so cancelling doesn't change the cached equipment.
-        self.equipment = existingEquipment.map {
-            MDEquipment(
-                id: $0.id,
-                name: $0.name,
-                mdEquipmentDescription: $0.mdEquipmentDescription,
-                instructionManualFileName: $0.instructionManualFileName,
-                rowCreatedTimestamp: $0.rowCreatedTimestamp
-            )
-        } ?? MDEquipment()
+        self.equipment =
+            existingEquipment.map {
+                MDEquipment(
+                    id: $0.id,
+                    name: $0.name,
+                    mdEquipmentDescription: $0.mdEquipmentDescription,
+                    instructionManualFileName: $0.instructionManualFileName,
+                    rowCreatedTimestamp: $0.rowCreatedTimestamp
+                )
+            } ?? MDEquipment()
     }
 
     private let dataToUpdate: [ObjectEntities] = [.equipment]
@@ -270,6 +271,12 @@ struct EquipmentFormView: View {
 
 #Preview("Edit", traits: .previewData) {
     NavigationStack {
-        EquipmentFormView(existingEquipment: MDEquipment(name: "Coffee machine", mdEquipmentDescription: "<p>Descale every 3 months.</p>", instructionManualFileName: "manual.pdf"))
+        EquipmentFormView(
+            existingEquipment: MDEquipment(
+                name: "Coffee machine",
+                mdEquipmentDescription: "<p>Descale every 3 months.</p>",
+                instructionManualFileName: "manual.pdf"
+            )
+        )
     }
 }

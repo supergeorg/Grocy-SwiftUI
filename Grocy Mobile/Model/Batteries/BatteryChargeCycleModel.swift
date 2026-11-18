@@ -68,7 +68,8 @@ class BatteryChargeCycle: Codable, Equatable, Identifiable {
     }
 
     static func == (lhs: BatteryChargeCycle, rhs: BatteryChargeCycle) -> Bool {
-        lhs.id == rhs.id && lhs.batteryID == rhs.batteryID && lhs.trackedTime == rhs.trackedTime && lhs.undone == rhs.undone && lhs.undoneTimestamp == rhs.undoneTimestamp
+        lhs.id == rhs.id && lhs.batteryID == rhs.batteryID && lhs.trackedTime == rhs.trackedTime && lhs.undone == rhs.undone
+            && lhs.undoneTimestamp == rhs.undoneTimestamp
             && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

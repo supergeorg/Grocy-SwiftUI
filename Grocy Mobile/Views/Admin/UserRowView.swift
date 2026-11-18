@@ -9,15 +9,15 @@ import SwiftUI
 
 struct UserRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    
+
     var user: GrocyUser
     var isCurrentUser: Bool
 
     let paddingValue: CGFloat = 7
     let cornerRadiusValue: CGFloat = 3
-    
+
     @State private var showDeleteAction: Bool = false
-    
+
     private func deleteUser() async {
         do {
             try await grocyVM.deleteUser(id: user.id)
@@ -27,7 +27,7 @@ struct UserRowActionsView: View {
             GrocyLogger.error("Delete user failed. \(error)")
         }
     }
-    
+
     var body: some View {
         // Real buttons (not tap gestures), labeled for VoiceOver; the icon-only style keeps the row compact.
         HStack {
@@ -76,16 +76,14 @@ struct UserRowActionsView: View {
 
 struct UserRowView: View {
     var user: GrocyUser
-    
+
     var isCurrentUser: Bool
-    
-    
-    
+
     var body: some View {
-        HStack{
+        HStack {
             UserRowActionsView(user: user, isCurrentUser: isCurrentUser)
             Divider()
-            VStack(alignment: .leading){
+            VStack(alignment: .leading) {
                 Text(user.username)
                     .font(.headline)
                 Text(user.displayName)

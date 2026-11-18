@@ -79,7 +79,7 @@ struct PhoneTabsSettingsView: View {
     }
 }
 
-private extension PhonePlace {
-    var tabRowID: String { "tab-\(rawValue)" }
-    var otherRowID: String { "other-\(rawValue)" }
+extension PhonePlace {
+    fileprivate var tabRowID: String { "tab-\(rawValue)" }
+    fileprivate var otherRowID: String { "other-\(rawValue)" }
 }

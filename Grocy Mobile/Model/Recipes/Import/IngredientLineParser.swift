@@ -485,7 +485,10 @@ nonisolated enum IngredientLineParser {
         for character in text {
             if character == "(" {
                 depth += 1
-                if depth == 1 { current = ""; continue }
+                if depth == 1 {
+                    current = ""
+                    continue
+                }
             } else if character == ")", depth > 0 {
                 depth -= 1
                 if depth == 0 {

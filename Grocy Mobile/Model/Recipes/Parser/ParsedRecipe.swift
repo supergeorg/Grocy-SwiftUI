@@ -30,6 +30,9 @@ struct ParsedRecipe {
     @Guide(description: "List of ingredients with their amounts, units, and names.")
     let ingredients: [ParsedIngredient]
 
-    @Guide(description: "URL of the main recipe image from the website. Extract the URL for the most prominent image of the website, most likely above the ingredients.")
+    @Guide(
+        description:
+            "URL of the main recipe image from the website. Extract the URL for the most prominent image of the website, most likely above the ingredients."
+    )
     var imageURL: String
 }

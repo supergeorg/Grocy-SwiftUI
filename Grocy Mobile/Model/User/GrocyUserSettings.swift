@@ -138,14 +138,22 @@ class GrocyUserSettings: Codable {
             self.stockAutoDecimalSeparatorPrices = try container.decodeFlexibleBoolIfPresent(forKey: .stockAutoDecimalSeparatorPrices)
             self.stockDefaultPurchaseAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .stockDefaultPurchaseAmount)
             self.stockDefaultConsumeAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .stockDefaultConsumeAmount)
-            self.stockDefaultConsumeAmountUseQuickConsumeAmount = try container.decodeFlexibleBoolIfPresent(forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount)
-            self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = try container.decodeFlexibleBoolIfPresent(forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList)
+            self.stockDefaultConsumeAmountUseQuickConsumeAmount = try container.decodeFlexibleBoolIfPresent(
+                forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount
+            )
+            self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = try container.decodeFlexibleBoolIfPresent(
+                forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList
+            )
             self.showPurchasedDateOnPurchase = try container.decodeFlexibleBoolIfPresent(forKey: .showPurchasedDateOnPurchase)
-            self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decodeFlexibleBoolIfPresent(forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
+            self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decodeFlexibleBoolIfPresent(
+                forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext
+            )
             self.shoppingListShowCalendar = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListShowCalendar)
             self.shoppingListAutoAddBelowMinStockAmount = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListAutoAddBelowMinStockAmount)
             self.shoppingListAutoAddBelowMinStockAmountListID = try container.decodeFlexibleIntIfPresent(forKey: .shoppingListAutoAddBelowMinStockAmountListID)
-            self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
+            self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decodeFlexibleBoolIfPresent(
+                forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled
+            )
             self.choresDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .choresDueSoonDays)
             self.batteriesDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .batteriesDueSoonDays)
             self.choresOverviewSwapTrackingButtons = try container.decodeFlexibleBoolIfPresent(forKey: .choresOverviewSwapTrackingButtons)

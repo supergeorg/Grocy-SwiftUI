@@ -240,14 +240,21 @@ class StockProduct: Codable, Equatable {
     }
 
     static func == (lhs: StockProduct, rhs: StockProduct) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdProductDescription == rhs.mdProductDescription && lhs.productGroupID == rhs.productGroupID && lhs.active == rhs.active && lhs.locationID == rhs.locationID
-            && lhs.storeID == rhs.storeID && lhs.quIDPurchase == rhs.quIDPurchase && lhs.quIDStock == rhs.quIDStock && lhs.minStockAmount == rhs.minStockAmount && lhs.defaultDueDays == rhs.defaultDueDays
-            && lhs.defaultDueDaysAfterOpen == rhs.defaultDueDaysAfterOpen && lhs.defaultDueDaysAfterFreezing == rhs.defaultDueDaysAfterFreezing && lhs.defaultDueDaysAfterThawing == rhs.defaultDueDaysAfterThawing
+        lhs.id == rhs.id && lhs.name == rhs.name && lhs.mdProductDescription == rhs.mdProductDescription && lhs.productGroupID == rhs.productGroupID
+            && lhs.active == rhs.active && lhs.locationID == rhs.locationID
+            && lhs.storeID == rhs.storeID && lhs.quIDPurchase == rhs.quIDPurchase && lhs.quIDStock == rhs.quIDStock && lhs.minStockAmount == rhs.minStockAmount
+            && lhs.defaultDueDays == rhs.defaultDueDays
+            && lhs.defaultDueDaysAfterOpen == rhs.defaultDueDaysAfterOpen && lhs.defaultDueDaysAfterFreezing == rhs.defaultDueDaysAfterFreezing
+            && lhs.defaultDueDaysAfterThawing == rhs.defaultDueDaysAfterThawing
             && lhs.pictureFileName == rhs.pictureFileName && lhs.enableTareWeightHandling == rhs.enableTareWeightHandling && lhs.tareWeight == rhs.tareWeight
-            && lhs.notCheckStockFulfillmentForRecipes == rhs.notCheckStockFulfillmentForRecipes && lhs.parentProductID == rhs.parentProductID && lhs.calories == rhs.calories
-            && lhs.cumulateMinStockAmountOfSubProducts == rhs.cumulateMinStockAmountOfSubProducts && lhs.dueType == rhs.dueType && lhs.quickConsumeAmount == rhs.quickConsumeAmount && lhs.quickOpenAmount == rhs.quickOpenAmount
-            && lhs.hideOnStockOverview == rhs.hideOnStockOverview && lhs.defaultStockLabelType == rhs.defaultStockLabelType && lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen && lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock
-            && lhs.noOwnStock == rhs.noOwnStock && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID && lhs.moveOnOpen == rhs.moveOnOpen && lhs.quIDConsume == rhs.quIDConsume
+            && lhs.notCheckStockFulfillmentForRecipes == rhs.notCheckStockFulfillmentForRecipes && lhs.parentProductID == rhs.parentProductID
+            && lhs.calories == rhs.calories
+            && lhs.cumulateMinStockAmountOfSubProducts == rhs.cumulateMinStockAmountOfSubProducts && lhs.dueType == rhs.dueType
+            && lhs.quickConsumeAmount == rhs.quickConsumeAmount && lhs.quickOpenAmount == rhs.quickOpenAmount
+            && lhs.hideOnStockOverview == rhs.hideOnStockOverview && lhs.defaultStockLabelType == rhs.defaultStockLabelType
+            && lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen && lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock
+            && lhs.noOwnStock == rhs.noOwnStock && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID && lhs.moveOnOpen == rhs.moveOnOpen
+            && lhs.quIDConsume == rhs.quIDConsume
             && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

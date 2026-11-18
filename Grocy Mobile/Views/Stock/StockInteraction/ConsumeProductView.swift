@@ -145,7 +145,8 @@ struct ConsumeProductView: View {
     private let priceFormatter = NumberFormatter()
 
     private var isFormValid: Bool {
-        return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != -1) && !(useSpecificStockEntry && stockEntryID == nil) && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
+        return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != -1) && !(useSpecificStockEntry && stockEntryID == nil)
+            && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
     }
 
     /// Determines the actual product ID for the transaction
@@ -223,14 +224,25 @@ struct ConsumeProductView: View {
 
     private func consumeProduct() async {
         if let transactionProductID = transactionProductID {
-            let consumeInfo = ProductConsume(amount: factoredAmount, transactionType: .consume, spoiled: spoiled, stockEntryID: stockEntryID, recipeID: recipeID, locationID: locationID, exactAmount: nil, allowSubproductSubstitution: true)
+            let consumeInfo = ProductConsume(
+                amount: factoredAmount,
+                transactionType: .consume,
+                spoiled: spoiled,
+                stockEntryID: stockEntryID,
+                recipeID: recipeID,
+                locationID: locationID,
+                exactAmount: nil,
+                allowSubproductSubstitution: true
+            )
             isProcessingAction = true
             isSuccessful = nil
             var shlActionSuccessful: Bool = false
             do {
                 try await grocyVM.postStockObject(id: transactionProductID, stockModePost: .consume, content: consumeInfo)
                 GrocyLogger.info("Consume \(amount.formattedAmount) \(productName) successful.")
-                if let autoAddBelowMinStock = userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true, let shlID = userSettings?.shoppingListAutoAddBelowMinStockAmountListID {
+                if let autoAddBelowMinStock = userSettings?.shoppingListAutoAddBelowMinStockAmount, autoAddBelowMinStock == true,
+                    let shlID = userSettings?.shoppingListAutoAddBelowMinStockAmountListID
+                {
                     do {
                         try await grocyVM.shoppingListAction(content: ShoppingListAction(listID: shlID), actionType: .addMissing)
                         GrocyLogger.info("Consume product successful.")
@@ -287,7 +299,9 @@ struct ConsumeProductView: View {
                         if let product = product {
                             locationID = product.defaultConsumeLocationID ?? product.locationID
                             quantityUnitID = product.quIDStock
-                            amount = userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
+                            amount =
+                                userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false
+                                ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
                         }
                     }
                     // Clear specific stock entry when product changes
@@ -358,7 +372,8 @@ struct ConsumeProductView: View {
                         MyToggle(
                             isOn: $useSpecificStockEntry,
                             description: "Use a specific stock item",
-                            descriptionInfo: "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
+                            descriptionInfo:
+                                "The first item in this list would be picked by the default rule which is \"Opened first, then first due first, then first in first out\"",
                             icon: MySymbols.stockEntry
                         )
                         .onChange(of: useSpecificStockEntry) {
@@ -464,7 +479,7 @@ struct ConsumeProductView: View {
                             // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                             Label("Mark as opened", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.open)
                                 .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                            .labelStyle(.titleAndIcon)
+                                .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormValid || isProcessingAction)
@@ -485,7 +500,7 @@ struct ConsumeProductView: View {
                             // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                             Label("Consume product", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.consume)
                                 .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                            .labelStyle(.titleAndIcon)
+                                .labelStyle(.titleAndIcon)
                         }
                     )
                     .disabled(!isFormValid || isProcessingAction)

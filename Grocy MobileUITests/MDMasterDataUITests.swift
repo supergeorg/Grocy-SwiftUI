@@ -55,10 +55,13 @@ final class MDMasterDataUITests: GrocyUITestCase {
     func testProducts() async throws {
         let locationID = try await createObject("locations", ["name": "UITest location \(runID)", "active": 1])
         let unitID = try await createObject("quantity_units", ["name": "UITest unit \(runID)", "active": 1])
-        try await createObject("products", [
-            "name": entryName, "description": entryDescription, "active": 0, "location_id": locationID,
-            "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
-        ])
+        try await createObject(
+            "products",
+            [
+                "name": entryName, "description": entryDescription, "active": 0, "location_id": locationID,
+                "qu_id_purchase": unitID, "qu_id_stock": unitID, "qu_id_consume": unitID, "qu_id_price": unitID,
+            ]
+        )
         // The product form groups its fields on sub-pages; "Active" is under the optional properties.
         checkDisabledEntry(inList: "Products", formSection: "Optional properties")
     }

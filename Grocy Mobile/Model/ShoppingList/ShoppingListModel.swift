@@ -18,7 +18,7 @@ class ShoppingListItem: Codable, Equatable {
     var done: Bool
     var quID: Int?
     var rowCreatedTimestamp: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case productID = "product_id"
@@ -28,7 +28,7 @@ class ShoppingListItem: Codable, Equatable {
         case quID = "qu_id"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
-    
+
     required init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -44,7 +44,7 @@ class ShoppingListItem: Codable, Equatable {
             throw APIError.decodingError(error: error)
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -56,7 +56,7 @@ class ShoppingListItem: Codable, Equatable {
         try container.encode(quID, forKey: .quID)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
-    
+
     init(
         id: Int = -1,
         productID: Int? = nil,
@@ -76,15 +76,9 @@ class ShoppingListItem: Codable, Equatable {
         self.quID = quID
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
-    
+
     static func == (lhs: ShoppingListItem, rhs: ShoppingListItem) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.productID == rhs.productID &&
-        lhs.note == rhs.note &&
-        lhs.amount == rhs.amount &&
-        lhs.shoppingListID == rhs.shoppingListID &&
-        lhs.done == rhs.done &&
-        lhs.quID == rhs.quID &&
-        lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+        lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.note == rhs.note && lhs.amount == rhs.amount && lhs.shoppingListID == rhs.shoppingListID
+            && lhs.done == rhs.done && lhs.quID == rhs.quID && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }

@@ -66,7 +66,17 @@ struct DueView: View {
     }
 
     private var allItems: [DueItem] {
-        DueItem.items(stock: stock, volatileStock: volatileStockList.first, mdProducts: mdProducts, chores: chores, tasks: openTasks, batteries: batteries, userSettings: userSettingsList.first, systemConfig: systemConfig, hiddenKinds: hiddenKinds)
+        DueItem.items(
+            stock: stock,
+            volatileStock: volatileStockList.first,
+            mdProducts: mdProducts,
+            chores: chores,
+            tasks: openTasks,
+            batteries: batteries,
+            userSettings: userSettingsList.first,
+            systemConfig: systemConfig,
+            hiddenKinds: hiddenKinds
+        )
     }
 
     /// The kinds shown: enabled on the server and not hidden by the user.
@@ -83,7 +93,6 @@ struct DueView: View {
             collapsedValue = DueUrgency.encode(collapsed: newCollapsed)
         }
     }
-
 
     var body: some View {
         let allItems = allItems

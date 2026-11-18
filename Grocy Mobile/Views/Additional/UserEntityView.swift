@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UserEntityView: View {
     var userEntity: MDUserEntity
-    
+
     var body: some View {
         Text(userEntity.name)
     }
