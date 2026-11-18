@@ -14,17 +14,16 @@ struct AboutLineView: View {
 
     var body: some View {
         Label {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
                 Text(caption)
-                    .font(.title)
-                if let content = content {
+                if let content {
                     Text(content)
-                        .font(.body)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
             }
         } icon: {
             Image(systemName: iconName)
-                .font(.title2)
         }
     }
 }
@@ -32,80 +31,83 @@ struct AboutLineView: View {
 struct AboutView: View {
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
 
-    var body: some View {
-        #if os(macOS)
-            ScrollView {
-                content
-            }
-            .padding()
-        #else
-            content
-        #endif
+    @State private var showWhatsNew: Bool = false
+
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found"
     }
 
-    var content: some View {
+    var body: some View {
         Form {
             Section {
-                Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
-                    .lineLimit(.none)
-                AboutLineView(iconName: MySymbols.info, caption: "Version", content: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Version number not found")
-                AboutLineView(iconName: MySymbols.developer, caption: "Developer", content: "Georg Meißner")
-                Link(
-                    destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
-                    label: {
+                LabeledContent {
+                    Text(appVersion)
+                        .textSelection(.enabled)
+                } label: {
+                    Label("Version", systemImage: MySymbols.info)
+                }
+                LabeledContent {
+                    Text("Georg Meißner")
+                } label: {
+                    Label("Developer", systemImage: MySymbols.developer)
+                }
+                if let gitHubURL = URL(string: "https://github.com/supergeorg/Grocy-SwiftUI") {
+                    Link(destination: gitHubURL) {
                         AboutLineView(iconName: MySymbols.api, caption: "Github", content: "supergeorg/Grocy-SwiftUI")
                     }
-                )
-                Link(
-                    destination: URL(string: "https://github.com/grocy/grocy")!,
-                    label: {
-                        AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
-                    }
-                )
-
-                #if os(iOS)
-                    NavigationLink(
-                        destination: TranslatorsView(),
-                        label: {
-                            AboutLineView(iconName: MySymbols.language, caption: "Translators")
-                        }
-                    )
-                #else
-                    DisclosureGroup(
-                        content: {
-                            TranslatorsView()
-                        },
-                        label: {
-                            AboutLineView(iconName: MySymbols.language, caption: "Translators")
-                        }
-                    )
-                #endif
-                Link(
-                    destination: URL(string: "https://github.com/twostraws/CodeScanner")!,
-                    label: {
-                        AboutLineView(iconName: MySymbols.barcodeScan, caption: "CodeScanner", content: "Copyright (MIT License) 2019 Paul Hudson")
-                    }
-                )
-                Link(
-                    destination: URL(string: "https://github.com/Infomaniak/swift-rich-html-editor")!,
-                    label: {
-                        AboutLineView(iconName: MySymbols.richText, caption: "Infomaniak Rich HTML Editor", content: "Copyright (Apache 2.0 License) Infomaniak")
-                    }
-                )
+                }
             }
             .foregroundStyle(.primary)
-            Button(
-                "Replay app onboarding",
-                systemImage: MySymbols.reset,
-                action: {
-                    self.onboardingNeeded = true
+
+            Section {
+                if let grocyURL = URL(string: "https://github.com/grocy/grocy") {
+                    Link(destination: grocyURL) {
+                        AboutLineView(iconName: MySymbols.purchase, caption: "Grocy", content: "Copyright (MIT License) 2017 Bernd Bestel")
+                    }
                 }
-            )
+                #if os(iOS)
+                    NavigationLink {
+                        TranslatorsView()
+                    } label: {
+                        AboutLineView(iconName: MySymbols.language, caption: "Translators")
+                    }
+                #else
+                    DisclosureGroup {
+                        TranslatorsView()
+                    } label: {
+                        AboutLineView(iconName: MySymbols.language, caption: "Translators")
+                    }
+                #endif
+                if let editorURL = URL(string: "https://github.com/Infomaniak/swift-rich-html-editor") {
+                    Link(destination: editorURL) {
+                        AboutLineView(iconName: MySymbols.richText, caption: "Infomaniak Rich HTML Editor", content: "Copyright (Apache 2.0 License) Infomaniak")
+                    }
+                }
+            } footer: {
+                Text("I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible.")
+            }
+            .foregroundStyle(.primary)
+
+            Section {
+                Button("What's New in Grocy Mobile", systemImage: MySymbols.whatsNew) {
+                    showWhatsNew = true
+                }
+                .disabled(WhatsNew.features(for: WhatsNew.appVersion).isEmpty)
+                Button("Replay app onboarding", systemImage: MySymbols.reset) {
+                    onboardingNeeded = true
+                }
+            }
         }
+        .formStyle(.grouped)
         .navigationTitle("About this app")
+        .sheet(isPresented: $showWhatsNew) {
+            WhatsNewView()
+        }
     }
 }
 
 #Preview {
-    AboutView()
+    NavigationStack {
+        AboutView()
+    }
 }

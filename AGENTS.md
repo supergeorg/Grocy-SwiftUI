@@ -10,7 +10,7 @@ Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-
 - **Design language:** Liquid Glass (`.glassEffect(...)`, system toolbars, `ContentUnavailableView`). There's no fallback for older OS versions, and none should be added.
 - **Language / toolchain:** Swift 6, latest Xcode. The app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, and `SWIFT_STRICT_MEMORY_SAFETY = YES`.
 - **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
-- **Version:** `MARKETING_VERSION` in the project (currently 3.4.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
+- **Version:** `MARKETING_VERSION` in the project (currently 3.5.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
 - **Dependencies (SPM):** `InfomaniakRichHTMLEditor` (`swift-rich-html-editor`, up to next major from 3.3.1), used for editing recipe preparation HTML. Prefer Apple frameworks over adding new packages.
 
 ## Repository Layout

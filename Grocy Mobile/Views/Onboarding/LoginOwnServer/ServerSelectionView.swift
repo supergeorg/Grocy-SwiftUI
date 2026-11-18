@@ -29,6 +29,17 @@ struct ServerSelectionView: View {
 
     var body: some View {
         List {
+            if serverProfiles.isEmpty {
+                ContentUnavailableView {
+                    Label("No servers", systemImage: MySymbols.ownServer)
+                } description: {
+                    Text("No server added yet. Please add one.")
+                } actions: {
+                    Button("Add server") {
+                        showAddServer = true
+                    }
+                }
+            }
             ForEach(serverProfiles, id: \.id) { serverProfile in
                 Button(
                     action: {
@@ -61,7 +72,7 @@ struct ServerSelectionView: View {
                             showAddServer.toggle()
                         },
                         label: {
-                            Image(systemName: MySymbols.new)
+                            Label("Add server", systemImage: MySymbols.new)
                         }
                     )
                 }
@@ -117,8 +128,19 @@ struct ServerSelectionView: View {
 
     private func deleteProfiles(at offsets: IndexSet) {
         for index in offsets {
-            profileModelContext?.delete(serverProfiles[index])
+            let profile = serverProfiles[index]
+            if profile.id == selectedServerProfileID {
+                selectedServerProfileID = nil
+            }
+            profileModelContext?.delete(profile)
         }
+        do {
+            try profileModelContext?.save()
+        } catch {
+            GrocyLogger.error("Deleting server profile failed. \(error)")
+        }
+        // Refresh, so the list (and its empty state after the last server) shows the deletion.
+        fetchServerProfiles()
     }
 
     @ViewBuilder

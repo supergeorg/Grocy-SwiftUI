@@ -135,36 +135,36 @@ struct ServerProfileFormView: View {
             Section("Home Assistant Ingress") {
                 MyToggle(isOn: $serverProfile.useHassIngress, description: "Use Home Assistant Ingress", icon: MySymbols.homeAssistant)
                 if serverProfile.useHassIngress {
-                    HStack {
-                        MyTextField(
-                            textToEdit: $serverProfile.hassToken,
-                            description: "Long-Term-Token for Home Assistant",
-                            isCorrect: Binding.constant(true),
-                            leadingIcon: "key",
-                            helpText:
-                                "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS)."
+                    // The field gets the whole row, so the form can place its label above it when the label is long.
+                    // The QR scan is its own row, like the Grocy QR scan above.
+                    MyTextField(
+                        textToEdit: $serverProfile.hassToken,
+                        description: "Long-lived access token",
+                        isCorrect: Binding.constant(true),
+                        leadingIcon: MySymbols.apiKey,
+                        helpText:
+                            "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS)."
+                    )
+                    .autocorrectionDisabled(true)
+                    #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                    #endif
+                    #if os(iOS)
+                        Button(
+                            action: {
+                                isShowingTokenScanner.toggle()
+                            },
+                            label: {
+                                Label("Scan token QR code", systemImage: MySymbols.qrScan)
+                            }
                         )
-                        .autocorrectionDisabled(true)
-                        #if os(iOS)
-                            .textInputAutocapitalization(.never)
-                        #endif
-                        #if os(iOS)
-                            Button(
-                                action: {
-                                    isShowingTokenScanner.toggle()
-                                },
-                                label: {
-                                    Image(systemName: MySymbols.qrScan)
-                                }
-                            )
-                            .sheet(
-                                isPresented: $isShowingTokenScanner,
-                                content: {
-                                    CodeScannerSheetView(title: "QR-Scan", symbologies: [.qr], onCodeFound: self.handleHassTokenScan)
-                                }
-                            )
-                        #endif
-                    }
+                        .sheet(
+                            isPresented: $isShowingTokenScanner,
+                            content: {
+                                CodeScannerSheetView(title: "QR-Scan", symbologies: [.qr], onCodeFound: self.handleHassTokenScan)
+                            }
+                        )
+                    #endif
                 }
                 Link(
                     destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI/blob/main/Guides/Home%20Assistant%20Ingress/HomeAssistantIngressGuide.md")!,

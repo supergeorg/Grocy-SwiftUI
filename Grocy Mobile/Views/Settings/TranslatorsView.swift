@@ -16,25 +16,25 @@ struct TranslatorLineView: View {
     var body: some View {
         DisclosureGroup(
             content: {
-                Group {
-                    ForEach(languageContributors, id: \.self) { contributor in
-                        Text(contributor)
-                            .font(.caption)
-                    }
+                ForEach(languageContributors, id: \.self) { contributor in
+                    Text(contributor)
+                        .font(.subheadline)
+                        .textSelection(.enabled)
                 }
             },
             label: {
                 Label {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: Spacing.hairline) {
                         Text(languageName)
-                            .font(.title)
-                        Text(languageMaintainers)
-                            .font(.body)
+                        if !languageMaintainers.isEmpty {
+                            Text(languageMaintainers)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 } icon: {
-                    VStack {
-                        Text(languageFlag).font(.title)
-                    }
+                    Text(languageFlag)
+                        .accessibilityHidden(true)
                 }
             }
         )
@@ -57,6 +57,7 @@ struct TranslatorsView: View {
                 }
             )
         }
+        .formStyle(.grouped)
         .navigationTitle("Translators")
     }
 }
