@@ -54,6 +54,7 @@ nonisolated struct MySymbols {
 
     static let amount = "number.circle"
     static let price = "banknote"
+    static let priceHistory = "chart.line.uptrend.xyaxis"
     static let spoiled = "trash.circle"
     static let doesntSpoil = "trash.slash.circle"
     static let description = "text.justifyleft"

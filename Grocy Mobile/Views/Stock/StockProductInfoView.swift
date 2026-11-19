@@ -26,6 +26,25 @@ struct StockProductInfoView: View {
     var stockElement: StockElement
     var isPopup: Bool = false
 
+    /// Fetched on demand, like Grocy's product card; `nil` while loading, when it failed, or with price tracking turned off.
+    @State private var priceHistory: ProductPriceHistories?
+
+    private var isPriceTrackingEnabled: Bool {
+        grocyVM.systemConfig?.featureFlagStockPriceTracking ?? true
+    }
+
+    private func loadPriceHistory() async {
+        guard isPriceTrackingEnabled else {
+            priceHistory = nil
+            return
+        }
+        do {
+            priceHistory = try await grocyVM.getProductPriceHistory(productID: stockElement.productID)
+        } catch {
+            GrocyLogger.error("Loading the price history failed. \(error)")
+        }
+    }
+
     var body: some View {
         Form {
             if let productDetails = productDetails {
@@ -141,10 +160,14 @@ struct StockProductInfoView: View {
             } else {
                 Text("Retrieving Details failed.")
             }
+            if isPriceTrackingEnabled, let priceHistory, !priceHistory.isEmpty {
+                StockProductPriceHistoryView(priceHistory: priceHistory, quantityUnitName: productDetails?.quantityUnitStock?.name)
+            }
         }
         .navigationTitle(product?.name ?? "Product overview")
         .task {
             await grocyVM.requestStockInfo(stockModeGet: .details, productID: stockElement.productID)
+            await loadPriceHistory()
         }
         .toolbar {
             if isPopup {

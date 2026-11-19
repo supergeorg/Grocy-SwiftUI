@@ -8,12 +8,12 @@
 import Foundation
 import SwiftData
 
+/// The current user's settings (`/user/settings`, Grocy's `DefaultUserSetting`s).
+///
+/// All optional: a setting the server doesn't send (older version) stays `nil`.
+/// The `datatables_state_*` keys are left out on purpose: they hold the web frontend's table layout as JSON and mean nothing to the app.
 @Model
 class GrocyUserSettings: Codable {
-    //    var autoReloadOnDBChange: Bool
-    //    var nightModeEnabled: Bool
-    //    var autoNightModeEnabled, autoNightModeTimeRangeFrom, autoNightModeTimeRangeTo: String
-    //    var autoNightModeTimeRangeGoesOverMidnight, currentlyInsideNightModeRange, keepScreenOn, keepScreenOnWhenFullscreenCard: Bool
     var productPresetsLocationID: Int?
     var productPresetsProductGroupID: Int?
     var productPresetsQuID: Int?
@@ -28,8 +28,6 @@ class GrocyUserSettings: Codable {
     var stockDefaultPurchaseAmount: Double?
     var stockDefaultConsumeAmount: Double?
     var stockDefaultConsumeAmountUseQuickConsumeAmount: Bool?
-    //    var scanModeConsumeEnabled: Bool
-    //var scanModePurchaseEnabled: Bool
     var showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
     var stockOverviewShowAllOutOfStockProducts: Bool?
     var showPurchasedDateOnPurchase: Bool?
@@ -45,29 +43,31 @@ class GrocyUserSettings: Codable {
     var choresOverviewSwapTrackingButtons: Bool?
     var batteriesDueSoonDays: Int?
     var tasksDueSoonDays: Int?
-    //    var showClockInHeader: Bool
-    //    var quagga2Numofworkers: Int
-    //    var quagga2Halfsample: Bool
-    //    var quagga2Patchsize: String
-    //    var quagga2Frequency: Int
-    //    var quagga2Debug: Bool
-    //    var datatablesStateBarcodeTable, datatablesStateBatteriesTable, datatablesStateEquipmentTable, datatablesStateLocationsTable: String
-    //    var datatablesStateProductgroupsTable, datatablesStateProductsTable, datatablesStateQuConversionsTable, datatablesStateQuConversionsTableProducts: String
-    //    var datatablesStateQuantityunitsTable, datatablesStateShoppingListPrintShadowTable, datatablesStateShoppinglistTable, datatablesStateStoresTable: String
-    //    var datatablesStateStockJournalTable, datatablesStateStockOverviewTable, datatablesStateStockentriesTable, datatablesStateTaskcategoriesTable: String
-    //    var datatablesStateUserentitiesTable, datatablesStateUserfieldsTable, datatablesStateUsersTable
+    var nightMode: String?
+    var autoNightModeEnabled: Bool?
+    var autoNightModeTimeRangeFrom: String?
+    var autoNightModeTimeRangeTo: String?
+    var autoNightModeTimeRangeGoesOverMidnight: Bool?
+    var nightModeEnabledInternal: Bool?
+    var autoReloadOnDBChange: Bool?
+    var showClockInHeader: Bool?
+    var keepScreenOn: Bool?
+    var keepScreenOnWhenFullscreenCard: Bool?
+    var productPresetsDefaultStockLabelType: Int?
+    var scanModeConsumeEnabled: Bool?
+    var scanModePurchaseEnabled: Bool?
+    var shoppingListPrintShowHeader: Bool?
+    var shoppingListPrintGroupByProductGroup: Bool?
+    var shoppingListPrintLayoutType: String?
+    var recipesShowListSideBySide: Bool?
+    var calendarColorProducts: String?
+    var calendarColorTasks: String?
+    var calendarColorChores: String?
+    var calendarColorBatteries: String?
+    var calendarColorMealPlan: String?
     var locale: String?
 
     enum CodingKeys: String, CodingKey {
-        //        case autoReloadOnDBChange = "auto_reload_on_db_change"
-        //        case nightModeEnabled = "night_mode_enabled"
-        //        case autoNightModeEnabled = "auto_night_mode_enabled"
-        //        case autoNightModeTimeRangeFrom = "auto_night_mode_time_range_from"
-        //        case autoNightModeTimeRangeTo = "auto_night_mode_time_range_to"
-        //        case autoNightModeTimeRangeGoesOverMidnight = "auto_night_mode_time_range_goes_over_midnight"
-        //        case currentlyInsideNightModeRange = "currently_inside_night_mode_range"
-        //        case keepScreenOn = "keep_screen_on"
-        //        case keepScreenOnWhenFullscreenCard = "keep_screen_on_when_fullscreen_card"
         case productPresetsLocationID = "product_presets_location_id"
         case productPresetsProductGroupID = "product_presets_product_group_id"
         case productPresetsQuID = "product_presets_qu_id"
@@ -82,8 +82,6 @@ class GrocyUserSettings: Codable {
         case stockDefaultPurchaseAmount = "stock_default_purchase_amount"
         case stockDefaultConsumeAmount = "stock_default_consume_amount"
         case stockDefaultConsumeAmountUseQuickConsumeAmount = "stock_default_consume_amount_use_quick_consume_amount"
-        //        case scanModeConsumeEnabled = "scan_mode_consume_enabled"
-        //        case scanModePurchaseEnabled = "scan_mode_purchase_enabled"
         case showIconOnStockOverviewPageWhenProductIsOnShoppingList = "show_icon_on_stock_overview_page_when_product_is_on_shopping_list"
         case stockOverviewShowAllOutOfStockProducts = "stock_overview_show_all_out_of_stock_products"
         case showPurchasedDateOnPurchase = "show_purchased_date_on_purchase"
@@ -99,31 +97,28 @@ class GrocyUserSettings: Codable {
         case choresOverviewSwapTrackingButtons = "chores_overview_swap_tracking_buttons"
         case batteriesDueSoonDays = "batteries_due_soon_days"
         case tasksDueSoonDays = "tasks_due_soon_days"
-        //        case showClockInHeader = "show_clock_in_header"
-        //        case quagga2Numofworkers = "quagga2_numofworkers"
-        //        case quagga2Halfsample = "quagga2_halfsample"
-        //        case quagga2Patchsize = "quagga2_patchsize"
-        //        case quagga2Frequency = "quagga2_frequency"
-        //        case quagga2Debug = "quagga2_debug"
-        //        case datatablesStateBarcodeTable = "datatables_state_barcode-table"
-        //        case datatablesStateBatteriesTable = "datatables_state_batteries-table"
-        //        case datatablesStateEquipmentTable = "datatables_state_equipment-table"
-        //        case datatablesStateLocationsTable = "datatables_state_locations-table"
-        //        case datatablesStateProductgroupsTable = "datatables_state_productgroups-table"
-        //        case datatablesStateProductsTable = "datatables_state_products-table"
-        //        case datatablesStateQuConversionsTable = "datatables_state_qu-conversions-table"
-        //        case datatablesStateQuConversionsTableProducts = "datatables_state_qu-conversions-table-products"
-        //        case datatablesStateQuantityunitsTable = "datatables_state_quantityunits-table"
-        //        case datatablesStateShoppingListPrintShadowTable = "datatables_state_shopping-list-print-shadow-table"
-        //        case datatablesStateShoppinglistTable = "datatables_state_shoppinglist-table"
-        //        case datatablesStateStoresTable = "datatables_state_stores-table"
-        //        case datatablesStateStockJournalTable = "datatables_state_stock-journal-table"
-        //        case datatablesStateStockOverviewTable = "datatables_state_stock-overview-table"
-        //        case datatablesStateStockentriesTable = "datatables_state_stockentries-table"
-        //        case datatablesStateTaskcategoriesTable = "datatables_state_taskcategories-table"
-        //        case datatablesStateUserentitiesTable = "datatables_state_userentities-table"
-        //        case datatablesStateUserfieldsTable = "datatables_state_userfields-table"
-        //        case datatablesStateUsersTable = "datatables_state_users-table"
+        case nightMode = "night_mode"
+        case autoNightModeEnabled = "auto_night_mode_enabled"
+        case autoNightModeTimeRangeFrom = "auto_night_mode_time_range_from"
+        case autoNightModeTimeRangeTo = "auto_night_mode_time_range_to"
+        case autoNightModeTimeRangeGoesOverMidnight = "auto_night_mode_time_range_goes_over_midnight"
+        case nightModeEnabledInternal = "night_mode_enabled_internal"
+        case autoReloadOnDBChange = "auto_reload_on_db_change"
+        case showClockInHeader = "show_clock_in_header"
+        case keepScreenOn = "keep_screen_on"
+        case keepScreenOnWhenFullscreenCard = "keep_screen_on_when_fullscreen_card"
+        case productPresetsDefaultStockLabelType = "product_presets_default_stock_label_type"
+        case scanModeConsumeEnabled = "scan_mode_consume_enabled"
+        case scanModePurchaseEnabled = "scan_mode_purchase_enabled"
+        case shoppingListPrintShowHeader = "shopping_list_print_show_header"
+        case shoppingListPrintGroupByProductGroup = "shopping_list_print_group_by_product_group"
+        case shoppingListPrintLayoutType = "shopping_list_print_layout_type"
+        case recipesShowListSideBySide = "recipes_show_list_side_by_side"
+        case calendarColorProducts = "calendar_color_products"
+        case calendarColorTasks = "calendar_color_tasks"
+        case calendarColorChores = "calendar_color_chores"
+        case calendarColorBatteries = "calendar_color_batteries"
+        case calendarColorMealPlan = "calendar_color_meal_plan"
         case locale
     }
 
@@ -168,6 +163,28 @@ class GrocyUserSettings: Codable {
             self.batteriesDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .batteriesDueSoonDays)
             self.choresOverviewSwapTrackingButtons = try container.decodeFlexibleBoolIfPresent(forKey: .choresOverviewSwapTrackingButtons)
             self.tasksDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .tasksDueSoonDays)
+            self.nightMode = try? container.decodeFlexibleString(forKey: .nightMode)
+            self.autoNightModeEnabled = try container.decodeFlexibleBoolIfPresent(forKey: .autoNightModeEnabled)
+            self.autoNightModeTimeRangeFrom = try? container.decodeFlexibleString(forKey: .autoNightModeTimeRangeFrom)
+            self.autoNightModeTimeRangeTo = try? container.decodeFlexibleString(forKey: .autoNightModeTimeRangeTo)
+            self.autoNightModeTimeRangeGoesOverMidnight = try container.decodeFlexibleBoolIfPresent(forKey: .autoNightModeTimeRangeGoesOverMidnight)
+            self.nightModeEnabledInternal = try container.decodeFlexibleBoolIfPresent(forKey: .nightModeEnabledInternal)
+            self.autoReloadOnDBChange = try container.decodeFlexibleBoolIfPresent(forKey: .autoReloadOnDBChange)
+            self.showClockInHeader = try container.decodeFlexibleBoolIfPresent(forKey: .showClockInHeader)
+            self.keepScreenOn = try container.decodeFlexibleBoolIfPresent(forKey: .keepScreenOn)
+            self.keepScreenOnWhenFullscreenCard = try container.decodeFlexibleBoolIfPresent(forKey: .keepScreenOnWhenFullscreenCard)
+            self.productPresetsDefaultStockLabelType = try container.decodeFlexibleIntIfPresent(forKey: .productPresetsDefaultStockLabelType)
+            self.scanModeConsumeEnabled = try container.decodeFlexibleBoolIfPresent(forKey: .scanModeConsumeEnabled)
+            self.scanModePurchaseEnabled = try container.decodeFlexibleBoolIfPresent(forKey: .scanModePurchaseEnabled)
+            self.shoppingListPrintShowHeader = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListPrintShowHeader)
+            self.shoppingListPrintGroupByProductGroup = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListPrintGroupByProductGroup)
+            self.shoppingListPrintLayoutType = try? container.decodeFlexibleString(forKey: .shoppingListPrintLayoutType)
+            self.recipesShowListSideBySide = try container.decodeFlexibleBoolIfPresent(forKey: .recipesShowListSideBySide)
+            self.calendarColorProducts = try? container.decodeFlexibleString(forKey: .calendarColorProducts)
+            self.calendarColorTasks = try? container.decodeFlexibleString(forKey: .calendarColorTasks)
+            self.calendarColorChores = try? container.decodeFlexibleString(forKey: .calendarColorChores)
+            self.calendarColorBatteries = try? container.decodeFlexibleString(forKey: .calendarColorBatteries)
+            self.calendarColorMealPlan = try? container.decodeFlexibleString(forKey: .calendarColorMealPlan)
             self.locale = try container.decodeIfPresent(String.self, forKey: .locale)
         } catch {
             throw APIError.decodingError(error: error)
@@ -205,6 +222,28 @@ class GrocyUserSettings: Codable {
         try container.encode(batteriesDueSoonDays, forKey: .batteriesDueSoonDays)
         try container.encode(choresOverviewSwapTrackingButtons, forKey: .choresOverviewSwapTrackingButtons)
         try container.encode(tasksDueSoonDays, forKey: .tasksDueSoonDays)
+        try container.encode(nightMode, forKey: .nightMode)
+        try container.encode(autoNightModeEnabled, forKey: .autoNightModeEnabled)
+        try container.encode(autoNightModeTimeRangeFrom, forKey: .autoNightModeTimeRangeFrom)
+        try container.encode(autoNightModeTimeRangeTo, forKey: .autoNightModeTimeRangeTo)
+        try container.encode(autoNightModeTimeRangeGoesOverMidnight, forKey: .autoNightModeTimeRangeGoesOverMidnight)
+        try container.encode(nightModeEnabledInternal, forKey: .nightModeEnabledInternal)
+        try container.encode(autoReloadOnDBChange, forKey: .autoReloadOnDBChange)
+        try container.encode(showClockInHeader, forKey: .showClockInHeader)
+        try container.encode(keepScreenOn, forKey: .keepScreenOn)
+        try container.encode(keepScreenOnWhenFullscreenCard, forKey: .keepScreenOnWhenFullscreenCard)
+        try container.encode(productPresetsDefaultStockLabelType, forKey: .productPresetsDefaultStockLabelType)
+        try container.encode(scanModeConsumeEnabled, forKey: .scanModeConsumeEnabled)
+        try container.encode(scanModePurchaseEnabled, forKey: .scanModePurchaseEnabled)
+        try container.encode(shoppingListPrintShowHeader, forKey: .shoppingListPrintShowHeader)
+        try container.encode(shoppingListPrintGroupByProductGroup, forKey: .shoppingListPrintGroupByProductGroup)
+        try container.encode(shoppingListPrintLayoutType, forKey: .shoppingListPrintLayoutType)
+        try container.encode(recipesShowListSideBySide, forKey: .recipesShowListSideBySide)
+        try container.encode(calendarColorProducts, forKey: .calendarColorProducts)
+        try container.encode(calendarColorTasks, forKey: .calendarColorTasks)
+        try container.encode(calendarColorChores, forKey: .calendarColorChores)
+        try container.encode(calendarColorBatteries, forKey: .calendarColorBatteries)
+        try container.encode(calendarColorMealPlan, forKey: .calendarColorMealPlan)
         try container.encode(locale, forKey: .locale)
     }
 }
