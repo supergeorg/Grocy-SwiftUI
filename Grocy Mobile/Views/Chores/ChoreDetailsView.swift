@@ -88,7 +88,10 @@ struct ChoreDetailsView: View {
                     LabeledContent(
                         content: {
                             HStack {
-                                Text(formatDateAsString(lastTracked, showTime: false, localizationKey: localizationKey) ?? "")
+                                Text(
+                                    formatDateTimeAsString(lastTracked, dateOnly: choreDetails.chore?.trackDateOnly ?? false, localizationKey: localizationKey)
+                                        ?? ""
+                                )
                                 Text(getRelativeDateAsText(lastTracked, localizationKey: localizationKey) ?? "")
                                     .font(.caption)
                                     .italic()

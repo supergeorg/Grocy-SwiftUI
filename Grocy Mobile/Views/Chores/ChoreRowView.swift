@@ -24,7 +24,7 @@ struct ChoreRowView: View {
                     if chore.isRescheduled == true {
                         Image(systemName: MySymbols.choreRescheduled)
                     }
-                    Text(formatDateAsString(nextEstimatedExecutionTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(nextEstimatedExecutionTime, dateOnly: chore.trackDateOnly, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(nextEstimatedExecutionTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()
@@ -34,7 +34,7 @@ struct ChoreRowView: View {
                 HStack {
                     Text("\(Text("Last tracked")):")
                     Spacer()
-                    Text(formatDateAsString(lastTrackedTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(lastTrackedTime, dateOnly: chore.trackDateOnly, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(lastTrackedTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()

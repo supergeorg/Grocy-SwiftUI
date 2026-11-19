@@ -457,7 +457,7 @@ struct DueView: View {
 
     private func trackChore(_ chore: Chore, skipped: Bool = false) async {
         do {
-            let executeInfo = ChoreExecuteModel(trackedTime: Date().iso8601withFractionalSeconds, doneBy: nil, skipped: skipped)
+            let executeInfo = ChoreExecuteModel(trackedTime: Date().grocyDateTimeString, doneBy: nil, skipped: skipped)
             _ = try await grocyVM.executeChore(id: chore.id, content: executeInfo)
             GrocyLogger.info("Tracking chore was successful.")
             doneCount += 1
@@ -470,7 +470,7 @@ struct DueView: View {
 
     private func completeTask(_ task: GrocyTask) async {
         do {
-            try await grocyVM.executeTask(taskID: task.id, content: TaskExecuteModel(doneTime: Date().iso8601withFractionalSeconds))
+            try await grocyVM.executeTask(taskID: task.id, content: TaskExecuteModel(doneTime: Date().grocyDateTimeString))
             GrocyLogger.info("Completing task was successful.")
             doneCount += 1
             await updateData()

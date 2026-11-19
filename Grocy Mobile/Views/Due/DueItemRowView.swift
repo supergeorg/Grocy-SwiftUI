@@ -30,9 +30,9 @@ struct DueItemRowView: View {
         }
     }
 
-    /// Tasks can have a due time; chores and batteries are shown by day.
-    private var showsTime: Bool {
-        if case .task = item.source { return item.date?.hasTimeComponent ?? false }
+    /// Chores tracked by date only never show a time; otherwise the time is shown when the date has one.
+    private var isDateOnly: Bool {
+        if case .chore(let chore) = item.source { return chore.trackDateOnly }
         return false
     }
 
@@ -62,7 +62,7 @@ struct DueItemRowView: View {
                 VStack(alignment: .trailing, spacing: Spacing.hairline) {
                     Text(getRelativeDateAsText(date, localizationKey: localizationKey) ?? "")
                         .font(.subheadline)
-                    Text(formatDateAsString(date, showTime: showsTime, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(date, dateOnly: isDateOnly, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -37,7 +37,7 @@ struct BatteryRowView: View {
                 Text("\(Text("Last charged")):")
                 Spacer()
                 if let lastTrackedTime = battery.lastTrackedTime {
-                    Text(formatDateAsString(lastTrackedTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(lastTrackedTime, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(lastTrackedTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()
@@ -50,7 +50,7 @@ struct BatteryRowView: View {
                 HStack {
                     Text("\(Text("Next planned charge cycle")):")
                     Spacer()
-                    Text(formatDateAsString(nextEstimatedChargeTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(nextEstimatedChargeTime, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(nextEstimatedChargeTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()

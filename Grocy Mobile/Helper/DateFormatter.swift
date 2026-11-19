@@ -36,6 +36,15 @@ extension Date {
         let startOfDay = calendar.startOfDay(for: self)
         return self != startOfDay
     }
+
+    /// Whether the date carries a real time of day worth showing.
+    /// Grocy stores date-only values as midnight (`00:00:00`) or as the end of the day (`23:59:59`, e.g. due dates of chores tracked by date).
+    nonisolated var hasTimeOfDay: Bool {
+        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: self)
+        let isStartOfDay = components.hour == 0 && components.minute == 0 && components.second == 0
+        let isEndOfDay = components.hour == 23 && components.minute == 59 && components.second == 59
+        return !isStartOfDay && !isEndOfDay
+    }
 }
 
 func formatDateOutput(_ dateStrIN: String) -> String? {
@@ -75,6 +84,20 @@ func formatDateAsString(_ date: Date?, showTime: Bool? = false, localizationKey:
     }
 }
 
+/// Formats a date from Grocy and adds the time when the value has one (see `Date.hasTimeOfDay`).
+/// - Parameter dateOnly: Hides the time, e.g. for chores that are tracked by date only.
+nonisolated func formatDateTimeAsString(_ date: Date?, dateOnly: Bool = false, localizationKey: String? = nil) -> String? {
+    guard let date else { return nil }
+    let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone.current
+    dateFormatter.locale = localizationKey.map { Locale(identifier: $0) } ?? .current
+    dateFormatter.dateStyle = .medium
+    if !dateOnly && date.hasTimeOfDay {
+        dateFormatter.timeStyle = .short
+    }
+    return dateFormatter.string(from: date)
+}
+
 func formatTimestampOutput(_ timeStamp: String, localizationKey: String? = nil) -> String? {
     let timeStampDate = getDateFromTimestamp(timeStamp)
     let timeStampFormatted = formatDateAsString(timeStampDate, showTime: true, localizationKey: localizationKey)
@@ -90,11 +113,17 @@ nonisolated func getDateFromString(_ dateString: String?) -> Date? {
     if let date = iso8601Formatter.date(from: dateString) {
         return date
     }
+    iso8601Formatter.formatOptions = [.withInternetDateTime]
+    if let date = iso8601Formatter.date(from: dateString) {
+        return date
+    }
 
     // Fall back to DateFormatter for custom formats
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
-    let formats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd"]
+    formatter.timeZone = .current
+    // Grocy stores local times without a time zone.
+    let formats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd"]
 
     for format in formats {
         formatter.dateFormat = format
@@ -106,17 +135,9 @@ nonisolated func getDateFromString(_ dateString: String?) -> Date? {
     return nil
 }
 
-func getDateFromTimestamp(_ dateString: String) -> Date? {
-    let strategy = Date.ISO8601FormatStyle()
-        .year()
-        .month()
-        .day()
-        .dateSeparator(.dash)
-        .dateTimeSeparator(.space)
-        .time(includingFractionalSeconds: false)
-        .timeSeparator(.colon)
-    let date = try? Date(dateString, strategy: strategy)
-    return date
+/// Parses a Grocy timestamp (`Y-m-d H:i:s`, local time).
+nonisolated func getDateFromTimestamp(_ dateString: String) -> Date? {
+    getDateFromString(dateString)
 }
 
 func getTimeDistanceFromNow(date: Date) -> Int? {
