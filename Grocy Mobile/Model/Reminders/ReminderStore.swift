@@ -459,7 +459,7 @@ final class ReminderStore {
         case .tasks:
             for (taskID, done) in changes.doneChanges.sorted(by: { $0.key < $1.key }) {
                 if done {
-                    let doneTime = (completionDates[taskID] ?? Date()).iso8601withFractionalSeconds
+                    let doneTime = (completionDates[taskID] ?? Date()).grocyDateTimeString
                     try await grocyVM.executeTask(taskID: taskID, content: TaskExecuteModel(doneTime: doneTime))
                 } else {
                     try await grocyVM.undoTask(taskID: taskID)
@@ -476,7 +476,7 @@ final class ReminderStore {
                 )
                 let taskID = try await grocyVM.postMDObject(object: .tasks, content: task).createdObjectID
                 if reminder.isCompleted {
-                    let doneTime = (reminder.completionDate ?? Date()).iso8601withFractionalSeconds
+                    let doneTime = (reminder.completionDate ?? Date()).grocyDateTimeString
                     try await grocyVM.executeTask(taskID: taskID, content: TaskExecuteModel(doneTime: doneTime))
                 }
                 link(reminder, to: taskID)
@@ -487,7 +487,7 @@ final class ReminderStore {
         case .chores:
             // A chore can't be undone from Reminders: its reminder reopens with the next due date right away.
             for (choreID, done) in changes.doneChanges.sorted(by: { $0.key < $1.key }) where done {
-                let trackedTime = (completionDates[choreID] ?? Date()).iso8601withFractionalSeconds
+                let trackedTime = (completionDates[choreID] ?? Date()).grocyDateTimeString
                 _ = try await grocyVM.executeChore(id: choreID, content: ChoreExecuteModel(trackedTime: trackedTime, doneBy: nil, skipped: false))
             }
             grocyVM.timeStampsAdditionalObjects[.chores] = nil

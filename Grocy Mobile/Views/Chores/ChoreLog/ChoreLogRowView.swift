@@ -25,7 +25,7 @@ struct ChoreLogRowView: View {
                 HStack {
                     Text("\(Text("Undone on")):")
                     Spacer()
-                    Text(formatDateAsString(choreLogEntry.undoneTimestamp, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(choreLogEntry.undoneTimestamp, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(choreLogEntry.undoneTimestamp, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()
@@ -35,7 +35,7 @@ struct ChoreLogRowView: View {
                 HStack {
                     Text("\(Text("Tracked time")):")
                     Spacer()
-                    Text(formatDateAsString(trackedTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(trackedTime, dateOnly: chore?.trackDateOnly ?? false, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(trackedTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()
@@ -49,7 +49,7 @@ struct ChoreLogRowView: View {
                 HStack {
                     Text("\(Text("Scheduled tracking time")):")
                     Spacer()
-                    Text(formatDateAsString(scheduledExecutionTime, showTime: false, localizationKey: localizationKey) ?? "")
+                    Text(formatDateTimeAsString(scheduledExecutionTime, dateOnly: chore?.trackDateOnly ?? false, localizationKey: localizationKey) ?? "")
                     Text(getRelativeDateAsText(scheduledExecutionTime, localizationKey: localizationKey) ?? "")
                         .font(.caption)
                         .italic()
@@ -63,9 +63,15 @@ struct ChoreLogRowView: View {
                 }
             }
         }
-        .listRowBackground(
-            (choreLogEntry.trackedTime ?? Date() > choreLogEntry.scheduledExecutionTime ?? Date()) ? Color(.GrocyColors.grocyRedBackground) : nil
-        )
+        .listRowBackground(isTrackedLate ? Color(.GrocyColors.grocyRedBackground) : nil)
+    }
+
+    /// Like Grocy's journal: a chore that wasn't skipped and was tracked after its scheduled time.
+    private var isTrackedLate: Bool {
+        guard !choreLogEntry.skipped, let trackedTime = choreLogEntry.trackedTime, let scheduledExecutionTime = choreLogEntry.scheduledExecutionTime else {
+            return false
+        }
+        return trackedTime > scheduledExecutionTime
     }
 }
 

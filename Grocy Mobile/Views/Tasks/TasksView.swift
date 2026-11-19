@@ -220,7 +220,7 @@ struct TasksView: View {
 
     private func trackTask(taskID: Int) async {
         do {
-            let executeInfo = TaskExecuteModel(doneTime: Date().iso8601withFractionalSeconds)
+            let executeInfo = TaskExecuteModel(doneTime: Date().grocyDateTimeString)
             try await grocyVM.executeTask(taskID: taskID, content: executeInfo)
             GrocyLogger.info("Tracking task successful.")
             await self.updateData()

@@ -129,7 +129,7 @@ struct BatteryTrackingView: View {
                     }
                     if let next = selectedBattery.nextEstimatedChargeTime {
                         LabeledContent("Next planned charge cycle") {
-                            Text(formatDateAsString(next, showTime: false, localizationKey: localizationKey) ?? "")
+                            Text(formatDateTimeAsString(next, localizationKey: localizationKey) ?? "")
                         }
                     }
                 }

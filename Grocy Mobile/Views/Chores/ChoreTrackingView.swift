@@ -54,7 +54,7 @@ struct ChoreTrackingView: View {
 
     private func trackChore(skipped: Bool = false) async {
         if let choreID {
-            let executeInfo = ChoreExecuteModel(trackedTime: trackedTime.iso8601withFractionalSeconds, doneBy: userID, skipped: skipped)
+            let executeInfo = ChoreExecuteModel(trackedTime: trackedTime.grocyDateTimeString, doneBy: userID, skipped: skipped)
             isProcessingAction = true
             isSuccessful = nil
             do {

@@ -190,7 +190,7 @@ struct ChoresView: View {
     }
 
     private func trackChore(choreID: Int, skipped: Bool = false) async {
-        let executeInfo = ChoreExecuteModel(trackedTime: Date().iso8601withFractionalSeconds, doneBy: nil, skipped: skipped)
+        let executeInfo = ChoreExecuteModel(trackedTime: Date().grocyDateTimeString, doneBy: nil, skipped: skipped)
         do {
             _ = try await grocyVM.executeChore(id: choreID, content: executeInfo)
             GrocyLogger.info("Tracking chore successful.")
