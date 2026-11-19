@@ -166,7 +166,7 @@ struct DueView: View {
             case .productNotInStock(let productID):
                 if let product = mdProducts.first(where: { $0.id == productID }) {
                     // A stand-in with amount 0, as in the stock overview's "below min. stock" filter.
-                    StockEntriesView(stockElement: StockElement(bestBeforeDate: nil, dueType: product.dueType, productID: productID, product: product))
+                    StockEntriesView(stockElement: StockElement(notInStock: product))
                 }
             case .chore(let choreID):
                 ChoreDetailsView(choreID: choreID)

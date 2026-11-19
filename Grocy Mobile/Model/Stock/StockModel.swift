@@ -20,7 +20,16 @@ class StockElement: Codable, Equatable {
     var isAggregatedAmount: Bool
     var dueType: DueType
     var productID: Int
-    @Relationship(deleteRule: .nullify) var product: MDProduct?
+    /// The stored link to the product, set by `SwiftDataSynchronizer` for the server's stock.
+    @Relationship(deleteRule: .nullify, originalName: "product") private var storedProduct: MDProduct?
+    /// The product of a display-only element (see `init(notInStock:)`). Not a relationship: linking a new object to a
+    /// stored product inserts it into the product's context, so a display-only element would end up in the store.
+    @Transient private var displayProduct: MDProduct? = nil
+
+    var product: MDProduct? {
+        get { storedProduct ?? displayProduct }
+        set { storedProduct = newValue }
+    }
 
     enum CodingKeys: String, CodingKey {
         case amount
@@ -47,7 +56,7 @@ class StockElement: Codable, Equatable {
             self.isAggregatedAmount = try container.decodeFlexibleBool(forKey: .isAggregatedAmount)
             self.dueType = DueType(rawValue: try container.decodeFlexibleInt(forKey: .dueType))!
             self.productID = try container.decodeFlexibleInt(forKey: .productID)
-            self.product = nil
+            self.storedProduct = nil
         } catch {
             throw APIError.decodingError(error: error)
         }
@@ -89,6 +98,21 @@ class StockElement: Codable, Equatable {
         self.dueType = dueType
         self.productID = productID
         self.product = product
+    }
+
+    /// A display-only element with amount 0, for a product that isn't in stock (the stock overview's products below their
+    /// minimum stock amount or, with "show all out of stock products", every other product). It stays out of SwiftData.
+    init(notInStock product: MDProduct) {
+        self.amount = 0
+        self.amountAggregated = 0
+        self.value = 0
+        self.bestBeforeDate = nil
+        self.amountOpened = 0
+        self.amountOpenedAggregated = 0
+        self.isAggregatedAmount = false
+        self.dueType = product.dueType
+        self.productID = product.id
+        self.displayProduct = product
     }
 
     static func == (lhs: StockElement, rhs: StockElement) -> Bool {
