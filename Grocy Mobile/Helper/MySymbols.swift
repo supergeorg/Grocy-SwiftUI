@@ -205,6 +205,19 @@ nonisolated struct MySymbols {
     static let nextStep = "chevron.forward"
     static let cookingFinished = "fork.knife.circle"
 
+    // MARK: - Meal plan
+
+    static let mealPlan = "menucard"
+    static let mealPlanSection = "square.split.1x2"
+    static let mealPlanNote = "note.text"
+    static let sectionTime = "clock"
+    static let previousWeek = "chevron.backward"
+    static let nextWeek = "chevron.forward"
+    static let copyDay = "document.on.document"
+    static let moreActions = "ellipsis"
+    static let dayMenu = "chevron.down"
+    static let mealPlanPeriod = "calendar"
+
     // MARK: - Recipe preparation editor
 
     static let formatBold = "bold"

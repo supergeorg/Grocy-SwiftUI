@@ -138,6 +138,8 @@ struct Grocy_MobileApp: App {
         RecipeNesting.self,
         VolatileStockElement.self,
         VolatileStockProductMissing.self,
+        MealPlanEntry.self,
+        MDMealPlanSection.self,
     ]
 
     var modelContainer: ModelContainer

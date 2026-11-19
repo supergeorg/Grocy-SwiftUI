@@ -48,9 +48,9 @@ struct Sidebar: View {
                         Label("Recipes", systemImage: MySymbols.recipe)
                     }
 
-                    if devMode {
+                    if systemConfig?.featureFlagRecipesMealplan != false {
                         NavigationLink(value: NavigationItem.mealPlan) {
-                            Label("Meal plan", systemImage: MySymbols.date)
+                            Label("Meal plan", systemImage: MySymbols.mealPlan)
                         }
                     }
                 }

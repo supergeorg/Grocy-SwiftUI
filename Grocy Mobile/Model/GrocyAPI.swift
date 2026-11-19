@@ -32,6 +32,7 @@ public enum ObjectEntities: String, CaseIterable {
     case userentities
     case userobjects
     case meal_plan
+    case meal_plan_sections
     case stock_log
     case stock
     case stock_current_locations
@@ -115,6 +116,7 @@ protocol GrocyAPI {
     // MARK: - Shopping List
     func shoppingListAddItem(content: Data) async throws
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws
+    func shoppingListAddProduct(content: Data) async throws
     // MARK: - Master Data
     func getObject<T: Codable>(object: ObjectEntities) async throws -> T
     func postObject<T: Codable>(object: ObjectEntities, content: Data) async throws -> T
@@ -753,6 +755,10 @@ extension GrocyApi {
 
     func shoppingListAddItem(content: Data) async throws {
         try await callEmptyResponse(.objectsEntity, method: .POST, object: .shopping_list, content: content)
+    }
+
+    func shoppingListAddProduct(content: Data) async throws {
+        try await callEmptyResponse(.stockShoppingListAddProduct, method: .POST, content: content)
     }
 
     func shoppingListAction(content: Data, actionType: ShoppingListActionType) async throws {
