@@ -252,7 +252,9 @@ nonisolated struct MySymbols {
     static let transferFrom = "square.and.arrow.up"
     static let transferTo = "square.and.arrow.down"
     static let note = "square.and.pencil"
-    static let exportToReminders = "checklist"
+    static let syncWithReminders = "checklist"
+    static let lastSync = "clock"
+    static let syncNow = "arrow.triangle.2.circlepath"
 
     // MARK: - Scanner
 

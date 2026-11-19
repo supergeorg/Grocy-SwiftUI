@@ -87,6 +87,7 @@ extension ModelContainer {
 struct Grocy_MobileApp: App {
     @State private var grocyVM: GrocyViewModel
     @State private var deepLinkManager = DeepLinkManager()
+    @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("onboardingNeeded") var onboardingNeeded: Bool = true
@@ -225,6 +226,7 @@ struct Grocy_MobileApp: App {
             // The view model writes through the same main context the views read from, so @Query and
             // modelContext.fetch in views see its saves immediately.
             let vm = GrocyViewModel(modelContext: container.mainContext, profileModelContext: profileContainer.mainContext)
+            ReminderStore.shared.observeChanges(grocyVM: vm)
             return (container, vm)
         }
 
@@ -328,6 +330,24 @@ struct Grocy_MobileApp: App {
         .environment(\.profileModelContext, profileModelContainer.mainContext)
         .environment(\.profileModelContainer, profileModelContainer)
         .environment(\.locale, Locale(identifier: localizationKey))
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            switch phase {
+            case .active:
+                ReminderStore.shared.startPeriodicSync()
+            case .background:
+                ReminderStore.shared.stopPeriodicSync()
+                #if os(iOS)
+                    ReminderStore.shared.scheduleBackgroundSync()
+                #endif
+            default:
+                break
+            }
+        }
+        #if os(iOS)
+            .backgroundTask(.appRefresh(ReminderStore.backgroundTaskIdentifier)) {
+                await ReminderStore.shared.syncInBackground()
+            }
+        #endif
         .commands {
             SidebarCommands()
             //            #if os(macOS)
