@@ -425,7 +425,7 @@ class GrocyViewModel {
                             self.shoppingList = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingList)
                             self.updateWidgetShoppingList()
-                            ReminderStore.shared.syncAutomaticallyIfEnabled(grocyVM: self)
+                            ReminderStore.shared.syncAutomaticallyIfEnabled(grocyVM: self, only: .shoppingList)
                         case .shopping_lists:
                             self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingListDescriptions)
@@ -446,6 +446,7 @@ class GrocyViewModel {
                             self.grocyTasks = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.grocyTasks)
                             self.updateWidgetTasks()
+                            ReminderStore.shared.syncAutomaticallyIfEnabled(grocyVM: self, only: .tasks)
                         case .task_categories:
                             self.mdTaskCategories = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdTaskCategories)
@@ -504,6 +505,7 @@ class GrocyViewModel {
             self.chores = try await grocyApi.getChores()
             try swiftDataSync.syncPersistentCollection(self.chores)
             self.updateWidgetChores()
+            ReminderStore.shared.syncAutomaticallyIfEnabled(grocyVM: self, only: .chores)
 
         case .stock:
             self.stock = try await grocyApi.getStock()

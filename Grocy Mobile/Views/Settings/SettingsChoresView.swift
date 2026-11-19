@@ -25,6 +25,11 @@ struct SettingsChoresView: View {
                     icon: MySymbols.choreTrackNext
                 )
             }
+            ReminderSyncSection(
+                target: .chores,
+                footer:
+                    "Mirrors the chores to a list in Reminders, with their next due dates. Checking off a chore there tracks it in Grocy, and the reminder comes back with the next due date. It syncs when the chores or their reminders change, every few minutes while the app is open, and from time to time in the background."
+            )
         }
         .formStyle(.grouped)
         .navigationTitle("Chores settings")

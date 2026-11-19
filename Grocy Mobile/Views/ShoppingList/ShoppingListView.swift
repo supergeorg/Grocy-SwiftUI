@@ -776,7 +776,7 @@ struct ShoppingListView: View {
                 }
             }
         )
-        .disabled(selectedShoppingList.map { ReminderStore.shared.syncingListIDs.contains($0.id) } ?? true)
+        .disabled(selectedShoppingList.map { ReminderStore.shared.isSyncing(.shoppingList(id: $0.id)) } ?? true)
     }
 
     var sortGroupMenu: some View {

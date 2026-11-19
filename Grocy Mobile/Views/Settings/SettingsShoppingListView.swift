@@ -10,7 +10,6 @@ import SwiftUI
 
 struct SettingsShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
-    @Environment(\.openURL) private var openURL
 
     @Query(sort: \ShoppingListDescription.id) var shoppingListDescriptions: ShoppingListDescriptions
 
@@ -109,20 +108,7 @@ struct SettingsShoppingListView: View {
     private var remindersSection: some View {
         Section {
             if reminderStore.isAccessDenied || reminderStore.isAccessRestricted {
-                LabeledContent {
-                    if reminderStore.isAccessDenied {
-                        Button("Open Settings") {
-                            if let url = ReminderStore.privacySettingsURL {
-                                openURL(url)
-                            }
-                        }
-                    }
-                } label: {
-                    Label(
-                        reminderStore.isAccessDenied ? "Reminders access is off" : "This device doesn't allow access to Reminders.",
-                        systemImage: MySymbols.warning
-                    )
-                }
+                RemindersAccessRow()
             } else {
                 MyToggle(isOn: $syncShoppingListToReminders, description: "Sync automatically", icon: MySymbols.syncWithReminders)
                 if syncShoppingListToReminders {
@@ -138,35 +124,26 @@ struct SettingsShoppingListView: View {
                                 .foregroundStyle(.primary)
                         }
                     )
-                    LabeledContent {
-                        if reminderStore.syncingListIDs.contains(shoppingListToSyncID) {
-                            ProgressView()
-                        } else if let lastSync = reminderStore.lastSync(shoppingListID: shoppingListToSyncID) {
-                            Text(lastSync, format: .relative(presentation: .named))
-                        } else {
-                            Text("Never")
-                        }
-                    } label: {
-                        Label("Last synced", systemImage: MySymbols.lastSync)
-                            .foregroundStyle(.primary)
-                    }
+                    ReminderLastSyncRow(
+                        isSyncing: reminderStore.isSyncing(.shoppingList(id: shoppingListToSyncID)),
+                        lastSync: reminderStore.lastSync(shoppingListID: shoppingListToSyncID)
+                    )
                     Button {
                         Task { await startAutomaticSync() }
                     } label: {
                         Label("Sync Now", systemImage: MySymbols.syncNow)
                     }
-                    .disabled(reminderStore.syncingListIDs.contains(shoppingListToSyncID))
+                    .disabled(reminderStore.isSyncing(.shoppingList(id: shoppingListToSyncID)))
                 }
             }
-            if !reminderStore.calendarIdentifiers.isEmpty {
+            if reminderStore.hasLinkedList(of: .shoppingList) {
                 Button("Unlink lists in Reminders", role: .destructive) {
                     showUnlinkConfirmation = true
                 }
                 // On the button, so the dialog's popover points at it.
-                .confirmationDialog("Unlink all lists in Reminders?", isPresented: $showUnlinkConfirmation, titleVisibility: .visible) {
+                .confirmationDialog("Unlink the shopping lists in Reminders?", isPresented: $showUnlinkConfirmation, titleVisibility: .visible) {
                     Button("Unlink") {
-                        syncShoppingListToReminders = false
-                        reminderStore.unlinkAll()
+                        reminderStore.unlink(.shoppingList)
                     }
                 } message: {
                     Text("Syncing stops. The lists and their reminders stay in Reminders.")
