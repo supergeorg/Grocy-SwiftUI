@@ -10,10 +10,6 @@ import SwiftUI
 struct SettingsChoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
-    @State private var isFirst: Bool = true
-
-    private let dataToUpdate: [ObjectEntities] = [.locations, .product_groups, .quantity_units]
-
     var body: some View {
         Form {
             Section("Chores overview") {
@@ -32,12 +28,6 @@ struct SettingsChoresView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("Chores settings")
-        .task {
-            if isFirst {
-                await grocyVM.requestData(objects: dataToUpdate)
-                isFirst = false
-            }
-        }
         .onDisappear(perform: {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])

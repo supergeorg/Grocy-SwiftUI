@@ -77,6 +77,12 @@ class ShoppingListItem: Codable, Equatable {
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 
+    /// The amount as the shopping list shows it: rounded up to a whole number when the
+    /// Grocy user setting "shopping_list_round_up" is on, like Grocy's own shopping list.
+    func displayAmount(roundUp: Bool) -> Double {
+        roundUp ? amount.rounded(.up) : amount
+    }
+
     static func == (lhs: ShoppingListItem, rhs: ShoppingListItem) -> Bool {
         lhs.id == rhs.id && lhs.productID == rhs.productID && lhs.note == rhs.note && lhs.amount == rhs.amount && lhs.shoppingListID == rhs.shoppingListID
             && lhs.done == rhs.done && lhs.quID == rhs.quID && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp

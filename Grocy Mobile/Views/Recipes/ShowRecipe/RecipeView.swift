@@ -20,6 +20,7 @@ struct RecipeView: View {
     @Query private var ingredientsAll: [RecipePosResolvedElement]
     @Query private var fulfilments: RecipeFulfilments
     @Query private var nestings: RecipesNesting
+    @Query private var userSettingsList: GrocyUserSettingsList
 
     var initialRecipe: Recipe
     @State private var recipe: Recipe
@@ -29,6 +30,9 @@ struct RecipeView: View {
     @State private var showConsumeAllNeeded: Bool = false
     @State private var showAddToShLSelection: Bool = false
     @State private var showCooking: Bool = false
+    /// The ingredients ticked off, by `RecipePosResolvedElement.miseEnPlaceID`. Shared with the cooking mode's mise en place.
+    /// Like in Grocy, the state isn't saved.
+    @State private var readyIngredients: Set<String> = []
 
     @State private var addToShLItems: [AddMissingToShLItem] = []
 
@@ -36,7 +40,7 @@ struct RecipeView: View {
     @ScaledMetric(relativeTo: .body) private var rowIconWidth: CGFloat = Sizes.rowIconWidth
 
     private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions, .recipes, .recipes_pos_resolved, .recipes_nestings, .products]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments, .user_settings]
 
     init(initialRecipe: Recipe) {
         self.initialRecipe = initialRecipe
@@ -56,9 +60,27 @@ struct RecipeView: View {
 
     private var fulfilment: RecipeFulfilment? { fulfilments.first }
 
-    /// Ingredient groups in display order: ungrouped ingredients first, then the groups by name.
-    private var groupedIngredients: [(name: String, ingredients: [RecipePosResolvedElement])] {
-        ingredientsAll.groupedForDisplay
+    private var userSettings: GrocyUserSettings? { userSettingsList.first }
+
+    /// Ingredient groups in display order: ungrouped ingredients first, then the groups by name,
+    /// each split by product group when the Grocy user setting asks for it.
+    private var groupedIngredients: [RecipeIngredientGroup] {
+        ingredientsAll.groupedForDisplay(byProductGroup: userSettings?.recipeIngredientsGroupByProductGroup ?? false)
+    }
+
+    /// Grocy's "recipes_show_ingredient_checkbox": a checkbox in front of each ingredient to tick it off.
+    private var showsIngredientCheckbox: Bool { userSettings?.recipesShowIngredientCheckbox ?? false }
+
+    private func readyBinding(_ id: String) -> Binding<Bool> {
+        Binding {
+            readyIngredients.contains(id)
+        } set: { isReady in
+            if isReady {
+                readyIngredients.insert(id)
+            } else {
+                readyIngredients.remove(id)
+            }
+        }
     }
 
     /// Calories of all ingredients; Grocy calculates them per serving.
@@ -189,15 +211,16 @@ struct RecipeView: View {
 
         ForEach(groupedIngredients, id: \.name) { group in
             Section {
-                ForEach(group.ingredients, id: \.id) { ingredient in
-                    let display = displayAmount(for: ingredient)
-                    RecipeIngredientRowView(
-                        recipePos: ingredient,
-                        amount: display.amount,
-                        quantityUnit: display.unit,
-                        stockQuantityUnit: quantityUnit(mdProducts.first { $0.id == ingredient.productID }?.quIDStock),
-                        nestedRecipeName: ingredient.isNestedRecipePos ? recipes.first { $0.id == ingredient.childRecipeID }?.name : nil
-                    )
+                ForEach(group.productGroups, id: \.name) { productGroup in
+                    if !productGroup.name.isEmpty {
+                        Text(productGroup.name)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .accessibilityAddTraits(.isHeader)
+                    }
+                    ForEach(productGroup.ingredients, id: \.id) { ingredient in
+                        ingredientRow(ingredient)
+                    }
                 }
             } header: {
                 if group.name.isEmpty {
@@ -230,6 +253,32 @@ struct RecipeView: View {
             Section("Preparation") {
                 HTMLPreviewView(htmlContent: $recipe.recipeDescription)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func ingredientRow(_ ingredient: RecipePosResolvedElement) -> some View {
+        let display = displayAmount(for: ingredient)
+        let isReady = readyIngredients.contains(ingredient.miseEnPlaceID)
+        let row = RecipeIngredientRowView(
+            recipePos: ingredient,
+            amount: display.amount,
+            quantityUnit: display.unit,
+            stockQuantityUnit: quantityUnit(mdProducts.first { $0.id == ingredient.productID }?.quIDStock),
+            nestedRecipeName: ingredient.isNestedRecipePos ? recipes.first { $0.id == ingredient.childRecipeID }?.name : nil,
+            isDone: showsIngredientCheckbox && isReady
+        )
+        if showsIngredientCheckbox {
+            Toggle(isOn: readyBinding(ingredient.miseEnPlaceID)) {
+                row
+            }
+            #if os(macOS)
+                .toggleStyle(.checkbox)
+            #else
+                .toggleStyle(.miseEnPlace)
+            #endif
+        } else {
+            row
         }
     }
 
@@ -283,11 +332,11 @@ struct RecipeView: View {
             )
             #if os(iOS)
                 .fullScreenCover(isPresented: $showCooking) {
-                    RecipeCookingView(recipe: recipe)
+                    RecipeCookingView(recipe: recipe, readyIngredients: $readyIngredients)
                 }
             #else
                 .sheet(isPresented: $showCooking) {
-                    RecipeCookingView(recipe: recipe)
+                    RecipeCookingView(recipe: recipe, readyIngredients: $readyIngredients)
                 }
             #endif
             .sheet(isPresented: $showAddToShLSelection) {
@@ -349,6 +398,7 @@ struct RecipeView: View {
                     }
                 }
             }
+            .sensoryFeedback(.selection, trigger: readyIngredients)
             .task {
                 await updateData()
             }

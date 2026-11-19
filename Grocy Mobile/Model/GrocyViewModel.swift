@@ -518,6 +518,8 @@ class GrocyViewModel {
             try swiftDataSync.syncSingletonModel(GrocyUserSettings.self, with: self.userSettings)
             self.updateWidgetChores()
             self.updateWidgetTasks()
+            // "Round up" changes how the shopping list widget shows its amounts.
+            self.updateWidgetShoppingList()
 
         case .recipeFulfillments:
             self.recipeFulfillments = try await grocyApi.getRecipeFulfillments()
@@ -654,6 +656,7 @@ class GrocyViewModel {
                 try modelContext.fetch(FetchDescriptor<MDQuantityUnit>()).map { ($0.id, $0) },
                 uniquingKeysWith: { first, _ in first }
             )
+            let roundUp = try modelContext.fetch(FetchDescriptor<GrocyUserSettings>()).first?.shoppingListRoundUp ?? false
 
             let lists = descriptions.map { description in
                 let listItems =
@@ -662,9 +665,10 @@ class GrocyViewModel {
                     .map { item in
                         let product = item.productID.flatMap { products[$0] }
                         let name = product?.name ?? item.note
-                        var amount = item.amount.formattedAmount
+                        let displayAmount = item.displayAmount(roundUp: roundUp)
+                        var amount = displayAmount.formattedAmount
                         if let quantityUnit = item.quID.flatMap({ quantityUnits[$0] }) {
-                            amount += " \(quantityUnit.getName(amount: item.amount))"
+                            amount += " \(quantityUnit.getName(amount: displayAmount))"
                         }
                         return WidgetShoppingListSummary.Item(id: item.id, name: name, amount: amount)
                     }

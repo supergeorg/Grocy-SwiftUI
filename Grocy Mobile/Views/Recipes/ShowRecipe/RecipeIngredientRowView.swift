@@ -18,6 +18,8 @@ struct RecipeIngredientRowView: View {
     var stockQuantityUnit: MDQuantityUnit?
     /// The included recipe this ingredient comes from, if it isn't one of the recipe's own.
     var nestedRecipeName: String? = nil
+    /// Ticked off with the ingredient checkbox: crossed out, like in Grocy.
+    var isDone: Bool = false
 
     private enum Status {
         case fulfilled, onShoppingList, missing
@@ -61,6 +63,8 @@ struct RecipeIngredientRowView: View {
 
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 Text("\(Text(amountText).fontWeight(.semibold)) \(recipePos.productName)")
+                    .strikethrough(isDone)
+                    .foregroundStyle(isDone ? .secondary : .primary)
 
                 Group {
                     switch status {

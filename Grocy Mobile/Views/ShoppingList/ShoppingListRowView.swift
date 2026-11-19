@@ -23,10 +23,11 @@ struct ShoppingListRowView: View {
     var onDelete: (ShoppingListItem) -> Void = { _ in }
 
     var amountString: String {
+        let amount = shoppingListItem.displayAmount(roundUp: userSettings?.shoppingListRoundUp ?? false)
         if let quantityUnit = quantityUnit {
-            return "\(shoppingListItem.amount.formattedAmount) \(quantityUnit.getName(amount: shoppingListItem.amount))"
+            return "\(amount.formattedAmount) \(quantityUnit.getName(amount: amount))"
         } else {
-            return "\(shoppingListItem.amount.formattedAmount)"
+            return "\(amount.formattedAmount)"
         }
     }
 
