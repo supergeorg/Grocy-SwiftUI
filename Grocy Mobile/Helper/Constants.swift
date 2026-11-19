@@ -73,6 +73,8 @@ enum Sizes {
     static let parserTextHeight: CGFloat = 200
     static let parserResultMaxHeight: CGFloat = 300
     static let popoverFormSize: CGFloat = 500
+    /// Height of the price history chart in the product overview.
+    static let priceHistoryChartHeight: CGFloat = 200
     /// Widest line length of the cooking mode's pages, so long steps stay readable on iPad and Mac.
     static let cookingReadableWidth: CGFloat = 720
     /// Widest line length of the onboarding, login start and What's New screens, so the feature list stays compact on iPad and Mac.

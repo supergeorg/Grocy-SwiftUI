@@ -857,12 +857,20 @@ class GrocyViewModel {
                 try swiftDataSync.syncPersistentCollection(stockEntries)
 
             case .priceHistory:
-                print("not implemented")
+                _ = try await getProductPriceHistory(productID: productID)
             }
         } catch {
             GrocyLogger.error("Data request failed for \(stockModeGet). Message: \("\(error)")")
             self.failedToLoadErrors.append(error)
         }
+    }
+
+    /// The product's purchase prices, newest first. Kept in memory only (`stockProductPriceHistories`), not in SwiftData.
+    @discardableResult
+    func getProductPriceHistory(productID: Int) async throws -> ProductPriceHistories {
+        let priceHistory: ProductPriceHistories = try await grocyApi.getStockProductInfo(stockModeGet: .priceHistory, productID: productID, queries: nil)
+        self.stockProductPriceHistories[productID] = priceHistory
+        return priceHistory
     }
 
     func getStockProductLocations(productID: Int) async throws {

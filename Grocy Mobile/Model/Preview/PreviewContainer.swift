@@ -56,6 +56,8 @@ struct PreviewContainer {
         MDEquipment.self,
         MealPlanEntry.self,
         MDMealPlanSection.self,
+        SystemConfig.self,
+        GrocyUserSettings.self,
     ]
 
     static let shared: ModelContainer = {
