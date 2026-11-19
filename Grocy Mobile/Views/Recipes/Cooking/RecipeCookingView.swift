@@ -25,8 +25,9 @@ struct RecipeCookingView: View {
 
     let recipe: Recipe
 
-    /// The ingredients the person has ready, by `CookingIngredient.id` (stable across syncs, unlike the element's UUID).
-    @State private var readyIngredients: Set<String> = []
+    /// The ingredients the person has ready, by `RecipePosResolvedElement.miseEnPlaceID`. Owned by the recipe screen,
+    /// so its ingredient checkboxes (Grocy's "recipes_show_ingredient_checkbox") show the same state.
+    @Binding var readyIngredients: Set<String>
     @State private var currentPage: Int = 0
 
     @State private var showConsumeConfirmation: Bool = false
@@ -34,8 +35,9 @@ struct RecipeCookingView: View {
     @State private var isConsumed: Bool = false
     @State private var errorMessage: String?
 
-    init(recipe: Recipe) {
+    init(recipe: Recipe, readyIngredients: Binding<Set<String>>) {
         self.recipe = recipe
+        _readyIngredients = readyIngredients
         let recipeID = recipe.id
         _ingredients = Query(filter: #Predicate<RecipePosResolvedElement> { $0.recipeID == recipeID })
     }
@@ -67,7 +69,7 @@ struct RecipeCookingView: View {
             amountText = unitName.isEmpty ? display.amount.formattedAmount : "\(display.amount.formattedAmount) \(unitName)"
         }
         return CookingIngredient(
-            id: "\(ingredient.recipeID)-\(ingredient.recipePosID)-\(ingredient.productID)",
+            id: ingredient.miseEnPlaceID,
             name: ingredient.productName,
             amountText: amountText,
             note: ingredient.note
@@ -500,8 +502,9 @@ private struct MiseEnPlaceIngredientLabel: View {
 
 #Preview("Recipe with steps", traits: .previewData) {
     @Previewable @Query(filter: #Predicate<Recipe> { $0.id == 1 }) var recipes: Recipes
+    @Previewable @State var readyIngredients: Set<String> = []
     if let recipe = recipes.first {
-        RecipeCookingView(recipe: recipe)
+        RecipeCookingView(recipe: recipe, readyIngredients: $readyIngredients)
             .onAppear {
                 recipe.recipeDescription = RecipePreparationFormat.html(
                     introduction: "A quick weeknight dinner.",
@@ -524,5 +527,6 @@ private struct MiseEnPlaceIngredientLabel: View {
 }
 
 #Preview("Without preparation", traits: .previewData) {
-    RecipeCookingView(recipe: Recipe(name: "Recipe without steps"))
+    @Previewable @State var readyIngredients: Set<String> = []
+    RecipeCookingView(recipe: Recipe(name: "Recipe without steps"), readyIngredients: $readyIngredients)
 }

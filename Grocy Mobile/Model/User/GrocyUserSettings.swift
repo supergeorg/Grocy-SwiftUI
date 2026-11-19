@@ -31,13 +31,16 @@ class GrocyUserSettings: Codable {
     //    var scanModeConsumeEnabled: Bool
     //var scanModePurchaseEnabled: Bool
     var showIconOnStockOverviewPageWhenProductIsOnShoppingList: Bool?
+    var stockOverviewShowAllOutOfStockProducts: Bool?
     var showPurchasedDateOnPurchase: Bool?
     var showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Bool?
     var shoppingListShowCalendar: Bool?
+    var shoppingListRoundUp: Bool?
     var shoppingListAutoAddBelowMinStockAmount: Bool?
     var shoppingListAutoAddBelowMinStockAmountListID: Int?
     var shoppingListToStockWorkflowAutoSubmitWhenPrefilled: Bool?
-    //    var recipeIngredientsGroupByProductGroup: Bool
+    var recipeIngredientsGroupByProductGroup: Bool?
+    var recipesShowIngredientCheckbox: Bool?
     var choresDueSoonDays: Int?
     var choresOverviewSwapTrackingButtons: Bool?
     var batteriesDueSoonDays: Int?
@@ -82,13 +85,16 @@ class GrocyUserSettings: Codable {
         //        case scanModeConsumeEnabled = "scan_mode_consume_enabled"
         //        case scanModePurchaseEnabled = "scan_mode_purchase_enabled"
         case showIconOnStockOverviewPageWhenProductIsOnShoppingList = "show_icon_on_stock_overview_page_when_product_is_on_shopping_list"
+        case stockOverviewShowAllOutOfStockProducts = "stock_overview_show_all_out_of_stock_products"
         case showPurchasedDateOnPurchase = "show_purchased_date_on_purchase"
         case showWarningOnPurchaseWhenDueDateIsEarlierThanNext = "show_warning_on_purchase_when_due_date_is_earlier_than_next"
         case shoppingListShowCalendar = "shopping_list_show_calendar"
+        case shoppingListRoundUp = "shopping_list_round_up"
         case shoppingListAutoAddBelowMinStockAmount = "shopping_list_auto_add_below_min_stock_amount"
         case shoppingListAutoAddBelowMinStockAmountListID = "shopping_list_auto_add_below_min_stock_amount_list_id"
         case shoppingListToStockWorkflowAutoSubmitWhenPrefilled = "shopping_list_to_stock_workflow_auto_submit_when_prefilled"
-        //        case recipeIngredientsGroupByProductGroup = "recipe_ingredients_group_by_product_group"
+        case recipeIngredientsGroupByProductGroup = "recipe_ingredients_group_by_product_group"
+        case recipesShowIngredientCheckbox = "recipes_show_ingredient_checkbox"
         case choresDueSoonDays = "chores_due_soon_days"
         case choresOverviewSwapTrackingButtons = "chores_overview_swap_tracking_buttons"
         case batteriesDueSoonDays = "batteries_due_soon_days"
@@ -144,16 +150,20 @@ class GrocyUserSettings: Codable {
             self.showIconOnStockOverviewPageWhenProductIsOnShoppingList = try container.decodeFlexibleBoolIfPresent(
                 forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList
             )
+            self.stockOverviewShowAllOutOfStockProducts = try container.decodeFlexibleBoolIfPresent(forKey: .stockOverviewShowAllOutOfStockProducts)
             self.showPurchasedDateOnPurchase = try container.decodeFlexibleBoolIfPresent(forKey: .showPurchasedDateOnPurchase)
             self.showWarningOnPurchaseWhenDueDateIsEarlierThanNext = try container.decodeFlexibleBoolIfPresent(
                 forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext
             )
             self.shoppingListShowCalendar = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListShowCalendar)
+            self.shoppingListRoundUp = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListRoundUp)
             self.shoppingListAutoAddBelowMinStockAmount = try container.decodeFlexibleBoolIfPresent(forKey: .shoppingListAutoAddBelowMinStockAmount)
             self.shoppingListAutoAddBelowMinStockAmountListID = try container.decodeFlexibleIntIfPresent(forKey: .shoppingListAutoAddBelowMinStockAmountListID)
             self.shoppingListToStockWorkflowAutoSubmitWhenPrefilled = try container.decodeFlexibleBoolIfPresent(
                 forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled
             )
+            self.recipeIngredientsGroupByProductGroup = try container.decodeFlexibleBoolIfPresent(forKey: .recipeIngredientsGroupByProductGroup)
+            self.recipesShowIngredientCheckbox = try container.decodeFlexibleBoolIfPresent(forKey: .recipesShowIngredientCheckbox)
             self.choresDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .choresDueSoonDays)
             self.batteriesDueSoonDays = try container.decodeFlexibleIntIfPresent(forKey: .batteriesDueSoonDays)
             self.choresOverviewSwapTrackingButtons = try container.decodeFlexibleBoolIfPresent(forKey: .choresOverviewSwapTrackingButtons)
@@ -181,12 +191,16 @@ class GrocyUserSettings: Codable {
         try container.encode(stockDefaultConsumeAmount, forKey: .stockDefaultConsumeAmount)
         try container.encode(stockDefaultConsumeAmountUseQuickConsumeAmount, forKey: .stockDefaultConsumeAmountUseQuickConsumeAmount)
         try container.encode(showIconOnStockOverviewPageWhenProductIsOnShoppingList, forKey: .showIconOnStockOverviewPageWhenProductIsOnShoppingList)
+        try container.encode(stockOverviewShowAllOutOfStockProducts, forKey: .stockOverviewShowAllOutOfStockProducts)
         try container.encode(showPurchasedDateOnPurchase, forKey: .showPurchasedDateOnPurchase)
         try container.encode(showWarningOnPurchaseWhenDueDateIsEarlierThanNext, forKey: .showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
         try container.encode(shoppingListShowCalendar, forKey: .shoppingListShowCalendar)
+        try container.encode(shoppingListRoundUp, forKey: .shoppingListRoundUp)
         try container.encode(shoppingListAutoAddBelowMinStockAmount, forKey: .shoppingListAutoAddBelowMinStockAmount)
         try container.encode(shoppingListAutoAddBelowMinStockAmountListID, forKey: .shoppingListAutoAddBelowMinStockAmountListID)
         try container.encode(shoppingListToStockWorkflowAutoSubmitWhenPrefilled, forKey: .shoppingListToStockWorkflowAutoSubmitWhenPrefilled)
+        try container.encode(recipeIngredientsGroupByProductGroup, forKey: .recipeIngredientsGroupByProductGroup)
+        try container.encode(recipesShowIngredientCheckbox, forKey: .recipesShowIngredientCheckbox)
         try container.encode(choresDueSoonDays, forKey: .choresDueSoonDays)
         try container.encode(batteriesDueSoonDays, forKey: .batteriesDueSoonDays)
         try container.encode(choresOverviewSwapTrackingButtons, forKey: .choresOverviewSwapTrackingButtons)

@@ -16910,6 +16910,9 @@
         }
       }
     },
+    "By default the stock overview page lists all products which are currently in stock or below their min. stock amount - when this is enabled, all (active) products are always shown" : {
+
+    },
     "Calendar" : {
       "localizations" : {
         "ca" : {
@@ -38838,6 +38841,9 @@
         }
       }
     },
+    "Group ingredients by their product group" : {
+
+    },
     "GS1 family" : {
       "shouldTranslate" : false
     },
@@ -58601,6 +58607,9 @@
         }
       }
     },
+    "Recipe card" : {
+
+    },
     "Recipe parsing" : {
       "localizations" : {
         "de" : {
@@ -58794,6 +58803,9 @@
           }
         }
       }
+    },
+    "Recipes settings" : {
+
     },
     "Release date" : {
       "localizations" : {
@@ -62073,6 +62085,9 @@
     "Show" : {
 
     },
+    "Show a little checkbox next to each ingredient to mark it as done" : {
+
+    },
     "Show a warning when the due date of the purchased product is earlier than the next due date in stock" : {
       "localizations" : {
         "ca" : {
@@ -62226,6 +62241,9 @@
           }
         }
       }
+    },
+    "Show all out of stock products" : {
+
     },
     "Show an icon if the product is already on the shopping list" : {
       "localizations" : {
@@ -67685,6 +67703,12 @@
         }
       }
     },
+    "Tasks overview" : {
+
+    },
+    "Tasks settings" : {
+
+    },
     "The app doesn't have permission to read reminders." : {
       "comment" : "access denied error description",
       "localizations" : {
@@ -67844,6 +67868,9 @@
           }
         }
       }
+    },
+    "The ingredient is crossed out when clicked, the status is not saved, means reset when the page is reloaded" : {
+
     },
     "The ingredients listed here result in this amount of servings" : {
       "localizations" : {

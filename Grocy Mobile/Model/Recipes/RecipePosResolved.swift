@@ -184,7 +184,44 @@ final class RecipePosResolvedElement: Codable {
 
 typealias RecipePosResolved = [RecipePosResolvedElement]
 
+extension RecipePosResolvedElement {
+    /// Identifies the ingredient in the mise en place by recipe, position and product, so it stays the same across syncs
+    /// (unlike the element's ID). The recipe screen's checkboxes and the cooking mode share it.
+    var miseEnPlaceID: String {
+        "\(recipeID)-\(recipePosID)-\(productID)"
+    }
+}
+
+/// An ingredient group of a recipe, with its ingredients split by product group when the Grocy user setting
+/// "recipe_ingredients_group_by_product_group" is on (otherwise one unnamed product group holds them all).
+struct RecipeIngredientGroup {
+    struct ProductGroup {
+        var name: String
+        var ingredients: [RecipePosResolvedElement]
+    }
+
+    var name: String
+    var productGroups: [ProductGroup]
+}
+
 extension [RecipePosResolvedElement] {
+    /// The ingredient groups in display order. With `byProductGroup`, each group lists its ingredients by product group,
+    /// like Grocy's recipe card: by product group name, ingredients without a product group first.
+    func groupedForDisplay(byProductGroup: Bool) -> [RecipeIngredientGroup] {
+        groupedForDisplay.map { group in
+            guard byProductGroup else {
+                return RecipeIngredientGroup(name: group.name, productGroups: [.init(name: "", ingredients: group.ingredients)])
+            }
+            let productGroups = Dictionary(grouping: group.ingredients, by: \.productGroup)
+                .map { RecipeIngredientGroup.ProductGroup(name: $0.key, ingredients: $0.value) }
+                .sorted { lhs, rhs in
+                    if lhs.name.isEmpty != rhs.name.isEmpty { return lhs.name.isEmpty }
+                    return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+                }
+            return RecipeIngredientGroup(name: group.name, productGroups: productGroups)
+        }
+    }
+
     /// The ingredient groups in display order: ungrouped ingredients first, then the groups by name, each sorted by product name.
     var groupedForDisplay: [(name: String, ingredients: [RecipePosResolvedElement])] {
         Dictionary(grouping: self) { $0.ingredientGroup ?? "" }

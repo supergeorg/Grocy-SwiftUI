@@ -233,40 +233,34 @@ struct StockView: View {
     }
 
     @State private var cachedMissingStock: Stock = []
-    @State private var missingStockUpdateTask: Task<Void, Never>?
 
     var missingStock: Stock {
         cachedMissingStock
     }
 
-    private func updateMissingStock() {
-        missingStockUpdateTask?.cancel()
+    /// Grocy's "stock_overview_show_all_out_of_stock_products": list every active product, not only those in stock
+    /// or below their minimum stock amount.
+    private var showsAllOutOfStockProducts: Bool {
+        userSettings?.stockOverviewShowAllOutOfStockProducts ?? false
+    }
 
-        // Build product lookup on main thread
+    /// The products that aren't in stock but belong in the overview, as empty stock elements: those below their minimum
+    /// stock amount and, with `showsAllOutOfStockProducts`, every other active product.
+    ///
+    /// Synchronous, so `computeFilteredAndGroupedStock()` right after it sees the new elements.
+    private func updateMissingStock() {
         let productsByID = Dictionary(uniqueKeysWithValues: mdProducts.map { ($0.id, $0) })
         let missingProducts = volatileStock?.missingProducts ?? []
         let stockProductIDs = Set(stock.map { $0.productID })
 
-        missingStockUpdateTask = Task {
-            if !Task.isCancelled {
-                self.cachedMissingStock = missingProducts.filter { !$0.isPartlyInStock && !stockProductIDs.contains($0.productID) }.compactMap {
-                    missingProduct in
-                    guard let product = productsByID[missingProduct.productID] else { return nil }
-                    return StockElement(
-                        amount: 0,
-                        amountAggregated: 0,
-                        value: 0.0,
-                        bestBeforeDate: nil,
-                        amountOpened: 0,
-                        amountOpenedAggregated: 0,
-                        isAggregatedAmount: false,
-                        dueType: product.dueType,
-                        productID: missingProduct.productID,
-                        product: product
-                    )
-                }
-            }
+        var elements: Stock = missingProducts.filter { !$0.isPartlyInStock && !stockProductIDs.contains($0.productID) }.compactMap { missingProduct in
+            productsByID[missingProduct.productID].map(StockElement.init(notInStock:))
         }
+        if showsAllOutOfStockProducts {
+            let listedProductIDs = stockProductIDs.union(elements.map(\.productID))
+            elements += mdProducts.filter { $0.active && !listedProductIDs.contains($0.id) }.map(StockElement.init(notInStock:))
+        }
+        cachedMissingStock = elements
     }
 
     var filteredAndSearchedStock: [StockElement] {
@@ -290,6 +284,24 @@ struct StockView: View {
         let stock = self.stock
         let missingStock = self.missingStock
         let productNamesByID = Dictionary(uniqueKeysWithValues: mdProducts.map { ($0.id, $0.name) })
+
+        // Built once per pass, not per element: with "show all out of stock products" the overview has an element for every
+        // product, and per-element scans of these lists made a pass quadratic.
+        let dueProductIDs = Set(volatileStock?.dueProducts.map(\.productID) ?? [])
+        let expiredProductIDs = Set(volatileStock?.expiredProducts.map(\.productID) ?? [])
+        let overdueProductIDs = Set(volatileStock?.overdueProducts.map(\.productID) ?? [])
+        let missingProductIDs = Set(volatileStock?.missingProducts.map(\.productID) ?? [])
+        let productIDsAtFilteredLocation: Set<Int>? = filteredLocationID.map { locationID in
+            Set(stockLocations.filter { $0.locationID == locationID }.map(\.productID))
+        }
+        var lastPurchasedByProductID: [Int: Date] = [:]
+        if stockGrouping == .lastPurchased {
+            for entry in stockEntries {
+                guard let purchasedDate = entry.purchasedDate else { continue }
+                if let known = lastPurchasedByProductID[entry.productID], known >= purchasedDate { continue }
+                lastPurchasedByProductID[entry.productID] = purchasedDate
+            }
+        }
 
         filterComputationTask = Task {
             // Run computation on main thread to avoid Sendable/ModelContext issues
@@ -321,18 +333,12 @@ struct StockView: View {
                 }
 
                 // Location filter
-                if let filterLocationID = filteredLocationID,
-                    !(self.stockLocations.contains { $0.productID == element.productID && $0.locationID == filterLocationID })
-                {
+                if let productIDsAtFilteredLocation, !productIDsAtFilteredLocation.contains(element.productID) {
                     continue
                 }
 
                 // Status filter
                 let productID = element.productID
-                let dueProductIDs = Set(self.volatileStock?.dueProducts.map { $0.productID } ?? [])
-                let expiredProductIDs = Set(self.volatileStock?.expiredProducts.map { $0.productID } ?? [])
-                let overdueProductIDs = Set(self.volatileStock?.overdueProducts.map { $0.productID } ?? [])
-                let missingProductIDs = Set(self.volatileStock?.missingProducts.map { $0.productID } ?? [])
 
                 let passesStatus =
                     filteredStatus == .all
@@ -353,11 +359,7 @@ struct StockView: View {
                     case .nextDueDate:
                         return element.bestBeforeDate as AnyHashable
                     case .lastPurchased:
-                        let lastPurchased = self.stockEntries
-                            .filter { $0.productID == productID && $0.purchasedDate != nil }
-                            .max { ($0.purchasedDate ?? Date.distantPast) < ($1.purchasedDate ?? Date.distantPast) }?
-                            .purchasedDate
-                        return lastPurchased as AnyHashable
+                        return lastPurchasedByProductID[productID] as AnyHashable
                     case .minStockAmount:
                         return element.product?.minStockAmount ?? 0
                     case .parentProduct:
@@ -540,11 +542,24 @@ struct StockView: View {
         // Observes a value snapshot, not the models: `onChange` keeps the previous value, and comparing models
         // that a sync has deleted reads detached attributes, which crashes SwiftData.
         .onChange(of: stock.map(StockSnapshot.init)) { _, _ in
+            // A product that leaves or enters the stock moves between the stock and the empty elements.
+            updateMissingStock()
             computeFilteredAndGroupedStock()
         }
         .onChange(of: volatileStock) { _, _ in
             updateMissingStock()
             computeFilteredAndGroupedStock()
+        }
+        .onChange(of: showsAllOutOfStockProducts) { _, _ in
+            updateMissingStock()
+            computeFilteredAndGroupedStock()
+        }
+        // Adding, deleting or (de)activating a product changes which products are listed.
+        .onChange(of: mdProducts.filter(\.active).map(\.id)) { _, _ in
+            if showsAllOutOfStockProducts {
+                updateMissingStock()
+                computeFilteredAndGroupedStock()
+            }
         }
         .toolbar(content: {
             ToolbarItemGroup(placement: .navigation) {

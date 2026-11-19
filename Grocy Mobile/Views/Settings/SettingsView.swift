@@ -15,7 +15,9 @@ enum SettingsNavigationItem: Hashable {
     case stockSettings
     case shoppingListSettings
     case choresSettings
+    case tasksSettings
     case batteriesSettings
+    case recipesSettings
     case mealPlanSettings
     case appLog
     case aboutApp
@@ -33,6 +35,9 @@ struct SettingsView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
     @Query private var systemConfigList: [SystemConfig]
+
+    /// The server's feature flags. Until the config is loaded, every area is shown.
+    private var systemConfig: SystemConfig? { systemConfigList.first }
 
     var body: some View {
         List {
@@ -75,23 +80,44 @@ struct SettingsView: View {
                     Label("App settings", systemImage: MySymbols.app)
                         .foregroundStyle(.primary)
                 }
-                NavigationLink(value: SettingsNavigationItem.stockSettings) {
-                    Label("Stock settings", systemImage: MySymbols.stockOverview)
-                        .foregroundStyle(.primary)
+                // Like Grocy's own settings, an area the server turned off has no settings page.
+                if systemConfig?.featureFlagStock != false {
+                    NavigationLink(value: SettingsNavigationItem.stockSettings) {
+                        Label("Stock settings", systemImage: MySymbols.stockOverview)
+                            .foregroundStyle(.primary)
+                    }
                 }
-                NavigationLink(value: SettingsNavigationItem.shoppingListSettings) {
-                    Label("Shopping list settings", systemImage: MySymbols.shoppingList)
-                        .foregroundStyle(.primary)
+                if systemConfig?.featureFlagShoppinglist != false {
+                    NavigationLink(value: SettingsNavigationItem.shoppingListSettings) {
+                        Label("Shopping list settings", systemImage: MySymbols.shoppingList)
+                            .foregroundStyle(.primary)
+                    }
                 }
-                NavigationLink(value: SettingsNavigationItem.choresSettings) {
-                    Label("Chores settings", systemImage: MySymbols.chores)
-                        .foregroundStyle(.primary)
+                if systemConfig?.featureFlagChores != false {
+                    NavigationLink(value: SettingsNavigationItem.choresSettings) {
+                        Label("Chores settings", systemImage: MySymbols.chores)
+                            .foregroundStyle(.primary)
+                    }
                 }
-                NavigationLink(value: SettingsNavigationItem.batteriesSettings) {
-                    Label("Batteries settings", systemImage: MySymbols.batteries)
-                        .foregroundStyle(.primary)
+                if systemConfig?.featureFlagTasks != false {
+                    NavigationLink(value: SettingsNavigationItem.tasksSettings) {
+                        Label("Tasks settings", systemImage: MySymbols.tasks)
+                            .foregroundStyle(.primary)
+                    }
                 }
-                if systemConfigList.first?.featureFlagRecipes != false && systemConfigList.first?.featureFlagRecipesMealplan != false {
+                if systemConfig?.featureFlagBatteries != false {
+                    NavigationLink(value: SettingsNavigationItem.batteriesSettings) {
+                        Label("Batteries settings", systemImage: MySymbols.batteries)
+                            .foregroundStyle(.primary)
+                    }
+                }
+                if systemConfig?.featureFlagRecipes != false {
+                    NavigationLink(value: SettingsNavigationItem.recipesSettings) {
+                        Label("Recipes settings", systemImage: MySymbols.recipe)
+                            .foregroundStyle(.primary)
+                    }
+                }
+                if systemConfig?.featureFlagRecipes != false && systemConfig?.featureFlagRecipesMealplan != false {
                     NavigationLink(value: SettingsNavigationItem.mealPlanSettings) {
                         Label("Meal plan settings", systemImage: MySymbols.mealPlan)
                             .foregroundStyle(.primary)
@@ -124,8 +150,12 @@ struct SettingsView: View {
                 SettingsShoppingListView()
             case .choresSettings:
                 SettingsChoresView()
+            case .tasksSettings:
+                SettingsTasksView()
             case .batteriesSettings:
                 SettingsBatteriesView()
+            case .recipesSettings:
+                SettingsRecipesView()
             case .mealPlanSettings:
                 SettingsMealPlanView()
             case .appLog:

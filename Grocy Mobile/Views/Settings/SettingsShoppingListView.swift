@@ -35,6 +35,11 @@ struct SettingsShoppingListView: View {
         Form {
             Section("Shopping list") {
                 ServerSettingsToggle(
+                    settingKey: GrocyUserSettings.CodingKeys.shoppingListRoundUp.rawValue,
+                    description: "Round up quantity amounts to the nearest whole number",
+                    icon: MySymbols.amount
+                )
+                ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmount.rawValue,
                     description: "Automatically add products that are below their defined min. stock amount to the shopping list",
                     icon: MySymbols.amount,

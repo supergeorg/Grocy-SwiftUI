@@ -5,12 +5,15 @@
 //  Created by Georg Meissner on 03.01.22.
 //
 
+import SwiftData
 import SwiftUI
 
 struct SettingsStockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @AppStorage("devMode") private var devMode: Bool = false
+
+    @Query private var systemConfigList: [SystemConfig]
 
     @State private var useQuickConsume: Bool = false
     @State private var isFirst: Bool = true
@@ -60,6 +63,13 @@ struct SettingsStockView: View {
                     description: "Show an icon if the product is already on the shopping list",
                     icon: MySymbols.shoppingList
                 )
+                ServerSettingsToggle(
+                    settingKey: GrocyUserSettings.CodingKeys.stockOverviewShowAllOutOfStockProducts.rawValue,
+                    description: "Show all out of stock products",
+                    descriptionInfo:
+                        "By default the stock overview page lists all products which are currently in stock or below their min. stock amount - when this is enabled, all (active) products are always shown",
+                    icon: MySymbols.stockOverview
+                )
             }
             Section("Purchase") {
                 ServerSettingsDoubleStepper(
@@ -101,17 +111,20 @@ struct SettingsStockView: View {
                     description: "Decimal places allowed for amounts",
                     icon: MySymbols.decimalPlaces
                 )
-                ServerSettingsIntStepper(
-                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesInput.rawValue,
-                    description: "Decimal places allowed for prices (input)",
-                    icon: MySymbols.decimalPlaces
-                )
-                ServerSettingsIntStepper(
-                    settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesDisplay.rawValue,
-                    description: "Decimal places allowed for prices (display)",
-                    icon: MySymbols.decimalPlaces
-                )
-                if devMode {
+                // Prices only matter when the server tracks them, as in Grocy's own settings.
+                if systemConfigList.first?.featureFlagStockPriceTracking != false {
+                    ServerSettingsIntStepper(
+                        settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesInput.rawValue,
+                        description: "Decimal places allowed for prices (input)",
+                        icon: MySymbols.decimalPlaces
+                    )
+                    ServerSettingsIntStepper(
+                        settingKey: GrocyUserSettings.CodingKeys.stockDecimalPlacesPricesDisplay.rawValue,
+                        description: "Decimal places allowed for prices (display)",
+                        icon: MySymbols.decimalPlaces
+                    )
+                }
+                if devMode && systemConfigList.first?.featureFlagStockPriceTracking != false {
                     ServerSettingsToggle(
                         settingKey: GrocyUserSettings.CodingKeys.stockAutoDecimalSeparatorPrices.rawValue,
                         description: "Add decimal separator automatically for price inputs",
