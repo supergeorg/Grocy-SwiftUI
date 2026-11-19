@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockTableRow: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.grocyFeatures) private var features
     @AppStorage("localizationKey") var localizationKey: String = "en"
 
     #if os(iOS)
@@ -37,13 +38,14 @@ struct StockTableRow: View {
     var productStatus: ProductStatus? {
         let productID = stockElement.productID
 
-        if (volatileStock?.dueProducts ?? []).contains(where: { $0.productID == productID }) {
+        // Without due date tracking, only "below min. stock" applies.
+        if features.dueDateTracking, (volatileStock?.dueProducts ?? []).contains(where: { $0.productID == productID }) {
             return .expiringSoon
         }
-        if (volatileStock?.expiredProducts ?? []).contains(where: { $0.productID == productID }) {
+        if features.dueDateTracking, (volatileStock?.expiredProducts ?? []).contains(where: { $0.productID == productID }) {
             return .expired
         }
-        if (volatileStock?.overdueProducts ?? []).contains(where: { $0.productID == productID }) {
+        if features.dueDateTracking, (volatileStock?.overdueProducts ?? []).contains(where: { $0.productID == productID }) {
             return .overdue
         }
         if (volatileStock?.missingProducts ?? []).contains(where: { $0.productID == productID }) {
@@ -84,7 +86,7 @@ struct StockTableRow: View {
             if stockElement.amount > 0 {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], mdQuantityUnits: mdQuantityUnits)
             }
-            if (stockElement.amount - stockElement.amountOpened) > 0 {
+            if features.openedTracking, (stockElement.amount - stockElement.amountOpened) > 0 {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], mdQuantityUnits: mdQuantityUnits)
             }
         }
@@ -171,7 +173,7 @@ struct StockTableRow: View {
             // an HStack squeezes the texts until words break ("Pack / s"); this moves whole items to the next line.
             FlowLayout(spacing: Spacing.small) {
                 Text("\(stockElement.amount.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amount) ?? "")")
-                if stockElement.amountOpened > 0 {
+                if features.openedTracking, stockElement.amountOpened > 0 {
                     Text("\(stockElement.amountOpened.formattedAmount) opened")
                         .font(.caption)
                         .italic()
@@ -179,7 +181,7 @@ struct StockTableRow: View {
                 if stockElement.amount != stockElement.amountAggregated {
                     Text("Σ \(stockElement.amountAggregated.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amountAggregated) ?? "")")
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
-                    if stockElement.amountOpenedAggregated > 0 {
+                    if features.openedTracking, stockElement.amountOpenedAggregated > 0 {
                         Text("\(stockElement.amountOpenedAggregated.formattedAmount) opened")
                             .foregroundStyle(Color(.GrocyColors.grocyGray))
                             .font(.caption)
@@ -194,7 +196,9 @@ struct StockTableRow: View {
                         .help("This product is currently on a shopping list.")
                         .accessibilityLabel(Text("This product is currently on a shopping list."))
                 }
-                if stockElement.bestBeforeDate == Date.neverOverdue {
+                if !features.dueDateTracking {
+                    EmptyView()
+                } else if stockElement.bestBeforeDate == Date.neverOverdue {
                     Text("Never overdue")
                 } else {
                     Text(formatDateAsString(stockElement.bestBeforeDate, showTime: false, localizationKey: localizationKey) ?? "")
@@ -207,8 +211,26 @@ struct StockTableRow: View {
     }
 }
 
-//struct StockTableRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StockTableRow(stockElement: StockElement(amount: "2", amountAggregated: "5", value: "1.0", bestBeforeDate: "12.12.2021", amountOpened: "1", amountOpenedAggregated: "2", isAggregatedAmount: "0", dueType: "1", productID: "1", product: MDProduct(id: "1", name: "Product", mdProductDescription: "", productGroupID: "1", active: "1", locationID: "1", storeID: "1", quIDPurchase: "1", quIDStock: "1", minStockAmount: "0", defaultBestBeforeDays: "0", defaultBestBeforeDaysAfterOpen: "0", defaultBestBeforeDaysAfterFreezing: "0", defaultBestBeforeDaysAfterThawing: "0", pictureFileName: nil, enableTareWeightHandling: "0", tareWeight: "0", notCheckStockFulfillmentForRecipes: "0", parentProductID: nil, calories: "13", cumulateMinStockAmountOfSubProducts: "1", dueType: "1", quickConsumeAmount: "1", rowCreatedTimestamp: "ts", hideOnStockOverview: nil, userfields: nil)), activeSheet: Binding.constant(nil))
-//    }
-//}
+#Preview(traits: .previewData) {
+    List {
+        StockTableRow(
+            stockElement: StockElement(
+                amount: 2,
+                amountAggregated: 2,
+                value: 3.5,
+                bestBeforeDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()),
+                amountOpened: 1,
+                amountOpenedAggregated: 1,
+                productID: 1,
+                product: MDProduct(id: 1, name: "Cookies")
+            ),
+            mdQuantityUnits: [],
+            shoppingList: [],
+            mdProductGroups: [],
+            volatileStock: nil,
+            parentProduct: nil,
+            userSettings: nil
+        )
+    }
+    .environment(StockInteractionNavigationRouter())
+}

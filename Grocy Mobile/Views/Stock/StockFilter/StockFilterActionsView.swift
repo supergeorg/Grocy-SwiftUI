@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct StockFilterActionsView: View {
+    @Environment(\.grocyFeatures) private var features
     @Binding var filteredStatus: ProductStatus
 
     var numExpiringSoon: Int?
@@ -17,27 +18,29 @@ struct StockFilterActionsView: View {
 
     var body: some View {
         FilterCapsuleBar {
-            StockFilterCapsuleView(
-                num: numExpiringSoon,
-                filteredStatus: $filteredStatus,
-                ownFilteredStatus: ProductStatus.expiringSoon,
-                color: Color(.GrocyColors.grocyYellow),
-                backgroundColor: Color(.GrocyColors.grocyYellowBackground)
-            )
-            StockFilterCapsuleView(
-                num: numOverdue,
-                filteredStatus: $filteredStatus,
-                ownFilteredStatus: ProductStatus.overdue,
-                color: Color(.GrocyColors.grocyGray),
-                backgroundColor: Color(.GrocyColors.grocyGrayBackground)
-            )
-            StockFilterCapsuleView(
-                num: numExpired,
-                filteredStatus: $filteredStatus,
-                ownFilteredStatus: ProductStatus.expired,
-                color: Color(.GrocyColors.grocyRed),
-                backgroundColor: Color(.GrocyColors.grocyRedBackground)
-            )
+            if features.dueDateTracking {
+                StockFilterCapsuleView(
+                    num: numExpiringSoon,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ProductStatus.expiringSoon,
+                    color: Color(.GrocyColors.grocyYellow),
+                    backgroundColor: Color(.GrocyColors.grocyYellowBackground)
+                )
+                StockFilterCapsuleView(
+                    num: numOverdue,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ProductStatus.overdue,
+                    color: Color(.GrocyColors.grocyGray),
+                    backgroundColor: Color(.GrocyColors.grocyGrayBackground)
+                )
+                StockFilterCapsuleView(
+                    num: numExpired,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ProductStatus.expired,
+                    color: Color(.GrocyColors.grocyRed),
+                    backgroundColor: Color(.GrocyColors.grocyRedBackground)
+                )
+            }
             StockFilterCapsuleView(
                 num: numBelowStock,
                 filteredStatus: $filteredStatus,

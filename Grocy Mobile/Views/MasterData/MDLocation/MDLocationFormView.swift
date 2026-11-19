@@ -14,6 +14,7 @@ struct MDLocationFormView: View {
     @Query(sort: \MDLocation.id, order: .forward) var mdLocations: MDLocations
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
@@ -94,13 +95,15 @@ struct MDLocationFormView: View {
             }
             MyToggle(isOn: $location.active, description: "Active", icon: MySymbols.active)
             MyTextEditor(textToEdit: $location.mdLocationDescription, description: "Description", leadingIcon: MySymbols.description)
-            MyToggle(
-                isOn: $location.isFreezer,
-                description: "Is freezer",
-                descriptionInfo:
-                    "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
-                icon: MySymbols.freezing
-            )
+            if features.freezing {
+                MyToggle(
+                    isOn: $location.isFreezer,
+                    description: "Is freezer",
+                    descriptionInfo:
+                        "When moving product from/to a freezer location, the products due date is automatically adjusted according to the product settings",
+                    icon: MySymbols.freezing
+                )
+            }
         }
         .formStyle(.grouped)
         .task {

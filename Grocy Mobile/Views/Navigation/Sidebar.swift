@@ -17,6 +17,7 @@ struct Sidebar: View {
 
     @State private var isMasterDataSectionExpanded: Bool = false
 
+    @Environment(\.grocyFeatures) private var features
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
         systemConfigList.first
@@ -97,8 +98,10 @@ struct Sidebar: View {
                     NavigationLink(value: NavigationItem.consume) {
                         Label("Consume", systemImage: MySymbols.consume)
                     }
-                    NavigationLink(value: NavigationItem.transfer) {
-                        Label("Transfer", systemImage: MySymbols.transfer)
+                    if features.locationTracking {
+                        NavigationLink(value: NavigationItem.transfer) {
+                            Label("Transfer", systemImage: MySymbols.transfer)
+                        }
                     }
                     NavigationLink(value: NavigationItem.inventory) {
                         Label("Inventory", systemImage: MySymbols.inventory)
@@ -199,6 +202,9 @@ struct Sidebar: View {
         #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif
+        .focusedSceneValue(\.sidebarSelection, $selection)
+        .focusedSceneValue(\.sidebarSystemConfig, systemConfig)
+        .focusedSceneValue(\.sidebarFeatures, features)
     }
 }
 

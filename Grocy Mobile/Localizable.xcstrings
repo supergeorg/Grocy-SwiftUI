@@ -7,6 +7,296 @@
     ":" : {
       "shouldTranslate" : false
     },
+    "A permission includes all permissions below it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Berechtigung umfasst alle Berechtigungen darunter."
+          }
+        }
+      }
+    },
+    "Add all list items to stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Einträge zum Bestand hinzufügen"
+          }
+        }
+      }
+    },
+    "Add items" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag hinzufügen"
+          }
+        }
+      }
+    },
+    "All permissions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Berechtigungen"
+          }
+        }
+      }
+    },
+    "Consume %@ %@ as spoiled" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ als verdorben verbrauchen"
+          }
+        }
+      }
+    },
+    "Create" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen"
+          }
+        }
+      }
+    },
+    "Create users" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer erstellen"
+          }
+        }
+      }
+    },
+    "Edit master data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stammdaten bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit own user data / change own password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Benutzerdaten bearbeiten / eigenes Passwort ändern"
+          }
+        }
+      }
+    },
+    "Edit stock entries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandseinträge bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit users (including passwords)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer bearbeiten (inklusive Passwörter)"
+          }
+        }
+      }
+    },
+    "Go" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehe zu"
+          }
+        }
+      }
+    },
+    "Item %lld of %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag %lld von %lld"
+          }
+        }
+      }
+    },
+    "Leave empty to keep the current password." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer lassen, um das aktuelle Passwort zu behalten."
+          }
+        }
+      }
+    },
+    "Mark completed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als erledigt markieren"
+          }
+        }
+      }
+    },
+    "No items to add to stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Einträge zum Hinzufügen zum Bestand"
+          }
+        }
+      }
+    },
+    "No recipe uses %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Rezept verwendet %@."
+          }
+        }
+      }
+    },
+    "No recipes found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Rezepte gefunden"
+          }
+        }
+      }
+    },
+    "No userfields found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Benutzerfelder gefunden."
+          }
+        }
+      }
+    },
+    "Open products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt als geöffnet markieren"
+          }
+        }
+      }
+    },
+    "Permissions for %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechtigungen für %@"
+          }
+        }
+      }
+    },
+    "Recipes with %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezepte mit %@"
+          }
+        }
+      }
+    },
+    "Remove items" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag entfernen"
+          }
+        }
+      }
+    },
+    "Search for recipes which contain this product" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Rezepten suchen, die dieses Produkt enthalten"
+          }
+        }
+      }
+    },
+    "Show users" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer anzeigen"
+          }
+        }
+      }
+    },
+    "Skip this item" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesen Eintrag überspringen"
+          }
+        }
+      }
+    },
+    "Stock entries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandseinträge"
+          }
+        }
+      }
+    },
+    "Track execution" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausführung erfassen"
+          }
+        }
+      }
+    },
+    "Undo execution" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausführung rückgängig machen"
+          }
+        }
+      }
+    },
     "“%@” from the website was matched to the similar unit “%@”." : {
       "localizations" : {
         "de" : {

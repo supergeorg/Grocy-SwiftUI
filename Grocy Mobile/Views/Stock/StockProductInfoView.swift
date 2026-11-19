@@ -11,6 +11,7 @@ import SwiftUI
 struct StockProductInfoView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @Query() var detailsList: [StockProductDetails]
     var productDetails: StockProductDetails? {
@@ -68,15 +69,17 @@ struct StockProductInfoView: View {
                             .foregroundStyle(.primary)
                     }
                 )
-                LabeledContent(
-                    content: {
-                        Text(productDetails.location?.name ?? "")
-                    },
-                    label: {
-                        Label("Default location", systemImage: MySymbols.location)
-                            .foregroundStyle(.primary)
-                    }
-                )
+                if features.locationTracking {
+                    LabeledContent(
+                        content: {
+                            Text(productDetails.location?.name ?? "")
+                        },
+                        label: {
+                            Label("Default location", systemImage: MySymbols.location)
+                                .foregroundStyle(.primary)
+                        }
+                    )
+                }
                 LabeledContent(
                     content: {
                         VStack(alignment: .trailing) {

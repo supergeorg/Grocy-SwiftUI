@@ -212,7 +212,8 @@ struct DueItem: Identifiable {
         var items: [DueItem] = []
         if systemConfig?.featureFlagStock != false, let volatileStock {
             let stockByProductID = Dictionary(stock.map { ($0.productID, $0) }, uniquingKeysWith: { first, _ in first })
-            if !hiddenKinds.contains(.product) {
+            // Without due date tracking (FEATURE_FLAG_STOCK_BEST_BEFORE_DATE_TRACKING), no product is due.
+            if !hiddenKinds.contains(.product), systemConfig?.featureFlagStockBestBeforeDateTracking != false {
                 let expiredIDs = Set(volatileStock.expiredProducts.map(\.productID))
                 let overdueIDs = Set(volatileStock.overdueProducts.map(\.productID))
                 let dueIDs = Set(volatileStock.dueProducts.map(\.productID))

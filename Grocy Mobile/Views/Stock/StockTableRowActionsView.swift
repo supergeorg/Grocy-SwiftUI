@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockTableRowActionsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     var stockElement: StockElement
     var shownActions: [ShownAction] = []
@@ -116,7 +117,7 @@ struct StockTableRowActionsView: View {
             .tint(Color(.GrocyColors.grocyDelete))
             .help("Consume all \(stockElement.product?.name ?? "?") which are currently in stock")
         }
-        if shownActions.contains(.openQA) {
+        if features.openedTracking && shownActions.contains(.openQA) {
             Button(
                 action: { Task { await openQuickConsumeAmount() } },
                 label: {

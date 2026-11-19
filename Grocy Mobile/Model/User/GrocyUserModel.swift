@@ -86,9 +86,12 @@ class GrocyUser: Codable, Equatable {
 typealias GrocyUsers = [GrocyUser]
 
 // MARK: - GrocyUserPOST
+/// The body to create or edit a user. On edit, Grocy keeps the password when it's empty.
 struct GrocyUserPOST: Codable {
     let id: Int
     let username, firstName, lastName, password: String
+    /// Grocy sets the picture from this on every edit, so an edit sends the current one to keep it.
+    var pictureFileName: String? = nil
     let rowCreatedTimestamp: Date
 
     enum CodingKeys: String, CodingKey {
@@ -97,6 +100,19 @@ struct GrocyUserPOST: Codable {
         case firstName = "first_name"
         case lastName = "last_name"
         case password
+        case pictureFileName = "picture_file_name"
         case rowCreatedTimestamp = "row_created_timestamp"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(username, forKey: .username)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encode(password, forKey: .password)
+        // Sent as `null` too: Grocy reads the key on every create and edit.
+        try container.encode(pictureFileName, forKey: .pictureFileName)
+        try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 }

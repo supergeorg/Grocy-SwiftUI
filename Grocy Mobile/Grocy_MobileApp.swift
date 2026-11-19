@@ -315,6 +315,7 @@ struct Grocy_MobileApp: App {
                     }
                 } else {
                     ContentView()
+                        .grocyFeatures()
                         .environment(deepLinkManager)
                         .onOpenURL { url in
                             if let deepLink = GrocyDeepLink(url: url) {
@@ -350,9 +351,7 @@ struct Grocy_MobileApp: App {
         #endif
         .commands {
             SidebarCommands()
-            //            #if os(macOS)
-            //            AppCommands()
-            //            #endif
+            AppCommands()
         }
         #if os(macOS)
             Settings {
@@ -360,6 +359,7 @@ struct Grocy_MobileApp: App {
                     NavigationStack {
                         SettingsView()
                     }
+                    .grocyFeatures()
                     .modelContainer(modelContainer)
                     .modelContainer(profileModelContainer)
                     .environment(grocyVM)

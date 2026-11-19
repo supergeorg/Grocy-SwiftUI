@@ -13,7 +13,7 @@ struct MDUserEntityRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(userEntity.caption)
-                .font(.title)
+                .font(.headline)
             Text(userEntity.name)
         }
         .multilineTextAlignment(.leading)
@@ -63,14 +63,7 @@ struct MDUserEntitiesView: View {
 
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
-            #if os(macOS)
-                NavigationView {
-                    bodyContent
-                        .frame(minWidth: Constants.macOSNavWidth)
-                }
-            #else
-                bodyContent
-            #endif
+            bodyContent
         } else {
             ServerProblemView()
                 .navigationTitle("Userentities")
@@ -85,7 +78,7 @@ struct MDUserEntitiesView: View {
                         action: {
                             showAddUserEntity.toggle()
                         },
-                        label: { Image(systemName: MySymbols.new) }
+                        label: { Label("Create", systemImage: MySymbols.new) }
                     )
                 }
             }
@@ -94,10 +87,15 @@ struct MDUserEntitiesView: View {
                 .sheet(
                     isPresented: self.$showAddUserEntity,
                     content: {
-                        NavigationView {
+                        NavigationStack {
                             MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
                         }
                     }
+                )
+            #else
+                .navigationDestination(
+                    isPresented: $showAddUserEntity,
+                    destination: { MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity) }
                 )
             #endif
     }
@@ -105,11 +103,11 @@ struct MDUserEntitiesView: View {
     var content: some View {
         List {
             if grocyVM.mdUserEntities.isEmpty {
-                Text("No userentities found.")
+                ContentUnavailableView("No userentities found.", systemImage: MySymbols.unknown)
             } else if filteredUserEntities.isEmpty {
                 ContentUnavailableView.search
             }
-            ForEach(filteredUserEntities, id: \.id) { userEntity in
+            ForEach(filteredUserEntities) { userEntity in
                 NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
@@ -127,15 +125,13 @@ struct MDUserEntitiesView: View {
             }
         }
         .task {
-            Task {
-                await updateData()
-            }
+            await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
-        //        .animation(.default, value: filteredUserEntities.count)
+        .animation(.default, value: filteredUserEntities.count)
         .alert(
             "Are you sure you want to delete userentity \"\(userEntityToDelete?.name ?? "")\"?",
             isPresented: $showDeleteConfirmation,
@@ -153,6 +149,8 @@ struct MDUserEntitiesView: View {
     }
 }
 
-#Preview {
-    MDUserEntitiesView()
+#Preview(traits: .previewData) {
+    NavigationStack {
+        MDUserEntitiesView()
+    }
 }

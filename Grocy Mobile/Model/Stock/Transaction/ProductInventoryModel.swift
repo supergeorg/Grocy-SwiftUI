@@ -16,6 +16,8 @@ struct ProductInventory: Codable {
     var locationID: Int?
     var price: Double?
     var note: String
+    /// Without due date tracking (`FEATURE_FLAG_STOCK_BEST_BEFORE_DATE_TRACKING`), no due date is sent and Grocy uses the product's default. Not encoded.
+    var sendsBestBeforeDate: Bool = true
 
     enum CodingKeys: String, CodingKey {
         case newAmount = "new_amount"
@@ -29,7 +31,9 @@ struct ProductInventory: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(newAmount, forKey: .newAmount)
-        try container.encode(bestBeforeDate.asJSONDateString, forKey: .bestBeforeDate)
+        if sendsBestBeforeDate {
+            try container.encode(bestBeforeDate.asJSONDateString, forKey: .bestBeforeDate)
+        }
         try container.encode(storeID, forKey: .storeID)
         try container.encode(locationID, forKey: .locationID)
         try container.encode(price, forKey: .price)

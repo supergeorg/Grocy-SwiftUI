@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct MDLocationRowView: View {
+    @Environment(\.grocyFeatures) private var features
+
     var location: MDLocation
 
     var body: some View {
@@ -17,7 +19,7 @@ struct MDLocationRowView: View {
                 Text(location.name)
                     .font(.headline)
                     .foregroundStyle(location.active ? .primary : .secondary)
-                if location.isFreezer {
+                if features.freezing, location.isFreezer {
                     Image(systemName: MySymbols.freezing)
                         .foregroundStyle(.secondary)
                         .accessibilityLabel(Text("Freezer"))

@@ -39,6 +39,7 @@ enum ShoppingListInteraction: Hashable, Identifiable {
     case newShoppingListEntry
     case purchase(item: ShoppingListItem)
     case autoPurchase(item: ShoppingListItem)
+    case purchaseAll(items: [ShoppingListItem])
 
     var id: Self { self }
 }
@@ -85,6 +86,7 @@ struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
     @Environment(\.openURL) private var openURL
+    @Environment(\.grocyFeatures) private var features
 
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
@@ -234,6 +236,13 @@ struct ShoppingListView: View {
             .filter {
                 $0.shoppingListID == selectedShoppingListID
             }
+    }
+
+    /// The items "Add all list items to stock" purchases: those with a product that aren't done yet, in the shown order.
+    private var itemsToPurchase: [ShoppingListItem] {
+        selectedShoppingListItems
+            .filter { $0.productID != nil && !$0.done }
+            .sorted { $0.id < $1.id }
     }
 
     var filteredShoppingListItems: [ShoppingListItem] {
@@ -503,7 +512,8 @@ struct ShoppingListView: View {
         .task {
             if firstAppear {
                 await updateData()
-                if selectedShoppingListID == -1 {
+                // Without multiple shopping lists, Grocy only uses its first list.
+                if selectedShoppingListID == -1 || !features.multipleShoppingLists {
                     selectedShoppingListID = shoppingListDescriptions.first?.id ?? -1
                 }
                 firstAppear = false
@@ -566,6 +576,8 @@ struct ShoppingListView: View {
                     PurchaseProductView(directProductToPurchaseID: item.productID, productToPurchaseAmount: item.amount, isPopup: true)
                 case .autoPurchase(let item):
                     PurchaseProductView(directProductToPurchaseID: item.productID, productToPurchaseAmount: item.amount, autoPurchase: true, isPopup: true)
+                case .purchaseAll(let items):
+                    ShoppingListPurchaseAllView(items: items)
                 }
             }
         }
@@ -656,26 +668,28 @@ struct ShoppingListView: View {
 
     var shoppingListActionContent: some View {
         Group {
-            Picker(
-                selection: $selectedShoppingListID,
-                label: Text(""),
-                content: {
-                    ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
-                        Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+            if features.multipleShoppingLists {
+                Picker(
+                    selection: $selectedShoppingListID,
+                    label: Text(""),
+                    content: {
+                        ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
+                            Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+                        }
                     }
-                }
-            )
-            .help("Shopping list")
-            Divider()
-            Button(
-                action: {
-                    shoppingListInteractionRouter.present(.newShoppingList)
-                },
-                label: {
-                    Label("New shopping list", systemImage: MySymbols.new)
-                }
-            )
-            .help("New shopping list")
+                )
+                .help("Shopping list")
+                Divider()
+                Button(
+                    action: {
+                        shoppingListInteractionRouter.present(.newShoppingList)
+                    },
+                    label: {
+                        Label("New shopping list", systemImage: MySymbols.new)
+                    }
+                )
+                .help("New shopping list")
+            }
             NavigationLink(
                 value: selectedShoppingList,
                 label: {
@@ -683,18 +697,20 @@ struct ShoppingListView: View {
                 }
             )
             .help("Edit shopping list")
-            Button(
-                role: .destructive,
-                action: {
-                    if let selectedShoppingList {
-                        activeAlert = .deleteShoppingList(alertSHL: selectedShoppingList)
+            if features.multipleShoppingLists {
+                Button(
+                    role: .destructive,
+                    action: {
+                        if let selectedShoppingList {
+                            activeAlert = .deleteShoppingList(alertSHL: selectedShoppingList)
+                        }
+                    },
+                    label: {
+                        Label("Delete shopping list", systemImage: MySymbols.delete)
                     }
-                },
-                label: {
-                    Label("Delete shopping list", systemImage: MySymbols.delete)
-                }
-            )
-            .help("Delete shopping list")
+                )
+                .help("Delete shopping list")
+            }
         }
     }
 
@@ -712,13 +728,18 @@ struct ShoppingListView: View {
                 }
             )
             .help("Clear list")
-            //            Button(action: {
-            //                print("Not implemented")
-            //            }, label: {
-            //                Label("Add all list items to stock", systemImage: "questionmark")
-            //            })
-            //            .help("Add all list items to stock")
-            //                .disabled(true)
+            if grocyVM.systemConfig?.featureFlagStock != false {
+                Button(
+                    action: {
+                        shoppingListInteractionRouter.present(.purchaseAll(items: itemsToPurchase))
+                    },
+                    label: {
+                        Label("Add all list items to stock", systemImage: MySymbols.purchase)
+                    }
+                )
+                .help("Add all list items to stock")
+                .disabled(itemsToPurchase.isEmpty)
+            }
             Button(
                 role: .destructive,
                 action: {

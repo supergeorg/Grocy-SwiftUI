@@ -11,6 +11,7 @@ import SwiftUI
 struct StockEntryRowView: View {
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.grocyFeatures) private var features
 
     var stockEntry: StockEntry
     var stockElement: StockElement
@@ -22,6 +23,7 @@ struct StockEntryRowView: View {
     var userSettings: GrocyUserSettings?
 
     var backgroundColor: Color? {
+        guard features.dueDateTracking else { return nil }
         if (0..<(userSettings?.stockDueSoonDays ?? 5 + 1)) ~= getTimeDistanceFromNow(date: stockEntry.bestBeforeDate) ?? 100 {
             return Color(.GrocyColors.grocyYellowBackground)
         }
@@ -45,10 +47,12 @@ struct StockEntryRowView: View {
                         .font(.headline)
 
                     Text(
-                        "\(Text("Amount")): \(stockEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: stockEntry.amount) ?? "") \(Text(stockEntry.stockEntryOpen == true ? "Opened" : ""))"
+                        "\(Text("Amount")): \(stockEntry.amount.formattedAmount) \(quantityUnit?.getName(amount: stockEntry.amount) ?? "") \(Text(features.openedTracking && stockEntry.stockEntryOpen == true ? "Opened" : ""))"
                     )
 
-                    if stockEntry.bestBeforeDate == Date.neverOverdue {
+                    if !features.dueDateTracking {
+                        EmptyView()
+                    } else if stockEntry.bestBeforeDate == Date.neverOverdue {
                         HStack(alignment: .bottom) {
                             Text("\(Text("Due date")): ")
                             Text("Never overdue")
@@ -62,7 +66,7 @@ struct StockEntryRowView: View {
                         }
                     }
 
-                    if let location {
+                    if features.locationTracking, let location {
                         Text("\(Text("Location")): \(location.name)")
                     }
 
@@ -90,8 +94,19 @@ struct StockEntryRowView: View {
     }
 }
 
-//#Preview(traits: .previewData) {
-//    Form {
-//        StockEntryRowView(stockEntry: StockEntry(), dueType: 1, productID: 2)
-//    }
-//}
+#Preview(traits: .previewData) {
+    let product = MDProduct(id: 1, name: "Cookies")
+    List {
+        StockEntryRowView(
+            stockEntry: StockEntry(
+                id: 1,
+                productID: 1,
+                amount: 2,
+                bestBeforeDate: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
+                price: 1.49
+            ),
+            stockElement: StockElement(productID: 1, product: product),
+            product: product
+        )
+    }
+}

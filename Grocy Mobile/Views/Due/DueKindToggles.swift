@@ -15,7 +15,10 @@ struct DueKindToggles: View {
     @Query private var systemConfigList: [SystemConfig]
 
     private var kinds: [DueKind] {
-        DueKind.allCases.filter { $0.place.isEnabled(in: systemConfigList.first) }
+        DueKind.allCases.filter { kind in
+            // Due products need due date tracking; products below min. stock don't.
+            kind.place.isEnabled(in: systemConfigList.first) && !(kind == .product && systemConfigList.first?.featureFlagStockBestBeforeDateTracking == false)
+        }
     }
 
     private func binding(for kind: DueKind) -> Binding<Bool> {

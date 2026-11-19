@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SettingsShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     @Query(sort: \ShoppingListDescription.id) var shoppingListDescriptions: ShoppingListDescriptions
 
@@ -55,7 +56,7 @@ struct SettingsShoppingListView: View {
                     icon: MySymbols.amount,
                     toggleFeedback: $useAutoAddBelowMinStockAmount
                 )
-                if useAutoAddBelowMinStockAmount {
+                if useAutoAddBelowMinStockAmount && features.multipleShoppingLists {
                     ServerSettingsObjectPicker(
                         settingKey: GrocyUserSettings.CodingKeys.shoppingListAutoAddBelowMinStockAmountListID.rawValue,
                         description: "Shopping list",
@@ -111,7 +112,7 @@ struct SettingsShoppingListView: View {
                 RemindersAccessRow()
             } else {
                 MyToggle(isOn: $syncShoppingListToReminders, description: "Sync automatically", icon: MySymbols.syncWithReminders)
-                if syncShoppingListToReminders {
+                if syncShoppingListToReminders && features.multipleShoppingLists {
                     Picker(
                         selection: $shoppingListToSyncID,
                         content: {

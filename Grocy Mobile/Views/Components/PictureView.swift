@@ -68,8 +68,6 @@ struct PictureView: View {
     }
 }
 
-//struct PictureView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PictureView()
-//    }
-//}
+#Preview(traits: .previewData) {
+    PictureView(pictureFileName: "cookies.jpg", pictureType: .productPictures)
+}

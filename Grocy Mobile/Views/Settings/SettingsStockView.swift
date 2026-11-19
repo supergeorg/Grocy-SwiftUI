@@ -12,6 +12,7 @@ struct SettingsStockView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @AppStorage("devMode") private var devMode: Bool = false
+    @Environment(\.grocyFeatures) private var features
 
     @Query private var systemConfigList: [SystemConfig]
 
@@ -23,12 +24,14 @@ struct SettingsStockView: View {
     var body: some View {
         Form {
             Section("Presets for new products") {
-                ServerSettingsObjectPicker(
-                    settingKey: GrocyUserSettings.CodingKeys.productPresetsLocationID.rawValue,
-                    description: "Location",
-                    icon: MySymbols.location,
-                    objects: .location
-                )
+                if features.locationTracking {
+                    ServerSettingsObjectPicker(
+                        settingKey: GrocyUserSettings.CodingKeys.productPresetsLocationID.rawValue,
+                        description: "Location",
+                        icon: MySymbols.location,
+                        objects: .location
+                    )
+                }
                 ServerSettingsObjectPicker(
                     settingKey: GrocyUserSettings.CodingKeys.productPresetsProductGroupID.rawValue,
                     description: "Product group",
@@ -41,23 +44,29 @@ struct SettingsStockView: View {
                     icon: MySymbols.quantityUnit,
                     objects: .quantityUnit
                 )
-                ServerSettingsIntStepper(
-                    settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue,
-                    description: "Default due days",
-                    icon: MySymbols.date
-                )
-                ServerSettingsToggle(
-                    settingKey: GrocyUserSettings.CodingKeys.productPresetsTreatOpenedAsOutOfStock.rawValue,
-                    description: "Treat opened as out of stock",
-                    icon: MySymbols.stockOverview
-                )
+                if features.dueDateTracking {
+                    ServerSettingsIntStepper(
+                        settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue,
+                        description: "Default due days",
+                        icon: MySymbols.date
+                    )
+                }
+                if features.openedTracking {
+                    ServerSettingsToggle(
+                        settingKey: GrocyUserSettings.CodingKeys.productPresetsTreatOpenedAsOutOfStock.rawValue,
+                        description: "Treat opened as out of stock",
+                        icon: MySymbols.stockOverview
+                    )
+                }
             }
             Section("Stock overview") {
-                ServerSettingsIntStepper(
-                    settingKey: GrocyUserSettings.CodingKeys.stockDueSoonDays.rawValue,
-                    description: "Due soon days",
-                    icon: MySymbols.date
-                )
+                if features.dueDateTracking {
+                    ServerSettingsIntStepper(
+                        settingKey: GrocyUserSettings.CodingKeys.stockDueSoonDays.rawValue,
+                        description: "Due soon days",
+                        icon: MySymbols.date
+                    )
+                }
                 ServerSettingsToggle(
                     settingKey: GrocyUserSettings.CodingKeys.showIconOnStockOverviewPageWhenProductIsOnShoppingList.rawValue,
                     description: "Show an icon if the product is already on the shopping list",

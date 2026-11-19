@@ -13,7 +13,7 @@ struct MDUserFieldRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(userField.caption)
-                .font(.title)
+                .font(.headline)
             Text("\(Text("Name")): \(userField.name)")
             Text("\(Text("Entity")): \(userField.entity)")
             Text("\(Text("Type")): \(Text(LocalizedStringKey(UserFieldType(rawValue: userField.type)?.getDescription() ?? userField.type)))")
@@ -41,12 +41,14 @@ struct MDUserFieldsView: View {
         await grocyVM.requestData(objects: dataToUpdate)
     }
 
-    //    private var filteredUserFields: MDUserFields {
-    //        grocyVM.mdUserFields
-    //            .filter {
-    //                searchString.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(searchString)
-    //            }
-    //    }
+    private var filteredUserFields: MDUserFields {
+        grocyVM.mdUserFields
+            .filter {
+                searchString.isEmpty
+                    ? true : ($0.name.localizedCaseInsensitiveContains(searchString) || $0.caption.localizedCaseInsensitiveContains(searchString))
+            }
+            .sorted { ($0.entity, $0.sortNumber ?? .max, $0.caption) < ($1.entity, $1.sortNumber ?? .max, $1.caption) }
+    }
 
     private func deleteItem(itemToDelete: MDUserField) {
         userFieldToDelete = itemToDelete
@@ -64,14 +66,7 @@ struct MDUserFieldsView: View {
 
     var body: some View {
         if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
-            #if os(macOS)
-                NavigationView {
-                    bodyContent
-                        .frame(minWidth: Constants.macOSNavWidth)
-                }
-            #else
-                bodyContent
-            #endif
+            bodyContent
         } else {
             ServerProblemView()
                 .navigationTitle("Userfields")
@@ -86,7 +81,7 @@ struct MDUserFieldsView: View {
                         action: {
                             showAddUserField.toggle()
                         },
-                        label: { Image(systemName: MySymbols.new) }
+                        label: { Label("Create", systemImage: MySymbols.new) }
                     )
                 }
             }
@@ -95,43 +90,51 @@ struct MDUserFieldsView: View {
                 .sheet(
                     isPresented: self.$showAddUserField,
                     content: {
-                        NavigationView {
+                        NavigationStack {
                             MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
                         }
                     }
+                )
+            #else
+                .navigationDestination(
+                    isPresented: $showAddUserField,
+                    destination: { MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField) }
                 )
             #endif
     }
 
     var content: some View {
         List {
-            //            if grocyVM.mdUserFields.isEmpty {
-            //                Text("No userfields found.")
-            //            } else if filteredUserFields.isEmpty {
-            //                ContentUnavailableView.search
-            //            }
-            //            ForEach(filteredUserFields, id:\.id) { userField in
-            //                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: Binding.constant(false))) {
-            //                    MDUserFieldRowView(userField: userField)
-            //                }
-            //                .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-            //                    Button(role: .destructive,
-            //                           action: { deleteItem(itemToDelete: userField) },
-            //                           label: { Label("Delete", systemImage: MySymbols.delete) }
-            //                    )
-            //                })
-            //            }
+            if grocyVM.mdUserFields.isEmpty {
+                ContentUnavailableView("No userfields found.", systemImage: MySymbols.unknown)
+            } else if filteredUserFields.isEmpty {
+                ContentUnavailableView.search
+            }
+            ForEach(filteredUserFields) { userField in
+                NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: .constant(false))) {
+                    MDUserFieldRowView(userField: userField)
+                }
+                .swipeActions(
+                    edge: .trailing,
+                    allowsFullSwipe: true,
+                    content: {
+                        Button(
+                            role: .destructive,
+                            action: { deleteItem(itemToDelete: userField) },
+                            label: { Label("Delete", systemImage: MySymbols.delete) }
+                        )
+                    }
+                )
+            }
         }
         .task {
-            Task {
-                await updateData()
-            }
+            await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")
         .refreshable {
             await updateData()
         }
-        //        .animation(.default, value: filteredUserFields.count)
+        .animation(.default, value: filteredUserFields.count)
         .alert(
             "Are you sure you want to delete user field \"\(userFieldToDelete?.name ?? "")\"?",
             isPresented: $showDeleteConfirmation,
@@ -149,6 +152,8 @@ struct MDUserFieldsView: View {
     }
 }
 
-#Preview {
-    MDUserFieldsView()
+#Preview(traits: .previewData) {
+    NavigationStack {
+        MDUserFieldsView()
+    }
 }

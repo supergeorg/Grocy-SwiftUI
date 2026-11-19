@@ -26,10 +26,11 @@ struct MDUserEntityFormView: View {
     @Binding var showAddUserEntity: Bool
 
     @State private var isNameCorrect: Bool = true
+    /// Grocy only accepts letters and numbers, and each name once.
     private func checkNameCorrect() -> Bool {
-        //        let foundUserEntity = grocyVM.mdUserEntities.first(where: {$0.name == name})
-        //        return isNewUserEntity ? !(name.isEmpty || foundUserEntity != nil) : !(name.isEmpty || (foundUserEntity != nil && foundUserEntity!.id != foundUserEntity!.id))
-        return false
+        guard name.wholeMatch(of: /[A-Za-z0-9]+/) != nil else { return false }
+        let foundUserEntity = grocyVM.mdUserEntities.first { $0.name == name }
+        return foundUserEntity == nil || foundUserEntity?.id == userEntity?.id
     }
 
     @State private var isCaptionCorrect: Bool = true
@@ -123,7 +124,7 @@ struct MDUserEntityFormView: View {
                             Image(systemName: MySymbols.save)
                         }
                     )
-                    .disabled(!isNameCorrect || isProcessing)
+                    .disabled(!isNameCorrect || !isCaptionCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)
                 }
                 #if os(iOS)
@@ -184,8 +185,18 @@ struct MDUserEntityFormView: View {
     }
 }
 
-struct MDUserEntityFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: Binding.constant(false))
+#Preview("Create", traits: .previewData) {
+    NavigationStack {
+        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: .constant(true))
+    }
+}
+
+#Preview("Edit", traits: .previewData) {
+    NavigationStack {
+        MDUserEntityFormView(
+            isNewUserEntity: false,
+            userEntity: MDUserEntity(id: 1, name: "recipesources", caption: "Recipe sources"),
+            showAddUserEntity: .constant(false)
+        )
     }
 }

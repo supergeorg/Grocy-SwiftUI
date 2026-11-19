@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockJournalFilterView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     @AppStorage("localizationKey") var localizationKey: String = "en"
 
@@ -54,19 +55,21 @@ struct StockJournalFilterView: View {
                 }
             )
 
-            Picker(
-                selection: $filteredLocationID,
-                content: {
-                    Text("All").tag(nil as Int?)
-                    ForEach(mdLocations, id: \.id) { location in
-                        Text(location.name).tag(location.id as Int?)
+            if features.locationTracking {
+                Picker(
+                    selection: $filteredLocationID,
+                    content: {
+                        Text("All").tag(nil as Int?)
+                        ForEach(mdLocations, id: \.id) { location in
+                            Text(location.name).tag(location.id as Int?)
+                        }
+                    },
+                    label: {
+                        Label("Location", systemImage: MySymbols.filter)
+                            .foregroundStyle(.primary)
                     }
-                },
-                label: {
-                    Label("Location", systemImage: MySymbols.filter)
-                        .foregroundStyle(.primary)
-                }
-            )
+                )
+            }
 
             Picker(
                 selection: $filteredUserID,

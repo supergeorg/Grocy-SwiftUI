@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     @Query(filter: #Predicate<MDProduct> { $0.active }, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
@@ -92,34 +93,36 @@ struct StockEntryFormView: View {
 
     var content: some View {
         Form {
-            VStack(alignment: .trailing, spacing: Spacing.xxSmall) {
-                if !productDoesntSpoil {
-                    HStack {
-                        DatePicker(
-                            selection: $stockEntry.bestBeforeDate,
-                            displayedComponents: .date,
-                            label: {
-                                Label("Due date", systemImage: MySymbols.date)
-                                    .foregroundStyle(.primary)
+            if features.dueDateTracking {
+                VStack(alignment: .trailing, spacing: Spacing.xxSmall) {
+                    if !productDoesntSpoil {
+                        HStack {
+                            DatePicker(
+                                selection: $stockEntry.bestBeforeDate,
+                                displayedComponents: .date,
+                                label: {
+                                    Label("Due date", systemImage: MySymbols.date)
+                                        .foregroundStyle(.primary)
+                                }
+                            )
+                            DueDateScanner(dueDate: $stockEntry.bestBeforeDate)
+                        }
+                        Text(getRelativeDateAsText(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")
+                            .foregroundStyle(.secondary)
+                            .italic()
+                    }
+                    MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
+                        .onChange(
+                            of: productDoesntSpoil,
+                            {
+                                if productDoesntSpoil == true {
+                                    self.stockEntry.bestBeforeDate = Date.neverOverdue
+                                } else if productDoesntSpoil == false && self.stockEntry.bestBeforeDate == Date.neverOverdue {
+                                    self.stockEntry.bestBeforeDate = Date()
+                                }
                             }
                         )
-                        DueDateScanner(dueDate: $stockEntry.bestBeforeDate)
-                    }
-                    Text(getRelativeDateAsText(stockEntry.bestBeforeDate, localizationKey: localizationKey) ?? "")
-                        .foregroundStyle(.secondary)
-                        .italic()
                 }
-                MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
-                    .onChange(
-                        of: productDoesntSpoil,
-                        {
-                            if productDoesntSpoil == true {
-                                self.stockEntry.bestBeforeDate = Date.neverOverdue
-                            } else if productDoesntSpoil == false && self.stockEntry.bestBeforeDate == Date.neverOverdue {
-                                self.stockEntry.bestBeforeDate = Date()
-                            }
-                        }
-                    )
             }
 
             MyDoubleStepper(
@@ -152,22 +155,24 @@ struct StockEntryFormView: View {
                 }
             )
 
-            Picker(
-                selection: $stockEntry.locationID,
-                label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
-                content: {
-                    Text("").tag(nil as Int?)
-                    ForEach(mdLocations, id: \.id) { location in
-                        if location.id == product?.locationID {
-                            Text("\(location.name) (\(Text("Default location")))")
-                                .tag(location.id as Int?)
-                        } else {
-                            Text(location.name)
-                                .tag(location.id as Int?)
+            if features.locationTracking {
+                Picker(
+                    selection: $stockEntry.locationID,
+                    label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
+                    content: {
+                        Text("").tag(nil as Int?)
+                        ForEach(mdLocations, id: \.id) { location in
+                            if location.id == product?.locationID {
+                                Text("\(location.name) (\(Text("Default location")))")
+                                    .tag(location.id as Int?)
+                            } else {
+                                Text(location.name)
+                                    .tag(location.id as Int?)
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
 
             MyTextEditor(textToEdit: $stockEntry.note, description: "Note", leadingIcon: MySymbols.description)
         }

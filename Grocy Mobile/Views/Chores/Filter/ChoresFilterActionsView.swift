@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct ChoresFilterActionsView: View {
+    @Environment(\.grocyFeatures) private var features
     @Binding var filteredStatus: ChoreStatus
 
     @Query var userSettingsList: GrocyUserSettingsList
@@ -47,14 +48,16 @@ struct ChoresFilterActionsView: View {
                 backgroundColor: Color(.GrocyColors.grocyYellowBackground),
                 dueSoonDays: userSettings?.choresDueSoonDays
             )
-            ChoresFilterCapsuleView(
-                num: numAssignedToMe,
-                filteredStatus: $filteredStatus,
-                ownFilteredStatus: ChoreStatus.assignedToMe,
-                color: Color(.GrocyColors.grocyGray),
-                backgroundColor: Color(.GrocyColors.grocyGrayBackground),
-                dueSoonDays: userSettings?.choresDueSoonDays
-            )
+            if features.choreAssignments {
+                ChoresFilterCapsuleView(
+                    num: numAssignedToMe,
+                    filteredStatus: $filteredStatus,
+                    ownFilteredStatus: ChoreStatus.assignedToMe,
+                    color: Color(.GrocyColors.grocyGray),
+                    backgroundColor: Color(.GrocyColors.grocyGrayBackground),
+                    dueSoonDays: userSettings?.choresDueSoonDays
+                )
+            }
         }
     }
 }
