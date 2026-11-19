@@ -25,6 +25,7 @@ enum MasterDataItem: Hashable {
 /// (so master data is one tap away). Needs `masterDataDestinations()` on the navigation stack.
 struct MasterDataLinks: View {
     @AppStorage("devMode") private var devMode: Bool = false
+    @Environment(\.grocyFeatures) private var features
 
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
@@ -36,7 +37,7 @@ struct MasterDataLinks: View {
             MDCategoryRowView(categoryName: "Products", iconName: MySymbols.product, mdType: MDProduct.self)
         }
 
-        if !(systemConfig?.featureFlagStock == false) {
+        if !(systemConfig?.featureFlagStock == false) && features.locationTracking {
             NavigationLink(value: MasterDataItem.locations) {
                 MDCategoryRowView(categoryName: "Locations", iconName: MySymbols.location, mdType: MDLocation.self)
             }

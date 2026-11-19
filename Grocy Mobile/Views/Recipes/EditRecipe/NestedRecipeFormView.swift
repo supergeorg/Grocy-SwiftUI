@@ -26,7 +26,9 @@ struct NestedRecipeFormView: View {
     @State private var isFormCorrect: Bool = false
     private func checkFormCorrect() -> Bool {
         guard recipeNesting.recipeID != -1 else { return false }
-        return true
+        // A recipe can't include itself.
+        guard recipeNesting.includesRecipeID != -1, recipeNesting.includesRecipeID != recipeNesting.recipeID else { return false }
+        return recipeNesting.servings > 0
     }
 
     init(existingRecipeNesting: RecipeNesting? = nil, recipeID: Int) {
@@ -35,7 +37,7 @@ struct NestedRecipeFormView: View {
         self.recipeNesting = existingRecipeNesting ?? RecipeNesting(recipeID: recipeID)
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.recipes]
+    private let dataToUpdate: [ObjectEntities] = [.recipes, .recipes_nestings]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -45,36 +47,35 @@ struct NestedRecipeFormView: View {
     }
 
     private func saveRecipeNesting() async {
-        //        if location.id == -1 {
-        //            do {
-        //                location.id = try grocyVM.findNextID(.locations)
-        //            } catch {
-        //                GrocyLogger.error("Failed to get next ID: \(error)")
-        //                return
-        //            }
-        //        }
-        //        isProcessing = true
-        //        isSuccessful = nil
-        //        do {
-        //            try location.modelContext?.save()
-        //            if existingLocation == nil {
-        //                _ = try await grocyVM.postMDObject(object: .locations, content: location)
-        //            } else {
-        //                try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
-        //            }
-        //            GrocyLogger.info("Location \(location.name) successful.")
-        //            await updateData()
-        //            isSuccessful = true
-        //        } catch {
-        //            GrocyLogger.error("Location \(location.name) failed. \(error)")
-        //            isSuccessful = false
-        //            if let apiError = error as? APIError {
-        //                errorMessage = apiError.displayMessage
-        //            } else {
-        //                errorMessage = error.localizedDescription
-        //            }
-        //        }
-        //        isProcessing = false
+        if recipeNesting.id == -1 {
+            do {
+                recipeNesting.id = try grocyVM.findNextID(.recipes_nestings)
+            } catch {
+                GrocyLogger.error("Failed to get next ID: \(error)")
+                return
+            }
+        }
+        isProcessing = true
+        isSuccessful = nil
+        do {
+            if existingRecipeNesting == nil {
+                _ = try await grocyVM.postMDObject(object: .recipes_nestings, content: recipeNesting)
+            } else {
+                try await grocyVM.putMDObjectWithID(object: .recipes_nestings, id: recipeNesting.id, content: recipeNesting)
+            }
+            GrocyLogger.info("Saving included recipe \(recipeNesting.includesRecipeID) was successful.")
+            await grocyVM.requestData(objects: [.recipes_nestings])
+            isSuccessful = true
+        } catch {
+            GrocyLogger.error("Saving included recipe \(recipeNesting.includesRecipeID) failed. \(error)")
+            isSuccessful = false
+            if let apiError = error as? APIError {
+                errorMessage = apiError.displayMessage
+            } else {
+                errorMessage = error.localizedDescription
+            }
+        }
+        isProcessing = false
     }
 
     var body: some View {
@@ -86,7 +87,7 @@ struct NestedRecipeFormView: View {
                 selection: $recipeNesting.includesRecipeID,
                 content: {
                     Text("").tag(-1)
-                    ForEach(recipes, id: \.id) { recipe in
+                    ForEach(recipes.filter { $0.id != recipeID }, id: \.id) { recipe in
                         Text(recipe.name).tag(recipe.id)
                     }
                 },
@@ -98,6 +99,12 @@ struct NestedRecipeFormView: View {
             MyDoubleStepper(amount: $recipeNesting.servings, description: "Servings", systemImage: MySymbols.amount)
         }
         .formStyle(.grouped)
+        .onChange(of: recipeNesting.includesRecipeID) {
+            isFormCorrect = checkFormCorrect()
+        }
+        .onChange(of: recipeNesting.servings) {
+            isFormCorrect = checkFormCorrect()
+        }
         .task {
             await updateData()
             self.isFormCorrect = checkFormCorrect()

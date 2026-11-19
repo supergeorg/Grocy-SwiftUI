@@ -13,10 +13,9 @@ struct UserRowActionsView: View {
     var user: GrocyUser
     var isCurrentUser: Bool
 
-    let paddingValue: CGFloat = 7
-    let cornerRadiusValue: CGFloat = 3
-
     @State private var showDeleteAction: Bool = false
+    @State private var showEditUser: Bool = false
+    @State private var showPermissions: Bool = false
 
     private func deleteUser() async {
         do {
@@ -32,19 +31,17 @@ struct UserRowActionsView: View {
         // Real buttons (not tap gestures), labeled for VoiceOver; the icon-only style keeps the row compact.
         HStack {
             Button {
-                GrocyLogger.info("Edit user not implemented")
+                showEditUser = true
             } label: {
                 Label("Edit this item", systemImage: MySymbols.edit)
             }
             .help("Edit this item")
-            .disabled(true)
             Button {
-                GrocyLogger.info("Edit permissions not implemented")
+                showPermissions = true
             } label: {
                 Label("Configure user permissions", systemImage: MySymbols.permissions)
             }
             .help("Configure user permissions")
-            .disabled(true)
             Button(role: .destructive) {
                 showDeleteAction.toggle()
             } label: {
@@ -55,6 +52,22 @@ struct UserRowActionsView: View {
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.borderless)
+        .sheet(isPresented: $showEditUser) {
+            NavigationStack {
+                UserFormView(isNewUser: false, user: user)
+            }
+            #if os(macOS)
+                .frame(minWidth: Sizes.popoverFormSize, minHeight: Sizes.popoverFormSize)
+            #endif
+        }
+        .sheet(isPresented: $showPermissions) {
+            NavigationStack {
+                UserPermissionsView(user: user)
+            }
+            #if os(macOS)
+                .frame(minWidth: Sizes.popoverFormSize, minHeight: Sizes.popoverFormSize)
+            #endif
+        }
         .alert(
             "Are you sure you want to delete user \"\(user.displayName)\"?",
             isPresented: $showDeleteAction,
@@ -94,8 +107,12 @@ struct UserRowView: View {
     }
 }
 
-//struct UserRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserRowView(user: GrocyUser(id: "0", username: "username", firstName: "First name", lastName: "Last name", rowCreatedTimestamp: "ts", displayName: "Display Name", pictureFileName: nil), isCurrentUser: false)
-//    }
-//}
+#Preview(traits: .previewData) {
+    List {
+        UserRowView(
+            user: GrocyUser(id: 1, username: "username", firstName: "First name", lastName: "Last name", displayName: "Display Name"),
+            isCurrentUser: false
+        )
+        UserRowView(user: GrocyUser(id: 2, username: "me", displayName: "Current user"), isCurrentUser: true)
+    }
+}

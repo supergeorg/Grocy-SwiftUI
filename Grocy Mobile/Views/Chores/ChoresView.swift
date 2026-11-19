@@ -39,6 +39,7 @@ class ChoreInteractionNavigationRouter {
 struct ChoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.grocyFeatures) private var features
     @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
 
     @State private var searchString: String = ""
@@ -102,7 +103,7 @@ struct ChoresView: View {
 
     var filteredChores: [Chore] {
         chores
-            .filter { filteredUserID == nil || $0.nextExecutionAssignedToUserID == filteredUserID }
+            .filter { !features.choreAssignments || filteredUserID == nil || $0.nextExecutionAssignedToUserID == filteredUserID }
             .filter { matchesFilter($0) }
     }
 
@@ -422,9 +423,11 @@ struct ChoresView: View {
                         Label("Last tracked", systemImage: MySymbols.date)
                             .labelStyle(.titleAndIcon)
                             .tag(ChoresSortOption.byLastTracked)
-                        Label("Assign to", systemImage: MySymbols.user)
-                            .labelStyle(.titleAndIcon)
-                            .tag(ChoresSortOption.byUser)
+                        if features.choreAssignments {
+                            Label("Assign to", systemImage: MySymbols.user)
+                                .labelStyle(.titleAndIcon)
+                                .tag(ChoresSortOption.byUser)
+                        }
                     }
                 )
                 #if os(iOS)

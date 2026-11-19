@@ -12,6 +12,7 @@ import SwiftUI
 struct ShoppingListEntryFormView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
@@ -98,17 +99,20 @@ struct ShoppingListEntryFormView: View {
 
     var body: some View {
         Form {
-            Picker(
-                selection: $shoppingListEntry.shoppingListID,
-                label: Label("Shopping list", systemImage: MySymbols.shoppingList),
-                content: {
-                    Text("").tag(-1)
-                    ForEach(shoppingListDescriptions, id: \.id) { shLDescription in
-                        Text(shLDescription.name).tag(shLDescription.id)
+            // Without multiple shopping lists, items always go to the first list (set when the form appears).
+            if features.multipleShoppingLists {
+                Picker(
+                    selection: $shoppingListEntry.shoppingListID,
+                    label: Label("Shopping list", systemImage: MySymbols.shoppingList),
+                    content: {
+                        Text("").tag(-1)
+                        ForEach(shoppingListDescriptions, id: \.id) { shLDescription in
+                            Text(shLDescription.name).tag(shLDescription.id)
+                        }
                     }
-                }
-            )
-            .foregroundStyle(.primary)
+                )
+                .foregroundStyle(.primary)
+            }
 
             ProductField(productID: $shoppingListEntry.productID, description: "Product")
                 .onChange(of: shoppingListEntry.productID) {

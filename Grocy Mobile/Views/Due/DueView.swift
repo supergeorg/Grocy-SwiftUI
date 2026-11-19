@@ -46,6 +46,7 @@ struct DueView: View {
     @AppStorage(DueKind.hiddenKindsStorageKey) private var hiddenKindsValue: String = ""
     @AppStorage(DueUrgency.collapsedStorageKey) private var collapsedValue: String = ""
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.grocyFeatures) private var features
 
     @State private var filteredKind: DueKind? = nil
     @State private var doneCount: Int = 0
@@ -193,7 +194,7 @@ struct DueView: View {
         }
         .sheet(item: $stockInteractionRouter.presentedInteraction) { interaction in
             NavigationStack {
-                stockInteractionView(interaction)
+                StockInteractionView(interaction: interaction)
             }
             .environment(stockInteractionRouter)
         }
@@ -238,24 +239,6 @@ struct DueView: View {
 
     // MARK: - Rows
 
-    @ViewBuilder
-    private func stockInteractionView(_ interaction: StockInteraction) -> some View {
-        switch interaction {
-        case .stockJournal: StockJournalView(isPopup: true)
-        case .inventoryProduct: InventoryProductView(isPopup: true)
-        case .transferProduct: TransferProductView(isPopup: true)
-        case .consumeProduct: ConsumeProductView(isPopup: true)
-        case .purchaseProduct: PurchaseProductView(isPopup: true)
-        case .productPurchase(let stockElement): PurchaseProductView(stockElement: stockElement, isPopup: true)
-        case .productConsume(let stockElement): ConsumeProductView(stockElement: stockElement, isPopup: true)
-        case .productTransfer(let stockElement): TransferProductView(stockElement: stockElement, isPopup: true)
-        case .productInventory(let stockElement): InventoryProductView(stockElement: stockElement, isPopup: true)
-        case .productOverview(let stockElement): StockProductInfoView(stockElement: stockElement, isPopup: true)
-        case .productJournal(let stockElement): StockJournalView(stockElement: stockElement, isPopup: true)
-        case .addToShL(let stockElement): ShoppingListEntryFormView(productIDToSelect: stockElement.productID, isPopup: true)
-        }
-    }
-
     private func destination(for item: DueItem) -> DueDestination? {
         switch item.source {
         case .product, .belowMinStock: nil
@@ -268,7 +251,7 @@ struct DueView: View {
     private func user(for item: DueItem) -> GrocyUser? {
         let userID: Int?
         switch item.source {
-        case .chore(let chore): userID = chore.nextExecutionAssignedToUserID
+        case .chore(let chore): userID = features.choreAssignments ? chore.nextExecutionAssignedToUserID : nil
         case .task(let task): userID = task.assignedToUserID
         case .product, .belowMinStock, .battery: userID = nil
         }
@@ -317,7 +300,7 @@ struct DueView: View {
             if stockElement.amount > 0 {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], mdQuantityUnits: mdQuantityUnits)
             }
-            if (stockElement.amount - stockElement.amountOpened) > 0 {
+            if features.openedTracking, (stockElement.amount - stockElement.amountOpened) > 0 {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], mdQuantityUnits: mdQuantityUnits)
             }
         }

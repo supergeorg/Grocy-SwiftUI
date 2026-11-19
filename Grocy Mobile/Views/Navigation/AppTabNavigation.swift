@@ -55,6 +55,7 @@ struct AppTabNavigation: View {
     @AppStorage("enableMasterData") var enableMasterData: Bool = true
 
     @Environment(DeepLinkManager.self) var deepLinkManager
+    @Environment(\.grocyFeatures) private var features
 
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
@@ -173,6 +174,7 @@ struct AppTabNavigation: View {
                             }
                         }
                         .customizationID("georgappdev.Grocy.transferProduct")
+                        .hidden(!features.locationTracking)
 
                         Tab("Inventory", systemImage: MySymbols.inventory, value: TabNavigationItem.inventoryProduct) {
                             NavigationStack {
@@ -205,7 +207,7 @@ struct AppTabNavigation: View {
                             }
                         }
                         .customizationID("georgappdev.Grocy.mdLocations")
-                        .hidden(systemConfig?.featureFlagStock == false)
+                        .hidden(systemConfig?.featureFlagStock == false || !features.locationTracking)
 
                         Tab("Stores", systemImage: MySymbols.store, value: TabNavigationItem.mdStores) {
                             NavigationStack {

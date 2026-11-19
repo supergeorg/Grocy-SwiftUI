@@ -21,6 +21,7 @@ struct StockJournalView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @Query var mdProducts: MDProducts
     @Query var mdLocations: MDLocations
@@ -360,9 +361,11 @@ struct StockJournalView: View {
                             .labelStyle(.titleAndIcon)
                             .tag(StockJournalSortOption.byTransactionType)
 
-                        Label("Location", systemImage: MySymbols.location)
-                            .labelStyle(.titleAndIcon)
-                            .tag(StockJournalSortOption.byLocationName)
+                        if features.locationTracking {
+                            Label("Location", systemImage: MySymbols.location)
+                                .labelStyle(.titleAndIcon)
+                                .tag(StockJournalSortOption.byLocationName)
+                        }
 
                         Label("Done by", systemImage: MySymbols.user)
                             .labelStyle(.titleAndIcon)

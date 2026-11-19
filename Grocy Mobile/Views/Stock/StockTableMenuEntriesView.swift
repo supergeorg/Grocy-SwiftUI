@@ -10,9 +10,40 @@ import SwiftUI
 
 struct StockTableMenuEntriesView: View {
     @Environment(StockInteractionNavigationRouter.self) private var stockInteractionRouter
+    @Environment(\.grocyFeatures) private var features
+
+    @Environment(GrocyViewModel.self) private var grocyVM
 
     var stockElement: StockElement
     var quantityUnit: MDQuantityUnit?
+
+    /// Like Grocy's stock overview: the quick consume amount, at most what's in stock.
+    private var spoiledAmount: Double {
+        min(stockElement.product?.quickConsumeAmount ?? 1.0, stockElement.amount)
+    }
+
+    private func consumeAsSpoiled() async {
+        do {
+            try await grocyVM.postStockObject(
+                id: stockElement.productID,
+                stockModePost: .consume,
+                content: ProductConsume(
+                    amount: spoiledAmount,
+                    transactionType: .consume,
+                    spoiled: true,
+                    stockEntryID: nil,
+                    recipeID: nil,
+                    locationID: nil,
+                    exactAmount: nil,
+                    allowSubproductSubstitution: nil
+                )
+            )
+            GrocyLogger.info("Consuming \(spoiledAmount) of product \(stockElement.productID) as spoiled was successful.")
+            await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
+        } catch {
+            GrocyLogger.error("Consuming \(spoiledAmount) of product \(stockElement.productID) as spoiled failed. \(error)")
+        }
+    }
 
     var body: some View {
         Button(
@@ -44,15 +75,17 @@ struct StockTableMenuEntriesView: View {
                         .labelStyle(.titleAndIcon)
                 }
             )
-            Button(
-                action: {
-                    stockInteractionRouter.present(.productTransfer(stockElement: stockElement))
-                },
-                label: {
-                    Label("Transfer", systemImage: MySymbols.transfer)
-                        .labelStyle(.titleAndIcon)
-                }
-            )
+            if features.locationTracking {
+                Button(
+                    action: {
+                        stockInteractionRouter.present(.productTransfer(stockElement: stockElement))
+                    },
+                    label: {
+                        Label("Transfer", systemImage: MySymbols.transfer)
+                            .labelStyle(.titleAndIcon)
+                    }
+                )
+            }
             Button(
                 action: {
                     stockInteractionRouter.present(.productInventory(stockElement: stockElement))
@@ -64,61 +97,72 @@ struct StockTableMenuEntriesView: View {
             )
         }
         Divider()
-        Group {
-            //            Button(
-            //                role: .destructive,
-            //                action: {
-            //                    Task {
-            //                        await consumeAsSpoiled()
-            //                    }
-            //                },
-            //                label: {
-            //                    Label("Consume this stock entry as spoiled", systemImage: MySymbols.spoiled)
-            //                }
-            //            )
-            //
-            //                Button(action: {
-            //                    print("recip")
-            //                }, label: {
-            //                    Text("Search for recipes which contain this product")
-            //                })
+        if stockElement.amount > 0 {
+            Button(
+                role: .destructive,
+                action: {
+                    Task {
+                        await consumeAsSpoiled()
+                    }
+                },
+                label: {
+                    Label(
+                        "Consume \(spoiledAmount.formattedAmount) \(quantityUnit?.getName(amount: spoiledAmount) ?? "") as spoiled",
+                        systemImage: MySymbols.spoiled
+                    )
+                    .labelStyle(.titleAndIcon)
+                }
+            )
+        }
+        if features.recipes {
+            Button(
+                action: {
+                    stockInteractionRouter.present(.productRecipes(stockElement: stockElement))
+                },
+                label: {
+                    Label("Search for recipes which contain this product", systemImage: MySymbols.recipe)
+                        .labelStyle(.titleAndIcon)
+                }
+            )
         }
         Divider()
-        Group {
+        Button(
+            action: {
+                stockInteractionRouter.present(.productOverview(stockElement: stockElement))
+            },
+            label: {
+                Label("Product overview", systemImage: MySymbols.info)
+                    .labelStyle(.titleAndIcon)
+            }
+        )
+        Button(
+            action: {
+                stockInteractionRouter.present(.productEntries(stockElement: stockElement))
+            },
+            label: {
+                Label("Stock entries", systemImage: MySymbols.stockEntries)
+                    .labelStyle(.titleAndIcon)
+            }
+        )
+        Button(
+            action: {
+                stockInteractionRouter.present(.productJournal(stockElement: stockElement))
+            },
+            label: {
+                Label("Stock journal", systemImage: MySymbols.stockJournal)
+                    .labelStyle(.titleAndIcon)
+            }
+        )
+        if stockElement.product != nil {
             Button(
                 action: {
-                    stockInteractionRouter.present(.productOverview(stockElement: stockElement))
+                    stockInteractionRouter.present(.editProduct(stockElement: stockElement))
                 },
                 label: {
-                    Label("Product overview", systemImage: MySymbols.info)
+                    Label("Edit product", systemImage: MySymbols.edit)
                         .labelStyle(.titleAndIcon)
                 }
             )
-            //                Button(action: {
-            //                    print("Stock entries are not accessed here")
-            //                }, label: {
-            //                    Text("Stock entries")
-            //                })
-            Button(
-                action: {
-                    stockInteractionRouter.present(.productJournal(stockElement: stockElement))
-                },
-                label: {
-                    Label("Stock journal", systemImage: MySymbols.stockJournal)
-                        .labelStyle(.titleAndIcon)
-                }
-            )
-            //                Button(action: {
-            //                    print("Stock Journal summary is not available yet")
-            //                }, label: {
-            //                    Text("Stock journal summary")
-            //                })
-            //            Button(action: {
-            //                selectedStockElement = stockElement
-            //                activeSheet = .editProduct
-            //            }, label: {
-            //                Label("Edit product", systemImage: MySymbols.edit)
-            //            })
         }
     }
 }

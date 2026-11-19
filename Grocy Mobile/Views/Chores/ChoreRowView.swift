@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ChoreRowView: View {
+    @Environment(\.grocyFeatures) private var features
+
     var chore: Chore
     var user: GrocyUser?
 
@@ -40,7 +42,7 @@ struct ChoreRowView: View {
                         .italic()
                 }
             }
-            if let user, chore.nextExecutionAssignedToUserID == user.id {
+            if features.choreAssignments, let user, chore.nextExecutionAssignedToUserID == user.id {
                 HStack {
                     Text("\(Text("Assigned to")):")
                     Spacer()

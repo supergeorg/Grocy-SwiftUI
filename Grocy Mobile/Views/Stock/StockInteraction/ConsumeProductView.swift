@@ -51,6 +51,7 @@ struct ConsumeProductView: View {
     }
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @AppStorage("localizationKey") var localizationKey: String = "en"
     @AppStorage("devMode") private var devMode: Bool = false
@@ -134,7 +135,7 @@ struct ConsumeProductView: View {
         var totalAmount: Double = 0
         let childProductIDs = childProducts.map { $0.id }
         let filtEntries = allStockProductEntries.filter { entry in
-            (entry.productID == productID || childProductIDs.contains(entry.productID)) && entry.locationID == locationID
+            (entry.productID == productID || childProductIDs.contains(entry.productID)) && (!features.locationTracking || entry.locationID == locationID)
         }
         for filtEntry in filtEntries {
             totalAmount += filtEntry.amount
@@ -145,7 +146,8 @@ struct ConsumeProductView: View {
     private let priceFormatter = NumberFormatter()
 
     private var isFormValid: Bool {
-        return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (locationID != -1) && !(useSpecificStockEntry && stockEntryID == nil)
+        return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (!features.locationTracking || locationID != -1)
+            && !(useSpecificStockEntry && stockEntryID == nil)
             && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
     }
 
@@ -164,7 +166,7 @@ struct ConsumeProductView: View {
 
     private var stockEntriesForLocation: StockEntries {
         let entries =
-            locationID != -1
+            features.locationTracking && locationID != -1
             ? stockEntriesForConsumableProducts.filter { $0.locationID == locationID }
             : stockEntriesForConsumableProducts
         return entries
@@ -230,7 +232,8 @@ struct ConsumeProductView: View {
                 spoiled: spoiled,
                 stockEntryID: stockEntryID,
                 recipeID: recipeID,
-                locationID: locationID,
+                // Without location tracking, Grocy consumes from any location.
+                locationID: features.locationTracking ? locationID : nil,
                 exactAmount: nil,
                 allowSubproductSubstitution: true
             )
@@ -313,36 +316,38 @@ struct ConsumeProductView: View {
 
                 AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
 
-                Picker(
-                    selection: $locationID,
-                    label: HStack {
-                        Image(systemName: MySymbols.location)
-                            .foregroundStyle(.primary)
-                        Text("Location")
-                    },
-                    content: {
-                        Text("")
-                            .tag(-1 as Int)
-                        ForEach(mdLocations, id: \.id) { location in
-                            let isDisabled =
-                                useSpecificStockEntry
-                                && productID != nil
-                                && !stockEntriesForConsumableProducts.contains(where: {
-                                    $0.locationID == location.id
-                                })
+                if features.locationTracking {
+                    Picker(
+                        selection: $locationID,
+                        label: HStack {
+                            Image(systemName: MySymbols.location)
+                                .foregroundStyle(.primary)
+                            Text("Location")
+                        },
+                        content: {
+                            Text("")
+                                .tag(-1 as Int)
+                            ForEach(mdLocations, id: \.id) { location in
+                                let isDisabled =
+                                    useSpecificStockEntry
+                                    && productID != nil
+                                    && !stockEntriesForConsumableProducts.contains(where: {
+                                        $0.locationID == location.id
+                                    })
 
-                            if location.id == product?.defaultConsumeLocationID {
-                                Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount)) (\(Text("Default consume location")))")
-                                    .tag(location.id as Int)
-                                    .disabled(isDisabled)
-                            } else {
-                                Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
-                                    .tag(location.id as Int)
-                                    .disabled(isDisabled)
+                                if location.id == product?.defaultConsumeLocationID {
+                                    Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount)) (\(Text("Default consume location")))")
+                                        .tag(location.id as Int)
+                                        .disabled(isDisabled)
+                                } else {
+                                    Text("\(location.name) (\(getAmountForLocation(lID: location.id).formattedAmount))")
+                                        .tag(location.id as Int)
+                                        .disabled(isDisabled)
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
 
                 Section("Details") {
                     if (consumeType == .consume) || (consumeType == .both) {
@@ -403,12 +408,16 @@ struct ConsumeProductView: View {
                                             }
                                         }
                                         Text("\(Text("Amount")): \(stockProduct.amount.formattedAmount)")
-                                        if stockProduct.bestBeforeDate == Date.neverOverdue {
+                                        if !features.dueDateTracking {
+                                            EmptyView()
+                                        } else if stockProduct.bestBeforeDate == Date.neverOverdue {
                                             Text("Never overdue")
                                         } else {
                                             Text("Due on \(formatDateAsString(stockProduct.bestBeforeDate, localizationKey: localizationKey) ?? "?")")
                                         }
-                                        Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
+                                        if features.openedTracking {
+                                            Text(stockProduct.stockEntryOpen == true ? "Opened" : "Not opened")
+                                        }
                                         if !stockProduct.note.isEmpty {
                                             Text("\(Text("Note")): \(stockProduct.note)")
                                         }
@@ -465,7 +474,7 @@ struct ConsumeProductView: View {
                     }
                 }
             }
-            if (consumeType == .open) || (consumeType == .both) {
+            if features.openedTracking && ((consumeType == .open) || (consumeType == .both)) {
                 ToolbarItem(id: "open", placement: .primaryAction) {
                     Button(
                         role: .confirm,

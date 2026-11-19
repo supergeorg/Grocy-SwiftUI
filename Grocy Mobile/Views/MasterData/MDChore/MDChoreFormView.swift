@@ -15,6 +15,7 @@ struct MDChoreFormView: View {
     @Query(sort: \GrocyUser.displayName, order: .forward) var grocyUsers: GrocyUsers
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
@@ -52,11 +53,12 @@ struct MDChoreFormView: View {
 
     private var isFormValid: Bool {
         guard isNameCorrect else { return false }
-        guard chore.assignmentType == .noAssignment || chore.assignmentConfig?.isEmpty == false else { return false }
+        // Without chore assignments, the server ignores the assignment, so it can't make the form invalid.
+        guard !features.choreAssignments || chore.assignmentType == .noAssignment || chore.assignmentConfig?.isEmpty == false else { return false }
         if [ChorePeriodType.hourly, ChorePeriodType.daily, ChorePeriodType.weekly, ChorePeriodType.monthly, ChorePeriodType.yearly].contains(chore.periodType) {
             guard chore.periodInterval > 0 else { return false }
         }
-        if chore.assignmentType != .noAssignment {
+        if features.choreAssignments, chore.assignmentType != .noAssignment {
             guard chore.assignmentConfig != nil else { return false }
             guard chore.assignmentConfig!.isEmpty == false else { return false }
         }
@@ -232,28 +234,30 @@ struct MDChoreFormView: View {
                 .disabled(choreWasTracked)
             }
 
-            Section {
-                VStack(alignment: .leading) {
-                    Picker(
-                        selection: $chore.assignmentType,
-                        content: {
-                            ForEach(ChoreAssignmentType.allCases, id: \.rawValue) { assignmentType in
-                                Text(assignmentType.localizedName)
-                                    .tag(assignmentType)
+            if features.choreAssignments {
+                Section {
+                    VStack(alignment: .leading) {
+                        Picker(
+                            selection: $chore.assignmentType,
+                            content: {
+                                ForEach(ChoreAssignmentType.allCases, id: \.rawValue) { assignmentType in
+                                    Text(assignmentType.localizedName)
+                                        .tag(assignmentType)
+                                }
+                            },
+                            label: {
+                                Label("Assignment type", systemImage: MySymbols.choreAssignmentType)
+                                    .foregroundStyle(.primary)
                             }
-                        },
-                        label: {
-                            Label("Assignment type", systemImage: MySymbols.choreAssignmentType)
-                                .foregroundStyle(.primary)
-                        }
-                    )
-                    Text(assignmentTypeInfoText)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                        )
+                        Text(assignmentTypeInfoText)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
 
-                UserPicker(selection: $chore.assignmentConfig, users: grocyUsers)
+                    UserPicker(selection: $chore.assignmentConfig, users: grocyUsers)
+                }
             }
 
             Section {

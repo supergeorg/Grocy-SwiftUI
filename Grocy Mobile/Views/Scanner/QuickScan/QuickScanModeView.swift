@@ -44,6 +44,7 @@ struct QuickScanModeView: View {
 
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.openURL) private var openURL
+    @Environment(\.grocyFeatures) private var features
 
     @Query var mdProductBarcodes: MDProductBarcodes
     @Query var mdProducts: MDProducts
@@ -235,7 +236,7 @@ struct QuickScanModeView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Picker("Quick Scan mode", selection: $quickScanMode) {
-                                ForEach(QuickScanMode.allCases, id: \.self) { mode in
+                                ForEach(QuickScanMode.allCases.filter { features.openedTracking || $0 != .markAsOpened }, id: \.self) { mode in
                                     Label(mode.title, systemImage: mode.icon)
                                         .tag(mode)
                                 }

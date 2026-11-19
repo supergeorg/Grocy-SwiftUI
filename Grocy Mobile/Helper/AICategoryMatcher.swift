@@ -164,31 +164,6 @@ public actor AICategoryMatcher {
         return results
     }
 
-    //    /// Match multiple words concurrently (faster but uses more resources)
-    //    /// - Parameters:
-    //    ///   - words: Array of words to categorize
-    //    ///   - categories: Array of categorizable objects to match against
-    //    /// - Returns: Dictionary mapping words to their matched categories
-    //    public func matchConcurrently<T: Categorizable>(
-    //        words: [String],
-    //        in categories: [T]
-    //    ) async throws -> [String: T] {
-    //        try await withThrowingTaskGroup(of: (String, T).self) { group in
-    //            for word in words {
-    //                group.addTask {
-    //                    let category = try await self.match(word: word, in: categories)
-    //                    return (word, category)
-    //                }
-    //            }
-    //
-    //            var results: [String: T] = [:]
-    //            for try await (word, category) in group {
-    //                results[word] = category
-    //            }
-    //            return results
-    //        }
-    //    }
-
     // MARK: - Public Types
 
     /// Result from matching operations - contains only Sendable data

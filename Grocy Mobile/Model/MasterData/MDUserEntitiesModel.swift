@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - MDUserEntity
 
-struct MDUserEntity: Codable {
+/// A custom entity (`/objects/userentities`). Only kept in memory, not in SwiftData.
+struct MDUserEntity: Codable, Equatable, Identifiable {
     let id: Int
     let name: String
     let caption: String
@@ -35,9 +36,9 @@ struct MDUserEntity: Codable {
             self.name = try container.decode(String.self, forKey: .name)
             self.caption = try container.decode(String.self, forKey: .caption)
             self.mdUserEntityDescription = try? container.decodeIfPresent(String.self, forKey: .mdUserEntityDescription) ?? nil
-            self.showInSidebarMenu = try container.decodeFlexibleInt(forKey: .showInSidebarMenu)
+            self.showInSidebarMenu = try container.decodeFlexibleIntIfPresent(forKey: .showInSidebarMenu)
             self.iconCSSClass = try? container.decodeIfPresent(String.self, forKey: .iconCSSClass) ?? nil
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? Date()
         } catch {
             throw APIError.decodingError(error: error)
         }

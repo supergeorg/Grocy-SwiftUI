@@ -82,6 +82,9 @@ protocol GrocyAPI {
     func postUser(user: Data) async throws
     func putUserWithID(id: Int, user: Data) async throws
     func deleteUserWithID(id: Int) async throws
+    func getPermissionHierarchy() async throws -> GrocyPermissions
+    func getUserPermissions(id: Int) async throws -> GrocyUserPermissions
+    func putUserPermissions(id: Int, content: Data) async throws
     // MARK: - Recipes
     func getRecipeFulfillments() async throws -> RecipeFulfilments
     func addNotFulfilledProductsToShoppinglist(id: Int, content: Data) async throws
@@ -495,7 +498,7 @@ public class GrocyApi: GrocyAPI {
             request.httpBody = content
         }
 
-        print(url.absoluteString)
+        GrocyLogger.debug("\(method.rawValue) \(url.path())")
 
         request.timeoutInterval = self.timeoutInterval
         return request
@@ -518,6 +521,7 @@ extension GrocyApi {
         case users = "/users"
         case usersWithID = "/users/{userId}"
         case usersWithIDPermissions = "/users/{userId}/permissions"
+        case permissionHierarchy = "/objects/permission_hierarchy"
         //        Current user
         case user = "/user"
         case userSettings = "/user/settings"
@@ -628,6 +632,18 @@ extension GrocyApi {
 
     func deleteUserWithID(id: Int) async throws {
         return try await callEmptyResponse(.usersWithID, method: .DELETE, id: String(id))
+    }
+
+    func getPermissionHierarchy() async throws -> GrocyPermissions {
+        return try await call(.permissionHierarchy, method: .GET)
+    }
+
+    func getUserPermissions(id: Int) async throws -> GrocyUserPermissions {
+        return try await call(.usersWithIDPermissions, method: .GET, id: String(id))
+    }
+
+    func putUserPermissions(id: Int, content: Data) async throws {
+        return try await callEmptyResponse(.usersWithIDPermissions, method: .PUT, id: String(id), content: content)
     }
 
     // MARK: - Recipes

@@ -26,6 +26,7 @@ struct PurchaseProductView: View {
     }
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
     @AppStorage("localizationKey") var localizationKey: String = "en"
 
     @State private var firstAppear: Bool = true
@@ -45,6 +46,8 @@ struct PurchaseProductView: View {
     var barcode: MDProductBarcode? = nil
     var quickScan: Bool = false
     var isPopup: Bool = false
+    /// Called after a successful purchase instead of closing the form (used to purchase a whole shopping list).
+    var onPurchased: (() -> Void)? = nil
 
     @State private var productID: Int?
     @State private var amount: Double = 0.0
@@ -137,7 +140,8 @@ struct PurchaseProductView: View {
     private func purchaseProduct() async {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let strDueDate = productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)
+        // Without due date tracking, Grocy picks the due date (the product's default due days), like its web frontend.
+        let strDueDate: String? = features.dueDateTracking ? (productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)) : nil
         let noteText = note.isEmpty ? nil : note
         let purchasePrice = selfProduction ? nil : unitPrice
         let purchaseStoreID = selfProduction ? nil : storeID
@@ -146,7 +150,8 @@ struct PurchaseProductView: View {
             bestBeforeDate: strDueDate,
             transactionType: selfProduction ? .selfProduction : .purchase,
             price: purchasePrice,
-            locationID: locationID,
+            // Without location tracking, the product's default location is used.
+            locationID: features.locationTracking && locationID != -1 ? locationID : nil,
             storeID: purchaseStoreID,
             note: noteText
         )
@@ -158,7 +163,9 @@ struct PurchaseProductView: View {
                 GrocyLogger.info("Purchase \(product?.name ?? String(productID)) successful.")
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 isSuccessful = true
-                if autoPurchase || quickScan || productToPurchaseID != nil {
+                if let onPurchased {
+                    onPurchased()
+                } else if autoPurchase || quickScan || productToPurchaseID != nil {
                     self.finishForm()
                 }
                 actionPending = false
@@ -212,30 +219,32 @@ struct PurchaseProductView: View {
             if productID != nil {
                 AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
 
-                Section("Due date") {
-                    HStack {
-                        DatePicker(
-                            selection: $dueDate,
-                            displayedComponents: .date,
-                            label: {
-                                Label {
-                                    Text("Due date")
-                                    if !productDoesntSpoil {
-                                        Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")
-                                            .foregroundStyle(.secondary)
-                                            .italic()
+                if features.dueDateTracking {
+                    Section("Due date") {
+                        HStack {
+                            DatePicker(
+                                selection: $dueDate,
+                                displayedComponents: .date,
+                                label: {
+                                    Label {
+                                        Text("Due date")
+                                        if !productDoesntSpoil {
+                                            Text(getRelativeDateAsText(dueDate, localizationKey: localizationKey) ?? "")
+                                                .foregroundStyle(.secondary)
+                                                .italic()
+                                        }
+                                    } icon: {
+                                        Image(systemName: MySymbols.date)
                                     }
-                                } icon: {
-                                    Image(systemName: MySymbols.date)
                                 }
-                            }
-                        )
-                        .foregroundStyle(.primary)
-                        DueDateScanner(dueDate: $dueDate)
-                    }
-                    .disabled(productDoesntSpoil)
+                            )
+                            .foregroundStyle(.primary)
+                            DueDateScanner(dueDate: $dueDate)
+                        }
+                        .disabled(productDoesntSpoil)
 
-                    MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
+                        MyToggle(isOn: $productDoesntSpoil, description: "Never overdue", descriptionInfo: nil, icon: MySymbols.doesntSpoil)
+                    }
                 }
 
                 if !selfProduction {
@@ -274,7 +283,7 @@ struct PurchaseProductView: View {
                     }
                 }
 
-                Section("Location") {
+                Section(features.locationTracking ? LocalizedStringKey("Location") : LocalizedStringKey("Store")) {
                     if !selfProduction {
                         Picker(
                             selection: $storeID,
@@ -288,22 +297,24 @@ struct PurchaseProductView: View {
                         )
                     }
 
-                    Picker(
-                        selection: $locationID,
-                        label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
-                        content: {
-                            Text("").tag(-1 as Int)
-                            ForEach(mdLocations, id: \.id) { location in
-                                if location.id == product?.locationID {
-                                    Text("\(location.name) (\(Text("Default location")))")
-                                        .tag(location.id as Int)
-                                } else {
-                                    Text(location.name)
-                                        .tag(location.id as Int)
+                    if features.locationTracking {
+                        Picker(
+                            selection: $locationID,
+                            label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
+                            content: {
+                                Text("").tag(-1 as Int)
+                                ForEach(mdLocations, id: \.id) { location in
+                                    if location.id == product?.locationID {
+                                        Text("\(location.name) (\(Text("Default location")))")
+                                            .tag(location.id as Int)
+                                    } else {
+                                        Text(location.name)
+                                            .tag(location.id as Int)
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
                 MyTextField(textToEdit: $note, description: "Note", isCorrect: Binding.constant(true), leadingIcon: MySymbols.description)
 

@@ -11,6 +11,7 @@ import SwiftUI
 struct TransferProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @Query(filter: #Predicate<MDProduct> { $0.active }, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(filter: #Predicate<MDQuantityUnit> { $0.active }, sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
@@ -208,7 +209,7 @@ struct TransferProductView: View {
                             .font(.caption)
                             .foregroundStyle(Color(.GrocyColors.grocyRed))
                     }
-                    if product?.shouldNotBeFrozen == true,
+                    if features.freezing, product?.shouldNotBeFrozen == true,
                         locationTo?.isFreezer == true
                     {
                         Text("This product shouldn't be frozen")

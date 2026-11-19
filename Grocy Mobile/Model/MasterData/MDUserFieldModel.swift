@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - MDUserField
 
-struct MDUserField: Codable {
+/// A custom field of an entity (`/objects/userfields`). Only kept in memory, not in SwiftData.
+struct MDUserField: Codable, Equatable, Identifiable {
     let id: Int
     let name: String
     let entity: String
@@ -43,7 +44,7 @@ struct MDUserField: Codable {
             self.showAsColumnInTables = try container.decodeFlexibleBool(forKey: .showAsColumnInTables)
             self.config = try? container.decodeIfPresent(String.self, forKey: .config) ?? nil
             self.sortNumber = try container.decodeFlexibleIntIfPresent(forKey: .sortNumber)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? Date()
         } catch {
             throw APIError.decodingError(error: error)
         }

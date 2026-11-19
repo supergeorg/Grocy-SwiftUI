@@ -19,6 +19,7 @@ struct InventoryProductView: View {
     @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @State private var firstAppear: Bool = true
     @State private var actionPending: Bool = true
@@ -80,7 +81,7 @@ struct InventoryProductView: View {
     private let priceFormatter = NumberFormatter()
 
     private var isFormValid: Bool {
-        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (productInventory.locationID != nil)
+        (productID != nil) && (factoredAmount > 0) && (quantityUnitID != nil) && (!features.locationTracking || productInventory.locationID != nil)
             && factoredAmount != selectedProductStock?.amount
     }
 
@@ -106,6 +107,10 @@ struct InventoryProductView: View {
     private func inventoryProduct() async {
         if productNeverOverdue {
             productInventory.bestBeforeDate = Date.neverOverdue
+        }
+        productInventory.sendsBestBeforeDate = features.dueDateTracking
+        if !features.locationTracking {
+            productInventory.locationID = nil
         }
         if let productID = productID {
             isProcessingAction = true
@@ -169,14 +174,16 @@ struct InventoryProductView: View {
                     }
                 }
 
-                Section("Due date") {
-                    HStack {
-                        DatePicker("Due date", selection: $productInventory.bestBeforeDate, displayedComponents: .date)
-                        DueDateScanner(dueDate: $productInventory.bestBeforeDate)
-                    }
-                    .disabled(productNeverOverdue)
+                if features.dueDateTracking {
+                    Section("Due date") {
+                        HStack {
+                            DatePicker("Due date", selection: $productInventory.bestBeforeDate, displayedComponents: .date)
+                            DueDateScanner(dueDate: $productInventory.bestBeforeDate)
+                        }
+                        .disabled(productNeverOverdue)
 
-                    MyToggle(isOn: $productNeverOverdue, description: "Never overdue", icon: MySymbols.doesntSpoil)
+                        MyToggle(isOn: $productNeverOverdue, description: "Never overdue", icon: MySymbols.doesntSpoil)
+                    }
                 }
 
                 Section("Price") {
@@ -192,7 +199,7 @@ struct InventoryProductView: View {
                     )
                 }
 
-                Section("Location") {
+                Section(features.locationTracking ? LocalizedStringKey("Location") : LocalizedStringKey("Store")) {
                     Picker(
                         selection: $productInventory.storeID,
                         label: Label("Store", systemImage: MySymbols.store).foregroundStyle(.primary),
@@ -206,18 +213,20 @@ struct InventoryProductView: View {
                         }
                     )
 
-                    Picker(
-                        selection: $productInventory.locationID,
-                        label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
-                        content: {
-                            Text("")
-                                .tag(nil as Int?)
-                            ForEach(mdLocations, id: \.id) { location in
-                                Text(location.name)
-                                    .tag(location.id as Int?)
+                    if features.locationTracking {
+                        Picker(
+                            selection: $productInventory.locationID,
+                            label: Label("Location", systemImage: MySymbols.location).foregroundStyle(.primary),
+                            content: {
+                                Text("")
+                                    .tag(nil as Int?)
+                                ForEach(mdLocations, id: \.id) { location in
+                                    Text(location.name)
+                                        .tag(location.id as Int?)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
 
                 Section("Note") {

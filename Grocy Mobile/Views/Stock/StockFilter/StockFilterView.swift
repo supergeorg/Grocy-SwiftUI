@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockFilterView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.grocyFeatures) private var features
 
     @Query(filter: #Predicate<MDLocation> { $0.active }, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(filter: #Predicate<MDProductGroup> { $0.active }, sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
@@ -30,19 +31,21 @@ struct StockFilterView: View {
 
     var body: some View {
         List {
-            Picker(
-                selection: $filteredLocationID,
-                content: {
-                    Text("All").tag(nil as Int?)
-                    ForEach(mdLocations, id: \.id) { location in
-                        Text(location.name).tag(location.id as Int?)
+            if features.locationTracking {
+                Picker(
+                    selection: $filteredLocationID,
+                    content: {
+                        Text("All").tag(nil as Int?)
+                        ForEach(mdLocations, id: \.id) { location in
+                            Text(location.name).tag(location.id as Int?)
+                        }
+                    },
+                    label: {
+                        Label("Location", systemImage: MySymbols.filter)
+                            .foregroundStyle(.primary)
                     }
-                },
-                label: {
-                    Label("Location", systemImage: MySymbols.filter)
-                        .foregroundStyle(.primary)
-                }
-            )
+                )
+            }
             Picker(
                 selection: $filteredProductGroupID,
                 content: {
@@ -62,12 +65,14 @@ struct StockFilterView: View {
                 content: {
                     Text(ProductStatus.all.rawValue)
                         .tag(ProductStatus.all)
-                    Text(ProductStatus.expiringSoon.rawValue)
-                        .tag(ProductStatus.expiringSoon)
-                    Text(ProductStatus.overdue.rawValue)
-                        .tag(ProductStatus.overdue)
-                    Text(ProductStatus.expired.rawValue)
-                        .tag(ProductStatus.expired)
+                    if features.dueDateTracking {
+                        Text(ProductStatus.expiringSoon.rawValue)
+                            .tag(ProductStatus.expiringSoon)
+                        Text(ProductStatus.overdue.rawValue)
+                            .tag(ProductStatus.overdue)
+                        Text(ProductStatus.expired.rawValue)
+                            .tag(ProductStatus.expired)
+                    }
                     Text(ProductStatus.belowMinStock.rawValue)
                         .tag(ProductStatus.belowMinStock)
                 },

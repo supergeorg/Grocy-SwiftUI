@@ -33,6 +33,7 @@ struct MDProductFormView: View {
     @Query(filter: #Predicate<MDLocation> { $0.active }, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.grocyFeatures) private var features
 
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
@@ -123,7 +124,15 @@ struct MDProductFormView: View {
             && (product.quIDConsume != -1) && (product.quIDPrice != -1) && isBarcodeCorrect
     }
 
+    /// Grocy requires a location for every product. Without location tracking it can't be chosen, so the first one is used.
+    private func useFirstLocationWithoutLocationTracking() {
+        if !features.locationTracking, product.locationID == -1, let firstLocation = mdLocations.first {
+            product.locationID = firstLocation.id
+        }
+    }
+
     private func saveProduct() async {
+        useFirstLocationWithoutLocationTracking()
         if product.id == -1 {
             do {
                 product.id = try grocyVM.findNextID(.products)
@@ -183,7 +192,7 @@ struct MDProductFormView: View {
     /// The properties that are still empty, which Apple Intelligence can fill in.
     private var stepsToSuggest: Set<ProductPropertySuggester.Step> {
         var steps: Set<ProductPropertySuggester.Step> = []
-        if product.locationID == -1 { steps.insert(.location) }
+        if features.locationTracking, product.locationID == -1 { steps.insert(.location) }
         if product.productGroupID == nil { steps.insert(.productGroup) }
         if product.quIDStock == -1 { steps.insert(.quantityUnit) }
         return steps
@@ -428,20 +437,26 @@ struct MDProductFormView: View {
                 NavigationLink(
                     value: MDProductFormPart.location,
                     label: {
-                        MyLabelWithSubtitle(
-                            title: "Default location",
-                            subTitle: "\(Text("Location")), \(Text("Store"))",
-                            systemImage: MySymbols.location,
-                            isProblem: product.locationID == -1
-                        )
+                        if features.locationTracking {
+                            MyLabelWithSubtitle(
+                                title: "Default location",
+                                subTitle: "\(Text("Location")), \(Text("Store"))",
+                                systemImage: MySymbols.location,
+                                isProblem: product.locationID == -1
+                            )
+                        } else {
+                            MyLabelWithSubtitle(title: "Default store", systemImage: MySymbols.store)
+                        }
                     }
                 )
-                NavigationLink(
-                    value: MDProductFormPart.dueDate,
-                    label: {
-                        MyLabelWithSubtitle(title: "Due date", subTitle: "\(Text("Type")), \(Text("Default due days"))", systemImage: MySymbols.date)
-                    }
-                )
+                if features.dueDateTracking || features.openedTracking || features.freezing {
+                    NavigationLink(
+                        value: MDProductFormPart.dueDate,
+                        label: {
+                            MyLabelWithSubtitle(title: "Due date", subTitle: "\(Text("Type")), \(Text("Default due days"))", systemImage: MySymbols.date)
+                        }
+                    )
+                }
                 NavigationLink(
                     value: MDProductFormPart.quantityUnit,
                     label: {
@@ -483,6 +498,7 @@ struct MDProductFormView: View {
         }
         .task {
             await updateData()
+            useFirstLocationWithoutLocationTracking()
             self.isNameCorrect = checkNameCorrect()
             // Suggestions that were ready before the form opened
             applySuggestions()
@@ -619,12 +635,14 @@ struct MDProductFormView: View {
             )
 
             // Product should not be frozen
-            MyToggle(
-                isOn: $product.shouldNotBeFrozen,
-                description: "Should not be frozen",
-                descriptionInfo: "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown",
-                icon: MySymbols.freezing
-            )
+            if features.freezing {
+                MyToggle(
+                    isOn: $product.shouldNotBeFrozen,
+                    description: "Should not be frozen",
+                    descriptionInfo: "When enabled, on moving this product to a freezer location (so when freezing it), a warning will be shown",
+                    icon: MySymbols.freezing
+                )
+            }
 
             // Product picture
             NavigationLink(
@@ -644,54 +662,57 @@ struct MDProductFormView: View {
 
     var locationPropertiesView: some View {
         Form {
-            // Default Location - REQUIRED
-            Picker(
-                selection: $product.locationID,
-                content: {
-                    Text("").tag(-1)
-                    ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
-                        Text(grocyLocation.name).tag(grocyLocation.id)
-                    }
-                },
-                label: {
-                    Label("Default location", systemImage: MySymbols.location)
-                        .foregroundStyle(.primary)
-                    if product.locationID == -1 {
-                        Text("A location is required")
-                            .foregroundStyle(.red)
-                    }
-                }
-            )
-            // Default consume location
-            Picker(
-                selection: $product.defaultConsumeLocationID,
-                content: {
-                    Text("").tag(-1 as Int?)
-                    ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
-                        Text(grocyLocation.name).tag(grocyLocation.id as Int?)
-                    }
-                },
-                label: {
-                    Label {
-                        HStack {
-                            Text("Default consume location")
-                            FieldDescription(description: "Stock entries at this location will be consumed first")
+            if features.locationTracking {
+                // Default Location - REQUIRED
+                Picker(
+                    selection: $product.locationID,
+                    content: {
+                        Text("").tag(-1)
+                        ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
+                            Text(grocyLocation.name).tag(grocyLocation.id)
                         }
-                    } icon: {
-                        Image(systemName: MySymbols.location)
+                    },
+                    label: {
+                        Label("Default location", systemImage: MySymbols.location)
                             .foregroundStyle(.primary)
+                        if product.locationID == -1 {
+                            Text("A location is required")
+                                .foregroundStyle(.red)
+                        }
                     }
-                }
-            )
-
-            // Move on open
-            if product.defaultConsumeLocationID != -1 {
-                MyToggle(
-                    isOn: $product.moveOnOpen,
-                    description: "Move on open",
-                    descriptionInfo: "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location",
-                    icon: MySymbols.transfer
                 )
+                // Default consume location
+                Picker(
+                    selection: $product.defaultConsumeLocationID,
+                    content: {
+                        Text("").tag(-1 as Int?)
+                        ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
+                            Text(grocyLocation.name).tag(grocyLocation.id as Int?)
+                        }
+                    },
+                    label: {
+                        Label {
+                            HStack {
+                                Text("Default consume location")
+                                FieldDescription(description: "Stock entries at this location will be consumed first")
+                            }
+                        } icon: {
+                            Image(systemName: MySymbols.location)
+                                .foregroundStyle(.primary)
+                        }
+                    }
+                )
+
+                // Move on open
+                if features.openedTracking, product.defaultConsumeLocationID != -1 {
+                    MyToggle(
+                        isOn: $product.moveOnOpen,
+                        description: "Move on open",
+                        descriptionInfo:
+                            "When enabled, on marking this product as opened, the corresponding amount will be moved to the default consume location",
+                        icon: MySymbols.transfer
+                    )
+                }
             }
 
             // Default Store
@@ -709,72 +730,81 @@ struct MDProductFormView: View {
                 }
             )
         }
-        .navigationTitle("Default location")
+        .navigationTitle(features.locationTracking ? LocalizedStringKey("Default location") : LocalizedStringKey("Default store"))
     }
 
     var dueDatePropertiesView: some View {
         Form {
-            VStack(alignment: .leading) {
-                Text("Due date type")
-                    .font(.headline)
-                // Due Type, default best before
-                Picker(
-                    "",
-                    selection: $product.dueType,
-                    content: {
-                        Text("Best before date")
-                            .tag(DueType.bestBefore)
-                        Text("Expiration date")
-                            .tag(DueType.expires)
-                    }
+            if features.dueDateTracking {
+                VStack(alignment: .leading) {
+                    Text("Due date type")
+                        .font(.headline)
+                    // Due Type, default best before
+                    Picker(
+                        "",
+                        selection: $product.dueType,
+                        content: {
+                            Text("Best before date")
+                                .tag(DueType.bestBefore)
+                            Text("Expiration date")
+                                .tag(DueType.expires)
+                        }
+                    )
+                    .pickerStyle(.segmented)
+                }
+
+                // Default due days
+                MyIntStepper(
+                    amount: $product.defaultDueDays,
+                    description: "Default due days",
+                    helpText:
+                        "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)",
+                    minAmount: -1,
+                    amountName: product.defaultDueDays == 1 ? "Day" : "Days",
+                    systemImage: MySymbols.date
                 )
-                .pickerStyle(.segmented)
             }
 
-            // Default due days
-            MyIntStepper(
-                amount: $product.defaultDueDays,
-                description: "Default due days",
-                helpText:
-                    "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)",
-                minAmount: -1,
-                amountName: product.defaultDueDays == 1 ? "Day" : "Days",
-                systemImage: MySymbols.date
-            )
-
             // Default due days afer opening
-            MyIntStepper(
-                amount: $product.defaultDueDaysAfterOpen,
-                description: "Default due days after opened",
-                helpText: "When this product was marked as opened, the due date will be replaced by today + this amount of days (a value of 0 disables this)",
-                minAmount: 0,
-                amountName: product.defaultDueDaysAfterOpen == 1 ? "Day" : "Days",
-                systemImage: MySymbols.date
-            )
+            if features.openedTracking {
+                MyIntStepper(
+                    amount: $product.defaultDueDaysAfterOpen,
+                    description: "Default due days after opened",
+                    helpText:
+                        "When this product was marked as opened, the due date will be replaced by today + this amount of days (a value of 0 disables this)",
+                    minAmount: 0,
+                    amountName: product.defaultDueDaysAfterOpen == 1 ? "Day" : "Days",
+                    systemImage: MySymbols.date
+                )
+            }
 
             // Default due days after freezing
-            MyIntStepper(
-                amount: $product.defaultDueDaysAfterFreezing,
-                description: "Default due days after freezing",
-                helpText: "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days",
-                minAmount: -1,
-                amountName: product.defaultDueDaysAfterFreezing == 1 ? "Day" : "Days",
-                errorMessage:
-                    "This cannot be lower than \(Double(-1.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
-                systemImage: MySymbols.freezing
-            )
+            if features.freezing {
+                MyIntStepper(
+                    amount: $product.defaultDueDaysAfterFreezing,
+                    description: "Default due days after freezing",
+                    helpText:
+                        "On moving this product to a freezer location (so when freezing it), the due date will be replaced by today + this amount of days",
+                    minAmount: -1,
+                    amountName: product.defaultDueDaysAfterFreezing == 1 ? "Day" : "Days",
+                    errorMessage:
+                        "This cannot be lower than \(Double(-1.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
+                    systemImage: MySymbols.freezing
+                )
 
-            // Default due days after thawing
-            MyIntStepper(
-                amount: $product.defaultDueDaysAfterThawing,
-                description: "Default due days after thawing",
-                helpText: "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days",
-                minAmount: 0,
-                amountName: product.defaultDueDaysAfterThawing == 1 ? "Day" : "Days",
-                errorMessage:
-                    "This cannot be lower than \(Double(0.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
-                systemImage: MySymbols.thawing
-            )
+                // Default due days after thawing
+                MyIntStepper(
+                    amount: $product.defaultDueDaysAfterThawing,
+                    description: "Default due days after thawing",
+                    helpText:
+                        "On moving this product from a freezer location (so when thawing it), the due date will be replaced by today + this amount of days",
+                    minAmount: 0,
+                    amountName: product.defaultDueDaysAfterThawing == 1 ? "Day" : "Days",
+                    errorMessage:
+                        "This cannot be lower than \(Double(0.0).formatted(.number.precision(.fractionLength(0...4)))) and needs to be a valid number with max. \(Int(0)) decimal places",
+                    systemImage: MySymbols.thawing
+                )
+            }
         }
         .navigationTitle("Due date")
     }
@@ -926,12 +956,14 @@ struct MDProductFormView: View {
             )
 
             // Treat opened as out of stock
-            MyToggle(
-                isOn: $product.treatOpenedAsOutOfStock,
-                description: "Treat opened as out of stock",
-                descriptionInfo: "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount",
-                icon: MySymbols.stockOverview
-            )
+            if features.openedTracking {
+                MyToggle(
+                    isOn: $product.treatOpenedAsOutOfStock,
+                    description: "Treat opened as out of stock",
+                    descriptionInfo: "When enabled, opened items will be counted as missing for calculating if this product is below its minimum stock amount",
+                    icon: MySymbols.stockOverview
+                )
+            }
 
             // Quick consume amount
             MyDoubleStepperOptional(
@@ -945,15 +977,17 @@ struct MDProductFormView: View {
             )
 
             // Quick open amount
-            MyDoubleStepperOptional(
-                amount: $product.quickOpenAmount,
-                description: "Quick open amount",
-                descriptionInfo: "This amount is used for the \"quick open button\" on the stock overview page (related to quantity unit stock)",
-                minAmount: 0.0001,
-                amountStep: 1.0,
-                amountName: nil,
-                systemImage: MySymbols.open
-            )
+            if features.openedTracking {
+                MyDoubleStepperOptional(
+                    amount: $product.quickOpenAmount,
+                    description: "Quick open amount",
+                    descriptionInfo: "This amount is used for the \"quick open button\" on the stock overview page (related to quantity unit stock)",
+                    minAmount: 0.0001,
+                    amountStep: 1.0,
+                    amountName: nil,
+                    systemImage: MySymbols.open
+                )
+            }
 
             // Tare weight
             Group {

@@ -28,10 +28,11 @@ struct MDUserFieldFormView: View {
     @Binding var showAddUserField: Bool
 
     @State private var isNameCorrect: Bool = true
+    /// Grocy only accepts letters and numbers, and a name once per entity.
     private func checkNameCorrect() -> Bool {
-        //        let foundUserField = grocyVM.mdUserFields.first(where: {$0.name == name})
-        //        return isNewUserField ? !(name.isEmpty || foundUserField != nil) : !(name.isEmpty || (foundUserField != nil && foundUserField!.id != foundUserField!.id))
-        return false
+        guard name.wholeMatch(of: /[A-Za-z0-9]+/) != nil else { return false }
+        let foundUserField = grocyVM.mdUserFields.first { $0.name == name && $0.entity == entity?.rawValue }
+        return foundUserField == nil || foundUserField?.id == userField?.id
     }
 
     @State private var isCaptionCorrect: Bool = true
@@ -111,7 +112,7 @@ struct MDUserFieldFormView: View {
                     GrocyLogger.error("Userfield edit failed. \(error)")
                 }
             }
-            isProcessing = true
+            isProcessing = false
         }
     }
 
@@ -131,7 +132,7 @@ struct MDUserFieldFormView: View {
                             Image(systemName: MySymbols.save)
                         }
                     )
-                    .disabled(!isNameCorrect || isProcessing)
+                    .disabled(!isNameCorrect || !isCaptionCorrect || entity == nil || isProcessing)
                     .keyboardShortcut(.defaultAction)
                 }
                 #if os(iOS)
@@ -165,6 +166,9 @@ struct MDUserFieldFormView: View {
                         }
                     }
                 )
+                .onChange(of: entity) {
+                    isNameCorrect = checkNameCorrect()
+                }
                 if entity == nil {
                     Text("An entity is required")
                         .foregroundStyle(.red)
@@ -227,8 +231,25 @@ struct MDUserFieldFormView: View {
     }
 }
 
-struct MDUserFieldFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        MDUserFieldFormView(isNewUserField: true, showAddUserField: Binding.constant(true))
+#Preview("Create", traits: .previewData) {
+    NavigationStack {
+        MDUserFieldFormView(isNewUserField: true, showAddUserField: .constant(true))
+    }
+}
+
+#Preview("Edit", traits: .previewData) {
+    NavigationStack {
+        MDUserFieldFormView(
+            isNewUserField: false,
+            userField: MDUserField(
+                id: 1,
+                name: "brand",
+                entity: "products",
+                caption: "Brand",
+                type: UserFieldType.textSingleLine.rawValue,
+                showAsColumnInTables: true
+            ),
+            showAddUserField: .constant(false)
+        )
     }
 }

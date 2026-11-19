@@ -141,7 +141,7 @@ struct CodeResult: Hashable {
                             callback(CodeResult(value: text.transcript))
                         }
                     default:
-                        print("Not implemented")
+                        GrocyLogger.debug("Ignoring a recognized item that is neither a barcode nor text.")
                     }
                 }
             }

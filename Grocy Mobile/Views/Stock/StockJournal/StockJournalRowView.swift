@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct StockJournalRowView: View {
+    @Environment(\.grocyFeatures) private var features
+
     var journalEntry: StockJournalEntry
     var product: MDProduct?
     var location: MDLocation?
@@ -48,7 +50,7 @@ struct StockJournalRowView: View {
                     Text("\(Text("Transaction type")):")
                     Text(journalEntry.transactionType.localizedName)
                 }
-                if let locationName = location?.name {
+                if features.locationTracking, let locationName = location?.name {
                     HStack(spacing: Spacing.xxSmall) {
                         Text("\(Text("Location")):")
                         Text(locationName)

@@ -18,6 +18,7 @@ struct PreviewDataTrait: PreviewModifier {
 
     func body(content: Content, context: ModelContainer) -> some View {
         content
+            .grocyFeatures()
             .environment(grocyVM)
             .modelContainer(PreviewContainer.shared)
     }
@@ -41,6 +42,7 @@ struct PreviewContainer {
         StockEntry.self,
         StockJournalEntry.self,
         Recipe.self,
+        RecipeNesting.self,
         MDChore.self,
         MDTaskCategory.self,
         GrocyTask.self,

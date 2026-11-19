@@ -30,7 +30,7 @@ struct UserManagementView: View {
         users
             .filter {
                 !searchString.isEmpty
-                    ? ($0.username.localizedCaseInsensitiveContains(searchString) && $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
+                    ? ($0.username.localizedCaseInsensitiveContains(searchString) || $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
             }
     }
 
@@ -94,7 +94,7 @@ struct UserManagementView: View {
                             .sheet(
                                 isPresented: $showAddUser,
                                 content: {
-                                    NavigationView {
+                                    NavigationStack {
                                         UserFormView(isNewUser: true)
                                     }
                                 }
@@ -108,7 +108,9 @@ struct UserManagementView: View {
     var content: some View {
         List {
             if users.isEmpty {
-                Text("No users found").padding()
+                ContentUnavailableView("No users found", systemImage: MySymbols.user)
+            } else if filteredUsers.isEmpty {
+                ContentUnavailableView.search
             }
             ForEach(filteredUsers, id: \.id) { user in
                 UserRowView(user: user, isCurrentUser: (systemConfigList.first?.userUsername == user.username))
@@ -116,18 +118,17 @@ struct UserManagementView: View {
         }
         .navigationTitle("User management")
         .task {
-            Task {
-                await updateData()
-            }
+            await updateData()
         }
         .refreshable {
             await updateData()
         }
+        .searchable(text: $searchString, prompt: "Search")
     }
 }
 
-//struct UserManagementView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserManagementView()
-//    }
-//}
+#Preview(traits: .previewData) {
+    NavigationStack {
+        UserManagementView()
+    }
+}

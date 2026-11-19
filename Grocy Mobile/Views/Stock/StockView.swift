@@ -25,6 +25,9 @@ enum StockInteraction: Hashable, Identifiable {
     case productInventory(stockElement: StockElement)
     case productOverview(stockElement: StockElement)
     case productJournal(stockElement: StockElement)
+    case productEntries(stockElement: StockElement)
+    case productRecipes(stockElement: StockElement)
+    case editProduct(stockElement: StockElement)
 
     var id: Self { self }
 }
@@ -124,6 +127,7 @@ struct StockView: View {
     #endif
 
     @Environment(DeepLinkManager.self) var deepLinkManager
+    @Environment(\.grocyFeatures) private var features
 
     @AppStorage("StockView.stockGrouping") private var stockGrouping: StockGrouping = .none
     @AppStorage("StockView.sortCategory") private var sortCategory: StockSortCategory = .name
@@ -157,7 +161,7 @@ struct StockView: View {
     private var numFilters: Int {
         var filterCount = 0
         if filteredStatus != .all { filterCount += 1 }
-        if filteredLocationID != nil { filterCount += 1 }
+        if features.locationTracking, filteredLocationID != nil { filterCount += 1 }
         if filteredProductGroupID != nil { filterCount += 1 }
         return filterCount
     }
@@ -276,7 +280,8 @@ struct StockView: View {
 
         // Capture only Sendable primitives from SwiftData objects (on main thread)
         let searchString = self.searchString
-        let filteredLocationID = self.filteredLocationID
+        // A location filter stored before location tracking was turned off on the server no longer applies.
+        let filteredLocationID = features.locationTracking ? self.filteredLocationID : nil
         let filteredProductGroupID = self.filteredProductGroupID
         let filteredStatus = self.filteredStatus
         let stockGrouping = self.stockGrouping
@@ -590,14 +595,16 @@ struct StockView: View {
                         Label("Inventory", systemImage: MySymbols.inventory)
                     }
                 )
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.transferProduct)
-                    },
-                    label: {
-                        Label("Transfer", systemImage: MySymbols.transfer)
-                    }
-                )
+                if features.locationTracking {
+                    Button(
+                        action: {
+                            stockInteractionRouter.present(.transferProduct)
+                        },
+                        label: {
+                            Label("Transfer", systemImage: MySymbols.transfer)
+                        }
+                    )
+                }
                 Button(
                     action: {
                         stockInteractionRouter.present(.consumeProduct)
@@ -619,32 +626,7 @@ struct StockView: View {
         .environment(stockInteractionRouter)
         .sheet(item: $stockInteractionRouter.presentedInteraction) { interaction in
             NavigationStack {
-                switch interaction {
-                case .stockJournal:
-                    StockJournalView(isPopup: true)
-                case .inventoryProduct:
-                    InventoryProductView(isPopup: true)
-                case .transferProduct:
-                    TransferProductView(isPopup: true)
-                case .consumeProduct:
-                    ConsumeProductView(isPopup: true)
-                case .purchaseProduct:
-                    PurchaseProductView(isPopup: true)
-                case .productPurchase(let stockElement):
-                    PurchaseProductView(stockElement: stockElement, isPopup: true)
-                case .productConsume(let stockElement):
-                    ConsumeProductView(stockElement: stockElement, isPopup: true)
-                case .productTransfer(let stockElement):
-                    TransferProductView(stockElement: stockElement, isPopup: true)
-                case .productInventory(let stockElement):
-                    InventoryProductView(stockElement: stockElement, isPopup: true)
-                case .productOverview(let stockElement):
-                    StockProductInfoView(stockElement: stockElement, isPopup: true)
-                case .productJournal(let stockElement):
-                    StockJournalView(stockElement: stockElement, isPopup: true)
-                case .addToShL(let stockElement):
-                    ShoppingListEntryFormView(productIDToSelect: stockElement.productID, isPopup: true)
-                }
+                StockInteractionView(interaction: interaction)
             }
         }
         .navigationDestination(
@@ -711,9 +693,11 @@ struct StockView: View {
                         Label("Product group", systemImage: MySymbols.amount)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.productGroup)
-                        Label("Next due date", systemImage: MySymbols.date)
-                            .labelStyle(.titleAndIcon)
-                            .tag(StockGrouping.nextDueDate)
+                        if features.dueDateTracking {
+                            Label("Next due date", systemImage: MySymbols.date)
+                                .labelStyle(.titleAndIcon)
+                                .tag(StockGrouping.nextDueDate)
+                        }
                         Label("Last purchased", systemImage: MySymbols.date)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.lastPurchased)
@@ -723,9 +707,11 @@ struct StockView: View {
                         Label("Parent product", systemImage: MySymbols.product)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.parentProduct)
-                        Label("Default location", systemImage: MySymbols.location)
-                            .labelStyle(.titleAndIcon)
-                            .tag(StockGrouping.defaultLocation)
+                        if features.locationTracking {
+                            Label("Default location", systemImage: MySymbols.location)
+                                .labelStyle(.titleAndIcon)
+                                .tag(StockGrouping.defaultLocation)
+                        }
                     }
                 )
                 #if os(iOS)
@@ -742,9 +728,11 @@ struct StockView: View {
                         Label("Name", systemImage: MySymbols.product)
                             .labelStyle(.titleAndIcon)
                             .tag(StockSortCategory.name)
-                        Label("Due date", systemImage: MySymbols.date)
-                            .labelStyle(.titleAndIcon)
-                            .tag(StockSortCategory.dueDate)
+                        if features.dueDateTracking {
+                            Label("Due date", systemImage: MySymbols.date)
+                                .labelStyle(.titleAndIcon)
+                                .tag(StockSortCategory.dueDate)
+                        }
                         Label("Amount", systemImage: MySymbols.amount)
                             .labelStyle(.titleAndIcon)
                             .tag(StockSortCategory.amount)

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ChoresFilterView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.grocyFeatures) private var features
 
     @Query(sort: \GrocyUser.displayName, order: .forward) var users: GrocyUsers
 
@@ -31,7 +32,7 @@ struct ChoresFilterView: View {
             Picker(
                 selection: $filteredStatus,
                 content: {
-                    ForEach(ChoreStatus.allCases, id: \.caseName) { status in
+                    ForEach(ChoreStatus.allCases.filter { features.choreAssignments || $0 != .assignedToMe }, id: \.caseName) { status in
                         Text(status.title)
                             .tag(status)
                     }
@@ -45,21 +46,23 @@ struct ChoresFilterView: View {
                 .id(filteredStatus)
                 .listRowBackground(rowBackground)
             #endif
-            Picker(
-                selection: $filteredUserID,
-                content: {
-                    Text("All")
-                        .tag(nil as Int?)
-                    ForEach(users) { user in
-                        Text(user.displayName)
-                            .tag(user.id)
+            if features.choreAssignments {
+                Picker(
+                    selection: $filteredUserID,
+                    content: {
+                        Text("All")
+                            .tag(nil as Int?)
+                        ForEach(users) { user in
+                            Text(user.displayName)
+                                .tag(user.id)
+                        }
+                    },
+                    label: {
+                        Label("Assignment", systemImage: MySymbols.user)
+                            .foregroundStyle(.primary)
                     }
-                },
-                label: {
-                    Label("Assignment", systemImage: MySymbols.user)
-                        .foregroundStyle(.primary)
-                }
-            )
+                )
+            }
         }
     }
 }

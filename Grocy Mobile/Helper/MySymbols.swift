@@ -250,6 +250,8 @@ nonisolated struct MySymbols {
     static let disclosure = "chevron.right"
 
     static let stockEntry = "tag"
+    /// The stock entries of a product.
+    static let stockEntries = "rectangle.stack"
     static let transferFrom = "square.and.arrow.up"
     static let transferTo = "square.and.arrow.down"
     static let note = "square.and.pencil"

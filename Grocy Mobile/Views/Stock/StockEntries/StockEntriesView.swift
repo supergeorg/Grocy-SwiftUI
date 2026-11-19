@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StockEntriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     var stockElement: StockElement
 
@@ -99,19 +100,21 @@ struct StockEntriesView: View {
                     edge: .leading,
                     allowsFullSwipe: true,
                     content: {
-                        Button(
-                            action: {
-                                Task {
-                                    await openEntry(stockEntry: stockEntry)
+                        if features.openedTracking {
+                            Button(
+                                action: {
+                                    Task {
+                                        await openEntry(stockEntry: stockEntry)
+                                    }
+                                },
+                                label: {
+                                    Label("Open", systemImage: MySymbols.open)
                                 }
-                            },
-                            label: {
-                                Label("Open", systemImage: MySymbols.open)
-                            }
-                        )
-                        .tint(Color(.GrocyColors.grocyBlue))
-                        .help("Mark this stock entry as open")
-                        .disabled(stockEntry.stockEntryOpen)
+                            )
+                            .tint(Color(.GrocyColors.grocyBlue))
+                            .help("Mark this stock entry as open")
+                            .disabled(stockEntry.stockEntryOpen)
+                        }
                     }
                 )
                 .swipeActions(

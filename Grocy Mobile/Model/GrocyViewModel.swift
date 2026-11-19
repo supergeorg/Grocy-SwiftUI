@@ -320,6 +320,8 @@ class GrocyViewModel {
             ints = self.recipes.map { $0.id }
         case .recipes_pos:
             ints = self.recipesPos.map { $0.id }
+        case .recipes_nestings:
+            ints = self.recipesNestings.map { $0.id }
         case .tasks:
             ints = self.grocyTasks.map { $0.id }
         case .task_categories:
@@ -433,6 +435,11 @@ class GrocyViewModel {
                         case .shopping_locations:
                             self.mdStores = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdStores)
+                        // Userfields and user entities are only kept in memory.
+                        case .userfields:
+                            self.mdUserFields = try await grocyApi.getObject(object: object)
+                        case .userentities:
+                            self.mdUserEntities = try await grocyApi.getObject(object: object)
                         case .stock:
                             self.stockEntries = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.stockEntries)
@@ -796,6 +803,22 @@ class GrocyViewModel {
 
     func deleteUser(id: Int) async throws {
         try await grocyApi.deleteUserWithID(id: id)
+    }
+
+    /// All of Grocy's permissions, as a tree through `parent`.
+    func getPermissionHierarchy() async throws -> GrocyPermissions {
+        try await grocyApi.getPermissionHierarchy()
+    }
+
+    /// The IDs of the permissions assigned to a user (not the ones it inherits from them).
+    func getUserPermissionIDs(userID: Int) async throws -> Set<Int> {
+        Set(try await grocyApi.getUserPermissions(id: userID).map(\.permissionID))
+    }
+
+    /// Replaces all permissions of a user. Needs the ADMIN permission; in demo mode Grocy keeps ADMIN for everyone.
+    func putUserPermissions(userID: Int, permissionIDs: Set<Int>) async throws {
+        let content = try jsonEncoder.encode(GrocyUserPermissionsPUT(permissions: permissionIDs.sorted()))
+        try await grocyApi.putUserPermissions(id: userID, content: content)
     }
 
     func getNewUserID() -> Int {

@@ -15,111 +15,126 @@ struct UserFormView: View {
 
     @Environment(\.dismiss) var dismiss
 
-    @State private var username: String = ""
-    @State private var firstName: String = ""
-    @State private var lastName: String = ""
+    @State private var username: String
+    @State private var firstName: String
+    @State private var lastName: String
     @State private var password: String = ""
     @State private var passwordConfirm: String = ""
+
+    @State private var isProcessing: Bool = false
+    @State private var isSuccessful: Bool? = nil
+    @State private var errorMessage: String? = nil
 
     var isNewUser: Bool
     var user: GrocyUser?
 
-    @State private var isValidUsername: Bool = false
-    private func checkUsernameCorrect() -> Bool {
-        let foundUsername = users.first(where: { $0.username == username })
-        return isNewUser ? !(username.isEmpty || foundUsername != nil) : !(username.isEmpty || (foundUsername != nil && foundUsername!.id != user!.id))
+    init(isNewUser: Bool, user: GrocyUser? = nil) {
+        self.isNewUser = isNewUser
+        self.user = user
+        _username = State(initialValue: user?.username ?? "")
+        _firstName = State(initialValue: user?.firstName ?? "")
+        _lastName = State(initialValue: user?.lastName ?? "")
+        _isValidUsername = State(initialValue: !(user?.username.isEmpty ?? true))
     }
 
-    @State private var isMatchingPassword: Bool = true
-    private func checkPWParity() {
-        if (password == passwordConfirm) && (!password.isEmpty) {
-            isMatchingPassword = true
-        } else {
-            isMatchingPassword = false
-        }
+    @State private var isValidUsername: Bool
+    private func checkUsernameCorrect() -> Bool {
+        guard !username.isEmpty else { return false }
+        let foundUser = users.first(where: { $0.username == username })
+        return foundUser == nil || (!isNewUser && foundUser?.id == user?.id)
+    }
+
+    /// A new user needs a password; an edit keeps the current one when both fields stay empty.
+    private var isMatchingPassword: Bool {
+        password == passwordConfirm && (!isNewUser || !password.isEmpty)
     }
 
     private func updateData() async {
         await grocyVM.requestData(additionalObjects: [.users])
     }
 
-    private func finishForm() {
-        self.dismiss()
-    }
-
     private func saveUser() async {
-        if isNewUser {
-            let userPost = GrocyUserPOST(
-                id: grocyVM.getNewUserID(),
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                password: password,
-                rowCreatedTimestamp: Date()
-            )
-            do {
-                try await grocyVM.postUser(user: userPost)
-                GrocyLogger.info("Successfully saved user.")
-                await updateData()
-                finishForm()
-            } catch {
-                GrocyLogger.error("Saving user failed. \(error)")
-            }
-        } else {
-            if let intID = user?.id {
+        isProcessing = true
+        isSuccessful = nil
+        do {
+            if isNewUser {
                 let userPost = GrocyUserPOST(
-                    id: intID,
+                    id: grocyVM.getNewUserID(),
                     username: username,
                     firstName: firstName,
                     lastName: lastName,
                     password: password,
-                    rowCreatedTimestamp: user!.rowCreatedTimestamp
+                    rowCreatedTimestamp: Date()
                 )
-                do {
-                    try await grocyVM.putUser(id: user!.id, user: userPost)
-                    GrocyLogger.info("Successfully edited user.")
-                    await updateData()
-                    finishForm()
-                } catch {
-                    GrocyLogger.error("Editing user failed. \(error)")
-                }
+                try await grocyVM.postUser(user: userPost)
+                GrocyLogger.info("Creating user was successful.")
+            } else if let user {
+                let userPost = GrocyUserPOST(
+                    id: user.id,
+                    username: username,
+                    firstName: firstName,
+                    lastName: lastName,
+                    password: password,
+                    pictureFileName: user.pictureFileName,
+                    rowCreatedTimestamp: user.rowCreatedTimestamp
+                )
+                try await grocyVM.putUser(id: user.id, user: userPost)
+                GrocyLogger.info("Editing user was successful.")
             }
+            await updateData()
+            isSuccessful = true
+        } catch {
+            GrocyLogger.error("Saving user failed. \(error)")
+            errorMessage = (error as? APIError)?.displayMessage ?? error.localizedDescription
+            isSuccessful = false
         }
+        isProcessing = false
     }
 
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             Section(header: Text("Username")) {
                 MyTextField(
                     textToEdit: $username,
                     description: "Username",
                     isCorrect: $isValidUsername,
-                    leadingIcon: "rectangle.and.pencil.and.ellipsis",
+                    leadingIcon: MySymbols.user,
                     emptyMessage: "A username is required",
                     errorMessage: "Username already exists"
                 )
                 .onChange(of: username) {
                     isValidUsername = checkUsernameCorrect()
                 }
-                MyTextField(textToEdit: $firstName, description: "First name", isCorrect: Binding.constant(true), leadingIcon: "person", errorMessage: nil)
-                MyTextField(textToEdit: $lastName, description: "Last name", isCorrect: Binding.constant(true), leadingIcon: "person.2", errorMessage: nil)
+                MyTextField(textToEdit: $firstName, description: "First name", isCorrect: .constant(true), leadingIcon: MySymbols.user)
+                MyTextField(textToEdit: $lastName, description: "Last name", isCorrect: .constant(true), leadingIcon: MySymbols.user)
             }
-            Section(header: Text("Password")) {
-                MyTextField(textToEdit: $password, description: "Password", isCorrect: Binding.constant(true), leadingIcon: "key", errorMessage: nil)
-                MyTextField(
-                    textToEdit: $passwordConfirm,
-                    description: "Confirm password",
-                    isCorrect: $isMatchingPassword,
-                    leadingIcon: "key",
-                    errorMessage: "Passwords do not match"
-                )
+            Section {
+                SecureField("Password", text: $password)
+                    .textContentType(.newPassword)
+                SecureField("Confirm password", text: $passwordConfirm)
+                    .textContentType(.newPassword)
+                if password != passwordConfirm, !passwordConfirm.isEmpty {
+                    Text("Passwords do not match")
+                        .font(.caption)
+                        .foregroundStyle(Color(.GrocyColors.grocyRed))
+                }
+            } header: {
+                Text("Password")
+            } footer: {
+                if !isNewUser {
+                    Text("Leave empty to keep the current password.")
+                }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(isNewUser ? "Create user" : "Edit user")
         .toolbar(content: {
             ToolbarItem(placement: .cancellationAction) {
                 Button(role: .cancel) {
-                    finishForm()
+                    dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
@@ -132,18 +147,27 @@ struct UserFormView: View {
                     }
                 )
                 .keyboardShortcut(.defaultAction)
-                .disabled(!isValidUsername || !isMatchingPassword || password.isEmpty)
+                .disabled(!isValidUsername || !isMatchingPassword || isProcessing)
             }
         })
-        .onChange(of: password) {
-            checkPWParity()
+        .onChange(of: isSuccessful) {
+            if isSuccessful == true {
+                dismiss()
+            }
         }
-        .onChange(of: passwordConfirm) {
-            checkPWParity()
-        }
+        .sensoryFeedback(.success, trigger: isSuccessful == true)
+        .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 }
 
-#Preview {
-    UserFormView(isNewUser: true)
+#Preview("Create", traits: .previewData) {
+    NavigationStack {
+        UserFormView(isNewUser: true)
+    }
+}
+
+#Preview("Edit", traits: .previewData) {
+    NavigationStack {
+        UserFormView(isNewUser: false, user: GrocyUser(id: 1, username: "demo", firstName: "Demo", lastName: "User", displayName: "Demo User"))
+    }
 }
