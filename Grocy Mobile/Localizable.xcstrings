@@ -8056,6 +8056,7 @@
     },
     "A reminder has no due date." : {
       "comment" : "reminder has no due date error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -10370,9 +10371,6 @@
         }
       }
     },
-    "ADD TO CALENDAR" : {
-      "shouldTranslate" : false
-    },
     "Add to meal plan" : {
       "localizations" : {
         "ca" : {
@@ -11285,6 +11283,7 @@
     },
     "An unknown error occurred." : {
       "comment" : "unknown error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -20197,6 +20196,7 @@
       }
     },
     "Confirm" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -22311,6 +22311,12 @@
 
     },
     "Couldn't save the change" : {
+
+    },
+    "Couldn't sync \"%@\" with Reminders" : {
+
+    },
+    "Couldn't sync with Reminders" : {
 
     },
     "Couldn't track the charge cycle" : {
@@ -25443,6 +25449,9 @@
           }
         }
       }
+    },
+    "Date" : {
+
     },
     "Date range" : {
       "localizations" : {
@@ -30523,6 +30532,7 @@
       }
     },
     "Do you want to export this shopping list to Reminders? This may overwrite changes in the list." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -36879,6 +36889,7 @@
       }
     },
     "Export shopping list to Reminders" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -37176,6 +37187,7 @@
     },
     "Failed to read a calendar item." : {
       "comment" : "failed reading calendar item error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -37193,6 +37205,7 @@
     },
     "Failed to read reminders." : {
       "comment" : "failed reading reminders error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -37207,6 +37220,9 @@
           }
         }
       }
+    },
+    "Failed to read the reminders." : {
+
     },
     "Fill in with Apple Intelligence" : {
       "localizations" : {
@@ -38400,6 +38416,9 @@
       "shouldTranslate" : false
     },
     "Grocy Mobile connects to your self-hosted Grocy server. You can try a demo server first." : {
+
+    },
+    "Grocy Mobile doesn't have access to Reminders." : {
 
     },
     "Grocy Mobile is a companion app and needs a running Grocy server." : {
@@ -40386,9 +40405,6 @@
         }
       }
     },
-    "INIT CALENDAR" : {
-      "shouldTranslate" : false
-    },
     "Insert" : {
       "localizations" : {
         "de" : {
@@ -41738,6 +41754,12 @@
           }
         }
       }
+    },
+    "Last synced" : {
+
+    },
+    "Last synced %@" : {
+
     },
     "Last tracked" : {
       "localizations" : {
@@ -45159,6 +45181,15 @@
         }
       }
     },
+    "Mirrors a shopping list to a list in Reminders. Items you check off or add there are brought into Grocy. It syncs when the list or its reminders change, every few minutes while the app is open, and from time to time in the background. Any shopping list can also be synced from its title menu." : {
+
+    },
+    "Mirrors the chores to a list in Reminders, with their next due dates. Checking off a chore there tracks it in Grocy, and the reminder comes back with the next due date. It syncs when the chores or their reminders change, every few minutes while the app is open, and from time to time in the background." : {
+
+    },
+    "Mirrors the tasks to a list in Reminders, with their due dates. Tasks you check off or add there are brought into Grocy. It syncs when the tasks or their reminders change, every few minutes while the app is open, and from time to time in the background." : {
+
+    },
     "Mise en place" : {
 
     },
@@ -48062,6 +48093,9 @@
 
     },
     "No servers" : {
+
+    },
+    "No store" : {
 
     },
     "No store defined. Please create one." : {
@@ -54517,6 +54551,12 @@
         }
       }
     },
+    "Price history" : {
+
+    },
+    "Prices per %@" : {
+
+    },
     "Produces product" : {
       "localizations" : {
         "ca" : {
@@ -58417,9 +58457,6 @@
         }
       }
     },
-    "READ ALL" : {
-      "shouldTranslate" : false
-    },
     "Read instruction manuals (PDF) and keep notes for your equipment." : {
 
     },
@@ -58890,6 +58927,9 @@
           }
         }
       }
+    },
+    "Reminders access is off" : {
+
     },
     "Remove file" : {
 
@@ -67115,7 +67155,20 @@
         }
       }
     },
+    "Sync" : {
+
+    },
+    "Sync \"%@\" with Reminders?" : {
+
+    },
+    "Sync automatically" : {
+
+    },
+    "Sync Now" : {
+
+    },
     "Sync shopping list to Reminders" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -67124,6 +67177,15 @@
           }
         }
       }
+    },
+    "Sync with Reminders" : {
+
+    },
+    "Syncing stops. The list and its reminders stay in Reminders." : {
+
+    },
+    "Syncing stops. The lists and their reminders stay in Reminders." : {
+
     },
     "Tabs" : {
 
@@ -67711,6 +67773,7 @@
     },
     "The app doesn't have permission to read reminders." : {
       "comment" : "access denied error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -68051,6 +68114,9 @@
       }
     },
     "The ingredients were consumed from your stock." : {
+
+    },
+    "The list in Reminders can't be changed." : {
 
     },
     "The native app for Grocy, the self-hosted groceries and household management solution." : {
@@ -68588,6 +68654,9 @@
           }
         }
       }
+    },
+    "There's no account in Reminders that can hold a new list." : {
+
     },
     "There's no unit conversion to the product's stock unit \"%@\". Only whether any amount is in stock can be checked." : {
 
@@ -69446,8 +69515,12 @@
         }
       }
     },
+    "This creates the list \"%@ (Grocy Mobile)\" in Reminders. Items you check off or add there are brought into Grocy when you sync again." : {
+
+    },
     "This device doesn't allow access to reminders." : {
       "comment" : "access restricted error description",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -69462,6 +69535,9 @@
           }
         }
       }
+    },
+    "This device doesn't allow access to Reminders." : {
+
     },
     "This equals %@ %@" : {
       "localizations" : {
@@ -75387,6 +75463,9 @@
         }
       }
     },
+    "To sync shopping lists with Reminders, allow Grocy Mobile full access to Reminders in Settings." : {
+
+    },
     "Today" : {
 
     },
@@ -79668,6 +79747,21 @@
 
     },
     "Unknown recipe" : {
+
+    },
+    "Unlink" : {
+
+    },
+    "Unlink list in Reminders" : {
+
+    },
+    "Unlink lists in Reminders" : {
+
+    },
+    "Unlink the list in Reminders?" : {
+
+    },
+    "Unlink the shopping lists in Reminders?" : {
 
     },
     "Unsupported server version" : {
