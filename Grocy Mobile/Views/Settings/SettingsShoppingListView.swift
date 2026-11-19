@@ -10,25 +10,36 @@ import SwiftUI
 
 struct SettingsShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.openURL) private var openURL
 
-    @Query var mdProducts: MDProducts
-    @Query var shoppingList: [ShoppingListItem]
-    @Query var shoppingListDescriptions: ShoppingListDescriptions
+    @Query(sort: \ShoppingListDescription.id) var shoppingListDescriptions: ShoppingListDescriptions
 
-    @AppStorage("devMode") private var devMode: Bool = false
     @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
     @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
 
     @State private var useAutoAddBelowMinStockAmount: Bool = false
 
     @State private var isFirst: Bool = true
-    @State var foundReminders: [Reminder] = []
-    @State private var showFoundReminders: Bool = false
+    @State private var reminderStore = ReminderStore.shared
+    @State private var reminderSyncError: String?
+    @State private var showUnlinkConfirmation: Bool = false
 
     private let dataToUpdate: [ObjectEntities] = [.shopping_lists]
 
-    var selectedShoppingListItems: [ShoppingListItem] {
-        shoppingList.filter({ $0.shoppingListID == shoppingListToSyncID })
+    /// Turning the sync on asks for access just in time, and syncs once, so the list shows up in Reminders right away.
+    private func startAutomaticSync() async {
+        if shoppingListToSyncID == 0 || !shoppingListDescriptions.contains(where: { $0.id == shoppingListToSyncID }) {
+            shoppingListToSyncID = shoppingListDescriptions.first?.id ?? 0
+        }
+        guard let shoppingList = shoppingListDescriptions.first(where: { $0.id == shoppingListToSyncID }) else { return }
+        do {
+            try await reminderStore.sync(shoppingList: shoppingList, grocyVM: grocyVM, requestAccess: true)
+        } catch ReminderSyncError.accessDenied {
+            syncShoppingListToReminders = false
+        } catch {
+            GrocyLogger.error("Syncing the shopping list with Reminders failed. \(error)")
+            reminderSyncError = error.localizedDescription
+        }
     }
 
     var body: some View {
@@ -62,73 +73,7 @@ struct SettingsShoppingListView: View {
                     icon: MySymbols.stockOverview
                 )
             }
-            if devMode {
-                // Default header style, like every other section.
-                Section(header: Text("Reminders")) {
-                    MyToggle(isOn: $syncShoppingListToReminders, description: "Sync shopping list to Reminders")
-                    if syncShoppingListToReminders {
-                        Picker(
-                            "Shopping list",
-                            selection: $shoppingListToSyncID,
-                            content: {
-                                Text("").tag(0)
-                                ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
-                                    Text(shoppingListDescription.name).tag(shoppingListDescription.id)
-                                }
-                            }
-                        )
-                        Button(
-                            action: {
-                                Task {
-                                    do {
-                                        try await ReminderStore.shared.requestAccess()
-                                        ReminderStore.shared.initCalendar(calendarName: "Grocy Mobile")
-                                    } catch {
-                                        print(error)
-                                    }
-                                }
-                            },
-                            label: {
-                                Text("INIT CALENDAR")
-                            }
-                        )
-                        Button(
-                            action: {
-                                do {
-                                    for shoppingListItem in selectedShoppingListItems {
-                                        let title =
-                                            "\(shoppingListItem.amount.formattedAmount) \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
-                                        try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done))
-                                    }
-                                } catch {
-                                    print(error)
-                                }
-                            },
-                            label: {
-                                Text("ADD TO CALENDAR")
-                            }
-                        )
-                        .disabled(!ReminderStore.shared.isAvailable)
-                        Button(
-                            action: {
-                                Task {
-                                    do {
-                                        let allReminders = try await ReminderStore.shared.readAll()
-                                        foundReminders = allReminders
-                                        showFoundReminders = true
-                                    } catch {
-                                        print(error)
-                                    }
-                                }
-                            },
-                            label: {
-                                Text("READ ALL")
-                            }
-                        )
-                        .disabled(!ReminderStore.shared.isAvailable)
-                    }
-                }
-            }
+            remindersSection
         }
         .formStyle(.grouped)
         .navigationTitle("Shopping list settings")
@@ -143,14 +88,100 @@ struct SettingsShoppingListView: View {
                 await grocyVM.requestData(additionalObjects: [.user_settings])
             }
         })
-        .sheet(
-            isPresented: $showFoundReminders,
-            content: {
-                NavigationStack {
-                    ShoppingListReminderReadView(reminders: foundReminders)
+        .onChange(of: syncShoppingListToReminders) {
+            if syncShoppingListToReminders {
+                Task { await startAutomaticSync() }
+            }
+        }
+        .onChange(of: shoppingListToSyncID) {
+            if syncShoppingListToReminders {
+                Task { await startAutomaticSync() }
+            }
+        }
+        .alert(
+            "Couldn't sync with Reminders",
+            isPresented: Binding(get: { reminderSyncError != nil }, set: { if !$0 { reminderSyncError = nil } }),
+            actions: { Button("OK", role: .cancel) {} },
+            message: { Text(reminderSyncError ?? "") }
+        )
+    }
+
+    private var remindersSection: some View {
+        Section {
+            if reminderStore.isAccessDenied || reminderStore.isAccessRestricted {
+                LabeledContent {
+                    if reminderStore.isAccessDenied {
+                        Button("Open Settings") {
+                            if let url = ReminderStore.privacySettingsURL {
+                                openURL(url)
+                            }
+                        }
+                    }
+                } label: {
+                    Label(
+                        reminderStore.isAccessDenied ? "Reminders access is off" : "This device doesn't allow access to Reminders.",
+                        systemImage: MySymbols.warning
+                    )
+                }
+            } else {
+                MyToggle(isOn: $syncShoppingListToReminders, description: "Sync automatically", icon: MySymbols.syncWithReminders)
+                if syncShoppingListToReminders {
+                    Picker(
+                        selection: $shoppingListToSyncID,
+                        content: {
+                            ForEach(shoppingListDescriptions, id: \.id) { shoppingListDescription in
+                                Text(shoppingListDescription.name).tag(shoppingListDescription.id)
+                            }
+                        },
+                        label: {
+                            Label("Shopping list", systemImage: MySymbols.shoppingList)
+                                .foregroundStyle(.primary)
+                        }
+                    )
+                    LabeledContent {
+                        if reminderStore.syncingListIDs.contains(shoppingListToSyncID) {
+                            ProgressView()
+                        } else if let lastSync = reminderStore.lastSync(shoppingListID: shoppingListToSyncID) {
+                            Text(lastSync, format: .relative(presentation: .named))
+                        } else {
+                            Text("Never")
+                        }
+                    } label: {
+                        Label("Last synced", systemImage: MySymbols.lastSync)
+                            .foregroundStyle(.primary)
+                    }
+                    Button {
+                        Task { await startAutomaticSync() }
+                    } label: {
+                        Label("Sync Now", systemImage: MySymbols.syncNow)
+                    }
+                    .disabled(reminderStore.syncingListIDs.contains(shoppingListToSyncID))
                 }
             }
-        )
+            if !reminderStore.calendarIdentifiers.isEmpty {
+                Button("Unlink lists in Reminders", role: .destructive) {
+                    showUnlinkConfirmation = true
+                }
+                // On the button, so the dialog's popover points at it.
+                .confirmationDialog("Unlink all lists in Reminders?", isPresented: $showUnlinkConfirmation, titleVisibility: .visible) {
+                    Button("Unlink") {
+                        syncShoppingListToReminders = false
+                        reminderStore.unlinkAll()
+                    }
+                } message: {
+                    Text("Syncing stops. The lists and their reminders stay in Reminders.")
+                }
+            }
+        } header: {
+            Text("Reminders")
+        } footer: {
+            Text(
+                "Mirrors a shopping list to a list in Reminders. Items you check off or add there are brought into Grocy. It syncs when the list or its reminders change, every few minutes while the app is open, and from time to time in the background. Any shopping list can also be synced from its title menu."
+            )
+        }
+        .onAppear {
+            reminderStore.refreshAuthorizationStatus()
+        }
     }
 }
 

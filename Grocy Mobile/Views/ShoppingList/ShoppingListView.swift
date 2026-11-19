@@ -48,7 +48,7 @@ enum AlertType: Hashable, Identifiable {
     case deleteShoppingList(alertSHL: ShoppingListDescription)
     case clearShoppingList(alertSHL: ShoppingListDescription)
     case clearAllDone(alertSHL: ShoppingListDescription)
-    case exportToReminders(alertSHL: ShoppingListDescription)
+    case syncWithReminders(alertSHL: ShoppingListDescription)
 
     var id: Self { self }
 
@@ -62,8 +62,8 @@ enum AlertType: Hashable, Identifiable {
             return "Are you sure you want to empty shopping list \"\(alertSHL.name)\"?"
         case .clearAllDone:
             return "Do you really want to clear all done items?"
-        case .exportToReminders:
-            return "Export shopping list to Reminders"
+        case .syncWithReminders(let alertSHL):
+            return "Sync \"\(alertSHL.name)\" with Reminders?"
         }
     }
 }
@@ -84,6 +84,7 @@ class ShoppingListInteractionNavigationRouter {
 struct ShoppingListView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
+    @Environment(\.openURL) private var openURL
 
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
     @Query(sort: \ShoppingListItem.id, order: .forward) var shoppingList: [ShoppingListItem]
@@ -130,6 +131,8 @@ struct ShoppingListView: View {
 
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var activeAlert: AlertType?
+    @State private var showRemindersAccessAlert: Bool = false
+    @State private var reminderSyncSucceeded: Bool = false
     /// A failed delete or list action, shown to the person instead of only being logged.
     @State private var actionFailure: (title: LocalizedStringKey, message: String)?
 
@@ -345,24 +348,26 @@ struct ShoppingListView: View {
         }
     }
 
-    private func exportShoppingListToReminders(alertSHL: ShoppingListDescription) async {
+    /// Syncs the list with Reminders. The first sync of a list asks first, because it creates a list in Reminders.
+    private func startReminderSync(shoppingList: ShoppingListDescription) {
+        if ReminderStore.shared.isLinked(shoppingListID: shoppingList.id) {
+            Task { await syncWithReminders(shoppingList: shoppingList) }
+        } else {
+            activeAlert = .syncWithReminders(alertSHL: shoppingList)
+        }
+    }
+
+    private func syncWithReminders(shoppingList: ShoppingListDescription) async {
         do {
-            if !ReminderStore.shared.isAvailable {
-                try await ReminderStore.shared.requestAccess()
-                ReminderStore.shared.initCalendar(calendarName: "\(alertSHL.name) (Grocy Mobile)")
+            if try await ReminderStore.shared.sync(shoppingList: shoppingList, grocyVM: grocyVM, requestAccess: true) != nil {
+                reminderSyncSucceeded.toggle()
             }
-            let allReminders = try await ReminderStore.shared.readAll()
-            for reminder in allReminders {
-                try ReminderStore.shared.remove(with: reminder.id)
-            }
-            let filteredItems = shoppingList.filter { $0.shoppingListID == alertSHL.id }
-            for shoppingListItem in filteredItems {
-                let title =
-                    "\(shoppingListItem.amount.formattedAmount)x \(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? shoppingListItem.note)"
-                try ReminderStore.shared.save(Reminder(title: title, isComplete: shoppingListItem.done))
-            }
+        } catch ReminderSyncError.accessDenied {
+            GrocyLogger.error("Syncing the shopping list with Reminders failed, because the access was denied.")
+            showRemindersAccessAlert = true
         } catch {
-            GrocyLogger.error("Exporting the shopping list to Reminders failed. \(error)")
+            GrocyLogger.error("Syncing the shopping list with Reminders failed. \(error)")
+            reportFailure("Couldn't sync \"\(shoppingList.name)\" with Reminders", error)
         }
     }
 
@@ -599,10 +604,10 @@ struct ShoppingListView: View {
                             await slAction(.clearDone, actionSHL: alertSHL)
                         }
                     }
-                case .exportToReminders(let alertSHL):
-                    Button("Confirm", role: .confirm) {
+                case .syncWithReminders(let alertSHL):
+                    Button("Sync") {
                         Task {
-                            await exportShoppingListToReminders(alertSHL: alertSHL)
+                            await syncWithReminders(shoppingList: alertSHL)
                         }
                     }
                 default:
@@ -613,8 +618,10 @@ struct ShoppingListView: View {
                 switch activeAlert {
                 case .deleteItem(let shoppingListItem):
                     Text(mdProducts.first(where: { $0.id == shoppingListItem.productID })?.name ?? "Name not found")
-                case .exportToReminders:
-                    Text("Do you want to export this shopping list to Reminders? This may overwrite changes in the list.")
+                case .syncWithReminders(let alertSHL):
+                    Text(
+                        "This creates the list \"\(alertSHL.name) (Grocy Mobile)\" in Reminders. Items you check off or add there are brought into Grocy when you sync again."
+                    )
                 case .deleteShoppingList, .clearShoppingList, .clearAllDone:
                     Text("This can't be undone.")
                 case _: Text("")
@@ -634,6 +641,17 @@ struct ShoppingListView: View {
                 Text(actionFailure?.message ?? "")
             }
         )
+        .alert("Reminders access is off", isPresented: $showRemindersAccessAlert) {
+            Button("Open Settings") {
+                if let url = ReminderStore.privacySettingsURL {
+                    openURL(url)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("To sync shopping lists with Reminders, allow Grocy Mobile full access to Reminders in Settings.")
+        }
+        .sensoryFeedback(.success, trigger: reminderSyncSucceeded)
     }
 
     var shoppingListActionContent: some View {
@@ -747,13 +765,18 @@ struct ShoppingListView: View {
         Button(
             action: {
                 if let selectedShoppingList {
-                    activeAlert = .exportToReminders(alertSHL: selectedShoppingList)
+                    startReminderSync(shoppingList: selectedShoppingList)
                 }
             },
             label: {
-                Label("Export shopping list to Reminders", systemImage: MySymbols.exportToReminders)
+                Label("Sync with Reminders", systemImage: MySymbols.syncWithReminders)
+                // A second text is the menu item's subtitle.
+                if let lastSync = selectedShoppingList.flatMap({ ReminderStore.shared.lastSync(shoppingListID: $0.id) }) {
+                    Text("Last synced \(lastSync, format: .relative(presentation: .named))")
+                }
             }
         )
+        .disabled(selectedShoppingList.map { ReminderStore.shared.syncingListIDs.contains($0.id) } ?? true)
     }
 
     var sortGroupMenu: some View {

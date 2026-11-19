@@ -31,8 +31,6 @@ class GrocyViewModel {
     @ObservationIgnored @AppStorage("timeoutInterval") var timeoutInterval: Double = 60.0
     @ObservationIgnored @AppStorage("autoReload") private var autoReload: Bool = false
     @ObservationIgnored @AppStorage("autoReloadInterval") private var autoReloadInterval: Int = 0
-    @ObservationIgnored @AppStorage("syncShoppingListToReminders") private var syncShoppingListToReminders: Bool = false
-    @ObservationIgnored @AppStorage("shoppingListToSyncID") private var shoppingListToSyncID: Int = 0
     @ObservationIgnored @AppStorage("selectedServerProfileID") private var selectedServerProfileID: UUID?
     @ObservationIgnored @AppStorage("useAppleIntelligence") var useAppleIntelligence: Bool = true
 
@@ -173,6 +171,11 @@ class GrocyViewModel {
         }
     }
 
+    /// Waits until the login at launch is done, so the server can be called.
+    func waitForLogin() async {
+        await loginTask?.value
+    }
+
     func setDemoModus() {
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "", customHeaders: [:])
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
@@ -213,6 +216,8 @@ class GrocyViewModel {
         grocyApi.clearHassData()
         grocyApi.clearLoginData()
         self.deleteAllCachedData()
+        // The links to Reminders belong to the shopping lists of this server.
+        ReminderStore.shared.unlinkAll()
         isLoggedIn = false
     }
 
@@ -420,6 +425,7 @@ class GrocyViewModel {
                             self.shoppingList = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingList)
                             self.updateWidgetShoppingList()
+                            ReminderStore.shared.syncAutomaticallyIfEnabled(grocyVM: self)
                         case .shopping_lists:
                             self.shoppingListDescriptions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.shoppingListDescriptions)
