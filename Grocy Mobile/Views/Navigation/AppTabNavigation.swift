@@ -18,6 +18,7 @@ private enum TabNavigationItem: String, Codable {
     case settings = "settings"
     case openFoodFacts = "openFoodFacts"
     case recipes = "recipes"
+    case mealPlan = "mealPlan"
     case chores = "chores"
     case tasks = "tasks"
     case batteries = "batteries"
@@ -96,6 +97,18 @@ struct AppTabNavigation: View {
 
             // Grouped, because a tab builder takes at most 10 items.
             Group {
+                Tab("Meal plan", systemImage: MySymbols.mealPlan, value: TabNavigationItem.mealPlan) {
+                    NavigationStack {
+                        MealPlanView()
+                    }
+                }
+                .customizationID("georgappdev.Grocy.mealPlan")
+                .hidden(systemConfig?.featureFlagRecipes == false || systemConfig?.featureFlagRecipesMealplan == false)
+                // New tabs start in the sidebar, so the tab bar of existing users doesn't change.
+                #if os(iOS)
+                    .defaultVisibility(.hidden, for: .tabBar)
+                #endif
+
                 Tab("Chores overview", systemImage: MySymbols.chores, value: TabNavigationItem.chores) {
                     NavigationStack {
                         ChoresView()

@@ -55,7 +55,7 @@ struct Navigation: View {
         case .recipes:
             RecipesView()
         case .mealPlan:
-            EmptyView()
+            MealPlanView()
         case .choresOverview:
             ChoresView()
         case .tasks:

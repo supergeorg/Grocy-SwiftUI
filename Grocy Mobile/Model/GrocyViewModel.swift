@@ -64,6 +64,7 @@ class GrocyViewModel {
     var batteries: Batteries = []
     var batteryChargeCycles: BatteryChargeCycles = []
     var grocyTasks: GrocyTasks = []
+    var mealPlan: MealPlanEntries = []
 
     var mdProducts: MDProducts = []
     var mdProductBarcodes: MDProductBarcodes = []
@@ -78,6 +79,7 @@ class GrocyViewModel {
     var mdUserFields: MDUserFields = []
     var mdUserEntities: MDUserEntities = []
     var mdChores: MDChores = []
+    var mdMealPlanSections: MDMealPlanSections = []
 
     var stockProductDetails: [Int: StockProductDetails] = [:]
     var stockProductLocations: [Int: StockLocations] = [:]
@@ -321,6 +323,10 @@ class GrocyViewModel {
             ints = self.mdUserFields.map { $0.id }
         case .userentities:
             ints = self.mdUserEntities.map { $0.id }
+        case .meal_plan:
+            ints = self.mealPlan.map { $0.id }
+        case .meal_plan_sections:
+            ints = self.mdMealPlanSections.map { $0.id }
         default:
             throw APIError.invalidResponse
         }
@@ -370,6 +376,12 @@ class GrocyViewModel {
                         case .chores_log:
                             self.choreLog = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.choreLog)
+                        case .meal_plan:
+                            self.mealPlan = try await grocyApi.getObject(object: object)
+                            try swiftDataSync.syncPersistentCollection(self.mealPlan)
+                        case .meal_plan_sections:
+                            self.mdMealPlanSections = try await grocyApi.getObject(object: object)
+                            try swiftDataSync.syncPersistentCollection(self.mdMealPlanSections)
                         case .locations:
                             self.mdLocations = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdLocations)
@@ -559,6 +571,7 @@ class GrocyViewModel {
         self.batteries = []
         self.batteryChargeCycles = []
         self.grocyTasks = []
+        self.mealPlan = []
 
         self.mdProducts = []
         self.mdProductBarcodes = []
@@ -572,6 +585,7 @@ class GrocyViewModel {
         self.mdTaskCategories = []
         self.mdUserFields = []
         self.mdUserEntities = []
+        self.mdMealPlanSections = []
 
         self.stockProductDetails = [:]
         self.stockProductLocations = [:]
@@ -924,6 +938,12 @@ class GrocyViewModel {
     func shoppingListAction(content: ShoppingListAction, actionType: ShoppingListActionType) async throws {
         let jsonContent = try! jsonEncoder.encode(content)
         try await grocyApi.shoppingListAction(content: jsonContent, actionType: actionType)
+    }
+
+    /// Adds a product to a shopping list, or raises the amount of the item that's already there.
+    func addProductToShoppingList(content: ShoppingListAddProductModel) async throws {
+        let jsonContent = try jsonEncoder.encode(content)
+        try await grocyApi.shoppingListAddProduct(content: jsonContent)
     }
 
     // MARK: - Master Data

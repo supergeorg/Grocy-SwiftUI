@@ -16,7 +16,6 @@ class SystemConfig: Codable {
     //    let defaultLocale: String
     var currency: String
     // TODO Real implementation
-    //    let calendarFirstDayOfWeek: Int?
     //    let calendarShowWeekOfYear: Bool
     var basePath: String
     var baseURL: String
@@ -27,7 +26,6 @@ class SystemConfig: Codable {
     //    let authClass, reverseProxyAuthHeader, ldapAddress, ldapBaseDN: String
     //    let ldapBindDN, ldapBindPw, ldapUserFilter, ldapUidAttr: String
     //    let disableBrowserBarcodeCameraScanning: Bool
-    //    let mealPlanFirstDayOfWeek: String
     //    let defaultPermissions: [String]
     //    let grocycodeType, labelPrinterWebhook: String
     //    let labelPrinterRunServer: Bool
@@ -44,7 +42,15 @@ class SystemConfig: Codable {
     var featureFlagBatteries: Bool
     var featureFlagEquipment: Bool
     var featureFlagCalendar: Bool
-    //    let featureFlagLabelPrinter, featureFlagStockPriceTracking, featureFlagStockLocationTracking, featureFlagStockBestBeforeDateTracking: Bool
+    // Defaults, so the stored config migrates; the server sends them all.
+    var featureFlagRecipesMealplan: Bool = true
+    var featureFlagStockPriceTracking: Bool = true
+    /// `0` (Sunday) … `6` (Saturday), or empty for the locale's first day.
+    var calendarFirstDayOfWeek: String = ""
+    /// `0` (Sunday) … `6` (Saturday), `-1` for today, or empty for `calendarFirstDayOfWeek`.
+    var mealPlanFirstDayOfWeek: String = ""
+    var energyUnit: String = "kcal"
+    //    let featureFlagLabelPrinter, featureFlagStockLocationTracking, featureFlagStockBestBeforeDateTracking: Bool
     //    let featureFlagStockProductOpenedTracking, featureFlagStockProductFreezing, featureFlagStockBestBeforeDateFieldNumberPad, featureFlagShoppinglistMultipleLists: Bool
     //    let featureFlagChoresAssignments, featureFlagThermalPrinter, featureSettingStockCountOpenedProductsAgainstMinimumStockAmount, featureFlagAutoTorchOnWithCamera: Bool
     var locale: String
@@ -56,7 +62,6 @@ class SystemConfig: Codable {
         //        case demoDBSuffix = "DEMO_DB_SUFFIX"
         //        case defaultLocale = "DEFAULT_LOCALE"
         case currency = "CURRENCY"
-        //        case calendarFirstDayOfWeek = "CALENDAR_FIRST_DAY_OF_WEEK"
         //        case calendarShowWeekOfYear = "CALENDAR_SHOW_WEEK_OF_YEAR"
         case basePath = "BASE_PATH"
         case baseURL = "BASE_URL"
@@ -73,7 +78,6 @@ class SystemConfig: Codable {
         //        case ldapUserFilter = "LDAP_USER_FILTER"
         //        case ldapUidAttr = "LDAP_UID_ATTR"
         //        case disableBrowserBarcodeCameraScanning = "DISABLE_BROWSER_BARCODE_CAMERA_SCANNING"
-        //        case mealPlanFirstDayOfWeek = "MEAL_PLAN_FIRST_DAY_OF_WEEK"
         //        case defaultPermissions = "DEFAULT_PERMISSIONS"
         //        case grocycodeType = "GROCYCODE_TYPE"
         //        case labelPrinterWebhook = "LABEL_PRINTER_WEBHOOK"
@@ -94,8 +98,12 @@ class SystemConfig: Codable {
         case featureFlagBatteries = "FEATURE_FLAG_BATTERIES"
         case featureFlagEquipment = "FEATURE_FLAG_EQUIPMENT"
         case featureFlagCalendar = "FEATURE_FLAG_CALENDAR"
+        case featureFlagRecipesMealplan = "FEATURE_FLAG_RECIPES_MEALPLAN"
+        case featureFlagStockPriceTracking = "FEATURE_FLAG_STOCK_PRICE_TRACKING"
+        case calendarFirstDayOfWeek = "CALENDAR_FIRST_DAY_OF_WEEK"
+        case mealPlanFirstDayOfWeek = "MEAL_PLAN_FIRST_DAY_OF_WEEK"
+        case energyUnit = "ENERGY_UNIT"
         //        case featureFlagLabelPrinter = "FEATURE_FLAG_LABEL_PRINTER"
-        //        case featureFlagStockPriceTracking = "FEATURE_FLAG_STOCK_PRICE_TRACKING"
         //        case featureFlagStockLocationTracking = "FEATURE_FLAG_STOCK_LOCATION_TRACKING"
         //        case featureFlagStockBestBeforeDateTracking = "FEATURE_FLAG_STOCK_BEST_BEFORE_DATE_TRACKING"
         //        case featureFlagStockProductOpenedTracking = "FEATURE_FLAG_STOCK_PRODUCT_OPENED_TRACKING"
@@ -126,6 +134,11 @@ class SystemConfig: Codable {
             self.featureFlagBatteries = try container.decodeFlexibleBool(forKey: .featureFlagBatteries)
             self.featureFlagEquipment = try container.decodeFlexibleBool(forKey: .featureFlagEquipment)
             self.featureFlagCalendar = try container.decodeFlexibleBool(forKey: .featureFlagCalendar)
+            self.featureFlagRecipesMealplan = try container.decodeFlexibleBoolIfPresent(forKey: .featureFlagRecipesMealplan) ?? true
+            self.featureFlagStockPriceTracking = try container.decodeFlexibleBoolIfPresent(forKey: .featureFlagStockPriceTracking) ?? true
+            self.calendarFirstDayOfWeek = (try? container.decodeFlexibleString(forKey: .calendarFirstDayOfWeek)) ?? ""
+            self.mealPlanFirstDayOfWeek = (try? container.decodeFlexibleString(forKey: .mealPlanFirstDayOfWeek)) ?? ""
+            self.energyUnit = (try? container.decodeIfPresent(String.self, forKey: .energyUnit)) ?? "kcal"
 
             self.locale = try container.decode(String.self, forKey: .locale)
             self.userUsername = try? container.decodeIfPresent(String.self, forKey: .userUsername)
@@ -148,6 +161,11 @@ class SystemConfig: Codable {
         try container.encode(featureFlagBatteries, forKey: .featureFlagBatteries)
         try container.encode(featureFlagEquipment, forKey: .featureFlagEquipment)
         try container.encode(featureFlagCalendar, forKey: .featureFlagCalendar)
+        try container.encode(featureFlagRecipesMealplan, forKey: .featureFlagRecipesMealplan)
+        try container.encode(featureFlagStockPriceTracking, forKey: .featureFlagStockPriceTracking)
+        try container.encode(calendarFirstDayOfWeek, forKey: .calendarFirstDayOfWeek)
+        try container.encode(mealPlanFirstDayOfWeek, forKey: .mealPlanFirstDayOfWeek)
+        try container.encode(energyUnit, forKey: .energyUnit)
         try container.encode(locale, forKey: .locale)
         try container.encode(userUsername, forKey: .userUsername)
         try container.encode(userPictureFileName, forKey: .userPictureFileName)

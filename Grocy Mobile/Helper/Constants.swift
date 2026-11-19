@@ -59,6 +59,15 @@ enum Sizes {
     static let recipeCardPictureRatio: CGFloat = 4 / 3
     static let recipeCardCornerRadius: CGFloat = 16
     static let recipeThumbnailCornerRadius: CGFloat = 10
+    /// Picture of a meal plan entry in the list (scaled with Dynamic Type).
+    static let mealPlanThumbnail: CGFloat = 44
+    /// Narrowest day column of the meal plan's week grid; narrower, the meal plan shows the days as a list.
+    static let mealPlanDayMinWidth: CGFloat = 120
+    /// The column with the section names in the meal plan's week grid.
+    static let mealPlanSectionLabelWidth: CGFloat = 96
+    static let mealPlanCardCornerRadius: CGFloat = 12
+    /// The circle around today's date in the week grid's header (scaled with Dynamic Type).
+    static let mealPlanDayBadge: CGFloat = 34
     /// Height of the recipe picture above the details (iOS, scaled to the width on narrow screens).
     static let recipeHeaderPictureMaxHeight: CGFloat = 320
     static let parserTextHeight: CGFloat = 200

@@ -53,6 +53,8 @@ struct PreviewContainer {
         Battery.self,
         BatteryChargeCycle.self,
         MDEquipment.self,
+        MealPlanEntry.self,
+        MDMealPlanSection.self,
     ]
 
     static let shared: ModelContainer = {
@@ -99,6 +101,8 @@ struct PreviewContainer {
         loadAndInsert(modelType: MDBattery.self, filename: "objects__batteries.json", into: context)
         loadAndInsert(modelType: BatteryChargeCycle.self, filename: "objects__battery_charge_cycles.json", into: context)
         loadAndInsert(modelType: MDEquipment.self, filename: "objects__equipment.json", into: context)
+        loadAndInsert(modelType: MealPlanEntry.self, filename: "objects__meal_plan.json", into: context)
+        loadAndInsert(modelType: MDMealPlanSection.self, filename: "objects__meal_plan_sections.json", into: context)
 
         // Other
         loadAndInsert(modelType: StockElement.self, filename: "stock.json", into: context)

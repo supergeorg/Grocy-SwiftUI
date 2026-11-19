@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 28.10.20.
 //
 
+import SwiftData
 import SwiftUI
 
 enum SettingsNavigationItem: Hashable {
@@ -15,6 +16,7 @@ enum SettingsNavigationItem: Hashable {
     case shoppingListSettings
     case choresSettings
     case batteriesSettings
+    case mealPlanSettings
     case appLog
     case aboutApp
     /// The tab editor of the "own tabs" iPhone navigation, opened from the app settings.
@@ -29,6 +31,8 @@ struct SettingsView: View {
     @State private var selection: SettingsNavigationItem? = nil
 
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+
+    @Query private var systemConfigList: [SystemConfig]
 
     var body: some View {
         List {
@@ -87,6 +91,12 @@ struct SettingsView: View {
                     Label("Batteries settings", systemImage: MySymbols.batteries)
                         .foregroundStyle(.primary)
                 }
+                if systemConfigList.first?.featureFlagRecipes != false && systemConfigList.first?.featureFlagRecipesMealplan != false {
+                    NavigationLink(value: SettingsNavigationItem.mealPlanSettings) {
+                        Label("Meal plan settings", systemImage: MySymbols.mealPlan)
+                            .foregroundStyle(.primary)
+                    }
+                }
             }
 
             Section("App") {
@@ -116,6 +126,8 @@ struct SettingsView: View {
                 SettingsChoresView()
             case .batteriesSettings:
                 SettingsBatteriesView()
+            case .mealPlanSettings:
+                SettingsMealPlanView()
             case .appLog:
                 LogView()
             case .aboutApp:

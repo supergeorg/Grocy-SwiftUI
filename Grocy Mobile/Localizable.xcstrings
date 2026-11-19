@@ -119,6 +119,16 @@
       },
       "shouldTranslate" : false
     },
+    "%@ %@ per serving" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@ per serving"
+          }
+        }
+      }
+    },
     "%@ %%" : {
       "shouldTranslate" : false
     },
@@ -6743,6 +6753,9 @@
     "•" : {
       "shouldTranslate" : false
     },
+    "^[%@ serving](inflect: true)" : {
+
+    },
     "+ %lld more" : {
       "localizations" : {
         "de" : {
@@ -11850,6 +11863,12 @@
         }
       }
     },
+    "Are you sure you want to consume all ingredients needed by recipe \"%@\"?" : {
+
+    },
+    "Are you sure you want to delete \"%@\" from the meal plan?" : {
+
+    },
     "Are you sure you want to delete battery \"%@\"?" : {
 
     },
@@ -12055,6 +12074,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete meal plan section \"%@\"?" : {
+
     },
     "Are you sure you want to delete product \"%@\"?" : {
       "localizations" : {
@@ -13217,6 +13239,12 @@
           }
         }
       }
+    },
+    "Are you sure you want to put all missing products of this day on the shopping list?" : {
+
+    },
+    "Are you sure you want to put all missing products of this week on the shopping list?" : {
+
     },
     "Are you sure you want to remove this conversion?" : {
       "localizations" : {
@@ -22076,6 +22104,12 @@
         }
       }
     },
+    "Copy this day" : {
+
+    },
+    "Copy to" : {
+
+    },
     "Costs" : {
       "localizations" : {
         "ca" : {
@@ -22793,6 +22827,9 @@
           }
         }
       }
+    },
+    "Create meal plan section" : {
+
     },
     "Create product" : {
       "localizations" : {
@@ -25735,6 +25772,9 @@
           }
         }
       }
+    },
+    "Day actions" : {
+
     },
     "Day of month" : {
       "localizations" : {
@@ -32719,6 +32759,12 @@
         }
       }
     },
+    "Edit meal plan entry" : {
+
+    },
+    "Edit meal plan section" : {
+
+    },
     "Edit product" : {
       "localizations" : {
         "ca" : {
@@ -33816,6 +33862,9 @@
           }
         }
       }
+    },
+    "Edit sections…" : {
+
     },
     "Edit shopping list" : {
       "localizations" : {
@@ -36350,6 +36399,9 @@
         }
       }
     },
+    "Error" : {
+
+    },
     "Error while executing the barcode lookup plugin" : {
       "localizations" : {
         "cs" : {
@@ -36449,6 +36501,9 @@
           }
         }
       }
+    },
+    "Everything planned on this day is copied to the chosen day, as not done." : {
+
     },
     "Everything that's due" : {
       "localizations" : {
@@ -37223,6 +37278,9 @@
 
     },
     "Finished" : {
+
+    },
+    "First day of the week" : {
 
     },
     "First name" : {
@@ -38438,6 +38496,9 @@
           }
         }
       }
+    },
+    "Grocy sums up the meal plan per week from Monday to Sunday." : {
+
     },
     "Group" : {
       "localizations" : {
@@ -43440,6 +43501,12 @@
         }
       }
     },
+    "Mark as done" : {
+
+    },
+    "Mark as not done" : {
+
+    },
     "Mark as opened" : {
       "localizations" : {
         "ca" : {
@@ -44523,6 +44590,12 @@
           }
         }
       }
+    },
+    "Meal plan sections" : {
+
+    },
+    "Meal plan settings" : {
+
     },
     "means %@ per %@" : {
       "localizations" : {
@@ -46554,6 +46627,9 @@
     "Next" : {
 
     },
+    "Next day" : {
+
+    },
     "Next due date" : {
       "localizations" : {
         "ca" : {
@@ -46905,6 +46981,9 @@
       }
     },
     "Next planned charge cycle" : {
+
+    },
+    "Next week" : {
 
     },
     "No" : {
@@ -47606,6 +47685,9 @@
         }
       }
     },
+    "No meal plan sections" : {
+
+    },
     "No notes" : {
 
     },
@@ -47965,6 +48047,9 @@
       }
     },
     "No recipe was found on this website. Only websites that provide schema.org recipe data are supported." : {
+
+    },
+    "No section" : {
 
     },
     "No server added yet. Please add one." : {
@@ -50450,6 +50535,9 @@
           }
         }
       }
+    },
+    "Nothing planned" : {
+
     },
     "Nothing was found for the given barcode" : {
       "localizations" : {
@@ -54049,6 +54137,12 @@
         }
       }
     },
+    "Previous day" : {
+
+    },
+    "Previous week" : {
+
+    },
     "Price" : {
       "localizations" : {
         "ca" : {
@@ -56665,6 +56759,9 @@
           }
         }
       }
+    },
+    "Put missing products on the shopping list" : {
+
     },
     "QR-Scan" : {
       "localizations" : {
@@ -60174,6 +60271,12 @@
     "Section" : {
 
     },
+    "Sections are shown in this order" : {
+
+    },
+    "Sections group the meal plan's days, like breakfast, lunch and dinner." : {
+
+    },
     "See your stock, what's due soon and what's running low, and scan barcodes to purchase or consume." : {
 
     },
@@ -60539,6 +60642,9 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Server default (%@)" : {
+
     },
     "Server timeout interval" : {
       "localizations" : {
@@ -62974,6 +63080,9 @@
       }
     },
     "Shows the battery overview" : {
+
+    },
+    "Shows the day's actions" : {
 
     },
     "Shows the items still to buy on a shopping list." : {
@@ -68160,6 +68269,9 @@
       }
     },
     "The selected equipment has no instruction manual." : {
+
+    },
+    "The server default is the first day set on your Grocy server for the meal plan or the calendar, or else the app's language." : {
 
     },
     "The server version %@ is currently unsupported by the app. You can use it anyways, but there can be problems." : {
@@ -75058,6 +75170,12 @@
         }
       }
     },
+    "Time" : {
+
+    },
+    "Time of day" : {
+
+    },
     "To location" : {
       "localizations" : {
         "ca" : {
@@ -75241,6 +75359,9 @@
           }
         }
       }
+    },
+    "Today" : {
+
     },
     "Tomatoes" : {
       "localizations" : {
@@ -79516,6 +79637,12 @@
         }
       }
     },
+    "Unknown product" : {
+
+    },
+    "Unknown recipe" : {
+
+    },
     "Unsupported server version" : {
       "localizations" : {
         "de" : {
@@ -81427,6 +81554,9 @@
     "Version %@" : {
 
     },
+    "View" : {
+
+    },
     "Water the plants" : {
       "localizations" : {
         "de" : {
@@ -81623,6 +81753,9 @@
           }
         }
       }
+    },
+    "Week" : {
+
     },
     "Weekly" : {
       "localizations" : {

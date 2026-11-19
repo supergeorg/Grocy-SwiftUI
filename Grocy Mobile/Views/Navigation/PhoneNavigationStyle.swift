@@ -62,7 +62,7 @@ enum PhoneNavigationStyle: String, CaseIterable, Identifiable {
 /// A place of the iPhone tab navigation: a tab, or a page pushed onto a tab (from the settings button
 /// or from the due tab). Also the navigation value for pushing it.
 enum PhonePlace: String, CaseIterable, Identifiable, Hashable {
-    case stock, shoppingList, recipes, due, chores, tasks, batteries, equipment
+    case stock, shoppingList, recipes, mealPlan, due, chores, tasks, batteries, equipment
 
     var id: Self { self }
 
@@ -95,6 +95,7 @@ enum PhonePlace: String, CaseIterable, Identifiable, Hashable {
         case .stock: "Stock overview"
         case .shoppingList: "Shopping list"
         case .recipes: "Recipes"
+        case .mealPlan: "Meal plan"
         case .due: "Due"
         case .chores: "Chores overview"
         case .tasks: "Tasks"
@@ -117,6 +118,7 @@ enum PhonePlace: String, CaseIterable, Identifiable, Hashable {
         case .stock: MySymbols.stockOverview
         case .shoppingList: MySymbols.shoppingList
         case .recipes: MySymbols.recipe
+        case .mealPlan: MySymbols.mealPlan
         case .due: MySymbols.due
         case .chores: MySymbols.chores
         case .tasks: MySymbols.tasks
@@ -132,6 +134,7 @@ enum PhonePlace: String, CaseIterable, Identifiable, Hashable {
         case .stock: return config.featureFlagStock
         case .shoppingList: return config.featureFlagShoppinglist
         case .recipes: return config.featureFlagRecipes
+        case .mealPlan: return config.featureFlagRecipes && config.featureFlagRecipesMealplan
         case .due: return config.featureFlagStock || config.featureFlagChores || config.featureFlagTasks || config.featureFlagBatteries
         case .chores: return config.featureFlagChores
         case .tasks: return config.featureFlagTasks
@@ -151,6 +154,7 @@ enum PhonePlace: String, CaseIterable, Identifiable, Hashable {
         case .stock: StockView()
         case .shoppingList: ShoppingListView()
         case .recipes: RecipesView()
+        case .mealPlan: MealPlanView()
         case .due: DueView()
         case .chores: ChoresView()
         case .tasks: TasksView()

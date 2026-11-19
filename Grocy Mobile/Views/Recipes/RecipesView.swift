@@ -60,12 +60,14 @@ struct RecipesView: View {
     @Query(sort: \Recipe.name, order: .forward) var recipes: Recipes
     @Query var recipeFulfilments: RecipeFulfilments
 
-    @AppStorage("devMode") private var devMode: Bool = false
+    @Query private var systemConfigList: [SystemConfig]
+    private var systemConfig: SystemConfig? { systemConfigList.first }
 
     @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
     @State private var showImportRecipe: Bool = false
+    @State private var recipeToPlan: Recipe? = nil
     @State private var recipeToDelete: Recipe? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -253,12 +255,13 @@ struct RecipesView: View {
                 Label("Edit this item", systemImage: MySymbols.edit)
             }
         )
-        if devMode {
+        if systemConfig?.featureFlagRecipesMealplan != false {
             Button(
                 action: {
+                    recipeToPlan = recipe
                 },
                 label: {
-                    Label("Add to meal plan", systemImage: MySymbols.new)
+                    Label("Add to meal plan", systemImage: MySymbols.mealPlan)
                 }
             )
         }
@@ -348,6 +351,11 @@ struct RecipesView: View {
             .sheet(isPresented: $showAddRecipe) {
                 NavigationStack {
                     RecipeFormView()
+                }
+            }
+            .sheet(item: $recipeToPlan) { recipe in
+                NavigationStack {
+                    MealPlanEntryFormView(recipeID: recipe.id)
                 }
             }
             #if os(iOS)
