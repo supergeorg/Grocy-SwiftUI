@@ -43,6 +43,7 @@ struct PreviewContainer {
         Recipe.self,
         MDChore.self,
         MDTaskCategory.self,
+        GrocyTask.self,
         StockElement.self,
         VolatileStock.self,
         GrocyUser.self,

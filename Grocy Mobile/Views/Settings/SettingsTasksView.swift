@@ -21,6 +21,11 @@ struct SettingsTasksView: View {
                     icon: MySymbols.date
                 )
             }
+            ReminderSyncSection(
+                target: .tasks,
+                footer:
+                    "Mirrors the tasks to a list in Reminders, with their due dates. Tasks you check off or add there are brought into Grocy. It syncs when the tasks or their reminders change, every few minutes while the app is open, and from time to time in the background."
+            )
         }
         .formStyle(.grouped)
         .navigationTitle("Tasks settings")
