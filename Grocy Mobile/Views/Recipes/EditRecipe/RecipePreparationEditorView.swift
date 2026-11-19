@@ -518,7 +518,8 @@ final class RichHTMLEditorBridge: RichHTMLEditorViewDelegate {
 
     func richHTMLEditorViewDidLoad(_ richHTMLEditorView: RichHTMLEditorView) {
         #if os(macOS)
-            richHTMLEditorView.window?.makeFirstResponder(richHTMLEditorView.webView)
+            // AppKit declares `NSView.window` `unowned(unsafe)`. Safe here: the view is in its window while it loads.
+            unsafe richHTMLEditorView.window?.makeFirstResponder(richHTMLEditorView.webView)
         #endif
         _ = richHTMLEditorView.becomeFirstResponder()
     }
