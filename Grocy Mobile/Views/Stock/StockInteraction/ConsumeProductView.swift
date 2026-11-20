@@ -80,6 +80,8 @@ struct ConsumeProductView: View {
     }
     var consumeType: ConsumeType = .both
     var quickScan: Bool = false
+    /// The choices of the earlier Quick Scan consumes, used as defaults and updated after a consume.
+    var quickScanSession: QuickScanSession? = nil
     var isPopup: Bool = false
 
     @State private var productID: Int?
@@ -196,6 +198,18 @@ struct ConsumeProductView: View {
         searchProductTerm = ""
     }
 
+    /// Uses the location of the last Quick Scan consume, when the product is in stock there.
+    private func applyQuickScanSession() {
+        guard features.locationTracking, consumeType != .open, !useSpecificStockEntry,
+            let remembered = quickScanSession?.consumeLocationID, remembered != locationID
+        else { return }
+        let productIDs = Set(consumableProducts.map(\.id))
+        let entries = (try? modelContext.fetch(FetchDescriptor<StockEntry>())) ?? []
+        if entries.contains(where: { productIDs.contains($0.productID) && $0.locationID == remembered && $0.amount > 0 }) {
+            locationID = remembered
+        }
+    }
+
     private func openProduct() async {
         if let transactionProductID = transactionProductID {
             let openInfo = ProductOpen(amount: factoredAmount, stockEntryID: stockEntryID, allowSubproductSubstitution: true)
@@ -263,6 +277,9 @@ struct ConsumeProductView: View {
                     shlActionSuccessful = true
                 }
                 isSuccessful = true && shlActionSuccessful
+                if features.locationTracking, locationID != -1 {
+                    quickScanSession?.rememberConsume(locationID: locationID)
+                }
                 if quickScan || productToConsumeID != nil {
                     self.dismiss()
                 }
@@ -298,6 +315,7 @@ struct ConsumeProductView: View {
                     if let productID = productID {
                         Task {
                             await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
+                            applyQuickScanSession()
                         }
                         if let product = product {
                             locationID = product.defaultConsumeLocationID ?? product.locationID

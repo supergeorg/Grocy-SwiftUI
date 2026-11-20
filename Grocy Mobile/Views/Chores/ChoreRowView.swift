@@ -51,7 +51,6 @@ struct ChoreRowView: View {
             }
 
         }
-        //        .listRowBackground(backgroundColor)
     }
 }
 

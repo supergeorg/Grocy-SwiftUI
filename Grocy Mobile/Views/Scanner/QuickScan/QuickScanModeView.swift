@@ -56,8 +56,8 @@ struct QuickScanModeView: View {
     @State private var quickScanMode: QuickScanMode = .consume
 
     @State private var qsActiveSheet: QSActiveSheet?
-
-    //    @State private var firstInSession: Bool = true
+    /// The choices of the earlier scans, the defaults of the next ones. Kept until the app quits.
+    private var session: QuickScanSession { grocyVM.quickScanSession }
 
     @State private var showDemoGrocyCode: Bool = false
 
@@ -67,11 +67,6 @@ struct QuickScanModeView: View {
     @State var notRecognizedBarcode: String? = nil
 
     @State private var cameraUnauthorized: Bool = false
-
-    //    @State private var lastConsumeLocationID: Int?
-    //    @State private var lastPurchaseDueDate: Date = .init()
-    //    @State private var lastPurchaseStoreID: Int?
-    //    @State private var lastPurchaseLocationID: Int?
 
     @State private var isScanPaused: Bool = false
     func checkScanPause() {
@@ -241,6 +236,13 @@ struct QuickScanModeView: View {
                                         .tag(mode)
                                 }
                             }
+                            if !session.isEmpty {
+                                Section {
+                                    Button("Forget last choices", systemImage: MySymbols.reset) {
+                                        session.reset()
+                                    }
+                                }
+                            }
                         } label: {
                             // Not a Label: the toolbar would reduce it to its icon.
                             HStack(spacing: Spacing.xSmall) {
@@ -257,7 +259,7 @@ struct QuickScanModeView: View {
                     }
                 }
                 .onChange(of: newRecognizedBarcode?.id) {
-                    print("New recognized barcode: \(String(describing: newRecognizedBarcode?.id))")
+                    GrocyLogger.debug("New recognized barcode: \(String(describing: newRecognizedBarcode?.id))")
                     DispatchQueue.main.async {
                         if quickScanActionAfterAdd {
                             recognizedBarcode = newRecognizedBarcode
@@ -306,6 +308,7 @@ struct QuickScanModeView: View {
                         barcode: recognizedBarcode,
                         consumeType: .consume,
                         quickScan: true,
+                        quickScanSession: session,
                         isPopup: true
                     )
                 case .markAsOpened:
@@ -322,6 +325,7 @@ struct QuickScanModeView: View {
                         directProductToPurchaseID: product.id,
                         barcode: recognizedBarcode,
                         quickScan: true,
+                        quickScanSession: session,
                         isPopup: true
                     )
                 }

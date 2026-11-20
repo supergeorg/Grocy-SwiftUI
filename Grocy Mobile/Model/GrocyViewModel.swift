@@ -24,6 +24,10 @@ class GrocyViewModel {
 
     var aiCategoryMatcher: AICategoryMatcher?
 
+    /// Quick Scan's last choices (store, locations, due dates, prices). Kept until the app quits, and forgotten with the cached data,
+    /// because the IDs belong to this server.
+    let quickScanSession = QuickScanSession()
+
     @ObservationIgnored @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @ObservationIgnored @AppStorage("isDemoModus") var isDemoModus: Bool = false
     @ObservationIgnored @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
@@ -567,6 +571,7 @@ class GrocyViewModel {
     }
 
     func deleteAllCachedData() {
+        self.quickScanSession.reset()
         self.systemInfo = nil
         self.systemDBChangedTime = nil
         self.systemConfig = nil

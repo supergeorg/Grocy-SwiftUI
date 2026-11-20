@@ -81,9 +81,6 @@ struct StockJournalRowView: View {
     let descriptor = FetchDescriptor<StockJournalEntry>()
     let journalEntry = (try? context.fetch(descriptor))?.randomElement()
 
-    //    let productDescriptor = FetchDescriptor<MDProduct>(predicate: #Predicate<MDProduct> { $0.id == journalEntry?.productID })
-    //    let product = (try? context.fetch(productDescriptor))?.first
-
     List {
         if let journalEntry {
             StockJournalRowView(journalEntry: journalEntry, product: MDProduct())

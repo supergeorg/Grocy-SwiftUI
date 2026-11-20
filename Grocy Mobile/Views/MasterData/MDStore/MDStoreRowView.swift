@@ -5,7 +5,6 @@
 //  Created by Georg Meissner on 19.10.23.
 //
 
-//import SwiftData
 import SwiftUI
 
 struct MDStoreRowView: View {

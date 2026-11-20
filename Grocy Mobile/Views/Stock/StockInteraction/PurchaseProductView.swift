@@ -45,6 +45,8 @@ struct PurchaseProductView: View {
     var autoPurchase: Bool = false
     var barcode: MDProductBarcode? = nil
     var quickScan: Bool = false
+    /// The choices of the earlier Quick Scan purchases, used as defaults and updated after a purchase.
+    var quickScanSession: QuickScanSession? = nil
     var isPopup: Bool = false
     /// Called after a successful purchase instead of closing the form (used to purchase a whole shopping list).
     var onPurchased: (() -> Void)? = nil
@@ -70,6 +72,11 @@ struct PurchaseProductView: View {
 
     private func finishForm() {
         self.dismiss()
+    }
+
+    /// The store is the one of the last Quick Scan purchase.
+    private var isStoreFromSession: Bool {
+        storeID != -1 && quickScanSession?.purchaseStoreID == storeID
     }
 
     private var product: MDProduct? {
@@ -129,12 +136,50 @@ struct PurchaseProductView: View {
         self.storeID = actionPending ? (barcode?.storeID ?? product?.storeID ?? -1) : -1
         self.locationID = actionPending ? product?.locationID ?? -1 : -1
         self.note = ""
+        if actionPending {
+            applyQuickScanSession()
+        }
         if autoPurchase, actionPending, product?.defaultDueDays != nil, productID != nil, isFormValid {
             self.price = productDetails?.lastPrice
             Task {
                 await purchaseProduct()
             }
         }
+    }
+
+    /// Uses the store of the last Quick Scan purchase, and the location, due date and price of this product's last one.
+    private func applyQuickScanSession() {
+        guard let quickScanSession else { return }
+        if let storeID = quickScanSession.purchaseStoreID, mdStores.contains(where: { $0.id == storeID }) {
+            self.storeID = storeID
+        }
+        guard let productID, let choice = quickScanSession.purchaseChoices[productID] else { return }
+        if let locationID = choice.locationID, mdLocations.contains(where: { $0.id == locationID }) {
+            self.locationID = locationID
+        }
+        self.productDoesntSpoil = choice.neverOverdue
+        if let dueDate = choice.dueDate {
+            self.dueDate = dueDate
+        }
+        if let unitPrice = choice.unitPrice {
+            self.price = unitPrice
+            self.isTotalPrice = false
+        }
+    }
+
+    private func rememberInQuickScanSession() {
+        guard let quickScanSession, let productID else { return }
+        quickScanSession.rememberPurchase(
+            productID: productID,
+            storeID: storeID == -1 ? nil : storeID,
+            isSelfProduction: selfProduction,
+            choice: QuickScanSession.PurchaseChoice(
+                locationID: features.locationTracking && locationID != -1 ? locationID : nil,
+                dueDate: features.dueDateTracking && !productDoesntSpoil ? dueDate : nil,
+                neverOverdue: features.dueDateTracking && productDoesntSpoil,
+                unitPrice: selfProduction ? nil : unitPrice
+            )
+        )
     }
 
     private func purchaseProduct() async {
@@ -163,6 +208,7 @@ struct PurchaseProductView: View {
                 GrocyLogger.info("Purchase \(product?.name ?? String(productID)) successful.")
                 await grocyVM.requestData(additionalObjects: [.stock, .volatileStock])
                 isSuccessful = true
+                rememberInQuickScanSession()
                 if let onPurchased {
                     onPurchased()
                 } else if autoPurchase || quickScan || productToPurchaseID != nil {
@@ -213,6 +259,7 @@ struct PurchaseProductView: View {
                                 for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date()
                             )
                         }
+                        applyQuickScanSession()
                     }
                 }
 
@@ -295,6 +342,11 @@ struct PurchaseProductView: View {
                                 }
                             }
                         )
+                        if isStoreFromSession {
+                            Text("Store of your last scan")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
 
                     if features.locationTracking {

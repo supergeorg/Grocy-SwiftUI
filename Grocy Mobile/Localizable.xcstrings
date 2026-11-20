@@ -38255,6 +38255,16 @@
         }
       }
     },
+    "Forget last choices" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Auswahl vergessen"
+          }
+        }
+      }
+    },
     "Freezer" : {
       "localizations" : {
         "ca" : {
@@ -67880,6 +67890,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "店家"
+          }
+        }
+      }
+    },
+    "Store of your last scan" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschäft deines letzten Scans"
           }
         }
       }

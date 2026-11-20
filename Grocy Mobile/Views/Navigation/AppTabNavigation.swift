@@ -201,7 +201,6 @@ struct AppTabNavigation: View {
                             }
                         }
                         .customizationID("georgappdev.Grocy.mdProducts")
-                        //                    .badge(5)
 
                         Tab("Locations", systemImage: MySymbols.location, value: TabNavigationItem.mdLocations) {
                             NavigationStack {
