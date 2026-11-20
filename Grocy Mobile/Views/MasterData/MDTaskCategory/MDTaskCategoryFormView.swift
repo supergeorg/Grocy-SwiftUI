@@ -18,6 +18,7 @@ struct MDTaskCategoryFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingTaskCategory: MDTaskCategory?
     @State private var taskCategory: MDTaskCategory
@@ -33,7 +34,7 @@ struct MDTaskCategoryFormView: View {
         self.taskCategory = existingTaskCategory ?? MDTaskCategory()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.task_categories]
+    private let dataToUpdate: [ObjectEntities] = [.task_categories, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -60,6 +61,7 @@ struct MDTaskCategoryFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .task_categories, id: taskCategory.id, content: taskCategory)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.task_categories.rawValue, objectID: taskCategory.id, changes: userfieldChanges)
             GrocyLogger.info("Task category \(taskCategory.name) successful.")
             await updateData()
             isSuccessful = true
@@ -101,6 +103,7 @@ struct MDTaskCategoryFormView: View {
                 description: "Description",
                 leadingIcon: MySymbols.description
             )
+            UserfieldsSection(entity: ObjectEntities.task_categories.rawValue, objectID: existingTaskCategory?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

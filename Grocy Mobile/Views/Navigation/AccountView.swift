@@ -35,14 +35,14 @@ struct AccountView: View {
         List {
             Section {
                 NavigationLink(value: Route.settings) {
-                    Label("Settings", systemImage: MySymbols.settings)
+                    ListRowLabel("Settings", systemImage: MySymbols.settings)
                 }
             }
             if style != .sidebar, !otherPlaces.isEmpty {
                 Section("More") {
                     ForEach(otherPlaces) { place in
                         NavigationLink(value: place) {
-                            Label(place.title, systemImage: place.icon)
+                            ListRowLabel(place.title, systemImage: place.icon)
                         }
                     }
                 }

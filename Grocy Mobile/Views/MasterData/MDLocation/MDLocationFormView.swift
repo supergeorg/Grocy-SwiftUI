@@ -19,6 +19,7 @@ struct MDLocationFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingLocation: MDLocation?
     @State private var location: MDLocation
@@ -34,7 +35,7 @@ struct MDLocationFormView: View {
         self.location = existingLocation ?? MDLocation()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.locations]
+    private let dataToUpdate: [ObjectEntities] = [.locations, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -61,6 +62,7 @@ struct MDLocationFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .locations, id: location.id, content: location)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.locations.rawValue, objectID: location.id, changes: userfieldChanges)
             GrocyLogger.info("Location \(location.name) successful.")
             await updateData()
             isSuccessful = true
@@ -104,6 +106,7 @@ struct MDLocationFormView: View {
                     icon: MySymbols.freezing
                 )
             }
+            UserfieldsSection(entity: ObjectEntities.locations.rawValue, objectID: existingLocation?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

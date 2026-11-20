@@ -21,6 +21,7 @@ struct TaskFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingTask: GrocyTask? = nil
     var isPopup: Bool
@@ -39,7 +40,7 @@ struct TaskFormView: View {
         return !(grocyTask.name.isEmpty || (foundTask != nil && foundTask!.id != grocyTask.id))
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.tasks, .task_categories]
+    private let dataToUpdate: [ObjectEntities] = [.tasks, .task_categories, .userfields]
     private let additionalDataToUpdate: [AdditionalEntities] = [.users]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -72,6 +73,7 @@ struct TaskFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .tasks, id: grocyTask.id, content: grocyTask)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.tasks.rawValue, objectID: grocyTask.id, changes: userfieldChanges)
             GrocyLogger.info("Task \(grocyTask.name) successful.")
             await updateData()
             isSuccessful = true
@@ -171,6 +173,7 @@ struct TaskFormView: View {
                 }
             )
             .foregroundStyle(.primary)
+            UserfieldsSection(entity: ObjectEntities.tasks.rawValue, objectID: existingTask?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

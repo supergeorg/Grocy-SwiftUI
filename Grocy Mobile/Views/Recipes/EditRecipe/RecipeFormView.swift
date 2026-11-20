@@ -44,6 +44,7 @@ struct RecipeFormView: View {
     @State private var existingRecipe: Recipe?
     @State private var recipe: Recipe
     @State private var createdRecipeID: Int? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var groupedRecipes: [String: [RecipePos]] {
         let sortDescriptor = SortDescriptor<RecipePos>(\.ingredientGroup)
@@ -93,7 +94,7 @@ struct RecipeFormView: View {
         _recipe = State(initialValue: existingRecipe ?? Recipe())
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .recipes_nestings, .recipes_pos, .quantity_units, .quantity_unit_conversions]
+    private let dataToUpdate: [ObjectEntities] = [.products, .recipes_nestings, .recipes_pos, .quantity_units, .quantity_unit_conversions, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -121,6 +122,7 @@ struct RecipeFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .recipes, id: recipe.id, content: recipe)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.recipes.rawValue, objectID: createdRecipeID ?? recipe.id, changes: userfieldChanges)
             GrocyLogger.info("Recipe \(recipe.name) successful.")
             await grocyVM.requestData(objects: [.recipes])
             isSuccessful = true
@@ -338,6 +340,7 @@ struct RecipeFormView: View {
                     }
                 )
             }
+            UserfieldsSection(entity: ObjectEntities.recipes.rawValue, objectID: existingRecipe?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .navigationDestination(for: RecipeFormInteraction.self) { interaction in

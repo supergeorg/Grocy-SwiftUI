@@ -24,7 +24,7 @@ enum MasterDataItem: Hashable {
 /// The master data lists, as list rows. Used by `MasterDataView` and directly on the iPhone's `AccountView`
 /// (so master data is one tap away). Needs `masterDataDestinations()` on the navigation stack.
 struct MasterDataLinks: View {
-    @AppStorage("devMode") private var devMode: Bool = false
+    @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.grocyFeatures) private var features
 
     @Query var systemConfigList: [SystemConfig]
@@ -75,14 +75,16 @@ struct MasterDataLinks: View {
             }
         }
 
-        if devMode {
-            NavigationLink(value: MasterDataItem.userFields) {
-                Label("Userfields", systemImage: MySymbols.unknown)
-            }
+        NavigationLink(value: MasterDataItem.userFields) {
+            ListRowLabel("Userfields", systemImage: MySymbols.userfields, count: grocyVM.mdUserFields.count)
+        }
+        // Userfields and user entities are only kept in memory, so they are loaded for their counts.
+        .task {
+            await grocyVM.requestData(objects: [.userfields, .userentities])
+        }
 
-            NavigationLink(value: MasterDataItem.userEntities) {
-                Label("User entities", systemImage: MySymbols.unknown)
-            }
+        NavigationLink(value: MasterDataItem.userEntities) {
+            ListRowLabel("User entities", systemImage: MySymbols.userEntities, count: grocyVM.mdUserEntities.count)
         }
     }
 }

@@ -19,6 +19,7 @@ struct MDQuantityUnitFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingQuantityUnit: MDQuantityUnit?
     @State private var quantityUnit: MDQuantityUnit
@@ -42,7 +43,7 @@ struct MDQuantityUnitFormView: View {
         _createdQuantityUnitID = createdQuantityUnitID
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions]
+    private let dataToUpdate: [ObjectEntities] = [.quantity_units, .quantity_unit_conversions, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -93,6 +94,7 @@ struct MDQuantityUnitFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .quantity_units, id: quantityUnit.id, content: quantityUnit)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.quantity_units.rawValue, objectID: quantityUnit.id, changes: userfieldChanges)
             GrocyLogger.info("Quantity unit \(quantityUnit.name) successful.")
             await updateData()
             isSuccessful = true
@@ -182,6 +184,7 @@ struct MDQuantityUnitFormView: View {
                     }
                 )
             }
+            UserfieldsSection(entity: ObjectEntities.quantity_units.rawValue, objectID: existingQuantityUnit?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .sheet(

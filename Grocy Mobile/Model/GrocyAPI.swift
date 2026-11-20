@@ -126,6 +126,9 @@ protocol GrocyAPI {
     func getObjectWithID<T: Codable>(object: ObjectEntities, id: Int) async throws -> T
     func putObjectWithID(object: ObjectEntities, id: Int, content: Data) async throws
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws
+    // MARK: - Userfields
+    func getUserfieldValues(entity: String, objectID: Int) async throws -> UserfieldValues
+    func putUserfieldValues(entity: String, objectID: Int, content: Data) async throws
     // MARK: - Files
     func getFile(fileName: String, groupName: String, bestFitHeight: Int?, bestFitWidth: Int?) async throws -> Data
     func getFileUnmodified(fileName: String, groupName: String) async throws -> Data
@@ -510,7 +513,8 @@ extension GrocyApi {
         //        Generic entity interactions
         case objectsEntity = "/objects/{entity}"
         case objectsEntityWithID = "/objects/{entity}/{objectId}"
-        case userfieldsEntity = "/userfields/{entity}/{objectId}"
+        // The userfield entity is a string (e.g. `userentity-<name>`), not an `ObjectEntities`, so it's part of the ID: `<entity>/<objectId>`.
+        case userfieldsEntity = "/userfields/{objectId}"
         //        System
         case systemInfo = "/system/info"
         case systemDBChangedTime = "/system/db-changed-time"
@@ -812,6 +816,16 @@ extension GrocyApi {
 
     func deleteObjectWithID(object: ObjectEntities, id: Int) async throws {
         return try await callEmptyResponse(.objectsEntityWithID, method: .DELETE, object: object, id: String(id))
+    }
+
+    // MARK: - Userfields
+
+    func getUserfieldValues(entity: String, objectID: Int) async throws -> UserfieldValues {
+        return try await call(.userfieldsEntity, method: .GET, id: "\(entity)/\(objectID)")
+    }
+
+    func putUserfieldValues(entity: String, objectID: Int, content: Data) async throws {
+        return try await callEmptyResponse(.userfieldsEntity, method: .PUT, id: "\(entity)/\(objectID)", content: content)
     }
 
     // MARK: - Files

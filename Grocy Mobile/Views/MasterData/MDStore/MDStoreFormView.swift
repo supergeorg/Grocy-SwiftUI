@@ -18,6 +18,7 @@ struct MDStoreFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingStore: MDStore?
     @State private var store: MDStore
@@ -33,7 +34,7 @@ struct MDStoreFormView: View {
         self.store = existingStore ?? MDStore()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.shopping_locations]
+    private let dataToUpdate: [ObjectEntities] = [.shopping_locations, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -60,6 +61,7 @@ struct MDStoreFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .shopping_locations, id: store.id, content: store)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.shopping_locations.rawValue, objectID: store.id, changes: userfieldChanges)
             GrocyLogger.info("Store \(store.name) successful.")
             await updateData()
             isSuccessful = true
@@ -101,6 +103,7 @@ struct MDStoreFormView: View {
                 description: "Description",
                 leadingIcon: MySymbols.description
             )
+            UserfieldsSection(entity: ObjectEntities.shopping_locations.rawValue, objectID: existingStore?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

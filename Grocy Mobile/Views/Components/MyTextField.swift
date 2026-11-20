@@ -23,6 +23,8 @@ struct MyTextField: View {
 
     /// Becomes true on the first edit, so a new, still empty form doesn't greet people with an error.
     @State private var hasEdited: Bool = false
+    /// The field's width, which a validation message wraps in.
+    @State private var fieldWidth: CGFloat?
 
     var body: some View {
         LabeledContent {
@@ -41,6 +43,11 @@ struct MyTextField: View {
                 #endif
                 .onChange(of: textToEdit) {
                     hasEdited = true
+                }
+                .onGeometryChange(for: CGFloat.self) {
+                    $0.size.width
+                } action: {
+                    fieldWidth = $0
                 }
 
                 if !isCorrect && !textToEdit.isEmpty, let errorMessage = errorMessage {
@@ -95,6 +102,10 @@ struct MyTextField: View {
     private func validationMessage(_ message: LocalizedStringKey) -> some View {
         Text(message)
             .lineLimit(nil)
+            // Wraps in the field's width. With its one-line width, the row would move the label above the field
+            // as soon as a message appears.
+            .frame(width: fieldWidth, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
             .font(.caption)
             // Asset color with enough contrast for small text on the grouped row background.
             .foregroundStyle(Color(.GrocyColors.grocyRed))

@@ -106,7 +106,7 @@ struct MDUserFieldsView: View {
     var content: some View {
         List {
             if grocyVM.mdUserFields.isEmpty {
-                ContentUnavailableView("No userfields found.", systemImage: MySymbols.unknown)
+                ContentUnavailableView("No userfields found.", systemImage: MySymbols.userfields)
             } else if filteredUserFields.isEmpty {
                 ContentUnavailableView.search
             }

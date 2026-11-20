@@ -156,6 +156,11 @@ struct MDUserEntityFormView: View {
                     emptyMessage: "This is required and can only contain letters and numbers",
                     errorMessage: "This is required and can only contain letters and numbers"
                 )
+                // The internal name only allows letters and numbers, so the keyboard doesn't change what's typed.
+                #if os(iOS)
+                    .textInputAutocapitalization(.never)
+                #endif
+                .autocorrectionDisabled()
                 .onChange(of: name) {
                     isNameCorrect = checkNameCorrect()
                 }

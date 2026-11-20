@@ -18,6 +18,7 @@ struct EquipmentFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingEquipment: MDEquipment?
     var isPopup: Bool = false
@@ -52,7 +53,7 @@ struct EquipmentFormView: View {
             } ?? MDEquipment()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.equipment]
+    private let dataToUpdate: [ObjectEntities] = [.equipment, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -126,6 +127,7 @@ struct EquipmentFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .equipment, id: equipment.id, content: equipment)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.equipment.rawValue, objectID: equipment.id, changes: userfieldChanges)
             GrocyLogger.info("Equipment \(equipment.name) successful.")
             if let pickedManual {
                 try await grocyVM.uploadInstructionManual(fileData: pickedManual.data, fileName: pickedManual.fileName)
@@ -216,6 +218,7 @@ struct EquipmentFormView: View {
                     Label("Edit", systemImage: MySymbols.editPreparation)
                 }
             }
+            UserfieldsSection(entity: ObjectEntities.equipment.rawValue, objectID: existingEquipment?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf]) { result in

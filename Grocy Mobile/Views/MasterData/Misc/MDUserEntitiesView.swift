@@ -103,12 +103,12 @@ struct MDUserEntitiesView: View {
     var content: some View {
         List {
             if grocyVM.mdUserEntities.isEmpty {
-                ContentUnavailableView("No userentities found.", systemImage: MySymbols.unknown)
+                ContentUnavailableView("No userentities found.", systemImage: MySymbols.userEntities)
             } else if filteredUserEntities.isEmpty {
                 ContentUnavailableView.search
             }
             ForEach(filteredUserEntities) { userEntity in
-                NavigationLink(destination: MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: Binding.constant(false))) {
+                NavigationLink(destination: UserObjectsView(userEntity: userEntity)) {
                     MDUserEntityRowView(userEntity: userEntity)
                 }
                 .swipeActions(

@@ -38,6 +38,7 @@ struct MDProductFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     /// Suggestions that started before the form opened, e.g. in the recipe import.
     private var suggester: ProductPropertySuggester?
@@ -107,7 +108,7 @@ struct MDProductFormView: View {
         return mdQuantityUnits.first(where: { $0.id == product.quIDStock })
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes, .product_groups]
+    private let dataToUpdate: [ObjectEntities] = [.products, .quantity_units, .locations, .shopping_locations, .product_barcodes, .product_groups, .userfields]
     private let additionalDataToUpdate: [AdditionalEntities] = [.system_info]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -147,6 +148,7 @@ struct MDProductFormView: View {
             try product.modelContext?.save()
             if existingProduct == nil {
                 _ = try await grocyVM.postMDObject(object: .products, content: product)
+                try await grocyVM.saveUserfields(entity: ObjectEntities.products.rawValue, objectID: product.id, changes: userfieldChanges)
                 await grocyVM.requestData(objects: [.products])
                 createdProductID = product.id
                 if createBarcode == true && !queuedBarcode.isEmpty {
@@ -167,6 +169,7 @@ struct MDProductFormView: View {
                 isSuccessful = true
             } else {
                 try await grocyVM.putMDObjectWithID(object: .products, id: product.id, content: product)
+                try await grocyVM.saveUserfields(entity: ObjectEntities.products.rawValue, objectID: product.id, changes: userfieldChanges)
                 GrocyLogger.info("Product \(product.name) successful.")
                 await grocyVM.requestData(objects: [.products])
                 isSuccessful = true
@@ -495,6 +498,7 @@ struct MDProductFormView: View {
                     MyLabelWithSubtitle(title: "\(Text("Barcode")): \(queuedBarcode)", systemImage: MySymbols.barcode)
                 }
             }
+            UserfieldsSection(entity: ObjectEntities.products.rawValue, objectID: existingProduct?.id, changes: $userfieldChanges)
         }
         .task {
             await updateData()

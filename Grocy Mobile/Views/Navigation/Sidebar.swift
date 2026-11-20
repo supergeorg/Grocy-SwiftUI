@@ -154,6 +154,16 @@ struct Sidebar: View {
                             MDCategoryRowView(categoryName: "Task categories", iconName: MySymbols.tasks, mdType: MDTaskCategory.self)
                         }
                     }
+                    NavigationLink(value: NavigationItem.mdUserFields) {
+                        ListRowLabel("Userfields", systemImage: MySymbols.userfields, count: grocyVM.mdUserFields.count)
+                    }
+                    // Userfields and user entities are only kept in memory, so they are loaded for their counts.
+                    .task {
+                        await grocyVM.requestData(objects: [.userfields, .userentities])
+                    }
+                    NavigationLink(value: NavigationItem.mdUserEntities) {
+                        ListRowLabel("User entities", systemImage: MySymbols.userEntities, count: grocyVM.mdUserEntities.count)
+                    }
                 },
                 header: {
                     Label("Master data", systemImage: MySymbols.masterData)

@@ -23,19 +23,10 @@ struct MDCategoryRowView<T: PersistentModel>: View {
     }
 
     var body: some View {
-        HStack {
-            Label(categoryName, systemImage: iconName)
-                .foregroundStyle(.primary)
-            if itemCount > 0 {
-                Spacer()
-                Text("\(itemCount)")
-                    .foregroundStyle(.secondary)
-                    .font(.subheadline)
+        ListRowLabel(categoryName, systemImage: iconName, count: itemCount)
+            .onAppear {
+                updateCount()
             }
-        }
-        .onAppear {
-            updateCount()
-        }
     }
 }
 

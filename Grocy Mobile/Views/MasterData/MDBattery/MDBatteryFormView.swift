@@ -17,6 +17,7 @@ struct MDBatteryFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingBattery: MDBattery?
     var isPopup: Bool = false
@@ -46,7 +47,7 @@ struct MDBatteryFormView: View {
             } ?? MDBattery()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.batteries]
+    private let dataToUpdate: [ObjectEntities] = [.batteries, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: [.batteries])
     }
@@ -72,6 +73,7 @@ struct MDBatteryFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .batteries, id: battery.id, content: battery)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.batteries.rawValue, objectID: battery.id, changes: userfieldChanges)
             GrocyLogger.info("Battery \(battery.name) successful.")
             await updateData()
             isSuccessful = true
@@ -120,6 +122,7 @@ struct MDBatteryFormView: View {
                 amountName: "days",
                 systemImage: MySymbols.batteryChargeInterval
             )
+            UserfieldsSection(entity: ObjectEntities.batteries.rawValue, objectID: existingBattery?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

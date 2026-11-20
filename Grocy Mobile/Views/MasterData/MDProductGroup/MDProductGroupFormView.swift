@@ -18,6 +18,7 @@ struct MDProductGroupFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingProductGroup: MDProductGroup?
     @State private var productGroup: MDProductGroup
@@ -33,7 +34,7 @@ struct MDProductGroupFormView: View {
         self.productGroup = existingProductGroup ?? MDProductGroup()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.product_groups]
+    private let dataToUpdate: [ObjectEntities] = [.product_groups, .userfields]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -60,6 +61,7 @@ struct MDProductGroupFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .product_groups, id: productGroup.id, content: productGroup)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.product_groups.rawValue, objectID: productGroup.id, changes: userfieldChanges)
             GrocyLogger.info("Product group \(productGroup.name) successful.")
             await updateData()
             isSuccessful = true
@@ -101,6 +103,7 @@ struct MDProductGroupFormView: View {
                 description: "Description",
                 leadingIcon: MySymbols.description
             )
+            UserfieldsSection(entity: ObjectEntities.product_groups.rawValue, objectID: existingProductGroup?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .navigationTitle(existingProductGroup == nil ? "Create product group" : "Edit product group")

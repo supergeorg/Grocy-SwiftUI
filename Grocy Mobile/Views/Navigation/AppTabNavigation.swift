@@ -36,6 +36,8 @@ private enum TabNavigationItem: String, Codable {
     case mdChores = "mdChores"
     case mdTaskCategories = "mdTaskCategories"
     case mdBatteries = "mdBatteries"
+    case mdUserFields = "mdUserFields"
+    case mdUserEntities = "mdUserEntities"
 }
 
 struct AppTabNavigation: View {
@@ -254,6 +256,20 @@ struct AppTabNavigation: View {
                         }
                         .customizationID("georgappdev.Grocy.mdBatteries")
                         .hidden(systemConfig?.featureFlagBatteries == false)
+
+                        Tab("Userfields", systemImage: MySymbols.userfields, value: TabNavigationItem.mdUserFields) {
+                            NavigationStack {
+                                MDUserFieldsView()
+                            }
+                        }
+                        .customizationID("georgappdev.Grocy.mdUserFields")
+
+                        Tab("User entities", systemImage: MySymbols.userEntities, value: TabNavigationItem.mdUserEntities) {
+                            NavigationStack {
+                                MDUserEntitiesView()
+                            }
+                        }
+                        .customizationID("georgappdev.Grocy.mdUserEntities")
                     }
                 )
                 .tabPlacement(.sidebarOnly)

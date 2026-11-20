@@ -20,6 +20,7 @@ struct MDChoreFormView: View {
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
+    @State private var userfieldChanges = UserfieldChanges()
 
     var existingChore: MDChore? = nil
     var isPopup: Bool
@@ -45,7 +46,7 @@ struct MDChoreFormView: View {
         return !(chore.name.isEmpty || (foundChore != nil && foundChore!.id != chore.id))
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.chores, .products]
+    private let dataToUpdate: [ObjectEntities] = [.chores, .products, .userfields]
     private let additionalDataToUpdate: [AdditionalEntities] = [.chores, .users]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
@@ -119,6 +120,7 @@ struct MDChoreFormView: View {
             } else {
                 try await grocyVM.putMDObjectWithID(object: .chores, id: chore.id, content: chore)
             }
+            try await grocyVM.saveUserfields(entity: ObjectEntities.chores.rawValue, objectID: chore.id, changes: userfieldChanges)
             GrocyLogger.info("Chore \(chore.name) successful.")
             await updateData()
             isSuccessful = true
@@ -289,6 +291,7 @@ struct MDChoreFormView: View {
                     )
                 }
             }
+            UserfieldsSection(entity: ObjectEntities.chores.rawValue, objectID: existingChore?.id, changes: $userfieldChanges)
         }
         .formStyle(.grouped)
         .task {

@@ -7,296 +7,6 @@
     ":" : {
       "shouldTranslate" : false
     },
-    "A permission includes all permissions below it." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eine Berechtigung umfasst alle Berechtigungen darunter."
-          }
-        }
-      }
-    },
-    "Add all list items to stock" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Einträge zum Bestand hinzufügen"
-          }
-        }
-      }
-    },
-    "Add items" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eintrag hinzufügen"
-          }
-        }
-      }
-    },
-    "All permissions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Berechtigungen"
-          }
-        }
-      }
-    },
-    "Consume %@ %@ as spoiled" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ %2$@ als verdorben verbrauchen"
-          }
-        }
-      }
-    },
-    "Create" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erstellen"
-          }
-        }
-      }
-    },
-    "Create users" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benutzer erstellen"
-          }
-        }
-      }
-    },
-    "Edit master data" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stammdaten bearbeiten"
-          }
-        }
-      }
-    },
-    "Edit own user data / change own password" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eigene Benutzerdaten bearbeiten / eigenes Passwort ändern"
-          }
-        }
-      }
-    },
-    "Edit stock entries" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestandseinträge bearbeiten"
-          }
-        }
-      }
-    },
-    "Edit users (including passwords)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benutzer bearbeiten (inklusive Passwörter)"
-          }
-        }
-      }
-    },
-    "Go" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gehe zu"
-          }
-        }
-      }
-    },
-    "Item %lld of %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eintrag %lld von %lld"
-          }
-        }
-      }
-    },
-    "Leave empty to keep the current password." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leer lassen, um das aktuelle Passwort zu behalten."
-          }
-        }
-      }
-    },
-    "Mark completed" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Als erledigt markieren"
-          }
-        }
-      }
-    },
-    "No items to add to stock" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Einträge zum Hinzufügen zum Bestand"
-          }
-        }
-      }
-    },
-    "No recipe uses %@." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Rezept verwendet %@."
-          }
-        }
-      }
-    },
-    "No recipes found" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Rezepte gefunden"
-          }
-        }
-      }
-    },
-    "No userfields found." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Benutzerfelder gefunden."
-          }
-        }
-      }
-    },
-    "Open products" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Produkt als geöffnet markieren"
-          }
-        }
-      }
-    },
-    "Permissions for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berechtigungen für %@"
-          }
-        }
-      }
-    },
-    "Recipes with %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rezepte mit %@"
-          }
-        }
-      }
-    },
-    "Remove items" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eintrag entfernen"
-          }
-        }
-      }
-    },
-    "Search for recipes which contain this product" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach Rezepten suchen, die dieses Produkt enthalten"
-          }
-        }
-      }
-    },
-    "Show users" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benutzer anzeigen"
-          }
-        }
-      }
-    },
-    "Skip this item" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diesen Eintrag überspringen"
-          }
-        }
-      }
-    },
-    "Stock entries" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestandseinträge"
-          }
-        }
-      }
-    },
-    "Track execution" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausführung erfassen"
-          }
-        }
-      }
-    },
-    "Undo execution" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausführung rückgängig machen"
-          }
-        }
-      }
-    },
     "“%@” from the website was matched to the similar unit “%@”." : {
       "localizations" : {
         "de" : {
@@ -8226,6 +7936,16 @@
         }
       }
     },
+    "A permission includes all permissions below it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Berechtigung umfasst alle Berechtigungen darunter."
+          }
+        }
+      }
+    },
     "A quantity unit is required" : {
       "localizations" : {
         "ca" : {
@@ -8617,6 +8337,9 @@
           }
         }
       }
+    },
+    "A value is required" : {
+
     },
     "About this app" : {
       "localizations" : {
@@ -9400,6 +9123,16 @@
         }
       }
     },
+    "Add all list items to stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Einträge zum Bestand hinzufügen"
+          }
+        }
+      }
+    },
     "Add barcode" : {
       "localizations" : {
         "cs" : {
@@ -9976,6 +9709,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增項目"
+          }
+        }
+      }
+    },
+    "Add items" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag hinzufügen"
           }
         }
       }
@@ -11268,6 +11011,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Zutaten mit ihrem Bestandsstatus, eine Listen- oder Galerieansicht und Import von Webseiten."
+          }
+        }
+      }
+    },
+    "All permissions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Berechtigungen"
           }
         }
       }
@@ -21358,6 +21111,16 @@
         }
       }
     },
+    "Consume %@ %@ as spoiled" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ als verdorben verbrauchen"
+          }
+        }
+      }
+    },
     "Consume all %@ which are currently in stock" : {
       "localizations" : {
         "ca" : {
@@ -22945,6 +22708,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einkaufsliste \"%@\" konnte nicht aktualisiert werden"
+          }
+        }
+      }
+    },
+    "Create" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen"
           }
         }
       }
@@ -25856,6 +25629,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增自定義欄位"
+          }
+        }
+      }
+    },
+    "Create users" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer erstellen"
           }
         }
       }
@@ -29119,6 +28902,9 @@
         }
       }
     },
+    "Default value" : {
+
+    },
     "Delete" : {
       "localizations" : {
         "ca" : {
@@ -31222,6 +31008,9 @@
           }
         }
       }
+    },
+    "Do you really want to delete this record?" : {
+
     },
     "Do you want to export this shopping list to Reminders? This may overwrite changes in the list." : {
       "extractionState" : "stale",
@@ -33500,11 +33289,31 @@
         }
       }
     },
+    "Edit master data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stammdaten bearbeiten"
+          }
+        }
+      }
+    },
     "Edit meal plan entry" : {
 
     },
     "Edit meal plan section" : {
 
+    },
+    "Edit own user data / change own password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Benutzerdaten bearbeiten / eigenes Passwort ändern"
+          }
+        }
+      }
     },
     "Edit product" : {
       "localizations" : {
@@ -34975,6 +34784,16 @@
         }
       }
     },
+    "Edit stock entries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandseinträge bearbeiten"
+          }
+        }
+      }
+    },
     "Edit store" : {
       "localizations" : {
         "ca" : {
@@ -36241,6 +36060,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯自定義欄位"
+          }
+        }
+      }
+    },
+    "Edit users (including passwords)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer bearbeiten (inklusive Passwörter)"
           }
         }
       }
@@ -38996,6 +38825,16 @@
     },
     "Github" : {
       "shouldTranslate" : false
+    },
+    "Go" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehe zu"
+          }
+        }
+      }
     },
     "Grocy" : {
       "localizations" : {
@@ -41894,6 +41733,16 @@
         }
       }
     },
+    "Item %lld of %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag %lld von %lld"
+          }
+        }
+      }
+    },
     "kcal" : {
       "shouldTranslate" : false
     },
@@ -43029,6 +42878,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Darstellung"
+          }
+        }
+      }
+    },
+    "Leave empty to keep the current password." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer lassen, um das aktuelle Passwort zu behalten."
           }
         }
       }
@@ -44257,6 +44116,9 @@
         }
       }
     },
+    "Mandatory" : {
+
+    },
     "Manually" : {
       "localizations" : {
         "ca" : {
@@ -44655,6 +44517,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "標記為已開封"
+          }
+        }
+      }
+    },
+    "Mark completed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als erledigt markieren"
           }
         }
       }
@@ -48556,6 +48428,16 @@
     "No instruction manual" : {
 
     },
+    "No items to add to stock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Einträge zum Hinzufügen zum Bestand"
+          }
+        }
+      }
+    },
     "No location defined. Please create one." : {
       "localizations" : {
         "de" : {
@@ -49119,7 +49001,30 @@
         }
       }
     },
+    "No recipe uses %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Rezept verwendet %@."
+          }
+        }
+      }
+    },
     "No recipe was found on this website. Only websites that provide schema.org recipe data are supported." : {
+
+    },
+    "No recipes found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Rezepte gefunden"
+          }
+        }
+      }
+    },
+    "No records found." : {
 
     },
     "No section" : {
@@ -49354,6 +49259,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "用户实体未找到"
+          }
+        }
+      }
+    },
+    "No userfields found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Benutzerfelder gefunden."
           }
         }
       }
@@ -51245,6 +51160,7 @@
       }
     },
     "Not implemented" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -52234,6 +52150,9 @@
     "On the website" : {
 
     },
+    "One option per line" : {
+
+    },
     "Only assigned to me" : {
       "localizations" : {
         "de" : {
@@ -52782,12 +52701,28 @@
         }
       }
     },
+    "Open file" : {
+
+    },
     "Open Grocy Mobile to load your data." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öffne Grocy Mobile, um deine Daten zu laden."
+          }
+        }
+      }
+    },
+    "Open link" : {
+
+    },
+    "Open products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt als geöffnet markieren"
           }
         }
       }
@@ -53007,6 +52942,9 @@
           }
         }
       }
+    },
+    "Options" : {
+
     },
     "OS" : {
       "localizations" : {
@@ -54640,6 +54578,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "週期類型"
+          }
+        }
+      }
+    },
+    "Permissions for %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechtigungen für %@"
           }
         }
       }
@@ -60030,6 +59978,16 @@
     "Recipes settings" : {
 
     },
+    "Recipes with %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezepte mit %@"
+          }
+        }
+      }
+    },
     "Release date" : {
       "localizations" : {
         "de" : {
@@ -60129,8 +60087,21 @@
     "Reminders access is off" : {
 
     },
+    "Remove" : {
+
+    },
     "Remove file" : {
 
+    },
+    "Remove items" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eintrag entfernen"
+          }
+        }
+      }
     },
     "Replace file" : {
 
@@ -60204,6 +60175,9 @@
           }
         }
       }
+    },
+    "Required" : {
+
     },
     "Reschedule next execution" : {
       "localizations" : {
@@ -61544,6 +61518,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "搜尋"
+          }
+        }
+      }
+    },
+    "Search for recipes which contain this product" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Rezepten suchen, die dieses Produkt enthalten"
           }
         }
       }
@@ -64397,6 +64381,16 @@
         }
       }
     },
+    "Show users" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer anzeigen"
+          }
+        }
+      }
+    },
     "Shows how many products are due soon, overdue, expired or below their minimum stock amount." : {
       "localizations" : {
         "de" : {
@@ -64778,6 +64772,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "跳過下次執行"
+          }
+        }
+      }
+    },
+    "Skip this item" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesen Eintrag überspringen"
           }
         }
       }
@@ -66227,6 +66231,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "庫存數量"
+          }
+        }
+      }
+    },
+    "Stock entries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandseinträge"
           }
         }
       }
@@ -68530,6 +68544,9 @@
         }
       }
     },
+    "Take picture" : {
+
+    },
     "Tare weight" : {
       "localizations" : {
         "ca" : {
@@ -69477,6 +69494,9 @@
 
     },
     "The recipe was saved, but these ingredients couldn't be added: %@" : {
+
+    },
+    "The records of a user entity consist of its userfields. Add them in the userfields." : {
 
     },
     "The resulting price of this ingredient will be multiplied by this factor" : {
@@ -76669,6 +76689,9 @@
     "Time of day" : {
 
     },
+    "Title" : {
+
+    },
     "To location" : {
       "localizations" : {
         "ca" : {
@@ -77360,6 +77383,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "僅追蹤日期"
+          }
+        }
+      }
+    },
+    "Track execution" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausführung erfassen"
           }
         }
       }
@@ -80149,6 +80182,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消家務執行"
+          }
+        }
+      }
+    },
+    "Undo execution" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausführung rückgängig machen"
           }
         }
       }

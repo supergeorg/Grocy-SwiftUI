@@ -15,12 +15,32 @@ struct MDUserFieldFormView: View {
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
 
-    @State private var entity: ObjectEntities?
+    /// The entity the field belongs to, e.g. `products` or `userentity-<name>`.
+    @State private var entity: String = ""
     @State private var name: String = ""
     @State private var caption: String = ""
     @State private var sortNumber: Int? = -1
     @State private var type: UserFieldType = UserFieldType.none
     @State private var showAsColumnInTables: Bool = false
+    @State private var inputRequired: Bool = false
+    @State private var defaultValue: String = ""
+    /// The options of a select list, one per line.
+    @State private var config: String = ""
+
+    private var hasOptions: Bool {
+        type == .presetList || type == .presetChecklist
+    }
+
+    /// The entities Grocy accepts userfields for: its objects, the user entities and the users.
+    private var entities: [(entity: String, caption: String)] {
+        var entities = ObjectEntities.allCases.map { ($0.rawValue, $0.rawValue) }
+        entities += grocyVM.mdUserEntities.map { ($0.userfieldEntity, $0.caption) }
+        entities.append(("users", "users"))
+        if !entity.isEmpty && !entities.contains(where: { $0.0 == entity }) {
+            entities.append((entity, entity))
+        }
+        return entities
+    }
 
     var isNewUserField: Bool
     var userField: MDUserField?
@@ -31,7 +51,7 @@ struct MDUserFieldFormView: View {
     /// Grocy only accepts letters and numbers, and a name once per entity.
     private func checkNameCorrect() -> Bool {
         guard name.wholeMatch(of: /[A-Za-z0-9]+/) != nil else { return false }
-        let foundUserField = grocyVM.mdUserFields.first { $0.name == name && $0.entity == entity?.rawValue }
+        let foundUserField = grocyVM.mdUserFields.first { $0.name == name && $0.entity == entity }
         return foundUserField == nil || foundUserField?.id == userField?.id
     }
 
@@ -41,17 +61,20 @@ struct MDUserFieldFormView: View {
     }
 
     private func resetForm() {
-        entity = ObjectEntities(rawValue: userField?.entity ?? "")
+        entity = userField?.entity ?? ""
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
         sortNumber = userField?.sortNumber ?? -1
         type = UserFieldType(rawValue: userField?.type ?? "") ?? UserFieldType.none
         showAsColumnInTables = userField?.showAsColumnInTables == true
+        inputRequired = userField?.inputRequired == true
+        defaultValue = userField?.defaultValue ?? ""
+        config = userField?.config ?? ""
         isNameCorrect = checkNameCorrect()
         isCaptionCorrect = checkCaptionCorrect()
     }
 
-    private let dataToUpdate: [ObjectEntities] = [.userfields]
+    private let dataToUpdate: [ObjectEntities] = [.userfields, .userentities]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate)
     }
@@ -67,7 +90,7 @@ struct MDUserFieldFormView: View {
     }
 
     private func saveUserField() async {
-        if let entity = entity {
+        if !entity.isEmpty {
             let id: Int
             if isNewUserField {
                 do {
@@ -83,12 +106,14 @@ struct MDUserFieldFormView: View {
             let userFieldPOST = MDUserField(
                 id: id,
                 name: name,
-                entity: entity.rawValue,
+                entity: entity,
                 caption: caption,
                 type: type.rawValue,
                 showAsColumnInTables: showAsColumnInTables,
-                config: nil,
+                config: hasOptions ? config : nil,
                 sortNumber: sortNumber,
+                inputRequired: inputRequired,
+                defaultValue: defaultValue,
                 rowCreatedTimestamp: timeStamp
             )
             isProcessing = true
@@ -132,7 +157,7 @@ struct MDUserFieldFormView: View {
                             Image(systemName: MySymbols.save)
                         }
                     )
-                    .disabled(!isNameCorrect || !isCaptionCorrect || entity == nil || isProcessing)
+                    .disabled(!isNameCorrect || !isCaptionCorrect || entity.isEmpty || isProcessing)
                     .keyboardShortcut(.defaultAction)
                 }
                 #if os(iOS)
@@ -160,16 +185,16 @@ struct MDUserFieldFormView: View {
                     selection: $entity,
                     label: Text("Entity"),
                     content: {
-                        Text("").tag(nil as ObjectEntities?)
-                        ForEach(ObjectEntities.allCases, id: \.self) { objectEntity in
-                            Text(objectEntity.rawValue).tag(objectEntity as ObjectEntities?)
+                        Text(verbatim: "").tag("")
+                        ForEach(entities, id: \.entity) { entity in
+                            Text(verbatim: entity.caption).tag(entity.entity)
                         }
                     }
                 )
                 .onChange(of: entity) {
                     isNameCorrect = checkNameCorrect()
                 }
-                if entity == nil {
+                if entity.isEmpty {
                     Text("An entity is required")
                         .foregroundStyle(.red)
                 }
@@ -185,6 +210,11 @@ struct MDUserFieldFormView: View {
                     errorMessage: "This is required and can only contain letters and numbers",
                     helpText: "This is the internal field name, e. g. for the API"
                 )
+                // The internal name only allows letters and numbers, so the keyboard doesn't change what's typed.
+                #if os(iOS)
+                    .textInputAutocapitalization(.never)
+                #endif
+                .autocorrectionDisabled()
                 .onChange(of: name) {
                     isNameCorrect = checkNameCorrect()
                 }
@@ -219,8 +249,19 @@ struct MDUserFieldFormView: View {
                 }
             )
 
+            if hasOptions {
+                Section {
+                    MyTextEditor(textToEdit: $config, description: "Options", leadingIcon: MySymbols.inventory)
+                } footer: {
+                    Text("One option per line")
+                }
+            }
+
+            MyTextField(textToEdit: $defaultValue, description: "Default value", isCorrect: .constant(true), leadingIcon: MySymbols.description)
+            MyToggle(isOn: $inputRequired, description: "Mandatory", icon: MySymbols.inputRequired)
             MyToggle(isOn: $showAsColumnInTables, description: "Show as column in tables", icon: MySymbols.tableColumn)
         }
+        .formStyle(.grouped)
         .task {
             if firstAppear {
                 await updateData()

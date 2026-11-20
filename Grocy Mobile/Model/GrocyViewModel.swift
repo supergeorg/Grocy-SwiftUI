@@ -76,6 +76,7 @@ class GrocyViewModel {
     var mdTaskCategories: MDTaskCategories = []
     var mdUserFields: MDUserFields = []
     var mdUserEntities: MDUserEntities = []
+    var mdUserObjects: MDUserObjects = []
     var mdChores: MDChores = []
     var mdMealPlanSections: MDMealPlanSections = []
 
@@ -440,6 +441,8 @@ class GrocyViewModel {
                             self.mdUserFields = try await grocyApi.getObject(object: object)
                         case .userentities:
                             self.mdUserEntities = try await grocyApi.getObject(object: object)
+                        case .userobjects:
+                            self.mdUserObjects = try await grocyApi.getObject(object: object)
                         case .stock:
                             self.stockEntries = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.stockEntries)
@@ -602,6 +605,7 @@ class GrocyViewModel {
         self.mdTaskCategories = []
         self.mdUserFields = []
         self.mdUserEntities = []
+        self.mdUserObjects = []
         self.mdMealPlanSections = []
 
         self.stockProductDetails = [:]
@@ -1002,6 +1006,52 @@ class GrocyViewModel {
     func putMDObjectWithID<T: Codable>(object: ObjectEntities, id: Int, content: T) async throws {
         let jsonContent = try! jsonEncoder.encode(content)
         try await grocyApi.putObjectWithID(object: object, id: id, content: jsonContent)
+    }
+
+    // MARK: - Userfields
+
+    /// The userfields of an entity (e.g. `products` or `userentity-<name>`), in Grocy's order.
+    func userfields(for entity: String) -> MDUserFields {
+        mdUserFields
+            .filter { $0.entity == entity }
+            .sorted { ($0.sortNumber ?? .max, $0.name.localizedLowercase) < ($1.sortNumber ?? .max, $1.name.localizedLowercase) }
+    }
+
+    func getUserfieldValues(entity: String, objectID: Int) async throws -> UserfieldValues {
+        try await grocyApi.getUserfieldValues(entity: entity, objectID: objectID)
+    }
+
+    /// Saves changed userfield values. Only the given fields change, the others keep their values.
+    func putUserfieldValues(entity: String, objectID: Int, values: [String: String]) async throws {
+        guard !values.isEmpty else { return }
+        let jsonContent = try jsonEncoder.encode(UserfieldValues(values))
+        try await grocyApi.putUserfieldValues(entity: entity, objectID: objectID, content: jsonContent)
+        GrocyLogger.info("Saving userfields of \(entity) \(objectID) was successful.")
+    }
+
+    /// Saves what a form changed in the userfields of an object: uploads new files, saves the values,
+    /// then deletes the files that were replaced or removed.
+    func saveUserfields(entity: String, objectID: Int, changes: UserfieldChanges) async throws {
+        for (encodedStoredName, data) in changes.uploads {
+            try await grocyApi.putFileData(fileData: data, fileName: encodedStoredName, groupName: MDUserField.fileGroup)
+        }
+        try await putUserfieldValues(entity: entity, objectID: objectID, values: changes.values)
+        for encodedStoredName in changes.obsoleteFiles {
+            do {
+                try await grocyApi.deleteFile(fileName: encodedStoredName, groupName: MDUserField.fileGroup)
+            } catch {
+                GrocyLogger.warning("Deleting a replaced userfield file failed. \(error)")
+            }
+        }
+    }
+
+    /// A file of a file or picture userfield. Pictures are scaled to fit `bestFitWidth`.
+    func getUserfieldFile(value: String, bestFitWidth: Int? = nil) async throws -> Data? {
+        guard let encodedStoredName = MDUserField.encodedStoredFileName(of: value) else { return nil }
+        if let bestFitWidth {
+            return try await grocyApi.getFile(fileName: encodedStoredName, groupName: MDUserField.fileGroup, bestFitHeight: nil, bestFitWidth: bestFitWidth)
+        }
+        return try await grocyApi.getFileUnmodified(fileName: encodedStoredName, groupName: MDUserField.fileGroup)
     }
 
     // MARK: - Chores

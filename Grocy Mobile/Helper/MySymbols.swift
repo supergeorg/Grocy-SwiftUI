@@ -183,6 +183,17 @@ nonisolated struct MySymbols {
     static let chooseTabs = "rectangle.3.group"
     static let appleIntelligence = "apple.intelligence"
     static let tableColumn = "tablecells"
+    static let userfields = "rectangle.and.pencil.and.ellipsis"
+    static let userEntities = "square.stack.3d.up"
+    static let inputRequired = "asterisk"
+    // Userfield types
+    static let userfieldText = "character.cursor.ibeam"
+    static let userfieldNumber = "number"
+    static let userfieldCheckbox = "checkmark.square"
+    static let userfieldSelection = "list.bullet"
+    static let userfieldFile = "doc"
+    static let openLink = "arrow.up.forward.square"
+    static let openFile = "eye"
     static let sortNumber = "list.number"
 
     // MARK: - Recipes
