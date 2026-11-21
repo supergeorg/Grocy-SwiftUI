@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 13.11.20.
 //
 
+import AppIntents
 import SwiftData
 import SwiftUI
 
@@ -187,6 +188,8 @@ struct Grocy_MobileApp: App {
                         }
                     }
                 }
+                // AppDependencyManager.shared is declared unsafe for strict memory safety; it's only used here, at launch.
+                unsafe AppDependencyManager.shared.add(dependency: vm)
                 return
             }
         #endif
@@ -275,6 +278,11 @@ struct Grocy_MobileApp: App {
                 }
             }
         }
+
+        // Siri and Shortcuts can launch the app without UI, so the intents' dependency is registered here, on every launch.
+        let intentGrocyVM = _grocyVM.wrappedValue
+        // AppDependencyManager.shared is declared unsafe for strict memory safety; it's only used here, at launch.
+        unsafe AppDependencyManager.shared.add(dependency: intentGrocyVM)
 
         // Do migration for old AppStorage based to profile
         let profileModelContext = profileModelContainer.mainContext

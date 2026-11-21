@@ -5,6 +5,7 @@
 //  Created by Georg Meissner on 13.11.20.
 //
 
+import AppIntents
 internal import Combine
 import Foundation
 import OSLog
@@ -409,6 +410,8 @@ class GrocyViewModel {
                             // Stock may have been synced before the products (for example on first launch), so link it now.
                             try swiftDataSync.linkStockElementsToProducts()
                             self.updateWidgetShoppingList()
+                            // Siri's phrases name the products, so tell the system about the new names.
+                            GrocyAppShortcuts.updateAppShortcutParameters()
                         case .quantity_unit_conversions:
                             self.mdQuantityUnitConversions = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdQuantityUnitConversions)

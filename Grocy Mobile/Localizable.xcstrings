@@ -132,6 +132,9 @@
     "%@ %%" : {
       "shouldTranslate" : false
     },
+    "%@ isn't in stock." : {
+
+    },
     "%@ kcal" : {
       "shouldTranslate" : false
     },
@@ -3063,6 +3066,9 @@
           }
         }
       }
+    },
+    "%lld products" : {
+
     },
     "%lld products are below defined min. stock amount" : {
       "localizations" : {
@@ -9123,6 +9129,9 @@
         }
       }
     },
+    "Add ${amount} of ${product} to ${shoppingList}" : {
+
+    },
     "Add all list items to stock" : {
       "localizations" : {
         "de" : {
@@ -9969,6 +9978,9 @@
         }
       }
     },
+    "Add Product to Shopping List" : {
+
+    },
     "Add products that are below defined min. stock amount" : {
       "localizations" : {
         "ca" : {
@@ -10808,6 +10820,19 @@
         }
       }
     },
+    "Add to Shopping List" : {
+
+    },
+    "Added %@ %@ to the shopping list." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Added %1$@ %2$@ to the shopping list."
+          }
+        }
+      }
+    },
     "Adds this place as a tab" : {
 
     },
@@ -11026,6 +11051,9 @@
       }
     },
     "All places in one list, as in the iPad sidebar." : {
+
+    },
+    "amount" : {
 
     },
     "Amount" : {
@@ -17068,6 +17096,9 @@
         }
       }
     },
+    "buy" : {
+
+    },
     "By default the amount to be added to the shopping list is \"needed amount - stock amount - shopping list amount\" - when this is enabled, it is only checked against the stock amount, not against what is already on the shopping list" : {
       "localizations" : {
         "cs" : {
@@ -20899,6 +20930,9 @@
         }
       }
     },
+    "consume" : {
+
+    },
     "Consume" : {
       "localizations" : {
         "ca" : {
@@ -21120,6 +21154,9 @@
           }
         }
       }
+    },
+    "Consume ${amount} of ${product}" : {
+
     },
     "Consume all %@ which are currently in stock" : {
       "localizations" : {
@@ -21565,6 +21602,9 @@
         }
       }
     },
+    "Consume Product" : {
+
+    },
     "Consume product on chore execution" : {
       "localizations" : {
         "ca" : {
@@ -21914,6 +21954,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "消耗此庫存條目"
+          }
+        }
+      }
+    },
+    "Consumed %@ of %@. %@ left." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consumed %1$@ of %2$@. %3$@ left."
           }
         }
       }
@@ -31245,6 +31295,9 @@
         }
       }
     },
+    "drink" : {
+
+    },
     "Due" : {
       "localizations" : {
         "ca" : {
@@ -32556,6 +32609,9 @@
           }
         }
       }
+    },
+    "eat" : {
+
     },
     "Edit" : {
       "localizations" : {
@@ -38833,6 +38889,12 @@
     "Get all ingredients ready before you start cooking." : {
 
     },
+    "Get Stock Amount" : {
+
+    },
+    "Get stock amount of ${product}" : {
+
+    },
     "Github" : {
       "shouldTranslate" : false
     },
@@ -38845,6 +38907,9 @@
           }
         }
       }
+    },
+    "groceries" : {
+
     },
     "Grocy" : {
       "localizations" : {
@@ -38929,6 +38994,9 @@
       }
     },
     "Grocy 4.7.1 and iOS 27" : {
+
+    },
+    "Grocy couldn't do that: %@" : {
 
     },
     "Grocy for iOS/macOS" : {
@@ -39083,6 +39151,9 @@
 
     },
     "Grocy Mobile is a companion app and needs a running Grocy server." : {
+
+    },
+    "Grocy Mobile isn't connected to a Grocy server. Open the app and log in first." : {
 
     },
     "Grocy needs a product for every ingredient. Ingredients without a product aren't imported." : {
@@ -39756,6 +39827,9 @@
           }
         }
       }
+    },
+    "how much" : {
+
     },
     "HTML" : {
       "shouldTranslate" : false
@@ -41167,6 +41241,9 @@
       }
     },
     "Instruction manual" : {
+
+    },
+    "inventory" : {
 
     },
     "Inventory" : {
@@ -42922,6 +42999,9 @@
         }
       }
     },
+    "left" : {
+
+    },
     "Legacy Barcode Scanner" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -43219,6 +43299,9 @@
           }
         }
       }
+    },
+    "list" : {
+
     },
     "List" : {
       "localizations" : {
@@ -45206,6 +45289,9 @@
           }
         }
       }
+    },
+    "Marks an amount of a product in stock as opened. Without an amount, the product's quick open amount is used." : {
+
     },
     "Master data" : {
       "localizations" : {
@@ -52671,6 +52757,9 @@
         }
       }
     },
+    "open" : {
+
+    },
     "Open" : {
       "localizations" : {
         "cs" : {
@@ -52741,6 +52830,9 @@
         }
       }
     },
+    "Open ${amount} of ${product}" : {
+
+    },
     "Open file" : {
 
     },
@@ -52755,6 +52847,9 @@
       }
     },
     "Open link" : {
+
+    },
+    "Open Product" : {
 
     },
     "Open products" : {
@@ -52788,6 +52883,9 @@
           }
         }
       }
+    },
+    "opened" : {
+
     },
     "Opened" : {
       "localizations" : {
@@ -52882,6 +52980,19 @@
           }
         }
       }
+    },
+    "Opened %@ of %@. %@ of %@ are opened now." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opened %1$@ of %2$@. %3$@ of %4$@ are opened now."
+          }
+        }
+      }
+    },
+    "Opening products is turned off on your Grocy server." : {
+
     },
     "Opens filter" : {
       "localizations" : {
@@ -57965,6 +58076,9 @@
     "Put missing products on the shopping list" : {
 
     },
+    "Puts a product on a Grocy shopping list. If it's already on the list, its amount is raised." : {
+
+    },
     "QR-Scan" : {
       "localizations" : {
         "cs" : {
@@ -60127,6 +60241,9 @@
     "Reminders access is off" : {
 
     },
+    "remove" : {
+
+    },
     "Remove" : {
 
     },
@@ -60142,6 +60259,9 @@
           }
         }
       }
+    },
+    "Removes an amount of a product from stock. Without an amount, the product's quick consume amount is used." : {
+
     },
     "Replace file" : {
 
@@ -62683,6 +62803,9 @@
 
     },
     "Shop with your lists" : {
+
+    },
+    "shopping" : {
 
     },
     "Shopping list" : {
@@ -65735,6 +65858,9 @@
       },
       "shouldTranslate" : false
     },
+    "start" : {
+
+    },
     "Start cooking" : {
 
     },
@@ -66096,6 +66222,9 @@
         }
       }
     },
+    "stock" : {
+
+    },
     "Stock" : {
       "localizations" : {
         "de" : {
@@ -66307,6 +66436,9 @@
           }
         }
       }
+    },
+    "Stock Amount" : {
+
     },
     "Stock entries" : {
       "localizations" : {
@@ -69201,6 +69333,21 @@
     "Tasks settings" : {
 
     },
+    "Tells how much of a product is in stock, and how much of it is opened." : {
+
+    },
+    "The amount must be greater than zero." : {
+
+    },
+    "The amount to add, in the product's purchase quantity unit." : {
+
+    },
+    "The amount to consume, in the product's stock quantity unit. Leave it empty for the quick consume amount." : {
+
+    },
+    "The amount to open, in the product's stock quantity unit. Leave it empty for the quick open amount." : {
+
+    },
     "The app doesn't have permission to read reminders." : {
       "comment" : "access denied error description",
       "extractionState" : "stale",
@@ -69567,10 +69714,16 @@
     "The list in Reminders can't be changed." : {
 
     },
+    "The list to add the product to. Leave it empty for the default shopping list." : {
+
+    },
     "The native app for Grocy, the self-hosted groceries and household management solution." : {
 
     },
     "The preparation is saved as numbered steps." : {
+
+    },
+    "The product wasn't found on your Grocy server." : {
 
     },
     "The recipe is read from the website's schema.org data, which most recipe websites provide." : {
@@ -81424,6 +81577,9 @@
     "URL" : {
       "shouldTranslate" : false
     },
+    "use" : {
+
+    },
     "Use a specific stock item" : {
       "localizations" : {
         "ca" : {
@@ -81925,6 +82081,9 @@
       }
     },
     "Used in" : {
+
+    },
+    "used up" : {
 
     },
     "User" : {
@@ -85286,6 +85445,9 @@
         }
       }
     },
+    "Whether the product was thrown away instead of used." : {
+
+    },
     "Who least did first" : {
       "localizations" : {
         "ca" : {
@@ -86413,6 +86575,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是"
+          }
+        }
+      }
+    },
+    "You have %@ of %@ in stock, %@ of them opened." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You have %1$@ of %2$@ in stock, %3$@ of them opened."
+          }
+        }
+      }
+    },
+    "You have %@ of %@ in stock." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You have %1$@ of %2$@ in stock."
           }
         }
       }
