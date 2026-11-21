@@ -25,6 +25,15 @@ struct GlobalSearchView: View {
     @Query(sort: \MDTaskCategory.name) private var taskCategories: MDTaskCategories
     @Query(sort: \MDBattery.name) private var batteries: MDBatteries
     @Query(sort: \MDEquipment.name) private var equipment: MDEquipments
+    // For the stock rows, which are the stock overview's.
+    @Query private var shoppingList: [ShoppingListItem]
+    @Query private var volatileStockList: [VolatileStock]
+    @Query private var userSettingsList: GrocyUserSettingsList
+    @Query private var recipeFulfilments: RecipeFulfilments
+
+    // The rows' actions are the overviews' ones.
+    @State private var stockInteractionRouter = StockInteractionNavigationRouter()
+    @State private var recipeActionsRouter = RecipeActionsRouter()
 
     /// Owned by the search tab, which puts `.searchable` on its navigation stack (needed for the search tab's field).
     @Binding var searchText: String
@@ -32,9 +41,9 @@ struct GlobalSearchView: View {
     private let dataToUpdate: [ObjectEntities] = [
         .products, .product_barcodes, .recipes, .quantity_units,
         .locations, .shopping_locations, .product_groups, .chores, .task_categories,
-        .batteries, .equipment,
+        .batteries, .equipment, .shopping_list,
     ]
-    private let additionalDataToUpdate: [AdditionalEntities] = [.stock]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.stock, .volatileStock, .user_settings, .recipeFulfillments]
 
     private var query: String { searchText.trimmingCharacters(in: .whitespaces) }
 
@@ -91,20 +100,28 @@ struct GlobalSearchView: View {
                 ContentUnavailableView.search(text: query)
             } else {
                 if !stockResults.isEmpty {
+                    // The stock overview's rows, with its context menu and swipe actions.
                     Section("Stock overview") {
                         ForEach(stockResults) { stockElement in
-                            NavigationLink(value: stockElement) {
-                                stockRow(stockElement)
-                            }
+                            StockTableRow(
+                                stockElement: stockElement,
+                                mdQuantityUnits: quantityUnits,
+                                shoppingList: shoppingList,
+                                mdProductGroups: productGroups,
+                                volatileStock: volatileStockList.first,
+                                parentProduct: products.first(where: { $0.id == stockElement.product?.parentProductID }),
+                                userSettings: userSettingsList.first
+                            )
                         }
                     }
                 }
                 if !recipeResults.isEmpty {
                     Section("Recipes") {
                         ForEach(recipeResults) { recipe in
-                            NavigationLink(value: recipe) {
-                                Label(recipe.name, systemImage: MySymbols.recipe)
+                            NavigationLink(value: RecipeInteraction.showRecipe(recipe: recipe)) {
+                                RecipeRowView(recipe: recipe, fulfillment: recipeFulfilments.first(where: { $0.recipeID == recipe.id }))
                             }
+                            .recipeRowActions(recipe)
                         }
                     }
                 }
@@ -123,6 +140,13 @@ struct GlobalSearchView: View {
                         ForEach(productResults) { product in
                             NavigationLink(value: product) {
                                 masterDataRow(product.name, kind: "Product", systemImage: MySymbols.product)
+                            }
+                            // The stock overview's menu, also for a product that isn't in stock (as its "below min. stock" filter shows them).
+                            .contextMenu {
+                                StockTableMenuEntriesView(
+                                    stockElement: stock.first(where: { $0.productID == product.id }) ?? StockElement(notInStock: product),
+                                    quantityUnit: quantityUnits.first(where: { $0.id == product.quIDStock })
+                                )
                             }
                         }
                         ForEach(locationResults) { location in
@@ -165,14 +189,13 @@ struct GlobalSearchView: View {
             }
         }
         .navigationTitle("Search")
+        .stockInteractionSheet(router: stockInteractionRouter)
+        .recipeActions(router: recipeActionsRouter)
         .navigationDestination(for: StockElement.self) { stockElement in
             StockEntriesView(stockElement: stockElement)
         }
         .navigationDestination(for: MDProduct.self) { product in
             MDProductFormView(existingProduct: product)
-        }
-        .navigationDestination(for: Recipe.self) { recipe in
-            RecipeView(initialRecipe: recipe)
         }
         .navigationDestination(for: MDLocation.self) { MDLocationFormView(existingLocation: $0) }
         .navigationDestination(for: MDStore.self) { MDStoreFormView(existingStore: $0) }
@@ -201,18 +224,6 @@ struct GlobalSearchView: View {
             }
         } icon: {
             Image(systemName: systemImage)
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    private func stockRow(_ stockElement: StockElement) -> some View {
-        let quantityUnit = quantityUnits.first(where: { $0.id == stockElement.product?.quIDStock })
-        return VStack(alignment: .leading) {
-            Text(stockElement.product?.name ?? "")
-                .font(.headline)
-            Text("\(stockElement.amount.formattedAmount) \(quantityUnit?.getName(amount: stockElement.amount) ?? "")")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .combine)
     }

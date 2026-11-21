@@ -130,7 +130,6 @@ struct DueView: View {
                 }
             }
         }
-        .environment(stockInteractionRouter)
         .refreshable {
             await updateData()
         }
@@ -192,12 +191,7 @@ struct DueView: View {
             }
             .environment(choreInteractionRouter)
         }
-        .sheet(item: $stockInteractionRouter.presentedInteraction) { interaction in
-            NavigationStack {
-                StockInteractionView(interaction: interaction)
-            }
-            .environment(stockInteractionRouter)
-        }
+        .stockInteractionSheet(router: stockInteractionRouter)
         .sheet(item: $shoppingListProduct) { item in
             NavigationStack {
                 ShoppingListEntryFormView(productIDToSelect: item.id, isPopup: true)

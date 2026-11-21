@@ -60,17 +60,11 @@ struct RecipesView: View {
     @Query(sort: \Recipe.name, order: .forward) var recipes: Recipes
     @Query var recipeFulfilments: RecipeFulfilments
 
-    @Query private var systemConfigList: [SystemConfig]
-    private var systemConfig: SystemConfig? { systemConfigList.first }
-
     @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
     @State private var showImportRecipe: Bool = false
-    @State private var recipeToPlan: Recipe? = nil
-    @State private var recipeToDelete: Recipe? = nil
-    @State private var showDeleteConfirmation: Bool = false
-    @State private var deleteErrorMessage: String? = nil
+    @State private var recipeActionsRouter = RecipeActionsRouter()
     @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
     @AppStorage("RecipesView.sortOrder") private var sortOrderKey: String = "reverse"
     @State private var filteredStatus: RecipeStatus = .all
@@ -97,36 +91,6 @@ struct RecipesView: View {
     private let additionalDataToUpdate: [AdditionalEntities] = [.recipeFulfillments]
     private func updateData() async {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
-    }
-
-    private func deleteItem(itemToDelete: Recipe) {
-        recipeToDelete = itemToDelete
-        showDeleteConfirmation.toggle()
-    }
-
-    private func deleteRecipe(toDelID: Int) async {
-        do {
-            try await grocyVM.deleteMDObject(object: .recipes, id: toDelID)
-            GrocyLogger.info("Deleting recipe was successful.")
-            await updateData()
-        } catch {
-            GrocyLogger.error("Deleting recipe failed. \(error)")
-            if let apiError = error as? APIError {
-                deleteErrorMessage = apiError.displayMessage
-            } else {
-                deleteErrorMessage = error.localizedDescription
-            }
-        }
-    }
-
-    private func copyRecipe(recipeID: Int) async {
-        do {
-            try await grocyVM.copyRecipe(recipeID: recipeID)
-            GrocyLogger.info("Copying recipe \(recipeID) was successful.")
-            await updateData()
-        } catch {
-            GrocyLogger.error("Copying recipe failed. \(error)")
-        }
     }
 
     private func getFilteredRecipes(for status: RecipeStatus) -> Recipes {
@@ -205,20 +169,7 @@ struct RecipesView: View {
                     NavigationLink(value: RecipeInteraction.showRecipe(recipe: recipe)) {
                         RecipeRowView(recipe: recipe, fulfillment: fulfillment(for: recipe))
                     }
-                    .contextMenu { recipeMenuItems(recipe: recipe) }
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            deleteItem(itemToDelete: recipe)
-                        } label: {
-                            Label("Delete", systemImage: MySymbols.delete)
-                        }
-                    }
-                    .swipeActions(edge: .leading) {
-                        NavigationLink(value: RecipeInteraction.editRecipe(recipe: recipe)) {
-                            Label("Edit", systemImage: MySymbols.edit)
-                        }
-                        .tint(Color(.GrocyColors.grocyTurquoise))
-                    }
+                    .recipeRowActions(recipe)
                 }
             }
         case .gallery:
@@ -229,7 +180,7 @@ struct RecipesView: View {
                             RecipeCardView(recipe: recipe, fulfillment: fulfillment(for: recipe))
                         }
                         .buttonStyle(.plain)
-                        .contextMenu { recipeMenuItems(recipe: recipe) }
+                        .contextMenu { RecipeMenuEntriesView(recipe: recipe) }
                     }
                 }
                 .padding(.horizontal, Spacing.large)
@@ -245,45 +196,6 @@ struct RecipesView: View {
                 galleryWidth = width
             }
         }
-    }
-
-    @ViewBuilder
-    private func recipeMenuItems(recipe: Recipe) -> some View {
-        NavigationLink(
-            value: RecipeInteraction.editRecipe(recipe: recipe),
-            label: {
-                Label("Edit this item", systemImage: MySymbols.edit)
-            }
-        )
-        if systemConfig?.featureFlagRecipesMealplan != false {
-            Button(
-                action: {
-                    recipeToPlan = recipe
-                },
-                label: {
-                    Label("Add to meal plan", systemImage: MySymbols.mealPlan)
-                }
-            )
-        }
-        Button(
-            action: {
-                Task {
-                    await copyRecipe(recipeID: recipe.id)
-                }
-            },
-            label: {
-                Label("Copy recipe", systemImage: MySymbols.duplicate)
-            }
-        )
-        Button(
-            role: .destructive,
-            action: {
-                deleteItem(itemToDelete: recipe)
-            },
-            label: {
-                Label("Delete this item", systemImage: MySymbols.delete)
-            }
-        )
     }
 
     var body: some View {
@@ -309,53 +221,10 @@ struct RecipesView: View {
                 .padding(.vertical, Spacing.small)
             }
             .navigationTitle("Recipes")
-            .navigationDestination(for: RecipeInteraction.self) { interaction in
-                switch interaction {
-                case .showRecipe(let recipe):
-                    RecipeView(initialRecipe: recipe)
-                case .editRecipe(let recipe):
-                    RecipeFormView(existingRecipe: recipe)
-                }
-            }
-            .alert(
-                "Are you sure you want to delete recipe \"\(recipeToDelete?.name ?? "")\"?",
-                isPresented: $showDeleteConfirmation,
-                actions: {
-                    Button("Cancel", role: .cancel) {}
-                    // No destructive role: the person chose to delete, this button carries out their intent (HIG).
-                    Button("Delete") {
-                        if let toDelID = recipeToDelete?.id {
-                            Task {
-                                await deleteRecipe(toDelID: toDelID)
-                            }
-                        }
-                    }
-                },
-                message: {
-                    Text("This can't be undone.")
-                }
-            )
-            .alert(
-                "Couldn't delete \"\(recipeToDelete?.name ?? "")\"",
-                isPresented: Binding(
-                    get: { deleteErrorMessage != nil },
-                    set: { if !$0 { deleteErrorMessage = nil } }
-                ),
-                actions: {
-                    Button("OK", role: .cancel) {}
-                },
-                message: {
-                    Text(deleteErrorMessage ?? "")
-                }
-            )
+            .recipeActions(router: recipeActionsRouter)
             .sheet(isPresented: $showAddRecipe) {
                 NavigationStack {
                     RecipeFormView()
-                }
-            }
-            .sheet(item: $recipeToPlan) { recipe in
-                NavigationStack {
-                    MealPlanEntryFormView(recipeID: recipe.id)
                 }
             }
             #if os(iOS)

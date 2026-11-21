@@ -623,12 +623,7 @@ struct StockView: View {
                 )
             }
         })
-        .environment(stockInteractionRouter)
-        .sheet(item: $stockInteractionRouter.presentedInteraction) { interaction in
-            NavigationStack {
-                StockInteractionView(interaction: interaction)
-            }
-        }
+        .stockInteractionSheet(router: stockInteractionRouter)
         .navigationDestination(
             for: StockElement.self,
             destination: { stockElement in

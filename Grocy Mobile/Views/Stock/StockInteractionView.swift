@@ -33,6 +33,29 @@ struct StockInteractionView: View {
     }
 }
 
+extension View {
+    /// Lets the stock rows below (`StockTableRow`, `StockTableMenuEntriesView`) present their stock interactions:
+    /// provides the router to them and shows the interaction it presents in a sheet.
+    func stockInteractionSheet(router: StockInteractionNavigationRouter) -> some View {
+        modifier(StockInteractionSheet(router: router))
+    }
+}
+
+private struct StockInteractionSheet: ViewModifier {
+    @Bindable var router: StockInteractionNavigationRouter
+
+    func body(content: Content) -> some View {
+        content
+            .environment(router)
+            .sheet(item: $router.presentedInteraction) { interaction in
+                NavigationStack {
+                    StockInteractionView(interaction: interaction)
+                }
+                .environment(router)
+            }
+    }
+}
+
 private struct SheetCloseButton: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 
