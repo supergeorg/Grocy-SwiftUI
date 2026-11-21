@@ -129,7 +129,7 @@ struct GlobalSearchView: View {
                     Section("Equipment") {
                         ForEach(equipmentResults) { item in
                             NavigationLink(value: item) {
-                                Label(item.name, systemImage: MySymbols.equipment)
+                                ListRowLabel(item.name, systemImage: MySymbols.equipment)
                             }
                         }
                     }
@@ -139,7 +139,7 @@ struct GlobalSearchView: View {
                     Section("Master data") {
                         ForEach(productResults) { product in
                             NavigationLink(value: product) {
-                                masterDataRow(product.name, kind: "Product", systemImage: MySymbols.product)
+                                ListRowLabel(product.name, subtitle: "Product", systemImage: MySymbols.product)
                             }
                             // The stock overview's menu, also for a product that isn't in stock (as its "below min. stock" filter shows them).
                             .contextMenu {
@@ -151,37 +151,37 @@ struct GlobalSearchView: View {
                         }
                         ForEach(locationResults) { location in
                             NavigationLink(value: location) {
-                                masterDataRow(location.name, kind: "Location", systemImage: MySymbols.location)
+                                ListRowLabel(location.name, subtitle: "Location", systemImage: MySymbols.location)
                             }
                         }
                         ForEach(storeResults) { store in
                             NavigationLink(value: store) {
-                                masterDataRow(store.name, kind: "Store", systemImage: MySymbols.store)
+                                ListRowLabel(store.name, subtitle: "Store", systemImage: MySymbols.store)
                             }
                         }
                         ForEach(quantityUnitResults) { quantityUnit in
                             NavigationLink(value: quantityUnit) {
-                                masterDataRow(quantityUnit.name, kind: "Quantity unit", systemImage: MySymbols.quantityUnit)
+                                ListRowLabel(quantityUnit.name, subtitle: "Quantity unit", systemImage: MySymbols.quantityUnit)
                             }
                         }
                         ForEach(productGroupResults) { productGroup in
                             NavigationLink(value: productGroup) {
-                                masterDataRow(productGroup.name, kind: "Product group", systemImage: MySymbols.productGroup)
+                                ListRowLabel(productGroup.name, subtitle: "Product group", systemImage: MySymbols.productGroup)
                             }
                         }
                         ForEach(choreResults) { chore in
                             NavigationLink(value: chore) {
-                                masterDataRow(chore.name, kind: "Chore", systemImage: MySymbols.chores)
+                                ListRowLabel(chore.name, subtitle: "Chore", systemImage: MySymbols.chores)
                             }
                         }
                         ForEach(taskCategoryResults) { taskCategory in
                             NavigationLink(value: taskCategory) {
-                                masterDataRow(taskCategory.name, kind: "Task category", systemImage: MySymbols.tasks)
+                                ListRowLabel(taskCategory.name, subtitle: "Task category", systemImage: MySymbols.tasks)
                             }
                         }
                         ForEach(batteryResults) { battery in
                             NavigationLink(value: battery) {
-                                masterDataRow(battery.name, kind: "Battery", systemImage: MySymbols.batteries)
+                                ListRowLabel(battery.name, subtitle: "Battery", systemImage: MySymbols.batteries)
                             }
                         }
                     }
@@ -211,21 +211,6 @@ struct GlobalSearchView: View {
         .refreshable {
             await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
         }
-    }
-
-    private func masterDataRow(_ name: String, kind: LocalizedStringKey, systemImage: String) -> some View {
-        Label {
-            VStack(alignment: .leading) {
-                Text(name)
-                    .font(.headline)
-                Text(kind)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-        } icon: {
-            Image(systemName: systemImage)
-        }
-        .accessibilityElement(children: .combine)
     }
 }
 
