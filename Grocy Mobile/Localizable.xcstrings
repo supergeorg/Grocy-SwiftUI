@@ -39555,6 +39555,16 @@
         }
       }
     },
+    "History" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf"
+          }
+        }
+      }
+    },
     "Home Assistant Ingress" : {
       "shouldTranslate" : false
     },
@@ -40682,6 +40692,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "隨附的食譜"
+          }
+        }
+      }
+    },
+    "Including sub products" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inklusive Unterprodukte"
           }
         }
       }
@@ -48632,6 +48652,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine offenen Aufgaben"
+          }
+        }
+      }
+    },
+    "No price history available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Preisverlauf verfügbar"
           }
         }
       }
@@ -64255,6 +64285,26 @@
         }
       }
     },
+    "Show less" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weniger anzeigen"
+          }
+        }
+      }
+    },
+    "Show more" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr anzeigen"
+          }
+        }
+      }
+    },
     "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)" : {
       "localizations" : {
         "cs" : {
@@ -65835,6 +65885,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開始日期"
+          }
+        }
+      }
+    },
+    "Statistics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistik"
           }
         }
       }
