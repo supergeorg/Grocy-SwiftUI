@@ -37,6 +37,8 @@ import SwiftUI
         @State private var paths: [PhonePlace: NavigationPath] = [:]
         @State private var showQuickScan: Bool = false
         @State private var searchText: String = ""
+        /// The search tab's own path, so Quick Scan shows only on the search itself, not on a result opened from it.
+        @State private var searchPath = NavigationPath()
 
         @Query private var systemConfigList: [SystemConfig]
         private var systemConfig: SystemConfig? { systemConfigList.first }
@@ -89,7 +91,7 @@ import SwiftUI
 
                 // Gets its own place in the tab bar and turns into the search field when selected (iOS 26).
                 Tab(value: Selection.search, role: .search) {
-                    NavigationStack {
+                    NavigationStack(path: $searchPath) {
                         GlobalSearchView(searchText: $searchText)
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
@@ -107,7 +109,8 @@ import SwiftUI
             .tabViewSearchActivation(.searchTabSelection)
             // Only on the search tab: scanning a barcode is another way of searching
             // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-            .tabViewBottomAccessory(isEnabled: selection == .search) {
+            // Not on a result opened from the search (e.g. a product's form), where scanning isn't searching anymore.
+            .tabViewBottomAccessory(isEnabled: selection == .search && searchPath.isEmpty) {
                 Button {
                     showQuickScan = true
                 } label: {

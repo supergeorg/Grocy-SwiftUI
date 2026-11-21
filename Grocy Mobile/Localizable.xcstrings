@@ -64305,6 +64305,9 @@
         }
       }
     },
+    "Show picture" : {
+
+    },
     "Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)" : {
       "localizations" : {
         "cs" : {
