@@ -480,6 +480,12 @@
             "value" : "%@ Preis"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precio de %@"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2809,6 +2815,24 @@
             }
           }
         },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld artículo está hecho"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld artículos están hechos"
+                }
+              }
+            }
+          }
+        },
         "fr-FR" : {
           "variations" : {
             "plural" : {
@@ -2862,6 +2886,24 @@
                 "stringUnit" : {
                   "state" : "new",
                   "value" : "%lld items are undone"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld artículo está pendiente"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld artículos están pendientes"
                 }
               }
             }
@@ -5016,7 +5058,14 @@
       }
     },
     "%lld ratings" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld valoraciones"
+          }
+        }
+      }
     },
     "%lld tasks are assigned to me" : {
       "localizations" : {
@@ -5051,6 +5100,24 @@
                 "stringUnit" : {
                   "state" : "new",
                   "value" : "%lld tasks are assigned to me"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Tengo %lld tarea asignada"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Tengo %lld tareas asignadas"
                 }
               }
             }
@@ -6973,6 +7040,12 @@
             "value" : "Ein Barcode wird benötigt"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es necesario un código de barras"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7892,6 +7965,12 @@
             "value" : "Eine Erinnerung hat kein Fälligkeitsdatum."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un recordatorio no tiene fecha de vencimiento."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8096,6 +8175,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Über diese App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de esta app"
           }
         },
         "fr-FR" : {
@@ -8874,6 +8959,12 @@
             "value" : "Barcode hinzufügen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir código de barras"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9601,6 +9692,12 @@
             "state" : "translated",
             "value" : "Bild von Kamera hinzufügen"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir foto desde la cámara"
+          }
         }
       }
     },
@@ -9616,6 +9713,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produktbild mit der Kamera aufnehmen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir foto del producto desde la cámara"
           }
         },
         "fr-FR" : {
@@ -10889,6 +10992,12 @@
             "value" : "Mengen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cantidades"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10959,6 +11068,12 @@
             "value" : "Eine App in nativen Design, welche eine komfortable Nutzung von Grocy zuhause und unterwegs ermöglicht."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una app con diseño nativo para usar Grocy cómodamente en casa y fuera de ella."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11021,6 +11136,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eine Entität muss ausgewählt werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es necesaria una entidad"
           }
         },
         "fr-FR" : {
@@ -11088,6 +11209,12 @@
             "value" : "Ein unbekannter Fehler ist aufgetreten."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11108,6 +11235,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "API-Fehler aufgetreten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha detectado un error de la API."
           }
         },
         "fr-FR" : {
@@ -11174,6 +11307,12 @@
             "value" : "API-Schlüssel für den gewünschten Nutzer aus dem API-Menü in der Weboberfläche. Falls noch keine existiert, erstelle einen neuen Schlüssel"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave API del usuario, que se muestra en la vista web «Gestionar claves API». Si no hay ninguna, tienes que crear una nueva."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11232,6 +11371,12 @@
             "value" : "App"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11252,6 +11397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App-Sprache"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma de la app"
           }
         },
         "fr-FR" : {
@@ -11324,6 +11475,12 @@
             "value" : "App-Log"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registro de la app"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11388,6 +11545,12 @@
             "value" : "App-Einstellungen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de la app"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11402,6 +11565,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aussehen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apariencia"
           }
         }
       }
@@ -11565,6 +11734,12 @@
             "value" : "Are you sure you want to consume all ingredients needed by this recipe \"%@\"? (Ingredients marked with \"only check if any amount is in stock\" will be ignored)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres consumir todos los ingredientes necesarios para la receta «%@»? (Los ingredientes marcados con «solo comprobar si hay alguna cantidad en existencias» se ignorarán)."
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11657,6 +11832,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete chore \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la tarea doméstica «%@»?"
           }
         },
         "fi" : {
@@ -11757,6 +11938,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete location \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la ubicación «%@»?"
           }
         },
         "fi" : {
@@ -11865,6 +12052,12 @@
             "value" : "Are you sure you want to delete product \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar el producto «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11965,6 +12158,12 @@
             "value" : "Are you sure you want to delete product group \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar el grupo de productos «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12057,6 +12256,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete quantity unit \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la unidad «%@»?"
           }
         },
         "fi" : {
@@ -12165,6 +12370,12 @@
             "value" : "Are you sure you want to delete recipe \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la receta «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12257,6 +12468,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete shopping list \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la lista de la compra «%@»?"
           }
         },
         "fi" : {
@@ -12359,6 +12576,12 @@
             "value" : "Are you sure you want to delete store \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la tienda «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12451,6 +12674,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete task \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la tarea «%@»?"
           }
         },
         "fi" : {
@@ -12553,6 +12782,12 @@
             "value" : "Are you sure you want to delete user \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar el usuario «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12647,6 +12882,12 @@
             "value" : "Are you sure you want to delete user field \"%@\"?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar el campo de usuario «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12727,6 +12968,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete userentity \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar la entidad de usuario «%@»?"
           }
         },
         "fi" : {
@@ -12815,6 +13062,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to empty shopping list \"%@\"?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres vaciar la lista de la compra «%@»?"
           }
         },
         "fi" : {
@@ -12917,6 +13170,12 @@
             "value" : "Are you sure you want to put all missing ingredients for recipe \"%@\" on the shopping list?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres añadir a la lista de la compra todos los ingredientes que faltan para la receta «%@»?"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13003,6 +13262,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aufsteigend"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascendente"
           }
         },
         "fr-FR" : {
@@ -15145,6 +15410,12 @@
             "value" : "Barcode-Einstellungen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de códigos de barras"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15165,6 +15436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Barcode Einstellungen (alt)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de códigos de barras (antiguo)"
           }
         },
         "fr-FR" : {
@@ -15377,6 +15654,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Based on the prices of the default consume rule (Opened first, then first due first, then first in first out) for in stock ingredients and on the last price for missing ones"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Según los precios de la regla de consumo predeterminada (primero lo abierto, luego lo que vence antes y luego lo primero que entró) para los ingredientes en existencias, y según el último precio para los que faltan"
           }
         },
         "fi" : {
@@ -15622,6 +15905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batterie-Verwaltung ist noch nicht implementiert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilas no implementadas"
           }
         },
         "fr-FR" : {
@@ -16908,6 +17197,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamera-Zugriff benötigt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se necesita acceso a la cámara"
           }
         },
         "fr-FR" : {
@@ -19406,6 +19701,12 @@
             "value" : "Client-Informationen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información del cliente"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19754,6 +20055,12 @@
             "value" : "Bestätigen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20008,6 +20315,12 @@
             "value" : "Verbidung mit Server fehlgeschlagen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido conectar con el servidor."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20254,6 +20567,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Consume %1$@ %2$@ %3$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir %1$@ %2$@ %3$@"
           }
         },
         "fr-FR" : {
@@ -20644,6 +20963,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produkt verbrauchen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consumir producto"
           }
         },
         "fr-FR" : {
@@ -21064,6 +21389,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trotzdem fortfahren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar de todos modos"
           }
         },
         "fr-FR" : {
@@ -21794,6 +22125,12 @@
             "value" : "API-Schlüssel erstellen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear clave API"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22046,6 +22383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inverse Mengeneinheits-Umrechnung erstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear conversión de unidades inversa"
           }
         },
         "fr-FR" : {
@@ -24658,6 +25001,12 @@
             "value" : "Benutzerdefinierte Header"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cabeceras personalizadas"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24856,6 +25205,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einstellungen für den Datenabruf"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de obtención de datos"
           }
         },
         "fr-FR" : {
@@ -25394,6 +25749,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Días"
           }
         },
         "fr-FR" : {
@@ -28080,6 +28441,12 @@
             "value" : "Produktbild entfernen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar foto del producto"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28518,6 +28885,12 @@
             "value" : "Demo-Server"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servidor de demostración"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28586,6 +28959,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Absteigend"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descendente"
           }
         },
         "fr-FR" : {
@@ -29006,6 +29385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Details"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles"
           }
         },
         "fr-FR" : {
@@ -29584,6 +29969,12 @@
             "value" : "Ausgewählte Aktion nach Zuweisen des Barcodes durchführen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer la acción seleccionada después de asignar un código de barras"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29636,6 +30027,12 @@
             "value" : "Möchtest du wirklich alle erledigten Einträge löschen?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres borrar todos los artículos hechos?"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29656,6 +30053,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Möchtest du wirklich diesen Barcode löschen?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar este código de barras?"
           }
         },
         "fr-FR" : {
@@ -29728,6 +30131,12 @@
             "value" : "Möchtest du wirklich diesen Eintrag löschen?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar este artículo?"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29798,6 +30207,12 @@
             "value" : "Möchtest du wirklich diese Aufgabenkategorie löschen?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Seguro que quieres eliminar esta categoría de tareas?"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29861,6 +30276,12 @@
             "state" : "translated",
             "value" : "Möchtest du wirklich diese Einkaufsliste nach Erinnerungen exportieren? Dies überschreibt mögliche Änderungen an dieser Liste."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres exportar esta lista de la compra a Recordatorios? Puede sobrescribir los cambios de la lista."
+          }
         }
       }
     },
@@ -29870,6 +30291,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erledigt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho"
           }
         },
         "fr-FR" : {
@@ -30748,6 +31175,12 @@
             "value" : "Fällig am %@"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vence el %@"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31368,6 +31801,12 @@
             "value" : "Bearbeiten"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31388,6 +31827,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Barcode bearbeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar código de barras"
           }
         },
         "fr-FR" : {
@@ -31642,6 +32087,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eintrag bearbeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar entrada"
           }
         },
         "fr-FR" : {
@@ -34989,6 +35440,12 @@
             "state" : "translated",
             "value" : "Aktivierte Tabs"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pestañas activadas"
+          }
         }
       }
     },
@@ -35800,6 +36257,12 @@
             "value" : "Existierendes Produktbild"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto del producto existente"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -36153,6 +36616,12 @@
             "state" : "translated",
             "value" : "Einkaufsliste nach Erinnerungen exportieren"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar lista de la compra a Recordatorios"
+          }
         }
       }
     },
@@ -36174,6 +36643,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "External barcode lookup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Búsqueda externa de códigos de barras"
           }
         },
         "fi" : {
@@ -36245,6 +36720,12 @@
             "state" : "translated",
             "value" : "Rezept extrahieren"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extraer receta"
+          }
         }
       }
     },
@@ -36254,6 +36735,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Extrahiere Rezept…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrayendo receta..."
           }
         }
       }
@@ -36451,6 +36938,12 @@
             "value" : "Kalendereintrag lesen fehlgeschlagen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido leer un elemento del calendario."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -36468,6 +36961,12 @@
             "value" : "Erinnerungen lesen fehlgeschlagen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han podido leer los recordatorios."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -36482,6 +36981,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrar"
           }
         },
         "fr-FR" : {
@@ -36702,6 +37207,12 @@
             "value" : "For ingredients that are only partially in stock, the in stock amount will be consumed."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De los ingredientes que solo están parcialmente en existencias, se consumirá la cantidad disponible."
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -36770,6 +37281,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bei Einkäufen wird hierauf basierend das Fälligkeitsdatum vorausgefüllt (-1 bedeutet, dass dieses Produkt niemals überfällig ist)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En las compras, se sumará este número de días a hoy para sugerir la fecha de consumo preferente (-1 significa que este producto nunca caduca)"
           }
         },
         "fr-FR" : {
@@ -37224,6 +37741,12 @@
             "value" : "grocy - ERP für deinen Kühlschrank"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grocy - ERP más allá de tu nevera"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37288,6 +37811,12 @@
             "value" : "Grocy für iOS/macOS"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grocy para iOS/macOS"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37350,6 +37879,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "grocy ist eine selbst gehostete Webanwendung zur Lebensmittel- und Haushaltsverwaltung."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grocy es una solución web autoalojada para gestionar la compra y la casa."
           }
         },
         "fr-FR" : {
@@ -37439,6 +37974,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grocy-Einstellungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de Grocy"
           }
         },
         "fr-FR" : {
@@ -37846,6 +38387,12 @@
             "value" : "Anleitung (Englisch)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guía (en inglés)"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38039,7 +38586,14 @@
       "shouldTranslate" : false
     },
     "https://example.com/recipe" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://example.com/receta"
+          }
+        }
+      }
     },
     "I want to thank Bernd Bestel for the development of Grocy. Without him, this app would be impossible." : {
       "localizations" : {
@@ -38053,6 +38607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ich möchte mich bei Bernd Bestel für die Entwicklung von Grocy bedanken. Ohne ihm wäre diese App nicht möglich."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quiero dar las gracias a Bernd Bestel por desarrollar Grocy. Sin él, esta app sería imposible."
           }
         },
         "fr-FR" : {
@@ -38119,6 +38679,12 @@
             "value" : "Wenn aktiviert, werden die Mindestbestände von untergeordneten Produkten aufsummiert, heißt das untergeordnete Produkt wird nie \"fehlen\", nur dieses"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si se activa, el mínimo de existencias de los subproductos se acumulará en este producto; es decir, el subproducto nunca estará «en falta», solo este producto"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38182,6 +38748,12 @@
             "state" : "translated",
             "value" : "Bild"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imagen"
+          }
         }
       }
     },
@@ -38191,6 +38763,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rezept importieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar receta"
           }
         }
       }
@@ -38939,6 +39517,12 @@
             "value" : "Inkompatibler Server"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servidor incompatible"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38959,6 +39543,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Information zum Grocy-Server"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información sobre el servidor de Grocy"
           }
         },
         "fr-FR" : {
@@ -39347,6 +39937,12 @@
             "state" : "translated",
             "value" : "Einfügen"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insertar"
+          }
         }
       }
     },
@@ -39356,6 +39952,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Link einfügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insertar enlace"
           }
         }
       }
@@ -39736,6 +40338,12 @@
             "value" : "iPad: Tab-Navigation"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPad: navegación por pestañas"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39750,6 +40358,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iPhone: Tab-Navigation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone: navegación por pestañas"
           }
         },
         "fr-FR" : {
@@ -39942,7 +40556,14 @@
       "shouldTranslate" : false
     },
     "Keywords" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras clave"
+          }
+        }
+      }
     },
     "Last done by" : {
       "localizations" : {
@@ -41056,6 +41677,12 @@
             "value" : "Alter Barcode Scanner"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escáner de códigos de barras antiguo"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -41076,6 +41703,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los geht's!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Empecemos!"
           }
         },
         "fr-FR" : {
@@ -41307,6 +41940,12 @@
             "state" : "translated",
             "value" : "Link Details"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles del enlace"
+          }
         }
       }
     },
@@ -41317,17 +41956,44 @@
             "state" : "translated",
             "value" : "Link-Text"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto del enlace"
+          }
         }
       }
     },
     "Load recipe" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar receta"
+          }
+        }
+      }
     },
     "Load Recipe" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar receta"
+          }
+        }
+      }
     },
     "Loading recipe…" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando receta…"
+          }
+        }
+      }
     },
     "Location" : {
       "localizations" : {
@@ -41709,6 +42375,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Als Benutzer %@ angemeldet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesión iniciada como %@"
           }
         },
         "fr-FR" : {
@@ -42143,6 +42815,12 @@
             "value" : "Langzeit-Token für Home Assistant"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token de larga duración de Home Assistant"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -42395,6 +43073,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Mark %1$@ %2$@ %3$@ as open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar %1$@ %2$@ %3$@ como abierto"
           }
         },
         "fr-FR" : {
@@ -43247,6 +43931,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stammdaten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos maestros"
           }
         },
         "fr-FR" : {
@@ -44879,6 +45569,12 @@
             "value" : "Ein nicht verwendeter Name ist erforderlich"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El nombre ya existe"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -44947,6 +45643,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name der Benutzerentität"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de la entidad de usuario"
           }
         },
         "fr-FR" : {
@@ -46217,6 +46919,12 @@
             "value" : "Keine Barcodes gefunden."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado códigos de barras."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46232,6 +46940,12 @@
             "state" : "translated",
             "value" : "Keine Hausarbeit angelegt. Bitte erstelle eine."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ninguna tarea doméstica. Crea una."
+          }
         }
       }
     },
@@ -46241,6 +46955,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Eintrag im Hausarbeitenjournal gefunden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado registros de tareas domésticas."
           }
         }
       }
@@ -46257,6 +46977,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Verbindung zum Server."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin conexión con el servidor."
           }
         },
         "fr-FR" : {
@@ -46317,6 +47043,12 @@
             "value" : "Keine Beschreibung"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin descripción"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46331,6 +47063,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Standort definiert. Bitte erstelle einen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ninguna ubicación. Crea una."
           }
         },
         "fr-FR" : {
@@ -46353,6 +47091,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Logeintrag gefunden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha encontrado ninguna entrada en el registro."
           }
         },
         "fr-FR" : {
@@ -46417,6 +47161,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Einträge vorhanden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado resultados"
           }
         },
         "fr-FR" : {
@@ -46489,6 +47239,12 @@
             "value" : "No price information is available for at least one ingredient"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay información de precio de al menos un ingrediente"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46559,6 +47315,12 @@
             "value" : "Keine Produktgruppe definiert. Bitte erstelle eine."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ningún grupo de productos. Crea uno."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46579,6 +47341,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Produktbild"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin foto del producto"
           }
         },
         "fr-FR" : {
@@ -46645,6 +47413,12 @@
             "value" : "Keine Produkte gefunden."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado productos."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46709,6 +47483,12 @@
             "value" : "Keine Mengeneinheiten gefunden."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado unidades."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46767,6 +47547,12 @@
             "value" : "Kein Geschäft definiert. Bitte erstelle eines."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ninguna tienda. Crea una."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46782,6 +47568,12 @@
             "state" : "translated",
             "value" : "Keine Aufgabenkategorie definiert. Bitte erstelle eine."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ninguna categoría de tareas. Crea una."
+          }
         }
       }
     },
@@ -46791,6 +47583,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Aufgabe erstellt. Bitte erstelle eine."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ninguna tarea. Crea una."
           }
         }
       }
@@ -46807,6 +47605,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Transaktionen aufgezeichnet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado movimientos."
           }
         },
         "fr-FR" : {
@@ -46873,6 +47677,12 @@
             "value" : "Keine Benutzerentitäten gefunden."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado entidades de usuario."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -46935,6 +47745,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Benutzer gefunden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han encontrado usuarios"
           }
         },
         "fr-FR" : {
@@ -47147,6 +47963,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nicht auf dieser Plattform verfügbar."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No disponible en esta plataforma."
           }
         },
         "fr-FR" : {
@@ -48805,6 +49627,12 @@
             "value" : "Nicht implementiert"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No implementado"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50231,6 +51059,12 @@
             "value" : "Öffnen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50289,6 +51123,12 @@
             "value" : "Öffne Einstellungen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Ajustes"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50315,6 +51155,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opened"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto"
           }
         },
         "fi" : {
@@ -50397,6 +51243,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Optionale Eigenschaften"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Propiedades opcionales"
           }
         },
         "fr-FR" : {
@@ -50656,6 +51508,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eigener Server"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servidor propio"
           }
         },
         "fr-FR" : {
@@ -51267,7 +52125,14 @@
       }
     },
     "Paste a recipe URL above and tap load" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega arriba la URL de una receta y pulsa cargar"
+          }
+        }
+      }
     },
     "Paste recipe URL" : {
       "localizations" : {
@@ -51275,6 +52140,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rezept-URL einfügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega la URL de la receta"
           }
         }
       }
@@ -51647,6 +52518,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inventur durchführen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer inventario"
           }
         },
         "fr-FR" : {
@@ -52276,6 +53153,12 @@
             "value" : "Bitte schaue im Log nach, um das Problem genauer zu bestimmen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa el registro para averiguar el problema."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -52332,6 +53215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bitte aktiviere den Kamera-Zugriff in den Einstellungen, um Barcodes zu scannen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activa el acceso a la cámara en Ajustes para escanear códigos de barras."
           }
         },
         "fr-FR" : {
@@ -52716,6 +53605,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vorschau"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa"
           }
         },
         "fr-FR" : {
@@ -53470,6 +54365,12 @@
             "value" : "Produkt für Barcode"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Producto de este código de barras"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -53894,6 +54795,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produkt ist nicht auf dem Server"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El producto no está en el servidor"
           }
         },
         "fr-FR" : {
@@ -54470,6 +55377,12 @@
             "value" : "Produktbild hinterlegt"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto del producto encontrada"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -54705,7 +55618,14 @@
       }
     },
     "Published: %@" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Publicado: %@"
+          }
+        }
+      }
     },
     "Purchase" : {
       "localizations" : {
@@ -54903,6 +55823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produkt einkaufen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar producto"
           }
         },
         "fr-FR" : {
@@ -55335,6 +56261,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "QR-Scan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escanear QR"
           }
         },
         "fr-FR" : {
@@ -56075,6 +57007,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Mengeneinheit Bestand kann nach dem ersten Einkauf nicht mehr geändert werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La unidad de existencias no se puede cambiar después de la primera compra"
           }
         },
         "fr-FR" : {
@@ -57156,7 +58094,14 @@
       }
     },
     "Recipe Import" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar receta"
+          }
+        }
+      }
     },
     "Recipe parsing" : {
       "localizations" : {
@@ -57165,11 +58110,24 @@
             "state" : "translated",
             "value" : "Rezept-Verarbeitung"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Análisis de recetas"
+          }
         }
       }
     },
     "Recipe URL" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de la receta"
+          }
+        }
+      }
     },
     "Recipes" : {
       "localizations" : {
@@ -57363,6 +58321,12 @@
             "value" : "Veröffentlichungsdatum"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de publicación"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57383,6 +58347,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aktualisierungsintervall"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo de recarga"
           }
         },
         "fr-FR" : {
@@ -57444,6 +58414,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App-Einführung wiederholen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a ver la introducción de la app"
           }
         },
         "fr-FR" : {
@@ -57652,6 +58628,12 @@
             "value" : "Cache löschen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaciar caché"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57710,6 +58692,12 @@
             "value" : "Details abfragen fehlgeschlagen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han podido obtener los detalles."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57736,6 +58724,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Round up quantity amounts to the nearest whole number"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redondear las cantidades al número entero más cercano"
           }
         },
         "fi" : {
@@ -58556,6 +59550,12 @@
             "value" : "Scheduled tracking time"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de registro programada"
+          }
+        },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -58804,6 +59804,12 @@
             "value" : "Wähle einen Server-Typ aus:"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un tipo de servidor:"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -58861,6 +59867,12 @@
             "state" : "translated",
             "value" : "Bild aus der Galerie auswählen"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir foto de la galería"
+          }
         }
       }
     },
@@ -58876,6 +59888,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produktbild aus Galerie auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir foto del producto de la galería"
           }
         },
         "fr-FR" : {
@@ -59143,6 +60161,12 @@
             "value" : "Server-Timeout-Intervall"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo de espera del servidor"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -59199,6 +60223,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Server-URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del servidor"
           }
         },
         "fr-FR" : {
@@ -59269,6 +60299,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Server-URL deiner Grocy-Instanz (bei Home Assistant Ingress über Rechtsklick auf REST API Browser in der Weboberfläche abrufbar)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del servidor de tu instancia de Grocy (si usas Home Assistant Ingress, la encontrarás haciendo clic derecho en «REST API Browser» en la interfaz web)"
           }
         },
         "fr-FR" : {
@@ -60012,6 +61048,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einkaufsliste ist leer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La lista de la compra está vacía."
           }
         },
         "fr-FR" : {
@@ -62028,6 +63070,12 @@
             "value" : "Sortieren"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenar"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -62084,6 +63132,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortier-Kategorie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenar categoría"
           }
         },
         "fr-FR" : {
@@ -62296,6 +63350,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortier-Reihenfolge"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orden"
           }
         },
         "fr-FR" : {
@@ -63065,6 +64125,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bestand"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inventario"
           }
         },
         "fr-FR" : {
@@ -63931,6 +64997,12 @@
             "value" : "Bestands-Aktionen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movimientos de inventario"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63945,6 +65017,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bestand ist leer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El inventario está vacío."
           }
         },
         "fr-FR" : {
@@ -65061,6 +66139,12 @@
             "value" : "Erfolgreich"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correcto"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -65081,6 +66165,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Es gibt schon eine solche Umwandlung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esa conversión ya existe"
           }
         },
         "fr-FR" : {
@@ -65128,7 +66218,14 @@
       }
     },
     "Suitable for" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apto para"
+          }
+        }
+      }
     },
     "Sunday" : {
       "localizations" : {
@@ -65322,6 +66419,12 @@
             "value" : "Unterstützte Server-Version"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión del servidor compatible"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -65348,6 +66451,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swap track next schedule / track now buttons"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercambiar los botones «registrar siguiente programada» y «registrar ahora»"
           }
         },
         "fi" : {
@@ -65958,6 +67067,12 @@
             "value" : "Die App hat keine Berechtigungen, Erinnerungen zu lesen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La app no tiene permiso para leer los recordatorios."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -65978,6 +67093,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Barcode ist ungültig oder wird schon verwendet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código de barras no es válido o ya está en uso."
           }
         },
         "fr-FR" : {
@@ -66042,6 +67163,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der erste Eintrag in dieser Liste würde von der Standardregel \"Geöffnete zuerst, dann zuerst fällige, dann First In - First Out\" ausgewählt werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La regla predeterminada elegiría el primer elemento de esta lista, que es «primero lo abierto, luego lo que vence antes y luego lo primero que entró»"
           }
         },
         "fr-FR" : {
@@ -66464,6 +67591,12 @@
             "value" : "Die ausgewählte Menge ist gleich der Bestandsmenge."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cantidad seleccionada es igual a la cantidad en existencias."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -66520,6 +67653,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Serverversion %@ wird aktuell nicht von der App unterstützt. Du kannst die App trotzdem verwenden, es können aber Probleme auftreten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La app todavía no es compatible con la versión %@ del servidor. Puedes usarla igualmente, pero puede haber problemas."
           }
         },
         "fr-FR" : {
@@ -67639,6 +68778,12 @@
             "value" : "Dieses Gerät erlaubt keinen Zugriff auf Erinnerungen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este dispositivo no permite acceder a los recordatorios."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -67985,6 +69130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dies ist eine Begleiter-App, das heißt du musst Zugriff zu einer laufenden Grocy-Instanz haben. Wenn du diese App nur kurz ausprobieren willst, kannst du einen der vom Grocy-Entwickler Bernd Bestel bereitgestellten Demo-Server verwenden. Nutze den Demo-Server jedoch nicht produktiv, da die Daten gelöscht werden könnten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta es una app complementaria y necesita acceso a una instancia de Grocy en funcionamiento (por ejemplo, en tu servidor). Si solo quieres probar la app, usa uno de los servidores de demostración del desarrollador de Grocy. No uses los servidores de demostración para tus datos personales: no se conservan."
           }
         },
         "fr-FR" : {
@@ -69025,6 +70176,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "This means %1$@ is the same as %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto significa que %1$@ equivale a %2$@"
           }
         },
         "fr-FR" : {
@@ -72563,6 +73720,12 @@
             "value" : "Dieses Produkt ist derzeit auf einem Einkaufszettel."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este producto está ahora en una lista de la compra."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -72785,6 +73948,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieser Token muss im Home Assistant Web-Interface erzeugt werden. Öffne dafür deine Home Assistant Profil-Seite, scrolle bis Langzeit-Zugriffs-Token und erstelle einen neuen Token. Benenne ihn und kopiere den resultierenden Token in die App oder erzeuge einen QR-Code und scanne diesen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este token se genera desde la interfaz web de Home Assistant. Para ello, abre tu página de perfil de Home Assistant, baja hasta «Tokens de acceso de larga duración» y crea uno. Ponle un nombre y copia el token en la app, o crea un código QR y escanéalo (iOS)."
           }
         },
         "fr-FR" : {
@@ -75443,6 +76612,12 @@
             "value" : "Übersetzer"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traductores"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75659,6 +76834,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erneut versuchen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
           }
         },
         "fr-FR" : {
@@ -77731,6 +78912,12 @@
             "value" : "Ein unbekannter Fehler ist aufgetreten."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido."
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -77789,6 +78976,12 @@
             "value" : "Nicht unterstützte Server-Version"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión del servidor no compatible"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -77803,6 +78996,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bild hochladen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subir foto"
           }
         },
         "fr-FR" : {
@@ -77825,6 +79024,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Produktbild hochladen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subir foto del producto"
           }
         },
         "fr-FR" : {
@@ -78084,6 +79289,12 @@
             "value" : "Demo-Server verwenden"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar servidor de demostración"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -78152,6 +79363,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benutze Home Assistant Ingress"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar Home Assistant Ingress"
           }
         },
         "fr-FR" : {
@@ -78360,6 +79577,12 @@
             "value" : "Eigenen Server verwenden"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar tu propio servidor"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -78560,6 +79783,12 @@
             "value" : "Benutzerentitäten"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entidades de usuario"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -78580,6 +79809,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benutzerverwaltung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestión de usuarios"
           }
         },
         "fr-FR" : {
@@ -79192,6 +80427,12 @@
             "value" : "Ein nicht verwendeter Benutzername ist erforderlich"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El nombre de usuario ya existe"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -79260,6 +80501,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gültiger API-Schlüssel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave API válida"
           }
         },
         "fr-FR" : {
@@ -79684,7 +80931,14 @@
       "shouldTranslate" : false
     },
     "View original recipe" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver receta original"
+          }
+        }
+      }
     },
     "Wednesday" : {
       "localizations" : {
@@ -80066,6 +81320,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Willkommen bei Grocy Mobile!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a Grocy Mobile"
           }
         },
         "fr-FR" : {
@@ -81362,6 +82622,12 @@
             "value" : "Beim Umlagen von Produkten von/zu einem Gefrier-Standort wird das Mindesthaltbarkeitsdatum der Produkte automatisch entsprechend den Produkteinstellungen angepasst"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al mover un producto desde o hacia una ubicación de congelador, su fecha de consumo preferente se ajusta automáticamente según los ajustes del producto"
+          }
+        },
         "fr-FR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -81602,6 +82868,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn dieses Produkt als geöffnet markiert wurde, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt (ein Wert von 0 deaktiviert dies)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando este producto se marca como abierto, la fecha de consumo preferente pasa a ser hoy + este número de días (un valor de 0 lo desactiva)"
           }
         },
         "fr-FR" : {
