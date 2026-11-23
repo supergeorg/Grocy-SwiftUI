@@ -133,7 +133,7 @@ struct DueView: View {
         .refreshable {
             await updateData()
         }
-        .safeAreaBar(edge: .top) {
+        .floatingTopBar {
             if kinds.count > 1 {
                 DueFilterActionsView(filteredKind: $filteredKind, kinds: kinds, counts: counts)
                     .padding(.vertical, Spacing.small)

@@ -400,7 +400,7 @@ struct MealPlanView: View {
             contentWidth = width
         }
         // The period switcher floats above the days (the navigation layer).
-        .safeAreaBar(edge: .top) {
+        .floatingTopBar {
             periodBar(summary: periodSummary(lookup: lookup, entriesByDay: entriesByDay))
                 .padding(.vertical, Spacing.small)
         }

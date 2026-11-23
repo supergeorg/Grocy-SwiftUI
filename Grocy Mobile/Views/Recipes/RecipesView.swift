@@ -211,7 +211,7 @@ struct RecipesView: View {
                 await updateData()
             })
             // The capsules float in a bar above the recipes (the navigation layer), as in the other overviews
-            .safeAreaBar(edge: .top) {
+            .floatingTopBar {
                 RecipeFilterActionsView(
                     filteredStatus: $filteredStatus,
                     enoughInStockCount: enoughInStockCount,

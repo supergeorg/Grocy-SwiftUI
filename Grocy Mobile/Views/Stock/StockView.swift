@@ -539,7 +539,7 @@ struct StockView: View {
         .refreshable {
             await updateData()
         }
-        .safeAreaBar(edge: .top) {
+        .floatingTopBar {
             filterCapsules
                 .padding(.vertical, Spacing.small)
         }
