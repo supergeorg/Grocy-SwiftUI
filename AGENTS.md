@@ -4,13 +4,13 @@ Guidance for AI coding agents working on **Grocy Mobile**. It covers the project
 
 ## Project Overview
 
-Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-hosted app for managing groceries and the household. The app can't run without a server. It talks to a Grocy instance (version 4.4 to 4.7.1, see `GrocyAPP.supportedVersions`) over Grocy's REST API, or to one of the public demo servers. It can also reach Grocy through a Home Assistant Ingress.
+Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-hosted app for managing groceries and the household. The app can't run without a server. It talks to a Grocy instance (only version 4.7.1, see `GrocyAPP.supportedVersions`) over Grocy's REST API, or to one of the public demo servers. It can also reach Grocy through a Home Assistant Ingress.
 
-- **Platforms:** iOS / iPadOS 26.6+ and macOS 26.6+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.6`). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
+- **Platforms:** iOS / iPadOS 26.5+ and macOS 26.5+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.5`; kept at the newest SDK of the CI runner's Xcode). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
 - **Design language:** Liquid Glass (`.glassEffect(...)`, system toolbars, `ContentUnavailableView`). There's no fallback for older OS versions, and none should be added.
 - **Language / toolchain:** Swift 6, latest Xcode. The app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, and `SWIFT_STRICT_MEMORY_SAFETY = YES`.
 - **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
-- **Version:** `MARKETING_VERSION` in the project (currently 3.5.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
+- **Version:** `MARKETING_VERSION` in the project (currently 4.0.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
 - **Dependencies (SPM):** `InfomaniakRichHTMLEditor` (`swift-rich-html-editor`, up to next major from 3.3.1), used for editing recipe preparation HTML. Prefer Apple frameworks over adding new packages.
 
 ## Repository Layout
@@ -19,6 +19,8 @@ Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-
 Grocy Mobile/                 App target (file-system synchronized group, so new files are added automatically)
   Grocy_MobileApp.swift       @main entry: ModelContainers, GrocyViewModel, deep links, scenes
   Localizable.xcstrings       String Catalog (source language: en, ~30 locales)
+  InfoPlist.xcstrings         Permission prompts (NS…UsageDescription), translated like Localizable
+  AppShortcuts.xcstrings      Siri phrases of `GrocyAppShortcuts` (placeholders `${applicationName}`, `${product}`)
   Model/                      API client, view model, SwiftData @Model types, sync
     GrocyAPI.swift            `GrocyAPI` protocol + `GrocyApi` URLSession implementation, entity enums
     GrocyViewModel.swift      Central @Observable state & actions (injected via environment)
@@ -172,6 +174,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 ### Localization
 
 - UI strings are English `LocalizedStringKey` literals, extracted automatically into `Grocy Mobile/Localizable.xcstrings`. Reusable components take `LocalizedStringKey` parameters.
+- Permission prompts live in `InfoPlist.xcstrings` (the English text is also the `INFOPLIST_KEY_…` build setting, keep both equal), and Siri phrases in `AppShortcuts.xcstrings`. Translate new entries there, at least into German.
 - Prefer reusing existing keys ("Save", "Delete", "Cancel", "Name", "Required", …) over near-duplicates. German is the most complete translation. Contributors translate with the workflow in `Guides/Translation/TRANSLATION.md`.
 
 ### File headers & style
@@ -198,6 +201,8 @@ To format all changed files at once: `git diff --name-only --diff-filter=d HEAD 
 
 ## Building & Testing
 
+- **CI:** `.github/workflows/ci.yml` runs on every pull request on macOS: the `Grocy MobileTests` unit tests on an iPhone simulator (integration suites skip themselves) and a swift-format check, which fails if `swift-format format` would change a file. Keep it green.
+
 - Build and run through Xcode, using the `BuildProject` / `RunProject` tools when available. The scheme is `Grocy Mobile`. For local testing without your own server, use **Demo mode**, which connects to `https://demo.grocy.info`.
 - Use `XcodeRefreshCodeIssuesInFile` for quick type-checking after edits, and `RenderPreview` to check views against the preview data.
 - Unit tests in `Grocy MobileTests/Model/` use XCTest and check that the preview fixtures decode into SwiftData. **New tests should use Swift Testing** (`import Testing`, `@Test`, `#expect`). UI tests use XCUIAutomation.
@@ -206,7 +211,7 @@ To format all changed files at once: `git diff --name-only --diff-filter=d HEAD 
 
 ### Integration tests against a real Grocy server
 
-Integration tests live in `Grocy MobileTests/Integration/` and run against a throwaway Grocy server, built in Docker from a local clone of [grocy/grocy](https://github.com/grocy/grocy) (default `../grocy`, override with `GROCY_SOURCE_DIR`). Details are in `TestServer/README.md`.
+Integration tests live in `Grocy MobileTests/Integration/` and run against a throwaway Grocy server, built in Docker from a local clone of [grocy/grocy](https://github.com/grocy/grocy) (default `../grocy`, override with `GROCY_SOURCE_DIR`), pinned to Grocy 4.7.1 (`GROCY_VERSION`; a missing clone is cloned at that tag). Details are in `TestServer/README.md`.
 
 - **Run:** `TestServer/run-integration-tests.sh [destination]` starts the server, runs the `Grocy MobileTests` target with the server configured, and stops the server again (`KEEP_SERVER=1` keeps it running). Docker Desktop must be running.
 - **Server control:** `TestServer/grocy-test-server.sh start|stop|restart|status|logs`. It listens on `http://localhost:9290` with API key `grocy-mobile-integration-tests`. Every start creates an **empty database** (production mode, auth on); the only seeded data is what Grocy's migrations create (e.g. the location "Fridge").

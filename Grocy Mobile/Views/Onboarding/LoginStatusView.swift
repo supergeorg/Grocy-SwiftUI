@@ -20,11 +20,29 @@ struct LoginStatusView: View {
     }
 
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
+    @AppStorage(ServerVersionWarning.storageKey) private var serverVersionWarningShown: String = ""
 
     @State var loginState: LoginState = .loading
     @State private var isLoading: Bool = true
     @State var errorMessage: String? = nil
     @State var unsupportedVersion: String? = nil
+
+    /// Explains why the server isn't supported: an outdated server should be updated, a newer one hasn't been tested yet.
+    private var unsupportedVersionMessage: LocalizedStringKey {
+        let serverVersion = grocyVM.systemInfo?.grocyVersion.version ?? "?"
+        let supportedVersions = GrocyAPP.supportedVersions.formatted(.list(type: .or))
+        switch GrocyAPP.compatibility(of: grocyVM.systemInfo?.grocyVersion.version) {
+        case .outdated:
+            return
+                "This server runs Grocy \(serverVersion). Grocy Mobile requires Grocy \(supportedVersions). Please update your server. You can continue anyway, but many features won't work."
+        case .newer:
+            return
+                "This server runs Grocy \(serverVersion), which hasn't been tested with Grocy Mobile yet. The app supports Grocy \(supportedVersions). You can continue anyway, but some features might not work."
+        case .supported, .unknown:
+            return
+                "The server version \(serverVersion) is currently unsupported by the app. You can use it anyways, but there can be problems."
+        }
+    }
 
     private func tryLogin() async {
         isLoading = true
@@ -142,13 +160,16 @@ struct LoginStatusView: View {
                     Label("Incompatible server", systemImage: MySymbols.warning)
                 },
                 description: {
-                    Text(
-                        "The server version \(grocyVM.systemInfo?.grocyVersion.version ?? "?") is currently unsupported by the app. You can use it anyways, but there can be problems."
-                    )
+                    Text(unsupportedVersionMessage)
                 },
                 actions: {
                     Button(
                         action: {
+                            // The user saw the warning here, so don't repeat it when the app opens.
+                            serverVersionWarningShown = ServerVersionWarning.shownKey(
+                                appVersion: WhatsNew.appVersion,
+                                serverVersion: grocyVM.systemInfo?.grocyVersion.version ?? ""
+                            )
                             Task {
                                 if isDemoMode {
                                     grocyVM.setDemoModus()

@@ -11,7 +11,7 @@ This app is a companion for [Grocy](https://grocy.info/). It doesn't run on it's
 The goal of this app is to provide a native interface for Grocy on Apple devices (iOS, iPadOS, macOS). Therefore is this app developed for being compatible with iOS 26 and its Liquid Glass design. It needs the newest XCode (26) as well as at least iOS(26) or macOS (Tahoe 26) to compile and run.
 It would be possible to support older iOS versions, but would mean testing two design languages for consistency.
 
-To connect to your own server, Grocy version 4.5 is required, for developing purposes a demo server is available.
+To connect to your own server, Grocy version 4.7.1 is required, for developing purposes a demo server is available.
 
 What works or doesn't?
 - [x] Master Data: enter, edit or delete

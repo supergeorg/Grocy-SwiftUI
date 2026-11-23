@@ -10821,7 +10821,14 @@
       }
     },
     "Add to Shopping List" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Einkaufszettel hinzufügen"
+          }
+        }
+      }
     },
     "Added %@ %@ to the shopping list." : {
       "localizations" : {
@@ -21603,7 +21610,14 @@
       }
     },
     "Consume Product" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt verbrauchen"
+          }
+        }
+      }
     },
     "Consume product on chore execution" : {
       "localizations" : {
@@ -52850,7 +52864,14 @@
 
     },
     "Open Product" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produkt öffnen"
+          }
+        }
+      }
     },
     "Open products" : {
       "localizations" : {
@@ -66438,7 +66459,14 @@
       }
     },
     "Stock Amount" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandsmenge"
+          }
+        }
+      }
     },
     "Stock entries" : {
       "localizations" : {
@@ -70043,6 +70071,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "当店应用程序不支持服务器版本 %@ 。 你可以继续使用，但可能会出现问题。"
+          }
+        }
+      }
+    },
+    "This server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. You can continue anyway, but some features might not work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Du kannst trotzdem fortfahren, aber einige Funktionen funktionieren möglicherweise nicht."
+          }
+        }
+      }
+    },
+    "This server runs Grocy %@. Grocy Mobile requires Grocy %@. Please update your server. You can continue anyway, but many features won't work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Server verwendet Grocy %1$@. Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server. Du kannst trotzdem fortfahren, aber viele Funktionen werden nicht funktionieren."
           }
         }
       }
@@ -86624,6 +86672,26 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Your server runs Grocy %@. This version of Grocy Mobile requires Grocy %@. Please update your server, otherwise many features won't work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@. Diese Version von Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server, sonst werden viele Funktionen nicht funktionieren."
+          }
+        }
+      }
+    },
+    "Your server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. Some features might not work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Einige Funktionen funktionieren möglicherweise nicht."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

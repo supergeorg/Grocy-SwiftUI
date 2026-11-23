@@ -19,6 +19,7 @@ struct ContentView: View {
     var body: some View {
         navigation
             .whatsNewSheet()
+            .serverVersionWarning()
     }
 
     @ViewBuilder

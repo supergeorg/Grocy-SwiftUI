@@ -8,8 +8,38 @@
 import Foundation
 
 struct GrocyAPP {
-    //    The app plans to support the newest Grocy version as well as the version included in Home Assistant
-    static let supportedVersions: [String] = ["4.4.0", "4.5.0", "4.6.0", "4.7.0", "4.7.1"]
+    /// The Grocy versions the app supports: only the newest Grocy release, which is also the version in the Home Assistant add-on.
+    /// Keep the test server's `GROCY_VERSION` (`TestServer/grocy-test-server.sh`) equal to the newest entry.
+    static let supportedVersions: [String] = ["4.7.1"]
+
+    /// How a server's Grocy version relates to `supportedVersions`.
+    enum ServerCompatibility: Equatable {
+        /// The version is in `supportedVersions`.
+        case supported
+        /// The version is older than every supported version, so the server should be updated.
+        case outdated
+        /// The version is newer than every supported version and hasn't been tested with the app yet.
+        case newer
+        /// The version couldn't be read or lies between supported versions.
+        case unknown
+    }
+
+    /// Compares a Grocy version string like `4.7.1` with `supportedVersions`.
+    static func compatibility(of version: String?) -> ServerCompatibility {
+        guard let version, !version.isEmpty, version.first?.isNumber == true else {
+            return .unknown
+        }
+        if supportedVersions.contains(version) {
+            return .supported
+        }
+        if supportedVersions.allSatisfy({ version.compare($0, options: .numeric) == .orderedAscending }) {
+            return .outdated
+        }
+        if supportedVersions.allSatisfy({ version.compare($0, options: .numeric) == .orderedDescending }) {
+            return .newer
+        }
+        return .unknown
+    }
 
     enum DemoServers: String, CaseIterable, Identifiable {
         case noLanguage = "https://demo.grocy.info"

@@ -683,11 +683,11 @@ class GrocyViewModel {
             )
             let roundUp = try modelContext.fetch(FetchDescriptor<GrocyUserSettings>()).first?.shoppingListRoundUp ?? false
 
-            let lists = descriptions.map { description in
+            let lists = descriptions.map { (description: ShoppingListDescription) -> WidgetShoppingListSummary.List in
                 let listItems =
                     items
                     .filter { $0.shoppingListID == description.id }
-                    .map { item in
+                    .map { (item: ShoppingListItem) -> WidgetShoppingListSummary.Item in
                         let product = item.productID.flatMap { products[$0] }
                         let name = product?.name ?? item.note
                         let displayAmount = item.displayAmount(roundUp: roundUp)
@@ -697,7 +697,9 @@ class GrocyViewModel {
                         }
                         return WidgetShoppingListSummary.Item(id: item.id, name: name, amount: amount)
                     }
-                    .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+                    .sorted { (first: WidgetShoppingListSummary.Item, second: WidgetShoppingListSummary.Item) in
+                        first.name.localizedStandardCompare(second.name) == .orderedAscending
+                    }
                 return WidgetShoppingListSummary.List(id: description.id, name: description.name, items: listItems)
             }
 
