@@ -47,6 +47,12 @@ def main():
         subprocess.run(["xcodebuild", "-downloadPlatform", "iOS"], check=True, stdout=sys.stderr)
         runtimes = ios_runtimes(required)
     if not runtimes:
+        # The default download can be an older runtime that is already installed. Ask for the target's version.
+        target = ".".join(map(str, required))
+        print(f"Downloading iOS {target} explicitly.", file=sys.stderr)
+        subprocess.run(["xcodebuild", "-downloadPlatform", "iOS", "-buildVersion", target], check=False, stdout=sys.stderr)
+        runtimes = ios_runtimes(required)
+    if not runtimes:
         sys.exit("error: no iOS runtime meets the deployment target, even after downloading.")
 
     found = find_iphone(runtimes)
