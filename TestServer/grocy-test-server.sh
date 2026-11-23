@@ -6,6 +6,9 @@
 #
 # Environment:
 #   GROCY_SOURCE_DIR    Grocy clone to build from   (default: ../grocy next to this repo)
+#   GROCY_VERSION       Grocy release to test       (default: 4.7.1, the version in GrocyAPP.supportedVersions)
+#                       A missing clone is cloned at tag v$GROCY_VERSION; an existing clone must be at that version.
+#   GROCY_ALLOW_OTHER_VERSION=1  Build an existing clone even if it is at another version
 #   GROCY_TEST_PORT     Host port                    (default: 9290)
 #   GROCY_TEST_API_KEY  API key seeded into the DB   (default: grocy-mobile-integration-tests)
 #
@@ -16,6 +19,8 @@ HARNESS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$HARNESS_DIR")"
 
 GROCY_SOURCE_DIR="${GROCY_SOURCE_DIR:-$(dirname "$REPO_DIR")/grocy}"
+# Keep equal to the newest entry of GrocyAPP.supportedVersions (Grocy Mobile/Model/GrocySupportedServers.swift).
+GROCY_VERSION="${GROCY_VERSION:-4.7.1}"
 GROCY_TEST_PORT="${GROCY_TEST_PORT:-9290}"
 GROCY_TEST_API_KEY="${GROCY_TEST_API_KEY:-grocy-mobile-integration-tests}"
 
@@ -30,12 +35,34 @@ require_docker() {
     fi
 }
 
-start() {
-    require_docker
+# Makes sure $GROCY_SOURCE_DIR holds Grocy $GROCY_VERSION: clones the release tag if there is no clone yet,
+# and refuses to build a clone at another version (unless GROCY_ALLOW_OTHER_VERSION=1).
+prepare_source() {
+    if [[ ! -e "$GROCY_SOURCE_DIR" ]]; then
+        echo "Cloning Grocy v$GROCY_VERSION into $GROCY_SOURCE_DIR"
+        git clone --quiet --depth 1 --branch "v$GROCY_VERSION" https://github.com/grocy/grocy.git "$GROCY_SOURCE_DIR"
+    fi
     if [[ ! -f "$GROCY_SOURCE_DIR/version.json" ]]; then
         echo "error: no Grocy clone at $GROCY_SOURCE_DIR (set GROCY_SOURCE_DIR)." >&2
         exit 1
     fi
+    local source_version
+    source_version=$(sed -n 's/.*"Version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$GROCY_SOURCE_DIR/version.json")
+    if [[ "$source_version" != "$GROCY_VERSION" ]]; then
+        if [[ "${GROCY_ALLOW_OTHER_VERSION:-0}" == "1" ]]; then
+            echo "warning: the Grocy clone is at $source_version, not $GROCY_VERSION." >&2
+        else
+            echo "error: the Grocy clone at $GROCY_SOURCE_DIR is at version ${source_version:-unknown}, but the tests need $GROCY_VERSION." >&2
+            echo "       Run: git -C \"$GROCY_SOURCE_DIR\" fetch --tags && git -C \"$GROCY_SOURCE_DIR\" checkout v$GROCY_VERSION" >&2
+            echo "       (or set GROCY_ALLOW_OTHER_VERSION=1 to test another version)." >&2
+            exit 1
+        fi
+    fi
+}
+
+start() {
+    require_docker
+    prepare_source
 
     echo "Building $IMAGE from $GROCY_SOURCE_DIR ($(git -C "$GROCY_SOURCE_DIR" log -1 --format='%h %s' 2>/dev/null || echo 'unknown revision'))"
     docker build --quiet \

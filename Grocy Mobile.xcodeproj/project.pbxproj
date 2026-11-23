@@ -432,7 +432,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy.Grocy-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -478,7 +478,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy.Grocy-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -523,7 +523,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy.Grocy-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -565,8 +565,8 @@
 				INFOPLIST_FILE = "Grocy-Mobile-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app uses the camera to scan barcodes.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = ASDFG;
-				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists between Grocy Mobile and Reminders.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Grocy Mobile connects to your Grocy server or Home Assistant in your local network.";
+				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists, tasks and chores between Grocy Mobile and Reminders.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -581,7 +581,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -631,8 +631,8 @@
 				INFOPLIST_FILE = "Grocy-Mobile-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app uses the camera to scan barcodes.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = ASDFG;
-				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists between Grocy Mobile and Reminders.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Grocy Mobile connects to your Grocy server or Home Assistant in your local network.";
+				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists, tasks and chores between Grocy Mobile and Reminders.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -647,7 +647,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -696,8 +696,8 @@
 				INFOPLIST_FILE = "Grocy-Mobile-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app uses the camera to scan barcodes.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = ASDFG;
-				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists between Grocy Mobile and Reminders.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Grocy Mobile connects to your Grocy server or Home Assistant in your local network.";
+				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sync shopping lists, tasks and chores between Grocy Mobile and Reminders.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -712,7 +712,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

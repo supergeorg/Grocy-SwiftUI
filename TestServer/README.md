@@ -5,7 +5,7 @@ Integration tests in `Grocy MobileTests/Integration/` run against a real Grocy s
 ## Requirements
 
 - Docker Desktop (running)
-- A Grocy clone, by default at `../grocy` next to this repository (override with `GROCY_SOURCE_DIR`). Check out a version listed in `GrocyAPP.supportedVersions`.
+- A Grocy clone, by default at `../grocy` next to this repository (override with `GROCY_SOURCE_DIR`). The scripts are pinned to Grocy **4.7.1** (`GROCY_VERSION`, equal to `GrocyAPP.supportedVersions`): if there is no clone yet, `grocy-test-server.sh start` clones the `v4.7.1` tag, and a clone at another version is refused (set `GROCY_ALLOW_OTHER_VERSION=1` to test it anyway).
 
 ## Run the integration tests
 
@@ -45,6 +45,7 @@ TestServer/grocy-test-server.sh start|stop|restart|status|logs
 | Variable             | Default                          |
 |----------------------|----------------------------------|
 | `GROCY_SOURCE_DIR`   | `../grocy`                       |
+| `GROCY_VERSION`      | `4.7.1`                          |
 | `GROCY_TEST_PORT`    | `9290` (bound to 127.0.0.1 only) |
 | `GROCY_TEST_API_KEY` | `grocy-mobile-integration-tests` |
 

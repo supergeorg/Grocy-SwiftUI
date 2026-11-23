@@ -1,0 +1,136 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Add ${product} to the shopping list in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setze ${product} in ${applicationName} auf den Einkaufszettel"
+          }
+        }
+      }
+    },
+    "Add to the shopping list in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge in ${applicationName} etwas zum Einkaufszettel hinzu"
+          }
+        }
+      }
+    },
+    "Check ${product} stock in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe den Bestand von ${product} in ${applicationName}"
+          }
+        }
+      }
+    },
+    "Check stock in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe den Bestand in ${applicationName}"
+          }
+        }
+      }
+    },
+    "Consume a product in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbrauche ein Produkt in ${applicationName}"
+          }
+        }
+      }
+    },
+    "Consume ${product} in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbrauche ${product} in ${applicationName}"
+          }
+        }
+      }
+    },
+    "How much ${product} do I have in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie viel ${product} habe ich in ${applicationName}"
+          }
+        }
+      }
+    },
+    "How much ${product} is left in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie viel ${product} ist in ${applicationName} übrig"
+          }
+        }
+      }
+    },
+    "I opened ${product} in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich habe ${product} in ${applicationName} geöffnet"
+          }
+        }
+      }
+    },
+    "I used up ${product} in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich habe ${product} in ${applicationName} aufgebraucht"
+          }
+        }
+      }
+    },
+    "Open a product in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne ein Produkt in ${applicationName}"
+          }
+        }
+      }
+    },
+    "Open ${product} in ${applicationName}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne ${product} in ${applicationName}"
+          }
+        }
+      }
+    },
+    "Put ${product} on my ${applicationName} shopping list" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setze ${product} auf meinen ${applicationName}-Einkaufszettel"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
