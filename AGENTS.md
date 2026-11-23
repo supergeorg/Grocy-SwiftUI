@@ -6,7 +6,7 @@ Guidance for AI coding agents working on **Grocy Mobile**. It covers the project
 
 Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-hosted app for managing groceries and the household. The app can't run without a server. It talks to a Grocy instance (only version 4.7.1, see `GrocyAPP.supportedVersions`) over Grocy's REST API, or to one of the public demo servers. It can also reach Grocy through a Home Assistant Ingress.
 
-- **Platforms:** iOS / iPadOS 26.6+ and macOS 26.6+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.6`). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
+- **Platforms:** iOS / iPadOS 26.5+ and macOS 26.5+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.5`; kept at the newest SDK of the CI runner's Xcode). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
 - **Design language:** Liquid Glass (`.glassEffect(...)`, system toolbars, `ContentUnavailableView`). There's no fallback for older OS versions, and none should be added.
 - **Language / toolchain:** Swift 6, latest Xcode. The app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, and `SWIFT_STRICT_MEMORY_SAFETY = YES`.
 - **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
