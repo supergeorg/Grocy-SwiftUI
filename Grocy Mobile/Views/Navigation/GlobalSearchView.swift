@@ -191,9 +191,7 @@ struct GlobalSearchView: View {
         .navigationTitle("Search")
         .stockInteractionSheet(router: stockInteractionRouter)
         .recipeActions(router: recipeActionsRouter)
-        .navigationDestination(for: StockElement.self) { stockElement in
-            StockEntriesView(stockElement: stockElement)
-        }
+        .stockEntriesDestination()
         .navigationDestination(for: MDProduct.self) { product in
             MDProductFormView(existingProduct: product)
         }

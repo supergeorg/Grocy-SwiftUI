@@ -71,7 +71,7 @@ struct StockTableRow: View {
 
     var body: some View {
         NavigationLink(
-            value: stockElement,
+            value: StockEntriesDestination(productID: stockElement.productID),
             label: {
                 content
             }

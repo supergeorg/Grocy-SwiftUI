@@ -663,12 +663,7 @@ struct StockView: View {
             }
         })
         .stockInteractionSheet(router: stockInteractionRouter)
-        .navigationDestination(
-            for: StockElement.self,
-            destination: { stockElement in
-                StockEntriesView(stockElement: stockElement)
-            }
-        )
+        .stockEntriesDestination()
         #if os(iOS)
             .sheet(isPresented: $showingFilterSheet) {
                 NavigationStack {

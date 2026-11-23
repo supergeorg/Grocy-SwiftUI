@@ -10,8 +10,6 @@ import SwiftUI
 
 /// A due item's own page, pushed from the agenda.
 enum DueDestination: Hashable {
-    /// A product below its minimum stock amount that isn't in stock at all.
-    case productNotInStock(productID: Int)
     case chore(choreID: Int)
     case task(GrocyTask)
     case battery(batteryID: Int)
@@ -158,16 +156,9 @@ struct DueView: View {
                 }
             }
         }
-        .navigationDestination(for: StockElement.self) { stockElement in
-            StockEntriesView(stockElement: stockElement)
-        }
+        .stockEntriesDestination()
         .navigationDestination(for: DueDestination.self) { destination in
             switch destination {
-            case .productNotInStock(let productID):
-                if let product = mdProducts.first(where: { $0.id == productID }) {
-                    // A stand-in with amount 0, as in the stock overview's "below min. stock" filter.
-                    StockEntriesView(stockElement: StockElement(notInStock: product))
-                }
             case .chore(let choreID):
                 ChoreDetailsView(choreID: choreID)
                     .environment(choreInteractionRouter)
@@ -286,7 +277,7 @@ struct DueView: View {
 
     /// The same quick actions as in the stock overview: consume or open the quick consume amount, or consume all.
     private func productRow(for item: DueItem, stockElement: StockElement) -> some View {
-        NavigationLink(value: stockElement) {
+        NavigationLink(value: StockEntriesDestination(productID: stockElement.productID)) {
             DueItemRowView(item: item, quantityUnit: quantityUnit(for: stockElement.product))
         }
         .listRowBackground(item.urgency.backgroundColor)
@@ -311,14 +302,9 @@ struct DueView: View {
     @ViewBuilder
     private func belowMinStockRow(for item: DueItem, product: MDProduct, inStock: StockElement?) -> some View {
         Group {
-            if let inStock {
-                NavigationLink(value: inStock) {
-                    DueItemRowView(item: item, quantityUnit: quantityUnit(for: product))
-                }
-            } else {
-                NavigationLink(value: DueDestination.productNotInStock(productID: product.id)) {
-                    DueItemRowView(item: item, quantityUnit: quantityUnit(for: product))
-                }
+            // Opens the product's current stock element, or a stand-in if it isn't in stock.
+            NavigationLink(value: StockEntriesDestination(productID: product.id)) {
+                DueItemRowView(item: item, quantityUnit: quantityUnit(for: product))
             }
         }
         .listRowBackground(item.urgency.backgroundColor)
