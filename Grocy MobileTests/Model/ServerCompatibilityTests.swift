@@ -36,3 +36,32 @@ struct ServerCompatibilityTests {
         #expect(GrocyAPP.compatibility(of: version) == .unknown)
     }
 }
+
+@MainActor
+@Suite("Server version warning")
+struct ServerVersionWarningTests {
+    @Test func warnsAboutAnOutdatedServerAfterAnUpdate() {
+        #expect(ServerVersionWarning.shouldWarn(serverVersion: "4.6.0", appVersion: "4.0.0", lastShownKey: ""))
+        #expect(ServerVersionWarning.shouldWarn(serverVersion: "4.6.0", appVersion: "4.0.1", lastShownKey: "4.0.0|4.6.0"))
+    }
+
+    @Test func warnsAboutANewerServer() {
+        #expect(ServerVersionWarning.shouldWarn(serverVersion: "4.8.0", appVersion: "4.0.0", lastShownKey: ""))
+    }
+
+    @Test func warnsAgainWhenTheServerChanges() {
+        #expect(ServerVersionWarning.shouldWarn(serverVersion: "4.5.0", appVersion: "4.0.0", lastShownKey: "4.0.0|4.6.0"))
+    }
+
+    @Test func warnsOncePerAppAndServerVersion() {
+        let key = ServerVersionWarning.shownKey(appVersion: "4.0.0", serverVersion: "4.6.0")
+        #expect(!ServerVersionWarning.shouldWarn(serverVersion: "4.6.0", appVersion: "4.0.0", lastShownKey: key))
+    }
+
+    @Test func neverWarnsAboutASupportedOrUnknownServer() {
+        #expect(!ServerVersionWarning.shouldWarn(serverVersion: "4.7.1", appVersion: "4.0.0", lastShownKey: ""))
+        #expect(!ServerVersionWarning.shouldWarn(serverVersion: nil, appVersion: "4.0.0", lastShownKey: ""))
+        #expect(!ServerVersionWarning.shouldWarn(serverVersion: "?", appVersion: "4.0.0", lastShownKey: ""))
+        #expect(!ServerVersionWarning.shouldWarn(serverVersion: "4.6.0", appVersion: "", lastShownKey: ""))
+    }
+}

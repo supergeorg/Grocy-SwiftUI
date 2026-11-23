@@ -86672,6 +86672,26 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Your server runs Grocy %@. This version of Grocy Mobile requires Grocy %@. Please update your server, otherwise many features won't work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@. Diese Version von Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server, sonst werden viele Funktionen nicht funktionieren."
+          }
+        }
+      }
+    },
+    "Your server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. Some features might not work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Einige Funktionen funktionieren möglicherweise nicht."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

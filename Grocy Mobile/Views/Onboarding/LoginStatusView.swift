@@ -20,6 +20,7 @@ struct LoginStatusView: View {
     }
 
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
+    @AppStorage(ServerVersionWarning.storageKey) private var serverVersionWarningShown: String = ""
 
     @State var loginState: LoginState = .loading
     @State private var isLoading: Bool = true
@@ -164,6 +165,11 @@ struct LoginStatusView: View {
                 actions: {
                     Button(
                         action: {
+                            // The user saw the warning here, so don't repeat it when the app opens.
+                            serverVersionWarningShown = ServerVersionWarning.shownKey(
+                                appVersion: WhatsNew.appVersion,
+                                serverVersion: grocyVM.systemInfo?.grocyVersion.version ?? ""
+                            )
                             Task {
                                 if isDemoMode {
                                     grocyVM.setDemoModus()
