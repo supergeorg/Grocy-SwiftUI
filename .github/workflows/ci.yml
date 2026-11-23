@@ -42,7 +42,7 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5
       - name: Select the newest Xcode
@@ -51,27 +51,12 @@ jobs:
           xcode-version: latest-stable
       - name: Pick an iPhone simulator
         id: simulator
-        # The app needs iOS 26.6, so pick an iPhone on the newest iOS runtime (the first one listed can be older).
+        # Picks an iPhone on an iOS runtime that meets the deployment target, and downloads that runtime
+        # if the runner image doesn't have it yet.
+        timeout-minutes: 30
         run: |
           xcodebuild -version
-          SIMULATOR_ID=$(xcrun simctl list devices available --json | python3 -c '
-          import json, re, sys
-          devices = json.load(sys.stdin)["devices"]
-          def version(runtime):
-              return tuple(int(n) for n in re.findall(r"\d+", runtime.rsplit("iOS", 1)[-1]))
-          runtimes = sorted((r for r in devices if ".SimRuntime.iOS-" in r), key=version, reverse=True)
-          for runtime in runtimes:
-              for device in devices[runtime]:
-                  if device["name"].startswith("iPhone"):
-                      print(runtime, file=sys.stderr)
-                      print(device["udid"])
-                      sys.exit(0)
-          ')
-          if [[ -z "$SIMULATOR_ID" ]]; then
-            echo "::error::No iPhone simulator available."
-            xcrun simctl list devices available
-            exit 1
-          fi
+          SIMULATOR_ID=$(python3 .github/scripts/pick-simulator.py)
           echo "id=$SIMULATOR_ID" >> "$GITHUB_OUTPUT"
       - name: Run the unit tests
         run: |
