@@ -411,10 +411,45 @@ struct StockView: View {
         return "\(summedValue.formatted(.number.precision(.fractionLength(0...2)))) \(grocyVM.getCurrencySymbol())"
     }
 
+    /// Whether the groups are keyed by the ID of an object (product group, parent product, location), whose name the header shows.
+    private var isGroupedByObject: Bool {
+        stockGrouping == .productGroup || stockGrouping == .parentProduct || stockGrouping == .defaultLocation
+    }
+
+    /// The names of the objects the groups are keyed by, or nil when the stock isn't grouped by an object.
+    private var groupNamesByID: [Int: String]? {
+        switch stockGrouping {
+        case .productGroup:
+            return Dictionary(mdProductGroups.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first })
+        case .parentProduct:
+            return Dictionary(mdProducts.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first })
+        case .defaultLocation:
+            return Dictionary(mdLocations.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first })
+        default:
+            return nil
+        }
+    }
+
     var stockListContent: some View {
+        let groupNamesByID = self.groupNamesByID
+        let groupName: (AnyHashable) -> String? = { key in
+            guard let id = key as? Int else { return nil }
+            return groupNamesByID?[id]
+        }
         let sortedGroups = Array(groupedStock).sorted { a, b in
             if let dateA = a.key as? Date, let dateB = b.key as? Date { return dateA < dateB }
             if let numA = a.key as? Double, let numB = b.key as? Double { return numA < numB }
+            if groupNamesByID != nil {
+                // Named groups by name, the ungrouped elements last
+                switch (groupName(a.key), groupName(b.key)) {
+                case (let nameA?, let nameB?):
+                    return nameA.localizedStandardCompare(nameB) == .orderedAscending
+                case (.some, nil):
+                    return true
+                default:
+                    return false
+                }
+            }
             return String(describing: a.key) < String(describing: b.key)
         }
 
@@ -444,9 +479,13 @@ struct StockView: View {
                         return formatter
                     }()
 
-                    if stockGrouping == .productGroup, (groupKey as? String)?.isEmpty ?? false {
-                        Text("Ungrouped")
-                            .italic()
+                    if isGroupedByObject {
+                        if let name = groupName(groupKey) {
+                            Text(name).bold()
+                        } else {
+                            Text("Ungrouped")
+                                .italic()
+                        }
                     } else if stockGrouping == .none {
                         EmptyView()
                     } else if stockGrouping == .minStockAmount, let numValue = groupKey as? Double {
