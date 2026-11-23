@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Select the newest Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -44,16 +44,29 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Select the newest Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
       - name: Pick an iPhone simulator
         id: simulator
+        # The app needs iOS 26.6, so pick an iPhone on the newest iOS runtime (the first one listed can be older).
         run: |
           xcodebuild -version
-          SIMULATOR_ID=$(xcrun simctl list devices available | grep -m1 -E '^\s+iPhone' | grep -oE '[0-9A-F-]{36}')
+          SIMULATOR_ID=$(xcrun simctl list devices available --json | python3 -c '
+          import json, re, sys
+          devices = json.load(sys.stdin)["devices"]
+          def version(runtime):
+              return tuple(int(n) for n in re.findall(r"\d+", runtime.rsplit("iOS", 1)[-1]))
+          runtimes = sorted((r for r in devices if ".SimRuntime.iOS-" in r), key=version, reverse=True)
+          for runtime in runtimes:
+              for device in devices[runtime]:
+                  if device["name"].startswith("iPhone"):
+                      print(runtime, file=sys.stderr)
+                      print(device["udid"])
+                      sys.exit(0)
+          ')
           if [[ -z "$SIMULATOR_ID" ]]; then
             echo "::error::No iPhone simulator available."
             xcrun simctl list devices available
