@@ -467,8 +467,6 @@ class GrocyViewModel {
                         case .task_categories:
                             self.mdTaskCategories = try await grocyApi.getObject(object: object)
                             try swiftDataSync.syncPersistentCollection(self.mdTaskCategories)
-                        default:
-                            GrocyLogger.error("Object not implemented")
                         }
 
                         self.timeStampsObjects[object] = timeStamp
