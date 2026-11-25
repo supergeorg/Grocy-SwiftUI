@@ -106,6 +106,8 @@ struct ShoppingListView: View {
     }
 
     @State private var selectedShoppingListID: Int = -1
+    /// The selected list's notes as plain text. Grocy's web page edits them as rich text, so they're only shown here.
+    @State private var notesText: String = ""
 
     @State private var firstAppear: Bool = true
 
@@ -459,6 +461,17 @@ struct ShoppingListView: View {
                     )
                 #endif
             }
+            if !notesText.isEmpty {
+                Section("Notes") {
+                    Text(notesText)
+                        .textSelection(.enabled)
+                }
+            }
+        }
+        .task(id: selectedShoppingList?.notes) {
+            let notes = selectedShoppingList?.notes ?? ""
+            let text = notes.contains("<") ? String(await notes.htmlToAttributedStringAsync().characters) : notes
+            notesText = text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         .refreshable {
             await updateData()
