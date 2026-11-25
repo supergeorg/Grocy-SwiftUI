@@ -8,7 +8,7 @@
 import Charts
 import SwiftUI
 
-/// The purchase prices of a product: a chart per store, then every purchase, newest first.
+/// The purchase prices of a product: a chart per store with the trend of all purchases, then every purchase, newest first.
 /// Shown as a section of the product overview; prices are per stock quantity unit.
 struct StockProductPriceHistoryView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
@@ -21,23 +21,53 @@ struct StockProductPriceHistoryView: View {
         priceHistory.sorted { $0.date > $1.date }
     }
 
+    /// The trendline's series, named like Grocy's hidden trendline dataset so it can't match a store's name.
+    private static let trendSeries = "_TrendlineDataset"
+
+    /// The dotted trendline over all stores, like on Grocy's product card.
+    private var trend: PriceTrend? {
+        PriceTrend(points: priceHistory.map { ($0.date, $0.price) })
+    }
+
     private func storeName(_ entry: ProductPriceHistory) -> String {
         entry.storeName ?? String(localized: "No store")
     }
 
     var body: some View {
         Section {
-            Chart(priceHistory) { entry in
-                LineMark(
-                    x: .value("Date", entry.date, unit: .day),
-                    y: .value("Price", entry.price)
-                )
-                .foregroundStyle(by: .value("Store", storeName(entry)))
-                PointMark(
-                    x: .value("Date", entry.date, unit: .day),
-                    y: .value("Price", entry.price)
-                )
-                .foregroundStyle(by: .value("Store", storeName(entry)))
+            Chart {
+                ForEach(priceHistory) { entry in
+                    LineMark(
+                        x: .value("Date", entry.date, unit: .day),
+                        y: .value("Price", entry.price),
+                        series: .value("Store", storeName(entry))
+                    )
+                    .foregroundStyle(by: .value("Store", storeName(entry)))
+                    PointMark(
+                        x: .value("Date", entry.date, unit: .day),
+                        y: .value("Price", entry.price)
+                    )
+                    .foregroundStyle(by: .value("Store", storeName(entry)))
+                }
+                if let trend {
+                    // Its own series with a fixed style, so it stays out of the store legend. VoiceOver reads the purchases below.
+                    LineMark(
+                        x: .value("Date", trend.startDate, unit: .day),
+                        y: .value("Price", trend.startPrice),
+                        series: .value("Store", Self.trendSeries)
+                    )
+                    .foregroundStyle(Color.secondary)
+                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 4]))
+                    .accessibilityHidden(true)
+                    LineMark(
+                        x: .value("Date", trend.endDate, unit: .day),
+                        y: .value("Price", trend.endPrice),
+                        series: .value("Store", Self.trendSeries)
+                    )
+                    .foregroundStyle(Color.secondary)
+                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 4]))
+                    .accessibilityHidden(true)
+                }
             }
             .chartYAxis {
                 AxisMarks { value in
