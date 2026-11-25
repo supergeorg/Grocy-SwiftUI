@@ -12,7 +12,6 @@ struct UserManagementView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
     @Query var users: GrocyUsers
-    @Query var systemConfigList: [SystemConfig]
 
     @State private var searchString: String = ""
 
@@ -20,7 +19,7 @@ struct UserManagementView: View {
 
     @State private var showAddUser: Bool = false
 
-    private let additionalDataToUpdate: [AdditionalEntities] = [.users, .system_config]
+    private let additionalDataToUpdate: [AdditionalEntities] = [.users, .current_user]
 
     private func updateData() async {
         await grocyVM.requestData(additionalObjects: additionalDataToUpdate)
@@ -113,7 +112,7 @@ struct UserManagementView: View {
                 ContentUnavailableView.search
             }
             ForEach(filteredUsers, id: \.id) { user in
-                UserRowView(user: user, isCurrentUser: (systemConfigList.first?.userUsername == user.username))
+                UserRowView(user: user, isCurrentUser: (grocyVM.currentUser?.id == user.id))
             }
         }
         .navigationTitle("User management")
