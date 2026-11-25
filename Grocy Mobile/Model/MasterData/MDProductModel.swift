@@ -46,9 +46,18 @@ class MDProduct: Codable, Equatable, Identifiable {
     var defaultConsumeLocationID: Int?
     var moveOnOpen: Bool
     var autoReprintStockLabel: Bool
-    /// "Default purchase price type" (Grocy 4.4). The default lets SwiftData add the column to an existing store.
-    var defaultPurchasePriceType: PurchasePriceType = PurchasePriceType.unspecified
+    /// The raw value of ``defaultPurchasePriceType``.
+    ///
+    /// Stored as an `Int`: SwiftData doesn't apply the default of an enum property when it adds the column to an existing
+    /// store, so the existing products read `nil` and the app crashes. A plain `Int` gets its default.
+    var defaultPurchasePriceTypeRawValue: Int = PurchasePriceType.unspecified.rawValue
     var rowCreatedTimestamp: Date
+
+    /// "Default purchase price type" (Grocy 4.4).
+    var defaultPurchasePriceType: PurchasePriceType {
+        get { PurchasePriceType(rawValue: defaultPurchasePriceTypeRawValue) ?? .unspecified }
+        set { defaultPurchasePriceTypeRawValue = newValue.rawValue }
+    }
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -127,8 +136,8 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.moveOnOpen = try container.decodeFlexibleBool(forKey: .moveOnOpen)
             self.quIDConsume = try container.decodeFlexibleInt(forKey: .quIDConsume)
             self.autoReprintStockLabel = try container.decodeFlexibleBool(forKey: .autoReprintStockLabel)
-            self.defaultPurchasePriceType =
-                PurchasePriceType(rawValue: try container.decodeFlexibleIntIfPresent(forKey: .defaultPurchasePriceType) ?? 1) ?? .unspecified
+            self.defaultPurchasePriceTypeRawValue =
+                (PurchasePriceType(rawValue: try container.decodeFlexibleIntIfPresent(forKey: .defaultPurchasePriceType) ?? 1) ?? .unspecified).rawValue
             self.quIDPrice = try container.decodeFlexibleInt(forKey: .quIDPrice)
             self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
@@ -250,7 +259,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         self.moveOnOpen = moveOnOpen
         self.quIDConsume = quIDConsume
         self.autoReprintStockLabel = autoReprintStockLabel
-        self.defaultPurchasePriceType = defaultPurchasePriceType
+        self.defaultPurchasePriceTypeRawValue = defaultPurchasePriceType.rawValue
         self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
@@ -272,7 +281,7 @@ class MDProduct: Codable, Equatable, Identifiable {
             && lhs.noOwnStock == rhs.noOwnStock && lhs.disableOpen == rhs.disableOpen && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID
             && lhs.moveOnOpen == rhs.moveOnOpen
             && lhs.quIDConsume == rhs.quIDConsume
-            && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.defaultPurchasePriceType == rhs.defaultPurchasePriceType
+            && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.defaultPurchasePriceTypeRawValue == rhs.defaultPurchasePriceTypeRawValue
             && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
