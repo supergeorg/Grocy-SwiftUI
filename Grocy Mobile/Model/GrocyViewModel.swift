@@ -225,6 +225,8 @@ class GrocyViewModel {
         // The links to Reminders belong to the shopping lists of this server.
         ReminderStore.shared.unlinkAll()
         isLoggedIn = false
+        // The watch shows "not signed in" and drops the shopping lists and tasks.
+        self.updateWatch()
     }
 
     func cancelAllURLSessionTasks() {
@@ -709,9 +711,17 @@ class GrocyViewModel {
             WidgetSharedStore.save(WidgetShoppingListSummary(lists: lists, updated: Date()), forKey: WidgetSharedStore.shoppingListKey)
             WidgetSharedStore.saveLocalization(localizationKey)
             WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.shoppingListKind)
+            self.updateWatch()
         } catch {
             GrocyLogger.error("Updating the shopping list widget failed. \(error)")
         }
+    }
+
+    /// Sends the shopping lists and tasks the widgets show to the Watch app.
+    private func updateWatch() {
+        #if os(iOS)
+            WatchSync.shared.sendSnapshot()
+        #endif
     }
 
     /// Writes the chores with their next due date to the App Group and reloads the chores widget.
@@ -753,6 +763,7 @@ class GrocyViewModel {
             WidgetSharedStore.save(WidgetDueSummary(items: items, dueSoonDays: dueSoonDays, updated: Date()), forKey: WidgetSharedStore.tasksKey)
             WidgetSharedStore.saveLocalization(localizationKey)
             WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.tasksKind)
+            self.updateWatch()
         } catch {
             GrocyLogger.error("Updating the tasks widget failed. \(error)")
         }
