@@ -11,6 +11,7 @@
 		789BAF392EE444FB00C82475 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1D2EE444AC00C82475 /* WidgetKit.framework */; };
 		789BAF3A2EE444FB00C82475 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1F2EE444AC00C82475 /* SwiftUI.framework */; };
 		789BAF472EE444FB00C82475 /* Grocy WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 789BAF382EE444FB00C82475 /* Grocy WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		78D0E37630B674C600FF487D /* Grocy Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,27 @@
 			remoteGlobalIDString = 78B01C1E2DFF826D0080C814;
 			remoteInfo = "Grocy Mobile";
 		};
+		78D0E36530B674C600FF487D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78CB748E255E9EF600319108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78D0E35730B674C500FF487D;
+			remoteInfo = "Grocy Watch Watch App";
+		};
+		78D0E36F30B674C600FF487D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78CB748E255E9EF600319108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78D0E35730B674C500FF487D;
+			remoteInfo = "Grocy Watch Watch App";
+		};
+		78D0E37430B674C600FF487D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78CB748E255E9EF600319108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78D0E35730B674C500FF487D;
+			remoteInfo = "Grocy Watch Watch App";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +69,15 @@
 			);
 			name = "Embed Foundation Extensions";
 		};
+		78D0E37730B674C600FF487D /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolder = Product;
+			files = (
+				78D0E37630B674C600FF487D /* Grocy Watch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +87,9 @@
 		78B01C1F2DFF826D0080C814 /* Grocy Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78B01C2D2DFF826F0080C814 /* Grocy MobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Grocy MobileTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78B01C372DFF826F0080C814 /* Grocy MobileUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Grocy MobileUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grocy Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78D0E36430B674C600FF487D /* Grocy Watch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Grocy Watch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78D0E36E30B674C600FF487D /* Grocy Watch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Grocy Watch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -110,6 +144,21 @@
 			path = "Grocy MobileUITests";
 			sourceTree = "<group>";
 		};
+		78D0E35930B674C500FF487D /* Grocy Watch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Grocy Watch Watch App";
+			sourceTree = "<group>";
+		};
+		78D0E36730B674C600FF487D /* Grocy Watch Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Grocy Watch Watch AppTests";
+			sourceTree = "<group>";
+		};
+		78D0E37130B674C600FF487D /* Grocy Watch Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Grocy Watch Watch AppUITests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +185,21 @@
 			files = (
 			);
 		};
+		78D0E35530B674C500FF487D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		78D0E36130B674C600FF487D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		78D0E36B30B674C600FF487D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -155,6 +219,9 @@
 				78B01C302DFF826F0080C814 /* Grocy MobileTests */,
 				78B01C3A2DFF826F0080C814 /* Grocy MobileUITests */,
 				789BAF3B2EE444FB00C82475 /* Grocy Widget */,
+				78D0E35930B674C500FF487D /* Grocy Watch Watch App */,
+				78D0E36730B674C600FF487D /* Grocy Watch Watch AppTests */,
+				78D0E37130B674C600FF487D /* Grocy Watch Watch AppUITests */,
 				78CB749B255E9EF800319108 /* Products */,
 				78B868D22590B19B005A0CAF /* Frameworks */,
 			);
@@ -167,6 +234,9 @@
 				78B01C2D2DFF826F0080C814 /* Grocy MobileTests.xctest */,
 				78B01C372DFF826F0080C814 /* Grocy MobileUITests.xctest */,
 				789BAF382EE444FB00C82475 /* Grocy WidgetExtension.appex */,
+				78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */,
+				78D0E36430B674C600FF487D /* Grocy Watch Watch AppTests.xctest */,
+				78D0E36E30B674C600FF487D /* Grocy Watch Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,11 +270,13 @@
 				78B01C1C2DFF826D0080C814 /* Frameworks */,
 				78B01C1D2DFF826D0080C814 /* Resources */,
 				789BAF2E2EE444AC00C82475 /* Embed Foundation Extensions */,
+				78D0E37730B674C600FF487D /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				789BAF462EE444FB00C82475 /* PBXTargetDependency */,
+				78D0E37530B674C600FF487D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				789BE5692E00C31A002FF935 /* Grocy Mobile */,
@@ -259,6 +331,66 @@
 			productReference = 78B01C372DFF826F0080C814 /* Grocy MobileUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		78D0E35730B674C500FF487D /* Grocy Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78D0E38130B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch App" */;
+			buildPhases = (
+				78D0E35430B674C500FF487D /* Sources */,
+				78D0E35530B674C500FF487D /* Frameworks */,
+				78D0E35630B674C500FF487D /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				78D0E35930B674C500FF487D /* Grocy Watch Watch App */,
+			);
+			name = "Grocy Watch Watch App";
+			productName = "Grocy Watch Watch App";
+			productReference = 78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78D0E36330B674C600FF487D /* Grocy Watch Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78D0E38230B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch AppTests" */;
+			buildPhases = (
+				78D0E36030B674C600FF487D /* Sources */,
+				78D0E36130B674C600FF487D /* Frameworks */,
+				78D0E36230B674C600FF487D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78D0E36630B674C600FF487D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				78D0E36730B674C600FF487D /* Grocy Watch Watch AppTests */,
+			);
+			name = "Grocy Watch Watch AppTests";
+			productName = "Grocy Watch Watch AppTests";
+			productReference = 78D0E36430B674C600FF487D /* Grocy Watch Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		78D0E36D30B674C600FF487D /* Grocy Watch Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78D0E38330B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch AppUITests" */;
+			buildPhases = (
+				78D0E36A30B674C600FF487D /* Sources */,
+				78D0E36B30B674C600FF487D /* Frameworks */,
+				78D0E36C30B674C600FF487D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78D0E37030B674C600FF487D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				78D0E37130B674C600FF487D /* Grocy Watch Watch AppUITests */,
+			);
+			name = "Grocy Watch Watch AppUITests";
+			productName = "Grocy Watch Watch AppUITests";
+			productReference = 78D0E36E30B674C600FF487D /* Grocy Watch Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -266,7 +398,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 2610;
+				LastSwiftUpdateCheck = 2720;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					789BAF372EE444FB00C82475 = {
@@ -282,6 +414,17 @@
 					78B01C362DFF826F0080C814 = {
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = 78B01C1E2DFF826D0080C814;
+					};
+					78D0E35730B674C500FF487D = {
+						CreatedOnToolsVersion = 27.2;
+					};
+					78D0E36330B674C600FF487D = {
+						CreatedOnToolsVersion = 27.2;
+						TestTargetID = 78D0E35730B674C500FF487D;
+					};
+					78D0E36D30B674C600FF487D = {
+						CreatedOnToolsVersion = 27.2;
+						TestTargetID = 78D0E35730B674C500FF487D;
 					};
 				};
 			};
@@ -335,6 +478,9 @@
 				78B01C2C2DFF826F0080C814 /* Grocy MobileTests */,
 				78B01C362DFF826F0080C814 /* Grocy MobileUITests */,
 				789BAF372EE444FB00C82475 /* Grocy WidgetExtension */,
+				78D0E35730B674C500FF487D /* Grocy Watch Watch App */,
+				78D0E36330B674C600FF487D /* Grocy Watch Watch AppTests */,
+				78D0E36D30B674C600FF487D /* Grocy Watch Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -356,6 +502,21 @@
 			);
 		};
 		78B01C352DFF826F0080C814 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		78D0E35630B674C500FF487D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		78D0E36230B674C600FF487D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		78D0E36C30B674C600FF487D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -383,6 +544,21 @@
 			files = (
 			);
 		};
+		78D0E35430B674C500FF487D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		78D0E36030B674C600FF487D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		78D0E36A30B674C600FF487D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -400,6 +576,21 @@
 			isa = PBXTargetDependency;
 			target = 78B01C1E2DFF826D0080C814 /* Grocy Mobile */;
 			targetProxy = 78B01C382DFF826F0080C814 /* PBXContainerItemProxy */;
+		};
+		78D0E36630B674C600FF487D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78D0E35730B674C500FF487D /* Grocy Watch Watch App */;
+			targetProxy = 78D0E36530B674C600FF487D /* PBXContainerItemProxy */;
+		};
+		78D0E37030B674C600FF487D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78D0E35730B674C500FF487D /* Grocy Watch Watch App */;
+			targetProxy = 78D0E36F30B674C600FF487D /* PBXContainerItemProxy */;
+		};
+		78D0E37530B674C600FF487D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78D0E35730B674C500FF487D /* Grocy Watch Watch App */;
+			targetProxy = 78D0E37430B674C600FF487D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1054,6 +1245,264 @@
 			};
 			name = Release;
 		};
+		78D0E37830B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Grocy Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = georgappdev.Grocy;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		78D0E37930B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Grocy Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = georgappdev.Grocy;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Test;
+		};
+		78D0E37A30B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Grocy Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = georgappdev.Grocy;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = georgappdev.Grocy.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		78D0E37B30B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Grocy Watch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Grocy Watch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		78D0E37C30B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Grocy Watch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Grocy Watch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Test;
+		};
+		78D0E37D30B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Grocy Watch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Grocy Watch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		78D0E37E30B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Grocy Watch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		78D0E37F30B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Grocy Watch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Test;
+		};
+		78D0E38030B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F87Z29RSW;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "georgappdev.Grocy-Watch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Grocy Watch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 		78D7A05925ED07E400132ACC /* Test configuration for PBXProject "Grocy Mobile" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1184,6 +1633,33 @@
 				78CB74C2255E9EF800319108 /* Debug configuration for PBXProject "Grocy Mobile" */,
 				78D7A05925ED07E400132ACC /* Test configuration for PBXProject "Grocy Mobile" */,
 				78CB74C3255E9EF800319108 /* Release configuration for PBXProject "Grocy Mobile" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		78D0E38130B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78D0E37830B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch App" */,
+				78D0E37930B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch App" */,
+				78D0E37A30B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch App" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		78D0E38230B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78D0E37B30B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */,
+				78D0E37C30B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */,
+				78D0E37D30B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch AppTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		78D0E38330B674C600FF487D /* Build configuration list for PBXNativeTarget "Grocy Watch Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78D0E37E30B674C600FF487D /* Debug configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */,
+				78D0E37F30B674C600FF487D /* Test configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */,
+				78D0E38030B674C600FF487D /* Release configuration for PBXNativeTarget "Grocy Watch Watch AppUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
