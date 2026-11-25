@@ -1149,4 +1149,9 @@ class GrocyViewModel {
     func copyRecipe(recipeID: Int) async throws {
         try await grocyApi.recipeCopy(id: recipeID)
     }
+
+    /// Copies a product on the server and returns the copy's ID.
+    func copyProduct(productID: Int) async throws -> Int {
+        try await grocyApi.copyProduct(id: productID).createdObjectID
+    }
 }

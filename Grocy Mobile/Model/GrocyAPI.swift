@@ -112,6 +112,7 @@ protocol GrocyAPI {
     func getStockProductInfo<T: Codable>(stockModeGet: StockProductGet, productID: Int, queries: [String]?) async throws -> T
     func putStockEntry(entryID: Int, content: Data) async throws -> StockJournal
     func postStock<T: Codable>(id: Int, content: Data, stockModePost: StockProductPost) async throws -> T
+    func copyProduct(id: Int) async throws -> SuccessfulCreationMessage
     func getBookingWithID(id: Int) async throws -> StockJournalEntry
     func undoBookingWithID(id: Int) async throws
     func getPictureURL(groupName: String, fileName: String) async throws -> String?
@@ -545,6 +546,7 @@ extension GrocyApi {
         case stockProductWithIDInventory = "/stock/products/{productId}/inventory"
         case stockProductWithIDOpen = "/stock/products/{productId}/open"
         case stockProductMergeWithIDs = "/stock/products/{productIdToKeep}/merge/{productIdToRemove}"
+        case stockProductWithIDCopy = "/stock/products/{productId}/copy"
         case stockLocationsWithIdEntries = "/stock/locations/{locationId}/entries"
         case stockShoppingListAddMissing = "/stock/shoppinglist/add-missing-products"
         case stockShoppingListAddOverdue = "/stock/shoppinglist/add-overdue-products"
@@ -747,6 +749,11 @@ extension GrocyApi {
         case .transfer:
             return try await call(.stockProductWithIDTransfer, method: .POST, id: String(id), content: content)
         }
+    }
+
+    /// Copies a product with its own unit conversions (Grocy 4.7.1). The copy is named "Copy of …" in the server's language.
+    func copyProduct(id: Int) async throws -> SuccessfulCreationMessage {
+        return try await call(.stockProductWithIDCopy, method: .POST, id: String(id))
     }
 
     func getBookingWithID(id: Int) async throws -> StockJournalEntry {
