@@ -64,18 +64,13 @@ struct InventoryProductView: View {
         product?.name ?? ""
     }
 
-    private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        if let quIDStock = product?.quIDStock {
-            return mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
-        } else {
-            return []
-        }
-    }
-    private var quConversion: MDQuantityUnitConversion? {
-        return quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID })
-    }
+    /// The amount in the product's stock unit, which is what Grocy books. Conversions chain and work both ways.
     private var factoredAmount: Double {
-        return productInventory.newAmount * (quConversion?.factor ?? 1)
+        guard let product else { return productInventory.newAmount }
+        return QuantityUnitConversionResolver(product: product, conversions: mdQuantityUnitConversions).stockAmount(
+            productInventory.newAmount,
+            in: quantityUnitID
+        )
     }
 
     private let priceFormatter = NumberFormatter()
