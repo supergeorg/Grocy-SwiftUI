@@ -43,7 +43,7 @@ class ChoreLogEntry: Codable {
             self.undoneTimestamp = getDateFromString(try container.decodeIfPresent(String.self, forKey: .undoneTimestamp))
             self.skipped = try container.decodeFlexibleBool(forKey: .skipped)
             self.scheduledExecutionTime = getDateFromString(try container.decodeIfPresent(String.self, forKey: .scheduledExecutionTime))
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

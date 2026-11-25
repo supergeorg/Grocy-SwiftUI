@@ -123,7 +123,11 @@ nonisolated func getDateFromString(_ dateString: String?) -> Date? {
     formatter.locale = Locale(identifier: "en_US_POSIX")
     formatter.timeZone = .current
     // Grocy stores local times without a time zone.
-    let formats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd"]
+    // Older app versions wrote timestamps in the device's 12-hour format ("2026-08-12 4:33:51 PM"), so those are read too (#250).
+    let formats = [
+        "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd h:mm:ss a", "yyyy-MM-dd h:mm a",
+        "yyyy-MM-dd",
+    ]
 
     for format in formats {
         formatter.dateFormat = format

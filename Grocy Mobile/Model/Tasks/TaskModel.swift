@@ -44,7 +44,7 @@ class GrocyTask: Codable, Equatable, Identifiable {
             self.doneTimestamp = getDateFromString(try container.decodeIfPresent(String.self, forKey: .doneTimestamp))
             self.categoryID = try container.decodeFlexibleIntIfPresent(forKey: .categoryID)
             self.assignedToUserID = try container.decodeFlexibleIntIfPresent(forKey: .assignedToUserID)
-            self.rowCreatedTimestamp = getDateFromString(try container.decodeIfPresent(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decodeIfPresent(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

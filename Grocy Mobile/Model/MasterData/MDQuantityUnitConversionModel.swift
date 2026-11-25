@@ -34,7 +34,7 @@ class MDQuantityUnitConversion: Codable, Equatable, Identifiable {
             self.toQuID = try container.decodeFlexibleInt(forKey: .toQuID)
             self.factor = try container.decodeFlexibleDouble(forKey: .factor)
             self.productID = try container.decodeFlexibleIntIfPresent(forKey: .productID)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

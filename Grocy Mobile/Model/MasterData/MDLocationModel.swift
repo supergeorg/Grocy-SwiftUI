@@ -44,7 +44,7 @@ class MDLocation: Codable, Equatable, Identifiable, CustomStringConvertible {
             self.active = try container.decodeFlexibleBool(forKey: .active)
             self.mdLocationDescription = (try? container.decodeIfPresent(String.self, forKey: .mdLocationDescription)) ?? ""
             self.isFreezer = try container.decodeFlexibleBool(forKey: .isFreezer)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

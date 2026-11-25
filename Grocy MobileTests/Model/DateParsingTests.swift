@@ -27,6 +27,13 @@ struct DateParsingTests {
         #expect(getDateFromString("not a date") == nil)
     }
 
+    @Test("Timestamps an older app version wrote in the 12-hour format are parsed (#250)")
+    func parsesTwelveHourTimestamps() {
+        #expect(components(getDateFromString("2026-08-12 4:33:51 PM")) == DateComponents(year: 2026, month: 8, day: 12, hour: 16, minute: 33, second: 51))
+        #expect(components(getDateFromString("2026-08-12 12:05:00 AM")) == DateComponents(year: 2026, month: 8, day: 12, hour: 0, minute: 5, second: 0))
+        #expect(components(getDateFromString("2026-08-12 9:15 AM")) == DateComponents(year: 2026, month: 8, day: 12, hour: 9, minute: 15, second: 0))
+    }
+
     @Test(
         "Only real times of day are shown",
         arguments: [

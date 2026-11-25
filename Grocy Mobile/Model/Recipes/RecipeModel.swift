@@ -46,7 +46,7 @@ class Recipe: Codable, Identifiable {
             self.notCheckShoppinglist = try container.decodeFlexibleBool(forKey: .notCheckShoppinglist)
             self.type = try container.decode(RecipeType.self, forKey: .type)
             self.productID = try container.decodeFlexibleIntIfPresent(forKey: .productID)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

@@ -121,7 +121,7 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.quIDConsume = try container.decodeFlexibleInt(forKey: .quIDConsume)
             self.autoReprintStockLabel = try container.decodeFlexibleBool(forKey: .autoReprintStockLabel)
             self.quIDPrice = try container.decodeFlexibleInt(forKey: .quIDPrice)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }
