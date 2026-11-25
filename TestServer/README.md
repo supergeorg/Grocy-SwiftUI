@@ -36,6 +36,21 @@ xcodebuild test -project "Grocy Mobile.xcodeproj" -scheme "Grocy MobileUITests" 
 
 Any iOS simulator works as a destination, too. The app is launched with `GROCY_UITEST_SERVER_URL` in its environment, which turns on `UITestConfiguration` (debug builds only): both SwiftData stores stay in memory and the app logs in without creating a server profile, so the data, login and iCloud profiles of the installed app are never touched. Without `GROCY_TEST_SERVER_URL`, the UI tests are skipped. On macOS, the first run asks to allow UI automation; the Mac must be unlocked while the tests run.
 
+## HTTPS with a self-signed certificate
+
+To test "Trust this certificate" (servers with a self-signed certificate), put an HTTPS proxy in front of the test server:
+
+```sh
+TestServer/grocy-test-server.sh start
+TestServer/grocy-https-proxy.sh start      # prints the URL, the API key and the certificate's SHA-256 fingerprint
+```
+
+Then log in to `https://localhost:9443` in the app (a simulator on this Mac reaches it as `localhost`) with the API key `grocy-mobile-integration-tests`. The app should show the certificate with the fingerprint the script printed and offer to trust it.
+
+- The certificate is created once in `TestServer/.certs/` (git-ignored) and reused, so a trusted fingerprint keeps working across restarts. Delete that folder and restart the proxy to get a new certificate, which tests what happens when a trusted certificate changes.
+- `TestServer/grocy-https-proxy.sh fingerprint` prints the fingerprint again, `stop` stops the proxy. It runs nginx in Docker, and the certificate is made with OpenSSL in Docker, so nothing has to be installed on the Mac.
+- `GROCY_TEST_HTTPS_PORT` changes the port (default `9443`, bound to 127.0.0.1 only).
+
 ## Server control
 
 ```sh

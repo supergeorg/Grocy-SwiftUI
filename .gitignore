@@ -3,3 +3,6 @@ Assets-Source/*
 
 # Xcode per-user state
 xcuserdata/
+
+# Self-signed certificate of the HTTPS test server (TestServer/grocy-https-proxy.sh)
+TestServer/.certs/
