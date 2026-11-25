@@ -97,12 +97,25 @@ struct PurchaseProductView: View {
         return QuantityUnitConversionResolver(product: product, conversions: mdQuantityUnitConversions).stockAmount(amount, in: quantityUnitID)
     }
 
+    /// How many stock units one selected unit is (1 for the stock unit, 10 for a pack of 10 pieces).
+    private var stockAmountPerSelectedUnit: Double {
+        guard let product else { return 1 }
+        let perUnit = QuantityUnitConversionResolver(product: product, conversions: mdQuantityUnitConversions).stockAmount(1, in: quantityUnitID)
+        return perUnit > 0 ? perUnit : 1
+    }
+
+    /// The price per stock unit, which is what Grocy stores. A unit price is entered per selected unit, like in Grocy's web form.
     private var unitPrice: Double? {
         if isTotalPrice {
             return ((price ?? 0.0) / factoredAmount)
         } else {
-            return price
+            return price.map { $0 / stockAmountPerSelectedUnit }
         }
+    }
+
+    /// A price per stock unit (Grocy's last price, a Quick Scan choice) as the price per selected unit, for the price field.
+    private func priceInSelectedUnit(_ stockUnitPrice: Double?) -> Double? {
+        stockUnitPrice.map { $0 * stockAmountPerSelectedUnit }
     }
 
     var isFormValid: Bool {
@@ -131,8 +144,13 @@ struct PurchaseProductView: View {
             self.dueDate =
                 Calendar.current.date(byAdding: dateComponents, to: Calendar.current.startOfDay(for: Date())) ?? Calendar.current.startOfDay(for: Date())
         }
-        self.price = actionPending ? barcode?.lastPrice ?? productDetails?.lastPrice : nil
+        self.price = actionPending ? priceInSelectedUnit(productDetails?.lastPrice) : nil
         self.isTotalPrice = false
+        // Grocy's web form saves the price as entered on the barcode and reads it back as a total price.
+        if let barcodePrice = productBarcode?.lastPrice {
+            self.price = barcodePrice
+            self.isTotalPrice = true
+        }
         self.storeID = actionPending ? (barcode?.storeID ?? product?.storeID ?? -1) : -1
         self.locationID = actionPending ? product?.locationID ?? -1 : -1
         self.note = ""
@@ -140,7 +158,8 @@ struct PurchaseProductView: View {
             applyQuickScanSession()
         }
         if autoPurchase, actionPending, product?.defaultDueDays != nil, productID != nil, isFormValid {
-            self.price = productDetails?.lastPrice
+            self.price = priceInSelectedUnit(productDetails?.lastPrice)
+            self.isTotalPrice = false
             Task {
                 await purchaseProduct()
             }
@@ -162,7 +181,7 @@ struct PurchaseProductView: View {
             self.dueDate = dueDate
         }
         if let unitPrice = choice.unitPrice {
-            self.price = unitPrice
+            self.price = priceInSelectedUnit(unitPrice)
             self.isTotalPrice = false
         }
     }
@@ -308,7 +327,7 @@ struct PurchaseProductView: View {
                                 currencySymbol: grocyVM.getCurrencySymbol()
                             )
 
-                            if isTotalPrice && productID != nil {
+                            if productID != nil, price != nil, isTotalPrice || quantityUnitID != product?.quIDStock {
                                 Text("means \(grocyVM.getFormattedCurrency(amount: unitPrice ?? 0)) per \(stockQuantityUnit?.name ?? "")")
                                     .font(.caption)
                                     .foregroundStyle(Color(.GrocyColors.grocyGray))
