@@ -86,7 +86,7 @@ struct QuickScanModeSelectProductView: View {
         }
         .sheet(isPresented: $showProductForm) {
             NavigationStack {
-                MDProductFormView(queuedBarcode: barcode, createdProductID: $createdProductID)
+                MDProductFormView(userSettings: userSettings, queuedBarcode: barcode, createdProductID: $createdProductID)
             }
         }
         .toolbar(content: {
