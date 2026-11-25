@@ -11,6 +11,7 @@ import SwiftUI
 struct TransferProductView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.grocyFeatures) private var features
 
     @Query(filter: #Predicate<MDProduct> { $0.active }, sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
@@ -46,6 +47,8 @@ struct TransferProductView: View {
     @State private var stockEntryID: String?
 
     @State private var searchProductTerm: String = ""
+    /// A scanned product Grocycode. A stock entry code preselects that entry and its location, like Grocy's web transfer page.
+    @State private var scannedGrocyCode: GrocyCode?
 
     private let dataToUpdate: [ObjectEntities] = [.products, .locations, .quantity_units, .quantity_unit_conversions]
 
@@ -88,7 +91,20 @@ struct TransferProductView: View {
             && !(locationIDFrom == locationIDTo)
     }
 
+    /// Uses the scanned stock entry Grocycode's entry and its location once the product's entries are loaded.
+    private func applyScannedStockEntry() {
+        guard let scannedGrocyCode, scannedGrocyCode.entityID == productID, let stockID = scannedGrocyCode.stockID else { return }
+        let descriptor = FetchDescriptor<StockEntry>(predicate: #Predicate<StockEntry> { $0.stockID == stockID })
+        guard let entry = try? modelContext.fetch(descriptor).first else { return }
+        useSpecificStockEntry = true
+        stockEntryID = stockID
+        if let locationID = entry.locationID {
+            locationIDFrom = locationID
+        }
+    }
+
     private func resetForm() {
+        scannedGrocyCode = nil
         productID = actionPending ? productToTransferID : nil
         locationIDFrom = nil
         amount = 1.0
@@ -139,8 +155,11 @@ struct TransferProductView: View {
                 }
             }
 
-            ProductField(productID: $productID, description: "Product", excludeNoOwnStock: true)
+            ProductField(productID: $productID, description: "Product", excludeNoOwnStock: true, scannedGrocyCode: $scannedGrocyCode)
                 .onChange(of: productID) {
+                    if scannedGrocyCode?.entityID != productID {
+                        scannedGrocyCode = nil
+                    }
                     Task {
                         if let productID {
                             await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
@@ -149,6 +168,15 @@ struct TransferProductView: View {
                             locationIDFrom = selectedProduct.locationID
                             quantityUnitID = selectedProduct.quIDStock
                         }
+                        applyScannedStockEntry()
+                    }
+                }
+                // Scanning another entry of the selected product doesn't change the product.
+                .onChange(of: scannedGrocyCode) {
+                    guard let productID, scannedGrocyCode?.entityID == productID else { return }
+                    Task {
+                        await grocyVM.requestStockInfo(stockModeGet: .entries, productID: productID, queries: ["include_sub_products=true"])
+                        applyScannedStockEntry()
                     }
                 }
 

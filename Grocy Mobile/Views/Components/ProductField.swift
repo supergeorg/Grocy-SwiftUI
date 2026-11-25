@@ -59,6 +59,8 @@ struct ProductField: View {
     var icon: String = MySymbols.product
     /// Hides products with "Disable own stock", like Grocy's web purchase, inventory and transfer pages (#230).
     var excludeNoOwnStock: Bool = false
+    /// Set to a scanned product Grocycode, before the product is selected, so a form can use its stock entry.
+    var scannedGrocyCode: Binding<GrocyCode?>? = nil
 
     @State private var searchTerm: String = ""
     #if os(iOS)
@@ -85,6 +87,19 @@ struct ProductField: View {
     }
 
     #if os(iOS)
+        /// A product Grocycode selects its product. Any other code searches the names and barcodes.
+        private func handleScan(_ value: String) {
+            if let grocyCode = GrocyCode(string: value), grocyCode.entityType == .product,
+                filteredProducts.contains(where: { $0.id == grocyCode.entityID })
+            {
+                searchTerm = ""
+                scannedGrocyCode?.wrappedValue = grocyCode
+                productID = grocyCode.entityID
+            } else {
+                searchTerm = value
+            }
+        }
+
         var body: some View {
             pickerView
                 .pickerStyle(.navigationLink)
@@ -111,7 +126,7 @@ struct ProductField: View {
                         )
                         .sheet(isPresented: $isShowingScanner) {
                             CodeScannerSheetView { result in
-                                searchTerm = result.value
+                                handleScan(result.value)
                             }
                         }
                     }
