@@ -255,7 +255,7 @@ public class GrocyApi: GrocyAPI {
                     print(resultData)
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
-                } catch {
+                } catch let error as DecodingError {
                     throw APIError.decodingError(error: error)
                 }
             }
@@ -287,7 +287,7 @@ public class GrocyApi: GrocyAPI {
                 do {
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
-                } catch {
+                } catch let error as DecodingError {
                     throw APIError.decodingError(error: error)
                 }
             }
@@ -319,7 +319,7 @@ public class GrocyApi: GrocyAPI {
                 do {
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: resultData)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
-                } catch {
+                } catch let error as DecodingError {
                     throw APIError.decodingError(error: error)
                 }
             }
@@ -393,7 +393,7 @@ public class GrocyApi: GrocyAPI {
                 do {
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
-                } catch {
+                } catch let error as DecodingError {
                     throw APIError.decodingError(error: error)
                 }
             }
