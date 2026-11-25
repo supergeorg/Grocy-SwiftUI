@@ -74,6 +74,13 @@ struct FeatureFlagsAndPermissionsTests {
         #expect(features.multipleShoppingLists && features.choreAssignments)
     }
 
+    @Test("Label printing is off unless the server turns it on")
+    func featuresLabelPrinter() throws {
+        #expect(!GrocyFeatures(nil).labelPrinter)
+        #expect(!GrocyFeatures(try config()).labelPrinter)
+        #expect(GrocyFeatures(try config(#", "FEATURE_FLAG_LABEL_PRINTER": true"#)).labelPrinter)
+    }
+
     // MARK: - Inventory body
 
     @Test("An inventory without due date tracking doesn't send a due date")

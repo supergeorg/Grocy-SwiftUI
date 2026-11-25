@@ -14831,6 +14831,16 @@
         }
       }
     },
+    "Auto reprint stock entry label" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etikett für Bestandseinträge automatisch neu drucken"
+          }
+        }
+      }
+    },
     "Automatically add products that are below their defined min. stock amount to the shopping list" : {
       "localizations" : {
         "ca" : {
@@ -28782,6 +28792,16 @@
         }
       }
     },
+    "Default stock entry label" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard-Etikett für Bestandseinträge"
+          }
+        }
+      }
+    },
     "Default store" : {
       "localizations" : {
         "ca" : {
@@ -41870,6 +41890,16 @@
     "Know what's at home" : {
 
     },
+    "Label per unit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etikett pro Einheit"
+          }
+        }
+      }
+    },
     "Last charged" : {
 
     },
@@ -48564,6 +48594,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Einträge zum Hinzufügen zum Bestand"
+          }
+        }
+      }
+    },
+    "No label" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Etikett"
           }
         }
       }
@@ -64653,6 +64693,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ähnliche Produkte"
+          }
+        }
+      }
+    },
+    "Single label" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzelnes Etikett"
           }
         }
       }
@@ -84503,6 +84553,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟用後，家務就永遠不會逾期，到期日期將在到期時向後挪一天。"
+          }
+        }
+      }
+    },
+    "When enabled, a new stock entry label is printed when a stock entry of this product is changed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn aktiviert, wird ein neues Etikett gedruckt, sobald ein Bestandseintrag dieses Produkts geändert wird"
           }
         }
       }

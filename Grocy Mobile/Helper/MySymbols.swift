@@ -31,6 +31,8 @@ nonisolated struct MySymbols {
     static let quantityUnit = "scalemass"
     static let location = "location"
     static let store = "storefront"
+    static let stockLabel = "tag"
+    static let printLabel = "printer"
     static let productGroup = "square.on.circle"
     static let recipe = "book"
     static let picture = "photo"

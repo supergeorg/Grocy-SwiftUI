@@ -648,6 +648,30 @@ struct MDProductFormView: View {
                 )
             }
 
+            // Stock entry labels, printed by the server
+            if features.labelPrinter {
+                Picker(
+                    selection: Binding(
+                        get: { product.defaultStockLabelType ?? 0 },
+                        set: { product.defaultStockLabelType = $0 }
+                    ),
+                    label: Label("Default stock entry label", systemImage: MySymbols.stockLabel)
+                        .foregroundStyle(.primary),
+                    content: {
+                        Text("No label").tag(0)
+                        Text("Single label").tag(1)
+                        Text("Label per unit").tag(2)
+                    }
+                )
+
+                MyToggle(
+                    isOn: $product.autoReprintStockLabel,
+                    description: "Auto reprint stock entry label",
+                    descriptionInfo: "When enabled, a new stock entry label is printed when a stock entry of this product is changed",
+                    icon: MySymbols.printLabel
+                )
+            }
+
             // Product picture
             NavigationLink(
                 value: MDProductFormPart.productPicture,
