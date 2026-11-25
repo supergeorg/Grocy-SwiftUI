@@ -27,6 +27,8 @@ struct GrocyFeatures: Equatable {
     var choreAssignments = true
     /// Recipes and the meal plan.
     var recipes = true
+    /// Label printing on the server: the label fields of products. Off by default, like in Grocy.
+    var labelPrinter = false
 
     init() {}
 
@@ -39,6 +41,7 @@ struct GrocyFeatures: Equatable {
         multipleShoppingLists = config.featureFlagShoppinglistMultipleLists
         choreAssignments = config.featureFlagChoresAssignments
         recipes = config.featureFlagRecipes
+        labelPrinter = config.featureFlagLabelPrinter
     }
 }
 
