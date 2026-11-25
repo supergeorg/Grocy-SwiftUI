@@ -134,6 +134,23 @@ struct StockEntryFormView: View {
                 systemImage: MySymbols.amount
             )
 
+            // Like Grocy's web stock entry form. Grocy stores the date only.
+            DatePicker(
+                selection: Binding(
+                    get: { stockEntry.purchasedDate ?? Calendar.current.startOfDay(for: Date()) },
+                    set: { stockEntry.purchasedDate = Calendar.current.startOfDay(for: $0) }
+                ),
+                displayedComponents: .date,
+                label: {
+                    Label("Purchased date", systemImage: MySymbols.purchase)
+                        .foregroundStyle(.primary)
+                }
+            )
+
+            if features.openedTracking {
+                MyToggle(isOn: $stockEntry.stockEntryOpen, description: "Opened", icon: MySymbols.open)
+            }
+
             MyDoubleStepperOptional(
                 amount: $stockEntry.price,
                 description: "Price",
