@@ -97,6 +97,8 @@ struct MDProductFormView: View {
                 quIDConsume: userSettings?.productPresetsQuID ?? -1,
                 quIDPrice: userSettings?.productPresetsQuID ?? -1,
                 defaultDueDays: userSettings?.productPresetsDefaultDueDays ?? 0,
+                // Like Grocy's web form: new products take the label preset, which the server doesn't apply itself (#194).
+                defaultStockLabelType: userSettings?.productPresetsDefaultStockLabelType ?? 0,
                 treatOpenedAsOutOfStock: userSettings?.productPresetsTreatOpenedAsOutOfStock ?? false,
             )
     }
