@@ -152,7 +152,7 @@ struct InventoryProductView: View {
                 }
             }
 
-            ProductField(productID: $productID, description: "Product")
+            ProductField(productID: $productID, description: "Product", excludeNoOwnStock: true)
 
             if productID != nil {
                 Section("Amount") {

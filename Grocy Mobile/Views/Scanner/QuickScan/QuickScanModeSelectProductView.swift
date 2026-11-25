@@ -68,7 +68,7 @@ struct QuickScanModeSelectProductView: View {
             }
 
             Section {
-                ProductField(productID: $productID, description: "Product for this barcode")
+                ProductField(productID: $productID, description: "Product for this barcode", excludeNoOwnStock: true)
                 Button(
                     action: {
                         showProductForm = true
