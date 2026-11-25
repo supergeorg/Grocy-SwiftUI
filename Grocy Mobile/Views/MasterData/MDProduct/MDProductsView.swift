@@ -24,6 +24,8 @@ struct MDProductsView: View {
     @State private var productToDelete: MDProduct? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
+    @State private var copiedProduct: MDProduct? = nil
+    @State private var copyErrorMessage: String? = nil
 
     // Fetch the data with a dynamic predicate
     var mdProducts: MDProducts {
@@ -77,6 +79,24 @@ struct MDProductsView: View {
         }
     }
 
+    /// Copies the product on the server and opens the copy's form, like Grocy's web product list.
+    private func copyProduct(_ product: MDProduct) async {
+        do {
+            let copyID = try await grocyVM.copyProduct(productID: product.id)
+            GrocyLogger.info("Copying product \(product.id) was successful.")
+            // The copy brings its own unit conversions.
+            await grocyVM.requestData(objects: [.products, .quantity_unit_conversions])
+            copiedProduct = try? modelContext.fetch(FetchDescriptor<MDProduct>(predicate: #Predicate<MDProduct> { $0.id == copyID })).first
+        } catch {
+            GrocyLogger.error("Copying product failed. \(error)")
+            if let apiError = error as? APIError {
+                copyErrorMessage = apiError.displayMessage
+            } else {
+                copyErrorMessage = error.localizedDescription
+            }
+        }
+    }
+
     var body: some View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
@@ -111,6 +131,18 @@ struct MDProductsView: View {
                         )
                     }
                 )
+                .contextMenu {
+                    Button {
+                        Task { await copyProduct(product) }
+                    } label: {
+                        Label("Copy", systemImage: MySymbols.duplicate)
+                    }
+                    Button(role: .destructive) {
+                        deleteItem(itemToDelete: product)
+                    } label: {
+                        Label("Delete", systemImage: MySymbols.delete)
+                    }
+                }
             }
         }
         .task {
@@ -140,6 +172,19 @@ struct MDProductsView: View {
             },
             message: {
                 Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Couldn't copy the product",
+            isPresented: Binding(
+                get: { copyErrorMessage != nil },
+                set: { if !$0 { copyErrorMessage = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(copyErrorMessage ?? "")
             }
         )
         .alert(
@@ -183,6 +228,9 @@ struct MDProductsView: View {
         #else
             .navigationDestination(isPresented: $showAddProduct, destination: { MDProductFormView(userSettings: userSettings) })
         #endif
+        .navigationDestination(item: $copiedProduct) { product in
+            MDProductFormView(existingProduct: product, userSettings: userSettings)
+        }
         .navigationDestination(
             for: MDProduct.self,
             destination: { product in
