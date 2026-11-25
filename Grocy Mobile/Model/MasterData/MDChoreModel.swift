@@ -60,7 +60,8 @@ class MDChore: Codable, Equatable, Identifiable {
             self.id = try container.decodeFlexibleInt(forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
             self.mdChoreDescription = try container.decodeIfPresent(String.self, forKey: .choreDescription) ?? ""
-            self.periodType = ChorePeriodType(rawValue: try container.decode(String.self, forKey: .periodType))!
+            // Unknown types (e.g. written by another client or an older Grocy) mustn't crash the whole decoding.
+            self.periodType = try container.decodeFlexibleEnum(forKey: .periodType, default: ChorePeriodType.manually)
             self.periodDays = try container.decodeFlexibleIntIfPresent(forKey: .periodDays)
             self.periodConfig = try container.decodeIfPresent(String.self, forKey: .periodConfig)
             self.trackDateOnly = try container.decodeFlexibleBool(forKey: .trackDateOnly)
