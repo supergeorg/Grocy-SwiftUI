@@ -136,6 +136,7 @@ struct PurchaseProductView: View {
         self.storeID = actionPending ? (barcode?.storeID ?? product?.storeID ?? -1) : -1
         self.locationID = actionPending ? product?.locationID ?? -1 : -1
         self.note = ""
+        applyDefaultPurchasePriceType(convertingPrefilledPrice: true)
         if actionPending {
             applyQuickScanSession()
         }
@@ -143,6 +144,26 @@ struct PurchaseProductView: View {
             self.price = productDetails?.lastPrice
             Task {
                 await purchaseProduct()
+            }
+        }
+    }
+
+    /// Starts with the product's "Default purchase price type", like Grocy's web form. A scanned barcode's own price keeps its type,
+    /// and an automatic purchase keeps the last unit price.
+    /// - Parameter convertingPrefilledPrice: The price field holds the prefilled price per unit, which becomes the total for the amount.
+    private func applyDefaultPurchasePriceType(convertingPrefilledPrice: Bool = false) {
+        guard !autoPurchase, productBarcode?.lastPrice == nil, let type = product?.defaultPurchasePriceType else { return }
+        switch type {
+        case .unspecified:
+            break
+        case .unitPrice:
+            isTotalPrice = false
+        case .totalPrice:
+            if !isTotalPrice {
+                if convertingPrefilledPrice {
+                    price = price.map { $0 * amount }
+                }
+                isTotalPrice = true
             }
         }
     }
@@ -260,6 +281,7 @@ struct PurchaseProductView: View {
                                 for: Calendar.current.date(byAdding: .day, value: product?.defaultDueDays ?? 0, to: Date()) ?? Date()
                             )
                         }
+                        applyDefaultPurchasePriceType()
                         applyQuickScanSession()
                     }
                 }
