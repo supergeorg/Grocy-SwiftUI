@@ -197,6 +197,9 @@ struct DueItem: Identifiable {
     /// Done tasks, kinds the server disabled and kinds the user hid are left out.
     ///
     /// Products follow the stock overview (Grocy's volatile stock), so both show the same products.
+    ///
+    /// `sorted: false` leaves the items in no particular order, for counting: sorting compares the names of SwiftData
+    /// objects, and the due tab's badge counted on every update of the tab bar.
     static func items(
         stock: [StockElement],
         volatileStock: VolatileStock?,
@@ -207,7 +210,8 @@ struct DueItem: Identifiable {
         userSettings: GrocyUserSettings?,
         systemConfig: SystemConfig?,
         hiddenKinds: Set<DueKind> = [],
-        now: Date = .now
+        now: Date = .now,
+        sorted: Bool = true
     ) -> [DueItem] {
         var items: [DueItem] = []
         if systemConfig?.featureFlagStock != false, let volatileStock {
@@ -271,6 +275,7 @@ struct DueItem: Identifiable {
                 items.append(DueItem(source: .battery(battery), date: date, urgency: urgency))
             }
         }
+        guard sorted else { return items }
         return items.sorted {
             ($0.urgency, $0.date ?? .distantFuture, $0.name) < ($1.urgency, $1.date ?? .distantFuture, $1.name)
         }

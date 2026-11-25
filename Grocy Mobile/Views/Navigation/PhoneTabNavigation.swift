@@ -50,7 +50,6 @@ import SwiftUI
         @AppStorage(DueKind.hiddenKindsStorageKey) private var hiddenDueKinds: String = ""
         @Query(filter: #Predicate<StockElement> { $0.amountAggregated > 0 }) private var stock: Stock
         @Query private var volatileStockList: [VolatileStock]
-        @Query private var mdProducts: MDProducts
         @Query private var chores: Chores
         @Query(filter: #Predicate<GrocyTask> { !$0.done }) private var openTasks: GrocyTasks
         @Query private var batteries: Batteries
@@ -61,18 +60,22 @@ import SwiftUI
         }
 
         /// Expired, overdue and due today; "due soon" and "below min. stock" don't need attention yet.
+        ///
+        /// Counted on every update of the tab bar, so without the products below min. stock (never counted, and they
+        /// need all products) and without sorting.
         private var urgentDueCount: Int {
             guard places.contains(.due) else { return 0 }
             return DueItem.items(
                 stock: stock,
                 volatileStock: volatileStockList.first,
-                mdProducts: mdProducts,
+                mdProducts: [],
                 chores: chores,
                 tasks: openTasks,
                 batteries: batteries,
                 userSettings: userSettingsList.first,
                 systemConfig: systemConfig,
-                hiddenKinds: DueKind.hiddenKinds(from: hiddenDueKinds)
+                hiddenKinds: DueKind.hiddenKinds(from: hiddenDueKinds).union([.belowMinStock]),
+                sorted: false
             )
             .count(where: { $0.urgency.needsAttention })
         }
