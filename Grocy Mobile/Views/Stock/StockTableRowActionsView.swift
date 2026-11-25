@@ -14,7 +14,8 @@ struct StockTableRowActionsView: View {
 
     var stockElement: StockElement
     var shownActions: [ShownAction] = []
-    var mdQuantityUnits: MDQuantityUnits
+    /// The product's stock quantity unit, looked up by the parent (once per list, not per row).
+    var quantityUnit: MDQuantityUnit?
 
     enum ShownAction: Identifiable {
         case consumeQA, consumeAll, openQA
@@ -22,10 +23,6 @@ struct StockTableRowActionsView: View {
         var id: Int {
             self.hashValue
         }
-    }
-
-    var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: { $0.id == stockElement.product?.quIDStock })
     }
 
     private func consumeQuickConsumeAmount() async {

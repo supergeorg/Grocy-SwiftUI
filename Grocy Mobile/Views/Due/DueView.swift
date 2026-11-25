@@ -283,15 +283,15 @@ struct DueView: View {
         .listRowBackground(item.urgency.backgroundColor)
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             if stockElement.amount > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], quantityUnit: quantityUnit(for: stockElement.product))
             }
             if features.openedTracking, (stockElement.amount - stockElement.amountOpened) > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], quantityUnit: quantityUnit(for: stockElement.product))
             }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             if stockElement.amount > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], quantityUnit: quantityUnit(for: stockElement.product))
             }
         }
         .contextMenu {

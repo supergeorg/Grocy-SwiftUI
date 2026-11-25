@@ -12,6 +12,7 @@ import SwiftUI
 /// Matches names, and products by an exact barcode (typed in or scanned).
 struct GlobalSearchView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
+    @Environment(\.grocyFeatures) private var features
 
     @Query private var stock: [StockElement]
     @Query(sort: \MDProduct.name) private var products: MDProducts
@@ -102,16 +103,16 @@ struct GlobalSearchView: View {
                 if !stockResults.isEmpty {
                     // The stock overview's rows, with its context menu and swipe actions.
                     Section("Stock overview") {
+                        let rowLookups = StockRowLookups(
+                            quantityUnits: quantityUnits,
+                            productGroups: productGroups,
+                            products: products,
+                            shoppingList: shoppingList,
+                            volatileStock: volatileStockList.first,
+                            dueDateTracking: features.dueDateTracking
+                        )
                         ForEach(stockResults) { stockElement in
-                            StockTableRow(
-                                stockElement: stockElement,
-                                mdQuantityUnits: quantityUnits,
-                                shoppingList: shoppingList,
-                                mdProductGroups: productGroups,
-                                volatileStock: volatileStockList.first,
-                                parentProduct: products.first(where: { $0.id == stockElement.product?.parentProductID }),
-                                userSettings: userSettingsList.first
-                            )
+                            StockTableRow(stockElement: stockElement, lookups: rowLookups, userSettings: userSettingsList.first)
                         }
                     }
                 }

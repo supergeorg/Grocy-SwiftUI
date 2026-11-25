@@ -8,6 +8,50 @@
 import SwiftData
 import SwiftUI
 
+/// The objects the stock rows look up by ID, as dictionaries built once per list: searching the master data arrays
+/// in every row made the stock overview slow with a large household. The rows keep only what they looked up in it.
+struct StockRowLookups {
+    var quantityUnitsByID: [Int: MDQuantityUnit] = [:]
+    var productGroupsByID: [Int: MDProductGroup] = [:]
+    var productsByID: [Int: MDProduct] = [:]
+    var productIDsOnShoppingList: Set<Int> = []
+    /// The status a row is highlighted for: due soon wins over expired, overdue and below min. stock.
+    var statusByProductID: [Int: ProductStatus] = [:]
+
+    init() {}
+
+    init(
+        quantityUnits: MDQuantityUnits,
+        productGroups: MDProductGroups,
+        products: MDProducts,
+        shoppingList: [ShoppingListItem],
+        volatileStock: VolatileStock?,
+        dueDateTracking: Bool
+    ) {
+        quantityUnitsByID = Dictionary(quantityUnits.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        productGroupsByID = Dictionary(productGroups.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        productsByID = Dictionary(products.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        productIDsOnShoppingList = Set(shoppingList.compactMap(\.productID))
+
+        // From the lowest priority to the highest, so a higher one overwrites a lower one.
+        // Without due date tracking, only "below min. stock" applies.
+        for product in volatileStock?.missingProducts ?? [] {
+            statusByProductID[product.productID] = .belowMinStock
+        }
+        if dueDateTracking, let volatileStock {
+            for product in volatileStock.overdueProducts {
+                statusByProductID[product.productID] = .overdue
+            }
+            for product in volatileStock.expiredProducts {
+                statusByProductID[product.productID] = .expired
+            }
+            for product in volatileStock.dueProducts {
+                statusByProductID[product.productID] = .expiringSoon
+            }
+        }
+    }
+}
+
 struct StockTableRow: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.grocyFeatures) private var features
@@ -20,38 +64,27 @@ struct StockTableRow: View {
 
     var stockElement: StockElement
 
-    // Pass data from parent to avoid duplicate queries
-    let mdQuantityUnits: MDQuantityUnits
-    let shoppingList: [ShoppingListItem]
-    let mdProductGroups: MDProductGroups
-    let volatileStock: VolatileStock?
+    // Only the values this row needs, looked up once in the init: SwiftUI compares a view's stored properties on every
+    // update, and storing the whole lookups compared all products for each row.
+    let quantityUnit: MDQuantityUnit?
+    let productGroup: MDProductGroup?
     let parentProduct: MDProduct?
+    /// The status the row is highlighted for.
+    let productStatus: ProductStatus?
+    let isOnShoppingList: Bool
     let userSettings: GrocyUserSettings?
 
     @State private var showDetailView: Bool = false
 
-    var quantityUnit: MDQuantityUnit? {
-        mdQuantityUnits.first(where: { $0.id == stockElement.product?.quIDStock })
-    }
-
-    /// The status the row is highlighted for. Same order as before: due soon wins over expired, overdue and below min. stock.
-    var productStatus: ProductStatus? {
-        let productID = stockElement.productID
-
-        // Without due date tracking, only "below min. stock" applies.
-        if features.dueDateTracking, (volatileStock?.dueProducts ?? []).contains(where: { $0.productID == productID }) {
-            return .expiringSoon
-        }
-        if features.dueDateTracking, (volatileStock?.expiredProducts ?? []).contains(where: { $0.productID == productID }) {
-            return .expired
-        }
-        if features.dueDateTracking, (volatileStock?.overdueProducts ?? []).contains(where: { $0.productID == productID }) {
-            return .overdue
-        }
-        if (volatileStock?.missingProducts ?? []).contains(where: { $0.productID == productID }) {
-            return .belowMinStock
-        }
-        return nil
+    init(stockElement: StockElement, lookups: StockRowLookups, userSettings: GrocyUserSettings?) {
+        self.stockElement = stockElement
+        let product = stockElement.product
+        quantityUnit = product.flatMap { lookups.quantityUnitsByID[$0.quIDStock] }
+        productGroup = product?.productGroupID.flatMap { lookups.productGroupsByID[$0] }
+        parentProduct = product?.parentProductID.flatMap { lookups.productsByID[$0] }
+        productStatus = lookups.statusByProductID[stockElement.productID]
+        isOnShoppingList = lookups.productIDsOnShoppingList.contains(stockElement.productID)
+        self.userSettings = userSettings
     }
 
     var backgroundColor: Color? {
@@ -77,17 +110,17 @@ struct StockTableRow: View {
             }
         )
         .contextMenu {
-            StockTableMenuEntriesView(stockElement: stockElement, quantityUnit: mdQuantityUnits.first(where: { $0.id == stockElement.product?.quIDStock }))
+            StockTableMenuEntriesView(stockElement: stockElement, quantityUnit: quantityUnit)
         }
         .swipeActions(
             edge: .leading,
             allowsFullSwipe: true
         ) {
             if stockElement.amount > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeQA], quantityUnit: quantityUnit)
             }
             if features.openedTracking, (stockElement.amount - stockElement.amountOpened) > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], quantityUnit: quantityUnit)
             }
         }
         // No full swipe here: it consumed the whole stock by accident, so "All" needs a deliberate tap (#225).
@@ -96,7 +129,7 @@ struct StockTableRow: View {
             allowsFullSwipe: false
         ) {
             if stockElement.amount > 0 {
-                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], mdQuantityUnits: mdQuantityUnits)
+                StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], quantityUnit: quantityUnit)
             }
         }
         .listRowBackground(backgroundColor)
@@ -151,7 +184,7 @@ struct StockTableRow: View {
                 .foregroundStyle(.primary)
             }
             // Product group
-            if let productGroup = mdProductGroups.first(where: { $0.id == stockElement.product?.productGroupID }) {
+            if let productGroup {
                 HStack {
                     Image(systemName: MySymbols.productGroup)
                     Text(productGroup.name)
@@ -190,7 +223,7 @@ struct StockTableRow: View {
                     }
                 }
                 if userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
-                    shoppingList.first(where: { $0.productID == stockElement.productID }) != nil
+                    isOnShoppingList
                 {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
@@ -225,11 +258,7 @@ struct StockTableRow: View {
                 productID: 1,
                 product: MDProduct(id: 1, name: "Cookies")
             ),
-            mdQuantityUnits: [],
-            shoppingList: [],
-            mdProductGroups: [],
-            volatileStock: nil,
-            parentProduct: nil,
+            lookups: StockRowLookups(),
             userSettings: nil
         )
     }
