@@ -60,19 +60,33 @@ private struct HomeView: View {
             NavigationLink {
                 WatchShoppingListView()
             } label: {
-                Label("Shopping list", systemImage: "cart")
+                CountRow(title: "Shopping list", systemImage: "cart", count: shoppingListCount)
             }
-            .badge(shoppingListCount)
             NavigationLink {
                 WatchTasksView()
             } label: {
-                Label("Tasks", systemImage: "checklist")
+                CountRow(title: "Tasks", systemImage: "checklist", count: taskCount)
             }
-            .badge(taskCount)
             Section {
             } footer: {
                 WatchSyncStatusView(snapshot: snapshot)
             }
+        }
+    }
+}
+
+/// A row with a title and the number of open items. (`badge` isn't available on watchOS.)
+private struct CountRow: View {
+    let title: LocalizedStringKey
+    let systemImage: String
+    let count: Int
+
+    var body: some View {
+        HStack {
+            Label(title, systemImage: systemImage)
+            Spacer()
+            Text(count, format: .number)
+                .foregroundStyle(.secondary)
         }
     }
 }
