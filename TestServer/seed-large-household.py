@@ -173,7 +173,7 @@ def main():
             "chores",
             {
                 "name": f"Chore {i + 1}",
-                "period_type": random.choice(["manually", "dynamic-regular", "daily"]),
+                "period_type": random.choice(["manually", "daily", "hourly", "adaptive"]),
                 "period_days": random.choice([1, 3, 7, 14]),
                 "period_interval": 1,
                 "start_date": (today - datetime.timedelta(days=random.randint(0, 30))).isoformat() + " 08:00:00",
