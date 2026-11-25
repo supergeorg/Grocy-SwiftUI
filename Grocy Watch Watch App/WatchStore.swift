@@ -72,9 +72,25 @@ final class WatchStore: NSObject {
         guard !pendingActions.contains(where: { $0.kind == action.kind }) else { return }
         pendingActions.append(action)
         savePendingActions()
+        send(action)
         transfer(action)
-        // Wakes the iPhone app if it's reachable, so it carries out the check-off right away.
-        requestRefresh()
+    }
+
+    /// Sends an action right away while the iPhone is reachable. This also wakes the iPhone app in the background.
+    ///
+    /// `transferUserInfo` alone isn't enough: it waits until the system decides to deliver, and it doesn't deliver at all
+    /// between simulators.
+    private func send(_ action: WatchAction) {
+        let session = WCSession.default
+        guard session.activationState == .activated, session.isReachable, let userInfo = try? action.userInfo() else { return }
+        session.sendMessage(userInfo, replyHandler: nil, errorHandler: nil)
+    }
+
+    /// Sends all pending actions right away, for example when the iPhone becomes reachable again.
+    private func sendPendingActions() {
+        for action in pendingActions {
+            send(action)
+        }
     }
 
     private func transfer(_ action: WatchAction) {
@@ -126,6 +142,7 @@ extension WatchStore: nonisolated WCSessionDelegate {
             self.isPhoneReachable = isReachable
             if activationState == .activated {
                 self.transferUnsentActions(outstanding: outstanding)
+                self.sendPendingActions()
                 self.requestRefresh()
             }
         }
@@ -141,6 +158,7 @@ extension WatchStore: nonisolated WCSessionDelegate {
         Task { @MainActor in
             self.isPhoneReachable = isReachable
             if isReachable {
+                self.sendPendingActions()
                 self.requestRefresh()
             }
         }

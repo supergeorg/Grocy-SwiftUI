@@ -57,8 +57,10 @@ nonisolated struct WatchSnapshot: Codable, Equatable {
     }
 }
 
-/// A check-off made on the watch. The watch sends it with `transferUserInfo`, so it reaches the iPhone even when the
-/// iPhone isn't nearby at the moment, and the iPhone carries it out on the Grocy server.
+/// A check-off made on the watch, which the iPhone carries out on the Grocy server.
+///
+/// The watch sends it with `transferUserInfo`, so it reaches the iPhone even when the iPhone isn't nearby at the moment,
+/// and also as a message while the iPhone is reachable. Both use the same dictionary.
 nonisolated struct WatchAction: Codable, Equatable, Identifiable {
     static let userInfoKey = "action"
 

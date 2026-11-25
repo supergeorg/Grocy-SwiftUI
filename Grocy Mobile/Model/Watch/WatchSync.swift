@@ -161,8 +161,12 @@
         }
 
         nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-            guard WatchRefreshMessage.isRefresh(message) else { return }
-            Task { @MainActor in await self.refresh() }
+            // While the iPhone is reachable, the watch sends its actions as messages too (they also come as user info).
+            if let action = WatchAction(userInfo: message) {
+                Task { @MainActor in await self.handle(action) }
+            } else if WatchRefreshMessage.isRefresh(message) {
+                Task { @MainActor in await self.refresh() }
+            }
         }
     }
 #endif
