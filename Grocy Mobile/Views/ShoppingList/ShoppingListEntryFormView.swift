@@ -16,6 +16,7 @@ struct ShoppingListEntryFormView: View {
 
     @Query(sort: \MDProduct.name, order: .forward) var mdProducts: MDProducts
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query(sort: \ShoppingListDescription.id, order: .forward) var shoppingListDescriptions: ShoppingListDescriptions
 
     @State private var isProcessing: Bool = false
@@ -24,13 +25,16 @@ struct ShoppingListEntryFormView: View {
 
     var existingShoppingListEntry: ShoppingListItem?
     @State private var shoppingListEntry: ShoppingListItem
+    /// The amount in the chosen unit. Grocy stores a product's amount in its stock unit, so it's converted when loading and saving (#114).
+    @State private var displayAmount: Double
+    @State private var didLoadDisplayAmount: Bool = false
 
     var selectedShoppingListID: Int?
     var productIDToSelect: Int?
     var isPopup: Bool = false
 
     var isFormValid: Bool {
-        shoppingListEntry.amount > 0 && (shoppingListEntry.productID != -1 || !shoppingListEntry.note.isEmpty) && selectedShoppingListID != -1
+        displayAmount > 0 && (shoppingListEntry.productID != -1 || !shoppingListEntry.note.isEmpty) && selectedShoppingListID != -1
     }
 
     var product: MDProduct? {
@@ -42,7 +46,9 @@ struct ShoppingListEntryFormView: View {
         self.selectedShoppingListID = selectedShoppingListID
         self.productIDToSelect = productIDToSelect
         self.isPopup = isPopup
-        self.shoppingListEntry = existingShoppingListEntry ?? ShoppingListItem(productID: productIDToSelect ?? -1, shoppingListID: selectedShoppingListID ?? -1)
+        let entry = existingShoppingListEntry ?? ShoppingListItem(productID: productIDToSelect ?? -1, shoppingListID: selectedShoppingListID ?? -1)
+        self.shoppingListEntry = entry
+        self._displayAmount = State(initialValue: entry.amount)
     }
 
     private func getQuantityUnit() -> MDQuantityUnit? {
@@ -75,6 +81,15 @@ struct ShoppingListEntryFormView: View {
         }
         isProcessing = true
         isSuccessful = nil
+        if let product {
+            shoppingListEntry.amount = QuantityUnitConversionResolver(product: product, conversions: mdQuantityUnitConversions).stockAmount(
+                displayAmount,
+                in: shoppingListEntry.quID
+            )
+        } else {
+            // Free-text items keep the amount as entered, like Grocy's web form.
+            shoppingListEntry.amount = displayAmount
+        }
         do {
             try shoppingListEntry.modelContext?.save()
             if existingShoppingListEntry == nil {
@@ -121,7 +136,7 @@ struct ShoppingListEntryFormView: View {
                     }
                 }
 
-            AmountSelectionView(productID: $shoppingListEntry.productID, amount: $shoppingListEntry.amount, quantityUnitID: $shoppingListEntry.quID)
+            AmountSelectionView(productID: $shoppingListEntry.productID, amount: $displayAmount, quantityUnitID: $shoppingListEntry.quID)
 
             Section(
                 header: Label("Note", systemImage: MySymbols.note)
@@ -140,6 +155,13 @@ struct ShoppingListEntryFormView: View {
             }
             if shoppingListEntry.quID == -1, let selectedProduct = mdProducts.first(where: { $0.id == shoppingListEntry.productID }) {
                 shoppingListEntry.quID = selectedProduct.quIDPurchase
+            }
+            // Only once: the task runs again when the form comes back from a picker, and would undo the person's edit.
+            if !didLoadDisplayAmount {
+                didLoadDisplayAmount = true
+                if existingShoppingListEntry != nil {
+                    displayAmount = shoppingListEntry.displayAmount(roundUp: false, product: product, conversions: mdQuantityUnitConversions)
+                }
             }
         }
         .toolbar {

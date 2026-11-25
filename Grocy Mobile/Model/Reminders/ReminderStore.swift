@@ -405,12 +405,14 @@ final class ReminderStore {
                 uniquingKeysWith: { first, _ in first }
             )
             let roundUp = try context.fetch(FetchDescriptor<GrocyUserSettings>()).first?.shoppingListRoundUp ?? false
+            let conversions = try context.fetch(FetchDescriptor<MDQuantityUnitConversion>())
             return items.map { item in
                 ReminderSync.entry(
                     for: item,
                     product: item.productID.flatMap { products[$0] },
                     quantityUnit: item.quID.flatMap { quantityUnits[$0] },
-                    roundUp: roundUp
+                    roundUp: roundUp,
+                    conversions: conversions
                 )
             }
         case .tasks:

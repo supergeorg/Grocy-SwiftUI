@@ -14,7 +14,7 @@ import Foundation
 /// - The product's own conversions win over general ones. General conversions are only used when the product's own can't convert.
 /// - Conversions of other products are ignored.
 /// - The shortest chain wins when there is more than one.
-struct QuantityUnitConversionResolver {
+nonisolated struct QuantityUnitConversionResolver {
     /// One conversion: 1 `fromQuID` = `factor` × `toQuID`.
     struct Conversion: Equatable {
         var fromQuID: Int
@@ -99,7 +99,7 @@ struct QuantityUnitConversionResolver {
     }
 }
 
-extension QuantityUnitConversionResolver {
+nonisolated extension QuantityUnitConversionResolver {
     /// The resolver for `product`, built from the synced conversions.
     init(product: MDProduct, conversions: MDQuantityUnitConversions) {
         self.init(

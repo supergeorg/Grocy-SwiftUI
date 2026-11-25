@@ -17,13 +17,15 @@ struct ShoppingListRowView: View {
     var product: MDProduct? = nil
     var quantityUnit: MDQuantityUnit? = nil
     var userSettings: GrocyUserSettings? = nil
+    var conversions: MDQuantityUnitConversions = []
 
     // Callbacks for interactions
     var onToggleDone: (ShoppingListItem) async -> Void = { _ in }
     var onDelete: (ShoppingListItem) -> Void = { _ in }
 
     var amountString: String {
-        let amount = shoppingListItem.displayAmount(roundUp: userSettings?.shoppingListRoundUp ?? false)
+        // Grocy stores the amount in the stock unit, so it's converted to the item's unit (#114).
+        let amount = shoppingListItem.displayAmount(roundUp: userSettings?.shoppingListRoundUp ?? false, product: product, conversions: conversions)
         if let quantityUnit = quantityUnit {
             return "\(amount.formattedAmount) \(quantityUnit.getName(amount: amount))"
         } else {

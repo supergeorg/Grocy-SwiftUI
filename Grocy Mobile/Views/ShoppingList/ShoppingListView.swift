@@ -94,7 +94,13 @@ struct ShoppingListView: View {
     @Query(sort: \MDProductGroup.id, order: .forward) var mdProductGroups: MDProductGroups
     @Query(sort: \MDStore.id, order: .forward) var mdStores: MDStores
     @Query(sort: \MDQuantityUnit.id, order: .forward) var mdQuantityUnits: MDQuantityUnits
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) var mdQuantityUnitConversions: MDQuantityUnitConversions
     @Query var userSettingsList: GrocyUserSettingsList
+    /// The purchase form starts in the purchase unit, and Grocy stores the item's amount in the stock unit (#114).
+    private func purchaseAmount(of item: ShoppingListItem) -> Double {
+        item.purchaseAmount(product: mdProducts.first(where: { $0.id == item.productID }), conversions: mdQuantityUnitConversions)
+    }
+
     var userSettings: GrocyUserSettings? {
         userSettingsList.first
     }
@@ -573,9 +579,14 @@ struct ShoppingListView: View {
                 case .newShoppingListEntry:
                     ShoppingListEntryFormView(selectedShoppingListID: selectedShoppingListID, isPopup: true)
                 case .purchase(let item):
-                    PurchaseProductView(directProductToPurchaseID: item.productID, productToPurchaseAmount: item.amount, isPopup: true)
+                    PurchaseProductView(directProductToPurchaseID: item.productID, productToPurchaseAmount: purchaseAmount(of: item), isPopup: true)
                 case .autoPurchase(let item):
-                    PurchaseProductView(directProductToPurchaseID: item.productID, productToPurchaseAmount: item.amount, autoPurchase: true, isPopup: true)
+                    PurchaseProductView(
+                        directProductToPurchaseID: item.productID,
+                        productToPurchaseAmount: purchaseAmount(of: item),
+                        autoPurchase: true,
+                        isPopup: true
+                    )
                 case .purchaseAll(let items):
                     ShoppingListPurchaseAllView(items: items)
                 }
@@ -880,6 +891,7 @@ struct ShoppingListView: View {
                     product: element.product,
                     quantityUnit: mdQuantityUnits.first(where: { $0.id == element.shoppingListItem.quID }),
                     userSettings: userSettings,
+                    conversions: mdQuantityUnitConversions,
                     onToggleDone: changeDoneStatus,
                     onDelete: deleteItem
                 )
