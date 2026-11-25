@@ -33,6 +33,8 @@ struct ProductBuy: Codable {
     let locationID: Int?
     let storeID: Int?
     let note: String?
+    /// `yyyy-MM-dd`. Nil leaves it to Grocy, which uses today.
+    var purchasedDate: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case amount
@@ -42,5 +44,6 @@ struct ProductBuy: Codable {
         case locationID = "location_id"
         case storeID = "shopping_location_id"
         case note
+        case purchasedDate = "purchased_date"
     }
 }
