@@ -64,6 +64,8 @@ jobs:
           xcodebuild -showsdks | grep -i ios || true
           SIMULATOR_ID=$(python3 .github/scripts/pick-simulator.py)
           echo "id=$SIMULATOR_ID" >> "$GITHUB_OUTPUT"
+          # Boots while the app builds, instead of during the test step. That takes minutes on a runner.
+          xcrun simctl boot "$SIMULATOR_ID" || true
       - name: Build the app and the unit tests
         # Built once, separately from the test run, so the log shows how long each part takes.
         # No index store: CI never uses it, and it slows down every compile.
@@ -86,6 +88,7 @@ jobs:
         # runner. The unit tests are fast, so one simulator is enough.
         run: |
           set -o pipefail
+          xcrun simctl bootstatus "${{ steps.simulator.outputs.id }}" -b
           xcodebuild test-without-building \
             -project "Grocy Mobile.xcodeproj" \
             -scheme "Grocy MobileTests" \
