@@ -32,14 +32,14 @@ jobs:
       - name: Check formatting
         run: |
           xcrun swift-format --version
-          xcrun swift-format format -i -r -p "Grocy Mobile" "Grocy Widget" "Grocy MobileTests" "Grocy MobileUITests"
+          xcrun swift-format format -i -r -p "Grocy Mobile" "Grocy Widget" "Grocy Watch Watch App" "Grocy MobileTests" "Grocy MobileUITests"
           if ! git diff --exit-code -- '*.swift'; then
-            echo "::error::Some Swift files aren't formatted. Run: xcrun swift-format format -i -r -p \"Grocy Mobile\" \"Grocy Widget\" \"Grocy MobileTests\" \"Grocy MobileUITests\""
+            echo "::error::Some Swift files aren't formatted. Run: xcrun swift-format format -i -r -p \"Grocy Mobile\" \"Grocy Widget\" \"Grocy Watch Watch App\" \"Grocy MobileTests\" \"Grocy MobileUITests\""
             exit 1
           fi
       - name: Lint
         # Not strict: the remaining warnings in existing code can't be fixed automatically (see AGENTS.md).
-        run: xcrun swift-format lint -r -p "Grocy Mobile" "Grocy Widget" "Grocy MobileTests" "Grocy MobileUITests"
+        run: xcrun swift-format lint -r -p "Grocy Mobile" "Grocy Widget" "Grocy Watch Watch App" "Grocy MobileTests" "Grocy MobileUITests"
 
   unit-tests:
     name: Unit tests

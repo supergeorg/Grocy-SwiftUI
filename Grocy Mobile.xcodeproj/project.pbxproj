@@ -115,6 +115,15 @@
 			);
 			target = 789BAF372EE444FB00C82475 /* Grocy WidgetExtension */;
 		};
+		78D0E39030B6800000FF487D /* Exceptions for "Grocy Mobile" folder in "Grocy Watch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Localizable.xcstrings,
+				Model/SharedModel.swift,
+				Model/Watch/WatchSyncModel.swift,
+			);
+			target = 78D0E35730B674C500FF487D /* Grocy Watch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -130,6 +139,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				789BAF502EE447F900C82475 /* Exceptions for "Grocy Mobile" folder in "Grocy WidgetExtension" target */,
+				78D0E39030B6800000FF487D /* Exceptions for "Grocy Mobile" folder in "Grocy Watch Watch App" target */,
 			);
 			path = "Grocy Mobile";
 			sourceTree = "<group>";
