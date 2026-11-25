@@ -333,10 +333,17 @@ struct QuickScanModeView: View {
     extension View {
         /// Presents Quick Scan in a sheet, for when a button opens it (the iPhone search tab's bottom accessory).
         /// Closed with the close button or by swiping down. Opened from a tab or the sidebar, it's shown in place instead.
-        func quickScanSheet(isPresented: Binding<Bool>) -> some View {
+        /// With `zoomSource`, the sheet zooms out of the view marked with
+        /// `.matchedTransitionSource(id:in:)` for that ID and namespace, and back into it when it closes.
+        func quickScanSheet(isPresented: Binding<Bool>, zoomSource: (id: String, namespace: Namespace.ID)? = nil) -> some View {
             sheet(isPresented: isPresented) {
-                NavigationStack {
+                let scanner = NavigationStack {
                     QuickScanModeView(onClose: { isPresented.wrappedValue = false })
+                }
+                if let zoomSource {
+                    scanner.navigationTransition(.zoom(sourceID: zoomSource.id, in: zoomSource.namespace))
+                } else {
+                    scanner
                 }
             }
         }

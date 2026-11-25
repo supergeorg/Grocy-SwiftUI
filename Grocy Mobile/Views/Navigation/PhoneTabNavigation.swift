@@ -36,6 +36,9 @@ import SwiftUI
         /// One navigation path per tab, so deep links can push a place that isn't a tab.
         @State private var paths: [PhonePlace: NavigationPath] = [:]
         @State private var showQuickScan: Bool = false
+        /// The search field has the keyboard: it then floats above the keyboard, and Quick Scan moves above it.
+        @FocusState private var isSearchFieldFocused: Bool
+        @Namespace private var quickScanTransition
         @State private var searchText: String = ""
         /// The search tab's own path, so Quick Scan shows only on the search itself, not on a result opened from it.
         @State private var searchPath = NavigationPath()
@@ -93,9 +96,22 @@ import SwiftUI
                 Tab(value: Selection.search, role: .search) {
                     NavigationStack(path: $searchPath) {
                         GlobalSearchView(searchText: $searchText)
+                            // Only on the search tab: scanning a barcode is another way of searching
+                            // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
+                            // Only on the search screen itself, not on a result opened from it (e.g. a product's
+                            // form), where scanning isn't searching anymore.
+                            .safeAreaInset(edge: .bottom) {
+                                QuickScanSearchButton(
+                                    // Opening the scanner hides the keyboard: the button stays up meanwhile, so it
+                                    // doesn't slide under the field while the sheet zooms out of it.
+                                    isSearchFieldFocused: isSearchFieldFocused || showQuickScan,
+                                    transitionNamespace: quickScanTransition
+                                ) { showQuickScan = true }
+                            }
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
                     .searchable(text: $searchText, prompt: "Products, recipes and more")
+                    .searchFocused($isSearchFieldFocused)
                 }
             }
             // Rebuilt when the chosen tabs change: otherwise the tab bar keeps an item's old symbol by position
@@ -107,17 +123,7 @@ import SwiftUI
             .tabBarMinimizeBehavior(.onScrollDown)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)
-            // Only on the search tab: scanning a barcode is another way of searching
-            // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-            // Not on a result opened from the search (e.g. a product's form), where scanning isn't searching anymore.
-            .tabViewBottomAccessory(isEnabled: selection == .search && searchPath.isEmpty) {
-                Button {
-                    showQuickScan = true
-                } label: {
-                    Label("Quick Scan", systemImage: MySymbols.barcodeScan)
-                }
-            }
-            .quickScanSheet(isPresented: $showQuickScan)
+            .quickScanSheet(isPresented: $showQuickScan, zoomSource: (QuickScanSearchButton.transitionID, quickScanTransition))
             .task {
                 await grocyVM.requestData(additionalObjects: [.system_config])
             }
@@ -188,6 +194,33 @@ import SwiftUI
             path.append(place)
             paths[host] = path
             selection = .place(host)
+        }
+    }
+
+    /// Quick Scan on the search screen, across the whole width, right above the search field.
+    ///
+    /// A tab view bottom accessory stays behind the keyboard, and the navigation bar is hidden while searching.
+    /// The bottom safe area moves up with the keyboard, but while the field has the keyboard, it floats above the
+    /// keyboard and covers the safe area's lower edge, so the button keeps that field's height free below it.
+    /// Without the keyboard, the field is back in the tab bar, below the safe area.
+    /// The scanner zooms out of the button (iOS 26 zoom transition).
+    private struct QuickScanSearchButton: View {
+        static let transitionID = "quickScan"
+
+        let isSearchFieldFocused: Bool
+        let transitionNamespace: Namespace.ID
+        let action: () -> Void
+
+        var body: some View {
+            Button(action: action) {
+                Label("Quick Scan", systemImage: MySymbols.barcodeScan)
+                    .frame(maxWidth: .infinity, minHeight: Sizes.minimumHitTarget)
+            }
+            .buttonStyle(.glassProminent)
+            .matchedTransitionSource(id: Self.transitionID, in: transitionNamespace)
+            .padding(.horizontal, Spacing.large)
+            .padding(.bottom, isSearchFieldFocused ? Sizes.floatingSearchFieldHeight + Spacing.medium : Spacing.small)
+            .animation(.smooth, value: isSearchFieldFocused)
         }
     }
 
