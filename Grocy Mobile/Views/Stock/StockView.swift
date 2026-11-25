@@ -158,6 +158,12 @@ struct StockView: View {
         )
     }
 
+    private func clearFilters() {
+        storageFilteredStatus = .all
+        filteredLocationID = nil
+        filteredProductGroupID = nil
+    }
+
     private var numFilters: Int {
         var filterCount = 0
         if filteredStatus != .all { filterCount += 1 }
@@ -532,7 +538,18 @@ struct StockView: View {
                     }
                 }
             } else if filteredAndSearchedStock.isEmpty {
-                ContentUnavailableView.search
+                if numFilters > 0 {
+                    // Say that filters hide products, so a product that exists isn't taken for missing (#253).
+                    ContentUnavailableView {
+                        Label("No products", systemImage: MySymbols.filter)
+                    } description: {
+                        Text("No product matches the filters.")
+                    } actions: {
+                        Button("Clear filter", action: clearFilters)
+                    }
+                } else {
+                    ContentUnavailableView.search
+                }
             }
             stockListContent
         }
