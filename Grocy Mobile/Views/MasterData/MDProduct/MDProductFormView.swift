@@ -759,6 +759,20 @@ struct MDProductFormView: View {
                         .foregroundStyle(.primary)
                 }
             )
+
+            // The price type the purchase form starts with
+            Picker(
+                selection: $product.defaultPurchasePriceType,
+                content: {
+                    Text("Unspecified").tag(PurchasePriceType.unspecified)
+                    Text("Unit price").tag(PurchasePriceType.unitPrice)
+                    Text("Total price").tag(PurchasePriceType.totalPrice)
+                },
+                label: {
+                    Label("Default purchase price type", systemImage: MySymbols.price)
+                        .foregroundStyle(.primary)
+                }
+            )
         }
         .navigationTitle(features.locationTracking ? LocalizedStringKey("Default location") : LocalizedStringKey("Default store"))
     }

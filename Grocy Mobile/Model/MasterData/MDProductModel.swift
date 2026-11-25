@@ -44,6 +44,8 @@ class MDProduct: Codable, Equatable, Identifiable {
     var defaultConsumeLocationID: Int?
     var moveOnOpen: Bool
     var autoReprintStockLabel: Bool
+    /// "Default purchase price type" (Grocy 4.4). The default lets SwiftData add the column to an existing store.
+    var defaultPurchasePriceType: PurchasePriceType = PurchasePriceType.unspecified
     var rowCreatedTimestamp: Date
 
     enum CodingKeys: String, CodingKey {
@@ -81,6 +83,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         case defaultConsumeLocationID = "default_consume_location_id"
         case moveOnOpen = "move_on_open"
         case autoReprintStockLabel = "auto_reprint_stock_label"
+        case defaultPurchasePriceType = "default_purchase_price_type"
         case rowCreatedTimestamp = "row_created_timestamp"
     }
 
@@ -120,6 +123,8 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.moveOnOpen = try container.decodeFlexibleBool(forKey: .moveOnOpen)
             self.quIDConsume = try container.decodeFlexibleInt(forKey: .quIDConsume)
             self.autoReprintStockLabel = try container.decodeFlexibleBool(forKey: .autoReprintStockLabel)
+            self.defaultPurchasePriceType =
+                PurchasePriceType(rawValue: try container.decodeFlexibleIntIfPresent(forKey: .defaultPurchasePriceType) ?? 1) ?? .unspecified
             self.quIDPrice = try container.decodeFlexibleInt(forKey: .quIDPrice)
             self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
@@ -163,6 +168,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         try container.encode(defaultConsumeLocationID, forKey: .defaultConsumeLocationID)
         try container.encode(moveOnOpen, forKey: .moveOnOpen)
         try container.encode(autoReprintStockLabel, forKey: .autoReprintStockLabel)
+        try container.encode(defaultPurchasePriceType, forKey: .defaultPurchasePriceType)
         try container.encode(rowCreatedTimestamp, forKey: .rowCreatedTimestamp)
     }
 
@@ -201,6 +207,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         defaultConsumeLocationID: Int? = -1,
         moveOnOpen: Bool = false,
         autoReprintStockLabel: Bool = false,
+        defaultPurchasePriceType: PurchasePriceType = .unspecified,
         rowCreatedTimestamp: Date = Date()
     ) {
         self.id = id
@@ -236,6 +243,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         self.moveOnOpen = moveOnOpen
         self.quIDConsume = quIDConsume
         self.autoReprintStockLabel = autoReprintStockLabel
+        self.defaultPurchasePriceType = defaultPurchasePriceType
         self.quIDPrice = quIDPrice
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
@@ -256,8 +264,17 @@ class MDProduct: Codable, Equatable, Identifiable {
             && lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen && lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock
             && lhs.noOwnStock == rhs.noOwnStock && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID && lhs.moveOnOpen == rhs.moveOnOpen
             && lhs.quIDConsume == rhs.quIDConsume
-            && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
+            && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.defaultPurchasePriceType == rhs.defaultPurchasePriceType
+            && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
 }
 
 typealias MDProducts = [MDProduct]
+
+/// The price type the purchase form starts with. Grocy stores 1, 2 or 3.
+nonisolated enum PurchasePriceType: Int, Codable, CaseIterable, Sendable {
+    /// The purchase form's own default, a unit price.
+    case unspecified = 1
+    case unitPrice = 2
+    case totalPrice = 3
+}
