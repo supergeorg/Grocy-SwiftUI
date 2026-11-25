@@ -51,6 +51,21 @@ Then log in to `https://localhost:9443` in the app (a simulator on this Mac reac
 - `TestServer/grocy-https-proxy.sh fingerprint` prints the fingerprint again, `stop` stops the proxy. It runs nginx in Docker, and the certificate is made with OpenSSL in Docker, so nothing has to be installed on the Mac.
 - `GROCY_TEST_HTTPS_PORT` changes the port (default `9443`, bound to 127.0.0.1 only).
 
+## A large household for profiling
+
+`seed-large-household.py` fills a fresh test server with a household big enough to profile the app:
+1,000 products (two thirds in stock, some due soon, overdue or expired, some below their minimum), about 1,300 stock
+entries, shopping lists with 150 items, 100 recipes with their ingredients, chores, tasks and batteries.
+It only needs Python 3.
+
+```sh
+TestServer/grocy-test-server.sh start
+TestServer/seed-large-household.py              # --products 5000 for a bigger one
+```
+
+Then log in to `http://localhost:9290` with the API key `grocy-mobile-integration-tests`. Every
+`grocy-test-server.sh start` begins with an empty database again.
+
 ## Server control
 
 ```sh
