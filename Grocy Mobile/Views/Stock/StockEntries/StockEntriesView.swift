@@ -113,7 +113,7 @@ struct StockEntriesView: View {
                             )
                             .tint(Color(.GrocyColors.grocyBlue))
                             .help("Mark this stock entry as open")
-                            .disabled(stockEntry.stockEntryOpen)
+                            .disabled(stockEntry.stockEntryOpen || mdProducts.first(where: { $0.id == stockEntry.productID })?.disableOpen == true)
                         }
                     }
                 )

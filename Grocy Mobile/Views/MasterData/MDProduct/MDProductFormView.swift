@@ -1008,8 +1008,13 @@ struct MDProductFormView: View {
                 systemImage: MySymbols.consume
             )
 
-            // Quick open amount
+            // Can't be opened
             if features.openedTracking {
+                MyToggle(isOn: $product.disableOpen, description: "Can't be opened", icon: MySymbols.open)
+            }
+
+            // Quick open amount
+            if features.openedTracking && !product.disableOpen {
                 MyDoubleStepperOptional(
                     amount: $product.quickOpenAmount,
                     description: "Quick open amount",

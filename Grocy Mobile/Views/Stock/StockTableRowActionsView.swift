@@ -122,7 +122,8 @@ struct StockTableRowActionsView: View {
             .tint(Color(.GrocyColors.grocyDelete))
             .help("Consume all \(stockElement.product?.name ?? "?") which are currently in stock")
         }
-        if features.openedTracking && shownActions.contains(.openQA) {
+        // Products marked "Can't be opened" get no open button, like on Grocy's stock overview.
+        if features.openedTracking && shownActions.contains(.openQA) && stockElement.product?.disableOpen != true {
             Button(
                 action: { Task { await openQuickOpenAmount() } },
                 label: {

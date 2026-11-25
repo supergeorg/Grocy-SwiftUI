@@ -337,6 +337,13 @@ struct ConsumeProductView: View {
 
                 AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
 
+                // Says why "Mark as opened" stays disabled.
+                if features.openedTracking, consumeType != .consume, product?.disableOpen == true {
+                    Text("Can't be opened")
+                        .font(.caption)
+                        .foregroundStyle(Color(.GrocyColors.grocyRed))
+                }
+
                 if features.locationTracking {
                     Picker(
                         selection: $locationID,
@@ -512,7 +519,8 @@ struct ConsumeProductView: View {
                                 .labelStyle(.titleAndIcon)
                         }
                     )
-                    .disabled(!isFormValid || isProcessingAction)
+                    // Grocy refuses to open products marked "Can't be opened".
+                    .disabled(!isFormValid || isProcessingAction || product?.disableOpen == true)
                     .keyboardShortcut("o", modifiers: [.command])
                 }
             }

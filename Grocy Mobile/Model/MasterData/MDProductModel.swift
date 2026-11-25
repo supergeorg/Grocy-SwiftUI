@@ -41,6 +41,8 @@ class MDProduct: Codable, Equatable, Identifiable {
     var shouldNotBeFrozen: Bool
     var treatOpenedAsOutOfStock: Bool
     var noOwnStock: Bool
+    /// "Can't be opened" (Grocy 4.4). The default lets SwiftData add the column to an existing store.
+    var disableOpen: Bool = false
     var defaultConsumeLocationID: Int?
     var moveOnOpen: Bool
     var autoReprintStockLabel: Bool
@@ -78,6 +80,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         case shouldNotBeFrozen = "should_not_be_frozen"
         case treatOpenedAsOutOfStock = "treat_opened_as_out_of_stock"
         case noOwnStock = "no_own_stock"
+        case disableOpen = "disable_open"
         case defaultConsumeLocationID = "default_consume_location_id"
         case moveOnOpen = "move_on_open"
         case autoReprintStockLabel = "auto_reprint_stock_label"
@@ -116,6 +119,7 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.shouldNotBeFrozen = try container.decodeFlexibleBool(forKey: .shouldNotBeFrozen)
             self.treatOpenedAsOutOfStock = try container.decodeFlexibleBool(forKey: .treatOpenedAsOutOfStock)
             self.noOwnStock = try container.decodeFlexibleBool(forKey: .noOwnStock)
+            self.disableOpen = try container.decodeFlexibleBoolIfPresent(forKey: .disableOpen) ?? false
             self.defaultConsumeLocationID = try container.decodeFlexibleIntIfPresent(forKey: .defaultConsumeLocationID)
             self.moveOnOpen = try container.decodeFlexibleBool(forKey: .moveOnOpen)
             self.quIDConsume = try container.decodeFlexibleInt(forKey: .quIDConsume)
@@ -160,6 +164,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         try container.encode(shouldNotBeFrozen, forKey: .shouldNotBeFrozen)
         try container.encode(treatOpenedAsOutOfStock, forKey: .treatOpenedAsOutOfStock)
         try container.encode(noOwnStock, forKey: .noOwnStock)
+        try container.encode(disableOpen, forKey: .disableOpen)
         try container.encode(defaultConsumeLocationID, forKey: .defaultConsumeLocationID)
         try container.encode(moveOnOpen, forKey: .moveOnOpen)
         try container.encode(autoReprintStockLabel, forKey: .autoReprintStockLabel)
@@ -198,6 +203,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         shouldNotBeFrozen: Bool = false,
         treatOpenedAsOutOfStock: Bool = false,
         noOwnStock: Bool = false,
+        disableOpen: Bool = false,
         defaultConsumeLocationID: Int? = -1,
         moveOnOpen: Bool = false,
         autoReprintStockLabel: Bool = false,
@@ -232,6 +238,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         self.shouldNotBeFrozen = shouldNotBeFrozen
         self.treatOpenedAsOutOfStock = treatOpenedAsOutOfStock
         self.noOwnStock = noOwnStock
+        self.disableOpen = disableOpen
         self.defaultConsumeLocationID = defaultConsumeLocationID
         self.moveOnOpen = moveOnOpen
         self.quIDConsume = quIDConsume
@@ -254,7 +261,8 @@ class MDProduct: Codable, Equatable, Identifiable {
             && lhs.quickConsumeAmount == rhs.quickConsumeAmount && lhs.quickOpenAmount == rhs.quickOpenAmount
             && lhs.hideOnStockOverview == rhs.hideOnStockOverview && lhs.defaultStockLabelType == rhs.defaultStockLabelType
             && lhs.shouldNotBeFrozen == rhs.shouldNotBeFrozen && lhs.treatOpenedAsOutOfStock == rhs.treatOpenedAsOutOfStock
-            && lhs.noOwnStock == rhs.noOwnStock && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID && lhs.moveOnOpen == rhs.moveOnOpen
+            && lhs.noOwnStock == rhs.noOwnStock && lhs.disableOpen == rhs.disableOpen && lhs.defaultConsumeLocationID == rhs.defaultConsumeLocationID
+            && lhs.moveOnOpen == rhs.moveOnOpen
             && lhs.quIDConsume == rhs.quIDConsume
             && lhs.autoReprintStockLabel == rhs.autoReprintStockLabel && lhs.quIDPrice == rhs.quIDPrice && lhs.rowCreatedTimestamp == rhs.rowCreatedTimestamp
     }
