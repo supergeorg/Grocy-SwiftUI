@@ -39,7 +39,7 @@ class ShoppingListItem: Codable, Equatable {
             self.shoppingListID = try container.decodeFlexibleInt(forKey: .shoppingListID)
             self.done = try container.decodeFlexibleBool(forKey: .done)
             self.quID = try container.decodeFlexibleIntIfPresent(forKey: .quID)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

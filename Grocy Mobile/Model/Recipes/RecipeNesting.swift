@@ -31,7 +31,7 @@ class RecipeNesting: Codable, Equatable, Identifiable {
         self.recipeID = try container.decodeFlexibleInt(forKey: .recipeID)
         self.includesRecipeID = try container.decodeFlexibleInt(forKey: .includesRecipeID)
         self.servings = try container.decodeFlexibleDouble(forKey: .servings)
-        rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+        rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
     }
 
     init(

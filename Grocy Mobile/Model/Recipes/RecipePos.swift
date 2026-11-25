@@ -54,7 +54,7 @@ class RecipePos: Codable, Equatable, Identifiable {
         variableAmount = try container.decodeIfPresent(String.self, forKey: .variableAmount) ?? ""
         priceFactor = try container.decodeFlexibleDouble(forKey: .priceFactor)
         roundUp = try container.decodeFlexibleBool(forKey: .roundUp)
-        rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+        rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
     }
 
     init(

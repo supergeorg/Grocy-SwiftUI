@@ -37,7 +37,7 @@ class GrocyUser: Codable, Equatable {
             self.lastName = try? container.decodeIfPresent(String.self, forKey: .lastName)
             self.displayName = try container.decode(String.self, forKey: .displayName)
             self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

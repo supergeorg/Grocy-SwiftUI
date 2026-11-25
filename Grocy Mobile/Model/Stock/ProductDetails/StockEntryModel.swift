@@ -56,7 +56,7 @@ class StockEntry: Codable, Equatable, Identifiable {
             self.locationID = try container.decodeFlexibleIntIfPresent(forKey: .locationID)
             self.storeID = try container.decodeFlexibleIntIfPresent(forKey: .storeID)
             self.note = try container.decodeIfPresent(String.self, forKey: .note) ?? ""
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

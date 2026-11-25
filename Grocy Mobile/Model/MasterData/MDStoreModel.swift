@@ -30,7 +30,7 @@ class MDStore: Codable, Equatable, Identifiable {
             self.name = try container.decode(String.self, forKey: .name)
             self.active = try container.decodeFlexibleBool(forKey: .active)
             self.mdStoreDescription = (try? container.decodeIfPresent(String.self, forKey: .mdStoreDescription)) ?? ""
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }

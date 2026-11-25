@@ -76,7 +76,7 @@ class MDChore: Codable, Equatable, Identifiable {
             self.startDate = getDateFromString(try container.decode(String.self, forKey: .startDate))!
             self.rescheduledDate = getDateFromString(try container.decodeIfPresent(String.self, forKey: .rescheduledDate) ?? "")
             self.rescheduledNextExecutionAssignedToUserID = try container.decodeFlexibleIntIfPresent(forKey: .rescheduledNextExecutionAssignedToUserID)
-            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp))!
+            self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
         }
