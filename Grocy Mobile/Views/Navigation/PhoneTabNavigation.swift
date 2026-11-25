@@ -95,23 +95,10 @@ import SwiftUI
                         GlobalSearchView(searchText: $searchText)
                             // Only on the search tab: scanning a barcode is another way of searching
                             // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-                            // Floats above the search field: the safe area includes the field and the keyboard, so
-                            // the button moves up with them. A bottom accessory stayed behind the keyboard, and the
-                            // navigation bar is hidden while searching. Only on the search screen itself, not on a
-                            // result opened from it (e.g. a product's form), where scanning isn't searching anymore.
+                            // Only on the search screen itself, not on a result opened from it (e.g. a product's
+                            // form), where scanning isn't searching anymore.
                             .safeAreaInset(edge: .bottom) {
-                                HStack {
-                                    Spacer()
-                                    Button {
-                                        showQuickScan = true
-                                    } label: {
-                                        Label("Quick Scan", systemImage: MySymbols.barcodeScan)
-                                            .frame(minHeight: Sizes.minimumHitTarget)
-                                    }
-                                    .buttonStyle(.glassProminent)
-                                }
-                                .padding(.horizontal)
-                                .padding(.bottom, Spacing.small)
+                                QuickScanSearchButton { showQuickScan = true }
                             }
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
@@ -198,6 +185,27 @@ import SwiftUI
             path.append(place)
             paths[host] = path
             selection = .place(host)
+        }
+    }
+
+    /// Quick Scan on the search screen, across the whole width, right above the search field.
+    ///
+    /// A tab view bottom accessory stays behind the keyboard, and the navigation bar is hidden while searching.
+    /// The bottom safe area moves up with the keyboard, but while searching the floating search field covers its
+    /// lower edge, so the button keeps that field's height free below it.
+    private struct QuickScanSearchButton: View {
+        @Environment(\.isSearching) private var isSearching
+
+        let action: () -> Void
+
+        var body: some View {
+            Button(action: action) {
+                Label("Quick Scan", systemImage: MySymbols.barcodeScan)
+                    .frame(maxWidth: .infinity, minHeight: Sizes.minimumHitTarget)
+            }
+            .buttonStyle(.glassProminent)
+            .padding(.horizontal, Spacing.large)
+            .padding(.bottom, isSearching ? Sizes.floatingSearchFieldHeight + Spacing.small : Spacing.small)
         }
     }
 

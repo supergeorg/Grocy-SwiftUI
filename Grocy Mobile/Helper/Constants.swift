@@ -41,6 +41,8 @@ enum Spacing {
 enum Sizes {
     /// HIG minimum hit region for touch.
     static let minimumHitTarget: CGFloat = 44
+    /// Height of the search field that floats above the keyboard while a search tab is searching (iOS 26).
+    static let floatingSearchFieldHeight: CGFloat = 52
     static let productThumbnail: CGFloat = 75
     static let picturePreview: CGFloat = 300
     static let userfieldThumbnail: CGFloat = 32
