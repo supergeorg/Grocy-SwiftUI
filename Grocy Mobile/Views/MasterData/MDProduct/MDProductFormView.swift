@@ -864,15 +864,17 @@ struct MDProductFormView: View {
                     }
                 }
             )
-            .onChange(of: product.quIDStock) {
-                if product.quIDPurchase == -1 {
-                    product.quIDPurchase = product.quIDStock
+            // Like Grocy's web form: the other units follow the stock unit while they're unset or still the same as it (#199).
+            .onChange(of: product.quIDStock) { oldQuIDStock, newQuIDStock in
+                guard newQuIDStock != -1 else { return }
+                if product.quIDPurchase == -1 || product.quIDPurchase == oldQuIDStock {
+                    product.quIDPurchase = newQuIDStock
                 }
-                if product.quIDConsume == -1 {
-                    product.quIDConsume = product.quIDStock
+                if product.quIDConsume == -1 || product.quIDConsume == oldQuIDStock {
+                    product.quIDConsume = newQuIDStock
                 }
-                if product.quIDPrice == -1 {
-                    product.quIDPrice = product.quIDStock
+                if product.quIDPrice == -1 || product.quIDPrice == oldQuIDStock {
+                    product.quIDPrice = newQuIDStock
                 }
             }
 
