@@ -438,6 +438,15 @@ struct StockView: View {
 
     var stockListContent: some View {
         let groupNamesByID = self.groupNamesByID
+        // Built once for all rows, which look up their quantity unit, product group, parent product and status in it.
+        let rowLookups = StockRowLookups(
+            quantityUnits: mdQuantityUnits,
+            productGroups: mdProductGroups,
+            products: mdProducts,
+            shoppingList: shoppingList,
+            volatileStock: volatileStock,
+            dueDateTracking: features.dueDateTracking
+        )
         let groupName: (AnyHashable) -> String? = { key in
             guard let id = key as? Int else { return nil }
             return groupNamesByID?[id]
@@ -466,15 +475,7 @@ struct StockView: View {
                         groupElements,
                         id: \.productID
                     ) { stockElement in
-                        StockTableRow(
-                            stockElement: stockElement,
-                            mdQuantityUnits: mdQuantityUnits,
-                            shoppingList: shoppingList,
-                            mdProductGroups: mdProductGroups,
-                            volatileStock: volatileStock,
-                            parentProduct: mdProducts.first(where: { $0.id == stockElement.product?.parentProductID }),
-                            userSettings: userSettings
-                        )
+                        StockTableRow(stockElement: stockElement, lookups: rowLookups, userSettings: userSettings)
                     }
                 },
                 header: {
