@@ -17675,6 +17675,9 @@
         }
       }
     },
+    "Can't be opened" : {
+
+    },
     "Can't show this file" : {
 
     },
@@ -22747,6 +22750,9 @@
           }
         }
       }
+    },
+    "Couldn't copy the product" : {
+
     },
     "Couldn't delete \"%@\"" : {
       "localizations" : {
@@ -28495,6 +28501,9 @@
           }
         }
       }
+    },
+    "Default purchase price type" : {
+
     },
     "Default quantity unit consume" : {
       "localizations" : {
@@ -45337,6 +45346,12 @@
     "Marks an amount of a product in stock as opened. Without an amount, the product's quick open amount is used." : {
 
     },
+    "Marks this item as done" : {
+
+    },
+    "Marks this task as done" : {
+
+    },
     "Master data" : {
       "localizations" : {
         "cs" : {
@@ -48926,6 +48941,9 @@
         }
       }
     },
+    "No product matches the filters." : {
+
+    },
     "No product picture" : {
       "localizations" : {
         "cs" : {
@@ -51556,6 +51574,9 @@
         }
       }
     },
+    "Not signed in" : {
+
+    },
     "Note" : {
       "localizations" : {
         "ca" : {
@@ -51757,6 +51778,9 @@
       }
     },
     "Nothing planned" : {
+
+    },
+    "Nothing to buy" : {
 
     },
     "Nothing was found for the given barcode" : {
@@ -52899,6 +52923,9 @@
           }
         }
       }
+    },
+    "Open Grocy on your iPhone to load the shopping list, tasks and chores." : {
+
     },
     "Open link" : {
 
@@ -64687,6 +64714,9 @@
     "Sidebar" : {
 
     },
+    "Sign in to your Grocy server in the app on your iPhone." : {
+
+    },
     "Similar products" : {
       "localizations" : {
         "de" : {
@@ -70121,26 +70151,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "当店应用程序不支持服务器版本 %@ 。 你可以继续使用，但可能会出现问题。"
-          }
-        }
-      }
-    },
-    "This server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. You can continue anyway, but some features might not work." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieser Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Du kannst trotzdem fortfahren, aber einige Funktionen funktionieren möglicherweise nicht."
-          }
-        }
-      }
-    },
-    "This server runs Grocy %@. Grocy Mobile requires Grocy %@. Please update your server. You can continue anyway, but many features won't work." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieser Server verwendet Grocy %1$@. Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server. Du kannst trotzdem fortfahren, aber viele Funktionen werden nicht funktionieren."
           }
         }
       }
@@ -76407,6 +76417,26 @@
         }
       }
     },
+    "This server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. You can continue anyway, but some features might not work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Du kannst trotzdem fortfahren, aber einige Funktionen funktionieren möglicherweise nicht."
+          }
+        }
+      }
+    },
+    "This server runs Grocy %@. Grocy Mobile requires Grocy %@. Please update your server. You can continue anyway, but many features won't work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Server verwendet Grocy %1$@. Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server. Du kannst trotzdem fortfahren, aber viele Funktionen werden nicht funktionieren."
+          }
+        }
+      }
+    },
     "This token has to be generated out of your Home Assistant Web interface. To do this, open your Home Assistant Profile page, scroll down to Long-Lived Access Tokens and create one. Name it and copy the resulting Token in the App or create a QR Code and scan it (iOS)." : {
       "localizations" : {
         "cs" : {
@@ -76476,6 +76506,9 @@
           }
         }
       }
+    },
+    "This will apply to added products" : {
+
     },
     "This will be used as a headline to group ingredients together" : {
       "localizations" : {
@@ -78219,6 +78252,9 @@
           }
         }
       }
+    },
+    "Tracks this chore as done now" : {
+
     },
     "Transaction time" : {
       "localizations" : {
@@ -81274,6 +81310,9 @@
         }
       }
     },
+    "Unit price" : {
+
+    },
     "Unknown" : {
       "localizations" : {
         "ca" : {
@@ -81549,6 +81588,9 @@
     "Unlink the shopping lists in Reminders?" : {
 
     },
+    "Unspecified" : {
+
+    },
     "Unsupported server version" : {
       "localizations" : {
         "de" : {
@@ -81572,6 +81614,9 @@
       }
     },
     "Up to %lld tabs, plus search. Everything else opens from the settings button." : {
+
+    },
+    "Updated %@" : {
 
     },
     "Upload picture" : {
@@ -83527,6 +83572,9 @@
 
     },
     "View" : {
+
+    },
+    "Waiting for iPhone" : {
 
     },
     "Water the plants" : {
@@ -86713,6 +86761,26 @@
     "Your own server" : {
 
     },
+    "Your server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. Some features might not work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Einige Funktionen funktionieren möglicherweise nicht."
+          }
+        }
+      }
+    },
+    "Your server runs Grocy %@. This version of Grocy Mobile requires Grocy %@. Please update your server, otherwise many features won't work." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Server verwendet Grocy %1$@. Diese Version von Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server, sonst werden viele Funktionen nicht funktionieren."
+          }
+        }
+      }
+    },
     "Your servers are saved as profiles and synced to your other devices." : {
 
     },
@@ -86732,26 +86800,6 @@
         }
       },
       "shouldTranslate" : false
-    },
-    "Your server runs Grocy %@. This version of Grocy Mobile requires Grocy %@. Please update your server, otherwise many features won't work." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dein Server verwendet Grocy %1$@. Diese Version von Grocy Mobile benötigt Grocy %2$@. Bitte aktualisiere deinen Server, sonst werden viele Funktionen nicht funktionieren."
-          }
-        }
-      }
-    },
-    "Your server runs Grocy %@, which hasn't been tested with Grocy Mobile yet. The app supports Grocy %@. Some features might not work." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dein Server verwendet Grocy %1$@, das noch nicht mit Grocy Mobile getestet wurde. Die App unterstützt Grocy %2$@. Einige Funktionen funktionieren möglicherweise nicht."
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

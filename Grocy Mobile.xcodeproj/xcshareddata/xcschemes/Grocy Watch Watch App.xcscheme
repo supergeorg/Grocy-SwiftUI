@@ -46,7 +46,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78D0E35730B674C500FF487D"
             BuildableName = "Grocy Watch Watch App.app"
-            BlueprintName = "Grocy Watch Watch App"
             ReferencedContainer = "container:Grocy Mobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +62,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78D0E35730B674C500FF487D"
             BuildableName = "Grocy Watch Watch App.app"
-            BlueprintName = "Grocy Watch Watch App"
             ReferencedContainer = "container:Grocy Mobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
