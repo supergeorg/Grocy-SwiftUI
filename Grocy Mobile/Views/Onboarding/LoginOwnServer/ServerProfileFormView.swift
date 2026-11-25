@@ -176,6 +176,22 @@ struct ServerProfileFormView: View {
                     }
                 )
             }
+            if let fingerprint = serverProfile.trustedCertificateFingerprint {
+                Section {
+                    LabeledContent("SHA-256 fingerprint") {
+                        Text(fingerprint)
+                            .font(.caption.monospaced())
+                            .textSelection(.enabled)
+                    }
+                    Button("Don't trust this certificate", role: .destructive) {
+                        serverProfile.trustedCertificateFingerprint = nil
+                    }
+                } header: {
+                    Text("Trusted certificate")
+                } footer: {
+                    Text("The server's certificate isn't trusted by this device, but you trusted it for this server.")
+                }
+            }
             Section(
                 content: {
                     ForEach(serverProfile.customHeaders ?? []) { customHeader in
