@@ -15,7 +15,11 @@ struct StockEntriesView: View {
     var stockElement: StockElement
 
     @Query var stockEntries: StockEntries
+    /// Only the shown product: all entries here are of it.
     @Query var mdProducts: MDProducts
+    var product: MDProduct? {
+        mdProducts.first
+    }
     @Query var mdQuantityUnits: MDQuantityUnits
     @Query var mdStores: MDStores
     @Query var mdLocations: MDLocations
@@ -33,6 +37,8 @@ struct StockEntriesView: View {
         let predicate = #Predicate<StockEntry> { item in
             item.productID == stockElement.productID
         }
+        let productID = stockElement.productID
+        _mdProducts = Query(filter: #Predicate<MDProduct> { $0.id == productID })
         _stockEntries = Query(
             filter: predicate,
             sort: [SortDescriptor(\StockEntry.bestBeforeDate, order: .forward), SortDescriptor(\StockEntry.purchasedDate, order: .forward)]
@@ -50,7 +56,7 @@ struct StockEntriesView: View {
                 id: stockEntry.productID,
                 stockModePost: .consume,
                 content: ProductConsume(
-                    amount: mdProducts.first(where: { $0.id == stockEntry.productID })?.quickConsumeAmount ?? stockEntry.amount,
+                    amount: product?.quickConsumeAmount ?? stockEntry.amount,
                     transactionType: .consume,
                     spoiled: false,
                     stockEntryID: stockEntry.stockID
@@ -69,7 +75,7 @@ struct StockEntriesView: View {
                 id: stockEntry.productID,
                 stockModePost: .open,
                 content: ProductOpen(
-                    amount: mdProducts.first(where: { $0.id == stockEntry.productID })?.quickOpenAmount ?? stockEntry.amount,
+                    amount: product?.quickOpenAmount ?? stockEntry.amount,
                     stockEntryID: stockEntry.stockID,
                 )
             )
@@ -81,6 +87,11 @@ struct StockEntriesView: View {
     }
 
     var body: some View {
+        // Looked up once for all entries, not per entry.
+        let product = self.product
+        let quantityUnit = product.flatMap { product in mdQuantityUnits.first(where: { $0.id == product.quIDStock }) }
+        let locationsByID = Dictionary(mdLocations.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let storesByID = Dictionary(mdStores.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         List {
             if stockEntries.isEmpty {
                 Text("No matching records found")
@@ -89,10 +100,10 @@ struct StockEntriesView: View {
                 StockEntryRowView(
                     stockEntry: stockEntry,
                     stockElement: stockElement,
-                    product: mdProducts.first(where: { $0.id == stockEntry.productID }),
-                    quantityUnit: mdQuantityUnits.first(where: { $0.id == mdProducts.first(where: { $0.id == stockEntry.productID })?.quIDStock }),
-                    location: mdLocations.first(where: { $0.id == stockEntry.locationID }),
-                    store: mdStores.first(where: { $0.id == stockEntry.storeID }),
+                    product: product,
+                    quantityUnit: quantityUnit,
+                    location: stockEntry.locationID.flatMap { locationsByID[$0] },
+                    store: stockEntry.storeID.flatMap { storesByID[$0] },
                     currency: systemConfig?.currency,
                     userSettings: userSettings
                 )
@@ -113,7 +124,7 @@ struct StockEntriesView: View {
                             )
                             .tint(Color(.GrocyColors.grocyBlue))
                             .help("Mark this stock entry as open")
-                            .disabled(stockEntry.stockEntryOpen || mdProducts.first(where: { $0.id == stockEntry.productID })?.disableOpen == true)
+                            .disabled(stockEntry.stockEntryOpen || product?.disableOpen == true)
                         }
                     }
                 )

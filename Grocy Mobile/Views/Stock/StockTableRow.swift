@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 /// The objects the stock rows look up by ID, as dictionaries built once per list: searching the master data arrays
-/// in every row made the stock overview slow with a large household.
+/// in every row made the stock overview slow with a large household. The rows keep only what they looked up in it.
 struct StockRowLookups {
     var quantityUnitsByID: [Int: MDQuantityUnit] = [:]
     var productGroupsByID: [Int: MDProductGroup] = [:]
@@ -64,27 +64,27 @@ struct StockTableRow: View {
 
     var stockElement: StockElement
 
-    // Pass data from parent to avoid duplicate queries
-    let lookups: StockRowLookups
+    // Only the values this row needs, looked up once in the init: SwiftUI compares a view's stored properties on every
+    // update, and storing the whole lookups compared all products for each row.
+    let quantityUnit: MDQuantityUnit?
+    let productGroup: MDProductGroup?
+    let parentProduct: MDProduct?
+    /// The status the row is highlighted for.
+    let productStatus: ProductStatus?
+    let isOnShoppingList: Bool
     let userSettings: GrocyUserSettings?
 
     @State private var showDetailView: Bool = false
 
-    var quantityUnit: MDQuantityUnit? {
-        stockElement.product.flatMap { lookups.quantityUnitsByID[$0.quIDStock] }
-    }
-
-    var parentProduct: MDProduct? {
-        stockElement.product?.parentProductID.flatMap { lookups.productsByID[$0] }
-    }
-
-    var productGroup: MDProductGroup? {
-        stockElement.product?.productGroupID.flatMap { lookups.productGroupsByID[$0] }
-    }
-
-    /// The status the row is highlighted for.
-    var productStatus: ProductStatus? {
-        lookups.statusByProductID[stockElement.productID]
+    init(stockElement: StockElement, lookups: StockRowLookups, userSettings: GrocyUserSettings?) {
+        self.stockElement = stockElement
+        let product = stockElement.product
+        quantityUnit = product.flatMap { lookups.quantityUnitsByID[$0.quIDStock] }
+        productGroup = product?.productGroupID.flatMap { lookups.productGroupsByID[$0] }
+        parentProduct = product?.parentProductID.flatMap { lookups.productsByID[$0] }
+        productStatus = lookups.statusByProductID[stockElement.productID]
+        isOnShoppingList = lookups.productIDsOnShoppingList.contains(stockElement.productID)
+        self.userSettings = userSettings
     }
 
     var backgroundColor: Color? {
@@ -223,7 +223,7 @@ struct StockTableRow: View {
                     }
                 }
                 if userSettings?.showIconOnStockOverviewPageWhenProductIsOnShoppingList ?? true,
-                    lookups.productIDsOnShoppingList.contains(stockElement.productID)
+                    isOnShoppingList
                 {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
