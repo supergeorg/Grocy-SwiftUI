@@ -33,8 +33,9 @@ struct ShoppingListEntryFormView: View {
     var productIDToSelect: Int?
     var isPopup: Bool = false
 
+    /// Grocy 4.6 allows an amount of 0 for shopping list items.
     var isFormValid: Bool {
-        displayAmount > 0 && (shoppingListEntry.productID != -1 || !shoppingListEntry.note.isEmpty) && selectedShoppingListID != -1
+        displayAmount >= 0 && (shoppingListEntry.productID != -1 || !shoppingListEntry.note.isEmpty) && selectedShoppingListID != -1
     }
 
     var product: MDProduct? {
