@@ -57,4 +57,34 @@ struct DateParsingTests {
         #expect(formatDateTimeAsString(withTime, localizationKey: "en") != dateOnly)
         #expect(formatDateTimeAsString(withTime, dateOnly: true, localizationKey: "en") == dateOnly)
     }
+
+    @Test(
+        "The fast path for Grocy's formats gives the same dates as the formatters",
+        arguments: [
+            "2026-11-25", "2026-11-25 10:11:12", "2024-02-29 23:59:59", "2999-12-31", "2026-01-01 00:00:00", "2026-12-31 23:59:59",
+        ]
+    )
+    func fastPathMatchesFormatters(dateString: String) throws {
+        let fast = try #require(GrocyDateParser.parseGrocyFormat(dateString))
+        #expect(fast == GrocyDateParser.parseWithFormatters(dateString))
+    }
+
+    @Test(
+        "Other values skip the fast path",
+        arguments: [
+            "2026-02-30", "2026-13-01", "2026-11-25 24:00:00", "2026-11-25 10:61:00", "2026-11-25T10:11:12", "2026-11-25 10:11",
+            "2026-1-05", "2026-11-25x10:11:12", "",
+        ]
+    )
+    func fastPathRejects(dateString: String) {
+        #expect(GrocyDateParser.parseGrocyFormat(dateString) == nil)
+    }
+
+    @Test("Values the fast path rejects are still read by the formatters")
+    func fallback() {
+        #expect(getDateFromString("2026-11-25T10:11:12") != nil)
+        #expect(getDateFromString("2026-08-12 4:33:51 PM") != nil)
+        #expect(getDateFromString("2026-11-25T10:11:12.123Z") != nil)
+        #expect(getDateFromString("2026-02-30") == nil)
+    }
 }

@@ -104,39 +104,107 @@ func formatTimestampOutput(_ timeStamp: String, localizationKey: String? = nil) 
     return timeStampFormatted
 }
 
+/// Parses dates and timestamps from Grocy and from older app versions.
+///
+/// Grocy's own formats (`Y-m-d` and `Y-m-d H:i:s`, local time) take a fast path without a formatter: a full sync
+/// parses thousands of them, and creating formatters for each one took seconds on the main thread.
+/// Everything else goes through formatters that are made once.
 nonisolated func getDateFromString(_ dateString: String?) -> Date? {
     guard let dateString else { return nil }
-
-    // Try ISO8601 first
-    let iso8601Formatter = ISO8601DateFormatter()
-    iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    if let date = iso8601Formatter.date(from: dateString) {
+    if let date = GrocyDateParser.parseGrocyFormat(dateString) {
         return date
     }
-    iso8601Formatter.formatOptions = [.withInternetDateTime]
-    if let date = iso8601Formatter.date(from: dateString) {
-        return date
-    }
+    return GrocyDateParser.parseWithFormatters(dateString)
+}
 
-    // Fall back to DateFormatter for custom formats
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = .current
+nonisolated enum GrocyDateParser {
+    // Formatters are thread-safe for parsing. They're only configured here, once.
+    nonisolated(unsafe) private static let isoWithFractionalSeconds: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+    nonisolated(unsafe) private static let iso: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
     // Grocy stores local times without a time zone.
     // Older app versions wrote timestamps in the device's 12-hour format ("2026-08-12 4:33:51 PM"), so those are read too (#250).
-    let formats = [
+    nonisolated(unsafe) private static let formatters: [DateFormatter] = [
         "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd h:mm:ss a", "yyyy-MM-dd h:mm a",
         "yyyy-MM-dd",
-    ]
-
-    for format in formats {
+    ].map { format in
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .autoupdatingCurrent
         formatter.dateFormat = format
-        if let date = formatter.date(from: dateString) {
-            return date
-        }
+        return formatter
     }
 
-    return nil
+    /// The same order as before: ISO 8601 first, then the custom formats.
+    static func parseWithFormatters(_ dateString: String) -> Date? {
+        if let date = isoWithFractionalSeconds.date(from: dateString) ?? iso.date(from: dateString) {
+            return date
+        }
+        for formatter in formatters {
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+        }
+        return nil
+    }
+
+    /// `yyyy-MM-dd` or `yyyy-MM-dd HH:mm:ss` in the current time zone, or nil for anything else.
+    /// Values the formatters would treat differently (an invalid day, a time skipped by daylight saving time)
+    /// return nil too, so they still take the formatter path.
+    static func parseGrocyFormat(_ dateString: String) -> Date? {
+        let bytes = Array(dateString.utf8)
+        guard bytes.count == 10 || bytes.count == 19 else { return nil }
+
+        func number(_ range: Range<Int>) -> Int? {
+            var value = 0
+            for index in range {
+                let byte = bytes[index]
+                guard byte >= 48 && byte <= 57 else { return nil }
+                value = value * 10 + Int(byte - 48)
+            }
+            return value
+        }
+
+        guard bytes[4] == 45, bytes[7] == 45,  // "-"
+            let year = number(0..<4), let month = number(5..<7), let day = number(8..<10)
+        else { return nil }
+        var hour = 0
+        var minute = 0
+        var second = 0
+        if bytes.count == 19 {
+            guard bytes[10] == 32, bytes[13] == 58, bytes[16] == 58,  // " ", ":", ":"
+                let parsedHour = number(11..<13), let parsedMinute = number(14..<16), let parsedSecond = number(17..<19)
+            else { return nil }
+            hour = parsedHour
+            minute = parsedMinute
+            second = parsedSecond
+        }
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .current
+        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
+        guard let date = calendar.date(from: components) else { return nil }
+        // Calendar rolls invalid values over (February 30 becomes March 2); the formatters reject them.
+        let check = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        guard check.year == year, check.month == month, check.day == day, check.hour == hour, check.minute == minute,
+            check.second == second
+        else { return nil }
+        // Around a daylight saving time change a local time can exist twice, and Calendar and the formatters pick
+        // different ones. Those rare values keep the formatters' result.
+        if let transition = calendar.timeZone.nextDaylightSavingTimeTransition(after: date.addingTimeInterval(-2 * 3600)),
+            abs(transition.timeIntervalSince(date)) < 2 * 3600
+        {
+            return nil
+        }
+        return date
+    }
 }
 
 /// Parses a Grocy timestamp (`Y-m-d H:i:s`, local time).
