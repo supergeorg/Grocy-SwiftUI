@@ -90,9 +90,10 @@ struct StockTableRow: View {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.openQA], mdQuantityUnits: mdQuantityUnits)
             }
         }
+        // No full swipe here: it consumed the whole stock by accident, so "All" needs a deliberate tap (#225).
         .swipeActions(
             edge: .trailing,
-            allowsFullSwipe: true
+            allowsFullSwipe: false
         ) {
             if stockElement.amount > 0 {
                 StockTableRowActionsView(stockElement: stockElement, shownActions: [.consumeAll], mdQuantityUnits: mdQuantityUnits)
