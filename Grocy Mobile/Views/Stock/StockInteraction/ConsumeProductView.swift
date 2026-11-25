@@ -186,10 +186,16 @@ struct ConsumeProductView: View {
         return maxAmount
     }
 
+    /// The scanned barcode while it belongs to the selected product: its amount and unit are the defaults then (#257).
+    private var productBarcode: MDProductBarcode? {
+        guard actionPending, let barcode, barcode.productID == productID else { return nil }
+        return barcode
+    }
+
     private func resetForm() {
         productID = actionPending ? productToConsumeID : nil
-        amount = (actionPending ? barcode?.amount : nil) ?? userSettings?.stockDefaultConsumeAmount ?? 1.0
-        quantityUnitID = actionPending ? product?.quIDStock : nil
+        amount = productBarcode?.amount ?? userSettings?.stockDefaultConsumeAmount ?? 1.0
+        quantityUnitID = actionPending ? productBarcode?.quID ?? product?.quIDStock : nil
         locationID = actionPending ? product?.defaultConsumeLocationID ?? -1 : -1
         spoiled = false
         useSpecificStockEntry = actionPending ? directStockEntryID != nil : false
@@ -319,10 +325,12 @@ struct ConsumeProductView: View {
                         }
                         if let product = product {
                             locationID = product.defaultConsumeLocationID ?? product.locationID
-                            quantityUnitID = product.quIDStock
+                            // A scanned barcode with an amount wins over the default consume amount (#257).
+                            quantityUnitID = productBarcode?.quID ?? product.quIDStock
                             amount =
-                                userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false
-                                ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1)
+                                productBarcode?.amount
+                                ?? (userSettings?.stockDefaultConsumeAmountUseQuickConsumeAmount ?? false
+                                    ? (product.quickConsumeAmount ?? 1.0) : Double(userSettings?.stockDefaultConsumeAmount ?? 1))
                         }
                     }
                     // Clear specific stock entry when product changes
