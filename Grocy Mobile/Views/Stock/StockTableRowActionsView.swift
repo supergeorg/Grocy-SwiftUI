@@ -77,7 +77,7 @@ struct StockTableRowActionsView: View {
         stockElement.product?.quickOpenAmount ?? stockElement.product?.quickConsumeAmount ?? 1.0
     }
 
-    private func openQuickConsumeAmount() async {
+    private func openQuickOpenAmount() async {
         do {
             try await grocyVM.postStockObject(
                 id: stockElement.productID,
@@ -124,7 +124,7 @@ struct StockTableRowActionsView: View {
         }
         if features.openedTracking && shownActions.contains(.openQA) {
             Button(
-                action: { Task { await openQuickConsumeAmount() } },
+                action: { Task { await openQuickOpenAmount() } },
                 label: {
                     Label(quickOpenAmount.formattedAmount, systemImage: MySymbols.open)
                 }
