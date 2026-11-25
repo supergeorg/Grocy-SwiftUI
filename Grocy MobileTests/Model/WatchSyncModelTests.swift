@@ -23,6 +23,11 @@ struct WatchSyncModelTests {
                 dueSoonDays: 5,
                 updated: Date(timeIntervalSince1970: 1_700_000_000)
             ),
+            chores: WidgetDueSummary(
+                items: [.init(id: 4, name: "Water plants", dueDate: nil, assignedToMe: false)],
+                dueSoonDays: 5,
+                updated: Date(timeIntervalSince1970: 1_700_000_000)
+            ),
             handledActionIDs: handled,
             updated: Date(timeIntervalSince1970: 1_700_000_500)
         )
@@ -37,11 +42,22 @@ struct WatchSyncModelTests {
 
     @Test("An action survives the trip through the user info")
     func actionRoundTrip() throws {
-        for kind in [WatchAction.Kind.shoppingListItemDone(itemID: 7), .taskDone(taskID: 3)] {
+        for kind in [WatchAction.Kind.shoppingListItemDone(itemID: 7), .taskDone(taskID: 3), .choreDone(choreID: 4)] {
             let original = WatchAction(kind: kind, date: Date(timeIntervalSince1970: 1_700_000_000))
             let decoded = try #require(WatchAction(userInfo: try original.userInfo()))
             #expect(decoded == original)
         }
+    }
+
+    @Test("A snapshot from before chores were on the watch still decodes")
+    func snapshotWithoutChores() throws {
+        var original = snapshot(handled: [])
+        original.chores = nil
+        var json = try #require(try JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+        json.removeValue(forKey: "chores")
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoded = try #require(WatchSnapshot(applicationContext: [WatchSnapshot.contextKey: data]))
+        #expect(decoded == original)
     }
 
     @Test("Other dictionaries aren't read as a snapshot or an action")

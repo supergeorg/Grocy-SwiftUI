@@ -37,7 +37,7 @@ Grocy Mobile/                 App target (file-system synchronized group, so new
     Additional/               ServerProblemView, FlowLayout, ...
   Helper/                     Logger, symbols, formatters, decoding helpers, deep links, AI matcher, reminders
 Grocy Widget/                 WidgetKit extension: stock, shopping list, chores and tasks widgets
-Grocy Watch Watch App/        watchOS companion app: shopping list and tasks, data from the iPhone
+Grocy Watch Watch App/        watchOS companion app: shopping list, tasks and chores, data from the iPhone
 Grocy MobileTests/            Unit tests (currently XCTest)
 Grocy MobileUITests/          UI tests (XCUIAutomation)
 Changelogs/                   Release notes per version (Changelog_<version>.md, English + German)
@@ -114,7 +114,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - **Recipe import (work in progress):** `Views/Recipes/Import/` (UI and the JSON-LD `RecipeParser`) and `Model/Recipes/Import/` (ingredient line parser, product/unit mapping, preparation HTML format) import schema.org/Recipe JSON-LD from websites as Grocy recipes. See `Guides/Recipe Import/RecipeImportGuide.md`, and update it when the import changes.
 - **Batteries and equipment:** `Model/Batteries/` and `Model/Equipment/`, views in `Views/Batteries/` (overview with due filters, tracking, journal, battery details) and `Views/Equipment/` (list, details with the PDF manual via PDFKit, notes form). Battery due status is `BatteryStatus`. Non-picture files (PDF manuals) are fetched without `force_serve_as=picture`. Tracked times are sent as local `Y-m-d H:i:s`, the only format Grocy accepts.
 - **Widgets:** `Grocy Widget/` bundles the stock, shopping list, chores and tasks widgets (`AppIntentTimelineProvider`s, also on the Lock Screen). They never open SwiftData. After each sync, `GrocyViewModel` writes small `Codable` summaries (`WidgetStockSummary`, `WidgetShoppingListSummary`, `WidgetDueSummary`) to the App Group's `UserDefaults` via `WidgetSharedStore` (`Model/SharedModel.swift`) and reloads the matching timeline. `deleteAllCachedData` clears them. The app's language override is shared too, so widgets use the same language.
-- **Watch app:** `Grocy Watch Watch App/` never talks to the Grocy server. On iOS, `WatchSync` (`Model/Watch/WatchSync.swift`) sends a `WatchSnapshot` with the widgets' shopping list and tasks summaries as the WatchConnectivity application context after each widget update and on logout. The watch keeps the last snapshot in a file and sends check-offs as `WatchAction`s with `transferUserInfo`, so they wait until the iPhone is reachable. The iPhone carries out each action once with the app's login and lists the handled action IDs in the next snapshot, which is when the watch stops showing them as pending.
+- **Watch app:** `Grocy Watch Watch App/` never talks to the Grocy server. On iOS, `WatchSync` (`Model/Watch/WatchSync.swift`) sends a `WatchSnapshot` with the widgets' shopping list, tasks and chores summaries as the WatchConnectivity application context after each widget update and on logout. The watch keeps the last snapshot in a file and sends check-offs as `WatchAction`s with `transferUserInfo`, so they wait until the iPhone is reachable. The iPhone carries out each action once with the app's login and lists the handled action IDs in the next snapshot, which is when the watch stops showing them as pending.
 
 ## Coding Conventions
 

@@ -52,12 +52,20 @@ final class WatchStore: NSObject {
         pendingActions.contains { $0.kind == .taskDone(taskID: taskID) }
     }
 
+    func isPending(choreID: Int) -> Bool {
+        pendingActions.contains { $0.kind == .choreDone(choreID: choreID) }
+    }
+
     func checkOff(shoppingListItemID: Int) {
         perform(WatchAction(kind: .shoppingListItemDone(itemID: shoppingListItemID)))
     }
 
     func complete(taskID: Int) {
         perform(WatchAction(kind: .taskDone(taskID: taskID)))
+    }
+
+    func trackChore(choreID: Int) {
+        perform(WatchAction(kind: .choreDone(choreID: choreID)))
     }
 
     private func perform(_ action: WatchAction) {

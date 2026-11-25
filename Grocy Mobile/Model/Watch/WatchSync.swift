@@ -9,10 +9,10 @@
     import Foundation
     import WatchConnectivity
 
-    /// Shares the shopping lists and tasks with the Watch app, and carries out the check-offs made on the watch.
+    /// Shares the shopping lists, tasks and chores with the Watch app, and carries out the check-offs made on the watch.
     ///
     /// The watch has no connection to the Grocy server. The iPhone sends it a ``WatchSnapshot`` after each sync of the
-    /// shopping list or the tasks, and the watch sends back ``WatchAction``s, which this class carries out with the app's login.
+    /// shopping list, the tasks or the chores, and the watch sends back ``WatchAction``s, which this class carries out with the app's login.
     final class WatchSync: NSObject {
         static let shared = WatchSync()
 
@@ -40,7 +40,7 @@
             session.activate()
         }
 
-        /// Sends the current shopping lists and tasks to the watch. Calls within half a second are combined into one.
+        /// Sends the current shopping lists, tasks and chores to the watch. Calls within half a second are combined into one.
         func sendSnapshot() {
             guard WCSession.isSupported() else { return }
             sendTask?.cancel()
@@ -60,6 +60,7 @@
                 localizationKey: grocyVM?.localizationKey ?? "en",
                 shoppingList: isLoggedIn ? WidgetSharedStore.load(WidgetShoppingListSummary.self, forKey: WidgetSharedStore.shoppingListKey) : nil,
                 tasks: isLoggedIn ? WidgetSharedStore.load(WidgetDueSummary.self, forKey: WidgetSharedStore.tasksKey) : nil,
+                chores: isLoggedIn ? WidgetSharedStore.load(WidgetDueSummary.self, forKey: WidgetSharedStore.choresKey) : nil,
                 handledActionIDs: handledActionIDs,
                 updated: Date()
             )
@@ -88,6 +89,11 @@
                         try await grocyVM.putMDObjectWithID(object: .shopping_list, id: itemID, content: ShoppingListItemDonePUT(done: true))
                     case .taskDone(let taskID):
                         try await grocyVM.executeTask(taskID: taskID, content: TaskExecuteModel(doneTime: action.date.grocyDateTimeString))
+                    case .choreDone(let choreID):
+                        _ = try await grocyVM.executeChore(
+                            id: choreID,
+                            content: ChoreExecuteModel(trackedTime: action.date.grocyDateTimeString, doneBy: nil, skipped: false)
+                        )
                     }
                     GrocyLogger.info("Carried out the check-off from the watch.")
                 } catch {
@@ -98,11 +104,18 @@
             handledActionIDs = WatchActionLog.appendingHandled(action.id, to: handledActionIDs)
 
             if grocyVM.isLoggedIn {
+                // The server's change time has a resolution of one second, so a change right after the last sync could be
+                // missed. Clearing the timestamp makes the reload happen in any case.
                 switch action.kind {
                 case .shoppingListItemDone:
+                    grocyVM.timeStampsObjects[.shopping_list] = nil
                     await grocyVM.requestData(objects: [.shopping_list])
                 case .taskDone:
+                    grocyVM.timeStampsObjects[.tasks] = nil
                     await grocyVM.requestData(objects: [.tasks])
+                case .choreDone:
+                    grocyVM.timeStampsAdditionalObjects[.chores] = nil
+                    await grocyVM.requestData(additionalObjects: [.chores])
                 }
             }
             sendSnapshot()
@@ -112,7 +125,10 @@
             guard let grocyVM else { return }
             await grocyVM.waitForLogin()
             if grocyVM.isLoggedIn {
-                await grocyVM.requestData(objects: [.shopping_list, .shopping_lists, .products, .quantity_units, .tasks])
+                await grocyVM.requestData(
+                    objects: [.shopping_list, .shopping_lists, .products, .quantity_units, .tasks],
+                    additionalObjects: [.chores]
+                )
             }
             sendSnapshot()
         }

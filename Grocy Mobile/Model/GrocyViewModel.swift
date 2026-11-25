@@ -717,7 +717,7 @@ class GrocyViewModel {
         }
     }
 
-    /// Sends the shopping lists and tasks the widgets show to the Watch app.
+    /// Sends the shopping lists, tasks and chores the widgets show to the Watch app.
     private func updateWatch() {
         #if os(iOS)
             WatchSync.shared.sendSnapshot()
@@ -741,6 +741,7 @@ class GrocyViewModel {
             WidgetSharedStore.save(WidgetDueSummary(items: items, dueSoonDays: dueSoonDays, updated: Date()), forKey: WidgetSharedStore.choresKey)
             WidgetSharedStore.saveLocalization(localizationKey)
             WidgetCenter.shared.reloadTimelines(ofKind: WidgetSharedStore.choresKind)
+            self.updateWatch()
         } catch {
             GrocyLogger.error("Updating the chores widget failed. \(error)")
         }
