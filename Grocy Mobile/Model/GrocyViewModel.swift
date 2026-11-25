@@ -682,6 +682,7 @@ class GrocyViewModel {
                 uniquingKeysWith: { first, _ in first }
             )
             let roundUp = try modelContext.fetch(FetchDescriptor<GrocyUserSettings>()).first?.shoppingListRoundUp ?? false
+            let conversions = try modelContext.fetch(FetchDescriptor<MDQuantityUnitConversion>())
 
             let lists = descriptions.map { (description: ShoppingListDescription) -> WidgetShoppingListSummary.List in
                 let listItems =
@@ -690,7 +691,7 @@ class GrocyViewModel {
                     .map { (item: ShoppingListItem) -> WidgetShoppingListSummary.Item in
                         let product = item.productID.flatMap { products[$0] }
                         let name = product?.name ?? item.note
-                        let displayAmount = item.displayAmount(roundUp: roundUp)
+                        let displayAmount = item.displayAmount(roundUp: roundUp, product: product, conversions: conversions)
                         var amount = displayAmount.formattedAmount
                         if let quantityUnit = item.quID.flatMap({ quantityUnits[$0] }) {
                             amount += " \(quantityUnit.getName(amount: displayAmount))"

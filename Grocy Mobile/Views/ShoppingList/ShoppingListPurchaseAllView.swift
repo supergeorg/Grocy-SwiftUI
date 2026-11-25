@@ -15,6 +15,9 @@ struct ShoppingListPurchaseAllView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.dismiss) private var dismiss
 
+    @Query(sort: \MDProduct.id, order: .forward) private var mdProducts: MDProducts
+    @Query(sort: \MDQuantityUnitConversion.id, order: .forward) private var mdQuantityUnitConversions: MDQuantityUnitConversions
+
     var items: [ShoppingListItem]
 
     @State private var index: Int = 0
@@ -49,7 +52,11 @@ struct ShoppingListPurchaseAllView: View {
         if let item = currentItem {
             PurchaseProductView(
                 directProductToPurchaseID: item.productID,
-                productToPurchaseAmount: item.amount,
+                // The purchase form starts in the purchase unit, and Grocy stores the item's amount in the stock unit (#114).
+                productToPurchaseAmount: item.purchaseAmount(
+                    product: mdProducts.first(where: { $0.id == item.productID }),
+                    conversions: mdQuantityUnitConversions
+                ),
                 isPopup: true,
                 onPurchased: {
                     Task {

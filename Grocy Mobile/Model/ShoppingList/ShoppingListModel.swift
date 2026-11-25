@@ -77,10 +77,27 @@ class ShoppingListItem: Codable, Equatable {
         self.rowCreatedTimestamp = rowCreatedTimestamp
     }
 
-    /// The amount as the shopping list shows it: rounded up to a whole number when the
+    /// The amount in the unit `quID`.
+    ///
+    /// Grocy stores a product's amount in the product's stock unit, and `quID` is only the unit it's shown in (#114).
+    /// Keeps the amount for free-text items and when there's no conversion.
+    func amount(in quID: Int?, product: MDProduct?, conversions: MDQuantityUnitConversions) -> Double {
+        guard let product, let quID,
+            let factor = QuantityUnitConversionResolver(product: product, conversions: conversions).factor(from: product.quIDStock, to: quID)
+        else { return amount }
+        return amount * factor
+    }
+
+    /// The amount to purchase, in the product's purchase unit, which the purchase form starts with.
+    func purchaseAmount(product: MDProduct?, conversions: MDQuantityUnitConversions) -> Double {
+        amount(in: product?.quIDPurchase, product: product, conversions: conversions)
+    }
+
+    /// The amount as the shopping list shows it: in the item's unit, and rounded up to a whole number when the
     /// Grocy user setting "shopping_list_round_up" is on, like Grocy's own shopping list.
-    func displayAmount(roundUp: Bool) -> Double {
-        roundUp ? amount.rounded(.up) : amount
+    func displayAmount(roundUp: Bool, product: MDProduct? = nil, conversions: MDQuantityUnitConversions = []) -> Double {
+        let amount = amount(in: quID, product: product, conversions: conversions)
+        return roundUp ? amount.rounded(.up) : amount
     }
 
     static func == (lhs: ShoppingListItem, rhs: ShoppingListItem) -> Bool {

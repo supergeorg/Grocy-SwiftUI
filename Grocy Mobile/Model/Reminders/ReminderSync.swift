@@ -261,8 +261,14 @@ nonisolated enum ReminderSync {
 
     /// The entry of a shopping list item: the product name (or the note) as title, the amount and the note below it.
     @MainActor
-    static func entry(for item: ShoppingListItem, product: MDProduct?, quantityUnit: MDQuantityUnit?, roundUp: Bool) -> Entry {
-        let amount = item.displayAmount(roundUp: roundUp)
+    static func entry(
+        for item: ShoppingListItem,
+        product: MDProduct?,
+        quantityUnit: MDQuantityUnit?,
+        roundUp: Bool,
+        conversions: MDQuantityUnitConversions = []
+    ) -> Entry {
+        let amount = item.displayAmount(roundUp: roundUp, product: product, conversions: conversions)
         var amountText = amount.formattedAmount
         if let quantityUnit {
             amountText += " \(quantityUnit.getName(amount: amount))"
