@@ -57,6 +57,8 @@ struct ProductField: View {
     var description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey?
     var icon: String = MySymbols.product
+    /// Hides products with "Disable own stock", like Grocy's web purchase, inventory and transfer pages (#230).
+    var excludeNoOwnStock: Bool = false
 
     @State private var searchTerm: String = ""
     #if os(iOS)
@@ -72,7 +74,7 @@ struct ProductField: View {
             searchTerm.isEmpty ? true : ($0.name.localizedCaseInsensitiveContains(searchTerm) || getBarcodes(pID: $0.id).contains(searchTerm))
         }
         .filter {
-            $0.noOwnStock != true
+            !(excludeNoOwnStock && $0.noOwnStock)
         }
         .filter({
             $0.active

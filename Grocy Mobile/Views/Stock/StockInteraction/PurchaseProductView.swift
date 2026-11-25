@@ -243,7 +243,7 @@ struct PurchaseProductView: View {
                 }
             }
 
-            ProductField(productID: $productID, description: "Product")
+            ProductField(productID: $productID, description: "Product", excludeNoOwnStock: true)
                 .disabled(quickScan)
                 .onChange(of: productID) {
                     if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {

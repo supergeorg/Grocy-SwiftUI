@@ -144,7 +144,7 @@ struct TransferProductView: View {
                 }
             }
 
-            ProductField(productID: $productID, description: "Product")
+            ProductField(productID: $productID, description: "Product", excludeNoOwnStock: true)
                 .onChange(of: productID) {
                     Task {
                         if let productID {
