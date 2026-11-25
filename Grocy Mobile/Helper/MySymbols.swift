@@ -52,6 +52,8 @@ nonisolated struct MySymbols {
     static let splitIngredient = "scissors"
     static let connectUnit = "arrow.left.arrow.right"
     static let user = "person"
+    /// The user management, all users of the server.
+    static let userManagement = "person.2"
     static let parentProduct = "rectangle.stack"
 
     static let amount = "number.circle"

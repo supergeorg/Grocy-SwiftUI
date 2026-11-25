@@ -8,101 +8,73 @@
 import SwiftData
 import SwiftUI
 
+/// Grocy's user management: all users, to create, edit and delete them and to configure their permissions.
+///
+/// Listing users needs the USERS_READ permission. Permissions can only be read and changed by admins,
+/// so their actions only show for an admin (`GrocyViewModel.isCurrentUserAdmin`).
 struct UserManagementView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
-    @Query var users: GrocyUsers
+    @Query(sort: \GrocyUser.username) var users: GrocyUsers
+    @Query private var systemConfigList: [SystemConfig]
 
     @State private var searchString: String = ""
 
-    @State private var isReloading: Bool = false
-
     @State private var showAddUser: Bool = false
+    @State private var userForPermissions: GrocyUser? = nil
+    @State private var userToDelete: GrocyUser? = nil
+    @State private var showDeleteConfirmation: Bool = false
+    @State private var deleteErrorMessage: String? = nil
 
     private let additionalDataToUpdate: [AdditionalEntities] = [.users, .current_user]
 
     private func updateData() async {
         await grocyVM.requestData(additionalObjects: additionalDataToUpdate)
+        await grocyVM.checkCurrentUserIsAdmin()
+    }
+
+    /// Grocy without its own login has no permissions to configure.
+    private var canConfigurePermissions: Bool {
+        grocyVM.isCurrentUserAdmin == true && systemConfigList.first?.disableAuth != true
     }
 
     var filteredUsers: GrocyUsers {
-        users
-            .filter {
-                !searchString.isEmpty
-                    ? ($0.username.localizedCaseInsensitiveContains(searchString) || $0.displayName.localizedCaseInsensitiveContains(searchString)) : true
+        guard !searchString.isEmpty else { return users }
+        return users.filter {
+            $0.username.localizedStandardContains(searchString) || $0.displayName.localizedStandardContains(searchString)
+        }
+    }
+
+    private func isCurrentUser(_ user: GrocyUser) -> Bool {
+        grocyVM.currentUser?.id == user.id
+    }
+
+    private func deleteUser(_ user: GrocyUser) async {
+        do {
+            try await grocyVM.deleteUser(id: user.id)
+            GrocyLogger.info("Deleting user was successful.")
+            if let pictureFileName = user.pictureFileName, !pictureFileName.isEmpty {
+                do {
+                    try await grocyVM.deleteUserPicture(fileName: pictureFileName)
+                } catch {
+                    GrocyLogger.warning("Deleting the picture of the deleted user failed. \(error)")
+                }
             }
+            await grocyVM.reloadUsers()
+        } catch {
+            GrocyLogger.error("Deleting user failed. \(error)")
+            deleteErrorMessage = (error as? APIError)?.displayMessage ?? error.localizedDescription
+        }
     }
 
     var body: some View {
         if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count == 0 {
-            bodyContent
+            content
         } else {
             ServerProblemView()
                 .navigationTitle("User management")
         }
     }
-
-    #if os(macOS)
-        var bodyContent: some View {
-            content
-                .toolbar(content: {
-                    ToolbarItem(
-                        placement: .automatic,
-                        content: {
-                            Button(
-                                action: {
-                                    showAddUser.toggle()
-                                },
-                                label: {
-                                    HStack {
-                                        Text("Create user")
-                                        Image(systemName: MySymbols.new)
-                                    }
-                                }
-                            )
-                            .popover(
-                                isPresented: $showAddUser,
-                                content: {
-                                    UserFormView(isNewUser: true)
-                                        .padding()
-                                        .frame(width: Sizes.popoverFormSize, height: Sizes.popoverFormSize)
-                                }
-                            )
-                        }
-                    )
-                })
-        }
-    #elseif os(iOS)
-        var bodyContent: some View {
-            content
-                .toolbar(content: {
-                    ToolbarItemGroup(
-                        placement: .automatic,
-                        content: {
-                            Button(
-                                action: {
-                                    showAddUser.toggle()
-                                },
-                                label: {
-                                    HStack {
-                                        Text("Create user")
-                                        Image(systemName: MySymbols.new)
-                                    }
-                                }
-                            )
-                            .sheet(
-                                isPresented: $showAddUser,
-                                content: {
-                                    NavigationStack {
-                                        UserFormView(isNewUser: true)
-                                    }
-                                }
-                            )
-                        }
-                    )
-                })
-        }
-    #endif
 
     var content: some View {
         List {
@@ -112,10 +84,104 @@ struct UserManagementView: View {
                 ContentUnavailableView.search
             }
             ForEach(filteredUsers, id: \.id) { user in
-                UserRowView(user: user, isCurrentUser: (grocyVM.currentUser?.id == user.id))
+                NavigationLink(value: user) {
+                    UserRowView(user: user, isCurrentUser: isCurrentUser(user))
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    if !isCurrentUser(user) {
+                        Button(role: .destructive) {
+                            userToDelete = user
+                            showDeleteConfirmation = true
+                        } label: {
+                            Label("Delete", systemImage: MySymbols.delete)
+                        }
+                    }
+                }
+                .swipeActions(edge: .leading) {
+                    if canConfigurePermissions {
+                        Button {
+                            userForPermissions = user
+                        } label: {
+                            Label("Configure user permissions", systemImage: MySymbols.permissions)
+                        }
+                        .tint(Color(.GrocyColors.grocyBlue))
+                    }
+                }
+                .contextMenu {
+                    if canConfigurePermissions {
+                        Button {
+                            userForPermissions = user
+                        } label: {
+                            Label("Configure user permissions", systemImage: MySymbols.permissions)
+                        }
+                    }
+                    if !isCurrentUser(user) {
+                        Button(role: .destructive) {
+                            userToDelete = user
+                            showDeleteConfirmation = true
+                        } label: {
+                            Label("Delete", systemImage: MySymbols.delete)
+                        }
+                    }
+                }
             }
         }
         .navigationTitle("User management")
+        .navigationDestination(for: GrocyUser.self) { user in
+            UserFormView(isNewUser: false, user: user)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button {
+                    showAddUser = true
+                } label: {
+                    Label("Create user", systemImage: MySymbols.new)
+                }
+            }
+        }
+        .sheet(isPresented: $showAddUser) {
+            NavigationStack {
+                UserFormView(isNewUser: true)
+            }
+            #if os(macOS)
+                .frame(minWidth: Sizes.popoverFormSize, minHeight: Sizes.popoverFormSize)
+            #endif
+        }
+        .sheet(item: $userForPermissions) { user in
+            NavigationStack {
+                UserPermissionsView(user: user)
+            }
+            #if os(macOS)
+                .frame(minWidth: Sizes.popoverFormSize, minHeight: Sizes.popoverFormSize)
+            #endif
+        }
+        .alert(
+            "Are you sure you want to delete user \"\(userToDelete?.displayName ?? "")\"?",
+            isPresented: $showDeleteConfirmation,
+            presenting: userToDelete,
+            actions: { user in
+                Button("Cancel", role: .cancel) {}
+                // No destructive role: the person chose to delete, this button carries out their intent (HIG).
+                Button("Delete") {
+                    Task {
+                        await deleteUser(user)
+                    }
+                }
+            },
+            message: { _ in
+                Text("This can't be undone.")
+            }
+        )
+        .alert(
+            "Deleting the user failed",
+            isPresented: Binding(get: { deleteErrorMessage != nil }, set: { if !$0 { deleteErrorMessage = nil } }),
+            actions: {
+                Button("OK", role: .cancel) {}
+            },
+            message: {
+                Text(deleteErrorMessage ?? "")
+            }
+        )
         .task {
             await updateData()
         }

@@ -170,14 +170,14 @@ struct Sidebar: View {
                 }
             )
 
-            if devMode {
-                NavigationLink(
-                    value: NavigationItem.userManagement,
-                    label: {
-                        Label("User management", systemImage: MySymbols.user)
-                    }
-                )
+            NavigationLink(
+                value: NavigationItem.userManagement,
+                label: {
+                    Label("User management", systemImage: MySymbols.userManagement)
+                }
+            )
 
+            if devMode {
                 NavigationLink(
                     value: NavigationItem.recipeParsing,
                     label: {
