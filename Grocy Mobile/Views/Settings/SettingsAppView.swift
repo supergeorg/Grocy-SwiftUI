@@ -134,6 +134,13 @@ struct SettingsAppView: View {
             #endif
             Section("Data fetching settings") {
                 MyToggle(isOn: $autoReload, description: "Auto reload on external changes", icon: MySymbols.reload)
+                    // Apply the change right away, not only after the next launch (#112).
+                    .onChange(of: autoReload) {
+                        if grocyVM.isLoggedIn { grocyVM.setUpdateTimer() }
+                    }
+                    .onChange(of: autoReloadInterval) {
+                        if grocyVM.isLoggedIn { grocyVM.setUpdateTimer() }
+                    }
                 if autoReload {
                     Picker(
                         selection: $autoReloadInterval,
