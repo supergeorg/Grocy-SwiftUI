@@ -72,13 +72,18 @@ struct StockTableRowActionsView: View {
         }
     }
 
+    /// Grocy opens the quick open amount, which is separate from the quick consume amount.
+    private var quickOpenAmount: Double {
+        stockElement.product?.quickOpenAmount ?? stockElement.product?.quickConsumeAmount ?? 1.0
+    }
+
     private func openQuickConsumeAmount() async {
         do {
             try await grocyVM.postStockObject(
                 id: stockElement.productID,
                 stockModePost: .open,
                 content: ProductConsume(
-                    amount: stockElement.product?.quickConsumeAmount ?? 1.0,
+                    amount: quickOpenAmount,
                     transactionType: .productOpened,
                     spoiled: false,
                     stockEntryID: nil,
@@ -90,7 +95,7 @@ struct StockTableRowActionsView: View {
             )
             await grocyVM.requestData(additionalObjects: [.stock])
         } catch {
-            GrocyLogger.error("Open \(stockElement.product?.quickConsumeAmount ?? 1.0) item failed. \(error)")
+            GrocyLogger.error("Open \(quickOpenAmount) item failed. \(error)")
         }
     }
 
@@ -121,12 +126,12 @@ struct StockTableRowActionsView: View {
             Button(
                 action: { Task { await openQuickConsumeAmount() } },
                 label: {
-                    Label(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1", systemImage: MySymbols.open)
+                    Label(quickOpenAmount.formattedAmount, systemImage: MySymbols.open)
                 }
             )
             .tint(Color(.GrocyColors.grocyBlue))
             .help(
-                "Mark \(stockElement.product?.quickConsumeAmount?.formattedAmount ?? "1") \(quantityUnit?.getName(amount: stockElement.product?.quickConsumeAmount ?? 1.0) ?? "") \(stockElement.product?.name ?? "?") as open"
+                "Mark \(quickOpenAmount.formattedAmount) \(quantityUnit?.getName(amount: quickOpenAmount) ?? "") \(stockElement.product?.name ?? "?") as open"
             )
         }
     }
