@@ -22,7 +22,16 @@ nonisolated struct UntrustedCertificate: Equatable, Sendable {
 nonisolated enum CertificateFingerprint {
     /// SHA-256 over the certificate's DER data, as uppercase hex pairs separated by colons, like browsers and `openssl x509 -fingerprint -sha256` show it.
     static func sha256(of certificateData: Data) -> String {
-        SHA256.hash(data: certificateData).map { String(format: "%02X", $0) }.joined(separator: ":")
+        hexPairs(SHA256.hash(data: certificateData))
+    }
+
+    /// Bytes as uppercase hex pairs separated by colons. Built without `String(format:)`, which strict memory safety flags as unsafe.
+    static func hexPairs(_ bytes: some Sequence<UInt8>) -> String {
+        bytes.map { byte in
+            let hex = String(byte, radix: 16, uppercase: true)
+            return byte < 0x10 ? "0" + hex : hex
+        }
+        .joined(separator: ":")
     }
 }
 
