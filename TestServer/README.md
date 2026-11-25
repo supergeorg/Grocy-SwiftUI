@@ -54,7 +54,7 @@ Then log in to `https://localhost:9443` in the app (a simulator on this Mac reac
 ## A large household for profiling
 
 `seed-large-household.py` fills a fresh test server with a household big enough to profile the app:
-1,000 products (two thirds in stock, some due soon or overdue, some below their minimum), about 1,300 stock
+1,000 products (two thirds in stock, some due soon, overdue or expired, some below their minimum), about 1,300 stock
 entries, shopping lists with 150 items, 100 recipes with their ingredients, chores, tasks and batteries.
 It only needs Python 3.
 

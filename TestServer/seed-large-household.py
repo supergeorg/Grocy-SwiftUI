@@ -6,7 +6,7 @@ Usage:
     TestServer/seed-large-household.py [--products 1000] [--url http://localhost:9290] [--api-key ...]
 
 Creates locations, product groups, quantity units, stores, products with stock (some due soon, some
-overdue, some below their minimum), shopping lists with items, recipes with ingredients, chores,
+overdue or expired, some below their minimum), shopping lists with items, recipes with ingredients, chores,
 tasks and batteries. The amounts of everything but products scale with --products.
 
 Run it on a fresh test server (every `grocy-test-server.sh start` makes one): it doesn't check for
@@ -118,6 +118,8 @@ def main():
                 "qu_id_stock": unit,
                 "min_stock_amount": random.choice([0, 0, 0, 1, 2, 5]),
                 "default_best_before_days": random.choice([0, 3, 7, 30, 365]),
+                # 1 = best before, 2 = expiration date: past dates of the latter count as expired.
+                "due_type": 2 if i % 4 == 0 else 1,
             },
         )
 
