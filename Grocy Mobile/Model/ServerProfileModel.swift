@@ -34,6 +34,8 @@ final class ServerProfile {
     var userName: String = ""
     var displayName: String = ""
     @Attribute(.externalStorage) var profilePicture: Data?
+    /// The SHA-256 fingerprint of a server certificate the person trusted although the system doesn't, like a self-signed one (#195).
+    var trustedCertificateFingerprint: String? = nil
 
     init(
         name: String = "",

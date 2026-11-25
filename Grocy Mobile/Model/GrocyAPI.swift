@@ -69,6 +69,11 @@ struct EmptyResponse: Codable {
 protocol GrocyAPI {
     var isLoggedIn: Bool { get }
     func setLoginData(baseURL: String, apiKey: String, customHeaders: [String: String])
+    /// Trusts the certificate with this SHA-256 fingerprint for the server's host, even if the system doesn't (#195).
+    func setTrustedCertificate(fingerprint: String?)
+    /// The server certificate the system refused in the last connection, if any.
+    var untrustedCertificate: UntrustedCertificate? { get }
+    func cancelAllTasks()
     func clearLoginData()
     func setHassData(hassURL: String, hassToken: String) async
     func clearHassData()
@@ -152,6 +157,31 @@ public class GrocyApi: GrocyAPI {
 
     var isLoggedIn: Bool = false
 
+    /// All calls to the server go through this session, so its delegate can trust a certificate the person accepted (#195).
+    private let session = URLSession(configuration: .default, delegate: ServerTrustDelegate(), delegateQueue: nil)
+    private var trustDelegate: ServerTrustDelegate? { session.delegate as? ServerTrustDelegate }
+
+    deinit {
+        // A session keeps its delegate until it's invalidated.
+        session.finishTasksAndInvalidate()
+    }
+
+    func setTrustedCertificate(fingerprint: String?) {
+        trustDelegate?.setTrustedCertificate(fingerprint: fingerprint, host: URL(string: baseURL)?.host())
+    }
+
+    var untrustedCertificate: UntrustedCertificate? {
+        trustDelegate?.lastUntrustedCertificate
+    }
+
+    func cancelAllTasks() {
+        session.getAllTasks { tasks in
+            for task in tasks {
+                task.cancel()
+            }
+        }
+    }
+
     func setLoginData(baseURL: String, apiKey: String, customHeaders: [String: String] = [:]) {
         // Validate that baseURL is not empty and is a valid URL
         guard !baseURL.trimmingCharacters(in: .whitespaces).isEmpty else {
@@ -213,7 +243,7 @@ public class GrocyApi: GrocyAPI {
             queries: queries.isEmpty ? nil : queries,
             hassIngressToken: hassIngressToken
         )
-        let (resultData, resultCode) = try await URLSession.shared.data(for: urlRequest)
+        let (resultData, resultCode) = try await session.data(for: urlRequest)
         if let httpResponse = resultCode as? HTTPURLResponse {
             if httpResponse.statusCode == 200 {
                 return resultData
@@ -251,7 +281,7 @@ public class GrocyApi: GrocyAPI {
             isOctet: true,
             hassIngressToken: hassIngressToken
         )
-        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, from: fileData)
+        let (resultData, resultCode) = try await session.upload(for: urlRequest, from: fileData)
         if let httpResponse = resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
                 do {
@@ -283,7 +313,7 @@ public class GrocyApi: GrocyAPI {
             isOctet: true,
             hassIngressToken: hassIngressToken
         )
-        let (resultData, resultCode) = try await URLSession.shared.upload(for: urlRequest, fromFile: fileURL)
+        let (resultData, resultCode) = try await session.upload(for: urlRequest, fromFile: fileURL)
         if let httpResponse = resultCode as? HTTPURLResponse {
             if httpResponse.statusCode != 204 {
                 do {
@@ -357,7 +387,7 @@ public class GrocyApi: GrocyAPI {
             queries: queries,
             hassIngressToken: hassIngressToken
         )
-        let result = try await URLSession.shared.data(for: urlRequest)
+        let result = try await session.data(for: urlRequest)
         if let httpResponse = result.1 as? HTTPURLResponse {
             if !((200...299).contains(httpResponse.statusCode)) {
                 do {
@@ -406,7 +436,7 @@ public class GrocyApi: GrocyAPI {
             queries: queries,
             hassIngressToken: hassIngressToken
         )
-        let result = try await URLSession.shared.data(for: urlRequest)
+        let result = try await session.data(for: urlRequest)
         if let httpResponse = result.1 as? HTTPURLResponse {
             if (200...299).contains(httpResponse.statusCode) {
                 do {

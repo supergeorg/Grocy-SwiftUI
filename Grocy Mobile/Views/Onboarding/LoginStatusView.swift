@@ -16,7 +16,7 @@ struct LoginStatusView: View {
     var isDemoMode: Bool = false
 
     enum LoginState {
-        case loading, success, fail, unsupportedVersion
+        case loading, success, fail, unsupportedVersion, untrustedCertificate
     }
 
     @AppStorage("demoServerURL") var demoServerURL: String = GrocyAPP.DemoServers.noLanguage.rawValue
@@ -26,6 +26,8 @@ struct LoginStatusView: View {
     @State private var isLoading: Bool = true
     @State var errorMessage: String? = nil
     @State var unsupportedVersion: String? = nil
+    /// The certificate the system refused, which the person can choose to trust for their own server (#195).
+    @State var untrustedCertificate: UntrustedCertificate? = nil
 
     /// Explains why the server isn't supported: an outdated server should be updated, a newer one hasn't been tested yet.
     private var unsupportedVersionMessage: LocalizedStringKey {
@@ -63,7 +65,8 @@ struct LoginStatusView: View {
                     useHassIngress: profile.useHassIngress,
                     hassToken: profile.hassToken,
                     isDemoMode: false,
-                    customHeaders: profile.customHeaders ?? []
+                    customHeaders: profile.customHeaders ?? [],
+                    trustedCertificateFingerprint: profile.trustedCertificateFingerprint
                 )
             }
             await grocyVM.requestData(additionalObjects: [.current_user])
@@ -83,6 +86,13 @@ struct LoginStatusView: View {
                 loginState = .unsupportedVersion
             }
         } catch {
+            // A refused certificate of the person's own server can be trusted from here. The demo servers have valid certificates.
+            if !isDemoMode, error is URLError, let certificate = grocyVM.grocyApi.untrustedCertificate {
+                untrustedCertificate = certificate
+                loginState = .untrustedCertificate
+                isLoading = false
+                return
+            }
             loginState = .fail
             if let apiError = error as? APIError {
                 errorMessage = apiError.displayMessage
@@ -154,6 +164,53 @@ struct LoginStatusView: View {
                 }
             )
             .background(.red.opacity(colorScheme == .dark ? 0.3 : 1.0))
+        case .untrustedCertificate:
+            ContentUnavailableView(
+                label: {
+                    Label("Untrusted certificate", systemImage: MySymbols.warning)
+                },
+                description: {
+                    Text(
+                        "This device doesn't trust the certificate of \(untrustedCertificate?.host ?? "?"), for example because it's self-signed. Only trust it if this is your own server and the fingerprint matches its certificate."
+                    )
+                    if let summary = untrustedCertificate?.summary {
+                        Text(summary)
+                            .bold()
+                    }
+                    Text("SHA-256 fingerprint")
+                    Text(untrustedCertificate?.fingerprint ?? "")
+                        .font(.caption.monospaced())
+                        .textSelection(.enabled)
+                },
+                actions: {
+                    Button(
+                        action: {
+                            grocyVM.selectedServerProfile?.trustedCertificateFingerprint = untrustedCertificate?.fingerprint
+                            try? grocyVM.selectedServerProfile?.modelContext?.save()
+                            loginState = .loading
+                        },
+                        label: {
+                            Label("Trust this certificate", systemImage: MySymbols.success)
+                                .frame(maxWidth: .infinity)
+                        }
+                    )
+                    .buttonStyle(.glassProminent)
+                    .controlSize(.large)
+                    Button(
+                        action: {
+                            dismiss()
+                        },
+                        label: {
+                            Label("Cancel", systemImage: MySymbols.cancel)
+                                .frame(maxWidth: .infinity)
+                        }
+                    )
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
+                }
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.yellow.opacity(colorScheme == .dark ? 0.3 : 1.0))
         case .unsupportedVersion:
             ContentUnavailableView(
                 label: {
@@ -207,6 +264,17 @@ struct LoginStatusView: View {
 
 #Preview("Fail", traits: .previewData) {
     LoginStatusView(loginState: .fail, errorMessage: "Error message")
+}
+
+#Preview("UntrustedCertificate", traits: .previewData) {
+    LoginStatusView(
+        loginState: .untrustedCertificate,
+        untrustedCertificate: UntrustedCertificate(
+            host: "grocy.local",
+            fingerprint: "3F:2A:9C:11:5E:D0:47:B8:A2:6C:90:1D:E4:73:08:BB:5A:C1:FE:22:67:9D:0E:84:31:C6:7B:A5:12:F0:4E:9D",
+            summary: "grocy.local"
+        )
+    )
 }
 
 #Preview("UnsupportedVersion", traits: .previewData) {

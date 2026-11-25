@@ -161,7 +161,8 @@ class GrocyViewModel {
                             useHassIngress: profile.useHassIngress,
                             hassToken: profile.hassToken,
                             isDemoMode: isDemoModus,
-                            customHeaders: profile.customHeaders ?? []
+                            customHeaders: profile.customHeaders ?? [],
+                            trustedCertificateFingerprint: profile.trustedCertificateFingerprint
                         )
                     }
                     self.setUpdateTimer()
@@ -184,6 +185,7 @@ class GrocyViewModel {
 
     func setDemoModus() {
         grocyApi.setLoginData(baseURL: demoServerURL, apiKey: "", customHeaders: [:])
+        grocyApi.setTrustedCertificate(fingerprint: nil)
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isDemoModus = true
         isLoggedIn = true
@@ -208,6 +210,7 @@ class GrocyViewModel {
                 }
             )
         )
+        grocyApi.setTrustedCertificate(fingerprint: selectedServerProfile.trustedCertificateFingerprint)
         grocyApi.setTimeoutInterval(timeoutInterval: timeoutInterval)
         isDemoModus = false
         isLoggedIn = true
@@ -230,11 +233,7 @@ class GrocyViewModel {
     }
 
     func cancelAllURLSessionTasks() {
-        URLSession.shared.getAllTasks(completionHandler: { tasks in
-            for task in tasks {
-                task.cancel()
-            }
-        })
+        grocyApi.cancelAllTasks()
     }
 
     func stopUpdateTimer() {
@@ -266,7 +265,8 @@ class GrocyViewModel {
         useHassIngress: Bool = false,
         hassToken: String = "",
         isDemoMode: Bool,
-        customHeaders: [LoginCustomHeader] = []
+        customHeaders: [LoginCustomHeader] = [],
+        trustedCertificateFingerprint: String? = nil
     ) async throws {
         // Configure the new API completely before swapping it in, so no request runs against a half-configured instance.
         let api = GrocyApi()
@@ -278,6 +278,7 @@ class GrocyViewModel {
             apiKey: apiKey ?? "",
             customHeaders: Dictionary(uniqueKeysWithValues: customHeaders.map({ ($0.headerName, $0.headerValue) }))
         )
+        api.setTrustedCertificate(fingerprint: isDemoMode ? nil : trustedCertificateFingerprint)
         api.setTimeoutInterval(timeoutInterval: timeoutInterval)
         self.grocyApi = api
         // The server may have changed, so reload everything and forget errors from the previous server.
