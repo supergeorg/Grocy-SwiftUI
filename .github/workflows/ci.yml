@@ -64,19 +64,36 @@ jobs:
           xcodebuild -showsdks | grep -i ios || true
           SIMULATOR_ID=$(python3 .github/scripts/pick-simulator.py)
           echo "id=$SIMULATOR_ID" >> "$GITHUB_OUTPUT"
-      - name: Run the unit tests
+      - name: Build the app and the unit tests
+        # Built once, separately from the test run, so the log shows how long each part takes.
+        # No index store: CI never uses it, and it slows down every compile.
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild build-for-testing \
             -project "Grocy Mobile.xcodeproj" \
             -scheme "Grocy MobileTests" \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
-            -only-testing "Grocy MobileTests" \
-            -resultBundlePath TestResults.xcresult \
+            -derivedDataPath DerivedData \
+            -showBuildTimingSummary \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGN_IDENTITY=- \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM= \
             PROVISIONING_PROFILE_SPECIFIER= \
+            2>&1 | tee xcodebuild-build.log | grep --line-buffered -E 'error:|\*\* (BUILD|TEST)|Build Timing Summary|^[A-Za-z]+ \([0-9]+ tasks?\) \|'
+      - name: Run the unit tests
+        # Without parallel testing, xcodebuild doesn't clone and boot extra simulators, which costs minutes on a
+        # runner. The unit tests are fast, so one simulator is enough.
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project "Grocy Mobile.xcodeproj" \
+            -scheme "Grocy MobileTests" \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -derivedDataPath DerivedData \
+            -only-testing "Grocy MobileTests" \
+            -parallel-testing-enabled NO \
+            -resultBundlePath TestResults.xcresult \
             2>&1 | tee xcodebuild.log | grep --line-buffered -E 'error:|✘|✔|Test Suite|Test Case|\*\* (BUILD|TEST)'
       - name: Upload the test results
         if: failure()
@@ -85,5 +102,6 @@ jobs:
           name: TestResults
           path: |
             TestResults.xcresult
+            xcodebuild-build.log
             xcodebuild.log
           retention-days: 7
