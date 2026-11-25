@@ -2,11 +2,22 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Add ${product} to the shopping list in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Setze ${product} in ${applicationName} auf den Einkaufszettel"
+          }
+        },
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Add ${product} to the shopping list in ${applicationName}",
+              "Put ${product} on my ${applicationName} shopping list",
+              "Add to the shopping list in ${applicationName}"
+            ]
           }
         }
       }
@@ -41,6 +52,27 @@
         }
       }
     },
+    "Consume ${product} in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Verbrauche ${product} in ${applicationName}"
+          }
+        },
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Consume ${product} in ${applicationName}",
+              "I used up ${product} in ${applicationName}",
+              "Consume a product in ${applicationName}"
+            ]
+          }
+        }
+      }
+    },
     "Consume a product in ${applicationName}" : {
       "localizations" : {
         "de" : {
@@ -51,22 +83,24 @@
         }
       }
     },
-    "Consume ${product} in ${applicationName}" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbrauche ${product} in ${applicationName}"
-          }
-        }
-      }
-    },
     "How much ${product} do I have in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Wie viel ${product} habe ich in ${applicationName}"
+          }
+        },
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "How much ${product} do I have in ${applicationName}",
+              "How much ${product} is left in ${applicationName}",
+              "Check ${product} stock in ${applicationName}",
+              "Check stock in ${applicationName}"
+            ]
           }
         }
       }
@@ -101,22 +135,33 @@
         }
       }
     },
+    "Open ${product} in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Öffne ${product} in ${applicationName}"
+          }
+        },
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Open ${product} in ${applicationName}",
+              "I opened ${product} in ${applicationName}",
+              "Open a product in ${applicationName}"
+            ]
+          }
+        }
+      }
+    },
     "Open a product in ${applicationName}" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öffne ein Produkt in ${applicationName}"
-          }
-        }
-      }
-    },
-    "Open ${product} in ${applicationName}" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Öffne ${product} in ${applicationName}"
           }
         }
       }
