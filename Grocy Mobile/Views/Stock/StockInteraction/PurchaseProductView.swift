@@ -55,6 +55,7 @@ struct PurchaseProductView: View {
     @State private var amount: Double = 0.0
     @State private var quantityUnitID: Int?
     @State private var dueDate: Date = Calendar.current.startOfDay(for: Date())
+    @State private var purchasedDate: Date = Calendar.current.startOfDay(for: Date())
     @State private var productDoesntSpoil: Bool = false
     @State private var price: Double?
     @State private var isTotalPrice: Bool = false
@@ -128,7 +129,13 @@ struct PurchaseProductView: View {
         return barcode
     }
 
+    /// Grocy's user setting "Show purchased date on purchase and inventory page".
+    private var showsPurchasedDate: Bool {
+        userSettings?.showPurchasedDateOnPurchase == true
+    }
+
     private func resetForm() {
+        self.purchasedDate = Calendar.current.startOfDay(for: Date())
         self.productID = actionPending ? productToPurchaseID : nil
         self.amount =
             actionPending
@@ -238,7 +245,8 @@ struct PurchaseProductView: View {
             // Without location tracking, the product's default location is used.
             locationID: features.locationTracking && locationID != -1 ? locationID : nil,
             storeID: purchaseStoreID,
-            note: noteText
+            note: noteText,
+            purchasedDate: showsPurchasedDate ? dateFormatter.string(from: purchasedDate) : nil
         )
         if let productID = productID {
             isProcessingAction = true
@@ -307,6 +315,17 @@ struct PurchaseProductView: View {
 
             if productID != nil {
                 AmountSelectionView(productID: $productID, amount: $amount, quantityUnitID: $quantityUnitID)
+
+                if showsPurchasedDate {
+                    DatePicker(
+                        selection: $purchasedDate,
+                        displayedComponents: .date,
+                        label: {
+                            Label("Purchased date", systemImage: MySymbols.purchase)
+                                .foregroundStyle(.primary)
+                        }
+                    )
+                }
 
                 if features.dueDateTracking {
                     Section("Due date") {

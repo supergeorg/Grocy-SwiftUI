@@ -16,6 +16,8 @@ struct ProductInventory: Codable {
     var locationID: Int?
     var price: Double?
     var note: String
+    /// The purchased date of the added amount. Nil leaves it to Grocy, which uses today.
+    var purchasedDate: Date? = nil
     /// Without due date tracking (`FEATURE_FLAG_STOCK_BEST_BEFORE_DATE_TRACKING`), no due date is sent and Grocy uses the product's default. Not encoded.
     var sendsBestBeforeDate: Bool = true
 
@@ -26,6 +28,7 @@ struct ProductInventory: Codable {
         case locationID = "location_id"
         case price
         case note
+        case purchasedDate = "purchased_date"
     }
 
     func encode(to encoder: Encoder) throws {
@@ -38,6 +41,9 @@ struct ProductInventory: Codable {
         try container.encode(locationID, forKey: .locationID)
         try container.encode(price, forKey: .price)
         try container.encode(note.isEmpty ? nil : note, forKey: .note)
+        if let purchasedDate {
+            try container.encode(purchasedDate.asJSONDateString, forKey: .purchasedDate)
+        }
     }
 
     init(

@@ -94,21 +94,6 @@ struct QuickScanModeView: View {
         await grocyVM.requestData(objects: dataToUpdate, additionalObjects: additionalDataToUpdate)
     }
 
-    func searchForGrocyCode(barcodeString: String) -> GrocyCode? {
-        let codeComponents = barcodeString.components(separatedBy: ":")
-        if codeComponents.count >= 3,
-            codeComponents[0] == "grcy",
-            codeComponents[1] == "p",
-            let productID = Int(codeComponents[2])
-        {
-            let stockID: String? = codeComponents.count == 4 ? codeComponents[3] : nil
-            return GrocyCode(entityType: .product, entityID: productID, stockID: stockID)
-        } else if codeComponents.count == 3, codeComponents[0] == "grcy", codeComponents[1] == "c", let choreID = Int(codeComponents[2]) {
-            return GrocyCode(entityType: .chore, entityID: choreID, stockID: nil)
-        } else {
-            return nil
-        }
-    }
     #if os(iOS)
         func searchForBarcode(barcode: CodeResult) -> MDProductBarcode? {
             if barcode.type == .ean13 {
@@ -120,7 +105,7 @@ struct QuickScanModeView: View {
 
         func handleScan(result: CodeResult) {
             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-            if let grocyCode = searchForGrocyCode(barcodeString: result.value) {
+            if let grocyCode = GrocyCode(string: result.value) {
                 recognizedBarcode = nil
                 recognizedGrocyCode = grocyCode
                 qsActiveSheet = .grocyCode

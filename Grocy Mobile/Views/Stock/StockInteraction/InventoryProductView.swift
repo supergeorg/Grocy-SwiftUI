@@ -17,6 +17,11 @@ struct InventoryProductView: View {
     @Query(filter: #Predicate<MDStore> { $0.active }, sort: \MDStore.name, order: .forward) var mdStores: MDStores
     @Query(filter: #Predicate<MDLocation> { $0.active }, sort: \MDLocation.name, order: .forward) var mdLocations: MDLocations
     @Query(sort: \StockElement.productID, order: .forward) var stock: Stock
+    @Query var userSettingsList: GrocyUserSettingsList
+    /// Grocy's user setting "Show purchased date on purchase and inventory page".
+    private var showsPurchasedDate: Bool {
+        userSettingsList.first?.showPurchasedDateOnPurchase == true
+    }
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.grocyFeatures) private var features
@@ -104,6 +109,9 @@ struct InventoryProductView: View {
             productInventory.bestBeforeDate = Date.neverOverdue
         }
         productInventory.sendsBestBeforeDate = features.dueDateTracking
+        if !showsPurchasedDate {
+            productInventory.purchasedDate = nil
+        }
         if !features.locationTracking {
             productInventory.locationID = nil
         }
@@ -152,6 +160,23 @@ struct InventoryProductView: View {
             if productID != nil {
                 Section("Amount") {
                     AmountSelectionView(productID: $productID, amount: $productInventory.newAmount, quantityUnitID: $quantityUnitID)
+
+                    if showsPurchasedDate {
+                        DatePicker(
+                            selection: Binding(
+                                get: { productInventory.purchasedDate ?? Calendar.current.startOfDay(for: Date()) },
+                                set: { productInventory.purchasedDate = $0 }
+                            ),
+                            displayedComponents: .date,
+                            label: {
+                                Label("Purchased date", systemImage: MySymbols.purchase)
+                                    .foregroundStyle(.primary)
+                            }
+                        )
+                        Text("This will apply to added products")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
 
                     if productID != nil {
                         if stockAmountDifference != 0 {
