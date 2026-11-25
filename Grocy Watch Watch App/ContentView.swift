@@ -28,7 +28,7 @@ struct ContentView: View {
                     ContentUnavailableView(
                         "No data yet",
                         systemImage: "iphone",
-                        description: Text("Open Grocy on your iPhone to load the shopping list and tasks.")
+                        description: Text("Open Grocy on your iPhone to load the shopping list, tasks and chores.")
                     )
                 }
             }
@@ -51,10 +51,6 @@ private struct HomeView: View {
         (snapshot.shoppingList?.lists ?? []).flatMap(\.items).filter { !store.isPending(shoppingListItemID: $0.id) }.count
     }
 
-    private var taskCount: Int {
-        (snapshot.tasks?.items ?? []).filter { !store.isPending(taskID: $0.id) }.count
-    }
-
     var body: some View {
         List {
             NavigationLink {
@@ -62,10 +58,12 @@ private struct HomeView: View {
             } label: {
                 CountRow(title: "Shopping list", systemImage: "cart", count: shoppingListCount)
             }
-            NavigationLink {
-                WatchTasksView()
-            } label: {
-                CountRow(title: "Tasks", systemImage: "checklist", count: taskCount)
+            ForEach([WatchDueKind.tasks, .chores], id: \.self) { kind in
+                NavigationLink {
+                    WatchDueItemsView(kind: kind)
+                } label: {
+                    CountRow(title: kind.title, systemImage: kind.systemImage, count: store.openCount(kind))
+                }
             }
             Section {
             } footer: {

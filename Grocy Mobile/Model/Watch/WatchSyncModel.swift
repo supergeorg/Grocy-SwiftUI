@@ -12,7 +12,7 @@ import Foundation
 /// The data the iPhone shares with the Watch app, sent as the WatchConnectivity application context.
 ///
 /// The watch never talks to the Grocy server. It shows the last snapshot it received, also when the iPhone isn't nearby.
-/// The shopping lists and tasks are the summaries the widgets show, so they only include what isn't done yet.
+/// The shopping lists, tasks and chores are the summaries the widgets show, so the lists and tasks only include what isn't done yet.
 nonisolated struct WatchSnapshot: Codable, Equatable {
     static let contextKey = "snapshot"
 
@@ -21,6 +21,8 @@ nonisolated struct WatchSnapshot: Codable, Equatable {
     var localizationKey: String
     var shoppingList: WidgetShoppingListSummary?
     var tasks: WidgetDueSummary?
+    /// Missing in snapshots from app versions before chores were added to the watch.
+    var chores: WidgetDueSummary?
     /// The watch actions the iPhone has carried out or tried to, oldest first. The watch stops showing them as pending.
     var handledActionIDs: [UUID]
     var updated: Date
@@ -34,6 +36,7 @@ nonisolated struct WatchSnapshot: Codable, Equatable {
         localizationKey: String,
         shoppingList: WidgetShoppingListSummary?,
         tasks: WidgetDueSummary?,
+        chores: WidgetDueSummary?,
         handledActionIDs: [UUID],
         updated: Date
     ) {
@@ -41,6 +44,7 @@ nonisolated struct WatchSnapshot: Codable, Equatable {
         self.localizationKey = localizationKey
         self.shoppingList = shoppingList
         self.tasks = tasks
+        self.chores = chores
         self.handledActionIDs = handledActionIDs
         self.updated = updated
     }
@@ -53,19 +57,22 @@ nonisolated struct WatchSnapshot: Codable, Equatable {
     }
 }
 
-/// A check-off made on the watch. The watch sends it with `transferUserInfo`, so it reaches the iPhone even when the
-/// iPhone isn't nearby at the moment, and the iPhone carries it out on the Grocy server.
+/// A check-off made on the watch, which the iPhone carries out on the Grocy server.
+///
+/// The watch sends it with `transferUserInfo`, so it reaches the iPhone even when the iPhone isn't nearby at the moment,
+/// and also as a message while the iPhone is reachable. Both use the same dictionary.
 nonisolated struct WatchAction: Codable, Equatable, Identifiable {
     static let userInfoKey = "action"
 
     enum Kind: Codable, Equatable {
         case shoppingListItemDone(itemID: Int)
         case taskDone(taskID: Int)
+        case choreDone(choreID: Int)
     }
 
     var id: UUID
     var kind: Kind
-    /// When the check-off was made on the watch. Used as the task's done time.
+    /// When the check-off was made on the watch. Used as the task's done time and the chore's tracked time.
     var date: Date
 
     init(id: UUID = UUID(), kind: Kind, date: Date = Date()) {
