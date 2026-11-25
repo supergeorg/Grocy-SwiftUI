@@ -9,7 +9,7 @@ Grocy Mobile is a native SwiftUI client for [Grocy](https://grocy.info), a self-
 - **Platforms:** iOS / iPadOS 26.5+ and macOS 26.5+ (Tahoe), built from one multiplatform target. All targets share these deployment targets (`IPHONEOS_`/`MACOSX_`/`XROS_DEPLOYMENT_TARGET = 26.5`; kept at the newest SDK of the CI runner's Xcode). visionOS is listed in `SUPPORTED_PLATFORMS` but isn't a focus.
 - **Design language:** Liquid Glass (`.glassEffect(...)`, system toolbars, `ContentUnavailableView`). There's no fallback for older OS versions, and none should be added.
 - **Language / toolchain:** Swift 6, latest Xcode. The app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, and `SWIFT_STRICT_MEMORY_SAFETY = YES`.
-- **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
+- **Bundle IDs:** `georgappdev.Grocy` (app), `georgappdev.Grocy.Grocy-Widget` (widget), `georgappdev.Grocy.watchkitapp` (Watch app). App Group: `group.georgappdev.Grocy`. iCloud container: `iCloud.georgappdev.Grocy`.
 - **Version:** `MARKETING_VERSION` in the project (currently 4.0.0). Release notes go in `Changelogs/Changelog_<version>.md`, in English and German.
 - **Dependencies (SPM):** `InfomaniakRichHTMLEditor` (`swift-rich-html-editor`, up to next major from 3.3.1), used for editing recipe preparation HTML. Prefer Apple frameworks over adding new packages.
 
@@ -37,6 +37,7 @@ Grocy Mobile/                 App target (file-system synchronized group, so new
     Additional/               ServerProblemView, FlowLayout, ...
   Helper/                     Logger, symbols, formatters, decoding helpers, deep links, AI matcher, reminders
 Grocy Widget/                 WidgetKit extension: stock, shopping list, chores and tasks widgets
+Grocy Watch Watch App/        watchOS companion app: shopping list and tasks, data from the iPhone
 Grocy MobileTests/            Unit tests (currently XCTest)
 Grocy MobileUITests/          UI tests (XCUIAutomation)
 Changelogs/                   Release notes per version (Changelog_<version>.md, English + German)
@@ -45,6 +46,8 @@ Screenshots/ PrivacyPolicy/ Assets/   Non-code assets
 ```
 
 The widget target compiles a few files from the app folder through membership exceptions: `DateFormatter.swift`, `Decoder.swift`, `MySymbols.swift`, `APIError.swift`, `SharedModel.swift`, `ProductStatus.swift`, `VolatileStockModel.swift`, `Assets.xcassets`, and `Localizable.xcstrings`. Keep these files free of app-only dependencies such as `GrocyViewModel` or SwiftUI views from the app target. Don't break them, or the widget stops building.
+
+The Watch app target compiles `SharedModel.swift`, `Model/Watch/WatchSyncModel.swift` and `Localizable.xcstrings` from the app folder the same way. The same rules apply.
 
 ## Architecture
 
@@ -111,6 +114,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
 - **Recipe import (work in progress):** `Views/Recipes/Import/` (UI and the JSON-LD `RecipeParser`) and `Model/Recipes/Import/` (ingredient line parser, product/unit mapping, preparation HTML format) import schema.org/Recipe JSON-LD from websites as Grocy recipes. See `Guides/Recipe Import/RecipeImportGuide.md`, and update it when the import changes.
 - **Batteries and equipment:** `Model/Batteries/` and `Model/Equipment/`, views in `Views/Batteries/` (overview with due filters, tracking, journal, battery details) and `Views/Equipment/` (list, details with the PDF manual via PDFKit, notes form). Battery due status is `BatteryStatus`. Non-picture files (PDF manuals) are fetched without `force_serve_as=picture`. Tracked times are sent as local `Y-m-d H:i:s`, the only format Grocy accepts.
 - **Widgets:** `Grocy Widget/` bundles the stock, shopping list, chores and tasks widgets (`AppIntentTimelineProvider`s, also on the Lock Screen). They never open SwiftData. After each sync, `GrocyViewModel` writes small `Codable` summaries (`WidgetStockSummary`, `WidgetShoppingListSummary`, `WidgetDueSummary`) to the App Group's `UserDefaults` via `WidgetSharedStore` (`Model/SharedModel.swift`) and reloads the matching timeline. `deleteAllCachedData` clears them. The app's language override is shared too, so widgets use the same language.
+- **Watch app:** `Grocy Watch Watch App/` never talks to the Grocy server. On iOS, `WatchSync` (`Model/Watch/WatchSync.swift`) sends a `WatchSnapshot` with the widgets' shopping list and tasks summaries as the WatchConnectivity application context after each widget update and on logout. The watch keeps the last snapshot in a file and sends check-offs as `WatchAction`s with `transferUserInfo`, so they wait until the iPhone is reachable. The iPhone carries out each action once with the app's login and lists the handled action IDs in the next snapshot, which is when the watch stops showing them as pending.
 
 ## Coding Conventions
 
@@ -193,7 +197,7 @@ xcrun swift-format format -i -p <changed .swift files>
 xcrun swift-format lint -p <changed .swift files>
 ```
 
-To format all changed files at once: `git diff --name-only --diff-filter=d HEAD -- '*.swift' | tr '\n' '\0' | xargs -0 xcrun swift-format format -i -p`. For the whole codebase: `xcrun swift-format format -i -r -p "Grocy Mobile" "Grocy Widget" "Grocy MobileTests" "Grocy MobileUITests"`.
+To format all changed files at once: `git diff --name-only --diff-filter=d HEAD -- '*.swift' | tr '\n' '\0' | xargs -0 xcrun swift-format format -i -p`. For the whole codebase: `xcrun swift-format format -i -r -p "Grocy Mobile" "Grocy Widget" "Grocy Watch Watch App" "Grocy MobileTests" "Grocy MobileUITests"`.
 
 - Format before building, and build afterwards: some rules rewrite code (`FileScopedDeclarationPrivacy`, `NoAccessLevelOnExtensionDeclaration`, `OrderedImports`, `UseShorthandTypeNames`, …).
 - Fix new lint warnings in code you wrote. The remaining warnings in existing code (`AlwaysUseLowerCamelCase` on names like `chinese_simplified` or snake_case API types, a few `ReplaceForEachWithForLoop`) can't be fixed automatically and are left alone; don't rename them as a side effect.

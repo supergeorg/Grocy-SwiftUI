@@ -230,6 +230,9 @@ struct Grocy_MobileApp: App {
             // modelContext.fetch in views see its saves immediately.
             let vm = GrocyViewModel(modelContext: container.mainContext, profileModelContext: profileContainer.mainContext)
             ReminderStore.shared.observeChanges(grocyVM: vm)
+            #if os(iOS)
+                WatchSync.shared.start(grocyVM: vm)
+            #endif
             return (container, vm)
         }
 
