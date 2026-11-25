@@ -106,12 +106,12 @@ import SwiftUI
                                         showQuickScan = true
                                     } label: {
                                         Label("Quick Scan", systemImage: MySymbols.barcodeScan)
-                                            .padding(.vertical, 4)
+                                            .frame(minHeight: Sizes.minimumHitTarget)
                                     }
                                     .buttonStyle(.glassProminent)
                                 }
                                 .padding(.horizontal)
-                                .padding(.bottom, 8)
+                                .padding(.bottom, Spacing.small)
                             }
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
