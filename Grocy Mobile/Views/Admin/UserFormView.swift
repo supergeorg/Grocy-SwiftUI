@@ -177,6 +177,12 @@ struct UserFormView: View {
                     emptyMessage: "A username is required",
                     errorMessage: "Username already exists"
                 )
+                // Usernames are case-sensitive login names, so the keyboard doesn't change them.
+                #if os(iOS)
+                    .textInputAutocapitalization(.never)
+                #endif
+                .autocorrectionDisabled()
+                .textContentType(.username)
                 .onChange(of: username) {
                     isValidUsername = checkUsernameCorrect()
                 }
