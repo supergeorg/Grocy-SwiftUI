@@ -237,11 +237,13 @@ class GrocyViewModel {
 
     func stopUpdateTimer() {
         self.refreshTimer?.invalidate()
+        self.refreshTimer = nil
     }
 
+    /// Starts the auto reload timer with the current settings, or stops it when auto reload is off (#112).
     func setUpdateTimer() {
+        self.stopUpdateTimer()
         if self.autoReload && self.autoReloadInterval != 0 {
-            self.stopUpdateTimer()
             self.refreshTimer =
                 Timer
                 .scheduledTimer(
