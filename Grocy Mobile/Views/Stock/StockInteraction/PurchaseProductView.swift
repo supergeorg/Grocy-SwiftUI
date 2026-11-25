@@ -115,6 +115,12 @@ struct PurchaseProductView: View {
         (productID != nil) && (amount > 0) && (quantityUnitID != nil)
     }
 
+    /// The scanned barcode while it belongs to the selected product: its unit is the default then (#257).
+    private var productBarcode: MDProductBarcode? {
+        guard actionPending, let barcode, barcode.productID == productID else { return nil }
+        return barcode
+    }
+
     private func resetForm() {
         self.productID = actionPending ? productToPurchaseID : nil
         self.amount =
@@ -249,7 +255,8 @@ struct PurchaseProductView: View {
                     if let selectedProduct = mdProducts.first(where: { $0.id == productID }) {
                         if locationID == -1 { locationID = selectedProduct.locationID }
                         if storeID == -1 { storeID = selectedProduct.storeID ?? -1 }
-                        quantityUnitID = selectedProduct.quIDPurchase
+                        // A scanned barcode's unit wins over the default purchase unit, like its amount does (#257).
+                        quantityUnitID = productBarcode?.quID ?? selectedProduct.quIDPurchase
                         if product?.defaultDueDays == -1 {
                             productDoesntSpoil = true
                             dueDate = Calendar.current.startOfDay(for: Date())
