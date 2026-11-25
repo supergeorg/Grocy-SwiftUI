@@ -93,6 +93,20 @@ import SwiftUI
                 Tab(value: Selection.search, role: .search) {
                     NavigationStack(path: $searchPath) {
                         GlobalSearchView(searchText: $searchText)
+                            // Only on the search tab: scanning a barcode is another way of searching
+                            // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
+                            // In the navigation bar, because the keyboard covers a bottom accessory as soon as the
+                            // search field is active. Only on the search screen itself, not on a result opened from it
+                            // (e.g. a product's form), where scanning isn't searching anymore.
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button {
+                                        showQuickScan = true
+                                    } label: {
+                                        Label("Quick Scan", systemImage: MySymbols.barcodeScan)
+                                    }
+                                }
+                            }
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
                     .searchable(text: $searchText, prompt: "Products, recipes and more")
@@ -107,16 +121,6 @@ import SwiftUI
             .tabBarMinimizeBehavior(.onScrollDown)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)
-            // Only on the search tab: scanning a barcode is another way of searching
-            // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-            // Not on a result opened from the search (e.g. a product's form), where scanning isn't searching anymore.
-            .tabViewBottomAccessory(isEnabled: selection == .search && searchPath.isEmpty) {
-                Button {
-                    showQuickScan = true
-                } label: {
-                    Label("Quick Scan", systemImage: MySymbols.barcodeScan)
-                }
-            }
             .quickScanSheet(isPresented: $showQuickScan)
             .task {
                 await grocyVM.requestData(additionalObjects: [.system_config])

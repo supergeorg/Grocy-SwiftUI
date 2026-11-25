@@ -69,6 +69,8 @@ final class PhoneNavigationUITests: GrocyUITestCase {
             let field = app.searchFields.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 10), "No search field in the search tab.")
             field.tap()
+            // With the keyboard up, Quick Scan must still be reachable (it used to sit behind the keyboard).
+            XCTAssertTrue(app.buttons["Quick Scan"].isHittable, "The keyboard covers the Quick Scan button.")
             // The run ID is part of this run's product, location and unit names, so it finds all three.
             field.typeText(runID)
             XCTAssertTrue(element(in: app, labelContaining: productName).waitForExistence(timeout: 10), "The product isn't found.")
