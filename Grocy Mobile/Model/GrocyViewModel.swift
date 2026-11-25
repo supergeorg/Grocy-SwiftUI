@@ -121,6 +121,12 @@ class GrocyViewModel {
         return (try? modelContext.fetch(descriptor))?.first
     }
 
+    /// True when the app only hosts the unit tests. Xcode sets this variable for a hosted test bundle, not for the app
+    /// that UI tests launch.
+    nonisolated static var isUnitTestHost: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
+
     init(modelContext: ModelContext, profileModelContext: ModelContext) {
         self.grocyApi = GrocyApi()
         self.modelContext = modelContext
@@ -142,7 +148,11 @@ class GrocyViewModel {
             try container.encode(dateString)
         })
         self.jsonEncoder.outputFormatting = .prettyPrinted
-        if isLoggedIn {
+        if Self.isUnitTestHost {
+            // The unit tests share the app's UserDefaults. Logging in to the person's server there would run against
+            // test containers that are gone by the time the login reads the profile.
+            GrocyLogger.info("Running as unit test host, not logging in")
+        } else if isLoggedIn {
             loginTask = Task {
                 do {
                     if isDemoModus {
