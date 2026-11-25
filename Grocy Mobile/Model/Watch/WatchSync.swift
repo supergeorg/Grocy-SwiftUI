@@ -53,7 +53,9 @@
 
         private func sendSnapshotNow() {
             let session = WCSession.default
-            guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
+            // No isPaired / isWatchAppInstalled check: they can report the watch app as missing while it's running and sending
+            // messages (seen on the simulator). updateApplicationContext throws when there's really no watch app, which is logged.
+            guard session.activationState == .activated else { return }
             let isLoggedIn = grocyVM?.isLoggedIn ?? false
             let snapshot = WatchSnapshot(
                 isLoggedIn: isLoggedIn,
