@@ -702,7 +702,10 @@ class GrocyViewModel {
         do {
             let descriptions = try modelContext.fetch(FetchDescriptor<ShoppingListDescription>(sortBy: [SortDescriptor(\.id)]))
             let items = try modelContext.fetch(FetchDescriptor<ShoppingListItem>(predicate: #Predicate { $0.done == false }))
-            let products = Dictionary(try modelContext.fetch(FetchDescriptor<MDProduct>()).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            // Only the products on the lists: this runs several times per sync, and fetching all products was the main cost.
+            let productIDs = Array(Set(items.compactMap(\.productID)))
+            let listedProducts = try modelContext.fetch(FetchDescriptor<MDProduct>(predicate: #Predicate { productIDs.contains($0.id) }))
+            let products = Dictionary(listedProducts.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
             let quantityUnits = Dictionary(
                 try modelContext.fetch(FetchDescriptor<MDQuantityUnit>()).map { ($0.id, $0) },
                 uniquingKeysWith: { first, _ in first }
