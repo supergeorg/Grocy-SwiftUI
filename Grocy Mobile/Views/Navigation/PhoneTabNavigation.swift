@@ -95,17 +95,23 @@ import SwiftUI
                         GlobalSearchView(searchText: $searchText)
                             // Only on the search tab: scanning a barcode is another way of searching
                             // (the stock tab's toolbar is already full, and a tab would be a place, not an action).
-                            // In the navigation bar, because the keyboard covers a bottom accessory as soon as the
-                            // search field is active. Only on the search screen itself, not on a result opened from it
-                            // (e.g. a product's form), where scanning isn't searching anymore.
-                            .toolbar {
-                                ToolbarItem(placement: .topBarTrailing) {
+                            // Floats above the search field: the safe area includes the field and the keyboard, so
+                            // the button moves up with them. A bottom accessory stayed behind the keyboard, and the
+                            // navigation bar is hidden while searching. Only on the search screen itself, not on a
+                            // result opened from it (e.g. a product's form), where scanning isn't searching anymore.
+                            .safeAreaInset(edge: .bottom) {
+                                HStack {
+                                    Spacer()
                                     Button {
                                         showQuickScan = true
                                     } label: {
                                         Label("Quick Scan", systemImage: MySymbols.barcodeScan)
+                                            .padding(.vertical, 4)
                                     }
+                                    .buttonStyle(.glassProminent)
                                 }
+                                .padding(.horizontal)
+                                .padding(.bottom, 8)
                             }
                     }
                     // On the search tab's navigation stack, so the tab turns into the search field.
