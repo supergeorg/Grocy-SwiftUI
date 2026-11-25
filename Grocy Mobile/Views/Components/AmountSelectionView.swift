@@ -21,15 +21,13 @@ struct AmountSelectionView: View {
         mdProducts.first(where: { $0.id == productID })
     }
 
-    private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        if let quIDStock = product?.quIDStock {
-            return
-                mdQuantityUnitConversions
-                .filter({ $0.toQuID == quIDStock })
-                .filter({ $0.productID == nil ? true : $0.productID == productID })
-        } else {
-            return []
-        }
+    private var conversionResolver: QuantityUnitConversionResolver? {
+        product.map { QuantityUnitConversionResolver(product: $0, conversions: mdQuantityUnitConversions) }
+    }
+
+    /// Only the units this product can be converted to and from, each once (#192).
+    private var convertibleQuantityUnits: [MDQuantityUnit] {
+        (conversionResolver?.convertibleQuIDs ?? []).compactMap { quID in mdQuantityUnits.first(where: { $0.id == quID }) }
     }
 
     private var currentQuantityUnit: MDQuantityUnit? {
@@ -40,7 +38,7 @@ struct AmountSelectionView: View {
         }
     }
     private var factoredAmount: Double {
-        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID && $0.toQuID == product?.quIDStock })?.factor ?? 1)
+        conversionResolver?.stockAmount(amount, in: quantityUnitID) ?? amount
     }
     private var stockQuantityUnit: MDQuantityUnit? {
         mdQuantityUnits.first(where: { $0.id == product?.quIDStock })
@@ -64,21 +62,13 @@ struct AmountSelectionView: View {
                         content: {
                             Text("")
                                 .tag(-1)
-                            if let stockQU = mdQuantityUnits.first(where: { $0.id == product?.quIDStock }) {
-                                Text(stockQU.name)
-                                    .tag(stockQU.id)
+                            ForEach(convertibleQuantityUnits, id: \.id) { quantityUnit in
+                                Text(quantityUnit.name)
+                                    .tag(quantityUnit.id)
                             }
-                            ForEach(
-                                quantityUnitConversions,
-                                id: \.id,
-                                content: { quConversion in
-                                    Text(mdQuantityUnits.first(where: { $0.id == quConversion.fromQuID })?.name ?? String(quConversion.fromQuID))
-                                        .tag(quConversion.fromQuID)
-                                }
-                            )
                         }
                     )
-                    .disabled(quantityUnitConversions.isEmpty)
+                    .disabled(convertibleQuantityUnits.count <= 1)
                     if quantityUnitID == nil {
                         Text("A quantity unit is required")
                             .font(.caption)

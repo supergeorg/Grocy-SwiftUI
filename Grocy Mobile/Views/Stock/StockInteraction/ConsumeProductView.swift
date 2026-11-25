@@ -122,15 +122,10 @@ struct ConsumeProductView: View {
         product?.name ?? ""
     }
 
-    private var quantityUnitConversions: [MDQuantityUnitConversion] {
-        if let quIDStock = product?.quIDStock {
-            return mdQuantityUnitConversions.filter({ $0.toQuID == quIDStock })
-        } else {
-            return []
-        }
-    }
+    /// The amount in the product's stock unit, which is what Grocy books. Conversions chain and work both ways.
     private var factoredAmount: Double {
-        return amount * (quantityUnitConversions.first(where: { $0.fromQuID == quantityUnitID && $0.toQuID == product?.quIDStock })?.factor ?? 1)
+        guard let product else { return amount }
+        return QuantityUnitConversionResolver(product: product, conversions: mdQuantityUnitConversions).stockAmount(amount, in: quantityUnitID)
     }
 
     private var maxAmount: Double? {
@@ -150,7 +145,7 @@ struct ConsumeProductView: View {
     private var isFormValid: Bool {
         return (productID != nil) && (amount > 0) && (quantityUnitID != nil) && (!features.locationTracking || locationID != -1)
             && !(useSpecificStockEntry && stockEntryID == nil)
-            && !(useSpecificStockEntry && amount != 1.0) && !(amount > maxAmount ?? 0)
+            && !(useSpecificStockEntry && amount != 1.0) && !(factoredAmount > maxAmount ?? 0)
     }
 
     /// Determines the actual product ID for the transaction
