@@ -130,6 +130,24 @@ struct GrocyInfoView: View {
                     )
                 }
             }
+            if !isDemoModus, let profile = grocyVM.selectedServerProfile, let fingerprint = profile.trustedCertificateFingerprint {
+                Section {
+                    LabeledContent("SHA-256 fingerprint") {
+                        Text(fingerprint)
+                            .font(.caption.monospaced())
+                            .textSelection(.enabled)
+                    }
+                    Button("Don't trust this certificate", role: .destructive) {
+                        profile.trustedCertificateFingerprint = nil
+                        // Applies at once, not only at the next login.
+                        grocyVM.grocyApi.setTrustedCertificate(fingerprint: nil)
+                    }
+                } header: {
+                    Text("Trusted certificate")
+                } footer: {
+                    Text("The server's certificate isn't trusted by this device, but you trusted it for this server.")
+                }
+            }
         }
         .navigationTitle("Information about Grocy Server")
         .formStyle(.grouped)
