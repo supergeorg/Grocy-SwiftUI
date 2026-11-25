@@ -31132,6 +31132,16 @@
         }
       }
     },
+    "Don't trust this certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesem Zertifikat nicht vertrauen"
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "de" : {
@@ -62887,6 +62897,16 @@
         }
       }
     },
+    "SHA-256 fingerprint" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SHA-256-Fingerabdruck"
+          }
+        }
+      }
+    },
     "Share" : {
 
     },
@@ -70155,6 +70175,16 @@
         }
       }
     },
+    "The server's certificate isn't trusted by this device, but you trusted it for this server." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Gerät vertraut dem Zertifikat des Servers nicht, aber du hast ihm für diesen Server vertraut."
+          }
+        }
+      }
+    },
     "The start date cannot be changed when the chore was once tracked" : {
       "localizations" : {
         "ca" : {
@@ -71268,6 +71298,16 @@
     },
     "This device doesn't allow access to Reminders." : {
 
+    },
+    "This device doesn't trust the certificate of %@, for example because it's self-signed. Only trust it if this is your own server and the fingerprint matches its certificate." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Gerät vertraut dem Zertifikat von %@ nicht, zum Beispiel weil es selbst signiert ist. Vertraue ihm nur, wenn das dein eigener Server ist und der Fingerabdruck zu seinem Zertifikat passt."
+          }
+        }
+      }
     },
     "This equals %@ %@" : {
       "localizations" : {
@@ -79376,6 +79416,26 @@
         }
       }
     },
+    "Trust this certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesem Zertifikat vertrauen"
+          }
+        }
+      }
+    },
+    "Trusted certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertrauenswürdiges Zertifikat"
+          }
+        }
+      }
+    },
     "Try again" : {
       "localizations" : {
         "cs" : {
@@ -81609,6 +81669,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Version du serveur non prise en charge"
+          }
+        }
+      }
+    },
+    "Untrusted certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht vertrauenswürdiges Zertifikat"
           }
         }
       }
