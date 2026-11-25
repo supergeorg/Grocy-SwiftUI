@@ -9,15 +9,15 @@ import SwiftData
 import SwiftUI
 
 /// Everything that doesn't have a tab of its own on iPhone, opened from the settings button:
-/// settings first (always visible without scrolling), the places that aren't tabs (so every complete list stays reachable)
-/// and the master data lists, shown directly (one tap instead of two).
+/// settings first (always visible without scrolling), the places that aren't tabs (so every complete list stays reachable),
+/// the master data lists, shown directly (one tap instead of two), and the user management.
 ///
 /// It's pushed onto the current tab instead of shown in a sheet: the master data lists hide their search field
 /// above the list until it's pulled down, and in a sheet that pull dismisses the sheet instead.
 struct AccountView: View {
     /// Value-based routes, so the master data lists (which navigate by value, too) work inside the same stack.
     enum Route: Hashable {
-        case account, settings
+        case account, settings, userManagement
     }
 
     @AppStorage(PhoneNavigationStyle.storageKey) private var style: PhoneNavigationStyle = .smart
@@ -50,6 +50,11 @@ struct AccountView: View {
             Section("Master data") {
                 MasterDataLinks()
             }
+            Section {
+                NavigationLink(value: Route.userManagement) {
+                    ListRowLabel("User management", systemImage: MySymbols.userManagement)
+                }
+            }
         }
         .navigationTitle("Grocy Mobile")
     }
@@ -66,6 +71,8 @@ extension View {
                     AccountView()
                 case .settings:
                     SettingsView()
+                case .userManagement:
+                    UserManagementView()
                 }
             }
     }

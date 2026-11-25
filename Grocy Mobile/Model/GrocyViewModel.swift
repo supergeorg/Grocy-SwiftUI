@@ -50,6 +50,8 @@ class GrocyViewModel {
 
     var users: GrocyUsers = []
     var currentUser: GrocyUser? = nil
+    /// Whether the logged-in user has the ADMIN permission, `nil` until `checkCurrentUserIsAdmin()` knows.
+    var isCurrentUserAdmin: Bool? = nil
     var stock: Stock = []
     var stockEntries: StockEntries = []
     var stockCurrentLocations: StockLocations = []
@@ -603,6 +605,7 @@ class GrocyViewModel {
 
         self.users = []
         self.currentUser = nil
+        self.isCurrentUserAdmin = nil
         self.stock = []
         self.stockEntries = []
         self.volatileStock = nil
@@ -867,6 +870,62 @@ class GrocyViewModel {
         try await grocyApi.putUserPermissions(id: userID, content: content)
     }
 
+    /// Finds out whether the logged-in user is an admin (sets `isCurrentUserAdmin`).
+    ///
+    /// Grocy has no endpoint for one's own permissions, and only admins may read permissions at all,
+    /// so reading one's own permissions is the check: the server answers everyone else with an error message.
+    /// A failure without an answer (offline) leaves the last known value.
+    func checkCurrentUserIsAdmin() async {
+        if currentUser == nil {
+            await requestData(additionalObjects: [.current_user])
+        }
+        guard let currentUser else { return }
+        do {
+            _ = try await grocyApi.getUserPermissions(id: currentUser.id)
+            isCurrentUserAdmin = true
+        } catch let error as APIError {
+            if case .errorString = error {
+                isCurrentUserAdmin = false
+            } else {
+                GrocyLogger.warning("Checking the permissions of the current user failed. \(error)")
+            }
+        } catch {
+            if !isCancellation(error) {
+                GrocyLogger.warning("Checking the permissions of the current user failed. \(error)")
+            }
+        }
+    }
+
+    /// Reloads the users after a change, also when it happened in the same second as the last sync
+    /// (Grocy's `db-changed-time` has one-second resolution).
+    /// The list of all users needs the USERS_READ permission, so editing only oneself reloads just the current user.
+    func reloadUsers(includingAllUsers: Bool = true) async {
+        var entities: [AdditionalEntities] = [.current_user]
+        if includingAllUsers {
+            entities.append(.users)
+        }
+        for entity in entities {
+            timeStampsAdditionalObjects[entity] = nil
+        }
+        await requestData(additionalObjects: entities)
+    }
+
+    /// The ID of a user, read from the server: creating a user doesn't return it.
+    func userID(username: String) async throws -> Int? {
+        try await grocyApi.getUsers().first(where: { $0.username == username })?.id
+    }
+
+    /// Uploads a user picture under its file name (not yet encoded).
+    func uploadUserPicture(jpegData: Data, fileName: String) async throws {
+        try await grocyApi.putFileData(fileData: jpegData, fileName: Data(fileName.utf8).base64EncodedString(), groupName: PictureType.userPictures.rawValue)
+    }
+
+    /// Deletes a user picture by its file name (not yet encoded).
+    func deleteUserPicture(fileName: String) async throws {
+        try await grocyApi.deleteFile(fileName: Data(fileName.utf8).base64EncodedString(), groupName: PictureType.userPictures.rawValue)
+        userPictures[Data(fileName.utf8).base64EncodedString()] = nil
+    }
+
     func getNewUserID() -> Int {
         let ints = self.users.map { $0.id }
         var startvar = 0
@@ -980,8 +1039,8 @@ class GrocyViewModel {
     }
 
     func getUserPicture(fileName: String, bestFitHeight: Int? = nil, bestFitWidth: Int? = nil) async throws -> Data? {
-        if self.productPictures.keys.contains(fileName) {
-            return self.productPictures[fileName]
+        if self.userPictures.keys.contains(fileName) {
+            return self.userPictures[fileName]
         }
         let userPictureData = try await grocyApi.getFile(
             fileName: fileName,

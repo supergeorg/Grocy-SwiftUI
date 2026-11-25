@@ -47,6 +47,8 @@ enum Sizes {
     static let picturePreview: CGFloat = 300
     static let userfieldThumbnail: CGFloat = 32
     static let avatar: CGFloat = 40
+    /// The user picture in the user form.
+    static let userPicture: CGFloat = 120
     /// Width of a leading row symbol column, so names line up although symbols differ in width (scaled with Dynamic Type).
     static let rowIconWidth: CGFloat = 30
     static let navigationLogoHeight: CGFloat = 28

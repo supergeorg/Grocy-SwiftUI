@@ -18243,6 +18243,16 @@
         }
       }
     },
+    "Change your name, password and picture." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ändere deinen Namen, dein Passwort und dein Bild."
+          }
+        }
+      }
+    },
     "Charge" : {
 
     },
@@ -29182,6 +29192,16 @@
         }
       }
     },
+    "Delete picture" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild löschen"
+          }
+        }
+      }
+    },
     "Delete product picture" : {
       "localizations" : {
         "cs" : {
@@ -29622,6 +29642,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除此項目"
+          }
+        }
+      }
+    },
+    "Deleting the user failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen des Benutzers fehlgeschlagen"
           }
         }
       }
@@ -33788,6 +33818,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯物品分類"
+          }
+        }
+      }
+    },
+    "Edit profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil bearbeiten"
           }
         }
       }
@@ -69576,6 +69616,16 @@
     "The current file will be replaced on save" : {
 
     },
+    "The current picture will be deleted on save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das aktuelle Bild wird beim Speichern gelöscht"
+          }
+        }
+      }
+    },
     "The file isn't a PDF document." : {
 
     },
@@ -86801,6 +86851,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是"
+          }
+        }
+      }
+    },
+    "You" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du"
           }
         }
       }

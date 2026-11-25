@@ -5,9 +5,12 @@
 //  Created by Georg Meißner on 19.11.26.
 //
 
+import CoreGraphics
 import Foundation
+import ImageIO
 import SwiftData
 import Testing
+import UniformTypeIdentifiers
 
 @testable import Grocy_Mobile
 
@@ -66,7 +69,99 @@ struct UserManagementIntegrationTests {
         if let userID { try await grocyVM.deleteUser(id: userID) }
     }
 
+    @Test("A failed write shows the server's message, not a decoding error")
+    func duplicateUsernameShowsServerMessage() async throws {
+        let username = uniqueName("dup")
+        var userID: Int?
+        do {
+            userID = try await createUser(username: username)
+            let error = await #expect(throws: APIError.self) {
+                _ = try await createUser(username: username)
+            }
+            if case .errorString(let description) = error {
+                #expect(!description.isEmpty)
+            } else {
+                Issue.record("Expected the server's error message, got \(String(describing: error))")
+            }
+        } catch {
+            if let userID { try? await grocyVM.deleteUser(id: userID) }
+            throw error
+        }
+        if let userID { try await grocyVM.deleteUser(id: userID) }
+    }
+
+    @Test("A user picture is uploaded, set, loaded and deleted")
+    func userPicture() async throws {
+        let username = uniqueName("pic")
+        let fileName = "\(UUID().uuidString)_\(username).jpg"
+        var userID: Int?
+        var uploaded = false
+        do {
+            userID = try await createUser(username: username)
+            let id = try #require(userID)
+            try await grocyVM.uploadUserPicture(jpegData: try #require(Self.smallJPEG()), fileName: fileName)
+            uploaded = true
+
+            try await grocyVM.putUser(
+                id: id,
+                user: GrocyUserPOST(
+                    id: id,
+                    username: username,
+                    firstName: "First",
+                    lastName: "Last",
+                    password: "",
+                    pictureFileName: fileName,
+                    rowCreatedTimestamp: Date()
+                )
+            )
+            await grocyVM.reloadUsers()
+            #expect(grocyVM.users.first(where: { $0.id == id })?.pictureFileName == fileName)
+            let stored = try container.mainContext.fetch(FetchDescriptor<GrocyUser>()).first(where: { $0.id == id })
+            #expect(stored?.pictureFileName == fileName)
+
+            let picture = try await grocyVM.getUserPicture(fileName: Data(fileName.utf8).base64EncodedString(), bestFitWidth: 8)
+            #expect(picture?.isEmpty == false)
+
+            try await grocyVM.deleteUserPicture(fileName: fileName)
+            uploaded = false
+        } catch {
+            if uploaded { try? await grocyVM.deleteUserPicture(fileName: fileName) }
+            if let userID { try? await grocyVM.deleteUser(id: userID) }
+            throw error
+        }
+        if let userID { try await grocyVM.deleteUser(id: userID) }
+    }
+
+    /// A 4×4 pixel JPEG.
+    private static func smallJPEG() -> Data? {
+        guard
+            let context = CGContext(
+                data: nil,
+                width: 4,
+                height: 4,
+                bitsPerComponent: 8,
+                bytesPerRow: 0,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+            )
+        else { return nil }
+        context.setFillColor(red: 0.2, green: 0.6, blue: 0.3, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
+        guard let image = context.makeImage() else { return nil }
+        let output = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(output, UTType.jpeg.identifier as CFString, 1, nil) else { return nil }
+        CGImageDestinationAddImage(destination, image, nil)
+        return CGImageDestinationFinalize(destination) ? output as Data : nil
+    }
+
     // MARK: - Permissions
+
+    @Test("The test server's API key belongs to an admin")
+    func currentUserIsAdmin() async throws {
+        grocyVM.isCurrentUserAdmin = nil
+        await grocyVM.checkCurrentUserIsAdmin()
+        #expect(grocyVM.isCurrentUserAdmin == true)
+    }
 
     @Test("The permission tree has ADMIN as its root")
     func permissionHierarchy() async throws {
