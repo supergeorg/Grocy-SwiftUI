@@ -15,6 +15,10 @@ struct MDProductRowView: View {
     var location: MDLocation?
     var productGroup: MDProductGroup?
 
+    private var plainDescription: String {
+        product.mdProductDescription.strippingHTML.collapsingWhitespace
+    }
+
     var body: some View {
         HStack {
             if let pictureFileName = product.pictureFileName {
@@ -40,8 +44,9 @@ struct MDProductRowView: View {
                     if let productGroupName = productGroup?.name {
                         Text("\(Text("Product group")): \(Text(productGroupName))")
                     }
-                    if !product.mdProductDescription.isEmpty {
-                        Text(product.mdProductDescription)
+                    // Grocy saves descriptions as HTML, so show them without the tags (#139).
+                    if !plainDescription.isEmpty {
+                        Text(plainDescription)
                             .italic()
                     }
                 }
