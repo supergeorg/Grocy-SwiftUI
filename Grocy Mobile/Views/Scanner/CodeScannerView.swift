@@ -65,6 +65,13 @@ struct CodeResult: Hashable {
                 let authorized = await context.coordinator.checkCameraAuthorization()
                 if authorized {
                     try? scannerViewController.startScanning()
+                    // Zoom in on cameras that can't focus close up, so the barcode can be held farther away (#204).
+                    if let zoomFactor = recommendedScannerZoomFactor(), zoomFactor > scannerViewController.zoomFactor {
+                        scannerViewController.zoomFactor = min(
+                            max(zoomFactor, scannerViewController.minZoomFactor),
+                            scannerViewController.maxZoomFactor
+                        )
+                    }
                 } else {
                     onAuthorizationFailed?()
                 }
