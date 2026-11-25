@@ -33,3 +33,15 @@ public enum APIError: Error, Equatable {
     case hassError(error: Error)
     case notLoggedIn(error: Error)
 }
+
+/// True when a request ended because its task was cancelled, for example because the view that started it went away (#167).
+/// A cancelled request isn't a failed one, so it shouldn't show an error.
+nonisolated func isCancellation(_ error: Error) -> Bool {
+    if error is CancellationError {
+        return true
+    }
+    if let urlError = error as? URLError, urlError.code == .cancelled {
+        return true
+    }
+    return false
+}

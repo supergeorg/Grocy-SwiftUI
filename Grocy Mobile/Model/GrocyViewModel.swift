@@ -478,6 +478,10 @@ class GrocyViewModel {
                         self.loadingObjectEntities.remove(object)
                         self.failedToLoadObjects.remove(object)
                     }
+                } catch let error where isCancellation(error) {
+                    // Not a failure: the next request loads it again (#167).
+                    GrocyLogger.info("Data request cancelled for \(object)")
+                    self.loadingObjectEntities.remove(object)
                 } catch {
                     GrocyLogger.error("Data request failed for \(object). Message: \("\(error)")")
                     self.failedToLoadObjects.insert(object)
@@ -499,6 +503,10 @@ class GrocyViewModel {
                         self.loadingAdditionalEntities.remove(additionalObject)
                         self.failedToLoadAdditionalObjects.remove(additionalObject)
                     }
+                } catch let error where isCancellation(error) {
+                    // Not a failure: the next request loads it again (#167).
+                    GrocyLogger.info("Data request cancelled for \(additionalObject)")
+                    self.loadingAdditionalEntities.remove(additionalObject)
                 } catch {
                     GrocyLogger.error("Data request failed for \(additionalObject). Message: \("\(error)")")
                     self.failedToLoadAdditionalObjects.insert(additionalObject)
