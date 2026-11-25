@@ -102,7 +102,9 @@ import SwiftUI
                             // form), where scanning isn't searching anymore.
                             .safeAreaInset(edge: .bottom) {
                                 QuickScanSearchButton(
-                                    isSearchFieldFocused: isSearchFieldFocused,
+                                    // Opening the scanner hides the keyboard: the button stays up meanwhile, so it
+                                    // doesn't slide under the field while the sheet zooms out of it.
+                                    isSearchFieldFocused: isSearchFieldFocused || showQuickScan,
                                     transitionNamespace: quickScanTransition
                                 ) { showQuickScan = true }
                             }
