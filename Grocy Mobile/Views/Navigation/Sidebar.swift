@@ -41,6 +41,12 @@ struct Sidebar: View {
                         Label("Shopping list", systemImage: MySymbols.shoppingList)
                     }
                 }
+                // Everything due, as in the smart iPhone navigation.
+                if PhonePlace.due.isEnabled(in: systemConfig) {
+                    NavigationLink(value: NavigationItem.due) {
+                        Label("Due", systemImage: MySymbols.due)
+                    }
+                }
             }
 
             Section {
