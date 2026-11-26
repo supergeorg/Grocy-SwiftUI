@@ -133,6 +133,28 @@ enum DueKind: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Each kind has its own color, so the quick filters are told apart at a glance. Chores and tasks match their lists in Reminders,
+    /// products below their minimum stock amount the stock overview's filter.
+    var color: Color {
+        switch self {
+        case .product: Color(.GrocyColors.grocyOrange)
+        case .belowMinStock: Color(.GrocyColors.grocyBlue)
+        case .chore: Color(.GrocyColors.grocyTurquoise)
+        case .task: Color(.GrocyColors.grocyGreen)
+        case .battery: Color(.GrocyColors.grocyPurple)
+        }
+    }
+
+    var backgroundColor: Color {
+        switch self {
+        case .product: Color(.GrocyColors.grocyOrangeBackground)
+        case .belowMinStock: Color(.GrocyColors.grocyBlueBackground)
+        case .chore: Color(.GrocyColors.grocyTurquoiseBackground)
+        case .task: Color(.GrocyColors.grocyGreenBackground)
+        case .battery: Color(.GrocyColors.grocyPurpleBackground)
+        }
+    }
+
     /// The complete list of this kind.
     var place: PhonePlace {
         switch self {

@@ -46,38 +46,10 @@ import SwiftUI
         @Query private var systemConfigList: [SystemConfig]
         private var systemConfig: SystemConfig? { systemConfigList.first }
 
-        // For the due tab's badge.
-        @AppStorage(DueKind.hiddenKindsStorageKey) private var hiddenDueKinds: String = ""
-        @Query(filter: #Predicate<StockElement> { $0.amountAggregated > 0 }) private var stock: Stock
-        @Query private var volatileStockList: [VolatileStock]
-        @Query private var chores: Chores
-        @Query(filter: #Predicate<GrocyTask> { !$0.done }) private var openTasks: GrocyTasks
-        @Query private var batteries: Batteries
-        @Query private var userSettingsList: GrocyUserSettingsList
+        @DueBadgeCount private var dueBadgeCount: Int
 
         private var visiblePlaces: [PhonePlace] {
             places.filter { $0.isEnabled(in: systemConfig) }
-        }
-
-        /// Expired, overdue and due today; "due soon" and "below min. stock" don't need attention yet.
-        ///
-        /// Counted on every update of the tab bar, so without the products below min. stock (never counted, and they
-        /// need all products) and without sorting.
-        private var urgentDueCount: Int {
-            guard places.contains(.due) else { return 0 }
-            return DueItem.items(
-                stock: stock,
-                volatileStock: volatileStockList.first,
-                mdProducts: [],
-                chores: chores,
-                tasks: openTasks,
-                batteries: batteries,
-                userSettings: userSettingsList.first,
-                systemConfig: systemConfig,
-                hiddenKinds: DueKind.hiddenKinds(from: hiddenDueKinds).union([.belowMinStock]),
-                sorted: false
-            )
-            .count(where: { $0.urgency.needsAttention })
         }
 
         var body: some View {
@@ -91,7 +63,8 @@ import SwiftUI
                                 .phonePlaceDestinations()
                         }
                     }
-                    .badge(place == .due ? urgentDueCount : 0)
+                    // Only counted for the due tab.
+                    .badge(place == .due ? dueBadgeCount : 0)
                     .hidden(!place.isEnabled(in: systemConfig))
                 }
 

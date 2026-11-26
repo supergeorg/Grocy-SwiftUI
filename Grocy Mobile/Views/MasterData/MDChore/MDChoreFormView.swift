@@ -59,6 +59,10 @@ struct MDChoreFormView: View {
         if [ChorePeriodType.hourly, ChorePeriodType.daily, ChorePeriodType.weekly, ChorePeriodType.monthly, ChorePeriodType.yearly].contains(chore.periodType) {
             guard chore.periodInterval > 0 else { return false }
         }
+        // Grocy consumes the amount on each execution when a product is set, so it needs an amount.
+        if chore.consumeProductOnExecution, chore.productID != nil {
+            guard (chore.productAmount ?? 0) > 0 else { return false }
+        }
         if features.choreAssignments, chore.assignmentType != .noAssignment {
             guard chore.assignmentConfig != nil else { return false }
             guard chore.assignmentConfig!.isEmpty == false else { return false }

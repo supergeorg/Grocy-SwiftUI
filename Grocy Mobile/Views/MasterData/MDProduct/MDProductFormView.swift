@@ -122,9 +122,18 @@ struct MDProductFormView: View {
         self.dismiss()
     }
 
+    /// An amount Grocy requires (its column isn't nullable), so it can't be emptied; an empty value shows Grocy's default.
+    private func requiredAmount(_ keyPath: ReferenceWritableKeyPath<MDProduct, Double?>, default defaultValue: Double) -> Binding<Double> {
+        Binding(
+            get: { product[keyPath: keyPath] ?? defaultValue },
+            set: { product[keyPath: keyPath] = $0 }
+        )
+    }
+
     private var isFormValid: Bool {
         !(product.name.isEmpty) && isNameCorrect && (product.locationID != -1) && (product.quIDStock != -1) && (product.quIDPurchase != -1)
             && (product.quIDConsume != -1) && (product.quIDPrice != -1) && isBarcodeCorrect
+            && (product.quickConsumeAmount ?? 1) > 0 && (product.quickOpenAmount ?? 1) > 0 && (product.tareWeight ?? 0) >= 0
     }
 
     /// Grocy requires a location for every product. Without location tracking it can't be chosen, so the first one is used.
@@ -715,7 +724,7 @@ struct MDProductFormView: View {
                 Picker(
                     selection: $product.defaultConsumeLocationID,
                     content: {
-                        Text("").tag(-1 as Int?)
+                        Text("").tag(nil as Int?)
                         ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
                             Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                         }
@@ -733,8 +742,13 @@ struct MDProductFormView: View {
                     }
                 )
 
+                .onChange(of: product.defaultConsumeLocationID) {
+                    // Like Grocy's web form: moving on open needs a default consume location.
+                    if product.defaultConsumeLocationID == nil { product.moveOnOpen = false }
+                }
+
                 // Move on open
-                if features.openedTracking, product.defaultConsumeLocationID != -1 {
+                if features.openedTracking, product.defaultConsumeLocationID != nil {
                     MyToggle(
                         isOn: $product.moveOnOpen,
                         description: "Move on open",
@@ -749,7 +763,7 @@ struct MDProductFormView: View {
             Picker(
                 selection: $product.storeID,
                 content: {
-                    Text("").tag(-1 as Int?)
+                    Text("").tag(nil as Int?)
                     ForEach(mdStores.filter({ $0.active }), id: \.id) { grocyStore in
                         Text(grocyStore.name).tag(grocyStore.id as Int?)
                     }
@@ -1012,8 +1026,8 @@ struct MDProductFormView: View {
             }
 
             // Quick consume amount
-            MyDoubleStepperOptional(
-                amount: $product.quickConsumeAmount,
+            MyDoubleStepper(
+                amount: requiredAmount(\.quickConsumeAmount, default: 1),
                 description: "Quick consume amount",
                 descriptionInfo: "This amount is used for the \"quick consume button\" on the stock overview page (related to quantity unit stock)",
                 minAmount: 0.0001,
@@ -1029,8 +1043,8 @@ struct MDProductFormView: View {
 
             // Quick open amount
             if features.openedTracking && !product.disableOpen {
-                MyDoubleStepperOptional(
-                    amount: $product.quickOpenAmount,
+                MyDoubleStepper(
+                    amount: requiredAmount(\.quickOpenAmount, default: 1),
                     description: "Quick open amount",
                     descriptionInfo: "This amount is used for the \"quick open button\" on the stock overview page (related to quantity unit stock)",
                     minAmount: 0.0001,
@@ -1051,8 +1065,8 @@ struct MDProductFormView: View {
                 )
 
                 if product.enableTareWeightHandling {
-                    MyDoubleStepperOptional(
-                        amount: $product.tareWeight,
+                    MyDoubleStepper(
+                        amount: requiredAmount(\.tareWeight, default: 0),
                         description: "Tare weight",
                         minAmount: 0,
                         amountStep: 1,

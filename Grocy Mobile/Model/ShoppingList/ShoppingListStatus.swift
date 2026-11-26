@@ -29,9 +29,9 @@ enum ShoppingListStatus: String {
     func getIcon() -> String {
         switch self {
         case .all:
-            return "list.bullet"
+            return MySymbols.allEntries
         case .belowMinStock:
-            return "exclamationmark.triangle.fill"
+            return MySymbols.belowMinStock
         case .done:
             return MySymbols.done
         case .undone:

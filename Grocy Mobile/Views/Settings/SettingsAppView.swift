@@ -118,16 +118,15 @@ struct SettingsAppView: View {
                 }
             #endif
             MyToggle(isOn: $devMode, description: "DEV MODE", icon: MySymbols.devMode)
+            // The due view is in every navigation: a tab on iPhone, in the sidebar and as a tab on iPad, in the sidebar on the Mac.
+            Section {
+                DueKindToggles()
+            } header: {
+                Text("Due")
+            } footer: {
+                Text("What the due view shows.")
+            }
             #if os(iOS)
-                if PhoneNavigationStyle.applies(in: horizontalSizeClass) {
-                    Section {
-                        DueKindToggles()
-                    } header: {
-                        Text("Due")
-                    } footer: {
-                        Text("What the due tab shows.")
-                    }
-                }
                 Section("\(Text("Quick Scan")) \(Text("Settings"))") {
                     MyToggle(isOn: $quickScanActionAfterAdd, description: "Do selected action after assigning a barcode", icon: MySymbols.barcodeScan)
                 }

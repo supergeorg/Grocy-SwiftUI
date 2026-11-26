@@ -56,7 +56,7 @@ enum ProductStatus: LocalizedStringKey {
         case .belowMinStock:
             return MySymbols.belowMinStock
         default:
-            return "tag.fill"
+            return MySymbols.allEntries
         }
     }
 

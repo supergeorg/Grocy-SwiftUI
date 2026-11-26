@@ -18,7 +18,7 @@ struct WatchShoppingListView: View {
     var body: some View {
         List {
             if lists.isEmpty {
-                ContentUnavailableView("Nothing to buy", systemImage: "cart")
+                ContentUnavailableView("Nothing to buy", systemImage: "cart.fill")
             } else if lists.count == 1, let list = lists.first {
                 items(of: list)
             } else {

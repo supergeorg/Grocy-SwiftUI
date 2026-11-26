@@ -18,6 +18,7 @@ struct Sidebar: View {
     @State private var isMasterDataSectionExpanded: Bool = false
 
     @Environment(\.grocyFeatures) private var features
+    @DueBadgeCount private var dueBadgeCount: Int
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
         systemConfigList.first
@@ -40,6 +41,12 @@ struct Sidebar: View {
                     NavigationLink(value: NavigationItem.shoppingList) {
                         Label("Shopping list", systemImage: MySymbols.shoppingList)
                     }
+                }
+                if PhonePlace.due.isEnabled(in: systemConfig) {
+                    NavigationLink(value: NavigationItem.due) {
+                        Label("Due", systemImage: MySymbols.due)
+                    }
+                    .badge(dueBadgeCount)
                 }
             }
 

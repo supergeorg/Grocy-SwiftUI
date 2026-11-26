@@ -22,7 +22,8 @@ enum WatchDueKind {
     var systemImage: String {
         switch self {
         case .tasks: "checklist"
-        case .chores: "house"
+        // The same symbols as in the iPhone app (`MySymbols`, which this target doesn't compile).
+        case .chores: "list.bullet.clipboard"
         }
     }
 

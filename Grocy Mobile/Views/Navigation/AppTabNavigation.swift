@@ -13,6 +13,7 @@ private enum TabNavigationItem: String, Codable {
     case stockOverview = "stockOverview"
     case stockJournal = "stockJournal"
     case shoppingList = "shoppingList"
+    case due = "due"
     case masterData = "masterData"
     case activities = "activities"
     case settings = "settings"
@@ -58,6 +59,7 @@ struct AppTabNavigation: View {
 
     @Environment(DeepLinkManager.self) var deepLinkManager
     @Environment(\.grocyFeatures) private var features
+    @DueBadgeCount private var dueBadgeCount: Int
 
     @Query var systemConfigList: [SystemConfig]
     var systemConfig: SystemConfig? {
@@ -100,6 +102,15 @@ struct AppTabNavigation: View {
 
             // Grouped, because a tab builder takes at most 10 items.
             Group {
+                Tab("Due", systemImage: MySymbols.due, value: TabNavigationItem.due) {
+                    NavigationStack {
+                        DueView()
+                    }
+                }
+                .badge(dueBadgeCount)
+                .customizationID("georgappdev.Grocy.due")
+                .hidden(!PhonePlace.due.isEnabled(in: systemConfig))
+
                 Tab("Meal plan", systemImage: MySymbols.mealPlan, value: TabNavigationItem.mealPlan) {
                     NavigationStack {
                         MealPlanView()

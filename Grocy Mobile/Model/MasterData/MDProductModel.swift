@@ -105,10 +105,10 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.id = try container.decodeFlexibleInt(forKey: .id)
             self.name = (try? container.decodeIfPresent(String.self, forKey: .name)) ?? ""
             self.mdProductDescription = (try? container.decodeIfPresent(String.self, forKey: .mdProductDescription)) ?? ""
-            self.productGroupID = try container.decodeFlexibleIntIfPresent(forKey: .productGroupID)
+            self.productGroupID = try container.decodeFlexibleReferenceIfPresent(forKey: .productGroupID)
             self.active = try container.decodeFlexibleBool(forKey: .active)
             self.locationID = try container.decodeFlexibleInt(forKey: .locationID)
-            self.storeID = try container.decodeFlexibleIntIfPresent(forKey: .storeID)
+            self.storeID = try container.decodeFlexibleReferenceIfPresent(forKey: .storeID)
             self.quIDPurchase = try container.decodeFlexibleInt(forKey: .quIDPurchase)
             self.quIDStock = try container.decodeFlexibleInt(forKey: .quIDStock)
             self.minStockAmount = try container.decodeFlexibleDouble(forKey: .minStockAmount)
@@ -118,21 +118,22 @@ class MDProduct: Codable, Equatable, Identifiable {
             self.defaultDueDaysAfterThawing = try container.decodeFlexibleInt(forKey: .defaultDueDaysAfterThawing)
             self.pictureFileName = try? container.decodeIfPresent(String.self, forKey: .pictureFileName) ?? nil
             self.enableTareWeightHandling = try container.decodeFlexibleBool(forKey: .enableTareWeightHandling)
-            self.tareWeight = try container.decodeFlexibleDoubleIfPresent(forKey: .tareWeight)
+            // Grocy's column isn't nullable, but older app versions could store null in it; Grocy's default is used then.
+            self.tareWeight = try container.decodeFlexibleDoubleIfPresent(forKey: .tareWeight) ?? 0
             self.notCheckStockFulfillmentForRecipes = try container.decodeFlexibleBool(forKey: .notCheckStockFulfillmentForRecipes)
-            self.parentProductID = try container.decodeFlexibleIntIfPresent(forKey: .parentProductID)
+            self.parentProductID = try container.decodeFlexibleReferenceIfPresent(forKey: .parentProductID)
             self.calories = try container.decodeFlexibleDoubleIfPresent(forKey: .calories)
             self.cumulateMinStockAmountOfSubProducts = try container.decodeFlexibleBool(forKey: .cumulateMinStockAmountOfSubProducts)
-            self.dueType = DueType(rawValue: try container.decodeFlexibleInt(forKey: .dueType))!
-            self.quickConsumeAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .quickConsumeAmount)
-            self.quickOpenAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .quickOpenAmount)
+            self.dueType = DueType(rawValue: try container.decodeFlexibleInt(forKey: .dueType)) ?? .bestBefore
+            self.quickConsumeAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .quickConsumeAmount) ?? 1
+            self.quickOpenAmount = try container.decodeFlexibleDoubleIfPresent(forKey: .quickOpenAmount) ?? 1
             self.hideOnStockOverview = try container.decodeFlexibleBool(forKey: .hideOnStockOverview)
-            self.defaultStockLabelType = try container.decodeFlexibleIntIfPresent(forKey: .defaultStockLabelType)
+            self.defaultStockLabelType = try container.decodeFlexibleIntIfPresent(forKey: .defaultStockLabelType) ?? 0
             self.shouldNotBeFrozen = try container.decodeFlexibleBool(forKey: .shouldNotBeFrozen)
             self.treatOpenedAsOutOfStock = try container.decodeFlexibleBool(forKey: .treatOpenedAsOutOfStock)
             self.noOwnStock = try container.decodeFlexibleBool(forKey: .noOwnStock)
             self.disableOpen = try container.decodeFlexibleBoolIfPresent(forKey: .disableOpen) ?? false
-            self.defaultConsumeLocationID = try container.decodeFlexibleIntIfPresent(forKey: .defaultConsumeLocationID)
+            self.defaultConsumeLocationID = try container.decodeFlexibleReferenceIfPresent(forKey: .defaultConsumeLocationID)
             self.moveOnOpen = try container.decodeFlexibleBool(forKey: .moveOnOpen)
             self.quIDConsume = try container.decodeFlexibleInt(forKey: .quIDConsume)
             self.autoReprintStockLabel = try container.decodeFlexibleBool(forKey: .autoReprintStockLabel)
@@ -165,16 +166,17 @@ class MDProduct: Codable, Equatable, Identifiable {
         try container.encode(defaultDueDaysAfterThawing, forKey: .defaultDueDaysAfterThawing)
         try container.encode(pictureFileName, forKey: .pictureFileName)
         try container.encode(enableTareWeightHandling, forKey: .enableTareWeightHandling)
-        try container.encode(tareWeight, forKey: .tareWeight)
+        // Not nullable in Grocy, like the quick amounts and the label type below: null would be stored as it is, instead of the default.
+        try container.encode(tareWeight ?? 0, forKey: .tareWeight)
         try container.encode(notCheckStockFulfillmentForRecipes, forKey: .notCheckStockFulfillmentForRecipes)
         try container.encode(parentProductID, forKey: .parentProductID)
         try container.encode(calories, forKey: .calories)
         try container.encode(cumulateMinStockAmountOfSubProducts, forKey: .cumulateMinStockAmountOfSubProducts)
         try container.encode(dueType, forKey: .dueType)
-        try container.encode(quickConsumeAmount, forKey: .quickConsumeAmount)
-        try container.encode(quickOpenAmount, forKey: .quickOpenAmount)
+        try container.encode(quickConsumeAmount ?? 1, forKey: .quickConsumeAmount)
+        try container.encode(quickOpenAmount ?? 1, forKey: .quickOpenAmount)
         try container.encode(hideOnStockOverview, forKey: .hideOnStockOverview)
-        try container.encode(defaultStockLabelType, forKey: .defaultStockLabelType)
+        try container.encode(defaultStockLabelType ?? 0, forKey: .defaultStockLabelType)
         try container.encode(shouldNotBeFrozen, forKey: .shouldNotBeFrozen)
         try container.encode(treatOpenedAsOutOfStock, forKey: .treatOpenedAsOutOfStock)
         try container.encode(noOwnStock, forKey: .noOwnStock)
@@ -193,7 +195,7 @@ class MDProduct: Codable, Equatable, Identifiable {
         productGroupID: Int? = nil,
         active: Bool = true,
         locationID: Int = -1,
-        storeID: Int = -1,
+        storeID: Int? = nil,
         quIDPurchase: Int = -1,
         quIDStock: Int = -1,
         quIDConsume: Int = -1,
@@ -205,21 +207,21 @@ class MDProduct: Codable, Equatable, Identifiable {
         defaultDueDaysAfterThawing: Int = 0,
         pictureFileName: String? = nil,
         enableTareWeightHandling: Bool = false,
-        tareWeight: Double? = nil,
+        tareWeight: Double? = 0,
         notCheckStockFulfillmentForRecipes: Bool = false,
         parentProductID: Int? = nil,
         calories: Double? = nil,
         cumulateMinStockAmountOfSubProducts: Bool = false,
         dueType: DueType = DueType.bestBefore,
-        quickConsumeAmount: Double? = nil,
-        quickOpenAmount: Double? = nil,
+        quickConsumeAmount: Double? = 1,
+        quickOpenAmount: Double? = 1,
         hideOnStockOverview: Bool = false,
-        defaultStockLabelType: Int? = nil,
+        defaultStockLabelType: Int? = 0,
         shouldNotBeFrozen: Bool = false,
         treatOpenedAsOutOfStock: Bool = false,
         noOwnStock: Bool = false,
         disableOpen: Bool = false,
-        defaultConsumeLocationID: Int? = -1,
+        defaultConsumeLocationID: Int? = nil,
         moveOnOpen: Bool = false,
         autoReprintStockLabel: Bool = false,
         defaultPurchasePriceType: PurchasePriceType = .unspecified,

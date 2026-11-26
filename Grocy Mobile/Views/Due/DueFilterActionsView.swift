@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// The quick filters of the due agenda: one capsule per kind (chores, tasks, batteries) with its count.
+/// The quick filters of the due agenda: one capsule per kind with its count, in the kind's color.
 struct DueFilterActionsView: View {
     @Binding var filteredKind: DueKind?
     var kinds: [DueKind]
@@ -33,9 +33,10 @@ struct DueFilterActionsView: View {
                                 .transition(.blurReplace)
                         }
                     }
-                    .foregroundStyle(isSelected ? Color(.GrocyColors.grocyBlue) : Color(.GrocyColors.grocyGray))
+                    // The selected filter is filled with its color, the others are tinted with it.
+                    .foregroundStyle(isSelected ? Color.white : kind.color)
                 }
-                .filterCapsuleStyle(tint: isSelected ? Color(.GrocyColors.grocyBlueBackground) : Color(.GrocyColors.grocyGrayBackground))
+                .filterCapsuleStyle(tint: isSelected ? kind.color : kind.backgroundColor)
                 .accessibilityLabel(Text(kind.title))
                 .accessibilityValue(Text(String(counts[kind] ?? 0)))
                 .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -47,5 +48,5 @@ struct DueFilterActionsView: View {
 #Preview {
     @Previewable @State var filteredKind: DueKind? = nil
 
-    DueFilterActionsView(filteredKind: $filteredKind, kinds: DueKind.allCases, counts: [.chore: 3, .task: 1, .battery: 0])
+    DueFilterActionsView(filteredKind: $filteredKind, kinds: DueKind.allCases, counts: [.product: 2, .belowMinStock: 4, .chore: 3, .task: 1, .battery: 0])
 }

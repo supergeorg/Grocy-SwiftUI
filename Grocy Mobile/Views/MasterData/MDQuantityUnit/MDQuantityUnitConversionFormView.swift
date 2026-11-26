@@ -50,6 +50,8 @@ struct MDQuantityUnitConversionFormView: View {
         }
     }
     private func checkConversionCorrect() -> Bool {
+        // -1 is the unit not chosen yet; Grocy would store it as it is.
+        guard quantityUnitConversion.toQuID != -1, quantityUnitConversion.toQuID != quantityUnitConversion.fromQuID else { return false }
         return quantityUnitConversion.factor > 0 && !checkConversionExists() && !(createInverseConversion && checkReverseConversionExists())
     }
 
@@ -137,7 +139,7 @@ struct MDQuantityUnitConversionFormView: View {
                 label: Label("Quantity unit from", systemImage: MySymbols.quantityUnit),
                 content: {
                     Text("")
-                        .tag(0)
+                        .tag(-1)
                     ForEach(mdQuantityUnits, id: \.id) { grocyQuantityUnit in
                         Text(grocyQuantityUnit.name)
                             .tag(grocyQuantityUnit.id)
@@ -153,7 +155,7 @@ struct MDQuantityUnitConversionFormView: View {
                     label: Label("Quantity unit to", systemImage: MySymbols.quantityUnit),
                     content: {
                         Text("")
-                            .tag(0)
+                            .tag(-1)
                         ForEach(mdQuantityUnits.filter({ $0.id != quantityUnit.id }), id: \.id) { grocyQuantityUnit in
                             Text(grocyQuantityUnit.name)
                                 .tag(grocyQuantityUnit.id)

@@ -48,6 +48,9 @@ struct SettingsStockView: View {
                     ServerSettingsIntStepper(
                         settingKey: GrocyUserSettings.CodingKeys.productPresetsDefaultDueDays.rawValue,
                         description: "Default due days",
+                        descriptionInfo:
+                            "For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)",
+                        minAmount: -1,
                         icon: MySymbols.date
                     )
                 }

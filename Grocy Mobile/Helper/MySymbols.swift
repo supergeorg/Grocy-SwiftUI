@@ -23,7 +23,7 @@ nonisolated struct MySymbols {
     static let equipment = "wrench.and.screwdriver"
     static let batteryCharge = "battery.100percent.bolt"
     static let batteryUsedIn = "powerplug"
-    static let batteryChargeInterval = "arrow.triangle.2.circlepath"
+    static let batteryChargeInterval = "repeat"
     static let instructionManual = "book.pages"
 
     static let stockOverview = "archivebox"
@@ -53,7 +53,7 @@ nonisolated struct MySymbols {
     static let connectUnit = "arrow.left.arrow.right"
     static let user = "person"
     /// The user management, all users of the server.
-    static let userManagement = "person.2"
+    static let userManagement = "person.2.badge.gearshape"
     static let parentProduct = "rectangle.stack"
 
     static let amount = "number.circle"
@@ -106,6 +106,7 @@ nonisolated struct MySymbols {
     static let dropdown = "chevron.down"
     static let done = "checkmark.circle"
     static let undone = "circle"
+    static let inactive = "circle"
     static let clear = "clear"
     static let undo = "arrow.counterclockwise"
     static let timedRefresh = "clock.arrow.2.circlepath"
@@ -113,7 +114,7 @@ nonisolated struct MySymbols {
     static let sortForward = "arrow.up"
     static let sortReverse = "arrow.down"
     static let groupBy = "square.grid.2x2"
-    static let sortCategory = "line.3.horizontal.decrease.circle"
+    static let sortCategory = "arrow.up.arrow.down.circle"
     static let sortOrder = "arrow.up.arrow.down"
     static let active = "checkmark.circle.fill"
     static let warning = "exclamationmark.triangle.fill"
@@ -128,7 +129,7 @@ nonisolated struct MySymbols {
     static let torchOn = "bolt.circle"
     static let torchOff = "bolt.slash.circle"
     static let app = "app"
-    static let devMode = "wrench.and.screwdriver"
+    static let devMode = "hammer"
     static let show = "eye"
     static let scanDate = "text.viewfinder"
 
@@ -269,7 +270,7 @@ nonisolated struct MySymbols {
     static let stockEntries = "rectangle.stack"
     static let transferFrom = "square.and.arrow.up"
     static let transferTo = "square.and.arrow.down"
-    static let note = "square.and.pencil"
+    static let note = "note.text"
     static let syncWithReminders = "checklist"
     static let lastSync = "clock"
     static let syncNow = "arrow.triangle.2.circlepath"

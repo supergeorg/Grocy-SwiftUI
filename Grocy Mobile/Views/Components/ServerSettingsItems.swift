@@ -70,6 +70,7 @@ struct ServerSettingsIntStepper: View {
     let settingKey: String
     let description: LocalizedStringKey
     var descriptionInfo: LocalizedStringKey? = nil
+    var minAmount: Int = 0
     var icon: String? = nil
 
     func getSetting() async {
@@ -91,7 +92,7 @@ struct ServerSettingsIntStepper: View {
     }
 
     var body: some View {
-        MyIntStepper(amount: $value, description: description, helpText: descriptionInfo, systemImage: icon)
+        MyIntStepper(amount: $value, description: description, helpText: descriptionInfo, minAmount: minAmount, systemImage: icon)
             .task {
                 if isFirstShown {
                     await getSetting()
@@ -179,10 +180,11 @@ struct ServerSettingsObjectPicker: View {
     func getSetting() async {
         do {
             let userSettingsResult: GrocyUserSettingsInt = try await grocyVM.getUserSettingsEntry(settingKey: settingKey)
-            if userSettingsResult.value == 0 {
-                self.objectID = nil
+            // Grocy's presets use -1 for none; an empty value is none too.
+            if let value = userSettingsResult.value, value > 0 {
+                self.objectID = value
             } else {
-                self.objectID = userSettingsResult.value
+                self.objectID = -1
             }
         } catch {
             GrocyLogger.error("Data request failed for getting the user settings entry. Message: \("\(error)")")
@@ -202,7 +204,10 @@ struct ServerSettingsObjectPicker: View {
         Picker(
             selection: $objectID,
             content: {
-                Text("").tag(-1 as Int?)
+                // A shopping list setting always names a list.
+                if objects != .shoppingLists {
+                    Text("").tag(-1 as Int?)
+                }
                 Group {
                     switch objects {
                     case .location:

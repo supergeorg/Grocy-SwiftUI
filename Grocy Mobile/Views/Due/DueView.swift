@@ -152,7 +152,8 @@ struct DueView: View {
                         DueKindToggles()
                     }
                 } label: {
-                    Label("Show", systemImage: MySymbols.filter)
+                    // Not the filter symbol: the overviews use it for filters, and this menu chooses what the agenda shows.
+                    Label("Show", systemImage: MySymbols.show)
                 }
             }
         }

@@ -17,13 +17,13 @@ enum RecipeStatus: LocalizedStringKey {
     func getIconName() -> String {
         switch self {
         case .enoughInStock:
-            return "checkmark.circle.fill"
+            return MySymbols.fulfilled
         case .alreadyOnShoppingList:
-            return "exclamationmark.circle.fill"
+            return MySymbols.partiallyFulfilled
         case .notEnoughInStock:
-            return "xmark.circle.fill"
+            return MySymbols.notFulfilled
         default:
-            return "tag.fill"
+            return MySymbols.allEntries
         }
     }
 }

@@ -93098,8 +93098,15 @@
         }
       }
     },
-    "What the due tab shows." : {
-
+    "What the due view shows." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was die Fällig-Ansicht zeigt."
+          }
+        }
+      }
     },
     "What's New in Grocy Mobile" : {
 

@@ -62,7 +62,7 @@ struct ServerProfileRowView: View {
                 }
             }
             Spacer()
-            Image(systemName: isActive ? "checkmark.circle.fill" : "circle")
+            Image(systemName: isActive ? MySymbols.active : MySymbols.inactive)
                 .foregroundStyle(isActive ? .green : .primary)
         }
     }

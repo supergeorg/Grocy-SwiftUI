@@ -63,7 +63,7 @@ class RecipePos: Codable, Equatable, Identifiable {
         productID: Int? = nil,
         amount: Double = 1.0,
         note: String = "",
-        quID: Int = -1,
+        quID: Int? = nil,
         onlyCheckSingleUnitInStock: Bool = false,
         ingredientGroup: String = "",
         notCheckStockFulfillment: Bool = false,

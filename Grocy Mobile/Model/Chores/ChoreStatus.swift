@@ -52,7 +52,7 @@ enum ChoreStatus: Identifiable, CaseIterable {
         case .assignedToMe:
             return MySymbols.me
         default:
-            return "tag.fill"
+            return MySymbols.allEntries
         }
     }
 

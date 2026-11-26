@@ -72,6 +72,13 @@ extension KeyedDecodingContainer {
         return nil
     }
 
+    /// An optional reference to another object, `nil` for none.
+    /// Older app versions sent -1 for none, which Grocy stores as it is, so -1 is read as none too.
+    nonisolated func decodeFlexibleReferenceIfPresent(forKey key: Key) throws -> Int? {
+        guard let id = try decodeFlexibleIntIfPresent(forKey: key), id != -1 else { return nil }
+        return id
+    }
+
     nonisolated func decodeFlexibleDouble(forKey key: Key) throws -> Double {
         // Try Double directly
         if let double = try? decode(Double.self, forKey: key) {

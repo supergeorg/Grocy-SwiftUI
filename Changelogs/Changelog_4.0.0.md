@@ -6,6 +6,8 @@ A big update for Grocy 4.7.1.
 - Clearer permission prompts for the local network, camera and Reminders, now also in German
 - Siri phrases also work in German
 - User management for everyone, like in Grocy's web app: create, edit and delete users with their picture and userfields, and configure permissions as an admin. Edit your own name, password and picture in the settings.
+- Everything that's due in one place: expiring products, products below their minimum stock amount, chores, tasks and batteries. On iPhone as a tab, on iPad as a tab or in the sidebar, on the Mac in the sidebar, each with a badge for what needs attention.
+- Fixed forms that saved "none" in a way Grocy didn't understand, e.g. a product's default store and consume location, or a note on the shopping list without a product
 - TODO: more highlights
 
 Ein großes Update für Grocy 4.7.1.
@@ -14,4 +16,6 @@ Ein großes Update für Grocy 4.7.1.
 - Verständlichere Berechtigungsabfragen für das lokale Netzwerk, die Kamera und Erinnerungen, jetzt auch auf Deutsch
 - Siri-Befehle funktionieren auch auf Deutsch
 - Benutzerverwaltung für alle, wie in der Weboberfläche von Grocy: Benutzer mit Bild und Benutzerfeldern anlegen, bearbeiten und löschen, und als Admin Berechtigungen konfigurieren. Den eigenen Namen, das Passwort und das Bild in den Einstellungen ändern.
+- Alles Fällige an einem Ort: ablaufende Produkte, Produkte unter ihrem Mindestbestand, Hausarbeiten, Aufgaben und Batterien. Auf dem iPhone als Tab, auf dem iPad als Tab oder in der Seitenleiste, auf dem Mac in der Seitenleiste, jeweils mit einem Zähler für das, was Aufmerksamkeit braucht.
+- Formulare korrigiert, die „keine Auswahl“ so speicherten, wie Grocy es nicht verstand, z. B. den Standardladen und den Standard-Verbrauchsort eines Produkts oder eine Notiz ohne Produkt auf dem Einkaufszettel
 - TODO: weitere Highlights

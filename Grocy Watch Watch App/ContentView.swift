@@ -56,7 +56,7 @@ private struct HomeView: View {
             NavigationLink {
                 WatchShoppingListView()
             } label: {
-                CountRow(title: "Shopping list", systemImage: "cart", count: shoppingListCount)
+                CountRow(title: "Shopping list", systemImage: "cart.fill", count: shoppingListCount)
             }
             ForEach([WatchDueKind.tasks, .chores], id: \.self) { kind in
                 NavigationLink {

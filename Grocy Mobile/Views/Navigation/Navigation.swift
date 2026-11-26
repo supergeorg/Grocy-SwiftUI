@@ -11,6 +11,7 @@ enum NavigationItem: Hashable {
     case quickScan
     case stockOverview
     case shoppingList
+    case due
     case recipes
     case mealPlan
     case choresOverview
@@ -52,6 +53,8 @@ struct Navigation: View {
             StockView()
         case .shoppingList:
             ShoppingListView()
+        case .due:
+            DueView()
         case .recipes:
             RecipesView()
         case .mealPlan:

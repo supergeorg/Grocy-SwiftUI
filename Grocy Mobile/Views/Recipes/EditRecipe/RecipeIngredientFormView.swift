@@ -31,6 +31,7 @@ struct RecipeIngredientFormView: View {
     @State private var isFormCorrect: Bool = false
     private func checkFormCorrect() -> Bool {
         if ingredient.productID == nil { return false }
+        if ingredient.quID == nil { return false }
         if amount.isZero { return false }
         return true
     }
@@ -132,6 +133,9 @@ struct RecipeIngredientFormView: View {
 
             AmountSelectionView(productID: $ingredient.productID, amount: $amount, quantityUnitID: $ingredient.quID)
                 .onChange(of: amount) {
+                    isFormCorrect = checkFormCorrect()
+                }
+                .onChange(of: ingredient.quID) {
                     isFormCorrect = checkFormCorrect()
                 }
 
