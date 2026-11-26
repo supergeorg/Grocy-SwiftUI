@@ -54,7 +54,7 @@ nonisolated struct MySymbols {
     static let user = "person"
     /// The user management, all users of the server.
     static let userManagement = "person.2"
-    static let parentProduct = "rectangle.stack"
+    static let parentProduct = "arrow.turn.left.up"
 
     static let amount = "number.circle"
     static let price = "banknote"
@@ -102,7 +102,6 @@ nonisolated struct MySymbols {
     static let filter = "line.3.horizontal.decrease.circle"
     static let reload = "arrow.triangle.2.circlepath"
     static let search = "magnifyingglass"
-    static let menuPick = "chevron.down.circle"
     static let dropdown = "chevron.down"
     static let done = "checkmark.circle"
     static let undone = "circle"
@@ -113,12 +112,11 @@ nonisolated struct MySymbols {
     static let sortForward = "arrow.up"
     static let sortReverse = "arrow.down"
     static let groupBy = "square.grid.2x2"
-    static let sortCategory = "line.3.horizontal.decrease.circle"
+    static let sortCategory = "list.bullet.indent"
     static let sortOrder = "arrow.up.arrow.down"
     static let active = "checkmark.circle.fill"
     static let warning = "exclamationmark.triangle.fill"
     static let error = "xmark.circle.fill"
-    static let notSaved = "square.and.arrow.down.badge.clock"
     static let duplicate = "document.on.document"
 
     static let qrScan = "qrcode.viewfinder"
@@ -209,12 +207,11 @@ nonisolated struct MySymbols {
     static let nestedRecipe = "arrow.turn.down.right"
     static let layoutList = "list.bullet"
     static let layoutGallery = "square.grid.2x2"
-    static let viewOptions = "line.3.horizontal.decrease.circle"
     static let editPreparation = "pencil.and.scribble"
     static let fontSizeDecrease = "textformat.size.smaller"
     static let fontSizeIncrease = "textformat.size.larger"
     static let cooking = "frying.pan"
-    static let miseEnPlace = "checklist"
+    static let miseEnPlace = "checklist.unchecked"
     static let ingredientReady = "checkmark.circle.fill"
     static let ingredientNotReady = "circle"
     static let previousStep = "chevron.backward"
@@ -259,8 +256,6 @@ nonisolated struct MySymbols {
     static let household = "house"
     /// The agenda of everything due (chores, tasks, batteries).
     static let due = "calendar.badge.clock"
-    /// Links from the agenda to the complete lists.
-    static let allEntries = "square.grid.2x2"
     /// Collapsible section headers (rotated when expanded).
     static let disclosure = "chevron.right"
 
@@ -270,16 +265,12 @@ nonisolated struct MySymbols {
     static let transferFrom = "square.and.arrow.up"
     static let transferTo = "square.and.arrow.down"
     static let note = "square.and.pencil"
-    static let syncWithReminders = "checklist"
+    static let syncWithReminders = "list.bullet.circle"
     static let lastSync = "clock"
     static let syncNow = "arrow.triangle.2.circlepath"
 
     // MARK: - Scanner
 
-    static let scannerViewFinder = "camera.viewfinder"
-    static let scannerCapture = "camera.circle"
-    static let scannerPhotoLibrary = "photo.on.rectangle"
-    static let scannerButtonBackground = "capsule.fill"
     static let quickScanPause = "pause.rectangle"
 
     // MARK: - Introduction
@@ -290,4 +281,13 @@ nonisolated struct MySymbols {
     static let whatsNew = "sparkles"
     static let thanks = "heart.fill"
     static let widgets = "widget.small"
+
+    // MARK: - Watch
+
+    /// The paired iPhone, which the watch gets its data from.
+    static let iPhone = "iphone"
+    /// The watch waits for its first data from the iPhone.
+    static let waitingForPhone = "iphone.radiowaves.left.and.right"
+    /// A checked-off row of a list on the watch; an open row uses `undone`.
+    static let markedDone = "checkmark.circle.fill"
 }

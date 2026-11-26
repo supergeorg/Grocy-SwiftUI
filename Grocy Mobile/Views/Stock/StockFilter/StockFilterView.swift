@@ -41,7 +41,7 @@ struct StockFilterView: View {
                         }
                     },
                     label: {
-                        Label("Location", systemImage: MySymbols.filter)
+                        Label("Location", systemImage: MySymbols.location)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -55,7 +55,7 @@ struct StockFilterView: View {
                     }
                 },
                 label: {
-                    Label("Product group", systemImage: MySymbols.filter)
+                    Label("Product group", systemImage: MySymbols.productGroup)
                         .foregroundStyle(.primary)
                 }
             )

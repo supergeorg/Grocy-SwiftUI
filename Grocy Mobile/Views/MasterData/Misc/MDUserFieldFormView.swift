@@ -205,7 +205,7 @@ struct MDUserFieldFormView: View {
                     textToEdit: $name,
                     description: "Name",
                     isCorrect: $isNameCorrect,
-                    leadingIcon: "tag",
+                    leadingIcon: MySymbols.name,
                     emptyMessage: "This is required and can only contain letters and numbers",
                     errorMessage: "This is required and can only contain letters and numbers",
                     helpText: "This is the internal field name, e. g. for the API"
@@ -222,7 +222,7 @@ struct MDUserFieldFormView: View {
                     textToEdit: $caption,
                     description: "Caption",
                     isCorrect: $isCaptionCorrect,
-                    leadingIcon: "tag",
+                    leadingIcon: MySymbols.name,
                     emptyMessage: "A caption is required",
                     helpText: "This is used to display the field on the frontend"
                 )

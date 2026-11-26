@@ -86,7 +86,7 @@ struct ServerProfileFormView: View {
                     textToEdit: $serverProfile.grocyServerURL,
                     description: "Server URL",
                     isCorrect: Binding.constant(true),
-                    leadingIcon: "network",
+                    leadingIcon: MySymbols.serverURL,
                     helpText:
                         "Server-URL of your Grocy Instance (if you use Home Assistant Ingress, this can be accessed via right click on REST API Browser in the web interface)"
                 )
@@ -101,7 +101,7 @@ struct ServerProfileFormView: View {
                     textToEdit: $serverProfile.grocyAPIKey,
                     description: "Valid API key",
                     isCorrect: Binding.constant(true),
-                    leadingIcon: "key",
+                    leadingIcon: MySymbols.apiKey,
                     helpText: "API key for the user which is shown in the Manage API keys webview. If none exist, you need to create a new one."
                 )
                 .autocorrectionDisabled(true)

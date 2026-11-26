@@ -20,14 +20,14 @@ struct ContentView: View {
                     } else {
                         ContentUnavailableView(
                             "Not signed in",
-                            systemImage: "iphone",
+                            systemImage: MySymbols.iPhone,
                             description: Text("Sign in to your Grocy server in the app on your iPhone.")
                         )
                     }
                 } else {
                     ContentUnavailableView(
                         "No data yet",
-                        systemImage: "iphone",
+                        systemImage: MySymbols.iPhone,
                         description: Text("Open Grocy on your iPhone to load the shopping list, tasks and chores.")
                     )
                 }
@@ -56,7 +56,7 @@ private struct HomeView: View {
             NavigationLink {
                 WatchShoppingListView()
             } label: {
-                CountRow(title: "Shopping list", systemImage: "cart", count: shoppingListCount)
+                CountRow(title: "Shopping list", systemImage: MySymbols.shoppingList, count: shoppingListCount)
             }
             ForEach([WatchDueKind.tasks, .chores], id: \.self) { kind in
                 NavigationLink {
@@ -97,7 +97,7 @@ struct WatchSyncStatusView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if !store.pendingActions.isEmpty {
-                Label("Waiting for iPhone", systemImage: "iphone.radiowaves.left.and.right")
+                Label("Waiting for iPhone", systemImage: MySymbols.waitingForPhone)
             }
             Text("Updated \(snapshot.updated, format: .relative(presentation: .named))")
         }

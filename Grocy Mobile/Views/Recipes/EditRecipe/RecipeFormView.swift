@@ -335,7 +335,7 @@ struct RecipeFormView: View {
                         }
                     },
                     label: {
-                        Label("Preparation", systemImage: MySymbols.description)
+                        Label("Preparation", systemImage: MySymbols.steps)
                             .foregroundStyle(.primary)
                     }
                 )

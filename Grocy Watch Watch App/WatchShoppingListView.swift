@@ -18,7 +18,7 @@ struct WatchShoppingListView: View {
     var body: some View {
         List {
             if lists.isEmpty {
-                ContentUnavailableView("Nothing to buy", systemImage: "cart")
+                ContentUnavailableView("Nothing to buy", systemImage: MySymbols.shoppingList)
             } else if lists.count == 1, let list = lists.first {
                 items(of: list)
             } else {
@@ -45,7 +45,7 @@ struct WatchShoppingListView: View {
                 store.checkOff(shoppingListItemID: item.id)
             } label: {
                 HStack {
-                    Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
+                    Image(systemName: isDone ? MySymbols.markedDone : MySymbols.undone)
                         .foregroundStyle(isDone ? Color.green : Color.secondary)
                     VStack(alignment: .leading) {
                         Text(item.name)

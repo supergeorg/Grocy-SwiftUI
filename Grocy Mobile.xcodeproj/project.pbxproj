@@ -118,6 +118,7 @@
 		78D0E39030B6800000FF487D /* Exceptions for "Grocy Mobile" folder in "Grocy Watch Watch App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Helper/MySymbols.swift,
 				Localizable.xcstrings,
 				Model/SharedModel.swift,
 				Model/Watch/WatchSyncModel.swift,
