@@ -44,4 +44,46 @@ struct MDProductModelTests {
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         #expect(object["disable_open"] as? Bool == true)
     }
+
+    private func encoded(_ product: MDProduct) throws -> [String: Any] {
+        let data = try JSONEncoder().encode(product)
+        return try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+    }
+
+    @Test("Empty fields that are not null in Grocy are sent with Grocy's defaults")
+    func encodesNotNullDefaults() throws {
+        let object = try encoded(MDProduct(tareWeight: nil, quickConsumeAmount: nil, quickOpenAmount: nil, defaultStockLabelType: nil))
+        #expect(object["tare_weight"] as? Double == 0)
+        #expect(object["quick_consume_amount"] as? Double == 1)
+        #expect(object["quick_open_amount"] as? Double == 1)
+        #expect(object["default_stock_label_type"] as? Int == 0)
+    }
+
+    @Test("A new product has no store and no default consume location, not -1")
+    func newProductHasNoReferences() throws {
+        let object = try encoded(MDProduct())
+        #expect(object["shopping_location_id"] is NSNull)
+        #expect(object["default_consume_location_id"] is NSNull)
+        #expect(object["product_group_id"] is NSNull)
+        #expect(object["parent_product_id"] is NSNull)
+    }
+
+    @Test("-1, 0 and an empty string as a reference are read as none", arguments: ["-1", "0", "\"\"", "null"])
+    func decodesEmptyReferences(value: String) throws {
+        var json = Self.productJSON
+        for key in ["shopping_location_id", "default_consume_location_id", "product_group_id", "parent_product_id"] {
+            json = json.replacingOccurrences(of: "\"\(key)\":null", with: "\"\(key)\":\(value)")
+        }
+        let product = try decode(json)
+        #expect(product.storeID == nil)
+        #expect(product.defaultConsumeLocationID == nil)
+        #expect(product.productGroupID == nil)
+        #expect(product.parentProductID == nil)
+    }
+
+    @Test("A real reference is kept")
+    func decodesReferences() throws {
+        let json = Self.productJSON.replacingOccurrences(of: "\"shopping_location_id\":null", with: "\"shopping_location_id\":3")
+        #expect(try decode(json).storeID == 3)
+    }
 }

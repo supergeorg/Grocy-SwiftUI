@@ -33,12 +33,12 @@ class ShoppingListItem: Codable, Equatable {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decodeFlexibleInt(forKey: .id)
-            self.productID = try container.decodeFlexibleIntIfPresent(forKey: .productID)
+            self.productID = try container.decodeOptionalIDIfPresent(forKey: .productID)
             self.note = try container.decodeIfPresent(String.self, forKey: .note) ?? ""
             self.amount = try container.decodeFlexibleDouble(forKey: .amount)
             self.shoppingListID = try container.decodeFlexibleInt(forKey: .shoppingListID)
             self.done = try container.decodeFlexibleBool(forKey: .done)
-            self.quID = try container.decodeFlexibleIntIfPresent(forKey: .quID)
+            self.quID = try container.decodeOptionalIDIfPresent(forKey: .quID)
             self.rowCreatedTimestamp = getDateFromString(try container.decode(String.self, forKey: .rowCreatedTimestamp)) ?? .distantPast
         } catch {
             throw APIError.decodingError(error: error)
@@ -64,7 +64,7 @@ class ShoppingListItem: Codable, Equatable {
         amount: Double = 1.0,
         shoppingListID: Int = -1,
         done: Bool = false,
-        quID: Int = -1,
+        quID: Int? = nil,
         rowCreatedTimestamp: Date = Date()
     ) {
         self.id = id
