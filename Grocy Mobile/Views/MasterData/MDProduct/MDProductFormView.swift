@@ -303,7 +303,7 @@ struct MDProductFormView: View {
                 textToEdit: $product.name,
                 description: "Name",
                 isCorrect: $isNameCorrect,
-                leadingIcon: "tag",
+                leadingIcon: MySymbols.name,
                 emptyMessage: "A name is required",
                 errorMessage: "Name already exists"
             )

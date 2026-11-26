@@ -120,7 +120,7 @@ struct MDQuantityUnitFormView: View {
                 description: "Name",
                 subtitle: "(\(Text("in singular form")))",
                 isCorrect: $isNameCorrect,
-                leadingIcon: "tag",
+                leadingIcon: MySymbols.name,
                 emptyMessage: "A name is required",
                 errorMessage: "Name already exists"
             )
@@ -129,7 +129,7 @@ struct MDQuantityUnitFormView: View {
                 description: "Name",
                 subtitle: "(\(Text("in plural form")))",
                 isCorrect: Binding.constant(true),
-                leadingIcon: "tag"
+                leadingIcon: MySymbols.name
             )
             MyToggle(
                 isOn: $quantityUnit.active,

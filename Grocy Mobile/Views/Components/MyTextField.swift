@@ -122,7 +122,7 @@ struct MyTextField: View {
             description: "Description",
             subtitle: "Optional subtitle",
             isCorrect: $isCorrect,
-            leadingIcon: "tag",
+            leadingIcon: MySymbols.name,
             errorMessage: "Error message",
             helpText: "This is a help text"
         )

@@ -152,7 +152,7 @@ struct MDUserEntityFormView: View {
                     textToEdit: $name,
                     description: "Name of the userentity",
                     isCorrect: $isNameCorrect,
-                    leadingIcon: "tag",
+                    leadingIcon: MySymbols.name,
                     emptyMessage: "This is required and can only contain letters and numbers",
                     errorMessage: "This is required and can only contain letters and numbers"
                 )
@@ -168,7 +168,7 @@ struct MDUserEntityFormView: View {
                     textToEdit: $caption,
                     description: "Caption",
                     isCorrect: $isCaptionCorrect,
-                    leadingIcon: "tag",
+                    leadingIcon: MySymbols.name,
                     emptyMessage: "A caption is required"
                 )
                 .onChange(of: caption) {
