@@ -184,9 +184,7 @@ struct MealPlanEntryFormView: View {
                     }
                 )
                 if existingEntry != nil {
-                    Toggle(isOn: $entry.done) {
-                        Label("Done", systemImage: MySymbols.done)
-                    }
+                    MyToggle(isOn: $entry.done, description: "Done", icon: MySymbols.done)
                 }
             }
         }

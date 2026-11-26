@@ -115,6 +115,9 @@ struct ShoppingListEntryFormView: View {
 
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             // Without multiple shopping lists, items always go to the first list (set when the form appears).
             if features.multipleShoppingLists {
                 Picker(
@@ -139,15 +142,9 @@ struct ShoppingListEntryFormView: View {
 
             AmountSelectionView(productID: $shoppingListEntry.productID, amount: $displayAmount, quantityUnitID: $shoppingListEntry.quID)
 
-            Section(
-                header: Label("Note", systemImage: MySymbols.note)
-                    .labelStyle(.titleAndIcon)
-                    .font(.headline)
-            ) {
-                TextEditor(text: $shoppingListEntry.note)
-                    .frame(minHeight: Sizes.noteEditorMinHeight)
-            }
+            MyTextEditor(textToEdit: $shoppingListEntry.note, description: "Note", leadingIcon: MySymbols.note)
         }
+        .formStyle(.grouped)
         .navigationTitle(existingShoppingListEntry == nil ? "Create shopping list item" : "Edit shopping list item")
         .task {
             await updateData()

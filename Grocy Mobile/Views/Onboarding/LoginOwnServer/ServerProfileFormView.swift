@@ -215,6 +215,7 @@ struct ServerProfileFormView: View {
                 }
             )
         }
+        .formStyle(.grouped)
         .navigationTitle("Own server")
         #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

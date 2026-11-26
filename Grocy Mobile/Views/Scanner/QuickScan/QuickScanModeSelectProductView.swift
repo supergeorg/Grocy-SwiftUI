@@ -80,6 +80,7 @@ struct QuickScanModeSelectProductView: View {
                 .foregroundStyle(.primary)
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Add barcode")
         .onChange(of: createdProductID) {
             self.productID = createdProductID
