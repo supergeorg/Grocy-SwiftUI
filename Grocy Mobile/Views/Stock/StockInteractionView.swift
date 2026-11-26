@@ -33,25 +33,56 @@ struct StockInteractionView: View {
     }
 }
 
+/// The toolbar buttons of the stock overview that its interaction sheets zoom out of (iOS 26 zoom transition):
+/// the stock journal button, and the menu of the four stock actions. Each button is marked with
+/// `.matchedTransitionSource(id:in:)` for its ID and this namespace.
+struct StockInteractionZoom {
+    static let journalSourceID = "stockJournal"
+    static let actionsSourceID = "stockActions"
+
+    var namespace: Namespace.ID
+
+    /// The button the interaction's sheet zooms out of. The interactions of a single product open from its row,
+    /// so they slide up as usual.
+    func sourceID(for interaction: StockInteraction) -> String? {
+        switch interaction {
+        case .stockJournal: Self.journalSourceID
+        case .purchaseProduct, .consumeProduct, .transferProduct, .inventoryProduct: Self.actionsSourceID
+        default: nil
+        }
+    }
+}
+
 extension View {
     /// Lets the stock rows below (`StockTableRow`, `StockTableMenuEntriesView`) present their stock interactions:
     /// provides the router to them and shows the interaction it presents in a sheet.
-    func stockInteractionSheet(router: StockInteractionNavigationRouter) -> some View {
-        modifier(StockInteractionSheet(router: router))
+    /// With `zoom`, the sheets of the toolbar's interactions zoom out of their buttons.
+    func stockInteractionSheet(router: StockInteractionNavigationRouter, zoom: StockInteractionZoom? = nil) -> some View {
+        modifier(StockInteractionSheet(router: router, zoom: zoom))
     }
 }
 
 private struct StockInteractionSheet: ViewModifier {
     @Bindable var router: StockInteractionNavigationRouter
+    var zoom: StockInteractionZoom?
 
     func body(content: Content) -> some View {
         content
             .environment(router)
             .sheet(item: $router.presentedInteraction) { interaction in
-                NavigationStack {
+                let sheet = NavigationStack {
                     StockInteractionView(interaction: interaction)
                 }
                 .environment(router)
+                #if os(iOS)
+                    if let zoom, let sourceID = zoom.sourceID(for: interaction) {
+                        sheet.navigationTransition(.zoom(sourceID: sourceID, in: zoom.namespace))
+                    } else {
+                        sheet
+                    }
+                #else
+                    sheet
+                #endif
             }
     }
 }
