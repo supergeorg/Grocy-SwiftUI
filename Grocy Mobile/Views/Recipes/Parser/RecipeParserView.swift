@@ -44,6 +44,7 @@ struct RecipeParserView: View {
                     .font(.caption)
             }
         }
+        .formStyle(.grouped)
     }
 
     func extractRecipe() async {

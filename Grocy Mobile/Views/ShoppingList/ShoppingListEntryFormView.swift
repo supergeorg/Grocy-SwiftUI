@@ -115,6 +115,9 @@ struct ShoppingListEntryFormView: View {
 
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             // Without multiple shopping lists, items always go to the first list (set when the form appears).
             if features.multipleShoppingLists {
                 Picker(
@@ -148,6 +151,7 @@ struct ShoppingListEntryFormView: View {
                     .frame(minHeight: Sizes.noteEditorMinHeight)
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(existingShoppingListEntry == nil ? "Create shopping list item" : "Edit shopping list item")
         .task {
             await updateData()

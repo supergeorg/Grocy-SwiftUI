@@ -172,6 +172,7 @@ struct MDProductPictureFormView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Product picture")
         #if os(iOS)
             .onChange(of: capturedImage) {

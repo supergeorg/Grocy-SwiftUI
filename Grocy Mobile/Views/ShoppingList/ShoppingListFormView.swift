@@ -58,9 +58,9 @@ struct ShoppingListFormView: View {
         do {
             try shoppingListDescription.modelContext?.save()
             if existingShoppingListDescription == nil {
-                _ = try await grocyVM.postMDObject(object: .locations, content: shoppingListDescription)
+                _ = try await grocyVM.postMDObject(object: .shopping_lists, content: shoppingListDescription)
             } else {
-                try await grocyVM.putMDObjectWithID(object: .locations, id: shoppingListDescription.id, content: shoppingListDescription)
+                try await grocyVM.putMDObjectWithID(object: .shopping_lists, id: shoppingListDescription.id, content: shoppingListDescription)
             }
             GrocyLogger.info("Shopping list \(shoppingListDescription.name) successful.")
             await updateData()
@@ -79,6 +79,9 @@ struct ShoppingListFormView: View {
 
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             MyTextField(
                 textToEdit: $shoppingListDescription.name,
                 description: "Name",
@@ -91,6 +94,7 @@ struct ShoppingListFormView: View {
                 isNameCorrect = checkNameCorrect()
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(existingShoppingListDescription == nil ? "Create shopping list" : "Edit shopping list")
         .task {
             await updateData()
@@ -130,10 +134,17 @@ struct ShoppingListFormView: View {
                         }
                     )
                     .keyboardShortcut(.defaultAction)
-                    .disabled(isProcessing)
+                    .disabled(!isNameCorrect || isProcessing)
                 }
             )
         }
+        .onChange(of: isSuccessful) {
+            if isSuccessful == true {
+                finishForm()
+            }
+        }
+        .sensoryFeedback(.success, trigger: isSuccessful == true)
+        .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 }
 

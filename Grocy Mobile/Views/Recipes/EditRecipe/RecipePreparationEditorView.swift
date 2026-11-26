@@ -604,6 +604,7 @@ struct LinkDialog: View {
                     TextField("Link Text", text: $linkText)
                 }
             }
+            .formStyle(.grouped)
             .navigationTitle("Insert Link")
             #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)

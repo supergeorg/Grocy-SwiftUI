@@ -14,6 +14,8 @@ struct MDUserEntityFormView: View {
 
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
+    @State private var isSuccessful: Bool? = nil
+    @State private var errorMessage: String? = nil
 
     @State private var name: String = ""
     @State private var caption: String = ""
@@ -62,6 +64,11 @@ struct MDUserEntityFormView: View {
         #endif
     }
 
+    private func showError(_ error: Error) {
+        errorMessage = (error as? APIError)?.displayMessage ?? error.localizedDescription
+        isSuccessful = false
+    }
+
     private func saveUserEntity() async {
         let id: Int
         if isNewUserEntity {
@@ -84,25 +91,30 @@ struct MDUserEntityFormView: View {
             iconCSSClass: nil,
             rowCreatedTimestamp: timeStamp
         )
+        isSuccessful = nil
         isProcessing = true
         if isNewUserEntity {
             do {
                 _ = try await grocyVM.postMDObject(object: .userentities, content: userEntityPOST)
                 GrocyLogger.info("User entity add successful.")
+                isSuccessful = true
                 resetForm()
                 await updateData()
                 finishForm()
             } catch {
                 GrocyLogger.error("User entity add failed. \(error)")
+                showError(error)
             }
         } else {
             do {
                 try await grocyVM.putMDObjectWithID(object: .userentities, id: id, content: userEntityPOST)
                 GrocyLogger.info("User entity edit successful.")
+                isSuccessful = true
                 await updateData()
                 finishForm()
             } catch {
                 GrocyLogger.error("User entity edit failed. \(error)")
+                showError(error)
             }
         }
         isProcessing = false
@@ -121,7 +133,11 @@ struct MDUserEntityFormView: View {
                             }
                         },
                         label: {
-                            Image(systemName: MySymbols.save)
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Save", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessing)
                         }
                     )
                     .disabled(!isNameCorrect || !isCaptionCorrect || isProcessing)
@@ -137,6 +153,8 @@ struct MDUserEntityFormView: View {
                     }
                 #endif
             })
+            .sensoryFeedback(.success, trigger: isSuccessful == true)
+            .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 
     var content: some View {
@@ -147,6 +165,9 @@ struct MDUserEntityFormView: View {
                     .bold()
                     .padding(.bottom, Spacing.xLarge)
             #endif
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             Section(header: Text("Name of the userentity")) {
                 MyTextField(
                     textToEdit: $name,
@@ -180,6 +201,7 @@ struct MDUserEntityFormView: View {
 
             MyToggle(isOn: $showInSidebarMenu, description: "Show in sidebar menu", icon: MySymbols.tableColumn)
         }
+        .formStyle(.grouped)
         .task {
             if firstAppear {
                 await updateData()

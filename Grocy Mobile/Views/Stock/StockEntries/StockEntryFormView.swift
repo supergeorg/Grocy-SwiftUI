@@ -93,6 +93,9 @@ struct StockEntryFormView: View {
 
     var content: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             if features.dueDateTracking {
                 VStack(alignment: .trailing, spacing: Spacing.xxSmall) {
                     if !productDoesntSpoil {
@@ -193,19 +196,24 @@ struct StockEntryFormView: View {
 
             MyTextEditor(textToEdit: $stockEntry.note, description: "Note", leadingIcon: MySymbols.description)
         }
+        .formStyle(.grouped)
         .toolbar(content: {
             ToolbarItem(
                 placement: .confirmationAction,
                 content: {
                     Button(
+                        role: .confirm,
                         action: { Task { await saveStockEntry() } },
                         label: {
                             // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
-                            Label("Save", systemImage: MySymbols.save)
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Save", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessing)
                         }
                     )
                     .disabled(!isFormValid || isProcessing)
-                    .keyboardShortcut("s", modifiers: [.command])
+                    .keyboardShortcut(.defaultAction)
                 }
             )
         })
@@ -214,6 +222,8 @@ struct StockEntryFormView: View {
                 finishForm()
             }
         }
+        .sensoryFeedback(.success, trigger: isSuccessful == true)
+        .sensoryFeedback(.error, trigger: isSuccessful == false)
         .navigationTitle("Edit entry")
     }
 }
