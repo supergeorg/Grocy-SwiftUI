@@ -16,6 +16,8 @@ struct MealPlanSectionsView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var showAddSection: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
 
     @State private var sectionToDelete: MDMealPlanSection? = nil
     @State private var showDeleteConfirmation: Bool = false
@@ -110,6 +112,7 @@ struct MealPlanSectionsView: View {
                     NavigationStack {
                         MealPlanSectionFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -135,7 +138,7 @@ struct MealPlanSectionsView: View {
                     .keyboardShortcut(.defaultAction)
             }
             #if os(iOS)
-                ToolbarItemGroup(
+                ToolbarItem(
                     placement: .primaryAction,
                     content: {
                         Button(
@@ -148,6 +151,7 @@ struct MealPlanSectionsView: View {
                         )
                     }
                 )
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
             #endif
         })
         .alert(

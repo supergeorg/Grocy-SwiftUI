@@ -136,6 +136,8 @@ struct ShoppingListView: View {
     }
 
     @State private var showFilterSheet: Bool = false
+    /// The form for a new item zooms out of the toolbar's add button.
+    @Namespace private var addTransition
 
     @State private var shoppingListInteractionRouter = ShoppingListInteractionNavigationRouter()
 
@@ -512,6 +514,9 @@ struct ShoppingListView: View {
                     .help("Add item")
                 }
             )
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .navigationDestination(
             for: ShoppingListDescription.self,
@@ -604,6 +609,9 @@ struct ShoppingListView: View {
                     ShoppingListPurchaseAllView(items: items)
                 }
             }
+            #if os(iOS)
+                .zoomTransition(sourceID: ZoomTransitionID.add, in: addTransition, if: interaction == .newShoppingListEntry)
+            #endif
         }
         .alert(
             activeAlert?.title ?? "",

@@ -14,6 +14,8 @@ struct MDTaskCategoriesView: View {
 
     @State private var searchString: String = ""
     @State private var showAddTaskCategory: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
 
     @State private var taskCategoryToDelete: MDTaskCategory? = nil
     @State private var showDeleteConfirmation: Bool = false
@@ -113,6 +115,7 @@ struct MDTaskCategoriesView: View {
                     NavigationStack {
                         MDTaskCategoryFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -133,7 +136,7 @@ struct MDTaskCategoriesView: View {
         }
         .searchable(text: $searchString, prompt: "Search")
         .toolbar(content: {
-            ToolbarItemGroup(
+            ToolbarItem(
                 placement: .primaryAction,
                 content: {
                     Button(
@@ -146,6 +149,9 @@ struct MDTaskCategoriesView: View {
                     )
                 }
             )
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         })
         .alert(
             "Are you sure you want to delete task category \"\(taskCategoryToDelete?.name ?? "")\"?",
