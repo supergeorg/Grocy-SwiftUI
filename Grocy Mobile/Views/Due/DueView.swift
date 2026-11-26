@@ -152,7 +152,8 @@ struct DueView: View {
                         DueKindToggles()
                     }
                 } label: {
-                    Label("Show", systemImage: MySymbols.filter)
+                    // Not the filter symbol: this chooses which kinds the agenda shows at all, the capsules filter them.
+                    Label("Show", systemImage: MySymbols.show)
                 }
             }
         }
