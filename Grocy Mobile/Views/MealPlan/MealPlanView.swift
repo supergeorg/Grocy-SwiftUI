@@ -15,6 +15,8 @@ struct MealPlanFormRequest: Identifiable, Hashable {
     var day: Date = Date()
     var sectionID: Int? = nil
     var recipeID: Int? = nil
+    /// Opened with the toolbar's add button, so the form zooms out of it.
+    var fromToolbar = false
 
     static func == (lhs: MealPlanFormRequest, rhs: MealPlanFormRequest) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
@@ -71,6 +73,8 @@ struct MealPlanView: View {
     @State private var showSections: Bool = false
 
     @State private var formRequest: MealPlanFormRequest? = nil
+    /// The form for a new entry zooms out of the toolbar's add button.
+    @Namespace private var addTransition
     @State private var dayToCopy: Date? = nil
     @State private var recipeToShow: Recipe? = nil
 
@@ -421,6 +425,7 @@ struct MealPlanView: View {
                     NavigationStack {
                         formView(for: request)
                     }
+                    .zoomTransition(sourceID: ZoomTransitionID.add, in: addTransition, if: request.fromToolbar)
                 }
                 .sheet(item: dayToCopyBinding) { day in
                     NavigationStack {
@@ -570,12 +575,12 @@ struct MealPlanView: View {
 
     @ToolbarContentBuilder
     private func toolbarContent(lookup: MealPlanLookup) -> some ToolbarContent {
-        ToolbarItemGroup(placement: .primaryAction) {
+        ToolbarItem(placement: .primaryAction) {
             Button(
                 action: {
                     let today = Date()
                     let day = days.contains { calendar.isDate($0, inSameDayAs: today) } ? today : (days.first ?? today)
-                    formRequest = MealPlanFormRequest(day: day)
+                    formRequest = MealPlanFormRequest(day: day, fromToolbar: true)
                 },
                 label: {
                     Label("Add to meal plan", systemImage: MySymbols.new)
@@ -583,6 +588,9 @@ struct MealPlanView: View {
             )
             .keyboardShortcut("n", modifiers: .command)
         }
+        #if os(iOS)
+            .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+        #endif
         #if os(macOS)
             ToolbarItem {
                 periodPicker

@@ -21,6 +21,8 @@ struct UserManagementView: View {
     @State private var searchString: String = ""
 
     @State private var showAddUser: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var userForPermissions: GrocyUser? = nil
     @State private var userToDelete: GrocyUser? = nil
     @State private var showDeleteConfirmation: Bool = false
@@ -131,18 +133,24 @@ struct UserManagementView: View {
             UserFormView(isNewUser: false, user: user)
         }
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     showAddUser = true
                 } label: {
                     Label("Create user", systemImage: MySymbols.new)
                 }
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .sheet(isPresented: $showAddUser) {
             NavigationStack {
                 UserFormView(isNewUser: true)
             }
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #endif
             #if os(macOS)
                 .frame(minWidth: Sizes.popoverFormSize, minHeight: Sizes.popoverFormSize)
             #endif

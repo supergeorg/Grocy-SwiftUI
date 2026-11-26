@@ -29,6 +29,8 @@ struct MDUserFieldsView: View {
 
     @State private var searchString: String = ""
     @State private var showAddUserField: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
 
     @State private var shownEditPopover: MDUserField? = nil
 
@@ -76,7 +78,7 @@ struct MDUserFieldsView: View {
     var bodyContent: some View {
         content
             .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
+                ToolbarItem(placement: .primaryAction) {
                     Button(
                         action: {
                             showAddUserField.toggle()
@@ -84,6 +86,9 @@ struct MDUserFieldsView: View {
                         label: { Label("Create", systemImage: MySymbols.new) }
                     )
                 }
+                #if os(iOS)
+                    .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+                #endif
             }
             .navigationTitle("Userfields")
             #if os(iOS)
@@ -93,6 +98,7 @@ struct MDUserFieldsView: View {
                         NavigationStack {
                             MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
                         }
+                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                     }
                 )
             #else

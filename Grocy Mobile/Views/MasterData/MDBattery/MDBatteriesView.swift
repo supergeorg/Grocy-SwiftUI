@@ -14,6 +14,8 @@ struct MDBatteriesView: View {
 
     @State private var searchString: String = ""
     @State private var showAddBattery: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var batteryToDelete: MDBattery? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -98,6 +100,7 @@ struct MDBatteriesView: View {
                 NavigationStack {
                     MDBatteryFormView(isPopup: true)
                 }
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
             }
         #else
             .navigationDestination(isPresented: $showAddBattery) { MDBatteryFormView() }
@@ -144,13 +147,16 @@ struct MDBatteriesView: View {
             }
         )
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     showAddBattery.toggle()
                 } label: {
                     Label("Create battery", systemImage: MySymbols.new)
                 }
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .navigationTitle("Batteries")
     }

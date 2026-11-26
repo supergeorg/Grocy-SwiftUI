@@ -14,6 +14,8 @@ struct MDQuantityUnitsView: View {
 
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -109,6 +111,7 @@ struct MDQuantityUnitsView: View {
                     NavigationStack {
                         MDQuantityUnitFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -132,7 +135,7 @@ struct MDQuantityUnitsView: View {
             prompt: "Search"
         )
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button(
                     action: {
                         showAddQuantityUnit.toggle()
@@ -142,6 +145,9 @@ struct MDQuantityUnitsView: View {
                     }
                 )
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .animation(
             .default,

@@ -63,6 +63,8 @@ struct RecipesView: View {
     @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var showImportRecipe: Bool = false
     @State private var recipeActionsRouter = RecipeActionsRouter()
     @AppStorage("RecipesView.sortOption") private var sortOption: RecipeSortOption = .dueScore
@@ -226,6 +228,9 @@ struct RecipesView: View {
                 NavigationStack {
                     RecipeFormView()
                 }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #endif
             }
             #if os(iOS)
                 .sheet(isPresented: $showImportRecipe) {
@@ -290,6 +295,9 @@ struct RecipesView: View {
                         )
                     }
                 )
+                #if os(iOS)
+                    .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+                #endif
             }
     }
 

@@ -15,6 +15,8 @@ struct EquipmentView: View {
 
     @State private var searchString: String = ""
     @State private var showAddEquipment: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var equipmentToDelete: MDEquipment? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -104,6 +106,7 @@ struct EquipmentView: View {
                 NavigationStack {
                     EquipmentFormView(isPopup: true)
                 }
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
             }
         #else
             .navigationDestination(isPresented: $showAddEquipment) { EquipmentFormView() }
@@ -150,13 +153,16 @@ struct EquipmentView: View {
             }
         )
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     showAddEquipment.toggle()
                 } label: {
                     Label("Create equipment", systemImage: MySymbols.new)
                 }
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .navigationTitle("Equipment")
     }

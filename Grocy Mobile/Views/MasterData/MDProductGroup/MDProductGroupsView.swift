@@ -14,6 +14,8 @@ struct MDProductGroupsView: View {
 
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var productGroupToDelete: MDProductGroup? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -116,6 +118,7 @@ struct MDProductGroupsView: View {
                     NavigationStack {
                         MDProductGroupFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -143,7 +146,7 @@ struct MDProductGroupsView: View {
             value: mdProductGroups.count
         )
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 Button(
                     action: {
                         showAddProductGroup.toggle()
@@ -153,6 +156,9 @@ struct MDProductGroupsView: View {
                     }
                 )
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .alert(
             "Are you sure you want to delete product group \"\(productGroupToDelete?.name ?? "")\"?",

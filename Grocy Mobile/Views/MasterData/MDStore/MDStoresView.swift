@@ -14,6 +14,8 @@ struct MDStoresView: View {
 
     @State private var searchString: String = ""
     @State private var showAddStore: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var storeToDelete: MDStore? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -112,6 +114,7 @@ struct MDStoresView: View {
                     NavigationStack {
                         MDStoreFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -169,7 +172,7 @@ struct MDStoresView: View {
             }
         )
         .toolbar(content: {
-            ToolbarItemGroup(
+            ToolbarItem(
                 placement: .primaryAction,
                 content: {
                     Button(
@@ -182,6 +185,9 @@ struct MDStoresView: View {
                     )
                 }
             )
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         })
         .navigationTitle("Stores")
     }

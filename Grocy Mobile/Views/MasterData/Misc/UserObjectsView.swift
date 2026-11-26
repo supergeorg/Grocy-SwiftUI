@@ -15,6 +15,8 @@ struct UserObjectsView: View {
 
     @State private var searchString: String = ""
     @State private var showAddUserObject: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var values: [Int: [String: String]] = [:]
 
     @State private var userObjectToDelete: MDUserObject? = nil
@@ -103,17 +105,22 @@ struct UserObjectsView: View {
         }
         .navigationTitle(userEntity.caption)
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 NavigationLink {
                     MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: .constant(false))
                 } label: {
                     Label("Edit userentity", systemImage: MySymbols.edit)
                 }
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Button("Create", systemImage: MySymbols.new) {
                     showAddUserObject = true
                 }
                 .disabled(fields.isEmpty)
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         }
         .task {
             await updateData()
@@ -128,6 +135,7 @@ struct UserObjectsView: View {
                 NavigationStack {
                     UserObjectFormView(userEntity: userEntity)
                 }
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
             }
         #else
             .navigationDestination(isPresented: $showAddUserObject) {

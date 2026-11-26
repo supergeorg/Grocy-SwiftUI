@@ -14,6 +14,8 @@ struct MDChoresView: View {
 
     @State private var searchString: String = ""
     @State private var showAddChore: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var choreToDelete: MDChore? = nil
     @State private var showDeleteConfirmation: Bool = false
     @State private var deleteErrorMessage: String? = nil
@@ -113,6 +115,7 @@ struct MDChoresView: View {
                     NavigationStack {
                         MDChoreFormView(isPopup: true)
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
             )
         #else
@@ -166,7 +169,7 @@ struct MDChoresView: View {
             }
         )
         .toolbar(content: {
-            ToolbarItemGroup(
+            ToolbarItem(
                 placement: .primaryAction,
                 content: {
                     Button(
@@ -179,6 +182,9 @@ struct MDChoresView: View {
                     )
                 }
             )
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         })
         .navigationTitle("Chores")
     }

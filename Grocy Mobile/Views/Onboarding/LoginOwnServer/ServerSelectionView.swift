@@ -11,6 +11,8 @@ import SwiftUI
 struct ServerSelectionView: View {
     @Environment(\.profileModelContext) private var profileModelContext
     @State private var showAddServer: Bool = false
+    /// The form for a new object zooms out of the create button.
+    @Namespace private var addTransition
     @State private var serverProfiles: [ServerProfile] = []
 
     @AppStorage("selectedServerProfileID") private var selectedServerProfileID: UUID?
@@ -77,6 +79,9 @@ struct ServerSelectionView: View {
                     )
                 }
             )
+            #if os(iOS)
+                .matchedTransitionSource(id: ZoomTransitionID.add, in: addTransition)
+            #endif
         })
         .safeAreaBar(
             edge: .bottom,
@@ -109,6 +114,7 @@ struct ServerSelectionView: View {
                     NavigationStack {
                         ServerProfileFormView()
                     }
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                     .environment(\.profileModelContext, profileModelContext)
                 }
             )
