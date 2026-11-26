@@ -12,6 +12,9 @@ struct MDTaskCategoriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddTaskCategory: Bool = false
 
@@ -113,6 +116,7 @@ struct MDTaskCategoriesView: View {
                     NavigationStack {
                         MDTaskCategoryFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddTaskCategory", in: createTransition)
                 }
             )
         #else
@@ -144,6 +148,7 @@ struct MDTaskCategoriesView: View {
                             Label("Create task category", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showAddTaskCategory", in: createTransition)
                 }
             )
         })

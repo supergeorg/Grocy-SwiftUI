@@ -149,6 +149,7 @@ struct MDBarcodeFormView: View {
             MyTextEditor(textToEdit: $barcode.note, description: "Note", leadingIcon: MySymbols.description)
 
         }
+        .formStyle(.grouped)
         .onChange(of: barcode.barcode) {
             isBarcodeCorrect = checkBarcodeCorrect()
         }

@@ -60,6 +60,9 @@ struct RecipesView: View {
     @Query(sort: \Recipe.name, order: .forward) var recipes: Recipes
     @Query var recipeFulfilments: RecipeFulfilments
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var initialLoadDone = false
     @State private var searchString: String = ""
     @State private var showAddRecipe: Bool = false
@@ -226,6 +229,7 @@ struct RecipesView: View {
                 NavigationStack {
                     RecipeFormView()
                 }
+                .sheetZoomTransition(sourceID: "create-showAddRecipe", in: createTransition)
             }
             #if os(iOS)
                 .sheet(isPresented: $showImportRecipe) {
@@ -288,6 +292,7 @@ struct RecipesView: View {
                                 Label("Create recipe", systemImage: MySymbols.new)
                             }
                         )
+                        .sheetTransitionSource(id: "create-showAddRecipe", in: createTransition)
                     }
                 )
             }

@@ -12,6 +12,9 @@ struct MDStoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddStore: Bool = false
     @State private var storeToDelete: MDStore? = nil
@@ -112,6 +115,7 @@ struct MDStoresView: View {
                     NavigationStack {
                         MDStoreFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddStore", in: createTransition)
                 }
             )
         #else
@@ -180,6 +184,7 @@ struct MDStoresView: View {
                             Label("Create store", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showAddStore", in: createTransition)
                 }
             )
         })

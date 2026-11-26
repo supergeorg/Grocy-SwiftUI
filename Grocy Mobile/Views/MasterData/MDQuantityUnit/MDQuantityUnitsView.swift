@@ -12,6 +12,9 @@ struct MDQuantityUnitsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddQuantityUnit: Bool = false
     @State private var quantityUnitToDelete: MDQuantityUnit? = nil
@@ -109,6 +112,7 @@ struct MDQuantityUnitsView: View {
                     NavigationStack {
                         MDQuantityUnitFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddQuantityUnit", in: createTransition)
                 }
             )
         #else
@@ -141,6 +145,7 @@ struct MDQuantityUnitsView: View {
                         Label("Create quantity unit", systemImage: MySymbols.new)
                     }
                 )
+                .sheetTransitionSource(id: "create-showAddQuantityUnit", in: createTransition)
             }
         }
         .animation(

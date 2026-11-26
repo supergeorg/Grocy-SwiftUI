@@ -12,6 +12,9 @@ struct MDChoresView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddChore: Bool = false
     @State private var choreToDelete: MDChore? = nil
@@ -113,6 +116,7 @@ struct MDChoresView: View {
                     NavigationStack {
                         MDChoreFormView(isPopup: true)
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddChore", in: createTransition)
                 }
             )
         #else
@@ -177,6 +181,7 @@ struct MDChoresView: View {
                             Label("Create chore", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showAddChore", in: createTransition)
                 }
             )
         })

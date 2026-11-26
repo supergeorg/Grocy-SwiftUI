@@ -12,6 +12,9 @@ struct MDProductGroupsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddProductGroup: Bool = false
     @State private var productGroupToDelete: MDProductGroup? = nil
@@ -116,6 +119,7 @@ struct MDProductGroupsView: View {
                     NavigationStack {
                         MDProductGroupFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddProductGroup", in: createTransition)
                 }
             )
         #else
@@ -152,6 +156,7 @@ struct MDProductGroupsView: View {
                         Label("Create product group", systemImage: MySymbols.new)
                     }
                 )
+                .sheetTransitionSource(id: "create-showAddProductGroup", in: createTransition)
             }
         }
         .alert(

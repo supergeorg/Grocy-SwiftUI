@@ -13,6 +13,9 @@ struct EquipmentView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddEquipment: Bool = false
     @State private var equipmentToDelete: MDEquipment? = nil
@@ -104,6 +107,7 @@ struct EquipmentView: View {
                 NavigationStack {
                     EquipmentFormView(isPopup: true)
                 }
+                .sheetZoomTransition(sourceID: "create-showAddEquipment", in: createTransition)
             }
         #else
             .navigationDestination(isPresented: $showAddEquipment) { EquipmentFormView() }
@@ -156,6 +160,7 @@ struct EquipmentView: View {
                 } label: {
                     Label("Create equipment", systemImage: MySymbols.new)
                 }
+                .sheetTransitionSource(id: "create-showAddEquipment", in: createTransition)
             }
         }
         .navigationTitle("Equipment")

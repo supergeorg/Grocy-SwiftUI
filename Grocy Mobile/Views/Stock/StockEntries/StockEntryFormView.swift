@@ -193,6 +193,7 @@ struct StockEntryFormView: View {
 
             MyTextEditor(textToEdit: $stockEntry.note, description: "Note", leadingIcon: MySymbols.description)
         }
+        .formStyle(.grouped)
         .toolbar(content: {
             ToolbarItem(
                 placement: .confirmationAction,

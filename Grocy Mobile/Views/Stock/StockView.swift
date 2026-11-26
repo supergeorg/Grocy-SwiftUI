@@ -121,6 +121,59 @@ struct StockView: View {
     }
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
+    /// The toolbar's stock interactions zoom out of their button.
+    @Namespace private var toolbarTransition
+    private static let stockActionsTransitionID = "stockActions"
+
+    /// One menu for purchase, consume, transfer and inventory where the toolbar is narrow (iPhone).
+    private var showsStockActionsMenu: Bool {
+        #if os(iOS)
+            PhoneNavigationStyle.applies(in: horizontalSizeClass)
+        #else
+            false
+        #endif
+    }
+
+    /// The button a stock interaction's sheet zooms out of: only those of the toolbar, not those of a row.
+    private func toolbarTransitionID(for interaction: StockInteraction) -> AnyHashable? {
+        switch interaction {
+        case .stockJournal: interaction
+        case .purchaseProduct, .consumeProduct, .transferProduct, .inventoryProduct:
+            showsStockActionsMenu ? Self.stockActionsTransitionID : interaction
+        default: nil
+        }
+    }
+
+    /// Purchase, consume, transfer and inventory, in the order of the Go menu. Separate buttons each are a source of their sheet.
+    @ViewBuilder
+    private var stockActionButtons: some View {
+        Button {
+            stockInteractionRouter.present(.purchaseProduct)
+        } label: {
+            Label("Purchase", systemImage: MySymbols.purchase)
+        }
+        .sheetTransitionSource(id: StockInteraction.purchaseProduct, in: toolbarTransition)
+        Button {
+            stockInteractionRouter.present(.consumeProduct)
+        } label: {
+            Label("Consume", systemImage: MySymbols.consume)
+        }
+        .sheetTransitionSource(id: StockInteraction.consumeProduct, in: toolbarTransition)
+        if features.locationTracking {
+            Button {
+                stockInteractionRouter.present(.transferProduct)
+            } label: {
+                Label("Transfer", systemImage: MySymbols.transfer)
+            }
+            .sheetTransitionSource(id: StockInteraction.transferProduct, in: toolbarTransition)
+        }
+        Button {
+            stockInteractionRouter.present(.inventoryProduct)
+        } label: {
+            Label("Inventory", systemImage: MySymbols.inventory)
+        }
+        .sheetTransitionSource(id: StockInteraction.inventoryProduct, in: toolbarTransition)
+    }
 
     #if os(iOS)
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -641,46 +694,26 @@ struct StockView: View {
                         Label("Stock journal", systemImage: MySymbols.stockJournal)
                     }
                 )
+                .sheetTransitionSource(id: StockInteraction.stockJournal, in: toolbarTransition)
             }
             ToolbarSpacer(.fixed)
-            ToolbarItemGroup {
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.inventoryProduct)
-                    },
-                    label: {
-                        Label("Inventory", systemImage: MySymbols.inventory)
+            if showsStockActionsMenu {
+                // On iPhone the toolbar only has room for one of them, the rest would land in the overflow menu.
+                ToolbarItem {
+                    Menu {
+                        stockActionButtons
+                    } label: {
+                        Label("Stock interaction", systemImage: MySymbols.stockActions)
                     }
-                )
-                if features.locationTracking {
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.transferProduct)
-                        },
-                        label: {
-                            Label("Transfer", systemImage: MySymbols.transfer)
-                        }
-                    )
+                    .sheetTransitionSource(id: Self.stockActionsTransitionID, in: toolbarTransition)
                 }
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.consumeProduct)
-                    },
-                    label: {
-                        Label("Consume", systemImage: MySymbols.consume)
-                    }
-                )
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.purchaseProduct)
-                    },
-                    label: {
-                        Label("Purchase", systemImage: MySymbols.purchase)
-                    }
-                )
+            } else {
+                ToolbarItemGroup {
+                    stockActionButtons
+                }
             }
         })
-        .stockInteractionSheet(router: stockInteractionRouter)
+        .stockInteractionSheet(router: stockInteractionRouter, transitionNamespace: toolbarTransition, sourceID: toolbarTransitionID(for:))
         .stockEntriesDestination()
         #if os(iOS)
             .sheet(isPresented: $showingFilterSheet) {

@@ -36,13 +36,21 @@ struct StockInteractionView: View {
 extension View {
     /// Lets the stock rows below (`StockTableRow`, `StockTableMenuEntriesView`) present their stock interactions:
     /// provides the router to them and shows the interaction it presents in a sheet.
-    func stockInteractionSheet(router: StockInteractionNavigationRouter) -> some View {
-        modifier(StockInteractionSheet(router: router))
+    ///
+    /// Sheets of the toolbar's interactions zoom out of their button (`sourceID`, see `sheetZoomTransition`).
+    func stockInteractionSheet(
+        router: StockInteractionNavigationRouter,
+        transitionNamespace: Namespace.ID? = nil,
+        sourceID: @escaping (StockInteraction) -> AnyHashable? = { _ in nil }
+    ) -> some View {
+        modifier(StockInteractionSheet(router: router, transitionNamespace: transitionNamespace, sourceID: sourceID))
     }
 }
 
 private struct StockInteractionSheet: ViewModifier {
     @Bindable var router: StockInteractionNavigationRouter
+    var transitionNamespace: Namespace.ID?
+    var sourceID: (StockInteraction) -> AnyHashable?
 
     func body(content: Content) -> some View {
         content
@@ -52,6 +60,7 @@ private struct StockInteractionSheet: ViewModifier {
                     StockInteractionView(interaction: interaction)
                 }
                 .environment(router)
+                .sheetZoomTransition(sourceID: sourceID(interaction), in: transitionNamespace)
             }
     }
 }

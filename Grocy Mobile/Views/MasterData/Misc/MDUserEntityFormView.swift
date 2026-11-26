@@ -180,6 +180,7 @@ struct MDUserEntityFormView: View {
 
             MyToggle(isOn: $showInSidebarMenu, description: "Show in sidebar menu", icon: MySymbols.tableColumn)
         }
+        .formStyle(.grouped)
         .task {
             if firstAppear {
                 await updateData()

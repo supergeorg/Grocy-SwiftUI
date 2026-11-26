@@ -16,6 +16,9 @@ struct MDQuantityUnitFormView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var isProcessing: Bool = false
     @State private var isSuccessful: Bool? = nil
     @State private var errorMessage: String? = nil
@@ -177,6 +180,7 @@ struct MDQuantityUnitFormView: View {
                                         Label("Create QU conversion", systemImage: MySymbols.new)
                                     }
                                 )
+                                .sheetTransitionSource(id: "create-showAddQuantityUnitConversion", in: createTransition)
                             }
                             Text("1 \(quantityUnit.name) is the same as...")
                                 .italic()
@@ -193,6 +197,7 @@ struct MDQuantityUnitFormView: View {
                 NavigationStack {
                     MDQuantityUnitConversionFormView(quantityUnit: quantityUnit)
                 }
+                .sheetZoomTransition(sourceID: "create-showAddQuantityUnitConversion", in: createTransition)
             }
         )
         .navigationDestination(

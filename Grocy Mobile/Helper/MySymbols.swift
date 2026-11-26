@@ -232,6 +232,7 @@ nonisolated struct MySymbols {
     static let nextWeek = "chevron.forward"
     static let copyDay = "document.on.document"
     static let moreActions = "ellipsis"
+    static let stockActions = "shippingbox.and.arrow.backward"
     static let dayMenu = "chevron.down"
     static let mealPlanPeriod = "calendar"
 

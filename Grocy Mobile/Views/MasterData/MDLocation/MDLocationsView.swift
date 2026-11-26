@@ -12,6 +12,9 @@ struct MDLocationsView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddLocation: Bool = false
     @State private var locationToDelete: MDLocation? = nil
@@ -115,6 +118,7 @@ struct MDLocationsView: View {
                     NavigationStack {
                         MDLocationFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddLocation", in: createTransition)
                 }
             )
         #else
@@ -183,6 +187,7 @@ struct MDLocationsView: View {
                             Label("Create location", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showAddLocation", in: createTransition)
                 }
             )
         })

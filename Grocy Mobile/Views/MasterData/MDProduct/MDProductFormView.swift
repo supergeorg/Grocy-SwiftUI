@@ -696,6 +696,7 @@ struct MDProductFormView: View {
             )
             .disabled(existingProduct == nil)
         }
+        .formStyle(.grouped)
         .navigationTitle("Optional properties")
     }
 
@@ -788,6 +789,7 @@ struct MDProductFormView: View {
                 }
             )
         }
+        .formStyle(.grouped)
         .navigationTitle(features.locationTracking ? LocalizedStringKey("Default location") : LocalizedStringKey("Default store"))
     }
 
@@ -864,6 +866,7 @@ struct MDProductFormView: View {
                 )
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Due date")
     }
 
@@ -991,6 +994,7 @@ struct MDProductFormView: View {
             )
 
         }
+        .formStyle(.grouped)
         .navigationTitle("Quantity units")
     }
 
@@ -1084,6 +1088,7 @@ struct MDProductFormView: View {
                 icon: MySymbols.recipe
             )
         }
+        .formStyle(.grouped)
         .navigationTitle("Amounts")
     }
 

@@ -15,6 +15,9 @@ struct MealPlanSectionsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var showAddSection: Bool = false
 
     @State private var sectionToDelete: MDMealPlanSection? = nil
@@ -97,6 +100,7 @@ struct MealPlanSectionsView: View {
                         action: { showAddSection = true },
                         label: { Label("Create meal plan section", systemImage: MySymbols.new) }
                     )
+                    .sheetTransitionSource(id: "create-showAddSection", in: createTransition)
                     .keyboardShortcut("n", modifiers: .command)
                     Spacer()
                 }
@@ -110,6 +114,7 @@ struct MealPlanSectionsView: View {
                     NavigationStack {
                         MealPlanSectionFormView()
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddSection", in: createTransition)
                 }
             )
         #else

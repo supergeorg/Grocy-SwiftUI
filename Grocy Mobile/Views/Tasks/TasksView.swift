@@ -20,6 +20,9 @@ struct TasksView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(DeepLinkManager.self) private var deepLinkManager: DeepLinkManager?
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
     @State private var filteredStatus: TaskStatus = .all
@@ -386,6 +389,7 @@ struct TasksView: View {
             NavigationStack {
                 TaskFormView(isPopup: true)
             }
+            .sheetZoomTransition(sourceID: "create-showCreateTask", in: createTransition)
         }
         .navigationDestination(
             for: GrocyTask.self,
@@ -436,6 +440,7 @@ struct TasksView: View {
                             Label("Create task", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showCreateTask", in: createTransition)
                 }
             )
             ToolbarItemGroup(placement: .navigation) {

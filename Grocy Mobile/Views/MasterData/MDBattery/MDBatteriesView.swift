@@ -12,6 +12,9 @@ struct MDBatteriesView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddBattery: Bool = false
     @State private var batteryToDelete: MDBattery? = nil
@@ -98,6 +101,7 @@ struct MDBatteriesView: View {
                 NavigationStack {
                     MDBatteryFormView(isPopup: true)
                 }
+                .sheetZoomTransition(sourceID: "create-showAddBattery", in: createTransition)
             }
         #else
             .navigationDestination(isPresented: $showAddBattery) { MDBatteryFormView() }
@@ -150,6 +154,7 @@ struct MDBatteriesView: View {
                 } label: {
                     Label("Create battery", systemImage: MySymbols.new)
                 }
+                .sheetTransitionSource(id: "create-showAddBattery", in: createTransition)
             }
         }
         .navigationTitle("Batteries")

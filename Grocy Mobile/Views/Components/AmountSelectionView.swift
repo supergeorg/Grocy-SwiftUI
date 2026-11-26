@@ -45,7 +45,7 @@ struct AmountSelectionView: View {
     }
 
     var body: some View {
-        Section(header: Text("Amount").font(.headline)) {
+        Section(header: Text("Amount")) {
             MyDoubleStepper(
                 amount: $amount,
                 description: "Amount",

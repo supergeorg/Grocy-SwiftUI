@@ -19,6 +19,9 @@ struct MDProductsView: View {
         userSettingsList.first
     }
 
+    /// The create sheet zooms out of its button.
+    @Namespace private var createTransition
+
     @State private var searchString: String = ""
     @State private var showAddProduct: Bool = false
     @State private var productToDelete: MDProduct? = nil
@@ -212,6 +215,7 @@ struct MDProductsView: View {
                             Label("Create product", systemImage: MySymbols.new)
                         }
                     )
+                    .sheetTransitionSource(id: "create-showAddProduct", in: createTransition)
                 }
             )
         })
@@ -223,6 +227,7 @@ struct MDProductsView: View {
                     NavigationStack {
                         MDProductFormView(userSettings: userSettings)
                     }
+                    .sheetZoomTransition(sourceID: "create-showAddProduct", in: createTransition)
                 }
             )
         #else

@@ -138,6 +138,8 @@ struct ShoppingListView: View {
     @State private var showFilterSheet: Bool = false
 
     @State private var shoppingListInteractionRouter = ShoppingListInteractionNavigationRouter()
+    /// The add item sheet zooms out of its button.
+    @Namespace private var createTransition
 
     @State private var shlItemToDelete: ShoppingListItem? = nil
     @State private var activeAlert: AlertType?
@@ -510,6 +512,7 @@ struct ShoppingListView: View {
                         }
                     )
                     .help("Add item")
+                    .sheetTransitionSource(id: ShoppingListInteraction.newShoppingListEntry, in: createTransition)
                 }
             )
         }
@@ -604,6 +607,7 @@ struct ShoppingListView: View {
                     ShoppingListPurchaseAllView(items: items)
                 }
             }
+            .sheetZoomTransition(sourceID: interaction == .newShoppingListEntry ? AnyHashable(interaction) : nil, in: createTransition)
         }
         .alert(
             activeAlert?.title ?? "",

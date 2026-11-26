@@ -91,6 +91,7 @@ struct ShoppingListFormView: View {
                 isNameCorrect = checkNameCorrect()
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(existingShoppingListDescription == nil ? "Create shopping list" : "Edit shopping list")
         .task {
             await updateData()
