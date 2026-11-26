@@ -53,6 +53,8 @@ struct AppCommands: Commands {
                 .keyboardShortcut("7")
             button("Equipment", systemImage: MySymbols.equipment, item: .equipment, isEnabled: systemConfig?.featureFlagEquipment != false)
                 .keyboardShortcut("8")
+            button("Due", systemImage: MySymbols.due, item: .due, isEnabled: PhonePlace.due.isEnabled(in: systemConfig))
+                .keyboardShortcut("9")
 
             Divider()
 
