@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// The quick filters of the due agenda: one capsule per kind (chores, tasks, batteries) with its count.
+/// The quick filters of the due agenda: one capsule per kind (products, below min. stock, chores, tasks, batteries) with its count.
 struct DueFilterActionsView: View {
     @Binding var filteredKind: DueKind?
     var kinds: [DueKind]
@@ -33,9 +33,10 @@ struct DueFilterActionsView: View {
                                 .transition(.blurReplace)
                         }
                     }
-                    .foregroundStyle(isSelected ? Color(.GrocyColors.grocyBlue) : Color(.GrocyColors.grocyGray))
+                    // Each kind in its own color, as the stock overview's filters; the selected one also shows its name.
+                    .foregroundStyle(kind.color)
                 }
-                .filterCapsuleStyle(tint: isSelected ? Color(.GrocyColors.grocyBlueBackground) : Color(.GrocyColors.grocyGrayBackground))
+                .filterCapsuleStyle(tint: kind.backgroundColor)
                 .accessibilityLabel(Text(kind.title))
                 .accessibilityValue(Text(String(counts[kind] ?? 0)))
                 .accessibilityAddTraits(isSelected ? .isSelected : [])
