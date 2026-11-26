@@ -8,6 +8,7 @@
 import AppIntents
 internal import Combine
 import Foundation
+import Network
 import OSLog
 import SwiftData
 import SwiftUI
@@ -99,6 +100,12 @@ class GrocyViewModel {
     var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
     var failedToLoadErrors: [Error] = []
 
+    /// Set while the server can't be used, cleared by the next request it answers. Shown in a small status capsule.
+    var connectionProblem: ConnectionProblem?
+    /// When the server last answered, shown with a connection problem, so the person knows how old the data is.
+    var lastServerContact: Date?
+    @ObservationIgnored private let networkMonitor = NWPathMonitor()
+
     var timeStampsObjects: [ObjectEntities: SystemDBChangedTime] = [:]
     var timeStampsAdditionalObjects: [AdditionalEntities: SystemDBChangedTime] = [:]
 
@@ -150,6 +157,7 @@ class GrocyViewModel {
             try container.encode(dateString)
         })
         self.jsonEncoder.outputFormatting = .prettyPrinted
+        startNetworkMonitor()
         if Self.isUnitTestHost {
             // The unit tests share the app's UserDefaults. Logging in to the person's server there would run against
             // test containers that are gone by the time the login reads the profile.
@@ -297,6 +305,8 @@ class GrocyViewModel {
         self.timeStampsObjects.removeAll()
         self.timeStampsAdditionalObjects.removeAll()
         self.failedToLoadObjects.removeAll()
+        self.connectionProblem = nil
+        self.lastServerContact = nil
         self.failedToLoadAdditionalObjects.removeAll()
         self.failedToLoadErrors.removeAll()
         let systemInfo = try await api.getSystemInfo()
@@ -377,9 +387,11 @@ class GrocyViewModel {
 
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
+            serverAnswered()
             await self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
         } catch {
             GrocyLogger.error("Getting timestamp failed. Message: \(error)")
+            noteConnectionProblem(error)
         }
     }
 
@@ -498,6 +510,7 @@ class GrocyViewModel {
                     GrocyLogger.error("Data request failed for \(object). Message: \("\(error)")")
                     self.failedToLoadObjects.insert(object)
                     self.failedToLoadErrors.append(error)
+                    self.noteConnectionProblem(error)
                     self.loadingObjectEntities.remove(object)
                 }
             }
@@ -523,6 +536,7 @@ class GrocyViewModel {
                     GrocyLogger.error("Data request failed for \(additionalObject). Message: \("\(error)")")
                     self.failedToLoadAdditionalObjects.insert(additionalObject)
                     self.failedToLoadErrors.append(error)
+                    self.noteConnectionProblem(error)
                     self.loadingAdditionalEntities.remove(additionalObject)
                 }
             }
@@ -583,6 +597,53 @@ class GrocyViewModel {
             self.volatileStock = try await grocyApi.getVolatileStock(dueSoonDays: dueSoonDays)
             try swiftDataSync.syncSingletonModel(VolatileStock.self, with: self.volatileStock)
             self.updateWidgetSummary()
+        }
+    }
+
+    // MARK: - Server connection
+
+    /// Watches the network, so going offline shows at once, and coming back online checks the server again.
+    private func startNetworkMonitor() {
+        networkMonitor.pathUpdateHandler = { [weak self] path in
+            let isOnline = path.status == .satisfied
+            Task { @MainActor in
+                await self?.networkChanged(isOnline: isOnline)
+            }
+        }
+        networkMonitor.start(queue: .global(qos: .utility))
+    }
+
+    private func networkChanged(isOnline: Bool) async {
+        if !isOnline {
+            if grocyApi.isLoggedIn {
+                connectionProblem = .offline
+            }
+        } else if connectionProblem != nil {
+            await checkServerConnection()
+        }
+    }
+
+    /// Asks the server when its data last changed, the smallest request there is, to find out whether it can be used.
+    /// Called when the app becomes active, so an outage shows even before the next list loads.
+    func checkServerConnection() async {
+        guard grocyApi.isLoggedIn else { return }
+        do {
+            _ = try await grocyApi.getSystemDBChangedTime()
+            serverAnswered()
+        } catch {
+            GrocyLogger.error("Server check failed. Message: \(error)")
+            noteConnectionProblem(error)
+        }
+    }
+
+    private func serverAnswered() {
+        lastServerContact = .now
+        connectionProblem = nil
+    }
+
+    private func noteConnectionProblem(_ error: Error) {
+        if let problem = ConnectionProblem(error: error) {
+            connectionProblem = problem
         }
     }
 
@@ -652,6 +713,8 @@ class GrocyViewModel {
         self.timeStampsAdditionalObjects.removeAll()
 
         self.failedToLoadObjects.removeAll()
+        self.connectionProblem = nil
+        self.lastServerContact = nil
         self.failedToLoadAdditionalObjects.removeAll()
         self.failedToLoadErrors.removeAll()
 

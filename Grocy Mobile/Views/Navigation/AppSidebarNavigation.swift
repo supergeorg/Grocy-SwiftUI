@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AppSidebarNavigation: View {
     @Environment(DeepLinkManager.self) var deepLinkManager
+    @Environment(GrocyViewModel.self) private var grocyVM
 
     @State private var selection: NavigationItem? = .none
 
@@ -21,6 +22,8 @@ struct AppSidebarNavigation: View {
                 NavigationStack {
                     Navigation(selection: $selection)
                 }
+                // Only while the server can't be used: says so on every screen, without covering anything.
+                .serverStatusBar(isShown: grocyVM.connectionProblem != nil)
             }
         )
         .onAppear {

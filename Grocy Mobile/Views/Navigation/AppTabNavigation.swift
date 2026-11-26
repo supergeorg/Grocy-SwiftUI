@@ -318,6 +318,8 @@ struct AppTabNavigation: View {
         })
         #if os(iOS)
             .tabBarMinimizeBehavior(.onScrollDown)
+            // Only while the server can't be used: says so on every tab, without covering anything.
+            .serverStatusAccessory(isShown: grocyVM.connectionProblem != nil)
         #endif
         .onAppear {
             Task {

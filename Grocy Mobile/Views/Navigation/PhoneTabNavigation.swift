@@ -126,6 +126,8 @@ import SwiftUI
             .tabBarMinimizeBehavior(.onScrollDown)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)
+            // Only while the server can't be used: says so on every tab, without covering anything.
+            .serverStatusAccessory(isShown: grocyVM.connectionProblem != nil)
             .quickScanSheet(isPresented: $showQuickScan, zoomSource: (QuickScanSearchButton.transitionID, quickScanTransition))
             .task {
                 await grocyVM.requestData(additionalObjects: [.system_config])
