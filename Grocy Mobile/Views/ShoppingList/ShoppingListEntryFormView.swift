@@ -142,14 +142,7 @@ struct ShoppingListEntryFormView: View {
 
             AmountSelectionView(productID: $shoppingListEntry.productID, amount: $displayAmount, quantityUnitID: $shoppingListEntry.quID)
 
-            Section(
-                header: Label("Note", systemImage: MySymbols.note)
-                    .labelStyle(.titleAndIcon)
-                    .font(.headline)
-            ) {
-                TextEditor(text: $shoppingListEntry.note)
-                    .frame(minHeight: Sizes.noteEditorMinHeight)
-            }
+            MyTextEditor(textToEdit: $shoppingListEntry.note, description: "Note", leadingIcon: MySymbols.note)
         }
         .formStyle(.grouped)
         .navigationTitle(existingShoppingListEntry == nil ? "Create shopping list item" : "Edit shopping list item")
