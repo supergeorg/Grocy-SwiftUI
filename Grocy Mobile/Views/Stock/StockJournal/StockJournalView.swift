@@ -357,7 +357,7 @@ struct StockJournalView: View {
                             .labelStyle(.titleAndIcon)
                             .tag(StockJournalSortOption.byTransactionTime)
 
-                        Label("Transaction type", systemImage: MySymbols.consume)
+                        Label("Transaction type", systemImage: MySymbols.stockJournal)
                             .labelStyle(.titleAndIcon)
                             .tag(StockJournalSortOption.byTransactionType)
 

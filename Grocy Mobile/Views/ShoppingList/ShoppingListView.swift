@@ -835,10 +835,10 @@ struct ShoppingListView: View {
                         Label("None", systemImage: MySymbols.product)
                             .labelStyle(.titleAndIcon)
                             .tag(ShoppingListGrouping.none)
-                        Label("Product group", systemImage: MySymbols.amount)
+                        Label("Product group", systemImage: MySymbols.productGroup)
                             .labelStyle(.titleAndIcon)
                             .tag(ShoppingListGrouping.productGroup)
-                        Label("Store", systemImage: MySymbols.amount)
+                        Label("Store", systemImage: MySymbols.store)
                             .labelStyle(.titleAndIcon)
                             .tag(ShoppingListGrouping.defaultStore)
                     }
@@ -853,7 +853,7 @@ struct ShoppingListView: View {
                     systemImage: MySymbols.sortCategory,
                     selection: $sortOption,
                     content: {
-                        Label("Name", systemImage: MySymbols.product)
+                        Label("Name", systemImage: MySymbols.name)
                             .labelStyle(.titleAndIcon)
                             .tag(ShoppingListSortOption.byName)
                         Label("Amount", systemImage: MySymbols.amount)

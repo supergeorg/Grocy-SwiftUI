@@ -508,7 +508,7 @@ struct TasksView: View {
                         Label("Due", systemImage: MySymbols.date)
                             .labelStyle(.titleAndIcon)
                             .tag(TasksSortOption.byDueDate)
-                        Label("Category", systemImage: MySymbols.sortCategory)
+                        Label("Category", systemImage: MySymbols.tasks)
                             .labelStyle(.titleAndIcon)
                             .tag(TasksSortOption.byCategory)
                         Label("Assigned to", systemImage: MySymbols.user)

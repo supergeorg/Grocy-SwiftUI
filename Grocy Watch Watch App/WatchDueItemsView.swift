@@ -21,8 +21,8 @@ enum WatchDueKind {
 
     var systemImage: String {
         switch self {
-        case .tasks: "checklist"
-        case .chores: "house"
+        case .tasks: MySymbols.tasks
+        case .chores: MySymbols.chores
         }
     }
 
@@ -121,7 +121,7 @@ struct WatchDueItemsView: View {
             store.complete(kind, id: item.id)
         } label: {
             HStack {
-                Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
+                Image(systemName: isDone ? MySymbols.markedDone : MySymbols.undone)
                     .foregroundStyle(isDone ? Color.green : Color.secondary)
                 VStack(alignment: .leading) {
                     Text(item.name)

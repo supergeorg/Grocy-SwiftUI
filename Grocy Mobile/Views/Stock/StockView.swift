@@ -737,7 +737,7 @@ struct StockView: View {
                         Label("None", systemImage: MySymbols.product)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.none)
-                        Label("Product group", systemImage: MySymbols.amount)
+                        Label("Product group", systemImage: MySymbols.productGroup)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.productGroup)
                         if features.dueDateTracking {
@@ -751,7 +751,7 @@ struct StockView: View {
                         Label("Min. stock amount", systemImage: MySymbols.amount)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.minStockAmount)
-                        Label("Parent product", systemImage: MySymbols.product)
+                        Label("Parent product", systemImage: MySymbols.parentProduct)
                             .labelStyle(.titleAndIcon)
                             .tag(StockGrouping.parentProduct)
                         if features.locationTracking {
@@ -772,7 +772,7 @@ struct StockView: View {
                     systemImage: MySymbols.sortCategory,
                     selection: $sortCategory,
                     content: {
-                        Label("Name", systemImage: MySymbols.product)
+                        Label("Name", systemImage: MySymbols.name)
                             .labelStyle(.titleAndIcon)
                             .tag(StockSortCategory.name)
                         if features.dueDateTracking {

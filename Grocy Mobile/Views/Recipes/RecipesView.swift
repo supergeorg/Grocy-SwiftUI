@@ -319,10 +319,10 @@ struct RecipesView: View {
                     systemImage: MySymbols.sortCategory,
                     selection: $sortOption,
                     content: {
-                        Label("Name", systemImage: MySymbols.product)
+                        Label("Name", systemImage: MySymbols.name)
                             .labelStyle(.titleAndIcon)
                             .tag(RecipeSortOption.name)
-                        Label("Due score", systemImage: MySymbols.amount)
+                        Label("Due score", systemImage: MySymbols.due)
                             .labelStyle(.titleAndIcon)
                             .tag(RecipeSortOption.dueScore)
                     }

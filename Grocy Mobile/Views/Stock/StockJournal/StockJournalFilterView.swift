@@ -35,7 +35,7 @@ struct StockJournalFilterView: View {
                     }
                 },
                 label: {
-                    Label("Product", systemImage: MySymbols.filter)
+                    Label("Product", systemImage: MySymbols.product)
                         .foregroundStyle(.primary)
                 }
             )
@@ -50,7 +50,7 @@ struct StockJournalFilterView: View {
                     }
                 },
                 label: {
-                    Label("Transaction type", systemImage: MySymbols.filter)
+                    Label("Transaction type", systemImage: MySymbols.stockJournal)
                         .foregroundStyle(.primary)
                 }
             )
@@ -65,7 +65,7 @@ struct StockJournalFilterView: View {
                         }
                     },
                     label: {
-                        Label("Location", systemImage: MySymbols.filter)
+                        Label("Location", systemImage: MySymbols.location)
                             .foregroundStyle(.primary)
                     }
                 )
@@ -80,7 +80,7 @@ struct StockJournalFilterView: View {
                     }
                 },
                 label: {
-                    Label("User", systemImage: MySymbols.filter)
+                    Label("User", systemImage: MySymbols.user)
                         .foregroundStyle(.primary)
                 }
             )

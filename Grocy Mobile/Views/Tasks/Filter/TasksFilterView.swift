@@ -60,7 +60,7 @@ struct TasksFilterView: View {
                         .tag(nil as Int?)
                 },
                 label: {
-                    Label("Category", systemImage: MySymbols.filter)
+                    Label("Category", systemImage: MySymbols.tasks)
                         .foregroundStyle(.primary)
                 }
             )
