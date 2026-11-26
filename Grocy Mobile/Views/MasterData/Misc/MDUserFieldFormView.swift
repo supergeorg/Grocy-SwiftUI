@@ -21,7 +21,7 @@ struct MDUserFieldFormView: View {
     @State private var entity: String = ""
     @State private var name: String = ""
     @State private var caption: String = ""
-    @State private var sortNumber: Int? = -1
+    @State private var sortNumber: Int? = nil
     @State private var type: UserFieldType = UserFieldType.none
     @State private var showAsColumnInTables: Bool = false
     @State private var inputRequired: Bool = false
@@ -66,7 +66,7 @@ struct MDUserFieldFormView: View {
         entity = userField?.entity ?? ""
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
-        sortNumber = userField?.sortNumber ?? -1
+        sortNumber = userField?.sortNumber
         type = UserFieldType(rawValue: userField?.type ?? "") ?? UserFieldType.none
         showAsColumnInTables = userField?.showAsColumnInTables == true
         inputRequired = userField?.inputRequired == true
@@ -255,7 +255,7 @@ struct MDUserFieldFormView: View {
                 amount: $sortNumber,
                 description: "Sort number",
                 helpText: "Multiple Userfields will be ordered by that number on the input form",
-                minAmount: -1,
+                minAmount: 0,
                 errorMessage: "",
                 systemImage: MySymbols.sortNumber
             )

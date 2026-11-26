@@ -31,7 +31,10 @@ struct RecipeIngredientFormView: View {
     @State private var isFormCorrect: Bool = false
     private func checkFormCorrect() -> Bool {
         if ingredient.productID == nil { return false }
+        // Like Grocy's web form: a unit and a price factor above 0 are required.
+        if ingredient.quID == nil { return false }
         if amount.isZero { return false }
+        if ingredient.priceFactor <= 0 { return false }
         return true
     }
 
@@ -134,6 +137,9 @@ struct RecipeIngredientFormView: View {
                 .onChange(of: amount) {
                     isFormCorrect = checkFormCorrect()
                 }
+                .onChange(of: ingredient.quID) {
+                    isFormCorrect = checkFormCorrect()
+                }
 
             MyTextField(
                 textToEdit: $ingredient.variableAmount,
@@ -174,6 +180,9 @@ struct RecipeIngredientFormView: View {
             )
         }
         .formStyle(.grouped)
+        .onChange(of: ingredient.priceFactor) {
+            isFormCorrect = checkFormCorrect()
+        }
         .task {
             // Convert with the cached data first, so the stock amount never shows up in the form
             loadAmount()

@@ -50,7 +50,11 @@ struct MDQuantityUnitConversionFormView: View {
         }
     }
     private func checkConversionCorrect() -> Bool {
-        return quantityUnitConversion.factor > 0 && !checkConversionExists() && !(createInverseConversion && checkReverseConversionExists())
+        // Both units are required (the empty picker entry is 0, a new conversion starts at -1), and a unit can't convert to itself.
+        let fromQuID = quantityUnitConversion.fromQuID
+        let toQuID = quantityUnitConversion.toQuID
+        let hasUnits = fromQuID > 0 && toQuID > 0 && fromQuID != toQuID
+        return hasUnits && quantityUnitConversion.factor > 0 && !checkConversionExists() && !(createInverseConversion && checkReverseConversionExists())
     }
 
     init(quantityUnit: MDQuantityUnit, existingQuantityUnitConversion: MDQuantityUnitConversion? = nil) {
@@ -206,6 +210,9 @@ struct MDQuantityUnitConversionFormView: View {
             conversionCorrect = checkConversionCorrect()
         }
         .onChange(of: quantityUnitConversion.toQuID) {
+            conversionCorrect = checkConversionCorrect()
+        }
+        .onChange(of: quantityUnitConversion.fromQuID) {
             conversionCorrect = checkConversionCorrect()
         }
         .formStyle(.grouped)

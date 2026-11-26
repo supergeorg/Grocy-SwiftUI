@@ -35,7 +35,7 @@ struct ShoppingListEntryFormView: View {
 
     /// Grocy 4.6 allows an amount of 0 for shopping list items.
     var isFormValid: Bool {
-        displayAmount >= 0 && (shoppingListEntry.productID != -1 || !shoppingListEntry.note.isEmpty) && selectedShoppingListID != -1
+        displayAmount >= 0 && (shoppingListEntry.productID != nil || !shoppingListEntry.note.isEmpty) && shoppingListEntry.shoppingListID != -1
     }
 
     var product: MDProduct? {
@@ -47,7 +47,7 @@ struct ShoppingListEntryFormView: View {
         self.selectedShoppingListID = selectedShoppingListID
         self.productIDToSelect = productIDToSelect
         self.isPopup = isPopup
-        let entry = existingShoppingListEntry ?? ShoppingListItem(productID: productIDToSelect ?? -1, shoppingListID: selectedShoppingListID ?? -1)
+        let entry = existingShoppingListEntry ?? ShoppingListItem(productID: productIDToSelect, shoppingListID: selectedShoppingListID ?? -1)
         self.shoppingListEntry = entry
         self._displayAmount = State(initialValue: entry.amount)
     }
@@ -151,7 +151,7 @@ struct ShoppingListEntryFormView: View {
             if shoppingListEntry.shoppingListID == -1 {
                 shoppingListEntry.shoppingListID = shoppingListDescriptions.first?.id ?? -1
             }
-            if shoppingListEntry.quID == -1, let selectedProduct = mdProducts.first(where: { $0.id == shoppingListEntry.productID }) {
+            if shoppingListEntry.quID == nil, let selectedProduct = mdProducts.first(where: { $0.id == shoppingListEntry.productID }) {
                 shoppingListEntry.quID = selectedProduct.quIDPurchase
             }
             // Only once: the task runs again when the form comes back from a picker, and would undo the person's edit.

@@ -56,6 +56,12 @@ extension KeyedDecodingContainer {
         return try decode(Int.self, forKey: key)
     }
 
+    /// An optional reference to another object (a store, a location, a product). Grocy's IDs start at 1, so 0 and -1 mean
+    /// "none": older app versions saved -1 for an empty picker, and Grocy stores an empty field as an empty string.
+    nonisolated func decodeOptionalIDIfPresent(forKey key: Key) throws -> Int? {
+        try decodeFlexibleIntIfPresent(forKey: key).flatMap { $0 > 0 ? $0 : nil }
+    }
+
     nonisolated func decodeFlexibleIntIfPresent(forKey key: Key) throws -> Int? {
         // Try Int directly
         if let int = try? decodeIfPresent(Int.self, forKey: key) {
