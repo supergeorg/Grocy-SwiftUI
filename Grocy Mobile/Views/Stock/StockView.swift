@@ -124,6 +124,8 @@ struct StockView: View {
 
     #if os(iOS)
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+        /// The stock interaction sheets zoom out of the toolbar buttons that open them.
+        @Namespace private var stockInteractionTransition
     #endif
 
     @Environment(DeepLinkManager.self) var deepLinkManager
@@ -525,6 +527,27 @@ struct StockView: View {
         )
     }
 
+    /// The stock actions of the toolbar, in the order of the bar (purchase ends up at the trailing edge).
+    private var stockActions: [StockInteraction] {
+        features.locationTracking
+            ? [.inventoryProduct, .transferProduct, .consumeProduct, .purchaseProduct]
+            : [.inventoryProduct, .consumeProduct, .purchaseProduct]
+    }
+
+    private func stockActionButton(_ interaction: StockInteraction) -> some View {
+        Button {
+            stockInteractionRouter.present(interaction)
+        } label: {
+            switch interaction {
+            case .inventoryProduct: Label("Inventory", systemImage: MySymbols.inventory)
+            case .transferProduct: Label("Transfer", systemImage: MySymbols.transfer)
+            case .consumeProduct: Label("Consume", systemImage: MySymbols.consume)
+            case .purchaseProduct: Label("Purchase", systemImage: MySymbols.purchase)
+            default: EmptyView()
+            }
+        }
+    }
+
     var body: some View {
         List {
 
@@ -642,45 +665,47 @@ struct StockView: View {
                     }
                 )
             }
+            #if os(iOS)
+                .matchedTransitionSource(id: StockInteractionZoom.journalSourceID, in: stockInteractionTransition)
+            #endif
             ToolbarSpacer(.fixed)
-            ToolbarItemGroup {
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.inventoryProduct)
-                    },
-                    label: {
-                        Label("Inventory", systemImage: MySymbols.inventory)
-                    }
-                )
-                if features.locationTracking {
-                    Button(
-                        action: {
-                            stockInteractionRouter.present(.transferProduct)
-                        },
-                        label: {
-                            Label("Transfer", systemImage: MySymbols.transfer)
+            #if os(iOS)
+                // The iPhone bar has room for one button here: the four actions share a menu instead of
+                // spilling three of them into an overflow menu.
+                if horizontalSizeClass == .compact {
+                    ToolbarItem {
+                        Menu {
+                            ForEach(stockActions.reversed(), id: \.self) { interaction in
+                                stockActionButton(interaction)
+                            }
+                        } label: {
+                            Label("Stock actions", systemImage: MySymbols.stockActions)
                         }
-                    )
+                    }
+                    .matchedTransitionSource(id: StockInteractionZoom.actionsSourceID, in: stockInteractionTransition)
+                } else {
+                    ToolbarItemGroup {
+                        ForEach(stockActions, id: \.self) { interaction in
+                            stockActionButton(interaction)
+                        }
+                    }
                 }
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.consumeProduct)
-                    },
-                    label: {
-                        Label("Consume", systemImage: MySymbols.consume)
+            #else
+                ToolbarItemGroup {
+                    ForEach(stockActions, id: \.self) { interaction in
+                        stockActionButton(interaction)
                     }
-                )
-                Button(
-                    action: {
-                        stockInteractionRouter.present(.purchaseProduct)
-                    },
-                    label: {
-                        Label("Purchase", systemImage: MySymbols.purchase)
-                    }
-                )
-            }
+                }
+            #endif
         })
-        .stockInteractionSheet(router: stockInteractionRouter)
+        #if os(iOS)
+            .stockInteractionSheet(
+                router: stockInteractionRouter,
+                zoom: horizontalSizeClass == .compact ? StockInteractionZoom(namespace: stockInteractionTransition) : nil
+            )
+        #else
+            .stockInteractionSheet(router: stockInteractionRouter)
+        #endif
         .stockEntriesDestination()
         #if os(iOS)
             .sheet(isPresented: $showingFilterSheet) {

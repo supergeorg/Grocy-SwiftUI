@@ -13,6 +13,8 @@ nonisolated struct MySymbols {
     static let open = "envelope.open"
     static let transfer = "arrow.left.arrow.right"
     static let inventory = "list.bullet"
+    /// The menu of the stock actions (purchase, consume, transfer, inventory) on the iPhone.
+    static let stockActions = "plus.forwardslash.minus"
     static let stockJournal = "list.bullet.rectangle"
     static let addToShoppingList = "cart.fill.badge.plus"
     static let shoppingList = "cart.fill"
