@@ -258,10 +258,16 @@ struct StockView: View {
         }
     }
 
+    /// The filtered and grouped stock. Not `Equatable` on purpose: `@State` compares a new `Equatable` value with the
+    /// old one, and the old one can hold elements a sync has deleted. `StockElement.==` reads their attributes, which
+    /// crashes SwiftData ("backing data was detached from a context").
+    private struct StockListCache {
+        var filtered: [StockElement] = []
+        var grouped: [AnyHashable: [StockElement]] = [:]
+    }
+
     // Cached filtered/grouped results to prevent blocking during filter changes
-    @State private var cachedFilteredStock: [StockElement] = []
-    @State private var cachedGroupedStock: [AnyHashable: [StockElement]] = [:]
-    @State private var filterComputationTask: Task<Void, Never>?
+    @State private var cachedStockList = StockListCache()
 
     private let dataToUpdate: [ObjectEntities] = [
         .products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list, .stock, .stock_current_locations,
@@ -321,19 +327,17 @@ struct StockView: View {
     // The cache can still hold elements a sync removed since it was computed (their product left the stock);
     // their attributes can't be read anymore, so they're left out until the next computation.
     var filteredAndSearchedStock: [StockElement] {
-        cachedFilteredStock.filter { !$0.isRemoved }
+        cachedStockList.filtered.filter { !$0.isRemoved }
     }
 
     var groupedStock: [AnyHashable: [StockElement]] {
-        cachedGroupedStock.compactMapValues { elements in
+        cachedStockList.grouped.compactMapValues { elements in
             let live = elements.filter { !$0.isRemoved }
             return live.isEmpty ? nil : live
         }
     }
 
     private func computeFilteredAndGroupedStock() {
-        filterComputationTask?.cancel()
-
         // Capture only Sendable primitives from SwiftData objects (on main thread)
         let searchString = self.searchString
         // A location filter stored before location tracking was turned off on the server no longer applies.
@@ -364,93 +368,88 @@ struct StockView: View {
             }
         }
 
-        filterComputationTask = Task {
-            // Run computation on main thread to avoid Sendable/ModelContext issues
-            var grouped: [AnyHashable: [StockElement]] = [:]
-            var filtered: [StockElement] = []
+        // Synchronous, on the main actor: a later task could read elements that a sync deleted in between, which crashes SwiftData.
+        var grouped: [AnyHashable: [StockElement]] = [:]
+        var filtered: [StockElement] = []
 
-            let allStock = stock + missingStock
+        let allStock = stock + missingStock
 
-            for element in allStock {
-                // A sync may have removed the element since it was captured; reading it would crash.
-                guard !element.isRemoved else { continue }
-                // Quick reject checks
-                guard !(element.product?.hideOnStockOverview ?? false) else { continue }
+        for element in allStock {
+            // A sync may have removed the element since it was captured; reading it would crash.
+            guard !element.isRemoved else { continue }
+            // Quick reject checks
+            guard !(element.product?.hideOnStockOverview ?? false) else { continue }
 
-                // Search filter
-                if !searchString.isEmpty {
-                    let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
-                    let parentProductNameMatches =
-                        element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
+            // Search filter
+            if !searchString.isEmpty {
+                let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
+                let parentProductNameMatches =
+                    element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
 
-                    if !productNameMatches && !parentProductNameMatches {
-                        continue
-                    }
-                }
-
-                // Product group filter
-                if let groupID = filteredProductGroupID,
-                    element.product?.productGroupID != groupID
-                {
+                if !productNameMatches && !parentProductNameMatches {
                     continue
-                }
-
-                // Location filter
-                if let productIDsAtFilteredLocation, !productIDsAtFilteredLocation.contains(element.productID) {
-                    continue
-                }
-
-                // Status filter
-                let productID = element.productID
-
-                let passesStatus =
-                    filteredStatus == .all
-                    || (filteredStatus == .belowMinStock && missingProductIDs.contains(productID))
-                    || (filteredStatus == .expiringSoon && dueProductIDs.contains(productID))
-                    || (filteredStatus == .overdue && overdueProductIDs.contains(productID) && !expiredProductIDs.contains(productID))
-                    || (filteredStatus == .expired && expiredProductIDs.contains(productID))
-
-                if !passesStatus { continue }
-
-                // Compute group key
-                let groupKey: AnyHashable = {
-                    switch stockGrouping {
-                    case .none:
-                        return ""
-                    case .productGroup:
-                        return element.product?.productGroupID ?? 0
-                    case .nextDueDate:
-                        return element.bestBeforeDate as AnyHashable
-                    case .lastPurchased:
-                        return lastPurchasedByProductID[productID] as AnyHashable
-                    case .minStockAmount:
-                        return element.product?.minStockAmount ?? 0
-                    case .parentProduct:
-                        return element.product?.parentProductID ?? 0
-                    case .defaultLocation:
-                        return element.product?.locationID ?? 0
-                    }
-                }()
-
-                if grouped[groupKey] != nil {
-                    grouped[groupKey]?.append(element)
-                } else {
-                    grouped[groupKey] = [element]
                 }
             }
 
-            // Sort each group
-            for key in grouped.keys {
-                grouped[key]?.sort(using: sortSetting)
+            // Product group filter
+            if let groupID = filteredProductGroupID,
+                element.product?.productGroupID != groupID
+            {
+                continue
             }
 
-            filtered = grouped.values.flatMap { $0 }
+            // Location filter
+            if let productIDsAtFilteredLocation, !productIDsAtFilteredLocation.contains(element.productID) {
+                continue
+            }
 
-            if !Task.isCancelled {
-                self.cachedGroupedStock = grouped
-                self.cachedFilteredStock = filtered
+            // Status filter
+            let productID = element.productID
+
+            let passesStatus =
+                filteredStatus == .all
+                || (filteredStatus == .belowMinStock && missingProductIDs.contains(productID))
+                || (filteredStatus == .expiringSoon && dueProductIDs.contains(productID))
+                || (filteredStatus == .overdue && overdueProductIDs.contains(productID) && !expiredProductIDs.contains(productID))
+                || (filteredStatus == .expired && expiredProductIDs.contains(productID))
+
+            if !passesStatus { continue }
+
+            // Compute group key
+            let groupKey: AnyHashable = {
+                switch stockGrouping {
+                case .none:
+                    return ""
+                case .productGroup:
+                    return element.product?.productGroupID ?? 0
+                case .nextDueDate:
+                    return element.bestBeforeDate as AnyHashable
+                case .lastPurchased:
+                    return lastPurchasedByProductID[productID] as AnyHashable
+                case .minStockAmount:
+                    return element.product?.minStockAmount ?? 0
+                case .parentProduct:
+                    return element.product?.parentProductID ?? 0
+                case .defaultLocation:
+                    return element.product?.locationID ?? 0
+                }
+            }()
+
+            if grouped[groupKey] != nil {
+                grouped[groupKey]?.append(element)
+            } else {
+                grouped[groupKey] = [element]
             }
         }
+
+        // Sort each group
+        for key in grouped.keys {
+            grouped[key]?.sort(using: sortSetting)
+        }
+
+        filtered = grouped.values.flatMap { $0 }
+
+        self.cachedStockList = StockListCache(filtered: filtered, grouped: grouped)
     }
 
     @State private var cachedSummedValue: Double = 0
