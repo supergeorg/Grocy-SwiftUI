@@ -371,16 +371,14 @@ struct Grocy_MobileApp: App {
         #if os(macOS)
             Settings {
                 if !onboardingNeeded, isLoggedIn {
-                    NavigationStack {
-                        SettingsView()
-                    }
-                    .grocyFeatures()
-                    .modelContainer(modelContainer)
-                    .modelContainer(profileModelContainer)
-                    .environment(grocyVM)
-                    .environment(\.profileModelContext, profileModelContainer.mainContext)
-                    .environment(\.profileModelContainer, profileModelContainer)
-                    .environment(\.locale, Locale(identifier: localizationKey))
+                    MacSettingsView()
+                        .grocyFeatures()
+                        .modelContainer(modelContainer)
+                        .modelContainer(profileModelContainer)
+                        .environment(grocyVM)
+                        .environment(\.profileModelContext, profileModelContainer.mainContext)
+                        .environment(\.profileModelContainer, profileModelContainer)
+                        .environment(\.locale, Locale(identifier: localizationKey))
                 }
             }
         #endif

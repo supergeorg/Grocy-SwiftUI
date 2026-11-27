@@ -65,7 +65,7 @@ struct SettingsMealPlanView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Meal plan settings")
+        .navigationTitle("Meal plan")
     }
 }
 

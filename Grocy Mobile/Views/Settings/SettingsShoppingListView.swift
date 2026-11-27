@@ -76,7 +76,7 @@ struct SettingsShoppingListView: View {
             remindersSection
         }
         .formStyle(.grouped)
-        .navigationTitle("Shopping list settings")
+        .navigationTitle("Shopping list")
         .task {
             if isFirst {
                 await grocyVM.requestData(objects: dataToUpdate)
