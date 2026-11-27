@@ -39,7 +39,19 @@ struct SettingsView: View {
     /// The server's feature flags. Until the config is loaded, every area is shown.
     private var systemConfig: SystemConfig? { systemConfigList.first }
 
+    /// False where the stack's root registers the settings pages (`settingsDestinations()`), e.g. when the settings
+    /// are pushed from the iPhone's settings button: a destination registered on a pushed page isn't found there.
+    var registersDestinations: Bool = true
+
     var body: some View {
+        if registersDestinations {
+            content.settingsDestinations()
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         List {
             if isLoggedIn {
                 Section("Grocy") {
@@ -136,39 +148,57 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationDestination(for: SettingsNavigationItem.self) { destination in
-            switch destination {
-            case .serverInfo:
-                GrocyInfoView(systemInfo: grocyVM.systemInfo)
-            case .userInfo:
-                GrocyUserInfoView(grocyUser: grocyVM.currentUser)
-            case .appSettings:
-                SettingsAppView()
-            case .stockSettings:
-                SettingsStockView()
-            case .shoppingListSettings:
-                SettingsShoppingListView()
-            case .choresSettings:
-                SettingsChoresView()
-            case .tasksSettings:
-                SettingsTasksView()
-            case .batteriesSettings:
-                SettingsBatteriesView()
-            case .recipesSettings:
-                SettingsRecipesView()
-            case .mealPlanSettings:
-                SettingsMealPlanView()
-            case .appLog:
-                LogView()
-            case .aboutApp:
-                AboutView()
-            case .phoneTabs:
-                PhoneTabsSettingsView()
-            }
-        }
         .navigationTitle("Settings")
         .task {
             await grocyVM.requestData(additionalObjects: [.system_info, .current_user])
+        }
+    }
+}
+
+/// A page of the settings.
+private struct SettingsDestinationView: View {
+    @Environment(GrocyViewModel.self) private var grocyVM
+
+    let destination: SettingsNavigationItem
+
+    var body: some View {
+        switch destination {
+        case .serverInfo:
+            GrocyInfoView(systemInfo: grocyVM.systemInfo)
+        case .userInfo:
+            GrocyUserInfoView(grocyUser: grocyVM.currentUser)
+        case .appSettings:
+            SettingsAppView()
+        case .stockSettings:
+            SettingsStockView()
+        case .shoppingListSettings:
+            SettingsShoppingListView()
+        case .choresSettings:
+            SettingsChoresView()
+        case .tasksSettings:
+            SettingsTasksView()
+        case .batteriesSettings:
+            SettingsBatteriesView()
+        case .recipesSettings:
+            SettingsRecipesView()
+        case .mealPlanSettings:
+            SettingsMealPlanView()
+        case .appLog:
+            LogView()
+        case .aboutApp:
+            AboutView()
+        case .phoneTabs:
+            PhoneTabsSettingsView()
+        }
+    }
+}
+
+extension View {
+    /// Registers the settings pages. On the stack's root view when the settings are pushed onto it
+    /// (`SettingsView(registersDestinations: false)`), otherwise on the settings themselves.
+    func settingsDestinations() -> some View {
+        navigationDestination(for: SettingsNavigationItem.self) { destination in
+            SettingsDestinationView(destination: destination)
         }
     }
 }

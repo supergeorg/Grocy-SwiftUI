@@ -15,6 +15,10 @@ import SwiftUI
 struct UserManagementView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
+    /// False where the stack's root registers the user form (`userManagementDestinations()`), e.g. when the user
+    /// management is pushed from the iPhone's settings button: a destination registered on a pushed page isn't found there.
+    var registersDestinations: Bool = true
+
     @Query(sort: \GrocyUser.username) var users: GrocyUsers
     @Query private var systemConfigList: [SystemConfig]
 
@@ -129,9 +133,7 @@ struct UserManagementView: View {
             }
         }
         .navigationTitle("User management")
-        .navigationDestination(for: GrocyUser.self) { user in
-            UserFormView(isNewUser: false, user: user)
-        }
+        .userManagementDestinations(isEnabled: registersDestinations)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -197,6 +199,21 @@ struct UserManagementView: View {
             await updateData()
         }
         .searchable(text: $searchString, prompt: "Search")
+    }
+}
+
+extension View {
+    /// Registers the form of an existing user. On the stack's root view when the user management is pushed onto it
+    /// (`UserManagementView(registersDestinations: false)`), otherwise on the user management itself.
+    @ViewBuilder
+    func userManagementDestinations(isEnabled: Bool = true) -> some View {
+        if isEnabled {
+            navigationDestination(for: GrocyUser.self) { user in
+                UserFormView(isNewUser: false, user: user)
+            }
+        } else {
+            self
+        }
     }
 }
 
