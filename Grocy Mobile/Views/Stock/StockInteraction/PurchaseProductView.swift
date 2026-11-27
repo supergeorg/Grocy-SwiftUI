@@ -108,7 +108,8 @@ struct PurchaseProductView: View {
     /// The price per stock unit, which is what Grocy stores. A unit price is entered per selected unit, like in Grocy's web form.
     private var unitPrice: Double? {
         if isTotalPrice {
-            return ((price ?? 0.0) / factoredAmount)
+            // No price stays no price (unknown), as in Grocy's web form, instead of a price of 0.
+            return price.map { $0 / factoredAmount }
         } else {
             return price.map { $0 / stockAmountPerSelectedUnit }
         }
@@ -236,7 +237,8 @@ struct PurchaseProductView: View {
         let strDueDate: String? = features.dueDateTracking ? (productDoesntSpoil ? "2999-12-31" : dateFormatter.string(from: dueDate)) : nil
         let noteText = note.isEmpty ? nil : note
         let purchasePrice = selfProduction ? nil : unitPrice
-        let purchaseStoreID = selfProduction ? nil : storeID
+        // -1 is the picker's "no store": Grocy would store it as the store's ID.
+        let purchaseStoreID = selfProduction || storeID == -1 ? nil : storeID
         let purchaseInfo = ProductBuy(
             amount: factoredAmount,
             bestBeforeDate: strDueDate,

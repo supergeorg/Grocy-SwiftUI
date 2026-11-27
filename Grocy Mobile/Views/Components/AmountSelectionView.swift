@@ -45,7 +45,7 @@ struct AmountSelectionView: View {
     }
 
     var body: some View {
-        Section(header: Text("Amount").font(.headline)) {
+        Section(header: Text("Amount")) {
             MyDoubleStepper(
                 amount: $amount,
                 description: "Amount",
@@ -61,7 +61,7 @@ struct AmountSelectionView: View {
                         label: Label("Quantity unit", systemImage: MySymbols.quantityUnit).foregroundStyle(.primary),
                         content: {
                             Text("")
-                                .tag(-1)
+                                .tag(nil as Int?)
                             ForEach(convertibleQuantityUnits, id: \.id) { quantityUnit in
                                 Text(quantityUnit.name)
                                     .tag(quantityUnit.id)

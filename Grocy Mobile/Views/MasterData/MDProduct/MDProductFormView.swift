@@ -299,6 +299,9 @@ struct MDProductFormView: View {
 
     var body: some View {
         List {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             MyTextField(
                 textToEdit: $product.name,
                 description: "Name",
@@ -687,6 +690,7 @@ struct MDProductFormView: View {
             )
             .disabled(existingProduct == nil)
         }
+        .formStyle(.grouped)
         .navigationTitle("Optional properties")
     }
 
@@ -715,7 +719,8 @@ struct MDProductFormView: View {
                 Picker(
                     selection: $product.defaultConsumeLocationID,
                     content: {
-                        Text("").tag(-1 as Int?)
+                        // Nil, not -1: Grocy stores the empty field as no location.
+                        Text("").tag(nil as Int?)
                         ForEach(mdLocations.filter({ $0.active }), id: \.id) { grocyLocation in
                             Text(grocyLocation.name).tag(grocyLocation.id as Int?)
                         }
@@ -734,7 +739,7 @@ struct MDProductFormView: View {
                 )
 
                 // Move on open
-                if features.openedTracking, product.defaultConsumeLocationID != -1 {
+                if features.openedTracking, product.defaultConsumeLocationID != nil {
                     MyToggle(
                         isOn: $product.moveOnOpen,
                         description: "Move on open",
@@ -749,7 +754,7 @@ struct MDProductFormView: View {
             Picker(
                 selection: $product.storeID,
                 content: {
-                    Text("").tag(-1 as Int?)
+                    Text("").tag(nil as Int?)
                     ForEach(mdStores.filter({ $0.active }), id: \.id) { grocyStore in
                         Text(grocyStore.name).tag(grocyStore.id as Int?)
                     }
@@ -774,6 +779,7 @@ struct MDProductFormView: View {
                 }
             )
         }
+        .formStyle(.grouped)
         .navigationTitle(features.locationTracking ? LocalizedStringKey("Default location") : LocalizedStringKey("Default store"))
     }
 
@@ -850,6 +856,7 @@ struct MDProductFormView: View {
                 )
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Due date")
     }
 
@@ -977,6 +984,7 @@ struct MDProductFormView: View {
             )
 
         }
+        .formStyle(.grouped)
         .navigationTitle("Quantity units")
     }
 
@@ -1070,6 +1078,7 @@ struct MDProductFormView: View {
                 icon: MySymbols.recipe
             )
         }
+        .formStyle(.grouped)
         .navigationTitle("Amounts")
     }
 

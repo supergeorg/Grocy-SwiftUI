@@ -14,12 +14,14 @@ struct MDUserFieldFormView: View {
 
     @State private var firstAppear: Bool = true
     @State private var isProcessing: Bool = false
+    @State private var isSuccessful: Bool? = nil
+    @State private var errorMessage: String? = nil
 
     /// The entity the field belongs to, e.g. `products` or `userentity-<name>`.
     @State private var entity: String = ""
     @State private var name: String = ""
     @State private var caption: String = ""
-    @State private var sortNumber: Int? = -1
+    @State private var sortNumber: Int? = nil
     @State private var type: UserFieldType = UserFieldType.none
     @State private var showAsColumnInTables: Bool = false
     @State private var inputRequired: Bool = false
@@ -64,7 +66,7 @@ struct MDUserFieldFormView: View {
         entity = userField?.entity ?? ""
         name = userField?.name ?? ""
         caption = userField?.caption ?? ""
-        sortNumber = userField?.sortNumber ?? -1
+        sortNumber = userField?.sortNumber
         type = UserFieldType(rawValue: userField?.type ?? "") ?? UserFieldType.none
         showAsColumnInTables = userField?.showAsColumnInTables == true
         inputRequired = userField?.inputRequired == true
@@ -87,6 +89,11 @@ struct MDUserFieldFormView: View {
                 showAddUserField = false
             }
         #endif
+    }
+
+    private func showError(_ error: Error) {
+        errorMessage = (error as? APIError)?.displayMessage ?? error.localizedDescription
+        isSuccessful = false
     }
 
     private func saveUserField() async {
@@ -116,25 +123,30 @@ struct MDUserFieldFormView: View {
                 defaultValue: defaultValue,
                 rowCreatedTimestamp: timeStamp
             )
+            isSuccessful = nil
             isProcessing = true
             if isNewUserField {
                 do {
                     _ = try await grocyVM.postMDObject(object: .userfields, content: userFieldPOST)
                     GrocyLogger.info("Userfield add successful.")
+                    isSuccessful = true
                     resetForm()
                     await updateData()
                     finishForm()
                 } catch {
                     GrocyLogger.error("Userfield add failed. \(error)")
+                    showError(error)
                 }
             } else {
                 do {
                     _ = try await grocyVM.putMDObjectWithID(object: .userfields, id: id, content: userFieldPOST)
                     GrocyLogger.info("Userfield edit successful.")
+                    isSuccessful = true
                     await updateData()
                     finishForm()
                 } catch {
                     GrocyLogger.error("Userfield edit failed. \(error)")
+                    showError(error)
                 }
             }
             isProcessing = false
@@ -154,7 +166,11 @@ struct MDUserFieldFormView: View {
                             }
                         },
                         label: {
-                            Image(systemName: MySymbols.save)
+                            // Label style is left to the system, so the confirm button gets the standard Liquid Glass look.
+                            // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                            // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                            Label("Save", systemImage: isProcessing ? MySymbols.progress : MySymbols.save)
+                                .symbolEffect(.variableColor.iterative, isActive: isProcessing)
                         }
                     )
                     .disabled(!isNameCorrect || !isCaptionCorrect || entity.isEmpty || isProcessing)
@@ -170,6 +186,8 @@ struct MDUserFieldFormView: View {
                     }
                 #endif
             })
+            .sensoryFeedback(.success, trigger: isSuccessful == true)
+            .sensoryFeedback(.error, trigger: isSuccessful == false)
     }
 
     var content: some View {
@@ -180,6 +198,9 @@ struct MDUserFieldFormView: View {
                     .bold()
                     .padding(.bottom, Spacing.xLarge)
             #endif
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             VStack(alignment: .leading) {
                 Picker(
                     selection: $entity,
@@ -234,7 +255,7 @@ struct MDUserFieldFormView: View {
                 amount: $sortNumber,
                 description: "Sort number",
                 helpText: "Multiple Userfields will be ordered by that number on the input form",
-                minAmount: -1,
+                minAmount: 0,
                 errorMessage: "",
                 systemImage: MySymbols.sortNumber
             )

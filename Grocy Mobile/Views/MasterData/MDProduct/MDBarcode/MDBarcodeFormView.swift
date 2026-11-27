@@ -90,6 +90,9 @@ struct MDBarcodeFormView: View {
 
     var body: some View {
         Form {
+            if isSuccessful == false, let errorMessage {
+                ErrorMessageView(errorMessage: errorMessage)
+            }
             HStack {
                 MyTextField(
                     textToEdit: $barcode.barcode,
@@ -149,6 +152,7 @@ struct MDBarcodeFormView: View {
             MyTextEditor(textToEdit: $barcode.note, description: "Note", leadingIcon: MySymbols.description)
 
         }
+        .formStyle(.grouped)
         .onChange(of: barcode.barcode) {
             isBarcodeCorrect = checkBarcodeCorrect()
         }

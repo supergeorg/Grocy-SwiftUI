@@ -118,6 +118,7 @@ struct ChoreDetailsView: View {
                 Text("Retrieving Details failed.")
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Chore overview")
         .task {
             await updateData()

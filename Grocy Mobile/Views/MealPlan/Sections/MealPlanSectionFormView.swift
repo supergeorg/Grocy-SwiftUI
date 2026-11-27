@@ -130,7 +130,7 @@ struct MealPlanSectionFormView: View {
                 minAmount: nil,
                 systemImage: MySymbols.sortNumber
             )
-            Toggle(
+            MyToggle(
                 isOn: Binding(
                     get: { !section.timeInfo.isEmpty },
                     set: { isOn in
@@ -140,11 +140,10 @@ struct MealPlanSectionFormView: View {
                             section.timeInfo = ""
                         }
                     }
-                )
-            ) {
-                Label("Time", systemImage: MySymbols.sectionTime)
-                    .foregroundStyle(.primary)
-            }
+                ),
+                description: "Time",
+                icon: MySymbols.sectionTime
+            )
             if !section.timeInfo.isEmpty {
                 DatePicker("Time of day", selection: time, displayedComponents: .hourAndMinute)
             }
