@@ -329,6 +329,8 @@ struct StockJournalView: View {
                 }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .refreshable {
             await updateData()

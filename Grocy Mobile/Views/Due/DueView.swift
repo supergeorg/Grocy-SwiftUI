@@ -182,6 +182,8 @@ struct DueView: View {
                     MDChoreFormView(existingChore: mdChore, isPopup: true)
                 }
             }
+            // The chore log is a list.
+            .listSheetSize()
             .environment(choreInteractionRouter)
         }
         .stockInteractionSheet(router: stockInteractionRouter)
@@ -203,6 +205,8 @@ struct DueView: View {
                     MDBatteryFormView(existingBattery: mdBattery, isPopup: true)
                 }
             }
+            // The battery journal is a list.
+            .listSheetSize()
             .environment(batteryInteractionRouter)
         }
         .alert(

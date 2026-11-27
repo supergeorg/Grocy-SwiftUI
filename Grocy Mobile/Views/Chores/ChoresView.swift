@@ -348,6 +348,8 @@ struct ChoresView: View {
                     MDChoreFormView(existingChore: mdChore, isPopup: true)
                 }
             }
+            // The chore log is a list.
+            .listSheetSize()
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
@@ -406,6 +408,8 @@ struct ChoresView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .environment(choreInteractionRouter)
     }

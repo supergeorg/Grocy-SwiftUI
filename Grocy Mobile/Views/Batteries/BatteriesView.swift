@@ -254,6 +254,8 @@ struct BatteriesView: View {
                     MDBatteryFormView(existingBattery: mdBattery, isPopup: true)
                 }
             }
+            // The battery journal is a list.
+            .listSheetSize()
         }
         .alert(
             "Couldn't track the charge cycle",
@@ -309,6 +311,8 @@ struct BatteriesView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .environment(batteryInteractionRouter)
     }

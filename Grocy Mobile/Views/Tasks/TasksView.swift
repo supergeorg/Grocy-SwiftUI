@@ -503,6 +503,8 @@ struct TasksView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
     }
 

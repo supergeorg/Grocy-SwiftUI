@@ -592,6 +592,8 @@ struct ShoppingListView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .environment(shoppingListInteractionRouter)
         .sheet(item: $shoppingListInteractionRouter.presentedInteraction) { interaction in

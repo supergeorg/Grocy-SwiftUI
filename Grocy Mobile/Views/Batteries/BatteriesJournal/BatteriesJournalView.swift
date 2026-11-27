@@ -204,6 +204,8 @@ struct BatteriesJournalView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .alert(
             "Couldn't undo the charge cycle",
