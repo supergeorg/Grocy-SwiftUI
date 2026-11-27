@@ -14,7 +14,8 @@ struct AppSidebarNavigation: View {
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
-    @State private var selection: NavigationItem? = .none
+    /// The stock overview at launch, which the detail shows without a selection too, so the sidebar marks it.
+    @State private var selection: NavigationItem? = .stockOverview
 
     var body: some View {
         NavigationSplitView(

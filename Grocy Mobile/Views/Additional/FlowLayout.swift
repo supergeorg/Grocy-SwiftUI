@@ -10,8 +10,10 @@ import SwiftUI
 struct FlowLayout: Layout {
     var spacing: CGFloat = 8
 
+    /// The width the items use, not the whole width offered: in an `HStack` (the stock rows on the Mac) a layout that
+    /// takes all of it squeezes the views beside it. Without a width (an ideal size), the items stay on one line.
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = FlowResult(in: proposal.replacingUnspecifiedDimensions().width, subviews: subviews, spacing: spacing)
+        let result = FlowResult(in: proposal.width ?? .infinity, subviews: subviews, spacing: spacing)
         return result.size
     }
 
@@ -36,6 +38,7 @@ struct FlowLayout: Layout {
             var x: CGFloat = 0
             var y: CGFloat = 0
             var lineHeight: CGFloat = 0
+            var usedWidth: CGFloat = 0
 
             for subview in subviews {
                 let size = subview.sizeThatFits(.unspecified)
@@ -48,10 +51,11 @@ struct FlowLayout: Layout {
 
                 frames.append(CGRect(x: x, y: y, width: size.width, height: size.height))
                 lineHeight = max(lineHeight, size.height)
+                usedWidth = max(usedWidth, x + size.width)
                 x += size.width + spacing
             }
 
-            self.size = CGSize(width: maxWidth, height: y + lineHeight)
+            self.size = CGSize(width: usedWidth, height: y + lineHeight)
         }
     }
 }

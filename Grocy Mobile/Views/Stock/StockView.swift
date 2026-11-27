@@ -591,6 +591,12 @@ struct StockView: View {
         .navigationTitle("Stock overview")
         .searchable(text: $searchString, prompt: "Search")
         .animation(.default, value: filteredStatus)
+        .onAppear {
+            // The saved stock right away, so the rows are there in the first layout: on macOS, rows a list gets later
+            // in a split view's detail keep the estimated height and width until the window is resized.
+            updateMissingStock()
+            computeFilteredAndGroupedStock()
+        }
         .task {
             await updateData()
             updateMissingStock()
