@@ -118,20 +118,13 @@ nonisolated func getDateFromString(_ dateString: String?) -> Date? {
 }
 
 nonisolated enum GrocyDateParser {
-    // Formatters are thread-safe for parsing. They're only configured here, once.
-    nonisolated(unsafe) private static let isoWithFractionalSeconds: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-    nonisolated(unsafe) private static let iso: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter
-    }()
+    // All of them are Sendable and only configured here, once, so they can be shared without `nonisolated(unsafe)`.
+    // ISO 8601 uses format styles: `ISO8601DateFormatter` isn't Sendable.
+    private static let isoWithFractionalSeconds = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
+    private static let iso = Date.ISO8601FormatStyle()
     // Grocy stores local times without a time zone.
     // Older app versions wrote timestamps in the device's 12-hour format ("2026-08-12 4:33:51 PM"), so those are read too (#250).
-    nonisolated(unsafe) private static let formatters: [DateFormatter] = [
+    private static let formatters: [DateFormatter] = [
         "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd h:mm:ss a", "yyyy-MM-dd h:mm a",
         "yyyy-MM-dd",
     ].map { format in
@@ -144,7 +137,7 @@ nonisolated enum GrocyDateParser {
 
     /// The same order as before: ISO 8601 first, then the custom formats.
     static func parseWithFormatters(_ dateString: String) -> Date? {
-        if let date = isoWithFractionalSeconds.date(from: dateString) ?? iso.date(from: dateString) {
+        if let date = (try? isoWithFractionalSeconds.parse(dateString)) ?? (try? iso.parse(dateString)) {
             return date
         }
         for formatter in formatters {

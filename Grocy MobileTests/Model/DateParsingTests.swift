@@ -27,6 +27,14 @@ struct DateParsingTests {
         #expect(getDateFromString("not a date") == nil)
     }
 
+    @Test("ISO 8601 dates with a time zone are parsed as that moment, with or without fractional seconds")
+    func parsesISO8601() {
+        let moment = Date(timeIntervalSince1970: 1_763_906_709)  // 2025-11-23 14:05:09 UTC
+        #expect(getDateFromString("2025-11-23T14:05:09Z") == moment)
+        #expect(getDateFromString("2025-11-23T15:05:09+01:00") == moment)
+        #expect(getDateFromString("2025-11-23T14:05:09.500Z") == moment.addingTimeInterval(0.5))
+    }
+
     @Test("Timestamps an older app version wrote in the 12-hour format are parsed (#250)")
     func parsesTwelveHourTimestamps() {
         #expect(components(getDateFromString("2026-08-12 4:33:51 PM")) == DateComponents(year: 2026, month: 8, day: 12, hour: 16, minute: 33, second: 51))
