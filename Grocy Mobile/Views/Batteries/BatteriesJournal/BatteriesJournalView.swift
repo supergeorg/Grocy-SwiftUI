@@ -116,14 +116,6 @@ struct BatteriesJournalView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if chargeCyclesCount == 0 {
-                ContentUnavailableView {
-                    Label("No charge cycles", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("Tracked charge cycles are listed here.")
-                }
-            } else if chargeCycles.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(chargeCycles, id: \.id) { chargeCycle in
                 BatteriesJournalRowView(chargeCycle: chargeCycle, batteryName: batteryNames[chargeCycle.batteryID])
@@ -149,6 +141,19 @@ struct BatteriesJournalView: View {
                             }
                         }
                     }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if chargeCyclesCount == 0 {
+                    ContentUnavailableView {
+                        Label("No charge cycles", systemImage: MySymbols.batteries)
+                    } description: {
+                        Text("Tracked charge cycles are listed here.")
+                    }
+                } else if chargeCycles.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         .navigationTitle("Batteries journal")

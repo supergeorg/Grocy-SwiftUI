@@ -91,15 +91,7 @@ struct GlobalSearchView: View {
 
     var body: some View {
         List {
-            if query.isEmpty {
-                ContentUnavailableView(
-                    "Search",
-                    systemImage: MySymbols.search,
-                    description: Text("Find stock, products, recipes, equipment and master data by name or barcode.")
-                )
-            } else if !hasResults {
-                ContentUnavailableView.search(text: query)
-            } else {
+            if !query.isEmpty {
                 if !stockResults.isEmpty {
                     // The stock overview's rows, with its context menu and swipe actions.
                     Section("Stock overview") {
@@ -187,6 +179,18 @@ struct GlobalSearchView: View {
                         }
                     }
                 }
+            }
+        }
+        // Centered in the list on every platform; as list rows they'd sit at the top (on macOS also at the leading edge).
+        .overlay {
+            if query.isEmpty {
+                ContentUnavailableView(
+                    "Search",
+                    systemImage: MySymbols.search,
+                    description: Text("Find stock, products, recipes, equipment and master data by name or barcode.")
+                )
+            } else if !hasResults {
+                ContentUnavailableView.search(text: query)
             }
         }
         .navigationTitle("Search")

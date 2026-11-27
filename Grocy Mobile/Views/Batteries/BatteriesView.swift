@@ -153,24 +153,8 @@ struct BatteriesView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if batteriesCount == 0 {
-                // Batteries are created in master data, so there's no create action here.
-                ContentUnavailableView {
-                    Label("No batteries", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("No battery defined. Create one in master data.")
-                }
-            } else if batteries.isEmpty {
-                ContentUnavailableView.search
-            } else if filteredBatteries.isEmpty {
-                ContentUnavailableView {
-                    Label("No batteries", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("No battery matches this filter.")
-                }
             }
             ForEach(filteredBatteries.sorted(by: sortComparator), id: \.id) { battery in
                 let status = BatteryStatus.status(of: battery, dueSoonDays: dueSoonDays)
@@ -222,6 +206,26 @@ struct BatteriesView: View {
                         .tint(.green)
                         .accessibilityHint("Track charge cycle")
                     }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count == 0 {
+                if batteriesCount == 0 {
+                    // Batteries are created in master data, so there's no create action here.
+                    ContentUnavailableView {
+                        Label("No batteries", systemImage: MySymbols.batteries)
+                    } description: {
+                        Text("No battery defined. Create one in master data.")
+                    }
+                } else if batteries.isEmpty {
+                    ContentUnavailableView.search
+                } else if filteredBatteries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No batteries", systemImage: MySymbols.batteries)
+                    } description: {
+                        Text("No battery matches this filter.")
+                    }
+                }
             }
         }
         .refreshable {

@@ -550,32 +550,36 @@ struct StockView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if (stock + missingStock).isEmpty {
-                ContentUnavailableView {
-                    Label("Stock is empty.", systemImage: MySymbols.stockOverview)
-                } actions: {
-                    Button("Purchase") {
-                        stockInteractionRouter.present(.purchaseProduct)
-                    }
-                }
-            } else if filteredAndSearchedStock.isEmpty {
-                if numFilters > 0 {
-                    // Say that filters hide products, so a product that exists isn't taken for missing (#253).
-                    ContentUnavailableView {
-                        Label("No products", systemImage: MySymbols.filter)
-                    } description: {
-                        Text("No product matches the filters.")
-                    } actions: {
-                        Button("Clear filter", action: clearFilters)
-                    }
-                } else {
-                    ContentUnavailableView.search
-                }
             }
             stockListContent
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if (stock + missingStock).isEmpty {
+                    ContentUnavailableView {
+                        Label("Stock is empty.", systemImage: MySymbols.stockOverview)
+                    } actions: {
+                        Button("Purchase") {
+                            stockInteractionRouter.present(.purchaseProduct)
+                        }
+                    }
+                } else if filteredAndSearchedStock.isEmpty {
+                    if numFilters > 0 {
+                        // Say that filters hide products, so a product that exists isn't taken for missing (#253).
+                        ContentUnavailableView {
+                            Label("No products", systemImage: MySymbols.filter)
+                        } description: {
+                            Text("No product matches the filters.")
+                        } actions: {
+                            Button("Clear filter", action: clearFilters)
+                        }
+                    } else {
+                        ContentUnavailableView.search
+                    }
+                }
+            }
         }
         .refreshable {
             await updateData()

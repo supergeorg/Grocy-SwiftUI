@@ -77,10 +77,6 @@ struct MDBarcodesView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProductBarcodesCount == 0 {
-                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
-            } else if mdProductBarcodes.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdProductBarcodes, id: \.id) { productBarcode in
                 NavigationLink(
@@ -104,6 +100,15 @@ struct MDBarcodesView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdProductBarcodesCount == 0 {
+                    ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
+                } else if mdProductBarcodes.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         .navigationTitle("Barcodes")

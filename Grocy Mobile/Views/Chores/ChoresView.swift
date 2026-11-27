@@ -214,18 +214,8 @@ struct ChoresView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if choresCount == 0 {
-                // Chores are created in master data, so there's no create action here.
-                ContentUnavailableView {
-                    Label("No chores", systemImage: MySymbols.chores)
-                } description: {
-                    Text("No chore defined. Please create one.")
-                }
-            } else if chores.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(filteredChores.sorted(by: sortComparator), id: \.id) { chore in
                 ChoreRowView(
@@ -310,6 +300,20 @@ struct ChoresView: View {
                     )
                     .tint(.green)
                     .accessibilityHint("Track next chore schedule")
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if choresCount == 0 {
+                    // Chores are created in master data, so there's no create action here.
+                    ContentUnavailableView {
+                        Label("No chores", systemImage: MySymbols.chores)
+                    } description: {
+                        Text("No chore defined. Please create one.")
+                    }
+                } else if chores.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }

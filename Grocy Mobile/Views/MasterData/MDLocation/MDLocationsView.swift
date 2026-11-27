@@ -80,19 +80,6 @@ struct MDLocationsView: View {
 
     var content: some View {
         List {
-            if mdLocationsCount == 0 {
-                ContentUnavailableView {
-                    Label("No locations", systemImage: MySymbols.location)
-                } description: {
-                    Text("No location defined. Please create one.")
-                } actions: {
-                    Button("Create location") {
-                        showAddLocation = true
-                    }
-                }
-            } else if mdLocations.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(mdLocations, id: \.id) { location in
                 NavigationLink(value: location) {
                     MDLocationRowView(location: location)
@@ -108,6 +95,21 @@ struct MDLocationsView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if mdLocationsCount == 0 {
+                ContentUnavailableView {
+                    Label("No locations", systemImage: MySymbols.location)
+                } description: {
+                    Text("No location defined. Please create one.")
+                } actions: {
+                    Button("Create location") {
+                        showAddLocation = true
+                    }
+                }
+            } else if mdLocations.isEmpty {
+                ContentUnavailableView.search
             }
         }
         #if os(iOS)

@@ -76,16 +76,6 @@ struct MDQuantityUnitsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdQuantityUnitsCount == 0 {
-                ContentUnavailableView {
-                    Label("No quantity units", systemImage: MySymbols.quantityUnit)
-                } actions: {
-                    Button("Create quantity unit") {
-                        showAddQuantityUnit = true
-                    }
-                }
-            } else if mdQuantityUnits.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdQuantityUnits, id: \.id) { quantityUnit in
                 NavigationLink(value: quantityUnit) {
@@ -102,6 +92,21 @@ struct MDQuantityUnitsView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdQuantityUnitsCount == 0 {
+                    ContentUnavailableView {
+                        Label("No quantity units", systemImage: MySymbols.quantityUnit)
+                    } actions: {
+                        Button("Create quantity unit") {
+                            showAddQuantityUnit = true
+                        }
+                    }
+                } else if mdQuantityUnits.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         #if os(iOS)

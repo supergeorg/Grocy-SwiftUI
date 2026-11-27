@@ -99,18 +99,6 @@ struct DueView: View {
         let counts = Dictionary(grouping: allItems, by: \.kind).mapValues(\.count)
 
         List {
-            if grocyVM.failedToLoadObjects.contains(where: { dataToUpdate.contains($0) })
-                || grocyVM.failedToLoadAdditionalObjects.contains(where: { additionalDataToUpdate.contains($0) })
-            {
-                ServerProblemView()
-            } else if items.isEmpty {
-                ContentUnavailableView {
-                    Label("Nothing due", systemImage: MySymbols.done)
-                } description: {
-                    Text("Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here.")
-                }
-            }
-
             ForEach(DueUrgency.allCases) { urgency in
                 let group = items.filter { $0.urgency == urgency }
                 if !group.isEmpty {
@@ -125,6 +113,19 @@ struct DueView: View {
                             toggleCollapsed(urgency)
                         }
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.contains(where: { dataToUpdate.contains($0) })
+                || grocyVM.failedToLoadAdditionalObjects.contains(where: { additionalDataToUpdate.contains($0) })
+            {
+                ServerProblemView()
+            } else if items.isEmpty {
+                ContentUnavailableView {
+                    Label("Nothing due", systemImage: MySymbols.done)
+                } description: {
+                    Text("Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here.")
                 }
             }
         }

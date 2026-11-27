@@ -111,11 +111,6 @@ struct MDUserFieldsView: View {
 
     var content: some View {
         List {
-            if grocyVM.mdUserFields.isEmpty {
-                ContentUnavailableView("No userfields found.", systemImage: MySymbols.userfields)
-            } else if filteredUserFields.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserFields) { userField in
                 NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: .constant(false))) {
                     MDUserFieldRowView(userField: userField)
@@ -131,6 +126,13 @@ struct MDUserFieldsView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.mdUserFields.isEmpty {
+                ContentUnavailableView("No userfields found.", systemImage: MySymbols.userfields)
+            } else if filteredUserFields.isEmpty {
+                ContentUnavailableView.search
             }
         }
         .task {

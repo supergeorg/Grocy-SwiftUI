@@ -78,19 +78,6 @@ struct MDChoresView: View {
 
     var content: some View {
         List {
-            if choresCount == 0 {
-                ContentUnavailableView {
-                    Label("No chores", systemImage: MySymbols.chores)
-                } description: {
-                    Text("No chore defined. Please create one.")
-                } actions: {
-                    Button("Create chore") {
-                        showAddChore = true
-                    }
-                }
-            } else if mdChores.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(mdChores, id: \.id) { chore in
                 NavigationLink(value: chore) {
                     MDChoreRowView(chore: chore)
@@ -106,6 +93,21 @@ struct MDChoresView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if choresCount == 0 {
+                ContentUnavailableView {
+                    Label("No chores", systemImage: MySymbols.chores)
+                } description: {
+                    Text("No chore defined. Please create one.")
+                } actions: {
+                    Button("Create chore") {
+                        showAddChore = true
+                    }
+                }
+            } else if mdChores.isEmpty {
+                ContentUnavailableView.search
             }
         }
         #if os(iOS)

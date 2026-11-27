@@ -74,19 +74,6 @@ struct EquipmentView: View {
 
     var content: some View {
         List {
-            if equipmentCount == 0 {
-                ContentUnavailableView {
-                    Label("No equipment", systemImage: MySymbols.equipment)
-                } description: {
-                    Text("No equipment defined. Please create one.")
-                } actions: {
-                    Button("Create equipment") {
-                        showAddEquipment = true
-                    }
-                }
-            } else if equipment.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(equipment, id: \.id) { item in
                 NavigationLink(value: item) {
                     EquipmentRowView(equipment: item)
@@ -99,6 +86,21 @@ struct EquipmentView: View {
                         Label("Delete", systemImage: MySymbols.delete)
                     }
                 }
+            }
+        }
+        .overlay {
+            if equipmentCount == 0 {
+                ContentUnavailableView {
+                    Label("No equipment", systemImage: MySymbols.equipment)
+                } description: {
+                    Text("No equipment defined. Please create one.")
+                } actions: {
+                    Button("Create equipment") {
+                        showAddEquipment = true
+                    }
+                }
+            } else if equipment.isEmpty {
+                ContentUnavailableView.search
             }
         }
         #if os(iOS)

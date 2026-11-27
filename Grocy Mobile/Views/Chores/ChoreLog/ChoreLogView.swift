@@ -193,10 +193,6 @@ struct ChoreLogView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if choreLogCount == 0 {
-                ContentUnavailableView("No chore log entries found.", systemImage: MySymbols.chores)
-            } else if choreLog.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(choreLog, id: \.id) { (choreLogEntry: ChoreLogEntry) in
                 ChoreLogRowView(
@@ -222,6 +218,15 @@ struct ChoreLogView: View {
                         }
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if choreLogCount == 0 {
+                    ContentUnavailableView("No chore log entries found.", systemImage: MySymbols.chores)
+                } else if choreLog.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         .navigationTitle("Chores journal")

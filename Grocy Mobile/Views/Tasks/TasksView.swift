@@ -254,21 +254,8 @@ struct TasksView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if tasksCount == 0 {
-                ContentUnavailableView {
-                    Label("No tasks", systemImage: MySymbols.tasks)
-                } description: {
-                    Text("No task defined. Please create one.")
-                } actions: {
-                    Button("Create task") {
-                        showCreateTask = true
-                    }
-                }
-            } else if grocyTasks.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(filteredTasks.sorted(by: sortComparator), id: \.id) { grocyTask in
                 NavigationLink(value: grocyTask) {
@@ -357,6 +344,23 @@ struct TasksView: View {
                         )
                         .tint(.gray)
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if tasksCount == 0 {
+                    ContentUnavailableView {
+                        Label("No tasks", systemImage: MySymbols.tasks)
+                    } description: {
+                        Text("No task defined. Please create one.")
+                    } actions: {
+                        Button("Create task") {
+                            showCreateTask = true
+                        }
+                    }
+                } else if grocyTasks.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }

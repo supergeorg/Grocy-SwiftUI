@@ -69,6 +69,20 @@ struct MDBatteriesView: View {
 
     var content: some View {
         List {
+            ForEach(mdBatteries, id: \.id) { battery in
+                NavigationLink(value: battery) {
+                    MDBatteryRowView(battery: battery)
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        deleteItem(itemToDelete: battery)
+                    } label: {
+                        Label("Delete", systemImage: MySymbols.delete)
+                    }
+                }
+            }
+        }
+        .overlay {
             if batteriesCount == 0 {
                 ContentUnavailableView {
                     Label("No batteries", systemImage: MySymbols.batteries)
@@ -81,18 +95,6 @@ struct MDBatteriesView: View {
                 }
             } else if mdBatteries.isEmpty {
                 ContentUnavailableView.search
-            }
-            ForEach(mdBatteries, id: \.id) { battery in
-                NavigationLink(value: battery) {
-                    MDBatteryRowView(battery: battery)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button(role: .destructive) {
-                        deleteItem(itemToDelete: battery)
-                    } label: {
-                        Label("Delete", systemImage: MySymbols.delete)
-                    }
-                }
             }
         }
         #if os(iOS)

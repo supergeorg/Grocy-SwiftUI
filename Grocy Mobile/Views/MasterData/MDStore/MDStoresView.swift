@@ -77,18 +77,6 @@ struct MDStoresView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdStoresCount == 0 {
-                ContentUnavailableView {
-                    Label("No stores", systemImage: MySymbols.store)
-                } description: {
-                    Text("No store defined. Please create one.")
-                } actions: {
-                    Button("Create store") {
-                        showAddStore = true
-                    }
-                }
-            } else if mdStores.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdStores, id: \.id) { store in
                 NavigationLink(value: store) {
@@ -105,6 +93,23 @@ struct MDStoresView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdStoresCount == 0 {
+                    ContentUnavailableView {
+                        Label("No stores", systemImage: MySymbols.store)
+                    } description: {
+                        Text("No store defined. Please create one.")
+                    } actions: {
+                        Button("Create store") {
+                            showAddStore = true
+                        }
+                    }
+                } else if mdStores.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         #if os(iOS)

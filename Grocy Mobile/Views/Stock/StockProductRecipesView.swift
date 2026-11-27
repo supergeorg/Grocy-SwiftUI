@@ -33,6 +33,13 @@ struct StockProductRecipesView: View {
 
     var body: some View {
         List {
+            ForEach(recipesWithProduct, id: \.id) { recipe in
+                NavigationLink(value: recipe) {
+                    RecipeRowView(recipe: recipe, fulfillment: fulfillments.first(where: { $0.recipeID == recipe.id }))
+                }
+            }
+        }
+        .overlay {
             if grocyVM.failedToLoadObjects.contains(where: dataToUpdate.contains) {
                 ServerProblemView()
             } else if recipesWithProduct.isEmpty {
@@ -41,11 +48,6 @@ struct StockProductRecipesView: View {
                     systemImage: MySymbols.recipe,
                     description: Text("No recipe uses \(stockElement.product?.name ?? "this product").")
                 )
-            }
-            ForEach(recipesWithProduct, id: \.id) { recipe in
-                NavigationLink(value: recipe) {
-                    RecipeRowView(recipe: recipe, fulfillment: fulfillments.first(where: { $0.recipeID == recipe.id }))
-                }
             }
         }
         .navigationTitle("Recipes with \(stockElement.product?.name ?? "")")

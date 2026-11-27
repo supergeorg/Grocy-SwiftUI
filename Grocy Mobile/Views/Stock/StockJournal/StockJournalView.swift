@@ -216,10 +216,6 @@ struct StockJournalView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if stockJournalCount == 0 {
-                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
-            } else if stockJournal.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(stockJournalSorted, id: \.id) { (journalEntry: StockJournalEntry) in
                 StockJournalRowView(
@@ -246,6 +242,15 @@ struct StockJournalView: View {
                         .disabled(journalEntry.undone)
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if stockJournalCount == 0 {
+                    ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
+                } else if stockJournal.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         .navigationTitle("Stock journal")

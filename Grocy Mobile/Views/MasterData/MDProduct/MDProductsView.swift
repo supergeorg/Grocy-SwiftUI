@@ -103,16 +103,6 @@ struct MDProductsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProductsCount == 0 {
-                ContentUnavailableView {
-                    Label("No products", systemImage: MySymbols.product)
-                } actions: {
-                    Button("Create product") {
-                        showAddProduct = true
-                    }
-                }
-            } else if mdProducts.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdProducts, id: \.id) { product in
                 NavigationLink(value: product) {
@@ -144,6 +134,21 @@ struct MDProductsView: View {
                     } label: {
                         Label("Delete", systemImage: MySymbols.delete)
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdProductsCount == 0 {
+                    ContentUnavailableView {
+                        Label("No products", systemImage: MySymbols.product)
+                    } actions: {
+                        Button("Create product") {
+                            showAddProduct = true
+                        }
+                    }
+                } else if mdProducts.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }

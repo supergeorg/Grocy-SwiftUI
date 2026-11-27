@@ -63,16 +63,6 @@ struct MealPlanSectionsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdMealPlanSections.isEmpty {
-                ContentUnavailableView {
-                    Label("No meal plan sections", systemImage: MySymbols.mealPlanSection)
-                } description: {
-                    Text("Sections group the meal plan's days, like breakfast, lunch and dinner.")
-                } actions: {
-                    Button("Create meal plan section") {
-                        showAddSection = true
-                    }
-                }
             }
             ForEach(mdMealPlanSections, id: \.id) { section in
                 NavigationLink(value: section) {
@@ -89,6 +79,21 @@ struct MealPlanSectionsView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdMealPlanSections.isEmpty {
+                    ContentUnavailableView {
+                        Label("No meal plan sections", systemImage: MySymbols.mealPlanSection)
+                    } description: {
+                        Text("Sections group the meal plan's days, like breakfast, lunch and dinner.")
+                    } actions: {
+                        Button("Create meal plan section") {
+                            showAddSection = true
+                        }
+                    }
+                }
             }
         }
         #if os(macOS)

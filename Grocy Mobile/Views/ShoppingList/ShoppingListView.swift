@@ -407,14 +407,6 @@ struct ShoppingListView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if filteredShoppingListItems.isEmpty {
-                ContentUnavailableView {
-                    Label("Shopping list is empty.", systemImage: MySymbols.shoppingList)
-                } actions: {
-                    Button("Add item") {
-                        shoppingListInteractionRouter.present(.newShoppingListEntry)
-                    }
-                }
             }
             ForEach(groupedShoppingList.sorted(by: { $0.key < $1.key }), id: \.key) { groupName, groupElements in
                 #if os(macOS)
@@ -467,6 +459,19 @@ struct ShoppingListView: View {
                 Section("Notes") {
                     Text(notesText)
                         .textSelection(.enabled)
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if filteredShoppingListItems.isEmpty {
+                    ContentUnavailableView {
+                        Label("Shopping list is empty.", systemImage: MySymbols.shoppingList)
+                    } actions: {
+                        Button("Add item") {
+                            shoppingListInteractionRouter.present(.newShoppingListEntry)
+                        }
+                    }
                 }
             }
         }

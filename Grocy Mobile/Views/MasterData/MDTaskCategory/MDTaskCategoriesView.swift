@@ -78,18 +78,6 @@ struct MDTaskCategoriesView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdTaskCategoriesCount == 0 {
-                ContentUnavailableView {
-                    Label("No task categories", systemImage: MySymbols.tasks)
-                } description: {
-                    Text("No task category defined. Please create one.")
-                } actions: {
-                    Button("Create task category") {
-                        showAddTaskCategory = true
-                    }
-                }
-            } else if mdTaskCategories.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdTaskCategories, id: \.id) { taskCategory in
                 NavigationLink(value: taskCategory) {
@@ -106,6 +94,23 @@ struct MDTaskCategoriesView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdTaskCategoriesCount == 0 {
+                    ContentUnavailableView {
+                        Label("No task categories", systemImage: MySymbols.tasks)
+                    } description: {
+                        Text("No task category defined. Please create one.")
+                    } actions: {
+                        Button("Create task category") {
+                            showAddTaskCategory = true
+                        }
+                    }
+                } else if mdTaskCategories.isEmpty {
+                    ContentUnavailableView.search
+                }
             }
         }
         #if os(iOS)

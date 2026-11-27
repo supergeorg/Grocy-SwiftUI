@@ -78,17 +78,6 @@ struct UserObjectsView: View {
 
     var content: some View {
         List {
-            if fields.isEmpty {
-                ContentUnavailableView(
-                    "No userfields found.",
-                    systemImage: MySymbols.userfields,
-                    description: Text("The records of a user entity consist of its userfields. Add them in the userfields.")
-                )
-            } else if userObjects.isEmpty {
-                ContentUnavailableView("No records found.", systemImage: MySymbols.userEntities)
-            } else if filteredUserObjects.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserObjects) { userObject in
                 NavigationLink {
                     UserObjectFormView(userEntity: userEntity, existingUserObject: userObject)
@@ -101,6 +90,19 @@ struct UserObjectsView: View {
                         showDeleteConfirmation = true
                     }
                 }
+            }
+        }
+        .overlay {
+            if fields.isEmpty {
+                ContentUnavailableView(
+                    "No userfields found.",
+                    systemImage: MySymbols.userfields,
+                    description: Text("The records of a user entity consist of its userfields. Add them in the userfields.")
+                )
+            } else if userObjects.isEmpty {
+                ContentUnavailableView("No records found.", systemImage: MySymbols.userEntities)
+            } else if filteredUserObjects.isEmpty {
+                ContentUnavailableView.search
             }
         }
         .navigationTitle(userEntity.caption)

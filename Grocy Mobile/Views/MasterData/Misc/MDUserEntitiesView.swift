@@ -108,11 +108,6 @@ struct MDUserEntitiesView: View {
 
     var content: some View {
         List {
-            if grocyVM.mdUserEntities.isEmpty {
-                ContentUnavailableView("No userentities found.", systemImage: MySymbols.userEntities)
-            } else if filteredUserEntities.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserEntities) { userEntity in
                 NavigationLink(destination: UserObjectsView(userEntity: userEntity)) {
                     MDUserEntityRowView(userEntity: userEntity)
@@ -128,6 +123,13 @@ struct MDUserEntitiesView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.mdUserEntities.isEmpty {
+                ContentUnavailableView("No userentities found.", systemImage: MySymbols.userEntities)
+            } else if filteredUserEntities.isEmpty {
+                ContentUnavailableView.search
             }
         }
         .task {
