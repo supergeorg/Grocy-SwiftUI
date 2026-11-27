@@ -317,24 +317,29 @@ struct Grocy_MobileApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if onboardingNeeded {
-                OnboardingView()
-            } else {
-                if !isLoggedIn {
-                    NavigationStack {
-                        LoginView()
-                    }
+            Group {
+                if onboardingNeeded {
+                    OnboardingView()
                 } else {
-                    ContentView()
-                        .grocyFeatures()
-                        .environment(deepLinkManager)
-                        .onOpenURL { url in
-                            if let deepLink = GrocyDeepLink(url: url) {
-                                deepLinkManager.apply(deepLink: deepLink)
-                            }
+                    if !isLoggedIn {
+                        NavigationStack {
+                            LoginView()
                         }
+                    } else {
+                        ContentView()
+                            .grocyFeatures()
+                            .environment(deepLinkManager)
+                            .onOpenURL { url in
+                                if let deepLink = GrocyDeepLink(url: url) {
+                                    deepLinkManager.apply(deepLink: deepLink)
+                                }
+                            }
+                    }
                 }
             }
+            // Row icons in the text color, like the row's title, in every list and form (also in sheets).
+            // Lists tint them with the accent color otherwise. The sidebar keeps the system tint.
+            .listItemTint(Color.primary)
         }
         .modelContainer(modelContainer)
         .modelContainer(profileModelContainer)
@@ -370,6 +375,7 @@ struct Grocy_MobileApp: App {
                     NavigationStack {
                         SettingsView()
                     }
+                    .listItemTint(Color.primary)
                     .grocyFeatures()
                     .modelContainer(modelContainer)
                     .modelContainer(profileModelContainer)

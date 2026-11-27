@@ -215,6 +215,8 @@ struct Sidebar: View {
             .navigationSplitViewColumnWidth(min: 200, ideal: 200)
         #endif
         .navigationTitle("Grocy Mobile")
+        // The app sets row icons to the text color; the sidebar keeps the system's tinted icons, like the tab bar.
+        .listItemTint(nil)
         #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif

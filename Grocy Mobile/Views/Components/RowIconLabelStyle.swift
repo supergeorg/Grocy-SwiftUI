@@ -23,7 +23,7 @@ struct RowIconLabelStyle: LabelStyle {
         var body: some View {
             HStack(spacing: Spacing.medium) {
                 // In the text color, like the row's title. Icons with their own color (status symbols) keep it.
-                // In a List this isn't enough: it tints the icons of some rows; add `.listItemTint(Color.primary)` there.
+                // In a List this isn't enough on its own: the app root's `.listItemTint(Color.primary)` covers those rows.
                 configuration.icon
                     .foregroundStyle(Color.primary)
                     .frame(width: iconWidth)
