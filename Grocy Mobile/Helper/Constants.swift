@@ -13,6 +13,9 @@ struct Constants {
         /// A settings pane: wide enough for a grouped form with a picker, and for the panes in the window's toolbar.
         static let macOSSettingsWidth: CGFloat = 650.0
         static let macOSSettingsHeight: CGFloat = 520.0
+        /// The app log's and the about window's first size.
+        static let macOSAuxiliaryWindowWidth: CGFloat = 620.0
+        static let macOSAuxiliaryWindowHeight: CGFloat = 560.0
         static let macOSMinWindowWidth: CGFloat = 500.0
         static let macOSStockEntriesMinWidth: CGFloat = 350.0
         /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.

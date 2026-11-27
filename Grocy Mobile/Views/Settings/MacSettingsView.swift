@@ -10,8 +10,9 @@ import SwiftUI
     /// The Mac's settings window (Grocy Mobile > Settings…, ⌘,): one pane per page in the window's toolbar,
     /// like the settings of Mail or Safari, instead of the iPhone's list that pushes pages.
     ///
-    /// The panes are the pages of the iPhone's settings: General, one per area the server has turned on,
-    /// the account, the app log and the information about the app.
+    /// The panes are the pages of the iPhone's settings: General, one per area the server has turned on, and the account.
+    /// The app log and the information about the app are windows of their own, like in other Mac apps
+    /// (Window menu, and "About Grocy Mobile" in the app menu).
     struct MacSettingsView: View {
         @Environment(GrocyViewModel.self) private var grocyVM
 
@@ -62,12 +63,6 @@ import SwiftUI
                 Tab("Account", systemImage: MySymbols.user) {
                     pane { SettingsAccountView() }
                 }
-                Tab("App log", systemImage: MySymbols.logFile) {
-                    pane { LogView() }
-                }
-                Tab("About", systemImage: MySymbols.info) {
-                    pane { AboutView() }
-                }
             }
             .task {
                 await grocyVM.requestData(additionalObjects: [.system_config, .system_info, .current_user])
@@ -81,7 +76,7 @@ import SwiftUI
                 content()
                     .settingsDestinations()
             }
-            .frame(width: Sizes.macOSSettingsWidth, height: Sizes.macOSSettingsHeight)
+            .frame(width: Constants.macOSSettingsWidth, height: Constants.macOSSettingsHeight)
         }
     }
 

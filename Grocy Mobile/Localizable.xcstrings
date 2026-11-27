@@ -8514,6 +8514,16 @@
         }
       }
     },
+    "About Grocy Mobile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Grocy Mobile"
+          }
+        }
+      }
+    },
     "About this app" : {
       "localizations" : {
         "cs" : {
@@ -65264,6 +65274,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date de sortie"
+          }
+        }
+      }
+    },
+    "Reload" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu laden"
           }
         }
       }
