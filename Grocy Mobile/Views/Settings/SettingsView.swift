@@ -30,6 +30,10 @@ struct SettingsView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    /// False when the navigation stack's root registers the settings pages already (`accountNavigationDestinations()`):
+    /// in the iPhone tab navigation, registered on this pushed page, they weren't always found (e.g. on the due tab).
+    var registersDestinations: Bool = true
+
     @State private var selection: SettingsNavigationItem? = nil
 
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -136,39 +140,69 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationDestination(for: SettingsNavigationItem.self) { destination in
-            switch destination {
-            case .serverInfo:
-                GrocyInfoView(systemInfo: grocyVM.systemInfo)
-            case .userInfo:
-                GrocyUserInfoView(grocyUser: grocyVM.currentUser)
-            case .appSettings:
-                SettingsAppView()
-            case .stockSettings:
-                SettingsStockView()
-            case .shoppingListSettings:
-                SettingsShoppingListView()
-            case .choresSettings:
-                SettingsChoresView()
-            case .tasksSettings:
-                SettingsTasksView()
-            case .batteriesSettings:
-                SettingsBatteriesView()
-            case .recipesSettings:
-                SettingsRecipesView()
-            case .mealPlanSettings:
-                SettingsMealPlanView()
-            case .appLog:
-                LogView()
-            case .aboutApp:
-                AboutView()
-            case .phoneTabs:
-                PhoneTabsSettingsView()
-            }
-        }
+        .modifier(SettingsDestinations(isEnabled: registersDestinations))
         .navigationTitle("Settings")
         .task {
             await grocyVM.requestData(additionalObjects: [.system_info, .current_user])
+        }
+    }
+}
+
+/// The settings pages, one per `SettingsNavigationItem`.
+struct SettingsDestinationView: View {
+    @Environment(GrocyViewModel.self) private var grocyVM
+
+    let destination: SettingsNavigationItem
+
+    var body: some View {
+        switch destination {
+        case .serverInfo:
+            GrocyInfoView(systemInfo: grocyVM.systemInfo)
+        case .userInfo:
+            GrocyUserInfoView(grocyUser: grocyVM.currentUser)
+        case .appSettings:
+            SettingsAppView()
+        case .stockSettings:
+            SettingsStockView()
+        case .shoppingListSettings:
+            SettingsShoppingListView()
+        case .choresSettings:
+            SettingsChoresView()
+        case .tasksSettings:
+            SettingsTasksView()
+        case .batteriesSettings:
+            SettingsBatteriesView()
+        case .recipesSettings:
+            SettingsRecipesView()
+        case .mealPlanSettings:
+            SettingsMealPlanView()
+        case .appLog:
+            LogView()
+        case .aboutApp:
+            AboutView()
+        case .phoneTabs:
+            PhoneTabsSettingsView()
+        }
+    }
+}
+
+private struct SettingsDestinations: ViewModifier {
+    let isEnabled: Bool
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.settingsNavigationDestinations()
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    /// Registers the settings pages on a navigation stack.
+    func settingsNavigationDestinations() -> some View {
+        navigationDestination(for: SettingsNavigationItem.self) { destination in
+            SettingsDestinationView(destination: destination)
         }
     }
 }

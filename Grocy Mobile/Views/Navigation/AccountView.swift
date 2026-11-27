@@ -61,16 +61,17 @@ struct AccountView: View {
 }
 
 extension View {
-    /// Registers the profile page and its pages, including the master data lists, on a navigation stack's root view.
-    /// (Registered on the pushed page itself, the master data destinations aren't found.)
+    /// Registers the profile page and its pages, including the master data lists and the settings pages, on a navigation stack's root view.
+    /// (Registered on the pushed page itself, the master data and settings destinations aren't always found.)
     func accountNavigationDestinations() -> some View {
         masterDataDestinations()
+            .settingsNavigationDestinations()
             .navigationDestination(for: AccountView.Route.self) { route in
                 switch route {
                 case .account:
                     AccountView()
                 case .settings:
-                    SettingsView()
+                    SettingsView(registersDestinations: false)
                 case .userManagement:
                     UserManagementView()
                 }
