@@ -93,5 +93,9 @@ enum Sizes {
         /// The first size of the app log's and the About window.
         static let macOSAuxiliaryWindowWidth: CGFloat = 620
         static let macOSAuxiliaryWindowHeight: CGFloat = 560
+        /// The smallest sheet of a stock interaction. A Mac sheet takes its content's size, and a list has none of its own,
+        /// so without it the stock journal's sheet shrinks to its toolbar.
+        static let macOSSheetMinWidth: CGFloat = 560
+        static let macOSSheetMinHeight: CGFloat = 480
     #endif
 }

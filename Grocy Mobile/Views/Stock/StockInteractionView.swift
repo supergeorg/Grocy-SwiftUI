@@ -74,6 +74,10 @@ private struct StockInteractionSheet: ViewModifier {
                     StockInteractionView(interaction: interaction)
                 }
                 .environment(router)
+                #if os(macOS)
+                    // A Mac sheet takes its content's size; the lists (journal, entries, recipes) have none of their own.
+                    .frame(minWidth: Sizes.macOSSheetMinWidth, minHeight: Sizes.macOSSheetMinHeight)
+                #endif
                 #if os(iOS)
                     if let zoom, let sourceID = zoom.sourceID(for: interaction) {
                         sheet.navigationTransition(.zoom(sourceID: sourceID, in: zoom.namespace))
