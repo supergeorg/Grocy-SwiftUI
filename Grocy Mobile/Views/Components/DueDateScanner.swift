@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// A button that reads a due date from the package with the camera. Only on iOS: VisionKit's data scanner doesn't exist on
+/// macOS, so the Mac shows no button.
 struct DueDateScanner: View {
     @Binding var dueDate: Date
 
@@ -21,18 +23,18 @@ struct DueDateScanner: View {
     }
 
     var body: some View {
-        Button(
-            action: {
-                showDateScanner.toggle()
-            },
-            label: {
-                Image(systemName: MySymbols.scanDate)
-            }
-        )
-        .sheet(
-            isPresented: $showDateScanner,
-            content: {
-                #if os(iOS)
+        #if os(iOS)
+            Button(
+                action: {
+                    showDateScanner.toggle()
+                },
+                label: {
+                    Image(systemName: MySymbols.scanDate)
+                }
+            )
+            .sheet(
+                isPresented: $showDateScanner,
+                content: {
                     CodeScannerView(isPaused: $isScanPaused, onCodeFound: self.handleDateScan, symbologies: [], recognizeDates: true)
                         .onAppear { isScanPaused = false }
                         .onDisappear { isScanPaused = true }
@@ -42,8 +44,8 @@ struct DueDateScanner: View {
                         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                             isScanPaused = false
                         }
-                #endif
-            }
-        )
+                }
+            )
+        #endif
     }
 }
