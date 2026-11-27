@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Synchronization
 
 extension Date {
     var asJSONDateString: String {
@@ -119,54 +118,34 @@ nonisolated func getDateFromString(_ dateString: String?) -> Date? {
 }
 
 nonisolated enum GrocyDateParser {
-    /// The formatters, made and configured once. Formatters aren't declared `Sendable`, so they're kept behind a lock
-    /// instead of in `nonisolated(unsafe)` statics, which strict memory safety warns about on every use.
-    private struct Formatters {
-        let isoWithFractionalSeconds: ISO8601DateFormatter
-        let iso: ISO8601DateFormatter
-        let custom: [DateFormatter]
+    // All of them are Sendable and only configured here, once, so they can be shared without `nonisolated(unsafe)`.
+    // ISO 8601 uses format styles: `ISO8601DateFormatter` isn't Sendable.
+    private static let isoWithFractionalSeconds = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
+    private static let iso = Date.ISO8601FormatStyle()
+    // Grocy stores local times without a time zone.
+    // Older app versions wrote timestamps in the device's 12-hour format ("2026-08-12 4:33:51 PM"), so those are read too (#250).
+    private static let formatters: [DateFormatter] = [
+        "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd h:mm:ss a",
+        "yyyy-MM-dd h:mm a", "yyyy-MM-dd",
+    ].map { format in
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateFormat = format
+        return formatter
     }
-
-    private static let formatters = Mutex(
-        Formatters(
-            isoWithFractionalSeconds: {
-                let formatter = ISO8601DateFormatter()
-                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                return formatter
-            }(),
-            iso: {
-                let formatter = ISO8601DateFormatter()
-                formatter.formatOptions = [.withInternetDateTime]
-                return formatter
-            }(),
-            // Grocy stores local times without a time zone.
-            // Older app versions wrote timestamps in the device's 12-hour format ("2026-08-12 4:33:51 PM"), so those are read too (#250).
-            custom: [
-                "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd h:mm:ss a",
-                "yyyy-MM-dd h:mm a", "yyyy-MM-dd",
-            ].map { format in
-                let formatter = DateFormatter()
-                formatter.locale = Locale(identifier: "en_US_POSIX")
-                formatter.timeZone = .autoupdatingCurrent
-                formatter.dateFormat = format
-                return formatter
-            }
-        )
-    )
 
     /// The same order as before: ISO 8601 first, then the custom formats.
     static func parseWithFormatters(_ dateString: String) -> Date? {
-        formatters.withLock { formatters in
-            if let date = formatters.isoWithFractionalSeconds.date(from: dateString) ?? formatters.iso.date(from: dateString) {
+        if let date = (try? isoWithFractionalSeconds.parse(dateString)) ?? (try? iso.parse(dateString)) {
+            return date
+        }
+        for formatter in formatters {
+            if let date = formatter.date(from: dateString) {
                 return date
             }
-            for formatter in formatters.custom {
-                if let date = formatter.date(from: dateString) {
-                    return date
-                }
-            }
-            return nil
         }
+        return nil
     }
 
     /// `yyyy-MM-dd` or `yyyy-MM-dd HH:mm:ss` in the current time zone, or nil for anything else.
