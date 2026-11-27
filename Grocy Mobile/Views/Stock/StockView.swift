@@ -766,48 +766,49 @@ struct StockView: View {
             .stockInteractionSheet(router: stockInteractionRouter)
         #endif
         .stockEntriesDestination()
-        #if os(iOS)
-            .sheet(isPresented: $showingFilterSheet) {
-                NavigationStack {
-                    StockFilterView(
-                        filteredLocationID: $filteredLocationID,
-                        filteredProductGroupID: $filteredProductGroupID,
-                        filteredStatus: filteredStatusBinding
-                    )
-                    .navigationTitle("Filter")
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                StockFilterView(
+                    filteredLocationID: $filteredLocationID,
+                    filteredProductGroupID: $filteredProductGroupID,
+                    filteredStatus: filteredStatusBinding
+                )
+                .navigationTitle("Filter")
+                #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(
-                            placement: .confirmationAction,
-                            content: {
-                                Button(
-                                    role: .confirm,
-                                    action: {
-                                        showingFilterSheet = false
-                                    }
-                                )
-                            }
-                        )
-                        ToolbarItem(
-                            placement: .cancellationAction,
-                            content: {
-                                Button(
-                                    role: .destructive,
-                                    action: {
-                                        filteredLocationID = nil
-                                        filteredProductGroupID = nil
-                                        storageFilteredStatus = .all
-                                        showingFilterSheet = false
-                                    }
-                                )
-                            }
-                        )
-                    }
+                #endif
+                .toolbar {
+                    ToolbarItem(
+                        placement: .confirmationAction,
+                        content: {
+                            Button(
+                                role: .confirm,
+                                action: {
+                                    showingFilterSheet = false
+                                }
+                            )
+                        }
+                    )
+                    ToolbarItem(
+                        placement: .cancellationAction,
+                        content: {
+                            Button(
+                                role: .destructive,
+                                action: {
+                                    filteredLocationID = nil
+                                    filteredProductGroupID = nil
+                                    storageFilteredStatus = .all
+                                    showingFilterSheet = false
+                                }
+                            )
+                        }
+                    )
                 }
-                .presentationDetents([.medium])
-
             }
-        #endif
+            .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
+        }
     }
 
     var sortMenu: some View {
