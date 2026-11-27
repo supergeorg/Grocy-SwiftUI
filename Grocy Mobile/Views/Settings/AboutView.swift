@@ -45,11 +45,13 @@ struct AboutView: View {
                         .textSelection(.enabled)
                 } label: {
                     Label("Version", systemImage: MySymbols.info)
+                        .foregroundStyle(.primary)
                 }
                 LabeledContent {
                     Text("Georg Meißner")
                 } label: {
                     Label("Developer", systemImage: MySymbols.developer)
+                        .foregroundStyle(.primary)
                 }
                 if let gitHubURL = URL(string: "https://github.com/supergeorg/Grocy-SwiftUI") {
                     Link(destination: gitHubURL) {

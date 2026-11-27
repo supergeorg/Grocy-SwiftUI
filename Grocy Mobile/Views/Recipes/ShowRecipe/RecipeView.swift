@@ -242,6 +242,7 @@ struct RecipeView: View {
                                 Text(nesting.servings.formattedAmount)
                             } label: {
                                 Label(includedRecipe.name, systemImage: MySymbols.recipe)
+                                    .foregroundStyle(.primary)
                             }
                         }
                     }
@@ -483,6 +484,7 @@ extension RecipeView {
                         .monospacedDigit()
                 } label: {
                     Label("Due score", systemImage: MySymbols.due)
+                        .foregroundStyle(.primary)
                 }
             }
 
@@ -491,6 +493,7 @@ extension RecipeView {
                     Text(producedProduct.name)
                 } label: {
                     Label("Produces product", systemImage: MySymbols.selfProduction)
+                        .foregroundStyle(.primary)
                 }
             }
 

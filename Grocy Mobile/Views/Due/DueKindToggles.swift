@@ -34,9 +34,8 @@ struct DueKindToggles: View {
 
     var body: some View {
         ForEach(kinds) { kind in
-            Toggle(isOn: binding(for: kind)) {
-                Label(kind.title, systemImage: kind.icon)
-            }
+            // The shared toggle, so the icon has the text color like in every other settings row (a plain Label takes the tint).
+            MyToggle(isOn: binding(for: kind), description: kind.title, icon: kind.icon)
         }
     }
 }
