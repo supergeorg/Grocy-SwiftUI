@@ -128,6 +128,17 @@ struct SettingsAppView: View {
                         Text("What the due tab shows.")
                     }
                 }
+            #else
+                // The due list is in the Mac's sidebar; its kinds are set here like on the iPhone.
+                Section {
+                    DueKindToggles()
+                } header: {
+                    Text("Due")
+                } footer: {
+                    Text("What the due list shows.")
+                }
+            #endif
+            #if os(iOS)
                 Section("\(Text("Quick Scan")) \(Text("Settings"))") {
                     MyToggle(isOn: $quickScanActionAfterAdd, description: "Do selected action after assigning a barcode", icon: MySymbols.barcodeScan)
                 }

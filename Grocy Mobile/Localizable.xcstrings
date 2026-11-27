@@ -92004,8 +92004,25 @@
         }
       }
     },
+    "What the due list shows." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was die Liste „Fällig“ anzeigt."
+          }
+        }
+      }
+    },
     "What the due tab shows." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was der Tab „Fällig“ anzeigt."
+          }
+        }
+      }
     },
     "What's New in Grocy Mobile" : {
 
