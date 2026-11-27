@@ -9,6 +9,10 @@ import SwiftUI
 
 struct AppSidebarNavigation: View {
     @Environment(DeepLinkManager.self) var deepLinkManager
+    @Environment(GrocyViewModel.self) private var grocyVM
+    #if os(iOS)
+        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
 
     @State private var selection: NavigationItem? = .none
 
@@ -16,11 +20,17 @@ struct AppSidebarNavigation: View {
         NavigationSplitView(
             sidebar: {
                 Sidebar(selection: $selection)
+                    // Only while the server can't be used, at the bottom of the sidebar, like Mail's offline status.
+                    .serverStatusBar(isShown: grocyVM.connectionProblem != nil)
             },
             detail: {
                 NavigationStack {
                     Navigation(selection: $selection)
                 }
+                #if os(iOS)
+                    // Collapsed (iPhone), the sidebar isn't visible on the screens opened from it, so they show it too.
+                    .serverStatusBar(isShown: grocyVM.connectionProblem != nil && horizontalSizeClass == .compact)
+                #endif
             }
         )
         .onAppear {

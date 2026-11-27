@@ -32,6 +32,8 @@ public enum APIError: Error, Equatable {
     case decodingError(error: Error)
     case hassError(error: Error)
     case notLoggedIn(error: Error)
+    /// A proxy in front of Grocy (Home Assistant, a reverse proxy) answered 502–504 because Grocy doesn't answer.
+    case serverUnavailable(statusCode: Int)
 }
 
 /// True when a request ended because its task was cancelled, for example because the view that started it went away (#167).

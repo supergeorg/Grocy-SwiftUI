@@ -346,6 +346,10 @@ struct Grocy_MobileApp: App {
             switch phase {
             case .active:
                 ReminderStore.shared.startPeriodicSync()
+                // Finds out whether the server can be used, so an outage shows before the next list loads.
+                Task {
+                    await grocyVM.checkServerConnection()
+                }
             case .background:
                 ReminderStore.shared.stopPeriodicSync()
                 #if os(iOS)

@@ -53349,6 +53349,16 @@
     "No instruction manual" : {
 
     },
+    "No internet connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Internetverbindung"
+          }
+        }
+      }
+    },
     "No items to add to stock" : {
       "localizations" : {
         "de" : {
@@ -68090,6 +68100,26 @@
     "Server default (%@)" : {
 
     },
+    "Server error" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serverfehler"
+          }
+        }
+      }
+    },
+    "Server not reachable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server nicht erreichbar"
+          }
+        }
+      }
+    },
     "Server timeout interval" : {
       "localizations" : {
         "cs" : {
@@ -71169,6 +71199,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benutzer anzeigen"
+          }
+        }
+      }
+    },
+    "Showing saved data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespeicherte Daten werden angezeigt"
           }
         }
       }
@@ -87821,6 +87861,16 @@
         }
       }
     },
+    "Tries to reach the server again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versucht erneut, den Server zu erreichen"
+          }
+        }
+      }
+    },
     "Trust this certificate" : {
       "localizations" : {
         "de" : {
@@ -90533,7 +90583,14 @@
 
     },
     "Updated %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisiert %@"
+          }
+        }
+      }
     },
     "Upload picture" : {
       "localizations" : {

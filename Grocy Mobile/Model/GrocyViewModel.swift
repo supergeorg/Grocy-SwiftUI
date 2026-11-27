@@ -8,6 +8,7 @@
 import AppIntents
 internal import Combine
 import Foundation
+import Network
 import OSLog
 import SwiftData
 import SwiftUI
@@ -99,6 +100,19 @@ class GrocyViewModel {
     var failedToLoadAdditionalObjects = Set<AdditionalEntities>()
     var failedToLoadErrors: [Error] = []
 
+    /// Set while the server can't be used, cleared by the next request it answers. Shown in a small status capsule.
+    var connectionProblem: ConnectionProblem?
+    /// When the server last answered, shown with a connection problem, so the person knows how old the data is.
+    var lastServerContact: Date?
+    @ObservationIgnored private let networkMonitor = NWPathMonitor()
+    /// Tries the server again regularly while it can't be used, so the problem goes away by itself.
+    @ObservationIgnored private var connectionRetryTask: Task<Void, Never>?
+    /// Set while a server check runs, so the button, the retries and the network monitor don't ask at the same time.
+    @ObservationIgnored private var isCheckingServer = false
+    /// What the views asked for while the server couldn't be used. Loaded as soon as it answers again.
+    @ObservationIgnored private var pendingObjects = Set<ObjectEntities>()
+    @ObservationIgnored private var pendingAdditionalObjects = Set<AdditionalEntities>()
+
     var timeStampsObjects: [ObjectEntities: SystemDBChangedTime] = [:]
     var timeStampsAdditionalObjects: [AdditionalEntities: SystemDBChangedTime] = [:]
 
@@ -150,6 +164,7 @@ class GrocyViewModel {
             try container.encode(dateString)
         })
         self.jsonEncoder.outputFormatting = .prettyPrinted
+        startNetworkMonitor()
         if Self.isUnitTestHost {
             // The unit tests share the app's UserDefaults. Logging in to the person's server there would run against
             // test containers that are gone by the time the login reads the profile.
@@ -177,10 +192,13 @@ class GrocyViewModel {
                             trustedCertificateFingerprint: profile.trustedCertificateFingerprint
                         )
                     }
-                    self.setUpdateTimer()
                 } catch {
                     GrocyLogger.error("\(error)")
+                    // The saved data stays usable. The API is configured anyway, so the server is tried again
+                    // and the status says it can't be reached.
+                    self.noteConnectionProblem(error)
                 }
+                self.setUpdateTimer()
             }
         } else {
             GrocyLogger.info("Not logged in")
@@ -297,6 +315,7 @@ class GrocyViewModel {
         self.timeStampsObjects.removeAll()
         self.timeStampsAdditionalObjects.removeAll()
         self.failedToLoadObjects.removeAll()
+        self.resetServerConnection()
         self.failedToLoadAdditionalObjects.removeAll()
         self.failedToLoadErrors.removeAll()
         let systemInfo = try await api.getSystemInfo()
@@ -305,6 +324,7 @@ class GrocyViewModel {
                 "Server check successful. Logging into Grocy Server \(systemInfo.grocyVersion.version) with app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")."
             )
             self.systemInfo = systemInfo
+            self.serverAnswered()
             return
         } else {
             GrocyLogger.error("Selected server doesn't respond.")
@@ -377,9 +397,20 @@ class GrocyViewModel {
 
         do {
             let timestamp = try await grocyApi.getSystemDBChangedTime()
+            serverAnswered()
+            // Also what the views asked for while the server couldn't be used.
+            let objects = pendingObjects.isEmpty ? objects : Array(pendingObjects.union(objects ?? []))
+            let additionalObjects =
+                pendingAdditionalObjects.isEmpty ? additionalObjects : Array(pendingAdditionalObjects.union(additionalObjects ?? []))
+            pendingObjects.removeAll()
+            pendingAdditionalObjects.removeAll()
             await self.requestDataWithTimeStamp(objects: objects, additionalObjects: additionalObjects, timeStamp: timestamp)
         } catch {
+            guard !isCancellation(error) else { return }
             GrocyLogger.error("Getting timestamp failed. Message: \(error)")
+            pendingObjects.formUnion(objects ?? [])
+            pendingAdditionalObjects.formUnion(additionalObjects ?? [])
+            noteConnectionProblem(error)
         }
     }
 
@@ -498,6 +529,7 @@ class GrocyViewModel {
                     GrocyLogger.error("Data request failed for \(object). Message: \("\(error)")")
                     self.failedToLoadObjects.insert(object)
                     self.failedToLoadErrors.append(error)
+                    self.noteConnectionProblem(error)
                     self.loadingObjectEntities.remove(object)
                 }
             }
@@ -523,6 +555,7 @@ class GrocyViewModel {
                     GrocyLogger.error("Data request failed for \(additionalObject). Message: \("\(error)")")
                     self.failedToLoadAdditionalObjects.insert(additionalObject)
                     self.failedToLoadErrors.append(error)
+                    self.noteConnectionProblem(error)
                     self.loadingAdditionalEntities.remove(additionalObject)
                 }
             }
@@ -584,6 +617,104 @@ class GrocyViewModel {
             try swiftDataSync.syncSingletonModel(VolatileStock.self, with: self.volatileStock)
             self.updateWidgetSummary()
         }
+    }
+
+    // MARK: - Server connection
+
+    /// Watches the network, so going offline shows at once, and coming back online checks the server again.
+    private func startNetworkMonitor() {
+        networkMonitor.pathUpdateHandler = { [weak self] path in
+            let isOnline = path.status == .satisfied
+            Task { @MainActor in
+                await self?.networkChanged(isOnline: isOnline)
+            }
+        }
+        networkMonitor.start(queue: .global(qos: .utility))
+    }
+
+    private func networkChanged(isOnline: Bool) async {
+        if !isOnline {
+            if grocyApi.isLoggedIn {
+                connectionProblem = .offline
+            }
+        } else if connectionProblem != nil {
+            await checkServerConnection()
+        }
+    }
+
+    /// Asks the server when its data last changed, the smallest request there is, to find out whether it can be used.
+    /// Called when the app becomes active (so an outage shows even before the next list loads), by the status's button,
+    /// by the automatic retries and when the network comes back.
+    ///
+    /// When the server answers after a problem, it reloads what changed meanwhile, what failed, and what the views
+    /// asked for while it couldn't be used.
+    func checkServerConnection() async {
+        guard grocyApi.isLoggedIn, !isCheckingServer else { return }
+        isCheckingServer = true
+        defer { isCheckingServer = false }
+        let hadProblem = connectionProblem != nil
+        do {
+            _ = try await grocyApi.getSystemDBChangedTime()
+        } catch {
+            guard !isCancellation(error) else { return }
+            GrocyLogger.error("Server check failed. Message: \(error)")
+            noteConnectionProblem(error)
+            return
+        }
+        serverAnswered()
+        if hadProblem {
+            // The server may have been down since the launch, so its version wasn't loaded yet.
+            if systemInfo == nil {
+                systemInfo = try? await grocyApi.getSystemInfo()
+            }
+            failedToLoadErrors = []
+            await requestData(
+                objects: Array(Set(timeStampsObjects.keys).union(failedToLoadObjects)),
+                additionalObjects: Array(Set(timeStampsAdditionalObjects.keys).union(failedToLoadAdditionalObjects))
+            )
+        }
+    }
+
+    private func serverAnswered() {
+        lastServerContact = .now
+        connectionProblem = nil
+    }
+
+    private func noteConnectionProblem(_ error: Error) {
+        if let problem = ConnectionProblem(error: error) {
+            connectionProblem = problem
+            scheduleConnectionRetry()
+        }
+    }
+
+    /// Every 30 seconds while the server can't be used. Without network, the network monitor tries instead,
+    /// as soon as it's back.
+    private func scheduleConnectionRetry() {
+        guard connectionRetryTask == nil else { return }
+        connectionRetryTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(30))
+                guard let self, !Task.isCancelled, let problem = self.connectionProblem else { break }
+                if problem != .offline {
+                    await self.checkServerConnection()
+                }
+            }
+            // Not cancelled when the server answers: the reload after the problem runs in this task.
+            // A cancelled task was already replaced by `resetServerConnection()`.
+            if !Task.isCancelled {
+                self?.connectionRetryTask = nil
+            }
+        }
+    }
+
+    /// A new server, or no server: forgets the problem and what was waiting for the old server.
+    private func resetServerConnection() {
+        connectionRetryTask?.cancel()
+        connectionRetryTask = nil
+        pendingObjects.removeAll()
+        pendingAdditionalObjects.removeAll()
+        connectionProblem = nil
+        lastServerContact = nil
     }
 
     func retryFailedRequests() async {
@@ -652,6 +783,7 @@ class GrocyViewModel {
         self.timeStampsAdditionalObjects.removeAll()
 
         self.failedToLoadObjects.removeAll()
+        self.resetServerConnection()
         self.failedToLoadAdditionalObjects.removeAll()
         self.failedToLoadErrors.removeAll()
 
