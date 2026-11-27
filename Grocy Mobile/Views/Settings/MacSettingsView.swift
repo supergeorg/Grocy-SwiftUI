@@ -71,7 +71,7 @@ import SwiftUI
 
         /// A pane of a fixed size, so the window doesn't jump between panes. In its own navigation stack,
         /// so a page that opens a detail (the server information, the user) pushes it inside the pane.
-        private func pane(@ViewBuilder content: () -> some View) -> some View {
+        private func pane<Content: View>(@ViewBuilder content: () -> Content) -> some View {
             NavigationStack {
                 content()
                     .settingsDestinations()
