@@ -128,7 +128,10 @@ class StockElement: Codable, Equatable {
     }
 
     static func == (lhs: StockElement, rhs: StockElement) -> Bool {
-        lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
+        // The same object is equal without reading it: a sync may have deleted it, and reading an attribute of a deleted
+        // element that was never loaded crashes SwiftData ("backing data was detached from a context").
+        if lhs === rhs { return true }
+        return lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
             && lhs.amountOpened == rhs.amountOpened
             && lhs.amountOpenedAggregated == rhs.amountOpenedAggregated && lhs.isAggregatedAmount == rhs.isAggregatedAmount && lhs.dueType == rhs.dueType
             && lhs.productID == rhs.productID
