@@ -26,7 +26,7 @@ There's no HTML scraping and no third-party parser. Only websites that embed **s
 | File | Role |
 |------|------|
 | `Views/Recipes/Import/RecipeParse.swift` | `RecipeParser`: extracts the JSON-LD blocks, finds `Recipe` nodes (also inside `@graph`), and builds `JSONParsedRecipe` with its supporting types (`Ingredient`, `InstructionStep`, `IsoDuration`, `NutritionInfo`, `DietType`, …). Malformed fields are skipped with a warning instead of failing. The recipe's `image` may be a reference to a node of the `@graph` (`{"@id": "…#primaryimage"}`, e.g. Chefkoch), which is resolved; without any picture, the page's `og:image` is used. `diagnose(html:)` explains why a page yields no recipe. |
-| `Model/Recipes/Import/IngredientLineParser.swift` | Splits a line like `"2-3 EL Olivenöl, kaltgepresst"` into amount, amount text (for ranges), unit, name and note (`ParsedIngredientLine`). `KnownIngredientUnit` lists common units with their English and German spellings and UN/CEFACT codes. |
+| `Model/Recipes/Import/IngredientLineParser.swift` | Splits a line like `"2-3 EL Olivenöl, kaltgepresst"` into amount, amount text (for ranges), unit, name and note (`ParsedIngredientLine`). Sizes ("1 kl. Glas", "2 large eggs"), how full a spoon is ("1 EL, gehäuft Zucker"), a container after a weight ("400g can chopped tomatoes") and a preparation after the name without a comma ("1 onion finely sliced", "oil for frying", as on BBC Good Food) become notes, so the name matches the product and "and" in a preparation doesn't split the line. `KnownIngredientUnit` lists common units with their English and German spellings and UN/CEFACT codes. |
 | `Model/Recipes/Import/RecipeImportDraft.swift` | `RecipeImportDraft` and `ImportedIngredient` (the editable state), plus `RecipeImportMapper`, which builds the draft and applies Grocy's unit rules. |
 | `Model/Recipes/Import/IngredientMatcher.swift` | The matching of products (`productCandidates(for:note:)`, scored) and quantity units (`quantityUnitMatch(for:knownUnit:)`), the match quality (`IngredientMatchQuality`), and the names suggested for new quantity units. |
 | `Model/Recipes/Import/RecipePreparationFormat.swift` | The HTML format for the recipe's preparation (see below), in both directions: steps → HTML and HTML → steps. |
@@ -50,7 +50,7 @@ There's no HTML scraping and no third-party parser. Only websites that embed **s
 
 The best candidate is selected. From 100 on it's an exact match; below, it's *suggested*: the row says "Suggested", and the form shows the reason and the other candidates (*Similar products*). Selecting a product, also the suggested one, makes it the person's choice. Grocy requires a product for every ingredient. Ingredients without one are shown, but not saved, and the form footer counts them.
 
-**Quantity units.** `quantityUnitMatch(for:knownUnit:)` matches, as exact: a unit's name or plural name; any spelling of the same `KnownIngredientUnit` ("g" finds "Gramm" or "Grams", "EL" finds "Esslöffel" or "Tablespoon"); a word of the unit's name ("g" finds "Gramm (g)"). As suggested: the same stem ("Dosen" finds "Dose") or, for unknown units, an abbreviation of the name.
+**Quantity units.** `quantityUnitMatch(for:knownUnit:)` matches, as exact: a unit's name or plural name; any spelling of the same `KnownIngredientUnit` ("g" finds "Gramm" or "Grams", "EL" finds "Esslöffel" or "Tablespoon"); a word of the unit's name ("g" finds "Gramm (g)"). As suggested: the same stem ("Dosen" finds "Dose") or, for unknown units, an abbreviation of the name. When several units fit ("Pck." fits Grocy's default "Pack" and the household's "Packung"), the one the product can use comes first: its own units and those that convert to its stock unit, then the units other products use (`preferredUnits(for:)`). The same goes for the unit for pieces.
 
 When no unit matches (`hasUnmatchedUnit`), the row says so and the form offers *Create quantity unit*. Its name is the full name of a known unit in the recipe's language (`IngredientUnitLanguage.detect(in:)`, from units like "EL" or "tbsp"; the app language for "g" or "ml"), e.g. "TL" → "Teelöffel", or the unit as written. After a product or unit was created, `fillMissingMatches(in:)` fills in the other ingredients that were missing it, so one new "Bund" serves parsley and chives. Choices of the person stay as they are.
 
@@ -96,7 +96,7 @@ The introduction is the recipe's schema.org `description`. Many sites fill it wi
 `saveRecipe()` works in this order:
 1. If *Import picture* is on, it downloads the image, converts it to a JPEG of at most 2000 px (ImageIO, so WebP works too), and uploads it to the `recipepictures` file group. If this fails, the recipe is imported without a picture.
 2. It posts the recipe (`findNextID(.recipes)`) and remembers `createdRecipeID`.
-3. It posts one `recipes_pos` per ingredient to save. Each saved ingredient is marked as saved, so if some fail, the person can fix them and save again without creating a duplicate recipe or ingredient.
+3. It posts one `recipes_pos` per ingredient to save (`RecipeImportMapper.recipePos(for:id:recipeID:)`). Each saved ingredient is marked as saved, so if some fail, the person can fix them and save again without creating a duplicate recipe or ingredient.
 4. It resyncs `.recipes` and `.recipes_pos`.
 
 ## Extending

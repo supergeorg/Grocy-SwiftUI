@@ -77,7 +77,7 @@ nonisolated enum KnownIngredientUnit: String, CaseIterable, Sendable {
         case .pinch: ["prise", "prisen", "pinch", "pinches", "msp", "messerspitze", "messerspitzen"]
         case .dash: ["schuss", "spritzer", "dash", "dashes", "splash"]
         case .handful: ["handvoll", "hand voll", "handful", "handfuls"]
-        case .piece: ["stück", "stk", "st", "piece", "pieces", "pc", "pcs", "schote", "schoten"]
+        case .piece: ["stück", "stk", "st", "piece", "pieces", "pc", "pcs", "schote", "schoten", "knolle", "knollen"]
         case .clove: ["zehe", "zehen", "clove", "cloves"]
         case .bunch: ["bund", "bunch", "bunches", "bd"]
         case .sprig: ["zweig", "zweige", "zweiglein", "sprig", "sprigs", "stiel", "stiele"]
@@ -86,7 +86,7 @@ nonisolated enum KnownIngredientUnit: String, CaseIterable, Sendable {
         case .stalk: ["stange", "stangen", "stalk", "stalks"]
         case .can: ["dose", "dosen", "can", "cans", "tin", "tins"]
         case .jar: ["glas", "gläser", "jar", "jars"]
-        case .package: ["pck", "pkg", "pkt", "päckchen", "packung", "packungen", "package", "packages", "packet", "packets", "pack"]
+        case .package: ["pck", "pkg", "pkt", "päckchen", "packung", "packungen", "package", "packages", "packet", "packets", "pack", "paket", "pakete"]
         case .bag: ["beutel", "tüte", "tüten", "bag", "bags"]
         case .cube: ["würfel", "cube", "cubes"]
         case .tub: ["becher", "tub", "tubs"]
@@ -183,22 +183,40 @@ nonisolated enum IngredientLineParser {
             rest = rest.dropFirst(amount.length)
         }
 
-        // Unit, either directly after the amount ("200g") or as the next word ("200 g", "2 EL", "1 fl oz")
+        // Unit, either directly after the amount ("200g") or as the next word ("200 g", "2 EL", "1 fl oz"),
+        // also after a size ("1 kl. Glas Kapern", "1 small bunch of coriander")
         rest = rest.drop(while: { $0.isWhitespace })
+        takePackSize(from: &rest, into: &notes)
+        takeSizeWords(from: &rest, into: &notes)
         if let (unitText, length) = leadingUnit(in: rest) {
             line.unit = unitText
             line.knownUnit = KnownIngredientUnit.matching(unitText)
             rest = rest.dropFirst(length)
+            takeUnitModifiers(from: &rest, into: &notes)
+            rest = rest.drop(while: { $0.isWhitespace })
+            // "1 cup of flour", "a pinch of salt"
+            if rest.lowercased().hasPrefix("of ") {
+                rest = rest.dropFirst(3)
+            }
+            if line.knownUnit?.isMeasure == true {
+                // "400 g can chopped tomatoes", "320g pack chicken": the container is a note, the unit stays grams
+                takeContainerWord(from: &rest, into: &notes)
+            }
+            rest = rest.drop(while: { $0.isWhitespace || $0 == "." })
+            takeSizeWords(from: &rest, into: &notes)
         }
         rest = rest.drop(while: { $0.isWhitespace || $0 == "." })
 
         // Name and note: "Zwiebel(n), fein gewürfelt (ca. 100 g)"
         var name = String(rest)
+        // Notes of the quantity (sizes, modifiers) come first, then how the ingredient is prepared, then the rest
+        let preparationNoteIndex = notes.count
         if let commaIndex = firstIndexOutsideParentheses(of: ",", in: name) {
             notes.append(String(name[name.index(after: commaIndex)...]))
             name = String(name[..<commaIndex])
         }
         name = extractParentheses(from: name, into: &notes)
+        name = separatePreparation(from: name, into: &notes, at: preparationNoteIndex)
 
         line.name = name.collapsingWhitespace
         if line.unit == nil {
@@ -309,6 +327,99 @@ nonisolated enum IngredientLineParser {
             }
         }
         return nil
+    }
+
+    // MARK: Size, modifiers and preparation
+
+    /// Sizes before the name or unit ("1 große Zwiebel", "2 large eggs", "1 kl. Glas"). They are notes, so the name matches the product.
+    /// Not "gr.", which also means grams.
+    private static let sizeWords: Set<String> = [
+        "kl", "klein", "kleine", "kleiner", "kleines", "kleinen", "groß", "große", "großer", "großes", "großen", "gross", "grosse",
+        "mittelgroß", "mittelgroße", "mittelgroßer", "mittelgroßes", "mittelgroßen", "m.-große", "m.-großer", "m.-großes", "m.-großen",
+        "mittlere", "mittlerer", "mittleres", "mittleren", "small", "medium", "large", "big", "extra-large", "medium-sized", "large-sized",
+    ]
+
+    private static func takeSizeWords(from rest: inout Substring, into notes: inout [String]) {
+        while let word = rest.split(separator: " ", maxSplits: 1).first, rest.count > word.count {
+            let token = word.lowercased().trimmingTrailingPeriod.trimmingCharacters(in: CharacterSet(charactersIn: ","))
+            guard sizeWords.contains(token) else { return }
+            notes.append(String(word).trimmingCharacters(in: CharacterSet(charactersIn: ",")))
+            rest = rest.dropFirst(word.count).drop(while: { $0.isWhitespace })
+        }
+    }
+
+    /// How full the spoon is, after the unit and a comma: "1 EL, gehäuft Zucker", "2 TL, gestr. Backpulver" (Chefkoch).
+    private static let unitModifiers = [
+        "leicht gehäuft", "gut gehäuft", "gehäuft", "gehäufte", "gehäufter", "gestr.", "gestrichen", "gestrichene", "gestrichener",
+        "knapp", "knappe", "knapper", "voll", "volle", "voller", "heaped", "heaping", "level", "rounded", "scant", "generous",
+    ]
+
+    private static func takeUnitModifiers(from rest: inout Substring, into notes: inout [String]) {
+        var text = rest.drop(while: { $0.isWhitespace })
+        let hasComma = text.first == ","
+        if hasComma {
+            text = text.dropFirst().drop(while: { $0.isWhitespace })
+        }
+        let lowercased = text.lowercased()
+        if let modifier = unitModifiers.first(where: { lowercased.hasPrefix($0 + " ") }) {
+            notes.append(String(text.prefix(modifier.count)))
+            rest = text.dropFirst(modifier.count)
+        } else if hasComma {
+            rest = text
+        }
+    }
+
+    /// The size of each package in "3 x 400g cans chopped tomatoes": a note, so the line counts three cans.
+    private static func takePackSize(from rest: inout Substring, into notes: inout [String]) {
+        let text = String(rest)
+        guard let match = text.firstMatch(of: /^[x×]\s*(\d+(?:[.,]\d+)?\s*[\p{L}]+)\s+/.ignoresCase()) else { return }
+        notes.append(String(match.output.1))
+        rest = rest.dropFirst(match.output.0.count)
+    }
+
+    /// Containers after a measured amount, like "400 g can" or "320g pack".
+    private static let containerWords: Set<String> = ["can", "tin", "pack", "packet", "jar", "block", "bag", "tub", "dose", "glas", "packung", "becher"]
+
+    private static func takeContainerWord(from rest: inout Substring, into notes: inout [String]) {
+        let text = rest.drop(while: { $0.isWhitespace })
+        guard let word = text.split(separator: " ", maxSplits: 1).first, text.count > word.count,
+            containerWords.contains(word.lowercased())
+        else { return }
+        notes.append(String(word))
+        rest = text.dropFirst(word.count)
+    }
+
+    /// Words that start how an ingredient is prepared or used, written after its name without a comma, as on BBC Good Food:
+    /// "1 large onion chopped", "6 chicken thighs boneless and skinless", "oil for deep frying".
+    private static let preparationWords: Set<String> = [
+        "chopped", "sliced", "diced", "minced", "grated", "crushed", "peeled", "deseeded", "seeded", "trimmed", "halved",
+        "quartered", "cubed", "shredded", "torn", "toasted", "softened", "melted", "beaten", "drained", "rinsed", "boneless",
+        "skinless", "zested", "juiced", "cored", "pitted", "finely", "thinly", "roughly", "coarsely", "freshly", "cut", "plus",
+        "for", "to", "divided", "optional", "at", "lightly", "well", "squeezed", "washed", "julienned", "mashed", "sifted",
+        "room-temperature", "warmed", "chilled", "frozen", "defrosted", "thawed",
+    ]
+
+    private static let conjunctionWords: Set<String> = ["and", "or", "und", "oder"]
+
+    /// Moves a preparation that follows the name into the notes: "red pepper deseeded and thinly sliced" → "red pepper".
+    /// The first word is always kept, so names like "frozen peas" or "cut green beans" stay as they are.
+    private static func separatePreparation(from name: String, into notes: inout [String], at noteIndex: Int) -> String {
+        var words = name.split(separator: " ")
+        var insertIndex = noteIndex
+        // "skinless and boneless chicken breast": preparations joined before the name are a note, too
+        let leading = words.prefix(while: { preparationWords.contains($0.lowercased()) || conjunctionWords.contains($0.lowercased()) })
+        if leading.contains(where: { conjunctionWords.contains($0.lowercased()) }), leading.count < words.count,
+            let last = leading.last, !conjunctionWords.contains(last.lowercased())
+        {
+            notes.insert(leading.joined(separator: " "), at: insertIndex)
+            insertIndex += 1
+            words.removeFirst(leading.count)
+        }
+        guard words.count > 1,
+            let index = words.indices.dropFirst().first(where: { preparationWords.contains(words[$0].lowercased()) })
+        else { return words.joined(separator: " ") }
+        notes.insert(words[index...].joined(separator: " "), at: insertIndex)
+        return words[..<index].joined(separator: " ")
     }
 
     /// Words that stand for an amount without a number, longest first.
@@ -463,14 +574,16 @@ nonisolated enum IngredientLineParser {
             }
         }
 
-        let length = text.distance(from: text.startIndex, to: firstWord.endIndex)
         let hasMoreText = words.count > 1
+        // "1 EL, gehäuft Zucker": the comma belongs to the modifier after the unit
+        let unitWord = hasMoreText && firstWord.hasSuffix(",") ? firstWord.dropLast() : firstWord
+        let length = text.distance(from: text.startIndex, to: unitWord.endIndex)
 
-        if KnownIngredientUnit.matching(String(firstWord)) != nil {
-            return (String(firstWord).trimmingTrailingPeriod, length)
+        if KnownIngredientUnit.matching(String(unitWord)) != nil {
+            return (String(unitWord).trimmingTrailingPeriod, length)
         }
-        if hasMoreText, firstWord.hasSuffix("."), firstWord.count > 1 {
-            return (String(firstWord).trimmingTrailingPeriod, length)
+        if hasMoreText, unitWord.hasSuffix("."), unitWord.count > 1 {
+            return (String(unitWord).trimmingTrailingPeriod, length)
         }
         return nil
     }
